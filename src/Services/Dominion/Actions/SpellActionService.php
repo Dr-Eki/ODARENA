@@ -264,7 +264,9 @@ class SpellActionService
                 DB::transaction(function () use ($caster, $spell)
                 {
                     $dominionSpell = DominionSpell::where('dominion_id', $caster->id)->where('spell_id', $spell->id)
-                    ->update(['duration' => $spell->duration]);
+                    ->update(['duration' => $spell->duration,
+                              'cooldown' => $spell->cooldown
+                    ]);
 
                     $caster->save([
                         'event' => HistoryService::EVENT_ACTION_CAST_SPELL,
@@ -280,7 +282,8 @@ class SpellActionService
                         'dominion_id' => $caster->id,
                         'caster_id' => $caster->id,
                         'spell_id' => $spell->id,
-                        'duration' => $spell->duration
+                        'duration' => $spell->duration,
+                        'cooldown' => $spell->cooldown
                     ]);
 
                     $caster->save([
@@ -295,7 +298,8 @@ class SpellActionService
                 'message' => sprintf(
                     'Your wizards cast %s successfully, and it will continue to affect your dominion for the next %s ticks.',
                     $spell->name,
-                    $spell->duration
+                    $spell->duration,
+                    $spell->cooldown
                 )
             ];
         }
@@ -312,7 +316,9 @@ class SpellActionService
                 DB::transaction(function () use ($caster, $target, $spell)
                 {
                     $dominionSpell = DominionSpell::where('dominion_id', $target->id)->where('spell_id', $spell->id)
-                    ->update(['duration' => $spell->duration]);
+                    ->update(['duration' => $spell->duration,
+                              'cooldown' => $spell->cooldown
+                      ]);
 
                     $target->save([
                         'event' => HistoryService::EVENT_ACTION_CAST_SPELL,
@@ -328,7 +334,8 @@ class SpellActionService
                         'dominion_id' => $target->id,
                         'caster_id' => $caster->id,
                         'spell_id' => $spell->id,
-                        'duration' => $spell->duration
+                        'duration' => $spell->duration,
+                        'cooldown' => $spell->cooldown
                     ]);
 
                     $caster->save([
@@ -350,7 +357,8 @@ class SpellActionService
                 'message' => sprintf(
                     'Your wizards cast %s successfully, and it will continue to affect ' . $target->name . ' for the next %s ticks.',
                     $spell->name,
-                    $spell->duration
+                    $spell->duration,
+                    $spell->cooldown
                 )
             ];
         }
@@ -397,7 +405,8 @@ class SpellActionService
                             'dominion_id' => $target->id,
                             'caster_id' => $caster->id,
                             'spell_id' => $spell->id,
-                            'duration' => $spell->duration
+                            'duration' => $spell->duration,
+                            'cooldown' => $spell->cooldown
                         ]);
 
                         $caster->save([
@@ -441,7 +450,8 @@ class SpellActionService
                        'success' => true,
                        'message' => sprintf(
                            'Your wizards cast the spell successfully, but it was reflected and it will now affect your dominion for the next %s ticks.',
-                           $spell->duration
+                           $spell->duration,
+                           $spell->cooldown
                        ),
                        'alert-type' => 'danger'
                    ];
@@ -453,7 +463,8 @@ class SpellActionService
                        'message' => sprintf(
                            'Your wizards cast %s successfully, and it will continue to affect your target for the next %s ticks.',
                            $spell->name,
-                           $spell->duration
+                           $spell->duration,
+                           $spell->cooldown
                        )
                    ];
                }
@@ -1036,7 +1047,9 @@ class SpellActionService
             if ($this->spellCalculator->isSpellActive($caster, $spell->key))
             {
                 DominionSpell::where('dominion_id', $caster->id)->where('spell_id', $spell->id)
-                ->update(['duration' => $spell->duration]);
+                ->update(['duration' => $spell->duration,
+                          'cooldown' => $spell->cooldown
+                ]);
             }
             else
             {
@@ -1046,7 +1059,8 @@ class SpellActionService
                         'dominion_id' => $caster->id,
                         'caster_id' => $caster->id,
                         'spell_id' => $spell->id,
-                        'duration' => $spell->duration
+                        'duration' => $spell->duration,
+                        'cooldown' => $spell->cooldown
                     ]);
                 });
             }
@@ -1068,7 +1082,9 @@ class SpellActionService
                 DB::transaction(function () use ($caster, $target, $spell)
                 {
                     $dominionSpell = DominionSpell::where('dominion_id', $target->id)->where('spell_id', $spell->id)
-                    ->update(['duration' => $spell->duration]);
+                    ->update(['duration' => $spell->duration,
+                              'cooldown' => $spell->cooldown
+                    ]);
 
                     $target->save([
                         'event' => HistoryService::EVENT_ACTION_CAST_SPELL,
@@ -1084,7 +1100,8 @@ class SpellActionService
                         'dominion_id' => $target->id,
                         'caster_id' => $caster->id,
                         'spell_id' => $spell->id,
-                        'duration' => $spell->duration
+                        'duration' => $spell->duration,
+                        'cooldown' => $spell->cooldown
                     ]);
 
                     $caster->save([

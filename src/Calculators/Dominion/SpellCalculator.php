@@ -95,7 +95,7 @@ class SpellCalculator
      */
     public function isOnCooldown(Dominion $dominion, Spell $spell, bool $isInvasionSpell = false): bool
     {
-        if ($this->getSpellCooldown($dominion, $spell, $isInvasionSpell) > 0)
+        if ($this->cooldown) > 0)
         {
             return true;
         }
@@ -109,7 +109,7 @@ class SpellCalculator
      * @param string $spell
      * @return bool
      */
-    public function getSpellCooldown(Dominion $dominion, Spell $spell, bool $isInvasionSpell = false): int
+    /*public function getSpellCooldown(Dominion $dominion, Spell $spell, bool $isInvasionSpell = false): int
     {
 
         if ($spell->cooldown > 0) {
@@ -134,7 +134,7 @@ class SpellCalculator
 
         return 0;
     }
-
+    */
     /**
      * Returns a list of spells currently affecting $dominion.
      *

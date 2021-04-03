@@ -356,6 +356,7 @@ class TickService
                     ->where('dominions.protection_ticks', '=', 0)
                     ->update([
                         'duration' => DB::raw('`duration` - 1'),
+                        'cooldown' => DB::raw('`cooldown` - 1'),
                         'dominion_spells.updated_at' => $this->now,
                     ]);
 
@@ -613,6 +614,23 @@ class TickService
             {
                 $harmfulSpells[] = $spell->key;
             }
+
+            if($row->duration <= 0 and $row->cooldown > 0)
+            {
+              DB::table('dominion_spells')
+                  ->where('dominion_id', $dominion->id)
+                  ->where('spell_id'), $row->id)
+                  ->delete();
+              $caster = $row->caster_id;
+              $cooldown = $row->cooldown;
+              DB::transaction(function () use ($caster, $spell, $cooldown)
+              {
+                  $dominionSpell = DominionSpell::where('dominion_id', $caster->id)->where('spell_id', $spell->id)
+                  ->update(['duration' => 2000,
+                            'cooldown' => $cooldown
+                  ]);
+              });
+            }
         }
 
         if (!empty($beneficialSpells) and !$dominion->isAbandoned())
@@ -628,6 +646,7 @@ class TickService
         DB::table('dominion_spells')
             ->where('dominion_id', $dominion->id)
             ->where('duration', '<=', 0)
+            ->where('cooldown', '<=', 0)
             ->delete();
     }
 
