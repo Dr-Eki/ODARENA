@@ -1,50 +1,56 @@
 name: Artillery
 alignment: evil
-description: >-
-  <p>Designed by the Imperial Gnomes but operated by the more expendable and numerous trolls, the Artillery is the Empire's response to the Snow Elf and its powerful Trebuchets.</p>
-  <p>Enormous cannons are built into the hillsides, from which they fire cannonballs at the target.</p>
-  <hr />
-  <p>Each Bombardier can operate up to ten Cannons.</p>
-  <p>Cannonballs are destroyed upon impact.</p>
+description:
 home_land_type: hill
 playable: 1
 
-attacking: 2
-exploring : 3
+attacking: 3
+exploring : 2
 converting: 3
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   max_population: -20
-  cannot_build_homes: 1
 units:
   - name: Bombardier
-    type: defensive_elite
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
+      gold: 1000
     power:
       offense: 0
-      defense: 8
+      defense: 9
+
   - name: Cannon
-    type: machinery_elite
-    need_boat: false
+    training_time: 9
+    type:
+      - machine
     cost:
-      platinum: 500
+      gold: 500
       ore: 500
       lumber: 100
     power:
-      offense: 1
-      defense: 0
+      offense: 0
+      defense: 4
     perks:
       no_draftee: 1
       does_not_count_as_population: 1
-      true_immortal: 1
-      pairing_limit: 1,10
+      immortal_on_fending_off: 1
+      immortal_on_victory: 1
       faster_return: 11
+      sendable_with_zero_op: 1
+
   - name: Cannonball
-    type: machinery_elite
-    need_boat: false
+    training_time: 12
+    type:
+      - ammunition
     cost:
-      platinum: 50
+      gold: 50
       ore: 100
     power:
       offense: 1
@@ -53,13 +59,16 @@ units:
       no_draftee: 1
       does_not_count_as_population: 1
       fixed_casualties: 100
-      offense_from_pairing: 2,4 # slot, amount
-      damages_improvements_on_attack: 100
+      offense_from_pairing: 2,5 # slot, amount
+      damages_improvements_on_attack: 50
+      pairing_limit_increasable: 2,3,workshops,1 # Unit slot, amount (max 4 of this unit per each Unit 4), imp to increase, imp multiplier
+
   - name: Burning Cannonball
-    type: machinery_elite
-    need_boat: false
+    training_time: 12
+    type:
+      - ammunition
     cost:
-      platinum: 100
+      gold: 100
       ore: 200
       mana: 50
     power:
@@ -71,3 +80,4 @@ units:
       fixed_casualties: 100
       offense_from_pairing: 2,9 # slot, amount
       burns_peasants_on_attack: 1
+      pairing_limit_increasable: 2,3,workshops,1 # Unit slot, amount (max 4 of this unit per each Unit 4), imp to increase, imp multiplier

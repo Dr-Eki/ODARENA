@@ -1,63 +1,88 @@
 name: Armada
 alignment: good
-description: >-
-  <p>The Commonwealth Armada traces its origin to Human naval forces aimed at taking care of increasing piracy and worrying signs of an Imperial navy.</p>
-  <p>They were given a great deal of autonomy in order to face challenges in a manner and with an efficiency normal human bureaucracy would not permit.</p>
-  <p>With increased self-governance, the Armada gradually grow into its own faction of the Commonwealth and now controls its own seafaring dominions.</p>
-  <hr />
-  <p>You can have at most two of the elite units per Dock. For example, if you have two Oreclads and want to train one Siege Ship, you must have two Docks.</p>
-  <p>The restriction is increased by Harbor improvements. With 20% Harbor, 10 Docks can house 24 instead of 20 Oreclads/Siege Ships.</p>
+description:
 home_land_type: water
 playable: 1
+
+draftees_alias: cadet
 
 attacking: 1
 exploring : 2
 converting: 3
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   exchange_bonus: 25
+  salvaging: 50
+  invest_bonus: 25
+
 units:
   - name: Ensign
-    need_boat: true
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 350
+      gold: 300
       ore: 10
     power:
       offense: 3
-      defense: 3
-  - name: Commodore
-    need_boat: true
+      defense: 1
+    perks:
+      fewer_casualties_offense: 50
+
+  - name: Captain
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
     cost:
-      platinum: 800
-      ore: 25
+      gold: 3000
+      ore: 0
     power:
-      offense: 5
-      defense: 4
-  - name: Oreclad
-    need_boat: false
+      offense: 8
+      defense: 8
+    perks:
+      increases_prestige_gains: 100
+      pairing_limit: 4,1 # Unit slot, amount (max 2 of this unit per each Unit 4)
+
+  - name: Coastal Cannon
+    training_time: 12
+    type:
+      - machine
     cost:
-      platinum: 15000
-      ore: 10000
-      boat: 1
-      lumber: 5000
+      gold: 30000
+      ore: 12000
     power:
       offense: 0
-      defense: 120
+      defense: 200
     perks:
-      fewer_casualties: 50
+      immortal_on_fending_off: 1
       no_draftee: 1
       does_not_count_as_population: 1
-  - name: Siege Ship
-    need_boat: false
+      land_limit: water,2.5 # land type, max per land type
+
+  - name: Battleship
+    training_time: 12
+    type:
+      - ship
     cost:
-      platinum: 45000
-      ore: 11000
-      boat: 1
-      lumber: 32500
+      gold: 60000
+      ore: 15000
+      lumber: 35000
     power:
-      offense: 320
+      offense: 40
       defense: 40
     perks:
       fewer_casualties: 75
       no_draftee: 1
       does_not_count_as_population: 1
+      houses_military_units: 300
+      offense_from_pairing: 1,300,300 # slot, amount, num required
+      building_limit: shipyard,1,harbor
+      plunders: gold;100,gems;50

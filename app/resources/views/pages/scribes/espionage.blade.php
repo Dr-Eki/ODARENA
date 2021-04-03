@@ -6,16 +6,6 @@
         <div class="box-header with-border">
             <h3 class="box-title">Espionage</h3>
         </div>
-        <div class="box-body">
-            <div class="row">
-                <div class="col-md-12 col-md-12">
-                    <p>Espionage is when you send your spies to take actions against a target in so-called spy-ops.</p>
-                    <em>
-                        <p>More information can be found on the <a href="https://odarena.miraheze.org/wiki/Espionage">wiki</a>.</p>
-                    </em>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="box">
         <div class="box-header with-border">

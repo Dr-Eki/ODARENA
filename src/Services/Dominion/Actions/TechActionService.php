@@ -12,6 +12,9 @@ use OpenDominion\Models\Tech;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Traits\DominionGuardsTrait;
 
+
+use OpenDominion\Calculators\Dominion\SpellCalculator;
+
 class TechActionService
 {
     use DominionGuardsTrait;
@@ -19,14 +22,21 @@ class TechActionService
     /** @var TechCalculator */
     protected $techCalculator;
 
+    /** @var SpellCalculator */
+    protected $spellCalculator;
+
     /**
      * TechActionService constructor.
      *
      * @param TechCalculator $techCalculator
      */
-    public function __construct(TechCalculator $techCalculator)
+    public function __construct(
+        TechCalculator $techCalculator,
+        SpellCalculator $spellCalculator
+      )
     {
         $this->techCalculator = $techCalculator;
+        $this->spellCalculator = $spellCalculator;
     }
 
     /**
@@ -42,15 +52,21 @@ class TechActionService
     {
         $this->guardLockedDominion($dominion);
 
+        // Qur: Statis
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+            throw new GameException('You cannot level up advancements while you are in stasis..');
+        }
+
         // Get the tech information
         $techToUnlock = Tech::where('key', $key)->first();
         if ($techToUnlock == null) {
-            throw new LogicException('Failed to find tech ' . $key);
+            throw new LogicException('Failed to find advancement: ' . $key);
         }
 
         // Check prerequisites
         if (!$this->techCalculator->hasPrerequisites($dominion, $techToUnlock)) {
-            throw new GameException('You do not meet the requirements to unlock this advancement.');
+            throw new GameException('You do not meet the requirements to level up this advancement.');
         }
 
         // Check if enabled
@@ -63,9 +79,15 @@ class TechActionService
         $techCost = $this->techCalculator->getTechCost($dominion, $techToUnlock);
         if ($dominion->resource_tech < $techCost) {
             throw new GameException(sprintf(
-                'You do not have the required %s experience points to unlock this advancement.',
+                'You do not have the required %s experience points to level up this advancement.',
                 number_format($techCost)
             ));
+        }
+
+        // Check if faction can unlock advancements
+        if($dominion->race->getPerkValue('cannot_tech'))
+        {
+            throw new GameException($dominion->race->name . ' cannot use advancements.');
         }
 
         DB::transaction(function () use ($dominion, $techToUnlock, $techCost) {
@@ -83,7 +105,7 @@ class TechActionService
 
         return [
             'message' => sprintf(
-                'You have unlocked %s.',
+                'You have levelled up %s.',
                 $techToUnlock->name
             )
         ];

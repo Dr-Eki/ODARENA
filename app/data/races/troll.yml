@@ -1,29 +1,32 @@
 name: Troll
 alignment: evil
-description: >-
-  <p>Legends about Trolls go as far back as the oldest tales of Odarena. They are depicted as foul, brutish, and dull.</p>
-  <p>Many stories tell of Trolls eating unsuspecting wanderers who have wandered too far into the darkest depths of the forests at the foot of the Great Mountains.</p>
-  <p>Trolls have grown to be the largest and strongest land dwellers, with skin and muscles as thick as swords. While they can be overrun and driven away, only the strongest warriors can actually kill them.</p>
-  <p>Often assumed to be stupid in human, dwarven, and elven lore, Trolls have instead been embraced by the Empire for their simple sovereignty and tremendous power.</p>
-  <p>Enormously strong and enthralled by the shiine, Trolls are formidable at mining for gems. Mountain Trolls can sometimes be seen wearing Ironskin, a type of armour made of rock and root.</p>
+description: <p>While Trolls cannot take advancements, XP yields more generated land at a rate of +1% for every 10,000 XP (max +100% generated).</p>
 home_land_type: forest
 playable: 1
 
 attacking: 3
 exploring : 2
 converting: 3
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   max_population: -10
   food_consumption: 25
   invest_bonus: -25
-  gem_production: 10
-  castle_max: 50
+  gem_production: 50
+  improvements_max: 50
   cannot_tech: 1
+  salvaging: 20
 units:
   - name: Clubber
+    training_time: 9
+    type:
+      - living
+      - sentient
     cost:
-      platinum: 300
+      gold: 300
       ore: 50
       lumber: 10
     power:
@@ -31,38 +34,53 @@ units:
       defense: 0
     perks:
       only_dies_vs_raw_power: 3 # >=
+
   - name: Basher
+    training_time: 9
+    type:
+      - living
+      - sentient
     cost:
-      platinum: 300
+      gold: 300
       ore: 50
     power:
       offense: 0
       defense: 4
     perks:
       only_dies_vs_raw_power: 3 # >=
+
   - name: Ironskin
-    type: hybrid_elite
+    training_time: 12
+    type:
+      - equipment
+    
     cost:
-      lumber: 200
-      ore: 200
+      ore: 300
+      gem: 50
     power:
-      offense: 1
+      offense: 0
       defense: 0
     perks:
-      pairing_limit: 4,1 # Unit slot, amount (max 1 of this unit per each Unit 4)
+      sendable_with_zero_op: 1
       does_not_count_as_population: 1
       no_draftee: 1
+
   - name: Mountain Troll
-    type: hybrid_elite
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - massive
     cost:
-      platinum: 1500
-      ore: 500
+      gold: 1600
+      ore: 525
     power:
-      offense: 12
-      defense: 12
+      offense: 13
+      defense: 13
     perks:
-      eats_peasants_on_attack: 0.1 # Each Smasher eats 0.1 peasant on attack.
+      eats_peasants_on_attack: 0.1 # Each Mountain Troll eats 0.1 peasant on attack.
       eats_draftees_on_attack: 0.1 # Each Mountain Troll eats 0.1 draftee on attack.
       only_dies_vs_raw_power: 8 # >=
       offense_from_pairing: 3,2 # slot, amount
       defense_from_pairing: 3,2 # slot, amount
+      plunders: food;2,gems;1

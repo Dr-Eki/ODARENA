@@ -12,7 +12,7 @@ class ApiController extends Controller
     public function getPbbg()
     {
         return [
-            'name' => 'OD Arena',
+            'name' => 'ODARENA',
             'version' => (Cache::get('version') ?? 'unknown'),
             'description' => 'A text-based, persistent browser-based strategy game (PBBG) in a fantasy war setting',
             'tags' => ['fantasy', 'multiplayer', 'strategy'],
@@ -30,7 +30,7 @@ class ApiController extends Controller
             ],
             'links' => [
                 'beta' => 'https://odarena.com',
-                'github' => 'https://github.com/Dr-Eki/OpenDominion',
+                'github' => 'https://github.com/Dr-Eki/ODARENA',
             ],
         ];
     }

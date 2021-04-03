@@ -6,6 +6,7 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\GuardMembershipService;
+use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
 
 # ODA
 use OpenDominion\Calculators\Dominion\SpellCalculator;
@@ -30,84 +31,71 @@ class ExplorationCalculator
      * @param LandCalculator $landCalculator
      * @param GuardMembershipService $guardMembershipService
      */
-    public function __construct(
-        LandCalculator $landCalculator,
-        GuardMembershipService $guardMembershipService,
-        SpellCalculator $spellCalculator,
-        ImprovementCalculator $improvementCalculator)
+    public function __construct()
     {
-        $this->landCalculator = $landCalculator;
-        $this->guardMembershipService = $guardMembershipService;
-        $this->spellCalculator = $spellCalculator;
-        $this->improvementCalculator = $improvementCalculator;
+          $this->landCalculator = app(LandCalculator::class);
+          $this->guardMembershipService = app(GuardMembershipService::class);
+          $this->spellCalculator = app(SpellCalculator::class);
+          $this->landImprovementCalculator = app(LandImprovementCalculator::class);
+          $this->improvementCalculator = app(ImprovementCalculator::class);
     }
 
     /**
-     * Returns the Dominion's exploration platinum cost (raw).
+     * Returns the Dominion's exploration gold cost (raw).
      *
      * @param Dominion $dominion
      * @return int
      */
-     public function getPlatinumCostRaw(Dominion $dominion): int
-     {
-       $platinum = 0;
-       $totalLand = $this->landCalculator->getTotalLand($dominion);
+    public function getGoldCostRaw(Dominion $dominion): int
+    {
+        $totalLand = $this->landCalculator->getTotalLand($dominion);
+        $totalLand += $this->landCalculator->getTotalLandIncoming($dominion);
+        $gold = sqrt($totalLand)*$totalLand/6-1000;
 
-       if ($totalLand < 300) {
-           $platinum += -(3 * (300 - $totalLand));
-       } else {
-           $exponent = ($totalLand ** 0.0185) / 1.05;
-           $exponent = clamp($exponent, 1.09, 1.121);
-           $platinum += (3 * (($totalLand - 300) ** $exponent));
-       }
-
-       $platinum += 1000;
-
-       return $platinum;
-     }
+        return $gold;
+    }
 
      /**
-      * Returns the Dominion's exploration platinum cost bonus.
+      * Returns the Dominion's exploration gold cost bonus.
       *
       * @param Dominion $dominion
       * @return int
       */
-      public function getPlatinumCostBonus(Dominion $dominion): float
+      public function getGoldCostBonus(Dominion $dominion): float
       {
         $multiplier = 0;
 
-        // Techs
-        $multiplier = $dominion->getTechPerkMultiplier('explore_platinum_cost');
+        // Techs (returns negative value)
+        $multiplier += $dominion->getTechPerkMultiplier('explore_gold_cost');
+
+        // Title (returns negative value)
+        if(isset($dominion->title))
+        {
+            $multiplier += $dominion->title->getPerkMultiplier('explore_cost') * $dominion->title->getPerkBonus($dominion);
+        }
 
         // Racial bonus
         $multiplier += $dominion->race->getPerkMultiplier('explore_cost');
 
-        // Improvement: Cartography
+        // Improvement: Cartography (returns positive value)
         $multiplier -= $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'cartography');
 
-        // Elite Guard Tax
-        if ($this->guardMembershipService->isEliteGuardMember($dominion))
-        {
-            $multiplier += 0.25;
-        }
-
-
         # Cap explore plat reduction to 50%.
-        $multiplier = min($multiplier,0.50);
+        $multiplier = max($multiplier, -0.50);
 
         return (1 + $multiplier);
 
       }
 
    /**
-    * Returns the Dominion's exploration platinum cost.
+    * Returns the Dominion's exploration gold cost.
     *
     * @param Dominion $dominion
     * @return int
     */
-    public function getPlatinumCost(Dominion $dominion): int
+    public function getGoldCost(Dominion $dominion): int
     {
-      return $this->getPlatinumCostRaw($dominion) * $this->getPlatinumCostBonus($dominion);
+      return $this->getGoldCostRaw($dominion) * $this->getGoldCostBonus($dominion);
     }
 
     /**
@@ -118,18 +106,11 @@ class ExplorationCalculator
      */
     public function getDrafteeCostRaw(Dominion $dominion): int
     {
-        $draftees = 0;
+        $draftees = 5;
         $totalLand = $this->landCalculator->getTotalLand($dominion);
+        $draftees += (0.003 * (($totalLand - 300) ** 1.07));
 
-        if ($totalLand < 300) {
-            $draftees = -(300 / $totalLand);
-        } else {
-            $draftees += (0.003 * (($totalLand - 300) ** 1.07));
-        }
-
-        $draftees += 5;
-
-        return $draftees;
+        return ceil($draftees);
     }
 
     /**
@@ -141,6 +122,7 @@ class ExplorationCalculator
     public function getDrafteeCostModifier(Dominion $dominion): int
     {
         $modifier = 0;
+
         // Techs
         $modifier += $dominion->getTechPerkValue('explore_draftee_cost');
 
@@ -148,7 +130,7 @@ class ExplorationCalculator
     }
 
     /**
-     * Returns the Dominion's exploration platinum cost.
+     * Returns the Dominion's exploration gold cost.
      *
      * @param Dominion $dominion
      * @return int
@@ -168,7 +150,7 @@ class ExplorationCalculator
     public function getMaxAfford(Dominion $dominion): int
     {
         return min(
-            floor($dominion->resource_platinum / $this->getPlatinumCost($dominion)),
+            floor($dominion->resource_gold / $this->getGoldCost($dominion)),
             floor($dominion->military_draftees / $this->getDrafteeCost($dominion)),
             floor($this->landCalculator->getTotalLand($dominion) * (($dominion->morale/100)/8))
         );
@@ -189,4 +171,21 @@ class ExplorationCalculator
 
         #return floor(($amount + 2) / 3);
     }
+
+    public function getExploreTime(Dominion $dominion): int
+    {
+        $ticks = 12;
+
+        # Title: Pathfinder
+        $ticks += $dominion->title->getPerkValue('explore_time') * $dominion->title->getPerkBonus($dominion);
+
+        # Ugly, doesn't show up in land advisor if greater than 12
+        $ticks += $dominion->race->getPerkValue('explore_time');
+
+        $ticks = min($ticks, 12);
+
+        return $ticks;
+
+    }
+
 }

@@ -1,69 +1,89 @@
 name: Spirit
 alignment: good
-description: >-
-  <p>Spirits have always surrounded the world.</p>
-  <p>Distraught by the scourge of the Empire, these Spirits have rejoined the corporeal world to keep the pure pure.</p>
+description:
 home_land_type: water
 playable: 1
 
 attacking: 3
-exploring : 1
+exploring : 2
 converting: 1
+skill_level: 1
+
+construction_materials: gems
 
 perks:
-  food_consumption: -100
+  food_consumption: -80
+  max_population: 30
+  population_growth: 15
+  gem_production: 20
+  rezone_cost: -20
 units:
   - name: Wisp
-    type: hybrid_specialist
-    need_boat: false
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - ethereal
+
     cost:
-      platinum: 200
-      ore: 0
-    power:
-      offense: 2
-      defense: 2
-    perks:
-      immortal: 1
-      staggered_conversion: 40;1,85;2
-  - name: Banshee
-    need_boat: false
-    type: hybrid_specialist
-    cost:
-      platinum: 500
-      ore: 0
-    power:
-      offense: 3
-      defense: 3
-    perks:
-      immortal: 1
-      staggered_conversion: 75;2,85;3
-      offense_from_building: alchemy,40,1 # building type, ratio%, max
-      defense_from_building: alchemy,40,1 # building type, ratio%, max
-  - name: Phantom
-    need_boat: false
-    type: hybrid_elite
-    cost:
-      platinum: 1600
-      ore: 0
+      gold: 400
+      mana: 5
+      peasant: 1
     power:
       offense: 4
-      defense: 4
+      defense: 2
     perks:
-      immortal: 1
-      staggered_conversion: 75;3,85;4
-      offense_from_building: alchemy,20,2 # building type, ratio%, max
-      defense_from_building: alchemy,20,2 # building type, ratio%, max
-  - name: Spectre
-    need_boat: false
-    type: hybrid_elite
+      no_draftee: 1
+      spirit_immortal: 1
+      strength_conversion: 4,1,3 #  threshold,under,over <=4 DP becomes Wolverine, >4 DP becomes Werewolf
+
+  - name: Keeper
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
+
+    cost:
+      gold: 500
+      ore: 0
+    power:
+      offense: 0
+      defense: 5
+    perks:
+      increases_casualties_on_defense: 1
+
+  - name: Apparition
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - ethereal
+
+    cost:
+      gold: 1200
+      mana: 10
+    power:
+      offense: 6
+      defense: 6
+    perks:
+      spirit_immortal: 1
+      strength_conversion: 8,3,4 #  threshold,under,over <=4 DP becomes Wolverine, >4 DP becomes Werewolf
+
+  - name: Aspect
+    type:
+      - living
+      - sentient
+      - ethereal
+
     static_networth: 20
     cost:
-      platinum: 0
-      ore: 0
+      unit3: 2
+      mana: 120
     power:
       offense: 10
       defense: 10
     perks:
-      immortal: 1
-      staggered_conversion: 85;3,100;4
-      cannot_be_trained: 1
+      spirit_immortal: 1
+      strength_conversion: 6,3,4 #  threshold,under,over <=4 DP becomes Wolverine, >4 DP becomes Werewolf
+      no_draftee: 1

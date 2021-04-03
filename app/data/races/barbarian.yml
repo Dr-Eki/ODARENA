@@ -1,46 +1,70 @@
 name: Barbarian
 alignment: npc
-description: >-
-  <p>A lose gathering of roving, thieving crooks and scoundrels, enacting its anarchic rule over land not taken by the Empire or Commonwealth.</p>
+description:
 home_land_type: hill
 playable: 0
 
 attacking: 3
 exploring : 3
 converting: 3
+skill_level: 3
+
+construction_materials: gold,lumber
 
 perks:
-  food_consumption: -100
-  platinum_production: -100
+  no_food_consumption: 1
+  gold_production: -100
   food_production: -100
   lumber_production: -100
-  man_production: -100
-  extra_barren_max_population: 10
+  mana_production: -100
+  ore_production: -100
+  gem_production: -100
+  reduced_conversions: 33
 units:
   - name: Marauder
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 225
+      gold: 225
       ore: 0
     power:
       offense: 3
       defense: 0
   - name: Thug
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 225
+      gold: 225
       ore: 0
     power:
       offense: 0
       defense: 3
   - name: Robber
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 600
+      gold: 600
       ore: 0
     power:
       offense: 0
       defense: 5
   - name: Bandit
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 720
+      gold: 720
       ore: 0
     power:
       offense: 5

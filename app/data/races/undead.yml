@@ -1,57 +1,88 @@
 name: Undead
 alignment: evil
-description: >-
-  <p>The Undead are a collection of those who have defied death - skeleton puppets, flesh-obsessed ghouls, bloodthirsty vampires and their hideous progeny. This rag-tag alliance all share one thing in common: a hatred of life. They exist to end it, or drag it kicking and screaming into the shadow of undeath.</p>
-  <p>Extremely hard to kill, the Undead are constantly bolstering their ranks with more corpses. The Undead tend to live in fetid swamps, where the cloying humid air acts a natural preservative, protecting the skin from rot. Vampires are a vain bunch.</p>
+description:
 home_land_type: swamp
 playable: 1
 
 attacking: 3
 exploring : 1
 converting: 1
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   max_population: 30
   mana_production: 10
-  food_consumption: -80
+  no_food_consumption: 1
+  max_per_round: 1
+  wizard_training_time: 6
+  converts_executed_spies: 3 # into slot 3
 units:
   - name: Skeleton
-    need_boat: false
+    training_time: 9
+    type:
+      - mindless
+      - magical
     cost:
-      platinum: 225
+      gold: 0
     power:
       offense: 3
       defense: 0
     perks:
-      immortal: 1
+      cannot_be_trained: 1
+      housing_count: 0.1
+      pairing_limit_increasable: 4,6,spires,1 # Unit slot, amount (max 10 of this unit per each Unit 4), imp to increase, imp multiplier
+
   - name: Ghoul
+    training_time: 9
+    type:
+      - mindless
     cost:
-      platinum: 225
+      gold: 0
     power:
       offense: 0
       defense: 3
     perks:
-      immortal: 1
-  - name: Revenant
-    need_boat: false
+      cannot_be_trained: 1
+      housing_count: 0.1
+      pairing_limit_increasable: 4,6,spires,1 # Unit slot, amount (max 10 of this unit per each Unit 4), imp to increase, imp multiplier
+
+  - name: Wight
+    training_time: 12
+    type:
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
-      mana: 10
+      gold: 1000
+      mana: 8
     power:
-      offense: 3
-      defense: 5
+      offense: 6
+      defense: 6
     perks:
-      immortal: 1
-      staggered_conversion: 60;3,100;4 # 60% and up, convert to Revenant
-  - name: Wraith
-    need_boat: false
+      dies_into: 3
+      increases_casualties_on_offense: 1
+      increases_casualties_on_defense: 1
+
+  - name: Necromancer
+    training_time: 9
+    type:
+      - sentient
+      - intelligent
+      - wise
     cost:
-      platinum: 1000
-      mana: 10
+      gold: 300
+      lumber: 1
+      mana: 18
+      wizard: 1
     power:
-      offense: 5
-      defense: 3
+      offense: 0
+      defense: 6
     perks:
-      immortal: 1
-      staggered_conversion: 60;3,100;4 # 60% and up, convert to Revenant
-      offense_wizard_ratio: 1,2 # ratio%, max
+      immortal_on_victory: 1
+      immortal_on_fending_off: 1
+      immortal_wizard: 1
+      no_draftee: 1
+      counts_as_wizard_offense: 0.125
+      counts_as_wizard_defense: 0.125
+      building_limit: wizard_guild,40,spires # building, buildings per unit, imp to increased

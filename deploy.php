@@ -14,7 +14,7 @@ set('ssh_multiplexing', false);
 // Hosts
 
 host('odarena.com')
-    ->set('deploy_path', '/var/www/opendominion.net')
+    ->set('deploy_path', '/var/www/ODArena')
     ->configFile('~/.ssh/config');
 
 // Task definitions

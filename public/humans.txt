@@ -1,7 +1,7 @@
 /* PROJECT */
-    Name:           OpenDominion
-    URL:            https://opendominion.net
-    Repository:     https://github.com/WaveHack/OpenDominion
+    Name:           ODARENA
+    URL:            https://odarena.com
+    Repository:     https://github.com/Dreki/ODArena
     Created:        2013-02-04
     Languages:      PHP, MySQL, JavaScript, HTML, CSS
     Components:     Laravel, AdminLTE, jQuery
@@ -9,20 +9,15 @@
     Editors:        PhpStorm, VS Code
 
 /* TEAM */
-    Project Lead:   WaveHack
-    Contact:        email [at] wavehack [dot] net
-    Twitter:        @WaveHack
-    Discord:        Sharqy#1337
-    Location:       The Netherlands
-
-    Developer:      Slz
+    Project Lead:   Dreki
+    Contact:        dreki [at] odarena [dot] com
+    Twitter:        @ODARENA_Game
+    Discord:        Dreki#9715
 
 /* THANKS */
     Original Creator: Ross
 
-    Dominion Veterans: (too many to list, you know who you are)
-
-    Homepage Artwork: Mevnie
+    OpenDominion Creator: WaveHack
 
 /* SITE */
     Language:       English

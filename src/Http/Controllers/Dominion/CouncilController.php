@@ -19,11 +19,29 @@ class CouncilController extends AbstractDominionController
         $this->updateDominionCouncilLastRead($dominion);
         $councilService = app(CouncilService::class);
 
+        if($dominion->realm->alignment == 'evil')
+        {
+            $councilName = 'Senate';
+        }
+        elseif($dominion->realm->alignment == 'good')
+        {
+            $councilName = 'Parliament';
+        }
+        elseif($dominion->realm->alignment == 'independent')
+        {
+            $councilName = 'Assembly';
+        }
+        else
+        {
+            $councilName = 'Council';
+        }
+
         $threads = $councilService->getThreads($dominion->realm);
 
         return view('pages.dominion.council.index', [
             'councilThreads' => $threads,
             'realm' => $dominion->realm,
+            'councilName' => $councilName,
         ]);
     }
 

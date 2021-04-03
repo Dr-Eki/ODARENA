@@ -1,6 +1,6 @@
 # Contributing to OpenDominion
 
-Thank you for considering contributing to OpenDominion! This document contains some guidelines to explain the contributing process and hopefully answer some common questions.
+Thank you for considering contributing to ODARENA! This document contains some guidelines to explain the contributing process and hopefully answer some common questions.
 
 #### Table of Contents
 
@@ -31,7 +31,7 @@ Thank you for considering contributing to OpenDominion! This document contains s
 - For code contributions, make sure you have a [GitHub account](https://github.com/signup/free).
 - Make sure you read, understand and agree to the [Code of Conduct](CODE_OF_CONDUCT.md).
 - Understand that the project's development is governed BDFL-style. See [Governance](GOVERNANCE.md) for more details.
-- Finally, join the [OpenDominion Discord server](https://discord.gg/mFk2wZT).
+- Finally, join the [OpenDominion Discord server](https://discord.gg/HpzetmR).
 
 The Discord is used for both for the playerbase community, as well as development-related communication, community announcements and game updates.
 
@@ -44,7 +44,7 @@ OpenDominion is an open source clone of Dominion (round 70-74 ruleset), with a f
 - Free to play forever. No premium accounts, no microtransactions, no lootboxes, and no advertisements. The project is financed through voluntary Patreon donations.
 - Lifetime accounts by default. Meaning you can use the same user account across multiple rounds, instead of having to re-register for each round.
 - Additional gameplay changes for balance purposes, as decided by OpenDominion's Gameplay Committee.
- 
+
 ## How can I contribute?
 
 ### Join the community
@@ -53,12 +53,12 @@ While the original Dominion community back in the day was quite sizable, the Ope
 
 By time of writing, a few years of hard work have passed and significant progress has been made. Though still incomplete and under development, OpenDominion is slowly gaining players, code contributions, and people on Discord (players, developers, and people otherwise interested in the project).
 
-As authors of the OpenDominion project, we'd like to personally invite **you** (yes you, you're reading this, after all) to join us in the journey if you're interested in the project! Which we assume you somewhat are, since you're reading this! 
+As authors of the OpenDominion project, we'd like to personally invite **you** (yes you, you're reading this, after all) to join us in the journey if you're interested in the project! Which we assume you somewhat are, since you're reading this!
 
 It doesn't matter if you're a Dominion veteran or if you're new, feel free to:
 
 - [Participate in the beta](#participate-in-the-beta)!
-- Join the [Discord](https://discord.gg/mFk2wZT) 
+- Join the [Discord](https://discord.gg/mFk2wZT)
 - Spread the word to those you know might be interested.
 - Praise the project by starring it on GitHub.
 
@@ -99,7 +99,7 @@ Most of the stuff that needs coding is domain logic, meaning you have to know th
 There's also some non-domain coding issues open from time to time. We'll try to label these as "[good first issue](https://github.com/WaveHack/OpenDominion/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22good+first+issue%22)". This mostly consists of refactoring and UI stuff, however. If you need more info or something, feel free to request more information on the issue. Or as always, poke us on Discord.
 
 ## Local development
- 
+
 ### Setting up
 
 ##### Tech stack
@@ -114,7 +114,7 @@ If you're going to use PhpStorm to tinker around in the code, there's a partiall
 
 - You have [Docker](https://www.docker.com/) installed and in your path.
 - You are on a *nix-like shell. On Windows I recommend [Git for Windows](https://gitforwindows.org/), since this process is untested on WSL is at time of updating this document.
-- You have a basic understanding of the [Laravel framework](https://laravel.com/docs). See sections [deviation from Laravel](#deviation-from-laravel) and [directory structure](#directory-structure) for the current architectural setup, which slightly differs from a traditional Laravel project. 
+- You have a basic understanding of the [Laravel framework](https://laravel.com/docs). See sections [deviation from Laravel](#deviation-from-laravel) and [directory structure](#directory-structure) for the current architectural setup, which slightly differs from a traditional Laravel project.
 
 Notes:
 - Previously the installation guide required things like PHP, Composer etc, Homestead, and also Sqlite support. These have all been deprecated in favor for a Dockerized approach.
@@ -151,7 +151,7 @@ First-time setup script:
 
 ```bash
 laradock@8ea9bd9c9c56:/var/www$ bin/03-setup.sh
-``` 
+```
 
 You're now done. Navigate to [localhost](http://localhost) and you should see the homepage of your local OpenDominion instance. You can login with the credentials provided to you after the last step.
 
@@ -159,7 +159,7 @@ If you want to tinker with stuff through the command-line with an interactive sh
 
 For more info about Artisan and Tinker, consult the [documentation](https://laravel.com/docs/5.8/artisan#introduction).
 
-**Note:** If you want to use an SMTP server like Mailtrap.io for testing emails, change the `MAIL_*` fields accordingly in `.env`. By default emails are logged in the Laravel log file at `storage/logs/laravel*.log`. 
+**Note:** If you want to use an SMTP server like Mailtrap.io for testing emails, change the `MAIL_*` fields accordingly in `.env`. By default emails are logged in the Laravel log file at `storage/logs/laravel*.log`.
 
 ### Directory structure
 
@@ -210,7 +210,7 @@ With that said, here are some things to keep in mind if you're used to the Larav
 
 - Source code is in `src` instead of `app`.
 - Config, database, resources and routes are in `app`.
-- As a result of this, the `$app` instance is our custom application class, residing at `src/Application.php`, to override all the paths that Laravel uses by default. 
+- As a result of this, the `$app` instance is our custom application class, residing at `src/Application.php`, to override all the paths that Laravel uses by default.
 
 This is experimental and is subject to change. Please keep an eye on the #dev-announcements channel in the Discord server.
 

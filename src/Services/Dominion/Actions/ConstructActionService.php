@@ -13,6 +13,10 @@ use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Traits\DominionGuardsTrait;
 
+# ODA
+use OpenDominion\Helpers\RaceHelper;
+use OpenDominion\Calculators\Dominion\SpellCalculator;
+
 class ConstructActionService
 {
     use DominionGuardsTrait;
@@ -32,6 +36,12 @@ class ConstructActionService
     /** @var QueueService */
     protected $queueService;
 
+    /** @var RaceHelper */
+    protected $raceHelper;
+
+    /** @var SpellCalculator */
+    protected $spellCalculator;
+
     /**
      * ConstructionActionService constructor.
      */
@@ -42,6 +52,8 @@ class ConstructActionService
         $this->landCalculator = app(LandCalculator::class);
         $this->landHelper = app(LandHelper::class);
         $this->queueService = app(QueueService::class);
+        $this->raceHelper = app(RaceHelper::class);
+        $this->spellCalculator = app(SpellCalculator::class);
     }
 
     /**
@@ -64,26 +76,31 @@ class ConstructActionService
 
         $totalBuildingsToConstruct = array_sum($data);
 
+        // Qur: Statis
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+            throw new GameException('You cannot build while you are in stasis.');
+        }
+
         if ($totalBuildingsToConstruct <= 0)
         {
             throw new GameException('Construction was not started due to bad input.');
         }
 
-
-        if ($dominion->race->getPerkValue('cannot_build') == 1)
+        if ($dominion->race->getPerkValue('cannot_construct') or $dominion->race->getPerkValue('cannot_build'))
         {
             throw new GameException('Your faction is unable to construct buildings.');
         }
 
-        $maxAfford = $this->constructionCalculator->getMaxAfford($dominion);
-
-        if ($totalBuildingsToConstruct > $maxAfford) {
-            throw new GameException("You do not have enough platinum and/or lumber to construct {$totalBuildingsToConstruct} buildings.");
+        if ($totalBuildingsToConstruct > $this->constructionCalculator->getMaxAfford($dominion))
+        {
+            throw new GameException('You do not have enough resources to construct ' . number_format($totalBuildingsToConstruct) . '  buildings.');
         }
 
         $buildingsByLandType = [];
 
-        foreach ($data as $buildingType => $amount) {
+        foreach ($data as $buildingType => $amount)
+        {
             if ($amount === 0) {
                 continue;
             }
@@ -104,88 +121,108 @@ class ConstructActionService
             $buildingsByLandType[$landType] += $amount;
         }
 
-        foreach ($buildingsByLandType as $landType => $amount) {
+        # Get construction materials
+        $constructionMaterials = $this->raceHelper->getConstructionMaterials($dominion->race);
+
+        $primaryResource = null;
+        $secondaryResource = null;
+
+        if(isset($constructionMaterials[0]))
+        {
+            $primaryResource = $constructionMaterials[0];
+        }
+        if(isset($constructionMaterials[1]))
+        {
+            $secondaryResource = $constructionMaterials[1];
+        }
+
+        foreach ($buildingsByLandType as $landType => $amount)
+        {
+
             if ($amount > $this->landCalculator->getTotalBarrenLandByLandType($dominion, $landType))
             {
                 throw new GameException("You do not have enough barren land to construct {$totalBuildingsToConstruct} buildings.");
             }
-        }
 
+            $primaryCost = $this->constructionCalculator->getConstructionCostPrimary($dominion);# * $totalBuildingsToConstruct;
+            $secondaryCost = $this->constructionCalculator->getConstructionCostSecondary($dominion);# * $totalBuildingsToConstruct;
 
-        $platinumCost = $this->constructionCalculator->getTotalPlatinumCost($dominion, $totalBuildingsToConstruct);
-        $lumberCost = $this->constructionCalculator->getTotalLumberCost($dominion, $totalBuildingsToConstruct);
-        $manaCost = $this->constructionCalculator->getTotalManaCost($dominion, $totalBuildingsToConstruct);
-        $foodCost = $this->constructionCalculator->getTotalFoodCost($dominion, $totalBuildingsToConstruct);
-
-        DB::transaction(function () use ($dominion, $data, $platinumCost, $lumberCost, $manaCost, $foodCost, $totalBuildingsToConstruct) {
-            $hours = 12;
-            # Gnome: increased construction speed
-            if($dominion->race->getPerkValue('increased_construction_speed'))
+            if($landConstructionCostPerk = $dominion->race->getPerkMultiplier($landType.'_construction_cost'))
             {
-              $hours = 12 - $dominion->race->getPerkValue('increased_construction_speed');
+                $primaryCost *= (1 + $landConstructionCostPerk);
+                $secondaryCost *=  (1 + $landConstructionCostPerk);
             }
 
-            $this->queueService->queueResources('construction', $dominion, $data, $hours);
+            $primaryCostPerLandType[$landType] = $amount * $primaryCost;
+            $secondaryCostPerLandType[$landType] = $amount * $secondaryCost;
+        }
 
+        $primaryCostTotal = array_sum($primaryCostPerLandType);
+        $secondaryCostTotal = array_sum($secondaryCostPerLandType);
+
+        #dd($primaryCostPerLandType, $secondaryCostPerLandType);
+
+        DB::transaction(function () use ($dominion, $data, $primaryCostTotal, $secondaryCostTotal, $primaryResource, $secondaryResource, $totalBuildingsToConstruct)
+        {
+            $ticks = 12;
+
+            $ticks = 12 - $dominion->race->getPerkValue('increased_construction_speed');
+
+            $this->queueService->queueResources('construction', $dominion, $data, $ticks);
+
+            $dominion->{'resource_'.$primaryResource} -= $primaryCostTotal;
+            $dominion->{'stat_total_' . $primaryResource . '_spent_building'} += $primaryCostTotal;
+
+            if(isset($secondaryResource))
+            {
+                $dominion->{'resource_'.$secondaryResource} -= $secondaryCostTotal;
+                $dominion->{'stat_total_' . $secondaryResource . '_spent_building'} += $secondaryCostTotal;
+            }
+
+            $dominion->save(['event' => HistoryService::EVENT_ACTION_CONSTRUCT]);
+/*
             $dominion->fill([
-                'resource_platinum' => ($dominion->resource_platinum - $platinumCost),
-                'resource_lumber' => ($dominion->resource_lumber - $lumberCost),
-                'resource_mana' => ($dominion->resource_mana - $manaCost),
-                'resource_food' => ($dominion->resource_food - $foodCost),
-                'discounted_land' => max(0, $dominion->discounted_land - $totalBuildingsToConstruct),
+                {'resource_'.$primaryResource} => ($dominion->{'resource_'.$primaryResource} - $primaryCost),
+                {'resource_'.$secondaryResource} => ($dominion->{'resource_'.$secondaryResource} - $secondaryCost),
+
+                {'stat_total_' . $primaryResource . '_spent_building'} => ($dominion->{'stat_total_' . $primaryResource . '_spent_building'} + $primaryCost),
+                {'stat_total_' . $secondaryResource . '_spent_building'} => ($dominion->{'stat_total_' . $secondaryResource . '_spent_building'} + $secondaryCost),
+
+
             ])->save(['event' => HistoryService::EVENT_ACTION_CONSTRUCT]);
+*/
         });
 
-        if($platinumCost > 0 and $lumberCost > 0)
+        if(isset($secondaryResource))
         {
-          $return = [
-              'message' => sprintf(
-                  'Construction started at a cost of %s platinum and %s lumber.',
-                  number_format($platinumCost),
-                  number_format($lumberCost)
-              ),
-              'data' => [
-                  'platinumCost' => $platinumCost,
-                  'lumberCost' => $lumberCost,
-              ],
-          ];
+            $return = [
+                'message' => sprintf(
+                    'Construction started at a cost of %s %s and %s %s.',
+                    number_format($primaryCostTotal),
+                    $primaryResource,
+                    number_format($secondaryCostTotal),
+                    $secondaryResource
+                ),
+                'data' => [
+                    'primaryCost' => $primaryCostTotal,
+                    'secondaryCost' => $secondaryCostTotal,
+                ]
+            ];
         }
-        elseif($platinumCost > 0)
+        else
         {
-          $return = [
-              'message' => sprintf(
-                  'Construction started at a cost of %s platinum.',
-                  number_format($platinumCost)
-              ),
-              'data' => [
-                  'platinumCost' => $platinumCost
-              ],
-          ];
+            $return = [
+                'message' => sprintf(
+                    'Construction started at a cost of %s %s.',
+                    number_format($primaryCostTotal),
+                    $primaryResource
+                ),
+                'data' => [
+                    'primaryCost' => $primaryCostTotal
+                ]
+            ];
         }
-        elseif($manaCost > 0)
-        {
-          $return = [
-              'message' => sprintf(
-                  'Conjuring of buildings started at a cost of %s mana.',
-                  number_format($manaCost)
-              ),
-              'data' => [
-                  'platinumCost' => $manaCost
-              ],
-          ];
-        }
-        elseif($foodCost > 0)
-        {
-          $return = [
-              'message' => sprintf(
-                  'Growth of building started at a cost of %s food.',
-                  number_format($foodCost)
-              ),
-              'data' => [
-                  'platinumCost' => $foodCost
-              ],
-          ];
-        }
+
         return $return;
     }
 }

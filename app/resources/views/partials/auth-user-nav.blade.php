@@ -15,13 +15,10 @@
             </li>
             <li class="user-body">
                 <div class="row">
-                    <div class="col-xs-4 text-center">
-                        <span class="nyi">Profile</span>
-                    </div>
-                    <div class="col-xs-4 text-center">
+                    <div class="col-xs-6 text-center">
                         <a href="{{ route('dashboard') }}">Dashboard</a>
                     </div>
-                    <div class="col-xs-4 text-center">
+                    <div class="col-xs-6 text-center">
                         <a href="{{ route('settings') }}">Settings</a>
                     </div>
                 </div>

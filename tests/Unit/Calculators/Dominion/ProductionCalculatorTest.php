@@ -6,17 +6,17 @@ use OpenDominion\Tests\AbstractBrowserKitTestCase;
 
 class ProductionCalculatorTest extends AbstractBrowserKitTestCase
 {
-    public function testGetPlatinumProduction()
+    public function testGetGoldProduction()
     {
         $this->markTestIncomplete();
     }
 
-    public function testGetPlatinumProductionRaw()
+    public function testGetGoldProductionRaw()
     {
         $this->markTestIncomplete();
     }
 
-    public function testGetPlatinumProductionMultiplier()
+    public function testGetGoldProductionMultiplier()
     {
         $this->markTestIncomplete();
     }

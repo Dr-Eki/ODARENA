@@ -14,6 +14,11 @@ use OpenDominion\Services\Dominion\ProtectionService;
 
 # ODA
 use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\RealmCalculator;
+use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Helpers\LandHelper;
+use OpenDominion\Services\Dominion\BarbarianService;
+use Illuminate\Support\Carbon;
 
 class RealmController extends AbstractDominionController
 {
@@ -24,7 +29,10 @@ class RealmController extends AbstractDominionController
         $protectionService = app(ProtectionService::class);
         $guardMembershipService = app(GuardMembershipService::class);
         $spellCalculator = app(SpellCalculator::class);
-        #$militaryCalculator = app(MilitaryCalculator::class);
+        $realmCalculator = app(RealmCalculator::class);
+        $militaryCalculator = app(MilitaryCalculator::class);
+        $landHelper = app(LandHelper::class);
+        $barbarianService = app(BarbarianService::class);
 
         $dominion = $this->getSelectedDominion();
         $round = $dominion->round;
@@ -82,6 +90,62 @@ class RealmController extends AbstractDominionController
             })
             ->flatten();
 
+        $realmDominionsStats = [
+            'victories' => 0,
+            'total_land_conquered' => 0,
+            'total_land_explored' => 0,
+            'total_land_discovered' => 0,
+            'total_land_lost' => 0,
+            'prestige' => 0,
+          ];
+
+        foreach($dominions as $dominion)
+        {
+            $realmDominionsStats['victories'] += $dominion->stat_attacking_success;
+            $realmDominionsStats['total_land_conquered'] += $dominion->stat_total_land_conquered;
+            $realmDominionsStats['total_land_explored'] += $dominion->stat_total_land_explored;
+            $realmDominionsStats['total_land_discovered'] += $dominion->stat_total_land_discovered;
+            $realmDominionsStats['total_land_lost'] += $dominion->stat_total_land_lost;
+            $realmDominionsStats['prestige'] += $dominion->prestige;
+
+            foreach($landHelper->getLandTypes() as $landType)
+            {
+                if(isset($realmDominionsStats[$landType]))
+                {
+                    $realmDominionsStats[$landType] += $dominion->{'land_'.$landType};
+                }
+                else
+                {
+                    $realmDominionsStats[$landType] = $dominion->{'land_'.$landType};
+                }
+            }
+        }
+
+        $barbarianSettings = [];
+        $hoursIntoTheRound = now()->startOfHour()->diffInHours(Carbon::parse($dominion->round->start_date)->startOfHour());
+
+        if($realm->alignment == 'good')
+        {
+            $alignmentNoun = 'Commonwealth';
+            $alignmentAdjective = 'Commonwealth';
+        }
+        elseif($realm->alignment == 'evil')
+        {
+            $alignmentNoun = 'Empire';
+            $alignmentAdjective = 'Imperial';
+        }
+        elseif($realm->alignment == 'independent')
+        {
+            $alignmentNoun = 'Independent';
+            $alignmentAdjective = 'Independent';
+        }
+        elseif($realm->alignment == 'npc')
+        {
+            $alignmentNoun = 'Barbarian';
+            $alignmentAdjective = 'Barbarian';
+            $barbarianSettings = $barbarianService->getSettings();
+        }
+
         // Todo: refactor this hacky hacky navigation stuff
         $prevRealm = DB::table('realms')
             ->where('round_id', $round->id)
@@ -115,7 +179,15 @@ class RealmController extends AbstractDominionController
             'realmCount',
 
             # ODA
-            'spellCalculator'
+            'spellCalculator',
+            'realmDominionsStats',
+            'realmCalculator',
+            'militaryCalculator',
+            'landHelper',
+            'alignmentNoun',
+            'alignmentAdjective',
+            'barbarianSettings',
+            'hoursIntoTheRound'
         ));
     }
 

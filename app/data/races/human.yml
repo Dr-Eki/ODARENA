@@ -1,48 +1,82 @@
 name: Human
 alignment: good
 description: >-
-  <p>While humans can be found in many factions from the Sacred Order to the Templars, to Nomads and Dimensionalists, the vast majority still live under the same banner and work as one.</p>
-  <p>Humans are generally proficient in everything they set their mind to, though they are masters of no single discipline.</p>
+  <p>With their spell, Human can achieve unit training cost reduction greater than 50% (up to 60%).</p>
 home_land_type: plain
 playable: 1
 
 attacking: 3
 exploring : 3
 converting: 3
+skill_level: 1
+
+construction_materials: gold,lumber
 
 perks:
   food_production: 15
   research_points_per_acre: 100
+  salvaging: 75
+  construction_cost: -20
+  rezone_cost: -20
+  increased_construction_speed: 4
+  prestige_gains: 30
+
 units:
-  - name: Spearman
+  - name: Man-at-Arms
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 275
-      ore: 25
+      gold: 365
+      ore: 20
     power:
-      offense: 3
+      offense: 4
       defense: 0
+    perks:
+      faster_return: 3
+
   - name: Archer
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 275
-      ore: 15
+      gold: 365
+      lumber: 20
     power:
       offense: 0
-      defense: 3
-  - name: Knight
+      defense: 4
+
+  - name: Spearman
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
-      ore: 75
+      gold: 800
+      ore: 80
     power:
-      offense: 3
+      offense: 0
       defense: 7
     perks:
       fewer_casualties: 25
-  - name: Cavalry
+
+  - name: Knight
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1250
+      gold: 1250
       ore: 100
     power:
-      offense: 7
-      defense: 3
+      offense: 8
+      defense: 4
     perks:
       faster_return: 3
+      plunders: gold;0.75,gems;0.25

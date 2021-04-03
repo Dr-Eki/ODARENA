@@ -1,52 +1,73 @@
 name: Gnome
 alignment: good
-description: >-
-  <p>These ingenious little people are the masters of invention and tinkering technology.</p>
-  <p>Although slow and expensive due their metallic augments, their powerful machinery can turn the tide of battles in the late game.</p>
-  <hr />
-  <p>Gnomes finish buildings in nine ticks, instead of the normal twelve.</p>
+description:
 home_land_type: mountain
 playable: 1
 
-attacking: 2
+attacking: 1
 exploring : 3
 converting: 3
+skill_level: 2
+
+construction_materials: gold,ore
 
 perks:
-  extra_barren_max_population: 5
   food_consumption: -25
-  gem_production: 10
-  increased_construction_speed: 3
+  construction_cost: -25
+  increased_construction_speed: 6
+  salvaging: 50
 units:
-  - name: Suicide Squad
+  - name: Mortar
+
+    training_time: 12
+    type:
+      - machine
     cost:
-      platinum: 200
-      ore: 50
+      gold: 100
+      ore: 200
     power:
-      offense: 4
+      offense: 6
       defense: 0
     perks:
-      fixed_casualties: 50
-  - name: Tinker
+      faster_return: 8
+
+  - name: Oreguard
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 300
-      ore: 5
-    power:
-      offense: 0
-      defense: 3
-  - name: Rockapult
-    cost:
-      platinum: 700
+      gold: 50
       ore: 300
     power:
-      offense: 3
-      defense: 4
-    perks:
-      defense_from_land: mountain,20,5 # land type, ratio%, max
-  - name: Juggernaut
+      offense: 0
+      defense: 6
+
+  - name: Automaton
+    training_time: 12
+    type:
+      - machine
     cost:
-      platinum: 800
-      ore: 500
+      gold: 2000
+      ore: 2000
     power:
-      offense: 8
-      defense: 4
+      offense: 0
+      defense: 0
+    perks:
+      defense_from_advancements: anvils_level8;2,architecture_level8;2,minting_level8;2,drills_level8;2,fortifications_level8;2,gemcutting_level8;2,infrastructure_level8;2,quarries_level8;2,strategy_level8;2,tactics_level8;2
+
+  - name: Juggernaut
+    training_time: 12
+    type:
+      - machine
+    cost:
+      gold: 2000
+      ore: 2000
+    power:
+      offense: 0
+      defense: 0
+    perks:
+      offense_from_advancements: anvils_level8;2,architecture_level8;2,minting_level8;2,drills_level8;2,fortifications_level8;2,gemcutting_level8;2,infrastructure_level8;2,quarries_level8;2,strategy_level8;2,tactics_level8;2
+      defense_from_advancements: anvils_level8;1,architecture_level8;1,minting_level8;1,drills_level8;1,fortifications_level8;1,gemcutting_level8;1,infrastructure_level8;1,quarries_level8;1,strategy_level8;1,tactics_level8;1
+      sendable_with_zero_op: 1

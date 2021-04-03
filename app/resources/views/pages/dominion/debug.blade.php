@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
+{{--
 @section('page-header', 'Super Secret Debug Page™')
+--}}
 
 @section('content')
     <div class="alert alert-danger">
@@ -134,9 +136,9 @@
                 <div class="box-body">
                     <p>
                         {!! \OpenDominion\Http\Controllers\DebugController::printMethodValues($productionCalculator, [
-                            'getPlatinumProduction',
-                            'getPlatinumProductionRaw',
-                            'getPlatinumProductionMultiplier',
+                            'getGoldProduction',
+                            'getGoldProductionRaw',
+                            'getGoldProductionMultiplier',
                             'getFoodProduction',
                             'getFoodProductionRaw',
                             'getFoodProductionMultiplier',
@@ -190,9 +192,9 @@
                 <div class="box-body">
                     <p>
                         {!! \OpenDominion\Http\Controllers\DebugController::printMethodValues($constructionCalculator, [
-                            'getPlatinumCost',
-                            'getPlatinumCostRaw',
-                            'getPlatinumCostMultiplier',
+                            'getGoldCost',
+                            'getGoldCostRaw',
+                            'getGoldCostMultiplier',
                             'getLumberCost',
                             'getLumberCostRaw',
                             'getLumberCostMultiplier',
@@ -210,7 +212,7 @@
                 <div class="box-body">
                     <p>
                         {!! \OpenDominion\Http\Controllers\DebugController::printMethodValues($explorationCalculator, [
-                            'getPlatinumCost',
+                            'getGoldCost',
                             'getDrafteeCost',
                             'getMaxAfford',
                         ]) !!}
@@ -225,7 +227,7 @@
                 <div class="box-body">
                     <p>
                         {!! \OpenDominion\Http\Controllers\DebugController::printMethodValues($rezoningCalculator, [
-                            'getPlatinumCost',
+                            'getGoldCost',
                             'getMaxAfford',
                             'getCostMultiplier',
                         ]) !!}
@@ -242,7 +244,7 @@
                         {!! \OpenDominion\Http\Controllers\DebugController::printMethodValues($trainingCalculator, [
                             'getTrainingCostsPerUnit',
                             'getMaxTrainable',
-                            #'getSpecialistEliteCostMultiplier',
+                            'getSpecialistEliteCostMultiplier',
                             'getWizardCostMultiplier',
                         ]) !!}
                     </p>
@@ -257,13 +259,9 @@
                     <p>
                         {!! \OpenDominion\Http\Controllers\DebugController::printMethodValues($guardMembershipService, [
                             'canJoinGuards',
-                            'isRoyalGuardApplicant',
                             'isEliteGuardApplicant',
-                            'isRoyalGuardMember',
                             'isEliteGuardMember',
-                            'getHoursBeforeRoyalGuardMember',
                             'getHoursBeforeEliteGuardMember',
-                            'getHoursBeforeLeaveRoyalGuard',
                             'getHoursBeforeLeaveEliteGuard',
                         ]) !!}
                     </p>

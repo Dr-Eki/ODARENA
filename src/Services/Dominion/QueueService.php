@@ -47,7 +47,8 @@ class QueueService
     public function getQueue(string $source, Dominion $dominion): Collection
     {
         $hours = 0;
-        if ($this->forTick) {
+        if ($this->forTick)
+        {
             // don't include next hour when calculating tick
             $hours = 1;
         }
@@ -68,7 +69,8 @@ class QueueService
     public function getQueueAmount(string $source, Dominion $dominion, string $resource, int $hour): int
     {
         return $this->getQueue($source, $dominion)
-                ->filter(static function ($row) use ($resource, $hour) {
+                ->filter(static function ($row) use ($resource, $hour)
+                {
                     return (
                         ($row->resource === $resource) &&
                         ($row->hours === $hour)
@@ -109,6 +111,7 @@ class QueueService
 
     public function dequeueResource(string $source, Dominion $dominion, string $resource, int $amount): void
     {
+
         $queue = $this->getQueue($source, $dominion)
             ->filter(static function ($row) use ($resource) {
                 return ($row->resource === $resource);
@@ -116,7 +119,57 @@ class QueueService
 
         $leftToDequeue = $amount;
 
-        foreach ($queue as $value) {
+        foreach ($queue as $value)
+        {
+            $amountEnqueued = $value->amount;
+            $amountDequeued = $leftToDequeue;
+
+            if($amountEnqueued < $leftToDequeue)
+            {
+                $amountDequeued = $amountEnqueued;
+            }
+
+            $leftToDequeue -= $amountDequeued;
+            $newAmount = $amountEnqueued - $amountDequeued;
+
+            if($newAmount == 0)
+            {
+                DB::table('dominion_queue')->where([
+                    'dominion_id' => $dominion->id,
+                    'source' => $source,
+                    'resource' => $resource,
+                    'hours' => $value->hours,
+                ])->delete();
+            }
+            else
+            {
+                DB::table('dominion_queue')->where([
+                    'dominion_id' => $dominion->id,
+                    'source' => $source,
+                    'resource' => $resource,
+                    'hours' => $value->hours,
+                ])->update([
+                    'amount' => $newAmount,
+                ]);
+            }
+        }
+    }
+
+    public function dequeueResourceForHour(string $source, Dominion $dominion, string $resource, int $amount, int $hour): void
+    {
+
+        $queue = $this->getQueue($source, $dominion)
+            ->filter(static function ($row) use ($resource, $hour) {
+                return (
+                    $row->resource === $resource and
+                    $row->hours === $hour
+                  );
+            });
+
+        $leftToDequeue = $amount;
+
+        foreach ($queue as $value)
+        {
             $amountEnqueued = $value->amount;
             $amountDequeued = $leftToDequeue;
 
@@ -127,19 +180,22 @@ class QueueService
             $leftToDequeue -= $amountDequeued;
             $newAmount = $amountEnqueued - $amountDequeued;
 
-            if($newAmount == 0) {
+            if($newAmount == 0)
+            {
                 DB::table('dominion_queue')->where([
                     'dominion_id' => $dominion->id,
                     'source' => $source,
                     'resource' => $resource,
-                    'hours' => $value->hours,
+                    'hours' => $hour,
                 ])->delete();
-            } else {
+            }
+            else
+            {
                 DB::table('dominion_queue')->where([
                     'dominion_id' => $dominion->id,
                     'source' => $source,
                     'resource' => $resource,
-                    'hours' => $value->hours,
+                    'hours' => $hour,
                 ])->update([
                     'amount' => $newAmount,
                 ]);
@@ -157,45 +213,43 @@ class QueueService
      */
     public function queueResources(string $source, Dominion $dominion, array $data, int $hours = 12): void
     {
-        DB::transaction(function () use ($source, $dominion, $data, $hours) {
-            $data = array_map('\intval', $data);
-            $now = now();
+        $data = array_map('\intval', $data);
+        $now = now();
 
-            foreach ($data as $resource => $amount) {
-                if ($amount === 0) {
-                    continue;
-                }
-                $q = $this->getQueue($source, $dominion);
-                $existingQueueRow =
-                    $q->filter(static function ($row) use ($resource, $hours) {
-                        return (
-                            ($row->resource === $resource) &&
-                            ((int)$row->hours === $hours)
-                        );
-                    })->first();
-
-                if ($existingQueueRow === null) {
-                    DB::table('dominion_queue')->insert([
-                        'dominion_id' => $dominion->id,
-                        'source' => $source,
-                        'resource' => $resource,
-                        'hours' => $hours,
-                        'amount' => $amount,
-                        'created_at' => $now,
-                    ]);
-
-                } else {
-                    DB::table('dominion_queue')->where([
-                        'dominion_id' => $dominion->id,
-                        'source' => $source,
-                        'resource' => $resource,
-                        'hours' => $hours,
-                    ])->update([
-                        'amount' => ($existingQueueRow->amount + $amount),
-                    ]);
-                }
+        foreach ($data as $resource => $amount) {
+            if ($amount === 0) {
+                continue;
             }
-        }, 5);
+            $q = $this->getQueue($source, $dominion);
+            $existingQueueRow =
+                $q->filter(static function ($row) use ($resource, $hours) {
+                    return (
+                        ($row->resource === $resource) &&
+                        ((int)$row->hours === $hours)
+                    );
+                })->first();
+
+            if ($existingQueueRow === null) {
+                DB::table('dominion_queue')->insert([
+                    'dominion_id' => $dominion->id,
+                    'source' => $source,
+                    'resource' => $resource,
+                    'hours' => $hours,
+                    'amount' => $amount,
+                    'created_at' => $now,
+                ]);
+
+            } else {
+                DB::table('dominion_queue')->where([
+                    'dominion_id' => $dominion->id,
+                    'source' => $source,
+                    'resource' => $resource,
+                    'hours' => $hours,
+                ])->update([
+                    'amount' => DB::raw("amount + $amount"),
+                ]);
+            }
+        }
     }
 
     /**

@@ -1,46 +1,62 @@
 name: Sacred Order
 alignment: good
-description: >-
-  <p>The Sacred Order was created by Humans who felt that Crusades should be lifelong struggles to reach the Divines.</p>
-  <p>Monks are responsible for providing stable defenses, while Fanatics are seen both defending the holy land and conquering more, strengthened by Temples to the Divines.</p>
-  <p>Fanatics can convert some enemy soldiers into Martyrs, which join the infantry alongside the mighty Holy Warriors and Fanatics, which are elite Monks.</p>
+description:
 home_land_type: plain
 playable: 1
 
 attacking: 3
-exploring : 2
-converting: 2
+exploring : 1
+converting: 1
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   food_production: 5
-  max_population: 5
+  max_population: 25
   prestige_gains: 10
+  salvaging: 15
 units:
   - name: Martyr
+    type:
+      - living
+      - mindless
     cost:
-      platinum: 0
+      gold: 0
       ore: 0
     power:
       offense: 15
       defense: 0
     perks:
       fixed_casualties: 100
+      housing_count: 0.25
       cannot_be_trained: 1
+
   - name: Monk
+    training_time: 1
+    type:
+      - living
+      - sentient
+      - intelligent
     static_networth: 3
     cost:
-      platinum: 0
+      gold: 0
       ore: 0
     power:
       offense: 0
       defense: 1
     perks:
-        reduce_combat_losses: 1
+        reduces_casualties: 1
         tech_production: 0.03
-        faster_training: 7
+
   - name: Fanatic
+    training_time: 10
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 800
+      gold: 800
       ore: 75
       unit2: 1
     power:
@@ -50,10 +66,18 @@ units:
       no_draftee: 1
       offense_from_building: temple,5,2 # building type, ratio%, max
       defense_from_building: temple,5,2 # building type, ratio%, max
-      conversion: 1
-  - name: Holy Warrior
+      displaced_peasants_conversion: 1
+      casualties_conversion: 1
+
+  - name: Paladin
+    training_time: 10
+    type:
+      - living
+      - sentient
+      - intelligent
+      - legendary
     cost:
-      platinum: 1400
+      gold: 1250
       ore: 80
       unit2: 1
     power:
@@ -63,4 +87,5 @@ units:
       no_draftee: 1
       offense_from_building: shrine,5,2 # building type, ratio%, max
       defense_from_building: shrine,10,1 # building type, ratio%, max
-      conversion: 1
+      displaced_peasants_conversion: 1
+      casualties_conversion: 1

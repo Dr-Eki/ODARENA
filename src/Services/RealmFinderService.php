@@ -37,7 +37,7 @@ class RealmFinderService
             ->where([
                 'realms.round_id' => $round->id
             ]);
-
+/*
           if($race->alignment == 'independent')
           {
             if(rand(1,2) == 1)
@@ -53,6 +53,9 @@ class RealmFinderService
           {
             $alignment = $race->alignment;
           }
+*/
+
+        $alignment = $race->alignment;
 
         if (!$round->mixed_alignment)
         {

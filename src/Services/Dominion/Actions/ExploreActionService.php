@@ -16,6 +16,7 @@ use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Services\Dominion\ProtectionService;
+use OpenDominion\Services\Dominion\GuardMembershipService;
 
 class ExploreActionService
 {
@@ -43,6 +44,9 @@ class ExploreActionService
     /** @var ProtectionService */
     protected $protectionService;
 
+    /** @var GuardMembershipService */
+    protected $guardMembershipService;
+
     /**
      * @var int The minimum morale required to explore
      */
@@ -55,7 +59,8 @@ class ExploreActionService
           ImprovementCalculator $improvementCalculator,
           SpellCalculator $spellCalculator,
           LandCalculator $landCalculator,
-          ProtectionService $protectionService
+          ProtectionService $protectionService,
+          GuardMembershipService $guardMembershipService
       )
     {
         $this->explorationCalculator = app(ExplorationCalculator::class);
@@ -65,6 +70,7 @@ class ExploreActionService
         $this->improvementCalculator = $improvementCalculator;
         $this->landCalculator = $landCalculator;
         $this->protectionService = $protectionService;
+        $this->guardMembershipService = $guardMembershipService;
     }
 
     /**
@@ -79,20 +85,20 @@ class ExploreActionService
     {
         $this->guardLockedDominion($dominion);
 
-
-        if(!$dominion->round->isExploringAllowed())
+        if ($this->guardMembershipService->isEliteGuardMember($dominion))
         {
-            throw new GameException('Exploration has been disabled for this round.');
-        }
-
-        if ($this->protectionService->isUnderProtection($dominion))
-        {
-            throw new GameException('You cannot explore while under protection.');
+            throw new GameException('As a member of the Warriors League, you cannot explore.');
         }
 
         if($dominion->round->hasOffensiveActionsDisabled())
         {
             throw new GameException('Exploration has been disabled for the remainder of the round.');
+        }
+
+        // Qur: Statis
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+            throw new GameException('You cannot explore while you are in stasis.');
         }
 
         $data = array_only($data, array_map(function ($value) {
@@ -120,7 +126,7 @@ class ExploreActionService
 
         if ($totalLandToExplore > $this->explorationCalculator->getMaxAfford($dominion))
         {
-            throw new GameException('You do not have enough platinum and/or draftees to explore for ' . number_format($totalLandToExplore) . ' acres.');
+            throw new GameException('You do not have enough gold and/or draftees to explore for ' . number_format($totalLandToExplore) . ' acres.');
         }
 
         $maxAllowed = $this->landCalculator->getTotalLand($dominion) * 1.5;
@@ -136,6 +142,11 @@ class ExploreActionService
             throw new GameException('You cannot explore during Rainy Season.');
         }
 
+        if($dominion->getSpellPerkMultiplier('cannot_explore'))
+        {
+              throw new GameException('A spell is preventing you from exploring.');
+        }
+
         if ($dominion->morale <= static::MIN_MORALE)
         {
             throw new GameException('You do not have enough morale to explore.');
@@ -147,56 +158,57 @@ class ExploreActionService
             throw new GameException('Exploring that much land would lower your morale by ' . $moraleDrop . '%. You currently have ' . $dominion->morale . '% morale.');
         }
 
-        // todo: refactor. see training action service. same with other action services
-        #$newMorale = max(0, ($dominion->morale - $this->explorationCalculator->getMoraleDrop($totalLandToExplore)));
-        #$moraleDrop = ($dominion->morale - $newMorale);
-
         $newMorale = $dominion->morale - $moraleDrop;
 
-        $platinumCost = ($this->explorationCalculator->getPlatinumCost($dominion) * $totalLandToExplore);
-        $newPlatinum = ($dominion->resource_platinum - $platinumCost);
+        $goldCost = ($this->explorationCalculator->getGoldCost($dominion) * $totalLandToExplore);
+        $newGold = ($dominion->resource_gold - $goldCost);
 
         $drafteeCost = ($this->explorationCalculator->getDrafteeCost($dominion) * $totalLandToExplore);
         $newDraftees = ($dominion->military_draftees - $drafteeCost);
 
-        if($dominion->race->getPerkValue('cannot_tech'))
-        {
-          $researchPointsPerAcre = 0;
-        }
-        else
-        {
-          $researchPointsPerAcre = 10;
-        }
+        $researchPointsPerAcre = 10;
 
         # Observatory
         $researchPointsPerAcreMultiplier = $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'observatory');
         $researchPointsPerAcre *= (1 + $researchPointsPerAcreMultiplier);
         $researchPointsGained = $researchPointsPerAcre * $totalLandToExplore;
 
-        DB::transaction(function () use ($dominion, $data, $newMorale, $newPlatinum, $newDraftees, $totalLandToExplore, $researchPointsGained) {
-            $this->queueService->queueResources('exploration', $dominion, $data);
-            $this->queueService->queueResources('exploration',$dominion,['resource_tech' => $researchPointsGained]);
+        # Pathfinder
+        $ticks = $this->explorationCalculator->getExploreTime($dominion);
+
+        DB::transaction(function () use ($dominion, $data, $newMorale, $newGold, $newDraftees, $totalLandToExplore, $researchPointsGained, $goldCost, $ticks) {
+            $this->queueService->queueResources('exploration', $dominion, $data, $ticks);
+            $this->queueService->queueResources('exploration',$dominion,['resource_tech' => $researchPointsGained], $ticks);
 
 
             $dominion->stat_total_land_explored += $totalLandToExplore;
             $dominion->fill([
                 'morale' => $newMorale,
-                'resource_platinum' => $newPlatinum,
+                'resource_gold' => $newGold,
                 'military_draftees' => $newDraftees,
+
+                'stat_total_gold_spent_exploring' => ($dominion->stat_total_gold_spent_exploring + $goldCost),
+                'stat_total_food_spent_exploring' => ($dominion->stat_total_food_spent_exploring + 0),
+                'stat_total_lumber_spent_exploring' => ($dominion->stat_total_lumber_spent_exploring + 0),
+                'stat_total_mana_spent_exploring' => ($dominion->stat_total_mana_spent_exploring + 0),
+
+                'stat_total_ore_spent_exploring' => ($dominion->stat_total_ore_spent_exploring + 0),
+                'stat_total_gem_spent_exploring' => ($dominion->stat_total_gem_spent_exploring + 0),
+
             ])->save(['event' => HistoryService::EVENT_ACTION_EXPLORE]);
         });
 
         return [
             'message' => sprintf(
-                'Exploration begun at a cost of %s platinum and %s %s. When exploration is completed, you will earn %s experience points. Your orders for exploration disheartens the military, and morale drops by %d%%.',
-                number_format($platinumCost),
+                'Exploration begun at a cost of %s gold and %s %s. When exploration is completed, you will earn %s experience points. Your orders for exploration disheartens the military, and morale drops by %d%%.',
+                number_format($goldCost),
                 number_format($drafteeCost),
                 str_plural('draftee', $drafteeCost),
                 number_format($researchPointsGained),
                 $moraleDrop
             ),
             'data' => [
-                'platinumCost' => $platinumCost,
+                'goldCost' => $goldCost,
                 'drafteeCost' => $drafteeCost,
                 'moraleDrop' => $moraleDrop,
             ]

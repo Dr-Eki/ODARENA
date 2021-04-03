@@ -1,50 +1,82 @@
 name: Nomad
 alignment: evil
-description: >-
-  <p>Forever wandering the plains, Nomads are Humans who have rejected sedentary culture.</p>
-  <p>Very similar to the Human armies they have since long rejected, except for the masterful Horse Archers.</p>
+description:
 home_land_type: plain
 playable: 1
 
 attacking: 3
 exploring : 3
 converting: 3
+skill_level: 1
+
+construction_materials: gold,lumber
 
 perks:
   food_consumption: -15
-  extra_barren_max_population: 5
-  construction_cost: -25
+  extra_barren_max_population: 25
+  construction_cost: 15
+  increased_construction_speed: 2
+  salvaging: 65
+  offense_from_barren: 1 # Gets 1% OP bonus from every 1% barren
 units:
-  - name: Fighter
+  - name: Light Cavalry
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 280
-      ore: 25
+      gold: 300
+      ore: 15
     power:
       offense: 3
       defense: 0
-  - name: Kharash
+    perks:
+      faster_return: 3
+      fewer_casualties: 25
+      plunders: gold;2,gems;0.1
+
+  - name: Sabrer
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 280
-      ore: 15
+      gold: 275
+      ore: 35
     power:
       offense: 0
       defense: 3
-    perks:
-      reduce_combat_losses: 1
-  - name: Kheshig
+
+  - name: Halberdier
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1050
-      ore: 75
-    power:
-      offense: 3
-      defense: 7
-  - name: Horse Archer
-    cost:
-      platinum: 1275
+      gold: 900
       ore: 100
+    power:
+      offense: 0
+      defense: 7
+    perks:
+      increases_casualties_on_defense: 1
+
+  - name: Horse Archer
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 1200
+      ore: 50
     power:
       offense: 8
       defense: 3
     perks:
       faster_return: 3
-      fewer_casualties: 50
+      fewer_casualties_offense: 50
+      plunders: gold;1,gems;0.25,ore;0.5

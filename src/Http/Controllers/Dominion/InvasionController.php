@@ -15,6 +15,12 @@ use OpenDominion\Services\Dominion\ProtectionService;
 
 # ODA
 use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\NetworthCalculator;
+use OpenDominion\Calculators\Dominion\PrestigeCalculator;
+use OpenDominion\Calculators\Dominion\ImprovementCalculator;
+use OpenDominion\Services\Dominion\Actions\SendUnitsActionService;
+use OpenDominion\Helpers\RaceHelper;
+use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
 
 class InvasionController extends AbstractDominionController
 {
@@ -30,6 +36,11 @@ class InvasionController extends AbstractDominionController
 
             # ODA
             'spellCalculator' => app(SpellCalculator::class),
+            'networthCalculator' => app(NetworthCalculator::class),
+            'prestigeCalculator' => app(PrestigeCalculator::class),
+            'improvementCalculator' => app(ImprovementCalculator::class),
+            'raceHelper' => app(RaceHelper::class),
+            'landImprovementCalculator' => app(LandImprovementCalculator::class)
         ]);
     }
 
@@ -37,9 +48,11 @@ class InvasionController extends AbstractDominionController
     {
         $dominion = $this->getSelectedDominion();
         $invasionActionService = app(InvadeActionService::class);
+        #$sendUnitsActionService = app(SendUnitsActionService::class);
 
         try {
             $result = $invasionActionService->invade(
+            #$result = $sendUnitsActionService->sendUnits(
                 $dominion,
                 Dominion::findOrFail($request->get('target_dominion')),
                 $request->get('unit')

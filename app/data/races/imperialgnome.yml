@@ -1,47 +1,60 @@
 name: Imperial Gnome
 alignment: evil
-description: >-
-  <p>Distressed by the failed attempt to create an Orcish Navy, the Empress exploited the largest weakness found in Gnomes- their greed.</p>
-  <p>By promising them gems and ore, the Empress convinced thousands of Commonwealth Gnomes to join the Empire and build war machines.</p>
-  <hr />
-  <p>You can have at most two of the elite units per Factory. For example, if you have two Catapults and want to train one Airship, you must have two Factories.</p>
-  <p>The restriction is increased by Science improvements. With 20% Science, 10 Factories can house 24 instead of 20 Catapults/Airships.</p>
+description:
 home_land_type: mountain
 playable: 1
 
 attacking: 1
 exploring : 2
 converting: 3
+skill_level: 2
+
+construction_materials: gold,ore
 
 perks:
   food_consumption: -15
   gem_production: 10
-  guard_tax_exemption: 1
   extra_barren_max_population: 5
+  salvaging: 75
 units:
-  - name: Hammerer
-    need_boat: true
+  - name: Arquebusier
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 275
-      ore: 50
-    power:
-      offense: 3
-      defense: 0
-    perks:
-      offense_from_pairing: 2,1 # slot, amount
-  - name: Automaton
-    need_boat: true
-    cost:
-      platinum: 525
-      ore: 100
-      gem: 1
+      gold: 350
+      ore: 65
     power:
       offense: 4
-      defense: 5
-  - name: Catapult
+      defense: 0
+    perks:
+      increases_casualties_on_offense: 1
+
+  - name: Sapper
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 55000
-      ore: 20000
+      gold: 420
+      ore: 80
+    power:
+      offense: 0
+      defense: 4
+    perks:
+      reduces_casualties: 1
+      reduces_unit_costs: 0.5,7.5 # reduction per 1% of military, max reduction
+
+  - name: Turret
+    training_time: 12
+    type:
+      - machine
+    cost:
+      gold: 60000
+      ore: 22000
     power:
       offense: 0
       defense: 300
@@ -49,16 +62,24 @@ units:
       fewer_casualties: 25
       no_draftee: 1
       does_not_count_as_population: 1
+      building_limit: factory,3,workshops # building, buildings per unit, imp to increase
+      upkeep_gold: 50
+      upkeep_ore: 4
+
   - name: Airship
-    need_boat: false
+    training_time: 12
+    type:
+      - machine
     cost:
-      platinum: 30000
-      ore: 3500
-      gem: 250
+      gold: 33000
+      lumber: 10000
+      mana: 1000
     power:
       offense: 120
       defense: 20
     perks:
-      fewer_casualties: 50
+      fewer_casualties_offense: 50
       no_draftee: 1
       does_not_count_as_population: 1
+      building_limit: factory,2.5,workshops # building, buildings per unit, imp to increased
+      mana_drain: 1

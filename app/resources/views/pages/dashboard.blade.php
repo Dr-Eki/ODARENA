@@ -6,10 +6,10 @@
     <div class="box">
         <div class="box-body">
             @if ($dominions->isEmpty())
-                <p>Welcome to OD Arena!</p>
+                <p>Welcome to ODARENA!</p>
                 <p>To start playing, please register in a round below.</p>
             @else
-                <p>Welcome back to the Arena, {{ Auth::user()->display_name }}!</p>
+                <p>Welcome back to ODARENA, {{ Auth::user()->display_name }}!</p>
                 <p>Select a dominion below to go to its status screen.</p>
             @endif
         </div>
@@ -46,12 +46,16 @@
                                 <col>
                                 <col width="200">
                                 <col width="80">
+                                <col width="80">
+                                <col width="80">
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th class="text-center">Round</th>
                                     <th>Dominion</th>
                                     <th class="text-center">Faction</th>
+                                    <th class="text-center">Land</th>
+                                    <th class="text-center">Networth</th>
                                     <th class="text-center">Realm</th>
                                 </tr>
                             </thead>
@@ -62,34 +66,45 @@
                                             {{ $dominion->round->number }}
                                         </td>
                                         <td>
+                                            @if (!$dominion->round->hasStarted())
+                                                <span class="label label-success">Starting soon</span>
+                                            @endif
+
+                                            @if($dominion->isLocked())
+                                                <span class="label label-info">Finished</span>
+                                            @endif
+
                                             @if ($dominion->isSelectedByAuthUser())
                                                 <a href="{{ route('dominion.status') }}">{{ $dominion->name }}</a>
                                                 <span class="label label-success">Selected</span>
-
-                                                @if (!$dominion->round->hasStarted())
-                                                    <span class="label label-warning">Starting soon</span>
-                                                @endif
-
-                                                @if ($dominion->isLocked())
-                                                    <span class="label label-danger">Finished</span>
-                                                @endif
                                             @else
                                                 <form action="{{ route('dominion.select', $dominion) }}" method="post">
                                                     @csrf
                                                     <button type="submit" class="btn btn-link" style="padding: 0;">{{ $dominion->name }}</button>
-
-                                                    @if (!$dominion->round->hasStarted())
-                                                        <span class="label label-warning">Starting soon</span>
-                                                    @endif
-
-                                                    @if ($dominion->isLocked())
-                                                        <span class="label label-danger">Finished</span>
-                                                    @endif
                                                 </form>
+                                            @endif
+
+                                            @if($dominion->round->hasStarted() and !$dominion->isLocked())
+                                                <div class="col-sm-6 pull-right">
+                                                    <p>If you wish to abandon your dominion {{ $dominion->name }} in round {{ $dominion->round->number }}, you can do so here by checking confirm and then pressing the button. <em>This action cannot be undone.</em></p>
+                                                    <form action="{{ route('dominion.abandon', $dominion) }}" method="post">
+                                                        @csrf
+                                                        <label>
+                                                            <input type="checkbox" name="remember" required> Confirm abandon
+                                                        </label>
+                                                        <button type="submit" class="btn btn-danger btn-xs">Abandon dominion</button>
+                                                    </form>
+                                                </div>
                                             @endif
                                         </td>
                                         <td class="text-center">
                                             {{ $dominion->race->name }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ number_format($landCalculator->getTotalLand($dominion)) }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ number_format($networthCalculator->getDominionNetworth($dominion)) }}
                                         </td>
                                         <td class="text-center">
                                             #{{ $dominion->realm->number }}: {{ $dominion->realm->name }}
@@ -131,6 +146,7 @@
                                 <tr>
                                     <th class="text-center">Round</th>
                                     <th>Chapter</th>
+                                    <th>Era</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Register</th>
                                 </tr>
@@ -156,14 +172,16 @@
                                         <td class="text-center">{{ $round->number }}</td>
                                         <td>
                                             {{ $round->name }}
-                                            <span class="text-muted">({{ $round->league->description }})</span>
+                                        </td>
+                                        <td>
+                                          {{ $round->league->description }}
                                         </td>
                                         <td class="text-center">
                                             @if ($round->hasEnded())
                                                 <abbr title="Ended at {{ $round->end_date }}">Ended</abbr>
                                             @elseif ($round->isActive())
                                                 <abbr title="Ending at {{ $round->end_date }}">
-                                                    Ending in {{ $round->daysUntilEnd() }} {{ str_plural('day', $round->daysUntilEnd()) }}
+                                                    Ending in {{ $round->hoursUntilEnd() }} {{ str_plural('hour', $round->hoursUntilEnd()) }}
                                                 </abbr>
                                             @else
                                                 <abbr title="Starting at {{ $round->start_date }}">

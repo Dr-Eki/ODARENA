@@ -2,42 +2,57 @@
 
 namespace OpenDominion\Helpers;
 
+# ODA
+use OpenDominion\Models\Dominion;
+use OpenDominion\Calculators\Dominion\ImprovementCalculator;
+
 class ImprovementHelper
 {
 
-    public function getImprovementTypes(string $race): array
+    /** @var ImprovementCalculator */
+    protected $improvementCalculator;
+
+    public function __construct()
+    {
+        $this->improvementCalculator = app(ImprovementCalculator::class);
+    }
+
+    public function getImprovementTypes(?Dominion $dominion): array
     {
 
-      if($race == 'Growth')
+      $improvementTypes = [
+          'markets',
+          'keep',
+          'forges',
+          'walls',
+          'armory',
+          'infirmary',
+          'workshops',
+          'observatory',
+          'cartography',
+          #'towers',
+          'spires',
+          'hideouts',
+          'granaries',
+          'harbor',
+          'forestry',
+          'refinery',
+        ];
+
+      if($dominion)
       {
-        $improvementTypes[] = 'tissue';
+          if($dominion->race->getPerkValue('tissue_improvement'))
+          {
+              return ['tissue'];
+          }
+          else
+          {
+              return $improvementTypes;
+          }
       }
       else
       {
-        $improvementTypes = array(
-            #'science',
-            'markets',
-            'keep',
-            'forges',
-            'walls',
-            'armory',
-            'infirmary',
-            'workshops',
-            'observatory',
-            'cartography',
-            'towers',
-            'hideouts',
-            'granaries',
-            'harbor',
-            'forestry',
-            'refinery',
-          );
-      }
-
-      // For rules in ImproveActionRequest (???)
-      if($race == 'any_race')
-      {
-        $improvementTypes[] = 'tissue';
+          $improvementTypes[] = 'tissue';
       }
 
       return $improvementTypes;
@@ -47,19 +62,19 @@ class ImprovementHelper
     public function getImprovementRatingString(string $improvementType): string
     {
         $ratingStrings = [
-            #'science' => '+%s%% platinum production',
-            'markets' => '+%s%% platinum production',
+            'markets' => '+%s%% gold production',
             'keep' => '+%s%% max population',
-            'towers' => '+%1$s%% wizard power, +%1$s%% mana production, -%1$s%% damage from spells',
+            #'towers' => '+%1$s%% wizard power, +%1$s%% mana production, -%1$s%% damage from spells, +%1$s%% Wizard Guild wizard housing',
+            'spires' => '+%1$s%% wizard power, +%1$s%% mana production, -%1$s%% damage from spells, +%1$s%% Wizard Guild wizard housing',
             'forges' => '+%s%% offensive power',
             'walls' => '+%s%% defensive power',
-            'harbor' => '+%s%% food production, boat production & protection',
-            'armory' => '-%s%% military training platinum and ore costs',
+            'harbor' => '+%s%% food production',
+            'armory' => '-%s%% military training gold and ore costs',
             'infirmary' => '-%s%% casualties in battle',
             'workshops' => '-%s%% construction and rezoning costs',
             'observatory' => '+%1$s%% experience points gained through invasions, exploration, and production',
-            'cartography' => '+%1$s%% land discovered during invasions, -%1$s%% cost of exploring',
-            'hideouts' => '+%1$s%% spy power, -%1$s%% spy losses',
+            'cartography' => '+%1$s%% land discovered during invasions, -%1$s%% cost of exploring (max -50%% total reduction)',
+            'hideouts' => '+%1$s%% spy power, -%1$s%% spy losses, +%1$s%% Forest Haven spy housing',
             'forestry' => '+%s%% lumber production',
             'refinery' => '+%s%% ore production',
             'granaries' => '-%s%% lumber and food rot',
@@ -69,39 +84,29 @@ class ImprovementHelper
         return $ratingStrings[$improvementType] ?: null;
     }
 
-    public function getImprovementHelpString(string $improvementType): string
+    public function getImprovementHelpString(string $improvementType, Dominion $dominion): string
     {
         $helpStrings = [
-            #'science' => 'Improvements to science increase your platinum production.<br><br>Max +20% platinum production.',
-            'markets' => 'Markets increase your platinum production.<br><br>Max +20%.',
-            'keep' => 'Keep increases population housing of barren land and all buildings except for Barracks.<br><br>Max +15%.',
-            'towers' => 'Towers increase your wizard power, mana production, and reduce damage from offensive spells.<br><br>Max +40%.',
-            'forges' => 'Forges increase your offensive power.<br><br>Max +20%.',
-            'walls' => 'Walls increase your defensive power.<br><br>Max +20%.',
-            'harbor' => 'Harbor increases your food and boat production and protects boats from sinking.<br><br>Max +40%.',
-            'armory' => 'Armory decreases your unit platinum and ore training costs.<br><br>Max 20%.',
-            'infirmary' => 'Infirmary reduces casualties suffered in battle (offensive and defensive).<br><br>Max 20%.',
-            'workshops' => 'Workshop reduces construction and rezoning costs.<br><br>Max 20%.',
-            'observatory' => 'Observatory increases experience points gained through invasions, exploration, and production.<br><br>Max 20%.',
-            'cartography' => 'Cartography increases land discovered on attacks and reduces platinum cost of exploring.<br><br>Max 30%.',
-            'hideouts' => 'Hidehouts increase your spy power and reduces spy losses.<br><br>Max 40%.',
-            'forestry' => 'Forestry increases your lumber production.<br><br>Max 20%.',
-            'refinery' => 'Refinery increases your ore production.<br><br>Max 20%.',
-            'granaries' => 'Granaries reduce food and lumber rot.<br><br>Max 80%.',
-            'tissue' => 'Feed the tissue to grow and feed more cells.<br><br>Max 20%',
+            'markets' => 'Markets increase your gold production.<br><br>Max +',
+            'keep' => 'Keep increases population housing of barren land and all buildings except for Barracks.<br><br>Max +',
+            #'towers' => 'Towers increase your wizard power, mana production, reduce damage from offensive spells, and increase Wizard Guild housing.<br><br>Max +',
+            'spires' => 'Spires increase your wizard power, mana production, reduce damage from offensive spells, and increase Wizard Guild housing.<br><br>Max +',
+            'forges' => 'Forges increase your offensive power.<br><br>Max +',
+            'walls' => 'Walls increase your defensive power.<br><br>Max +',
+            'harbor' => 'Harbor increases your food and boat production and protects boats from sinking.<br><br>Max +',
+            'armory' => 'Armory decreases your unit gold and ore training costs.<br><br>Max ',
+            'infirmary' => 'Infirmary reduces casualties suffered in battle (offensive and defensive).<br><br>Max ',
+            'workshops' => 'Workshop reduces construction and rezoning costs.<br><br>Max ',
+            'observatory' => 'Observatory increases experience points gained through invasions, exploration, and production.<br><br>Max ',
+            'cartography' => 'Cartography increases land discovered on attacks and reduces gold cost of exploring.<br><br>Max ',
+            'hideouts' => 'Hidehouts increase your spy power, reduce spy losses, and increase Forest Haven housing.<br><br>Max ',
+            'forestry' => 'Forestry increases your lumber production.<br><br>Max ',
+            'refinery' => 'Refinery increases your ore production.<br><br>Max ',
+            'granaries' => 'Granaries reduce food and lumber rot.<br><br>Max ',
+            'tissue' => 'Feed the tissue to grow and feed more cells.<br><br>Max ',
         ];
 
-        return $helpStrings[$improvementType] ?: null;
-    }
-
-    // temp
-    public function getImprovementImplementedString(string $improvementType): ?string
-    {
-        if ($improvementType === 'towers') {
-            return '<abbr title="Partially implemented" class="label label-warning">PI</abbr>';
-        }
-
-        return null;
+        return ($helpStrings[$improvementType] . $this->improvementCalculator->getImprovementMaximum($improvementType, $dominion) * 100 .'%') ?: null;
     }
 
     public function getImprovementIcon(string $improvement): string
@@ -109,7 +114,8 @@ class ImprovementHelper
         $icons = [
             'markets' => 'hive-emblem',
             'keep' => 'capitol',
-            'towers' => 'fairy-wand',
+            #'towers' => 'fairy-wand',
+            'spires' => 'fairy-wand',
             'forges' => 'forging',
             'walls' => 'shield',
             'harbor' => 'anchor',
@@ -117,7 +123,7 @@ class ImprovementHelper
             'infirmary' => 'health',
             'workshops' => 'nails',
             'observatory' => 'telescope',
-            'cartography' => 'scroll-unfurled',
+            'cartography' => 'compass',
             'hideouts' => 'hood',
             'forestry' => 'pine-tree',
             'refinery' => 'large-hammer',

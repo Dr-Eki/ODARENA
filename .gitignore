@@ -16,3 +16,4 @@ _ide_helper_models.php
 /phpunit.xml
 .DS_Store
 npm-debug.log
+package-lock.json

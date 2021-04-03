@@ -1,63 +1,74 @@
 name: Merfolk
-alignment: good
-description: >-
-  <p>An aquatic race that lives in beautiful coral reefs where food is plentiful, Merfolk are the benevolent guardians of the great oceans.</p>
-  <p>Though typically peaceful, Merfolk are legendary for their wrath when angered, summoning terrors of the deep to destroy entire naval fleets with the thrashing tentacles of ravenous krakens. The chilling and alluring call of the piren might be the last thing you ever hear... before you're snatched from your ship and dragged down to the bottom of the cold, dark sea.</p>
-  <p>Mighty Charybdis is always lurking in the depths. When called upon, he will ravage any enemy ships or flying units which dare draw close.</p>
-  <hr />
-  <p>Merfolk can only build Homes, Farms, Towers, Temples, Diamond Mines, and Shrines, all of which are built in water.</p>
+alignment: independent
+description:
 home_land_type: water
 playable: 1
 
 attacking: 3
 exploring : 3
-converting: 1
+converting: 3
+skill_level: 1
+
+construction_materials: gold
 
 perks:
-  gem_production: -10
-  platinum_production: -10
-  mana_production: -10
   max_population: -15
-  construction_cost_only_platinum: 1
   damage_from_fireballs: -100
   damage_from_lightning_bolts: -50
 units:
   - name: Merman
+
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 300
+      gold: 300
     power:
       offense: 3
       defense: 0
-    perks:
-      sink_boats_offense: 1
-    need_boat: false
+
   - name: Siren
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 300
+      gold: 300
     power:
       offense: 0
       defense: 3
-    perks:
-      sink_boats_defense: 1
+
   - name: Leviathan
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - massive
     cost:
-      platinum: 2800
+      gold: 300000
     power:
       offense: 0
-      defense: 22
+      defense: 2200
     perks:
-      sink_boats_defense: 1
-      food_consumption: 1
-      #land_limit: water,0.22 # Max 1 unit per 0.22 acres of Water (4.54 Krakens/acre)
+      food_consumption: 40
+      housing_count: 30
+
   - name: Kraken
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - massive
     cost:
-      platinum: 1650
+      gold: 200000
     power:
-      offense: 12
-      defense: 7
+      offense: 1200
+      defense: 700
     perks:
-      sink_boats_offense: 1
-      sink_boats_defense: 1
-      food_consumption: 0.75
-      #land_limit: water,0.17 # Max 1 unit per 0.17 acres of Water (5.88 Krakens/acre)
-    need_boat: false
+      food_consumption: 25
+      housing_count: 20

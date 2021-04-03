@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-    <title>@yield('title', 'OD Arena')</title>
+    <title>@yield('title', 'ODARENA')</title>
 
     <link rel="author" href="{{ asset('humans.txt') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -15,9 +15,21 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/manifest.json">
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="apple-mobile-web-app-title" content="OD Arena">
-    <meta name="application-name" content="OD Arena">
+    <meta name="apple-mobile-web-app-title" content="ODARENA">
+    <meta name="application-name" content="ODARENA">
     <meta name="theme-color" content="#ffffff">
+
+
+    @if(request()->getHost() !== 'sim.odarena.com' and request()->getHost() !== 'odarena.local')
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-174957772-1"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'UA-174957772-1');
+        </script>
+    @endif
 
     @include('partials.styles')
 
@@ -48,8 +60,6 @@
                             @yield('page-subheader')
                         </small>
                     @endif
-
-                    @include('partials.tickers')
 
                 </h1>
                 {{--<ol class="breadcrumb">

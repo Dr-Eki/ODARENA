@@ -24,6 +24,12 @@ class LandCalculator
     /** @var LandHelper */
     protected $landHelper;
 
+    /** @var SpellCalculator */
+    #protected $spellCalculator;
+
+    /** @var ImprovementCalculator */
+    #protected $improvementCalculator;
+
     /**
      * LandCalculator constructor.
      *
@@ -50,7 +56,7 @@ class LandCalculator
      * @param Dominion $dominion
      * @return int
      */
-    public function getTotalLand(Dominion $dominion): int
+    public function getTotalLand(Dominion $dominion, bool $canBeZero = false): int
     {
         $totalLand = 0;
 
@@ -59,7 +65,26 @@ class LandCalculator
             $totalLand += $dominion->{'land_' . $landType};
         }
 
-        return $totalLand;
+        if($canBeZero)
+        {
+            return $totalLand;
+        }
+        else
+        {
+            return max(1,$totalLand);
+        }
+    }
+
+    public function getTotalLandIncoming(Dominion $dominion): int
+    {
+        $incoming = 0;
+        foreach ($this->landHelper->getLandTypes() as $landType)
+        {
+            $incoming += $this->queueService->getExplorationQueueTotalByResource($dominion, "land_{$landType}");
+            $incoming += $this->queueService->getInvasionQueueTotalByResource($dominion, "land_{$landType}");
+        }
+
+        return $incoming;
     }
 
     /**
@@ -86,10 +111,7 @@ class LandCalculator
      */
     public function getTotalBarrenLandForSwarm(Dominion $dominion): int
     {
-        return (
-            $this->getTotalLand($dominion)
-            - $this->buildingCalculator->getTotalBuildings($dominion)
-        );
+        return ($this->getTotalLand($dominion) - $this->buildingCalculator->getTotalBuildings($dominion));
     }
 
     /**
@@ -112,28 +134,38 @@ class LandCalculator
      */
     public function getBarrenLandByLandType(Dominion $dominion): array
     {
-        $buildingTypesbyLandType = $this->buildingHelper->getBuildingTypesByRace($dominion);
+        $barrenLandByLandType = [];
+        $landTypes = $this->landHelper->getLandTypes();
+        $availableBuildings = $this->buildingHelper->getBuildingsByRace($dominion->race);
+        $dominionBuildings = $this->buildingCalculator->getDominionBuildings($dominion);
 
-        $return = [];
+        foreach ($landTypes as $landType)
+        {
+            $barrenLandByLandType[$landType] = 0;
 
-        foreach ($buildingTypesbyLandType as $landType => $buildingTypes) {
-            $barrenLand = $dominion->{'land_' . $landType};
+            $barren = $dominion->{'land_' . $landType};
+            foreach($availableBuildings->where('land_type',$landType) as $building)
+            {
+                if(isset($dominionBuildings->where('building_id', $building->id)->first()->owned) and $dominionBuildings->where('building_id', $building->id)->first()->owned > 0)
+                {
+                    $barren -= $dominionBuildings->where('building_id', $building->id)->first()->owned;
+                }
+                $barren -= $this->queueService->getConstructionQueueTotalByResource($dominion, "building_{$building->key}");
 
-            foreach ($buildingTypes as $buildingType) {
-                $barrenLand -= $dominion->{"building_{$buildingType}"};
-                $barrenLand -= $this->queueService->getConstructionQueueTotalByResource($dominion, "building_{$buildingType}");
             }
 
-            $return[$landType] = $barrenLand;
+            $barrenLandByLandType[$landType] += $barren;
         }
 
-        return $return;
+        return $barrenLandByLandType;
+
     }
 
     public function getLandByLandType(Dominion $dominion): array
     {
         $return = [];
-        foreach ($this->landHelper->getLandTypes() as $landType) {
+        foreach ($this->landHelper->getLandTypes() as $landType)
+        {
             $return[$landType] = $dominion->{"land_{$landType}"};
         }
 
@@ -200,17 +232,14 @@ class LandCalculator
      */
     public function getTotalLandForRealm(Realm $realm): int
     {
-      $networth = 0;
+      $land = 0;
 
-      // todo: fix line below which generates this query:
-      // select * from "dominions" where "dominions"."realm_id" = '1' and "dominions"."realm_id" is not null
       foreach ($realm->dominions as $dominion)
       {
-          $networth += $this->getTotalLand($dominion);
+          $land += $this->getTotalLand($dominion);
       }
 
-      return $networth;
+      return $land;
   }
-
 
 }

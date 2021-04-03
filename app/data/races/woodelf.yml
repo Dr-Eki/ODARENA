@@ -1,46 +1,73 @@
 name: Wood Elf
 alignment: good
-description: >-
-  <p>Wood Elves are elves which have adapted to living in the forest, having learned to use the trees and bushes to their advantage.</p>
-  <p>They look up to the Sylvan, which they consider to be the caretakers of the forest. The two faction enjoy a mostly peaceful coexistence.</p>
+description:
 home_land_type: forest
 playable: 1
 
-attacking: 3
+attacking: 2
 exploring : 3
 converting: 3
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   wizard_strength: 20
   spy_strength: 20
   lumber_production: 20
+  improvements_max: 75
+  tech_production: 100
+  salvaging: 35
 units:
   - name: Ranger
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 300
+      gold: 300
       lumber: 25
     power:
       offense: 3
       defense: 0
+
   - name: Longbowman
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 400
+      gold: 400
       lumber: 25
     power:
       offense: 0
       defense: 4
+
   - name: Warden
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
+      gold: 1000
       lumber: 100
     power:
       offense: 0
       defense: 5
     perks:
       defense_from_land: forest,20,5 # land type, ratio%, max
+
   - name: Sentinel
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1200
+      gold: 1200
       lumber: 150
     power:
       offense: 3

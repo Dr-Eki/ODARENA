@@ -6,7 +6,7 @@ class Ticker {
      */
     constructor() {
         this.tickerServerElement = null;
-        this.tickerNextHourElement = null;
+        //this.tickerNextTickElement = null;
     }
 
     /**
@@ -14,7 +14,7 @@ class Ticker {
      */
     start() {
         this.tickerServerElement = document.getElementById('ticker-server');
-        this.tickerNextHourElement = document.getElementById('ticker-next-tick');
+        //this.tickerNextTickElement = document.getElementById('ticker-next-tick');
 
         // Only tick if the ticker element is visible; i.e. not on the homepage
         if (this.tickerServerElement !== null) {
@@ -38,10 +38,8 @@ class Ticker {
         nextHour.setMinutes(0);
         nextHour.setSeconds(0);
 
-        const diffDate = (nextHour - currentTime);
-
         this.tickerServerElement.innerHTML = Ticker.hms(Ticker.utc(currentTime));
-        this.tickerNextHourElement.innerHTML = Ticker.hms(diffDate);
+        //this.tickerNextTickElement.innerHTML = Ticker.hms(diffDate);
     }
 
     /**

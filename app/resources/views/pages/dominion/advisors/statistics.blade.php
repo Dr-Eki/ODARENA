@@ -1,22 +1,24 @@
 @extends('layouts.master')
 
+{{--
 @section('page-header', 'Statistics Advisor')
+--}}
 
 @section('content')
     @include('partials.dominion.advisor-selector')
 
     <div class="row">
 
-        <div class="col-md-12 col-md-9">
+        <div class="col-md-12 col-md-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa fa-bar-chart"></i> Statistics Advisor</h3>
+                    <h3 class="box-title"><i class="fa fa-chart-bar"></i> Statistics Advisor</h3>
                 </div>
                 <div class="box-body no-padding">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
                             <div class="box-header with-border">
-                                <h4 class="box-title">Military</h4>
+                                <h4 class="box-title"><i class="ra ra-sword ra-fw"></i> Military</h4>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4">
@@ -41,13 +43,13 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Offensive Power Multiplier:</td>
+                                        <td>OP Multiplier:</td>
                                         <td>
                                             <strong>{{ number_string(($militaryCalculator->getOffensivePowerMultiplier($selectedDominion) - 1) * 100, 3, true) }}%</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Offensive Ratio:</td>
+                                        <td>OPA:</td>
                                         <td>
                                             <strong>{{ number_format(($militaryCalculator->getOffensivePower($selectedDominion) / $landCalculator->getTotalLand($selectedDominion)), 3) }}</strong>
                                             @if ($militaryCalculator->getOffensivePowerMultiplier($selectedDominion) !== 1.0)
@@ -56,44 +58,40 @@
                                         </td>
                                     </tr>
                                 </tbody>
-                            </table>
-                        </div>
-                        <div class="col-xs-12 col-sm-4">
-                            <table class="table">
-                                <colgroup>
-                                    <col width="50%">
-                                    <col width="50%">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th colspan="2">Defensive Power</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Defensive Power:</td>
-                                        <td>
-                                            <strong>{{ number_format($militaryCalculator->getDefensivePower($selectedDominion)) }}</strong>
-                                            @if ($militaryCalculator->getDefensivePowerMultiplier($selectedDominion) !== 1.0)
-                                                <small class="text-muted">({{ number_format(($militaryCalculator->getDefensivePowerRaw($selectedDominion))) }} raw)</small>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Defensive Power Multiplier:</td>
-                                        <td>
-                                            <strong>{{ number_string(($militaryCalculator->getDefensivePowerMultiplier($selectedDominion) - 1) * 100, 3, true) }}%</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Defense Ratio:</td>
-                                        <td>
-                                            <strong>{{ number_format(($militaryCalculator->getDefensivePower($selectedDominion) / $landCalculator->getTotalLand($selectedDominion)), 3) }}</strong>
-                                            @if ($militaryCalculator->getDefensivePowerMultiplier($selectedDominion) !== 1.0)
-                                                <small class="text-muted">({{ number_format(($militaryCalculator->getDefensivePowerRaw($selectedDominion) / $landCalculator->getTotalLand($selectedDominion)), 3) }})</small>
-                                            @endif
-                                        </td>
-                                    </tr>
+                                <table class="table">
+                                    <colgroup>
+                                        <col width="50%">
+                                        <col width="50%">
+                                    </colgroup>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Defensive Power</th>
+                                        </tr>
+                                    </thead>
+                                        <tr>
+                                            <td>Defensive Power:</td>
+                                            <td>
+                                                <strong>{{ number_format($militaryCalculator->getDefensivePower($selectedDominion)) }}</strong>
+                                                @if ($militaryCalculator->getDefensivePowerMultiplier($selectedDominion) !== 1.0)
+                                                    <small class="text-muted">({{ number_format(($militaryCalculator->getDefensivePowerRaw($selectedDominion))) }} raw)</small>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>DP Multiplier:</td>
+                                            <td>
+                                                <strong>{{ number_string(($militaryCalculator->getDefensivePowerMultiplier($selectedDominion) - 1) * 100, 3, true) }}%</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>DPA:</td>
+                                            <td>
+                                                <strong>{{ number_format(($militaryCalculator->getDefensivePower($selectedDominion) / $landCalculator->getTotalLand($selectedDominion)), 3) }}</strong>
+                                                @if ($militaryCalculator->getDefensivePowerMultiplier($selectedDominion) !== 1.0)
+                                                    <small class="text-muted">({{ number_format(($militaryCalculator->getDefensivePowerRaw($selectedDominion) / $landCalculator->getTotalLand($selectedDominion)), 3) }})</small>
+                                                @endif
+                                            </td>
+                                        </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -105,7 +103,7 @@
                                 </colgroup>
                                 <thead class="hidden-xs">
                                     <tr>
-                                        <th colspan="2">Invasions</th>
+                                        <th colspan="2">Offensive Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -116,15 +114,65 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Defending success:</td>
+                                        <td>Bottomfeeds:</td>
                                         <td>
-                                            <strong>{{ number_format($selectedDominion->stat_defending_success) }}</strong>
+                                            <strong>{{ number_format($selectedDominion->stat_attacking_bottomfeeds) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tactical razes:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_attacking_razes) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Overwhelmed failures:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_attacking_failures) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Land conquered:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_total_land_conquered) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Land discovered:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_land_discovered) }}</strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table class="table">
+                                <colgroup>
+                                    <col width="50%">
+                                    <col width="50%">
+                                </colgroup>
+                                <thead class="hidden-xs">
+                                    <tr>
+                                        <th colspan="2">Defensive Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Invasions fought back:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_defending_success) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Invasions lost:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_defending_failures) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Land lost:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_land_lost) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
@@ -136,12 +184,92 @@
                                 </tbody>
                             </table>
                         </div>
+
+
+
+                        <div class="col-xs-12 col-sm-4">
+                            <table class="table">
+                                <colgroup>
+                                    <col width="50%">
+                                    <col width="50%">
+                                </colgroup>
+                                <thead class="hidden-xs">
+                                    <tr>
+                                        <th colspan="2">Units</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Enemy units killed:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_units_killed) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total units converted:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_units_converted) }}</strong>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>{{ str_plural($unitHelper->getUnitName('unit1', $selectedDominion->race)) }} trained:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_unit1_trained) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ str_plural($unitHelper->getUnitName('unit1', $selectedDominion->race)) }} lost:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_unit1_lost) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ str_plural($unitHelper->getUnitName('unit2', $selectedDominion->race)) }} trained:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_unit2_trained) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ str_plural($unitHelper->getUnitName('unit2', $selectedDominion->race)) }} lost:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_unit2_lost) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ str_plural($unitHelper->getUnitName('unit3', $selectedDominion->race)) }} trained:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_unit3_trained) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ str_plural($unitHelper->getUnitName('unit3', $selectedDominion->race)) }} lost:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_unit3_lost) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ str_plural($unitHelper->getUnitName('unit4', $selectedDominion->race)) }} trained:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_unit4_trained) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ str_plural($unitHelper->getUnitName('unit4', $selectedDominion->race)) }} lost:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_unit4_lost) }}</strong>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
                             <div class="box-header with-border">
-                                <h4 class="box-title">Operations</h4>
+                                <h4 class="box-title"><i class="fa fa-user-secret fa-fw"></i> Espionage</h4>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-4">
@@ -157,65 +285,61 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Spy Ratio (Offense):</td>
+                                        <td>Offensive Spy Ratio:</td>
                                         <td>
                                             <strong>{{ number_format($militaryCalculator->getSpyRatio($selectedDominion, 'offense'), 3) }}</strong>
                                             @if ($militaryCalculator->getSpyRatioMultiplier($selectedDominion) !== 1.0)
-                                                <small class="text-muted">({{ number_format($militaryCalculator->getSpyRatioRaw($selectedDominion, 'offense'), 3) }})</small>
+                                                <small class="text-muted">({{ number_format(($militaryCalculator->getSpyRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
                                             @endif
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Spy Ratio (Defense):</td>
+                                        <td>Defensive Spy Ratio:</td>
                                         <td>
                                             <strong>{{ number_format($militaryCalculator->getSpyRatio($selectedDominion, 'defense'), 3) }}</strong>
                                             @if ($militaryCalculator->getSpyRatioMultiplier($selectedDominion) !== 1.0)
-                                                <small class="text-muted">({{ number_format($militaryCalculator->getSpyRatioRaw($selectedDominion, 'defense'), 3) }})</small>
+                                                <small class="text-muted">({{ number_format(($militaryCalculator->getSpyRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
                                             @endif
                                         </td>
                                     </tr>
-                                </tbody>
-                                <thead>
                                     <tr>
-                                        <th colspan="2">Wizard Power</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Wizard Ratio (Offense):</td>
                                         <td>
-                                            <strong>{{ number_format($militaryCalculator->getWizardRatio($selectedDominion, 'offense'), 3) }}</strong>
-                                            @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
-                                                <small class="text-muted">({{ number_format($militaryCalculator->getWizardRatioRaw($selectedDominion, 'offense'), 3) }})</small>
-                                            @endif
+                                            <span data-toggle="tooltip" data-placement="top" title="Number of spies you have plus how many spies you have from units that count as spies in part or whole">Offensive Spy Points:</span>
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Wizard Ratio (Defense):</td>
                                         <td>
-                                            <strong>{{ number_format($militaryCalculator->getWizardRatio($selectedDominion, 'defense'), 3) }}</strong>
-                                            @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
-                                                <small class="text-muted">({{ number_format($militaryCalculator->getWizardRatioRaw($selectedDominion, 'defense'), 3) }})</small>
+                                            <strong>{{ number_format($militaryCalculator->getSpyPoints($selectedDominion, 'offense')) }}</strong>
+                                            @if ($militaryCalculator->getSpyRatioMultiplier($selectedDominion) !== 1.0)
+                                                <small class="text-muted">({{ number_format(($militaryCalculator->getSpyRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
                                             @endif
                                         </td>
                                     </tr>
-                                </tbody>
-                                <thead>
                                     <tr>
-                                        <th colspan="2">Success Rate</th>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="Number of spies you have plus how many spies you have from units that count as spies in part or whole">Defensive Spy Points:</span>
+                                        </td>
+                                        <td>
+                                            <strong>{{ number_format($militaryCalculator->getSpyPoints($selectedDominion, 'defense')) }}</strong>
+                                            @if ($militaryCalculator->getSpyRatioMultiplier($selectedDominion) !== 1.0)
+                                                <small class="text-muted">({{ number_format(($militaryCalculator->getSpyRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                            @endif
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
                                     <tr>
-                                        <td>Espionage Success:</td>
+                                        <td>Espionage success:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_espionage_success) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Magic Success:</td>
+                                        <td>Spies trained:</td>
                                         <td>
-                                            <strong>{{ number_format($selectedDominion->stat_spell_success) }}</strong>
+                                            <strong>{{ number_format($selectedDominion->stat_total_spies_trained) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Spies lost:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_spies_lost) }}</strong>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -229,7 +353,7 @@
                                 </colgroup>
                                 <thead>
                                     <tr>
-                                        <th colspan="2">Black Ops (Spy)</th>
+                                        <th colspan="2">Offensive Operations</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -258,6 +382,14 @@
                                         </td>
                                     </tr>
                                 </tbody>
+                            </table>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <table class="table">
+                                <colgroup>
+                                    <col width="50%">
+                                    <col width="50%">
+                                </colgroup>
                                 <thead>
                                     <tr>
                                         <th colspan="2">Theft</th>
@@ -265,39 +397,132 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Platinum Stolen:</td>
+                                        <td>Gold stolen:</td>
                                         <td>
-                                            <strong>{{ number_format($selectedDominion->stat_total_platinum_stolen) }}</strong>
+                                            <strong>{{ number_format($selectedDominion->stat_total_gold_stolen) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Lumber Stolen:</td>
+                                        <td>Lumber stolen:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_total_lumber_stolen) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Food Stolen:</td>
+                                        <td>Food stolen:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_total_food_stolen) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Mana Stolen:</td>
+                                        <td>Mana stolen:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_total_mana_stolen) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Ore Stolen:</td>
+                                        <td>Ore stolen:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_total_ore_stolen) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Gems Stolen:</td>
+                                        <td>Gems stolen:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_total_gems_stolen) }}</strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12">
+                            <div class="box-header with-border">
+                                <h4 class="box-title"><i class="ra ra-fairy-wand ra-fw"></i> Magic</h4>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <table class="table">
+                                <colgroup>
+                                    <col width="50%">
+                                    <col width="50%">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Wizard Power</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Offensive Wizard Ratio:</td>
+                                        <td>
+                                            <strong>{{ number_format($militaryCalculator->getWizardRatio($selectedDominion, 'offense'), 3) }}</strong>
+                                            @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
+                                                <small class="text-muted">({{ number_format(($militaryCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Defensive Wizard Ratio:</td>
+                                        <td>
+                                            <strong>{{ number_format($militaryCalculator->getWizardRatio($selectedDominion, 'defense'), 3) }}</strong>
+                                            @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
+                                                <small class="text-muted">({{ number_format(($militaryCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="Number of wizards (archmages count as two) you have plus how many wizards you have from units that count as wizards in part or whole">Offensive Wizard Points:</span>
+                                        </td>
+                                        <td>
+                                            <strong>{{ number_format($militaryCalculator->getWizardPoints($selectedDominion, 'offense')) }}</strong>
+                                            @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
+                                                <small class="text-muted">({{ number_format(($militaryCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                          <span data-toggle="tooltip" data-placement="top" title="Number of wizards (archmages count as two) you have plus how many wizards you have from units that count as wizards in part or whole">Defensive Wizard Points:</span>
+                                      </td>
+                                        <td>
+                                            <strong>{{ number_format($militaryCalculator->getWizardPoints($selectedDominion, 'defense')) }}</strong>
+                                            @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
+                                                <small class="text-muted">({{ number_format(($militaryCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Magic Success:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_spell_success) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Wizards trained:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_wizards_trained) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Wizards lost:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_wizards_lost) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Archmages trained:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_archmages_trained) }}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Archmages lost:</td>
+                                        <td>
+                                            <strong>{{ number_format($selectedDominion->stat_total_archmages_lost) }}</strong>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -311,48 +536,63 @@
                                 </colgroup>
                                 <thead>
                                     <tr>
-                                        <th colspan="2">Black Ops (Wizard)</th>
+                                        <th colspan="2">Offensive Operations</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Spies Disbanded:</td>
+                                        <td>Spies disbanded:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_disband_spies_damage) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Fireball Damage:</td>
+                                        <td>Fireball damage:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_fireball_damage) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Lightning Bolt Damage:</td>
+                                        <td>Lightning bolt damage:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_lightning_bolt_damage) }}</strong>
                                         </td>
                                     </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <table class="table">
+                                <colgroup>
+                                    <col width="50%">
+                                    <col width="50%">
+                                </colgroup>
+                                <thead>
                                     <tr>
-                                        <td>Earthquake Hours:</td>
+                                        <th colspan="2">Offensive Operations</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Earthquake duration:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_earthquake_hours) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Great Flood Hours:</td>
+                                        <td>Great Flood duration:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_great_flood_hours) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Insect Swarm Hours:</td>
+                                        <td>Insect Swarm duration:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_insect_swarm_hours) }}</strong>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Plague Hours:</td>
+                                        <td>Plague Ticks:</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->stat_plague_hours) }}</strong>
                                         </td>
@@ -367,7 +607,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="box-header with-border">
-                                        <h4 class="box-title">Population</h4>
+                                        <h4 class="box-title"><i class="ra ra-double-team ra-fw"></i> Population</h4>
                                     </div>
                                 </div>
                                 <div class="col-xs-12">
@@ -388,16 +628,9 @@
                                                     <strong>{{ number_format($populationCalculator->getPopulation($selectedDominion)) }}</strong>
                                                 </td>
                                             </tr>
+                                            @if(!$selectedDominion->race->getPerkMultiplier('no_population'))
                                             <tr>
-                                                @if ($selectedDominion->race->name == 'Growth')
-                                                    <td>Cells:</td>
-                                                @elseif ($selectedDominion->race->name == 'Myconid')
-                                                    <td>Spores:</td>
-                                                @elseif ($selectedDominion->race->name == 'Swarm')
-                                                    <td>Larvae:</td>
-                                                @else
-                                                    <td>Peasant Population:</td>
-                                                @endif
+                                                <td>{{ str_plural($raceHelper->getPeasantsTerm($selectedDominion->race)) }}</td>
                                                 <td>
                                                     <strong>{{ number_format($selectedDominion->peasants) }}</strong>
                                                     <small class="text-muted">({{ number_format((($selectedDominion->peasants / $populationCalculator->getPopulation($selectedDominion)) * 100), 2) }}%)</small>
@@ -419,6 +652,7 @@
                                                     @endif
                                                 </td>
                                             </tr>
+                                            @endif
                                             <tr>
                                                 <td>Population Multiplier:</td>
                                                 <td>
@@ -430,93 +664,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 col-sm-4">
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <div class="box-header with-border">
-                                        <h4 class="box-title">Production</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <table class="table">
-                                        <colgroup>
-                                            <col width="50%">
-                                            <col width="50%">
-                                        </colgroup>
-                                        <thead>
-                                            <tr>
-                                                <th colspan="2">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Platinum:</td>
-                                                <td>
-                                                    <strong>{{ number_format($selectedDominion->stat_total_platinum_production) }}</strong>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Food:</td>
-                                                <td>
-                                                    <strong>{{ number_format($selectedDominion->stat_total_food_production) }}</strong>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Lumber:</td>
-                                                <td>
-                                                    <strong>{{ number_format($selectedDominion->stat_total_lumber_production) }}</strong>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Mana:</td>
-                                                <td>
-                                                    <strong>{{ number_format($selectedDominion->stat_total_mana_production) }}</strong>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Ore:</td>
-                                                <td>
-                                                    <strong>{{ number_format($selectedDominion->stat_total_ore_production) }}</strong>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Gems:</td>
-                                                <td>
-                                                    <strong>{{ number_format($selectedDominion->stat_total_gem_production) }}</strong>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Experience Points:</td>
-                                                <td>
-                                                    <strong>{{ number_format($selectedDominion->stat_total_tech_production) }}</strong>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Boats:</td>
-                                                <td>
-                                                    <strong>{{ number_format($selectedDominion->stat_total_boat_production) }}</strong>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 col-md-3">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Information</h3>
-                </div>
-                <div class="box-body">
-                    <p>The statistics advisor gives you statistics regarding your current dominion state.</p>
-                    <p>Ratio numbers are total number of units per acre of land.</p>
                 </div>
             </div>
         </div>

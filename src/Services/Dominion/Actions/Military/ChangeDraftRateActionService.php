@@ -7,9 +7,23 @@ use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Traits\DominionGuardsTrait;
 use RuntimeException;
 
+# ODA
+use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Exceptions\GameException;
+
 class ChangeDraftRateActionService
 {
     use DominionGuardsTrait;
+
+    /** @var SpellCalculator */
+    protected $spellCalculator;
+
+    public function __construct(
+        SpellCalculator $spellCalculator
+        )
+    {
+        $this->spellCalculator = $spellCalculator;
+    }
 
     /**
      * Does a military change draft rate action for a Dominion.
@@ -22,6 +36,12 @@ class ChangeDraftRateActionService
     public function changeDraftRate(Dominion $dominion, int $draftRate): array
     {
         $this->guardLockedDominion($dominion);
+
+        // Qur: Statis
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+            throw new GameException('You cannot change your draft rate while you are in stasis.');
+        }
 
         if (($draftRate < 0) || ($draftRate > 100)) {
             throw new RuntimeException('Draft rate not changed due to bad input.');

@@ -112,7 +112,7 @@ return [
         'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
 
         'mail' => [
-            'to' => 'notice@odarena.com',
+            'to' => 'info@odarena.com',
         ],
 
         'slack' => [

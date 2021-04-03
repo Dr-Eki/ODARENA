@@ -1,44 +1,62 @@
 name: Jagunii
 alignment: good
-description: >-
-  <p>From beyond the Southern Sands come the Jagunii with their enormous War Mammoths, adorned with a nearly impenetrable armour made from an intricate weave of ore and gems.</p>
-  <p>The warriors chosen for duty with a War Mammoth commit themselves to a lifelong service &mdash; until glorious death in battle make them part ways. When its warriors die and armour shatters in battle, the Mammoth quickly returns home and can be retrained as a War Mammoth.</p>
-  <p>Each War Mammoth fits in its armour four Javalineers and four Lancers.</p>
+description:
 home_land_type: hill
 playable: 1
 
-attacking: 3
+attacking: 2
 exploring : 3
 converting: 3
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   research_points_per_acre: 25
   prestige_gains: 25
-  cannot_build_homes: 1
-  #cannot_build_barracks: 1
+  gem_production: 30
+  salvaging: 25
 units:
   - name: Javelineer
-    need_boat: true
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
+    
     cost:
-      platinum: 250
+      gold: 250
       ore: 5
       lumber: 5
     power:
       offense: 3
       defense: 0
+
   - name: Lancer
-    need_boat: true
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
+    
     cost:
-      platinum: 250
+      gold: 250
       ore: 5
       lumber: 5
     power:
       offense: 0
       defense: 3
+
   - name: Mammoth
-    need_boat: true
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - massive
+      - intelligent
+    
     cost:
-      platinum: 2400
+      gold: 2400
     power:
       offense: 0
       defense: 8
@@ -48,20 +66,28 @@ units:
       food_consumption: 0.25
       fewer_casualties: 50
       faster_return: 6
+
   - name: War Mammoth
-    need_boat: true
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - massive
+      - intelligent
+    
     cost:
-      ore: 800
+      ore: 2000
       gem: 1000
-      unit1: 4
+      unit1: 8
       unit2: 4
       unit3: 1
     power:
-      offense: 24
+      offense: 44
       defense: 24
     perks:
       dies_into: 3
-      fewer_casualties: 75
+      fewer_casualties_offense: 90
       no_draftee: 1
       does_not_count_as_population: 1
       food_consumption: 2
+      plunders: gems;1,food;1

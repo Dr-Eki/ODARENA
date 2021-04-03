@@ -1,13 +1,15 @@
 @extends('layouts.master')
 
+{{--
 @section('page-header', 'Magic Advisor')
+--}}
 
 @section('content')
     @include('partials.dominion.advisor-selector')
 
     <div class="row">
 
-        <div class="col-md-12 col-md-9">
+        <div class="col-md-12 col-md-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="ra ra-burning-embers"></i> Spells affecting your dominion</h3>
@@ -19,6 +21,7 @@
                             <col>
                             <col width="100">
                             <col width="200">
+                            <col width="200">
                         </colgroup>
                         <thead>
                             <tr>
@@ -26,44 +29,36 @@
                                 <th>Effect</th>
                                 <th class="text-center">Duration</th>
                                 <th class="text-center">Cast By</th>
+                                <th class="text-center">Cast At</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($spellCalculator->getActiveSpells($selectedDominion) as $spell)
-                                @php
-                                    $spellInfo = $spellHelper->getSpellInfo($spell->spell, $selectedDominion, true, true);
-                                @endphp
+                            @foreach ($spellCalculator->getActiveSpells($selectedDominion) as $activeSpell)
                                 <tr>
-                                    <td>{{ $spellInfo['name'] }}</td>
-                                    <td>{{ $spellInfo['description'] }}</td>
-                                    <td class="text-center">{{ $spell->duration }}</td>
+                                    <td>{{ $activeSpells[$activeSpell->spell]->name }}</td>
+                                    <td>
+                                        <ul>
+                                            @foreach($spellHelper->getSpellEffectsString($activeSpells[$activeSpell->spell]) as $effect)
+                                                <li>{{ $effect }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td class="text-center">{{ $activeSpell->duration }} / {{ $activeSpells[$activeSpell->spell]->duration }}</td>
                                     <td class="text-center">
-                                        @if ($spell->cast_by_dominion_id !== null)
-                                            <a href="{{ route('dominion.realm', $spell->cast_by_dominion_realm_number) }}">{{ $spell->cast_by_dominion_name }} (#{{ $spell->cast_by_dominion_realm_number }})</a>
+                                        @if ($activeSpell->cast_by_dominion_id !== null)
+                                            <a href="{{ route('dominion.realm', $activeSpell->cast_by_dominion_realm_number) }}">{{ $activeSpell->cast_by_dominion_name }} (#{{ $activeSpell->cast_by_dominion_realm_number }})</a>
                                         @else
                                             <em>Unknown</em>
                                         @endif
                                     </td>
+                                    <td class="text-center">{{ $activeSpell->created_at }}</td>
                                 </tr>
                             @endforeach
-                            {{-- todo: self-cast magic system --}}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-12 col-md-3">
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Information</h3>
-                </div>
-                <div class="box-body">
-                    <p>The magic advisor tells you the current spells affecting your dominion and their remaining duration.</p>
-                </div>
-            </div>
-        </div>
-
     </div>
 
 @endsection

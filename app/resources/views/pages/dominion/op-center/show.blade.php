@@ -11,7 +11,7 @@
                 @endphp
 
                 @slot('title', ('Status Screen (' . $dominion->name . ')'))
-                @slot('titleIconClass', 'fa fa-bar-chart')
+                @slot('titleIconClass', 'fa fa-chart-bar')
 
                 @if ($infoOp === null)
                     <p>No recent data available.</p>
@@ -19,6 +19,7 @@
                 @else
                     @slot('tableResponsive', false)
                     @slot('noPadding', true)
+
 
                     <div class="row">
                         <div class="col-xs-12 col-sm-4">
@@ -35,7 +36,7 @@
                                 <tbody>
                                     <tr>
                                         <td>Ruler:</td>
-                                        <td>{{ $infoOp->data['ruler_name'] }}</td>
+                                        <td><em>{{ isset($infoOp->data['title']) ? $infoOp->data['title'] : '' }}</em> {{ $infoOp->data['ruler_name'] }}</td>
                                     </tr>
                                     <tr>
                                         <td>Faction:</td>
@@ -46,20 +47,12 @@
                                         <td>
                                             {{ number_format($infoOp->data['land']) }}
                                             <span class="{{ $rangeCalculator->getDominionRangeSpanClass($selectedDominion, $dominion) }}">
-                                                ({{ number_format($rangeCalculator->getDominionRange($selectedDominion, $dominion), 1) }}%)
+                                                ({{ number_format($rangeCalculator->getDominionRange($selectedDominion, $dominion), 2) }}%)
                                             </span>
                                         </td>
                                     </tr>
                                     <tr>
-                                      @if ($dominion->race->name == 'Growth')
-                                        <td>Cells:</td>
-                                      @elseif ($dominion->race->name == 'Myconid')
-                                        <td>Spores:</td>
-                                      @elseif ($dominion->race->name == 'Swarm')
-                                        <td>Larvae:</td>
-                                      @else
-                                        <td>Peasants:</td>
-                                      @endif
+                                        <td>{{ str_plural($raceHelper->getPeasantsTerm($dominion->race)) }}:</td>
                                         <td>{{ number_format($infoOp->data['peasants']) }}</td>
                                     </tr>
                                     <tr>
@@ -78,6 +71,12 @@
                                         <td>Victories:</td>
                                         <td>{{ number_format($infoOp->data['victories']) }}</td>
                                     </tr>
+                                    @if(isset($infoOp->data['net_victories']))
+                                    <tr>
+                                        <td>Net Victories:</td>
+                                        <td>{{ number_format($infoOp->data['net_victories']) }}</td>
+                                    </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -94,8 +93,8 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Platinum:</td>
-                                        <td>{{ number_format($infoOp->data['resource_platinum']) }}</td>
+                                        <td>Gold:</td>
+                                        <td>{{ number_format($infoOp->data['resource_gold']) }}</td>
                                     </tr>
                                     <tr>
                                         <td>Food:</td>
@@ -121,22 +120,26 @@
                                         <td>Experience Points:</td>
                                         <td>{{ number_format($infoOp->data['resource_tech']) }}</td>
                                     </tr>
-                                    <tr>
-                                        <td>Boats:</td>
-                                        <td>{{ number_format($infoOp->data['resource_boats']) }}</td>
-                                    </tr>
 
                                     @if ($dominion->race->name == 'Norse' and isset($infoOp->data['resource_champion']))
                                     <tr>
                                         <td>Champions:</td>
                                         <td>{{ number_format($infoOp->data['resource_champion']) }}</td>
                                     </tr>
-                                    @elseif ($dominion->race->name == 'Demon' and isset($infoOp->data['resource_soul']))
-                                    <tr>
-                                        <td>Souls:</td>
-                                        <td>{{ number_format($infoOp->data['resource_soul']) }}</td>
-                                    </tr>
-                                    @elseif ($dominion->race->name == 'Snow Elf' and isset($infoOp->data['resource_wild_yeti']))
+                                    @elseif ($dominion->race->name == 'Demon')
+                                        @if(isset($infoOp->data['resource_soul']))
+                                        <tr>
+                                            <td>Souls:</td>
+                                            <td>{{ number_format($infoOp->data['resource_soul']) }}</td>
+                                        </tr>
+                                        @endif
+                                        @if(isset($infoOp->data['resource_blood']))
+                                        <tr>
+                                            <td>Blood:</td>
+                                            <td>{{ number_format($infoOp->data['resource_blood']) }}</td>
+                                        </tr>
+                                        @endif
+                                    @elseif ($dominion->race->name == 'Yeti' and isset($infoOp->data['resource_wild_yeti']) and $infoOp->data['resource_wild_yeti'] > 0)
                                     <tr>
                                         <td>Wild yetis:</td>
                                         <td>{{ number_format($infoOp->data['resource_wild_yeti']) }}</td>
@@ -162,15 +165,11 @@
                                         <td>{{ number_format($infoOp->data['morale']) }}%</td>
                                     </tr>
                                     <tr>
-                                      @if ($dominion->race->name == 'Growth')
-                                        <td>Amoeba:</td>
-                                      @elseif ($dominion->race->name == 'Myconid')
-                                        <td>Sporeling:</td>
-                                      @elseif ($dominion->race->name == 'Swarm')
-                                        <td>Cocoons:</td>
-                                      @else
-                                        <td>Draftees:</td>
-                                      @endif
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString( $dominion->race) }}">
+                                                {{ $raceHelper->getDrafteesTerm($dominion->race) }}:
+                                            </span>
+                                        </td>
                                         <td>{{ number_format($infoOp->data['military_draftees']) }}</td>
                                     </tr>
                                     <tr>
@@ -247,13 +246,17 @@
                         @elseif ($infoOp->isStale())
                             <span class="label label-warning">Stale</span>
                         @endif
+                        @if ($infoOp->isInaccurate())
+                            <span class="label label-info" data-toggle="tooltip" data-placement="top" title="The information is distorted by magic, consult the Scribes">Inaccurate</span>
+                        @endif
                     @endif
 
                     <div class="pull-right">
-                        <form action="{{ route('dominion.magic') }}" method="post" role="form">
+                        <form action="{{ route('dominion.intelligence') }}" method="post" role="form">
                             @csrf
-                            <input type="hidden" name="target_dominion" value="{{ $dominion->id }}">
-                            <input type="hidden" name="spell" value="clear_sight">
+                            <input type="hidden" name="spell_dominion" value="{{ $dominion->id }}">
+                            <input type="hidden" name="type" value="spell">
+                            <input type="hidden" name="operation" value="clear_sight">
                             <button type="submit" class="btn btn-sm btn-primary">Clear Sight ({{ number_format($spellCalculator->getManaCost($selectedDominion, 'clear_sight')) }} mana)</button>
                         </form>
                     </div>
@@ -274,17 +277,8 @@
                 <div class="box-body">
                     <p>This page contains the data that your realmies have gathered about dominion <b>{{ $dominion->name }}</b> from realm {{ $dominion->realm->name }} (#{{ $dominion->realm->number }}).</p>
 
-                    <p>Sections marked as <span class="label label-warning">stale</span> contain data from the previous hour (or earlier) and should be considered inaccurate. Sections marked as <span class="label label-danger">invalid</span> are more than 12 hours old. Recast your info ops before performing any offensive operations during this hour.</p>
+                    @include('partials.dominion.op-center.labels-explainer')
 
-                    {{--<p>Estimated stats:</p>
-                    <p>
-                        OP: ??? <abbr title="Not yet implemented" class="label label-danger">NYI</abbr><br>
-                        DP: ??? <abbr title="Not yet implemented" class="label label-danger">NYI</abbr><br>
-                        Land: {{ $infoOpService->getLandString($latestInfoOps) }}<br>
-                        Networth: {{ $infoOpService->getNetworthString($latestInfoOps) }}<br>
-                    </p>--}}
-
-                    {{-- todo: invade button --}}
                 </div>
             </div>
         </div>
@@ -323,15 +317,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($infoOp->data as $spell)
+                            @foreach ($infoOp->data as $spellOpInfo)
                                 @php
-                                    $spellInfo = $spellHelper->getSpellInfo($spell['spell'], $dominion, true, true);
-                                    $castByDominion = OpenDominion\Models\Dominion::with('realm')->findOrFail($spell['cast_by_dominion_id']);
+                                    $spell = OpenDominion\Models\Spell::where('id', $spellOpInfo['spell_id'])->first();
+                                    $castByDominion = OpenDominion\Models\Dominion::with('realm')->findOrFail($spellOpInfo['caster_id']);
                                 @endphp
                                 <tr>
-                                    <td>{{ $spellInfo['name'] }}</td>
-                                    <td>{{ $spellInfo['description'] }}</td>
-                                    <td class="text-center">{{ $spell['duration'] }}</td>
+                                    <td>{{ $spell->name }}</td>
+                                    <td>
+                                        <ul>
+                                        @foreach($spellHelper->getSpellEffectsString($spell, $selectedDominion->race) as $effect)
+                                            <li>{{ $effect }}</li>
+                                        @endforeach
+                                        <ul>
+                                    </td>
+                                    <td class="text-center">{{ $spellOpInfo['duration'] }} / {{ $spell->duration }} ticks</td>
                                     <td class="text-center">
                                         <a href="{{ route('dominion.realm', $castByDominion->realm->number) }}">{{ $castByDominion->name }} (#{{ $castByDominion->realm->number }})</a>
                                     </td>
@@ -349,13 +349,17 @@
                         @elseif ($infoOp->isStale())
                             <span class="label label-warning">Stale</span>
                         @endif
+                        @if ($infoOp->isInaccurate())
+                            <span class="label label-info" data-toggle="tooltip" data-placement="top" title="The information is distorted by magic, consult the Scribes">Inaccurate</span>
+                        @endif
                     @endif
 
                     <div class="pull-right">
-                        <form action="{{ route('dominion.magic') }}" method="post" role="form">
+                        <form action="{{ route('dominion.intelligence') }}" method="post" role="form">
                             @csrf
-                            <input type="hidden" name="target_dominion" value="{{ $dominion->id }}">
-                            <input type="hidden" name="spell" value="revelation">
+                            <input type="hidden" name="spell_dominion" value="{{ $dominion->id }}">
+                            <input type="hidden" name="type" value="spell">
+                            <input type="hidden" name="operation" value="revelation">
                             <button type="submit" class="btn btn-sm btn-primary">Revelation ({{ number_format($spellCalculator->getManaCost($selectedDominion, 'revelation')) }} mana)</button>
                         </form>
                     </div>
@@ -397,12 +401,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($improvementHelper->getImprovementTypes($dominion->race->name) as $improvementType)
+                            @foreach ($improvementHelper->getImprovementTypes($dominion) as $improvementType)
                                 <tr>
                                     <td>
-                                      <i class="ra ra-{{ $improvementHelper->getImprovementIcon($improvementType) }} ra-fw" data-toggle="tooltip" data-placement="top" title="{{ $improvementHelper->getImprovementHelpString($improvementType) }}"></i>
+                                      <i class="ra ra-{{ $improvementHelper->getImprovementIcon($improvementType) }} ra-fw" data-toggle="tooltip" data-placement="top" title="{{ $improvementHelper->getImprovementHelpString($improvementType, $selectedDominion) }}"></i>
                                         {{ ucfirst($improvementType) }}
-                                        {!! $improvementHelper->getImprovementImplementedString($improvementType) !!}
                                     </td>
                                     <td>
                                         {{ sprintf(
@@ -425,12 +428,16 @@
                         @elseif ($infoOp->isStale())
                             <span class="label label-warning">Stale</span>
                         @endif
+                        @if ($infoOp->isInaccurate())
+                            <span class="label label-info" data-toggle="tooltip" data-placement="top" title="The information is distorted by magic, consult the Scribes">Inaccurate</span>
+                        @endif
                     @endif
 
                     <div class="pull-right">
-                        <form action="{{ route('dominion.espionage') }}" method="post" role="form">
+                        <form action="{{ route('dominion.intelligence') }}" method="post" role="form">
                             @csrf
-                            <input type="hidden" name="target_dominion" value="{{ $dominion->id }}">
+                            <input type="hidden" name="espionage_dominion" value="{{ $dominion->id }}">
+                            <input type="hidden" name="type" value="espionage">
                             <input type="hidden" name="operation" value="castle_spy">
                             <button type="submit" class="btn btn-sm btn-primary">Castle Spy</button>
                         </form>
@@ -484,7 +491,7 @@
                                 <td>Draftees</td>
                                 <td colspan="12">&nbsp;</td>
                                 <td class="text-center">
-                                    ~{{ number_format(array_get($infoOp->data, 'units.home.draftees', 0)) }}
+                                    {{ number_format(array_get($infoOp->data, 'units.home.draftees', 0)) }}
                                 </td>
                             </tr>
                             @foreach ($unitHelper->getUnitTypes() as $unitType)
@@ -514,7 +521,7 @@
                                         @if (in_array($unitType, ['spies', 'wizards', 'archmages']))
                                             ???
                                         @elseif ($unitsAtHome !== 0)
-                                            ~{{ number_format($unitsAtHome) }}
+                                            {{ number_format($unitsAtHome) }}
                                         @else
                                             0
                                         @endif
@@ -537,12 +544,16 @@
                         @elseif ($infoOp->isStale())
                             <span class="label label-warning">Stale</span>
                         @endif
+                        @if ($infoOp->isInaccurate())
+                            <span class="label label-info" data-toggle="tooltip" data-placement="top" title="The information is distorted by magic, consult the Scribes">Inaccurate</span>
+                        @endif
                     @endif
 
                     <div class="clearfix pull-right">
-                        <form action="{{ route('dominion.espionage') }}" method="post" role="form">
+                        <form action="{{ route('dominion.intelligence') }}" method="post" role="form">
                             @csrf
-                            <input type="hidden" name="target_dominion" value="{{ $dominion->id }}">
+                            <input type="hidden" name="espionage_dominion" value="{{ $dominion->id }}">
+                            <input type="hidden" name="type" value="espionage">
                             <input type="hidden" name="operation" value="barracks_spy">
                             <button type="submit" class="btn btn-sm btn-primary">Barracks Spy</button>
                         </form>
@@ -643,7 +654,7 @@
                 @else
                     @slot('noPadding', true)
                     @slot('titleExtra')
-                        <span class="pull-right">Barren Land: <strong>{{ number_format(array_get($infoOp->data, 'barren_land')) }}</strong></span>
+                        <span class="pull-right">Barren Land: <strong>{{ number_format(array_get($infoOp->data, 'barren_land')) }}</strong> ({{ number_format(((array_get($infoOp->data, 'barren_land') / $landCalculator->getTotalLand($dominion)) * 100), 2) }}%)</span>
                     @endslot
 
                     <table class="table">
@@ -655,23 +666,23 @@
                         <thead>
                             <tr>
                                 <th>Building Type</th>
-                                <th class="text-center">Number</th>
+                                <th class="text-center">Amount</th>
                                 <th class="text-center">% of land</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($buildingHelper->getBuildingTypes($dominion) as $buildingType)
+                            @foreach ($buildingHelper->getBuildingsByRace($dominion->race) as $building)
                                 @php
-                                    $amount = array_get($infoOp->data, "constructed.{$buildingType}");
+                                    $amount = array_get($infoOp->data, "constructed.{$building->key}");
                                 @endphp
                                 <tr>
                                     <td>
-                                        {{ ucwords(str_replace('_', ' ', $buildingType)) }}
-                                        {!! $buildingHelper->getBuildingImplementedString($buildingType) !!}
-                                        <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="{{ $buildingHelper->getBuildingHelpString($buildingType) }}"></i>
+                                        <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
+                                            {{ $building->name }}
+                                        </span>
                                     </td>
                                     <td class="text-center">{{ number_format($amount) }}</td>
-                                    <td class="text-center">{{ number_format((($amount / array_get($infoOp->data, "total_land", $landCalculator->getTotalLand($dominion))) * 100), 2) }}%</td>
+                                    <td class="text-center">{{ number_format((($amount / $landCalculator->getTotalLand($dominion)) * 100), 2) }}%</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -686,12 +697,16 @@
                         @elseif ($infoOp->isStale())
                             <span class="label label-warning">Stale</span>
                         @endif
+                        @if ($infoOp->isInaccurate())
+                            <span class="label label-info" data-toggle="tooltip" data-placement="top" title="The information is distorted by magic, consult the Scribes">Inaccurate</span>
+                        @endif
                     @endif
 
                     <div class="pull-right">
-                        <form action="{{ route('dominion.espionage') }}" method="post" role="form">
+                        <form action="{{ route('dominion.intelligence') }}" method="post" role="form">
                             @csrf
-                            <input type="hidden" name="target_dominion" value="{{ $dominion->id }}">
+                            <input type="hidden" name="espionage_dominion" value="{{ $dominion->id }}">
+                            <input type="hidden" name="type" value="espionage">
                             <input type="hidden" name="operation" value="survey_dominion">
                             <button type="submit" class="btn btn-sm btn-primary">Survey Dominion</button>
                         </form>
@@ -713,6 +728,11 @@
 
                 @slot('title', 'Incoming building breakdown')
                 @slot('titleIconClass', 'fa fa-clock-o')
+                @if(isset($infoOp->data['constructing_land']))
+                @slot('titleExtra')
+                    <span class="pull-right">Incoming Buildings: <strong>{{ number_format(array_get($infoOp->data, 'constructing_land')) }}</strong> ({{ number_format(((array_get($infoOp->data, 'constructing_land') / $landCalculator->getTotalLand($dominion)) * 100), 2) }}%)</span>
+                @endslot
+                @endif
 
                 @if ($infoOp === null)
                     <p>No recent data available.</p>
@@ -738,12 +758,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($buildingHelper->getBuildingTypes($dominion) as $buildingType)
+                            @foreach ($buildingHelper->getBuildingsByRace($dominion->race) as $building)
                                 <tr>
-                                    <td>{{ ucwords(str_replace('_', ' ', $buildingType)) }}</td>
+                                    <td>
+                                        <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
+                                            {{ $building->name }}
+                                        </span>
+                                    </td>
                                     @for ($i = 1; $i <= 12; $i++)
                                         @php
-                                            $amount = array_get($infoOp->data, "constructing.{$buildingType}.{$i}", 0);
+                                            $amount = array_get($infoOp->data, "constructing.{$building->key}.{$i}", 0);
                                         @endphp
                                         <td class="text-center">
                                             @if ($amount === 0)
@@ -754,7 +778,7 @@
                                         </td>
                                     @endfor
                                     <td class="text-center">
-                                        @if ($amountConstructing = array_get($infoOp->data, "constructing.{$buildingType}"))
+                                        @if ($amountConstructing = array_get($infoOp->data, "constructing.{$building->key}"))
                                             {{ number_format(array_sum($amountConstructing)) }}
                                         @else
                                             0
@@ -792,6 +816,9 @@
                             <col width="100">
                             <col width="100">
                             <col width="100">
+                            @if ($dominion->race->getPerkValue('land_improvements'))
+                                <col width="100">
+                            @endif
                         </colgroup>
                         <thead>
                             <tr>
@@ -799,6 +826,9 @@
                                 <th class="text-center">Number</th>
                                 <th class="text-center">% of total</th>
                                 <th class="text-center">Barren</th>
+                                @if ($dominion->race->getPerkValue('land_improvements') or $dominion->race->getPerkValue('defense_from_forest'))
+                                    <th class="text-center">Bonus</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -813,6 +843,36 @@
                                     <td class="text-center">{{ number_format(array_get($infoOp->data, "explored.{$landType}.amount")) }}</td>
                                     <td class="text-center">{{ number_format(array_get($infoOp->data, "explored.{$landType}.percentage"), 2) }}%</td>
                                     <td class="text-center">{{ number_format(array_get($infoOp->data, "explored.{$landType}.barren")) }}</td>
+
+                                    @if ($dominion->race->getPerkValue('land_improvements') and isset($infoOp->data['land_improvements']))
+                                        <td class="text-center">
+                                              +{{ number_format($infoOp->data['land_improvements'][$landType]*100,2) }}%
+
+                                              @if($landType == 'plain')
+                                                  Offensive Power
+                                              @elseif($landType == 'mountain')
+                                                  Gold Production
+                                              @elseif($landType == 'swamp')
+                                                   Wizard Strength
+                                              @elseif($landType == 'forest')
+                                                  Max Population
+                                              @elseif($landType == 'hill')
+                                                  Defensive Power
+                                              @elseif($landType == 'water')
+                                                  Food and Boat Production
+                                              @endif
+                                        </td>
+                                    @endif
+
+                                    @if ($dominion->race->getPerkValue('defense_from_forest') and isset($infoOp->data['landtype_defense']))
+                                        <td class="text-center">
+                                            @if($infoOp->data['landtype_defense'][$landType] !== 0)
+                                                +{{ number_format($infoOp->data['landtype_defense'][$landType]*100,2) }}% Defensive Power
+                                            @else
+                                                &mdash;
+                                            @endif
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
@@ -827,12 +887,16 @@
                         @elseif ($infoOp->isStale())
                             <span class="label label-warning">Stale</span>
                         @endif
+                        @if ($infoOp->isInaccurate())
+                            <span class="label label-info" data-toggle="tooltip" data-placement="top" title="The information is distorted by magic, consult the Scribes">Inaccurate</span>
+                        @endif
                     @endif
 
                     <div class="pull-right">
-                        <form action="{{ route('dominion.espionage') }}" method="post" role="form">
+                        <form action="{{ route('dominion.intelligence') }}" method="post" role="form">
                             @csrf
-                            <input type="hidden" name="target_dominion" value="{{ $dominion->id }}">
+                            <input type="hidden" name="espionage_dominion" value="{{ $dominion->id }}">
+                            <input type="hidden" name="type" value="espionage">
                             <input type="hidden" name="operation" value="land_spy">
                             <button type="submit" class="btn btn-sm btn-primary">Land Spy</button>
                         </form>
@@ -936,23 +1000,24 @@
                         <colgroup>
                             <col width="150">
                             <col>
-                            <col width="100">
-                            <col width="200">
+                            <col>
                         </colgroup>
                         <thead>
                             <tr>
-                                <th>Tech</th>
+                                <th>Advancement</th>
+                                <th>Level</th>
                                 <th>Description</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($infoOp->data['techs'] as $techKey => $techName)
+                            @foreach ($infoOp->data['advancements'] as $advancement)
                                 @php
-                                    $techDescription = $techHelper->getTechDescription(OpenDominion\Models\Tech::where('key', $techKey)->firstOrFail());
+                                    $tech = OpenDominion\Models\Tech::where('key', $advancement['key'])->firstOrFail();
                                 @endphp
                                 <tr>
-                                    <td>{{ $techName }}</td>
-                                    <td>{{ $techDescription }}</td>
+                                    <td>{{ $advancement['name'] }}</td>
+                                    <td>{{ $advancement['level'] }}</td>
+                                    <td>{{ $techHelper->getTechDescription($tech) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -967,13 +1032,17 @@
                         @elseif ($infoOp->isStale())
                             <span class="label label-warning">Stale</span>
                         @endif
+                        @if ($infoOp->isInaccurate())
+                            <span class="label label-info" data-toggle="tooltip" data-placement="top" title="The information is distorted by magic, consult the Scribes">Inaccurate</span>
+                        @endif
                     @endif
 
                     <div class="pull-right">
-                        <form action="{{ route('dominion.magic') }}" method="post" role="form">
+                        <form action="{{ route('dominion.intelligence') }}" method="post" role="form">
                             @csrf
-                            <input type="hidden" name="target_dominion" value="{{ $dominion->id }}">
-                            <input type="hidden" name="spell" value="vision">
+                            <input type="hidden" name="spell_dominion" value="{{ $dominion->id }}">
+                            <input type="hidden" name="type" value="spell">
+                            <input type="hidden" name="operation" value="vision">
                             <button type="submit" class="btn btn-sm btn-primary">Vision ({{ number_format($spellCalculator->getManaCost($selectedDominion, 'vision')) }} mana)</button>
                         </form>
                     </div>

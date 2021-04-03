@@ -38,7 +38,7 @@ class DominionController extends AbstractController
         ];
 
         $resourceTypes = [
-            'platinum' => '#e5e4e2',
+            'gold' => '#e5e4e2',
             'food' => '#bab742',
             'lumber' => '#966f33',
             'mana' => '#8cd1e5',

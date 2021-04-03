@@ -6,15 +6,13 @@ use OpenDominion\Http\Requests\Dominion\AbstractDominionRequest;
 
 class TickActionRequest extends AbstractDominionRequest
 {
-    /**
-     * {@inheritdoc}
-     */
-     /*
-    public function rules(): array
-    {
-        return [
-            'dominion' => 'required'
-        ];
-    }
-    */
+  /**
+   * {@inheritdoc}
+   */
+  public function rules()
+  {
+      return [
+          'returnTo' => 'required',
+      ];
+  }
 }

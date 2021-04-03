@@ -15,11 +15,11 @@ class CreateRacesTable extends Migration
         Schema::create('races', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->enum('alignment', ['good', 'neutral', 'evil', 'npc', 'other']);
-            $table->enum('home_land_type', ['plain', 'mountain', 'swamp',/* 'cavern', */'forest', 'hill', 'water']);
+            $table->string('alignment');
+            $table->string('home_land_type');
 
             # ODA
-            $table->integer('playable');
+            #$table->integer('playable');
             $table->integer('attacking');
             $table->integer('exploring');
             $table->integer('converting');

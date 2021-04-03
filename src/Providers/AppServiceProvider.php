@@ -21,6 +21,7 @@ use OpenDominion\Calculators\Dominion\ProductionCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\NetworthCalculator;
+use OpenDominion\Calculators\RealmCalculator;
 use OpenDominion\Services\Activity\ActivityService;
 use OpenDominion\Services\Analytics\AnalyticsService;
 use OpenDominion\Services\CouncilService;
@@ -80,6 +81,7 @@ class AppServiceProvider extends AbstractServiceProvider
     {
         // Generic Calculators
         $this->app->singleton(NetworthCalculator::class);
+        $this->app->singleton(RealmCalculator::class);
 
         // Dominion Calculators
         $this->app->singleton(BuildingCalculator::class);

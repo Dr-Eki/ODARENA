@@ -14,7 +14,7 @@ use OpenDominion\Models\AbstractModel;
  * @property int $morale
  * @property float $spy_strength
  * @property float $wizard_strength
- * @property int $resource_platinum
+ * @property int $resource_gold
  * @property int $resource_food
  * @property int $resource_lumber
  * @property int $resource_mana
@@ -47,7 +47,7 @@ use OpenDominion\Models\AbstractModel;
  * @property int $building_tower
  * @property int $building_wizard_guild
  * @property int $building_temple
- * @property int $building_diamond_mine
+ * @property int $building_gem_mine
  * @property int $building_school
  * @property int $building_lumberyard
  * @property int $building_forest_haven
@@ -68,7 +68,7 @@ class Tick extends AbstractModel
         'morale' => 'integer',
         'spy_strength' => 'float',
         'wizard_strength' => 'float',
-        'resource_platinum' => 'integer',
+        'resource_gold' => 'integer',
         'resource_food' => 'integer',
         'resource_lumber' => 'integer',
         'resource_mana' => 'integer',
@@ -91,6 +91,7 @@ class Tick extends AbstractModel
         'land_forest' => 'integer',
         'land_hill' => 'integer',
         'land_water' => 'integer',
+        /*
         'building_home' => 'integer',
         'building_alchemy' => 'integer',
         'building_farm' => 'integer',
@@ -101,7 +102,7 @@ class Tick extends AbstractModel
         'building_tower' => 'integer',
         'building_wizard_guild' => 'integer',
         'building_temple' => 'integer',
-        'building_diamond_mine' => 'integer',
+        'building_gem_mine' => 'integer',
         'building_school' => 'integer',
         'building_lumberyard' => 'integer',
         'building_forest_haven' => 'integer',
@@ -110,6 +111,7 @@ class Tick extends AbstractModel
         'building_shrine' => 'integer',
         'building_barracks' => 'integer',
         'building_dock' => 'integer',
+        */
 
         # ODA
         'generated_land' => 'integer',
@@ -119,6 +121,15 @@ class Tick extends AbstractModel
         'generated_unit4' => 'integer',
         'resource_champion' => 'integer',
         'resource_soul' => 'integer',
+        'resource_blood' => 'integer',
+
+
+        'building_tissue' => 'integer',
+        'building_mycelia' => 'integer',
+        'building_ziggurat' => 'integer',
+
+        'peasants_sacrificed' => 'integer',
+        'protection_ticks' => 'integer',
 
         'starvation_casualties' => 'array',
         'pestilence_units' => 'array',

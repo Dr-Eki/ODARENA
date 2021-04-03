@@ -1,42 +1,41 @@
 name: Growth
 alignment: independent
 description: >-
-  <p>The growth is believed to originate from ancient Nox burial pits, deep in the swamp lands.</p>
-  <p>Attempts at communication have failed. It shows no signs of sentience. It simply grows and grows.</p>
-  <hr />
-  <ul>
-  <li>Unique building: Tissue - houses 160 and produces 2 food/tick.</li>
-  <li>Starts with 1,000 Tissue.</li>
-  </ul>
+  <p>Unique improvement: Tissue - increases population and food production.</p>
 home_land_type: swamp
 playable: 1
+
+peasants_alias: cell
+draftees_alias: amoeba
+
+construction_materials: food
 
 attacking: 2
 exploring : 0
 converting: 0
+skill_level: 2
 
 perks:
-#  max_population: 300
   population_growth: 200
-#  cannot_improve_castle: 1
-  food_consumption: -100
-#  cannot_construct: 1
-  construction_cost_only_food: 1
-  can_only_build_tissue: 1
-  cannot_build_homes: 1
+  no_food_consumption: 1
   cannot_explore: 1
   cannot_train_spies: 1
   cannot_train_wizards: 1
   cannot_train_archmages: 1
-  reduce_conversions: 75
+  reduced_conversions: 75
   tissue_improvement: 1
   draftee_dp: 0.01
   peasants_produce_food: 0.5
+  cannot_rezone: 1
+  cannot_release_units: 1
+
 units:
   - name: Abscess
-    need_boat: false
+    training_time: 9
+    type:
+      - living
     cost:
-      platinum: 0
+      gold: 0
       ore: 0
       food: 65
     power:
@@ -45,9 +44,13 @@ units:
     perks:
       counts_as_wizard_offense: 0.2
       counts_as_spy_offense: 0.2
+
   - name: Blister
+    training_time: 9
+    type:
+      - living
     cost:
-      platinum: 0
+      gold: 0
       ore: 0
       food: 65
     power:
@@ -56,9 +59,13 @@ units:
     perks:
       counts_as_wizard_defense: 0.15
       counts_as_spy_defense: 0.15
+
   - name: Cyst
+    training_time: 12
+    type:
+      - living
     cost:
-      platinum: 0
+      gold: 0
       ore: 0
       food: 150
     power:
@@ -67,10 +74,13 @@ units:
     perks:
         mana_production: 0.025
         food_production: 0.50
+
   - name: Ulcer
-    need_boat: false
+    training_time: 12
+    type:
+      - living
     cost:
-      platinum: 0
+      gold: 0
       ore: 0
       food: 160
     power:

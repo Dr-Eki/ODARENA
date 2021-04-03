@@ -1,55 +1,78 @@
 name: Sylvan
 alignment: good
-description: >-
-  <p>Sylvan are beings of the forest. They consider it their duty to maintain the forest and take care of all that lives there.</p>
-  <p>Trespassers are dealt with swiftly by the Leshy and Spriggan
-  <p>Those found destroying forest under Sylvan protection end up regretting it.</p>
-  <p>Their affinity for nature makes them excellent at exploration, and highly proficient spellcasters.</p>
+description:
 home_land_type: forest
 playable: 1
 
 attacking: 3
 exploring : 3
-converting: 1
+converting: 2
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   food_consumption: -25
-  lumber_production: 25
+  extra_barren_forest_max_population: 10
+  extra_barren_forest_jobs: 20
+  barren_forest_lumber_production: 100
+  salvaging: 100
 units:
   - name: Leshy
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 250
+      gold: 300
+      lumber: 25
     power:
-      offense: 3
+      offense: 4
       defense: 0
     perks:
-      offense_if_recently_invaded: 1
+      offense_if_recently_invaded: 2
+
   - name: Sprite
+    training_time: 9
+    type:
+      - living
+      - sentient
     cost:
-      platinum: 300
+      gold: 300
     power:
       offense: 0
       defense: 3
+
   - name: Dryad
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
+      gold: 850
       mana: 10
     power:
       offense: 0
-      defense: 3
+      defense: 4
     perks:
       counts_as_wizard_offense: 0.333
-      counts_as_wizard_defense: 0.333
+      counts_as_wizard_defense: 0.250
       defense_from_land: forest,20,5 # land type, ratio%, max
-      decay_protection: 100,mana
+
   - name: Spriggan
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      lumber: 650
-      mana: 100
+      lumber: 600
+      mana: 36
     power:
       offense: 7
       defense: 3
     perks:
       offense_if_recently_invaded: 7
       defense_if_recently_invaded: 3
-      decay_protection: 200,lumber

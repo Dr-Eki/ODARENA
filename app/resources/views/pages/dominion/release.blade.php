@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
+{{--
 @section('page-header', 'Release Troops')
+--}}
 
 @section('content')
     <div class="row">
@@ -29,9 +31,8 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        {!! $unitHelper->getUnitTypeIconHtml('draftees', $selectedDominion->race) !!}
-                                        <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString('draftees', $selectedDominion->race) }}">
-                                            Draftees
+                                        <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString( $selectedDominion->race) }}">
+                                            {{ $raceHelper->getDrafteesTerm($selectedDominion->race) }}:
                                         </span>
                                     </td>
                                     <td class="text-center">{{ number_format($selectedDominion->military_draftees) }}</td>
@@ -42,7 +43,7 @@
                                 @foreach ($unitHelper->getUnitTypes() as $unitType)
                                     <tr>
                                         <td>
-                                            {!! $unitHelper->getUnitTypeIconHtml($unitType, $selectedDominion->race) !!}
+
                                             <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $selectedDominion->race) }}">
                                                 {{ $unitHelper->getUnitName($unitType, $selectedDominion->race) }}
                                             </span>
@@ -58,6 +59,10 @@
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn btn-danger" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>Release</button>
+
+                        <span class="pull-right">
+                        <a href="{{ route('dominion.military') }}" class="btn btn-primary">Cancel</a>
+                        </span>
                     </div>
                 </form>
             </div>
@@ -69,10 +74,10 @@
                     <h3 class="box-title">Information</h3>
                 </div>
                 <div class="box-body">
-                    <p><b>Warning</b>: You are about to release your troops.</p>
-                    <p>Draftees will release into the peasantry. Other troops into draftees.</p>
-                    <p>Any platinum, ore and wizards used to train any released unit <b>will be lost</b>.</p>
-                    <p>Releasing troops processes <b>instantly</b>.</p>
+                    <p><b>Warning</b>: You are about to <b>instantly</b> release your troops.</p>
+                    <p>No resources spent on training units will be returned when you release units.</p>
+                    <p>Units are released into draftees and draftees are released into the peasantry.</p>
+                    <p><em>Units which do not count towards population are simply released and destroyed. No draftee is returned.</em></p>
                 </div>
             </div>
         </div>

@@ -6,6 +6,7 @@ use Auth;
 use DB;
 use OpenDominion\Models\Round;
 use OpenDominion\Services\Dominion\SelectorService;
+use Carbon\Carbon;
 
 class HomeController extends AbstractController
 {
@@ -41,11 +42,14 @@ class HomeController extends AbstractController
             ->first();
         }
 
+        $hoursUntilRoundStarts = now()->startOfHour()->diffInHours(Carbon::parse($currentRound->start_date)->startOfHour());
+
         $currentRankings = null;
         if($rankingsRound !== null)
         {
             $currentRankings = DB::table('daily_rankings')
                 ->where('round_id', $rankingsRound->id)
+                ->where('race_name', '!=', 'Barbarian')
                 ->orderBy('land_rank')
                 ->take(10)
                 ->get();
@@ -53,7 +57,8 @@ class HomeController extends AbstractController
 
         return view('pages.home', [
             'currentRound' => $currentRound,
-            'currentRankings' => $currentRankings
+            'currentRankings' => $currentRankings,
+            'hoursUntilRoundStarts' => $hoursUntilRoundStarts
         ]);
     }
 }

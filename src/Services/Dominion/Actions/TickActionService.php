@@ -52,7 +52,7 @@ class TickActionService
     {
         $this->guardLockedDominion($dominion);
 
-        DB::transaction(function () use ($dominion) {
+        #DB::transaction(function () use ($dominion) {
             // Checks
             if($dominion->user_id !== Auth::user()->id)
             {
@@ -64,14 +64,14 @@ class TickActionService
                 throw new GameException('You do not have any protection ticks left.');
             }
 
-        });
+        #});
 
         # Run the tick.
         $this->tickService->tickManually($dominion);
 
         $this->notificationService->sendNotifications($dominion, 'irregular_dominion');
         return [
-            'message' => 'One tick has been processed. You now have ' . $dominion->protection_ticks . ' tick(s) left.',
+            'message' => 'One tick has been processed. You now have ' . $dominion->protection_ticks . ' ' . str_plural('tick', $dominion->protection_ticks) . ' left.',
             'alert-type' => 'success',
             'redirect' => route('dominion.status')
         ];

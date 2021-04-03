@@ -8,48 +8,57 @@ playable: 0
 attacking: 3
 exploring : 3
 converting: 3
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   gem_production: 10
 units:
   - name: Crusader
-    need_boat: true
+    training_time: 9
+    
     cost:
-      platinum: 350
+      gold: 350
       ore: 35
     power:
       offense: 3
       defense: 0
     perks:
       faster_return: 3
+
   - name: Follower
-    need_boat: true
+    training_time: 6
+    
     cost:
-      platinum: 0
+      gold: 0
       ore: 0
     power:
       offense: 0
       defense: 2
     perks:
-      reduce_combat_losses: 1
+      reduces_casualties: 1
       mana_production: 0.05
-      faster_training: 3
+
   - name: Pikeman
-    need_boat: true
+    training_time: 12
+    
     cost:
-      platinum: 900
+      gold: 900
       ore: 90
     power:
       offense: 0
       defense: 6
+
   - name: Paladin
+    training_time: 12
     cost:
-      platinum: 1150
+      gold: 1150
       ore: 100
     power:
       offense: 5
       defense: 3
     perks:
-      faster_return: 3
+      kills_immortal: 1
       counts_as_wizard_offense: 0.1
       offense_staggered_land_range: 75;1,85;1.5,100;2

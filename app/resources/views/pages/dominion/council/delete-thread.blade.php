@@ -32,10 +32,9 @@
                     @if ($thread->dominion->isMonarch())
                         <i class="ra ra-queen-crown text-red"></i>
                     @endif
+                    <em>{{ $thread->dominion->title->name }}</em>
+                    {{ $thread->dominion->ruler_name }} of
                     <b>{{ $thread->dominion->name }}</b>
-                    @if ($thread->dominion->name !== $thread->dominion->ruler_name)
-                        ({{ $thread->dominion->ruler_name }})
-                    @endif
                 </i>
             </small>
         </div>
@@ -54,10 +53,9 @@
                             @if ($post->dominion->isMonarch())
                                 <i class="ra ra-queen-crown text-red"></i>
                             @endif
-                            <b>{{ $post->dominion->name }}</b>
-                            @if ($post->dominion->name !== $post->dominion->ruler_name)
-                                ({{ $post->dominion->ruler_name }})
-                            @endif
+                            <em>{{ $thread->dominion->title->name }}</em>
+                            {{ $thread->dominion->ruler_name }} of
+                            <b>{{ $thread->dominion->name }}</b>
                         </i>
                     </small>
                 </div>

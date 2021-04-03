@@ -1,53 +1,83 @@
 name: Dark Elf
 alignment: evil
-description: >-
-  <p>With ashen skin, inky-black eyes and bat-like features, Dark Elves are the cave-dwelling distant cousins of the majestic Wood Elves. Corrupted long ago by the whispered promises of power from fallen demons, the Dark Elves are a cruel species who thrive on torment... be it the torment of their enemies, or even their own kin.</p>
-  <p>Dark Elves have black magic coursing through their veins. Capable of calling down a rain of fire and lightning upon their enemies, they are a terrifying force to reckon with - and that's before they even set foot on the battlefield.</p>
-home_land_type: swamp
+description:
+home_land_type: mountain
 playable: 1
 
 attacking: 3
 exploring : 3
-converting: 1
+converting: 2
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   gem_production: 10
+  food_consumption: -20
 units:
-  - name: Swordsman
+  - name: Gargoyle
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
+
     cost:
-      platinum: 325
-      ore: 25
+      gold: 350
+      ore: 30
     power:
       offense: 4
       defense: 0
-  - name: Gargoyle
+    perks:
+      faster_return: 3
+
+  - name: Swordsman
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 320
-      ore: 0
+      gold: 320
+      ore: 30
     power:
       offense: 0
-      defense: 3
+      defense: 4
+
   - name: Adept
-    type: hybrid_elite
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
     cost:
-      platinum: 1100
+      gold: 1200
       ore: 0
     power:
-      offense: 4
+      offense: 3
       defense: 5
     perks:
-      counts_as_wizard_offense: 0.333
-      counts_as_wizard_defense: 0.333
+      counts_as_wizard_offense: 0.25
+      counts_as_wizard_defense: 0.25
       offense_from_building: wizard_guild,10,5 # building type, ratio%, max
       defense_from_building: wizard_guild,10,5 # building type, ratio%, max
+      tech_production: 0.025
+
   - name: Spirit Warrior
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+
     cost:
-      platinum: 1200
-      mana: 15
+      gold: 1000
+      mana: 25
     power:
-      offense: 7
+      offense: 5
       defense: 0
     perks:
-      immortal_vs_land_range: 75
-      offense_staggered_land_range: 75;0.5,95;1
-    need_boat: false
+      immortal_on_victory: 1
+      offense_from_advancements: wizardry_tradition_level8;1,magical_weapons_level8;1,concentration_level8;1,invocations_level8;1

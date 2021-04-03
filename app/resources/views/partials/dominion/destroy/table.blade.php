@@ -14,6 +14,7 @@
         <thead>
             <tr>
                 <th colspan="3">
+                    <span class="pull-left barren-land">{!! $landHelper->getLandTypeIconHtml($landType) !!}</span>
                     <span class="pull-right barren-land">Barren: <strong>{{ number_format($landCalculator->getTotalBarrenLandByLandType($selectedDominion, $landType)) }}</strong></span>
                     <h4>{{ ucfirst($landType) }}</h4>
                 </th>
@@ -32,12 +33,11 @@
                         <span data-toggle="tooltip" data-placement="top" title="{{ $buildingHelper->getBuildingHelpString($buildingType) }}">
                             {{ ucwords(str_replace('_', ' ', $buildingType)) }}
                         </span>
-                        {!! $buildingHelper->getBuildingImplementedString($buildingType) !!}
                     </td>
                     <td class="text-center">
                         {{ $selectedDominion->{'building_' . $buildingType} }}
                         <small>
-                            ({{ number_format((($selectedDominion->{'building_' . $buildingType} / $landCalculator->getTotalLand($selectedDominion)) * 100), 1) }}%)
+                            ({{ number_format((($selectedDominion->{'building_' . $buildingType} / $landCalculator->getTotalLand($selectedDominion)) * 100), 2) }}%)
                         </small>
                     </td>
                     <td class="text-center">

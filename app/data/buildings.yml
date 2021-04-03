@@ -1,0 +1,945 @@
+# Standard Buildings
+
+## Production Buildings
+
+alchemy:
+  name: Alchemy
+  enabled: 0
+  excluded_races:
+    - Growth
+    - Myconid
+    - Void
+    - Swarm
+  land_type: plain
+  perks:
+    gold_production: 45
+
+gold_mine:
+  name: Gold Mine
+  enabled: 1
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Void
+    - Swarm
+  land_type: plain
+  perks:
+    gold_production: 50
+
+farm:
+  name: Farm
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Reptilians
+    - Swarm
+    - Void
+  land_type: plain
+  perks:
+    food_production: 80
+
+bog:
+  name: Bog
+  exclusive_races:
+    - Reptilians
+  land_type: swamp
+  perks:
+    food_production: 100
+
+ore_mine:
+  name: Ore Mine
+  excluded_races:
+    - Ants
+    - Demon
+    - Dimensionalists
+    - Dwarf
+    - Elementals
+    - Firewalker
+    - Growth
+    - Lux
+    - Marshling
+    - Merfolk
+    - Myconid
+    - Nox
+    - Qur
+    - Reptilians
+    - Simian
+    - Sylvan
+    - Swarm
+    - Undead
+    - Vampires
+    - Void
+    - Weres
+    - Wood Elf
+  land_type: mountain
+  perks:
+    ore_production: 60
+
+dwarven_ore_mine:
+  name: Dwarven Ore Mine
+  exclusive_races:
+    - Dwarf
+  land_type: mountain
+  perks:
+    ore_production: 60
+    housing: 23
+
+diamond_mine:
+  name: Diamond Mine
+  enabled: 0
+  excluded_races:
+    - Growth
+    - Myconid
+    - Void
+    - Swarm
+  land_type: mountain
+  perks:
+    gem_production: 15
+
+gem_mine:
+  name: Gem Mine
+  excluded_races:
+    - Beastfolk
+    - Growth
+    - Merfolk
+    - Myconid
+    - Void
+    - Swarm
+  land_type: mountain
+  perks:
+    gem_production: 15
+
+pearl_farm:
+  name: Pearl Farm
+  exclusive_races:
+    - Merfolk
+  land_type: water
+  perks:
+    gem_production: 14
+
+algae_bloom:
+  name: Algae Bloom
+  exclusive_races:
+    - Merfolk
+  land_type: water
+  perks:
+    food_production: 80
+
+sunken_shrine:
+  name: Sunken Shrine
+  exclusive_races:
+    - Merfolk
+  land_type: water
+  perks:
+    defensive_casualties: 1,5,50 # 1% gives -5%, max -50%
+    offensive_casualties: 1,5,50 # 1% gives -5%, max -50%
+
+water_temple:
+  name: Water Temple
+  exclusive_races:
+    - Merfolk
+  land_type: water
+  perks:
+    defensive_modifier_reduction: 1,1.8,36 # Every 1% gives -2% DP mods, max -40% DP mods
+    population_growth: 1,6 # Every 1%, gives 6%
+
+mana_spring:
+  name: Mana Spring
+  exclusive_races:
+    - Merfolk
+  land_type: water
+  perks:
+    mana_production: 18
+
+tower:
+  name: Tower
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Void
+    - Swarm
+  land_type: swamp
+  perks:
+    mana_production: 25
+
+mast:
+  name: Mast
+  exclusive_races:
+    - Dragon
+    - Icekin
+  land_type: mountain
+  perks:
+    mana_production: 15
+
+lumberyard:
+  name: Lumberyard
+  excluded_races:
+    - Dwarf
+    - Dragon
+    - Firewalker
+    - Gnome
+    - Growth
+    - Icekin
+    - Merfolk
+    - Myconid
+    - Swarm
+    - Sylvan
+    - Void
+  land_type: forest
+  perks:
+    lumber_production: 50
+
+dock:
+  name: Dock
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Reptilians
+    - Void
+    - Swarm
+  land_type: water
+  perks:
+    food_production: 40
+    tech_production_modifier: 1,5,25 #Every 1% gives +5% XP production, max +25%
+    exchange_rate: 1,4,20 # Every 1% gives +4% exchange rate, max +20%
+
+watermill:
+  name: Watermill
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Reptilians
+    - Void
+    - Swarm
+  land_type: water
+  perks:
+    gem_production_modifier: 1,4,20 # Every 1% gives +4% gem production, max +20%
+    ore_production_modifier: 1,4,20 # Every 1% gives +4% ore production, max +20%
+
+aqueduct:
+  name: Aqueduct
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Reptilians
+    - Swarm
+    - Void
+    - Yeti
+  land_type: water
+  perks:
+    food_production_modifier: 1,8,40 # Every 1% gives +8% food production, max +20%
+
+shipyard:
+  name: Shipyard
+  exclusive_races:
+    - Armada
+  land_type: water
+  perks:
+    unit_lumber_costs: 1,1,40 # Every 1% gives 1% reduction, max 20%
+
+## Mod Buildings
+
+masonry:
+  name: Masonry
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Void
+    - Swarm
+    - Beastfolk
+  land_type: plain
+  perks:
+    improvements: 1,2.75 # Every 1% gives 2.75% higher imps
+    lightning_bolt_damage: 1,0.75 # Every 1% reduces damage from LBs by 0.75%
+
+gryphon_nest:
+  name: Gryphon Nest
+  exclusive_races:
+    - Snow Elf
+  land_type: mountain
+  perks:
+    offensive_power: 1,1.8,36 # Every 1% gives 2% OP, max +40% OP
+
+military_academy:
+  name: Military Academy
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Snow Elf
+    - Swarm
+    - Void
+  land_type: hill
+  perks:
+    offensive_power: 1,1.8,36 # Every 1% gives 2% OP, max +40% OP
+
+guard_tower:
+  name: Guard Tower
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Void
+    - Swarm
+  land_type: hill
+  perks:
+    defensive_power: 1,1.8,36 # Every 1% gives 2% DP, max +40% DP
+
+temple:
+  name: Temple
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Void
+    - Swarm
+  land_type: swamp
+  perks:
+    defensive_modifier_reduction: 1,1.8,36 # Every 1% gives -2% DP mods, max -40% DP mods
+    population_growth: 1,6 # Every 1%, gives 6%
+
+tavern:
+  name: Tavern
+  exclusive_races:
+    - Dwarf
+    - Gnome
+    - Goblin
+    - Halfling
+    - Human
+    - Kerranad
+    - Kobold
+    - Norse
+    - Orc
+    - Vampires
+  land_type: plain
+  perks:
+    base_morale: 1,4,30
+
+stone_wall:
+  name: Stone Wall
+  exclusive_races:
+    - Dragon
+  land_type: mountain
+  perks:
+    defensive_power: 1,1.5,60 # Every 1% gives 1.5% DP, max +60% DP
+    raw_defense: 50
+
+shrine:
+  name: Shrine
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Void
+    - Swarm
+  land_type: forest
+  perks:
+    defensive_casualties: 1,5,50 # 1% gives -1% max -10%
+    offensive_casualties: 1,5,50 # 1% gives -5%, max -50%
+
+smithy:
+  name: Smithy
+  excluded_races:
+    - Beastfolk
+    - Dragon
+    - Gnome
+    - Growth
+    - Imperial Gnome
+    - Merfolk
+    - Myconid
+    - Swarm
+    - Void
+  land_type: plain
+  perks:
+    unit_gold_costs: 1,2,40 # ratio, perk, max
+    unit_ore_costs: 1,2,40 # ratio, perk, max
+
+ore_mill:
+  name: Gnomish Smithy
+  exclusive_races:
+    - Gnome
+    - Imperial Gnome
+  land_type: plain
+  perks:
+    unit_gold_costs: 1,2,40 # ratio, perk, max
+
+factory:
+  name: Factory
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Void
+    - Swarm
+  land_type: hill
+  perks:
+    construction_cost: 1,4,80 # 1% gives -4% construction cost, max -80%
+    rezone_cost: 1,2,40 # 1% gives -2% construction cost, max -40%
+
+## Other Buildings
+
+forest_haven:
+  name: Forest Haven
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Void
+    - Swarm
+  land_type: forest
+  perks:
+    spy_losses: 1,3,30 # 1% gives -3% spy losses, max -30
+    fireball_damage: 1,8  # Every 1% reduces damage from FBs by 8%
+    gold_theft_reduction: 1,8,100  # Every 1% reduces plat stolen by 8%, max 100% reduction
+    spy_housing: 40
+    housing: 0
+
+wizard_guild:
+  name: Wizard Guild
+  excluded_races:
+    - Dragon
+    - Growth
+    - Merfolk
+    - Myconid
+    - Void
+    - Swarm
+  land_type: swamp
+  perks:
+    wizard_strength_recovery: 1,0.1,2 # Every 1% gives +0.1% WS recovery per tick, max +2%/tick
+    wizard_cost: 1,2,40 # Every 1% gives 2% cost reduction, max 40% reduction
+    spell_cost: 1,2,40 # Every 1% gives 2% cost reduction, max 40% reduction
+    wizard_housing: 40
+    housing: 0
+
+# Racial Buildings/Faction Buildings
+
+# VOID SETUP
+
+arc:
+  name: Arc
+  exclusive_races:
+    - Void
+  land_type: hill
+  perks:
+    defensive_casualties: 1,4,100 # 1% gives -4%, max -100%
+    offensive_casualties: 1,4,100 # 1% gives -4%, max -100%
+    mana_production: -5
+
+helix:
+  name: Helix
+  exclusive_races:
+    - Void
+  land_type: swamp
+  perks:
+    offensive_power: 1,1.5,150 # Every 1% gives 2% OP, max +200% OP
+    mana_production: -2
+
+oculus:
+  name: Oculus
+  exclusive_races:
+    - Void
+  land_type: mountain
+  perks:
+    wizard_strength: 1,2,200 # Every 1% gives 2% WPA, max +200% OP
+    spy_strength: 1,2,200 # Every 1% gives 2% SPA, max +200% OP
+    mana_production: -1
+
+mosaic:
+  name: Mosaic
+  exclusive_races:
+    - Void
+  land_type: plain
+  perks:
+    land_discovered: 1,2,200 # Every 1% gives 2% land discovered, max +200%
+    mana_production: -2
+
+pillar:
+  name: Pillar
+  exclusive_races:
+    - Void
+  land_type: hill
+  perks:
+    defensive_power: 1,1.5,150 # Every 1% gives 2% DP, max +200% DP
+    mana_production: -2
+
+tesseract:
+  name: Tesseract
+  exclusive_races:
+    - Void
+  land_type: mountain
+  perks:
+    military_housing: 48
+
+ziggurat:
+  name: Ziggurat
+  exclusive_races:
+    - Void
+  land_type: mountain
+  perks:
+    raw_defense: 4
+    mana_production: 30
+
+# END VOID
+
+# GROWTH TISSUES
+
+tissue:
+  name: Tissue
+  enabled: 0
+  exclusive_races:
+    - Growth
+  land_type: swamp
+  perks:
+    food_production: 4
+    housing: 176
+    jobs: 0
+
+tissue_plain:
+  name: Tissue
+  exclusive_races:
+    - Growth
+  land_type: plain
+  perks:
+    food_production: 4
+    housing: 176
+    jobs: 0
+
+sinew:
+  name: Sinew
+  exclusive_races:
+    - Growth
+  land_type: plain
+  perks:
+    defensive_casualties: 1,5,90 # 1% gives -2% max -100%
+    offensive_casualties: 1,5,90 # 1% gives -2%, max -100%
+    housing: 88
+    jobs: 0
+
+tissue_forest:
+  name: Tissue
+  exclusive_races:
+    - Growth
+  land_type: forest
+  perks:
+    food_production: 4
+    housing: 176
+    jobs: 0
+
+tendon:
+  name: Tendon
+  exclusive_races:
+    - Growth
+  land_type: forest
+  perks:
+    improvements: 1,4 # Every 1% gives 2.5% higher imps
+    housing: 88
+    jobs: 0
+
+tissue_mountain:
+  name: Tissue
+  exclusive_races:
+    - Growth
+  land_type: mountain
+  perks:
+    food_production: 4
+    housing: 176
+    jobs: 0
+
+cartilage:
+  name: Cartilage
+  exclusive_races:
+    - Growth
+  land_type: mountain
+  perks:
+    raw_defense: 112
+    housing: 88
+    jobs: 0
+
+tissue_hill:
+  name: Tissue
+  exclusive_races:
+    - Growth
+  land_type: hill
+  perks:
+    food_production: 4
+    housing: 176
+    jobs: 0
+
+incisor:
+  name: Incisor
+  exclusive_races:
+    - Growth
+  land_type: hill
+  perks:
+    offensive_power: 1,1,100 # Every 1% gives 1% OP, max +40% OP
+    housing: 88
+    jobs: 0
+
+tissue_swamp:
+  name: Tissue
+  exclusive_races:
+    - Growth
+  land_type: swamp
+  perks:
+    food_production: 4
+    housing: 176
+    jobs: 0
+
+sac:
+  name: Sac
+  exclusive_races:
+    - Growth
+  land_type: swamp
+  perks:
+    unit_food_costs: 1,4,40 # ratio, perk, max
+    housing: 88
+    jobs: 0
+
+tissue_water:
+  name: Tissue
+  exclusive_races:
+    - Growth
+  land_type: water
+  perks:
+    food_production: 4
+    housing: 176
+    jobs: 0
+
+gill:
+  name: Gill
+  exclusive_races:
+    - Growth
+  land_type: water
+  perks:
+    food_production_modifier: 1,10,1000 # Every 1% gives +8% food production, max +20%
+    housing: 0
+    jobs: 0
+
+# END GROWTH
+
+mycelia:
+  name: Mycelia
+  exclusive_races:
+    - Myconid
+  land_type: forest
+  perks:
+    housing: 30
+    food_production: 4
+    jobs: 0
+
+camp:
+  name: Camp
+  exclusive_races:
+    - Beastfolk
+  land_type: forest
+  perks:
+    unit_gold_costs: 1,2.5,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
+    unit_ore_costs: 1,2,40 # Every 1% gives 2.5% reduction, max -50% plat and ore
+    military_housing: 8
+
+blast_furnace:
+  name: Blast Furnace
+  exclusive_races:
+    - Firewalker
+  land_type: mountain
+  perks:
+    extra_units_trained: 1,1,20 # Every 1% gives 1% extra units, max +20%
+
+spawning_pool:
+  name: Spawning Pool
+  exclusive_races:
+    - Marshling
+  land_type: swamp
+  perks:
+    extra_units_trained: 1,1,100 # Every 1% gives 1% extra units, max +100%
+    housing: 62
+
+altar:
+  name: Altar
+  exclusive_races:
+    - Demon
+  land_type: swamp
+  perks:
+    unit_blood_costs: 1,1,100 # Every 1% gives 1% extra units, max +100%
+    housing: 62
+
+
+# HOME ALTERNATIVES
+
+barracks:
+  name: Barracks
+  excluded_races:
+    - Armada
+    - Black Orc
+    - Dragon
+    - Growth
+    - Jagunii
+    - Marshling
+    - Merfolk
+    - Myconid
+    - Nomad
+    - Orc
+    - Swarm
+    - Vampires
+    - Void
+  land_type: hill
+  perks:
+    military_housing: 36
+    jobs: 0
+
+home:
+  name: Home
+  enabled: 0
+  land_type: plain
+  perks:
+    housing: 30
+    jobs: 0
+
+abode:
+  name: Abode
+  exclusive_races:
+    - Nox
+  land_type: swamp
+  perks:
+    housing: 30
+    jobs: 0
+
+beacon:
+  name: Beacon
+  exclusive_races:
+    - Lux
+  land_type: water
+  perks:
+    housing: 30
+    jobs: 0
+
+cave:
+  name: Cave
+  exclusive_races:
+    - Troll
+    - Yeti
+  land_type: mountain
+  perks:
+    housing: 30
+    jobs: 0
+
+chamber:
+  name: Chamber
+  exclusive_races:
+    - Dark Elf
+    - Demon
+    - Dwarf
+    - Gnome
+    - Imperial Gnome
+  land_type: mountain
+  perks:
+    housing: 30
+
+colony:
+  name: Colony
+  exclusive_races:
+    - Ants
+  land_type: forest
+  perks:
+    housing: 180
+
+coral_reef:
+  name: Coral Reef
+  exclusive_races:
+    - Merfolk
+  land_type: water
+  perks:
+    housing: 30
+    jobs: 0
+
+dwelling:
+  name: Dwelling
+  exclusive_races:
+    - Afflicted
+    - Goblin
+    - Halfling
+    - Kobold
+  land_type: hill
+  perks:
+    housing: 38
+    jobs: 0
+
+estate:
+  name: Estate
+  exclusive_races:
+    - Cult
+    - Qur
+  land_type: forest
+  perks:
+    housing: 30
+    jobs: 10
+
+farmstead:
+  name: Farmstead
+  exclusive_races:
+    - Dragon
+  land_type: mountain
+  perks:
+    housing: 30
+    jobs: 30
+    food_production: 80
+
+grove:
+  name: Grove
+  exclusive_races:
+    - Beastfolk
+    - Simian
+    - Sylvan
+    - Weres
+    - Wood Elf
+  land_type: forest
+  perks:
+    housing: 30
+    jobs: 0
+
+hall:
+  name: Hall
+  exclusive_races:
+    - Icekin
+    - Snow Elf
+  land_type: mountain
+  perks:
+    housing: 30
+    jobs: 0
+
+incinerator:
+  name: Incinerator
+  exclusive_races:
+    - Firewalker
+  land_type: mountain
+  perks:
+    housing: 34
+    population_growth: 1,3 # Every 1%, gives 3%
+    jobs: 0
+
+orcish_longhouse:
+  name: Longhouse
+  exclusive_races:
+    - Orc
+    - Black Orc
+  land_type: forest
+  perks:
+    housing: 30
+    military_housing: 10
+    jobs: 0
+
+garrison:
+  name: Garrison
+  exclusive_races:
+    - Orc
+    - Black Orc
+  land_type: forest
+  perks:
+    housing: 0
+    military_housing: 60
+    jobs: 0
+
+norse_longhouse:
+  name: Longhouse
+  exclusive_races:
+    - Norse
+  land_type: water
+  perks:
+    housing: 30
+    military_housing: 30
+    jobs: 0
+
+ringfort:
+  name: Ringfort
+  exclusive_races:
+    - Norse
+  land_type: plain
+  perks:
+    raw_defense: 60
+    ore_production: -5
+
+mansion:
+  name: Mansion
+  exclusive_races:
+    - Vampires
+  land_type: forest
+  perks:
+    housing: 30
+    jobs: 10
+
+mire:
+  name: Mire
+  exclusive_races:
+    - Reptilians
+  land_type: swamp
+  perks:
+    housing: 30
+    jobs: 0
+
+monastery:
+  name: Monastery
+  exclusive_races:
+    - Sacred Order
+  land_type: plain
+  perks:
+    housing: 30
+    military_housing: 10
+    jobs: 0
+
+residence:
+  name: Residence
+  exclusive_races:
+    - Human
+    - Kerranad
+  land_type: plain
+  perks:
+    housing: 30
+    jobs: 0
+
+sanctuary:
+  name: Sanctuary
+  exclusive_races:
+    - Spirit
+  land_type: water
+  perks:
+    housing: 30
+    mana_production: 5
+
+shed:
+  name: Shed
+  exclusive_races:
+    - Barbarian
+  land_type: forest
+  perks:
+    housing: 30
+    jobs: 0
+
+tomb:
+  name: Tomb
+  exclusive_races:
+    - Undead
+  land_type: swamp
+  perks:
+    housing: 30
+    jobs: 0
+    crypt_bodies_decay_protection: 30

@@ -7,6 +7,9 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\GuardMembershipService;
 use OpenDominion\Services\Dominion\ProtectionService;
 
+# ODA
+use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+
 class RangeCalculator
 {
     public const MINIMUM_RANGE = 0.4;
@@ -20,6 +23,9 @@ class RangeCalculator
     /** @var GuardMembershipService */
     protected $guardMembershipService;
 
+    /** @var MilitaryCalculator */
+    protected $militaryCalculator;
+
     /**
      * RangeCalculator constructor.
      *
@@ -30,11 +36,13 @@ class RangeCalculator
     public function __construct(
         LandCalculator $landCalculator,
         ProtectionService $protectionService,
-        GuardMembershipService $guardMembershipService
+        GuardMembershipService $guardMembershipService,
+        MilitaryCalculator $militaryCalculator
     ) {
         $this->landCalculator = $landCalculator;
         $this->protectionService = $protectionService;
         $this->guardMembershipService = $guardMembershipService;
+        $this->militaryCalculator = $militaryCalculator;
     }
 
     /**
@@ -53,10 +61,15 @@ class RangeCalculator
         $targetModifier = $this->getRangeModifier($target);
 
         return (
+          (
             ($targetLand >= ($selfLand * $selfModifier)) &&
             ($targetLand <= ($selfLand / $selfModifier)) &&
             ($selfLand >= ($targetLand * $targetModifier)) &&
             ($selfLand <= ($targetLand / $targetModifier))
+          )
+
+            # Or was recently invaded by the target in the last three hours.
+            or $this->militaryCalculator->getRecentlyInvadedCountByAttacker($self, $target, 3)
         );
     }
 
@@ -68,22 +81,24 @@ class RangeCalculator
      */
     public function checkGuardApplications(Dominion $self, Dominion $target): void
     {
-        $isRoyalGuardApplicant = $this->guardMembershipService->isRoyalGuardApplicant($self);
+        #$isRoyalGuardApplicant = $this->guardMembershipService->isRoyalGuardApplicant($self);
         $isEliteGuardApplicant = $this->guardMembershipService->isEliteGuardApplicant($self);
 
-        if ($isRoyalGuardApplicant || $isEliteGuardApplicant) {
+        if ($isEliteGuardApplicant) {
             $selfLand = $this->landCalculator->getTotalLand($self);
             $targetLand = $this->landCalculator->getTotalLand($target);
 
-            // Reset Royal Guard application if out of range
+            // Reset Peacekeepers League (Royal Guard) application if out of range
+            /*
             if ($isRoyalGuardApplicant) {
                 $guardModifier = $this->guardMembershipService::ROYAL_GUARD_RANGE;
                 if (($targetLand < ($selfLand * $guardModifier)) || ($targetLand > ($selfLand / $guardModifier))) {
                     $this->guardMembershipService->joinRoyalGuard($self);
                 }
             }
+            */
 
-            // Reset Elite Guard application if out of range
+            // Reset Warriors League (Elite Guard) application if out of range
             if ($isEliteGuardApplicant) {
                 $guardModifier = $this->guardMembershipService::ELITE_GUARD_RANGE;
                 if (($targetLand < ($selfLand * $guardModifier)) || ($targetLand > ($selfLand / $guardModifier))) {
@@ -150,7 +165,13 @@ class RangeCalculator
             return $this->guardMembershipService::ELITE_GUARD_RANGE;
         }
 
+        /*
         if ($this->guardMembershipService->isRoyalGuardMember($dominion)) {
+            return $this->guardMembershipService::ROYAL_GUARD_RANGE;
+        }
+        */
+
+        if ($this->guardMembershipService->isBarbarianGuardMember($dominion)) {
             return $this->guardMembershipService::ROYAL_GUARD_RANGE;
         }
 
@@ -165,63 +186,63 @@ class RangeCalculator
      */
     public function getDominionsInRange(Dominion $self): Collection
     {
-        // todo: this doesn't belong here since it touches the db. Move to RangeService?
+        return $self->round->activeDominions()
+            ->with(['realm', 'round'])
+            ->get()
+            ->filter(function ($dominion) use ($self) {
+                return (
 
-        // Allow evil (Empire) to target in-realm.
-        # Removed as of Round 11.
-        /*
-        if($self->race->alignment == 'evil')
-        {
+                    # Not in the same realm; and
+                    ($dominion->realm->id !== $self->realm->id) and
 
-          return $self->round->dominions()
-              ->with(['realm', 'round'])
-              ->get()
-              ->filter(function ($dominion) use ($self) {
-                  return (
+                    # Is in range; and
+                    $this->isInRange($self, $dominion) and
 
-                      # Not the same dominion
-                      ($dominion->id !== $self->id) &&
+                    # Is not in protection;
+                    !$this->protectionService->isUnderProtection($dominion) and
 
-                      # Is in range; and
-                      $this->isInRange($self, $dominion) &&
-
-                      # Is not in protection;
-                      !$this->protectionService->isUnderProtection($dominion)
-                  );
-              })
-              ->sortByDesc(function ($dominion) {
-                  return $this->landCalculator->getTotalLand($dominion);
-              })
-              ->values();
-
-        }
-        else
-        {
-        */
-          return $self->round->activeDominions()
-              ->with(['realm', 'round'])
-              ->get()
-              ->filter(function ($dominion) use ($self) {
-                  return (
-
-                      # Not in the same realm; and
-                      ($dominion->realm->id !== $self->realm->id) &&
-
-                      # Is in range; and
-                      $this->isInRange($self, $dominion) &&
-
-                      # Is not in protection;
-                      !$this->protectionService->isUnderProtection($dominion)
-                  );
-              })
-              ->sortByDesc(function ($dominion) {
-                  return $this->landCalculator->getTotalLand($dominion);
-              })
-              ->values();
-        /*
-        }
-        */
-
-
+                    # Is not locked;
+                    $dominion->is_locked !== 1
+                );
+            })
+            ->sortByDesc(function ($dominion) {
+                return $this->landCalculator->getTotalLand($dominion);
+            })
+            ->values();
     }
+
+
+        /**
+         * Returns all dominions in range of a dominion.
+         *
+         * @param Dominion $self
+         * @return Collection
+         */
+        public function getFriendlyDominionsInRange(Dominion $self): Collection
+        {
+            return $self->round->activeDominions()
+                ->with(['realm', 'round'])
+                ->get()
+                ->filter(function ($dominion) use ($self) {
+                    return (
+
+                        # In the same realm; and
+                        ($dominion->realm->id === $self->realm->id) and
+
+                        # Is in range; and
+                        $this->isInRange($self, $dominion) and
+
+                        # Is not in protection;
+                        !$this->protectionService->isUnderProtection($dominion) and
+
+                        # Is not locked;
+                        $dominion->is_locked !== 1
+                    );
+                })
+                ->sortByDesc(function ($dominion) {
+                    return $this->landCalculator->getTotalLand($dominion);
+                })
+                ->values();
+        }
+
 }

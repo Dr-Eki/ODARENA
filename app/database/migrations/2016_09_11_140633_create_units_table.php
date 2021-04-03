@@ -16,7 +16,7 @@ class CreateUnitsTable extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('race_id')->unsigned();
-            $table->enum('slot', [1, 2, 3, 4]);
+            $table->integer('slot');
             $table->string('name');
             $table->integer('cost_platinum');
             $table->integer('cost_ore');

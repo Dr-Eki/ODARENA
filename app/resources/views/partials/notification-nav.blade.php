@@ -1,7 +1,7 @@
 @if (auth()->check() && isset($selectedDominion))
     <li class="dropdown notifications-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-bell-o"></i>
+            <i class="far fa-bell"></i>
             @if ($selectedDominion->unreadNotifications->count() > 0)
                 <span class="label label-warning">
                     {{ $selectedDominion->unreadNotifications->count() }}

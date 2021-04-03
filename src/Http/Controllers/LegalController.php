@@ -8,7 +8,7 @@ class LegalController extends AbstractController
     public function getIndex()
     {
         return view('pages.legal.index', [
-            'company_name' => 'OD Arena',
+            'company_name' => 'ODARENA',
             'company_address' => 'Cyprus',
         ]);
     }
@@ -16,8 +16,8 @@ class LegalController extends AbstractController
     public function getTermsAndConditions()
     {
       return view('pages.legal.termsandconditions', [
-        'company_name' => 'OD Arena',
-        'website_name' => 'OD Arena',
+        'company_name' => 'ODARENA',
+        'website_name' => 'ODARENA',
         'website_url' => 'https://odarena.com/',
         'contact_email' => 'info@odarena.com',
         'company_jurisdiction' => 'the Republic of Cyprus',
@@ -28,8 +28,8 @@ class LegalController extends AbstractController
     public function getPrivacyPolicy()
     {
       return view('pages.legal.privacypolicy', [
-          'company_name' => 'OD Arena',
-          'website_name' => 'OD Arena',
+          'company_name' => 'ODARENA',
+          'website_name' => 'ODARENA',
           'website_url' => 'https://odarena.com/',
           'contact_email' => 'info@odarena.com',
       ]);

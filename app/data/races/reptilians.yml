@@ -1,0 +1,86 @@
+name: Reptilians
+alignment: evil
+description:
+home_land_type: swamp
+playable: 1
+
+attacking: 3
+exploring : 2
+converting: 3
+skill_level: 1
+
+construction_materials: gold,lumber
+
+peasants_alias: working one
+draftees_alias: drafted one
+
+perks:
+    population_growth: 20
+    extra_barren_max_population: 5
+units:
+  - name: Horned One
+
+    training_time: 4
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 600
+    power:
+      offense: 5
+      defense: 2.5
+    perks:
+      counts_as_spy_offense: 0.25
+      counts_as_spy_defense: 0.25
+
+  - name: Scaled One
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+    cost:
+      gold: 750
+    power:
+      offense: 0
+      defense: 6
+    perks:
+      reduces_casualties: 1
+
+  - name: Blessed One
+
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+    cost:
+      gold: 1200
+    power:
+      offense: 10
+      defense: 6
+    perks:
+      counts_as_wizard_offense: 0.25
+      counts_as_wizard_defense: 0.25
+
+  - name: Ancient One
+
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - massive
+    cost:
+      gold: 100000
+      mana: 10000
+    power:
+      offense: 600
+      defense: 800
+    perks:
+      building_limit: temple,1,spires # building, buildings per unit, imp to increased
+      fewer_casualties: 90
+      no_draftee: 1
+      housing_count: 2

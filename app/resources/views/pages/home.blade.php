@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
             <div style="margin-bottom: 20px;">
-                <img src="{{ asset('assets/app/images/odarena.png') }}" class="img-responsive" alt="OD Arena">
+                <img src="{{ asset('assets/app/images/odarena.png') }}" class="img-responsive" alt="ODARENA">
             </div>
         </div>
     </div>
@@ -44,7 +44,12 @@
                     </div>
                     <div class="box-body text-center">
                         <p>Registration for round {{ $currentRound->number }} is open.</p>
-                        <p>The round starts on {{ $currentRound->start_date }} and lasts for {{ $currentRound->durationInDays() }} days.</p>
+                        <p>The round starts in {{ $hoursUntilRoundStarts . ' ' . str_plural('hour', $hoursUntilRoundStarts) }}.</p>
+
+
+                            <a href="{{ route('round.register', $currentRound) }}">
+                            <button type="submit" class="btn btn-primary">Register To Join Round {{ $currentRound->number }} Now</button>
+                            </a>
                     </div>
                 @elseif (!$currentRound->hasStarted())
                     <div class="box-body text-center" style="padding: 0; border-bottom: 1px solid #f4f4f4;">
@@ -53,6 +58,11 @@
                     <div class="box-body text-center">
                         <p>Registration for round {{ $currentRound->number }} opens on {{ $currentRound->start_date->subDays(3) }}.</p>
                         <p>The round starts on {{ $currentRound->start_date }} and lasts for {{ $currentRound->durationInDays() }} days.</p>
+
+
+                            <a href="{{ route('round.register', $currentRound) }}">
+                            <button type="submit" class="btn btn-primary">Register To Join Round {{ $currentRound->number }} Now</button>
+                            </a>
                     </div>
                 @else
                     <div class="box-body text-center" style="padding: 0;">
@@ -72,7 +82,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-center">Players:</td>
+                                    <td class="text-center">Dominions:</td>
                                     <td class="text-center">{{ number_format($currentRound->dominions->count()) }}</td>
                                 </tr>
                                 <tr>
@@ -89,7 +99,9 @@
                             </p>
                         @else
                             <p>
-                                <em><a href="{{ route('round.register', $currentRound) }}">Join the ongoing round!</a></em>
+                                <a href="{{ route('round.register', $currentRound) }}">
+                                <button type="submit" class="btn btn-primary">Register To Join Round {{ $currentRound->number }} Now</button>
+                                </a>
                             </p>
                         @endif
                     </div>
@@ -147,36 +159,56 @@
         <div class="col-sm-6">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Welcome to OD Arena!</h3>
+                    <h3 class="box-title">Welcome to ODARENA!</h3>
                 </div>
                 <div class="box-body">
-                    <p>OD Arena is a persistent browser-based fantasy game where you control a dominion and is charged with defending its lands and competing with other players to become the largest in the current round.</p>
-
-                    <p>To start playing, first <a href="{{ route('auth.register') }}">Register An Account</a>.</p>
-                    <p>If you already have an account, <a href="{{ route('auth.login') }}">Login To Your Account</a>.</p>
-                    <p>Then once you are logged in, you can create your Dominion and join the round.</p>
-
-                    @if ($currentRound === null || $currentRound->hasEnded())
-                    <p><em>There is currently no round. A new one will start in a day or two.</em></p>
-
-                      @if ($discordInviteLink = config('app.discord_invite_link'))
-                        <p>Join us on our <a href="{{ $discordInviteLink }}" target="_blank">Discord server <i class="fa fa-external-link"></i></a> to be informed.
-                      @endif
-
+                    @if(request()->getHost() == 'sim.odarena.com')
+                        <p>This is the <strong>ODARENA Simulator</strong>.</p>
+                        <p>The simulator is identical to the game. Here's how it works:</p>
+                        <ol>
+                          <li>Create a new account. The sim uses an entirely separate database from the game, in order to make changes here (for upcoming rounds) without affecting the game.</li>
+                          <li>Create a dominion as usual.</li>
+                          <li>Start ticking through protection like you would normally.</li>
+                          <li>Once you have depleted your protection ticks, you can delete and start a new dominion.</li>
+                          <li>Refresh the page and you will be able to create a new dominion.</li>
+                          <li>No scheduled ticks take place here &mdash; ever.</li>
+                        </ol>
+                        <p>Known bugs/issues:</p>
+                        <ul>
+                          <li>Deleting will generate an ugly Server 500 error for now. Just refresh and it goes away.</li>
+                          <li>OP calculation on invasion page isn’t working. Calculate OP manually for now.</li>
+                        </ul>
+                        <p>To start simming, first <a href="{{ route('auth.register') }}">Register An Account</a>.</p>
+                        <p>If you already have an account, <a href="{{ route('auth.login') }}">Login To Your Account</a>.</p>
                     @else
+                        <p><strong>ODARENA</strong> is a persistent browser-based fantasy game where you control a dominion and is charged with defending its lands and competing with other players to become the largest in the current round.</p>
 
-                      @if ($discordInviteLink = config('app.discord_invite_link'))
-                        <p>And please come join us on our <a href="{{ $discordInviteLink }}" target="_blank">Discord server <i class="fa fa-external-link"></i></a>!
-                      @endif
+                        <p>To start playing, first <a href="{{ route('auth.register') }}">Register An Account</a>.</p>
+                        <p>If you already have an account, <a href="{{ route('auth.login') }}">Login To Your Account</a>.</p>
+                        <p>Then once you are logged in, you can create your Dominion and join the round.</p>
 
+                        @if ($currentRound === null || $currentRound->hasEnded())
+                            <p><em>There is currently no round. A new one will start in a day or two.</em></p>
+
+                                @if ($discordInviteLink = config('app.discord_invite_link'))
+                                  <p>Join us on our <a href="{{ $discordInviteLink }}" target="_blank">Discord server <i class="fa fa-external-link"></i></a> to be informed.
+                                @endif
+
+                        @else
+
+                          @if ($discordInviteLink = config('app.discord_invite_link'))
+                            <p>And please come join us on our <a href="{{ $discordInviteLink }}" target="_blank">Discord server <i class="fa fa-external-link"></i></a>!
+                          @endif
+
+                        @endif
+                         It's the main place for game announcements, game-related chat and development chat.</p>
+                       </p>
                     @endif
-                     It's the main place for game announcements, game-related chat and development chat.</p>
-                   </p>
                 </div>
                 <div class="box-body">
-                    <p>OD Arena is based on <a href="https://beta.opendominion.net/" target="_new">OpenDominion</a>, created by WaveHack.</p>
+                    <p>ODARENA is based on <a href="https://beta.opendominion.net/" target="_new">OpenDominion</a>, created by WaveHack.</p>
 
-                    <p>Just like OpenDominion, OD Arena is open source software and can be found on <a href="https://github.com/Dr-Eki/OpenDominion" target="_blank">GitHub <i class="fa fa-external-link"></i></a>.</p>
+                    <p>ODARENA is open source software. The code can be found on <a href="https://github.com/Dr-Eki/ODArena" target="_blank">GitHub <i class="fa fa-external-link"></i></a>.</p>
                 </div>
 
             </div>

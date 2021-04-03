@@ -1,0 +1,91 @@
+name: Qur
+alignment: independent
+description:
+home_land_type: forest
+playable: 1
+
+attacking: 3
+exploring : 3
+converting: 3
+skill_level: 2
+
+construction_materials: gold,lumber
+
+perks:
+  salvaging: 65
+  gem_production: 20
+
+units:
+  - name: Artificer
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
+    
+    cost:
+      gold: 1000
+    power:
+      offense: 0
+      defense: 0
+    perks:
+      tech_production: 0.025
+
+  - name: Crystal
+    training_time: 0
+    type:
+      - magical
+    
+    cost:
+      gem: 20
+      mana: 5
+    power:
+      offense: 0
+      defense: 2
+    perks:
+      no_draftee: 1
+      does_not_count_as_population: 1
+      mana_drain: 0.005
+      instant_training: 1
+      pairing_limit_increasable: 1,4,spires,2 # Unit slot, amount (max 2 of this unit per each Unit 4), imp to increase, imp multiplier
+
+  - name: Chariot
+    training_time: 12
+    type:
+      - machine
+    
+    cost:
+      gold: 1000
+      lumber: 475
+    power:
+      offense: 0
+      defense: 0
+    perks:
+      faster_return: 6
+      reduces_casualties: 1
+      plunders: gold;5,lumber;5
+      offense_from_pairing: 4,7,1 # slot, amount, num required
+      sendable_with_zero_op: 1
+      does_not_count_as_population: 1
+      no_draftee: 1
+      pairing_limit_increasable: 1,1,workshops,1 # Unit slot, amount (max 2 of this unit per each Unit 4), imp to increase, imp multiplier
+
+  - name: Zealot
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+    
+    cost:
+      gold: 1000
+      mana: 10
+    power:
+      offense: 7
+      defense: 8
+    perks:
+      destroys_souls: 1
+      kills_immortal: 1
+      faster_return_if_paired: 3,6 # slot, ticks
+      plunders: mana;2,gems;1

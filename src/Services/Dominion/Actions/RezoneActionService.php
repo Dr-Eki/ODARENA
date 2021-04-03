@@ -9,6 +9,9 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Traits\DominionGuardsTrait;
 
+
+use OpenDominion\Calculators\Dominion\SpellCalculator;
+
 class RezoneActionService
 {
     use DominionGuardsTrait;
@@ -19,16 +22,24 @@ class RezoneActionService
     /** @var RezoningCalculator */
     protected $rezoningCalculator;
 
+    /** @var SpellCalculator */
+    protected $spellCalculator;
+
     /**
      * RezoneActionService constructor.
      *
      * @param LandCalculator $landCalculator
      * @param RezoningCalculator $rezoningCalculator
      */
-    public function __construct(LandCalculator $landCalculator, RezoningCalculator $rezoningCalculator)
+    public function __construct(
+        LandCalculator $landCalculator,
+        RezoningCalculator $rezoningCalculator,
+        SpellCalculator $spellCalculator
+        )
     {
         $this->landCalculator = $landCalculator;
         $this->rezoningCalculator = $rezoningCalculator;
+        $this->spellCalculator = $spellCalculator;
     }
 
     /**
@@ -43,6 +54,17 @@ class RezoneActionService
     public function rezone(Dominion $dominion, array $remove, array $add): array
     {
         $this->guardLockedDominion($dominion);
+
+        // Qur: Statis
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+            throw new GameException('You cannot rezone land while you are in stasis.');
+        }
+
+        if ($dominion->race->getPerkValue('cannot_rezone'))
+        {
+            throw new GameException($dominion->race->name . ' cannot rezone land.');
+        }
 
         // Level out rezoning going to the same type.
         foreach (array_intersect_key($remove, $add) as $key => $value) {
@@ -74,31 +96,19 @@ class RezoneActionService
             }
         }
 
-        $platinumCost = $totalLand * $this->rezoningCalculator->getPlatinumCost($dominion);
-        $foodCost = $totalLand * $this->rezoningCalculator->getFoodCost($dominion);
-        $manaCost = $totalLand * $this->rezoningCalculator->getManaCost($dominion);
+        $cost = $totalLand * $this->rezoningCalculator->getRezoningCost($dominion);
+        $resource = $this->rezoningCalculator->getRezoningMaterial($dominion);
 
-
-        if ($platinumCost > 0 and $platinumCost > $dominion->resource_platinum)
+        if($cost > $dominion->{'resource_'.$resource})
         {
-            throw new GameException("You do not have enough platinum to re-zone {$totalLand} acres of land.");
+            throw new GameException("You do not have enough $resource to re-zone {$totalLand} acres of land.");
         }
 
-        if ($foodCost > 0 and $foodCost > $dominion->resource_food)
-        {
-            throw new GameException("You do not have enough food to re-zone {$totalLand} acres of land.");
-        }
+        # All fine, perform changes.
+        $dominion->{'resource_'.$resource} -= $cost;
 
-        if ($manaCost > 0 and $platinumCost > $dominion->resource_mana)
-        {
-            throw new GameException("You do not have enough mana to re-zone {$totalLand} acres of land.");
-        }
-
-
-        // All fine, perform changes.
-        $dominion->resource_platinum -= $platinumCost;
-        $dominion->resource_food -= $foodCost;
-        $dominion->resource_mana -= $manaCost;
+        # Update spending statistics.
+        $dominion->{'stat_total_'.$resource.'_spent_rezoning'}  += $cost;
 
         foreach ($remove as $landType => $amount) {
             $dominion->{'land_' . $landType} -= $amount;
@@ -109,22 +119,6 @@ class RezoneActionService
 
         $dominion->save(['event' => HistoryService::EVENT_ACTION_REZONE]);
 
-        if($manaCost > 0)
-        {
-          $resource = 'mana';
-          $cost = $manaCost;
-        }
-        elseif($foodCost > 0)
-        {
-          $resource = 'food';
-          $cost = $foodCost;
-        }
-        else
-        {
-          $resource = 'platinum';
-          $cost = $platinumCost;
-        }
-
         return [
             'message' => sprintf(
                 'Your land has been re-zoned at a cost of %1$s %2$s.',
@@ -132,7 +126,8 @@ class RezoneActionService
                 $resource
             ),
             'data' => [
-                'platinumCost' => $platinumCost,
+                'cost' => $cost,
+                'resource' => $resource,
             ]
         ];
     }

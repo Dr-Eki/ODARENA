@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
+{{--
 @section('page-header', 'Search Dominions')
+--}}
 
 @section('content')
     <div class="row">
@@ -50,7 +52,7 @@
                             <div class="form-group">
                                 <div class="col-sm-12 text-right">
                                     <button class="btn btn-default search-range" data-min="{{ ceil($landCalculator->getTotalLand($selectedDominion) * 0.40) }}" data-max="{{ floor($landCalculator->getTotalLand($selectedDominion) / 0.40) }}">40%</button>
-                                    <button class="btn btn-success search-range" data-min="{{ ceil($landCalculator->getTotalLand($selectedDominion) * 0.60) }}" data-max="{{ floor($landCalculator->getTotalLand($selectedDominion) / 0.60) }}">60%</button>
+                                    <button class="btn btn-danger search-range" data-min="{{ ceil($landCalculator->getTotalLand($selectedDominion) * 0.60) }}" data-max="{{ floor($landCalculator->getTotalLand($selectedDominion) / 0.60) }}">60%</button>
                                     <button class="btn btn-warning search-range" data-min="{{ ceil($landCalculator->getTotalLand($selectedDominion) * 0.75) }}" data-max="{{ floor($landCalculator->getTotalLand($selectedDominion) / 0.75) }}">75%</button>
                                 </div>
                             </div>
@@ -83,6 +85,7 @@
                             <col width="100">
                             <col width="100">
                             <col width="100">
+                            <col width="100">
                             <col width="100" class="hidden">
                         </colgroup>
                         <thead>
@@ -92,25 +95,75 @@
                                 <th class="text-center">Faction</th>
                                 <th class="text-center">Land</th>
                                 <th class="text-center">Networth</th>
+                                <th class="text-center">Units<br>Returning</th>
                                 <th class="text-center hidden">My Range</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if ($selectedDominion->round->hasStarted())
                                 @foreach ($dominions as $dominion)
-                                    <tr>
+                                    @if ($dominion->isLocked())
+                                      <tr style="text-decoration:line-through; color: #666">
+                                    @else
+                                      <tr>
+                                    @endif
                                         <td data-search="{{ $dominion->name }}">
+                                            @if ($dominion->isLocked())
+                                                <span data-toggle="tooltip" data-placement="top" title="This dominion has been locked.<br>Reason: <strong>{{ $dominion->getLockedReason($dominion->is_locked) }}</strong>">
+                                                <i class="fa fa-lock fa-lg text-grey" title=""></i>
+                                                </span>
+                                            @endif
+
+                                            @if ($spellCalculator->isSpellActive($dominion, 'rainy_season'))
+                                                <span data-toggle="tooltip" data-placement="top" title="Rainy Season">
+                                                <i class="ra ra-droplet fa-lg text-blue"></i>
+                                                </span>
+                                            @endif
+
+                                            @if ($spellCalculator->isSpellActive($dominion, 'primordial_wrath'))
+                                                <span data-toggle="tooltip" data-placement="top" title="Primordial Wrath">
+                                                <i class="ra ra-monster-skull fa-lg text-red" title=""></i>
+                                                </span>
+                                            @endif
+
+                                            @if ($spellCalculator->isSpellActive($dominion, 'ragnarok'))
+                                                <span data-toggle="tooltip" data-placement="top" title="Ragnarök">
+                                                <i class="ra ra-blast fa-lg text-red" title=""></i>
+                                                </span>
+                                            @endif
+
+                                            @if ($spellCalculator->isSpellActive($dominion, 'stasis'))
+                                                <span data-toggle="tooltip" data-placement="top" title="Stasis">
+                                                <i class="ra ra-emerald fa-lg text-red"</i>
+                                                </span>
+                                            @endif
+
+                                            @if ($dominion->isMonarch())
+                                                <span data-toggle="tooltip" data-placement="top" title="Governor of The Realm">
+                                                <i class="fa fa-star fa-lg text-orange"></i>
+                                                </span>
+                                            @endif
+
                                             @if ($protectionService->isUnderProtection($dominion))
-                                                <i class="ra ra-shield ra-lg text-aqua" title="Under Protection"></i>
+                                                <span data-toggle="tooltip" data-placement="top" title="{{ $dominion->protection_ticks }} protection tick(s) left">
+                                                <i class="ra ra-shield ra-lg text-aqua"></i>
+                                                </span>
                                             @endif
 
                                             @if ($guardMembershipService->isEliteGuardMember($dominion))
-                                                <i class="ra ra-heavy-shield ra-lg text-yellow" title="Elite Guard"></i>
-                                            @elseif ($guardMembershipService->isRoyalGuardMember($dominion))
-                                                <i class="ra ra-heavy-shield ra-lg text-green" title="Royal Guard"></i>
+                                                <span data-toggle="tooltip" data-placement="top" title="Warriors League">
+                                                <i class="ra ra-heavy-shield ra-lg text-yellow"></i>
+                                                </span>
+                                            @elseif ($guardMembershipService->isBarbarianGuardMember($dominion))
+                                                <span data-toggle="tooltip" data-placement="top" title="Ib-Tham's Guard">
+                                                <i class="ra ra-heavy-shield ra-lg text-muted"></i>
+                                                </span>
                                             @endif
 
                                             <a href="{{ route('dominion.op-center.show', $dominion) }}">{{ $dominion->name }}</a>
+                                            @if($dominion->id === $selectedDominion->id)
+                                            <span class="label label-primary">You</span>
+                                            @endif
                                         </td>
                                         <td class="text-center">
                                             {{ $dominion->realm->number }}
@@ -124,8 +177,15 @@
                                         <td class="text-center" data-order="{{ $networthCalculator->getDominionNetworth($dominion) }}" data-search="{{ $networthCalculator->getDominionNetworth($dominion) }}">
                                             {{ number_format($networthCalculator->getDominionNetworth($dominion)) }}
                                         </td>
+                                        <td>
+                                            @if ($militaryCalculator->hasReturningUnits($dominion))
+                                                <span class="label label-success">Yes</span>
+                                            @else
+                                                <span class="text-gray">No</span>
+                                            @endif
+                                        </td>
                                         <td class="hidden">
-                                            @if ($rangeCalculator->isInRange($selectedDominion, $dominion))
+                                            @if ($rangeCalculator->isInRange($selectedDominion, $dominion) and $selectedDominion->realm->id !== $dominion->realm->id)
                                                 true
                                             @endif
                                         </td>
@@ -147,8 +207,8 @@
                 <div class="box-body">
                     <p>Use the search to find dominions matching certain criteria.</p>
                     <p>The grey button labelled 40% pre-fills the land min and land max with dominions 40%-250% your range.</p>
-                    <p>The green button labelled 60% pre-fills the land min and land max with dominions 60%-166% your range: Royal Guard range.</p>
-                    <p>The grey button labelled 75% pre-fills the land min and land max with dominions 75%-133% your range: Elite Guard range</p>
+                    <p>The green button labelled 60% pre-fills the land min and land max with dominions 60%-166% your range: Barbarian range.</p>
+                    <p>The orange button labelled 75% pre-fills the land min and land max with dominions 75%-133% your range: Warriors League range</p>
                     @if (!$selectedDominion->round->hasStarted())
                         <p>The current round has not started. No dominions will be listed.</p>
                     @endif
@@ -203,7 +263,7 @@
                 }
 
                 var range = $('select[name=range]').val();
-                if (range && data[5] != "true") return false;
+                if (range && data[6] != "true") return false;
 
                 return true;
             }

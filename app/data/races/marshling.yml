@@ -1,0 +1,89 @@
+name: Marshling
+alignment: independent
+description:
+home_land_type: swamp
+playable: 1
+
+attacking: 2
+exploring : 1
+converting: 1
+skill_level: 3
+
+construction_materials: gold,lumber
+
+peasants_alias: bubbler
+draftees_alias: blob
+
+perks:
+  gold_production: -50
+  max_population: 25
+units:
+
+  - name: Spawn
+    training_time: 6
+    type:
+      - living
+      - mindless
+    
+    static_networth: 3
+    cost:
+      food: 100
+      lumber: 60
+      mana: 15
+    power:
+      offense: 2
+      defense: 2
+    perks:
+      minimum_wpa_to_train: 0.50
+      wins_into: 2
+      cannot_be_released: 1
+
+  - name: Slime
+    type:
+      - living
+    
+    static_networth: 5
+    cost:
+      gold: 0
+    power:
+      offense: 3
+      defense: 3
+    perks:
+      cannot_be_trained: 1
+      wins_into: 3
+      dies_into: 1
+      cannot_be_released: 1
+
+  - name: Goo
+    type:
+      - living
+      - sentient
+    
+    static_networth: 7
+    cost:
+      gold: 0
+    power:
+      offense: 4
+      defense: 5
+    perks:
+      cannot_be_trained: 1
+      wins_into: 4
+      dies_into: 2
+      cannot_be_released: 1
+
+  - name: Ooze
+    type:
+      - living
+      - sentient
+      - intelligent
+    
+    static_networth: 8
+    cost:
+      gold: 0
+    power:
+      offense: 6
+      defense: 3
+    perks:
+      cannot_be_trained: 1
+      dies_into_multiple_on_victory: 1,2,1 # slot, amount on victory, amount on failure
+      cannot_be_released: 1

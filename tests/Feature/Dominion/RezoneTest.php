@@ -64,9 +64,9 @@ class RezoneTest extends AbstractBrowserKitTestCase
     /**
      * Test that rezoning fails if you cannot afford it.
      */
-    public function testRezoningWithoutEnoughPlatinumFails()
+    public function testRezoningWithoutEnoughGoldFails()
     {
-        $this->dominion->resource_platinum = 0;
+        $this->dominion->resource_gold = 0;
         $this->dominion->save();
 
         $this->visitRoute('dominion.rezone')
@@ -74,8 +74,8 @@ class RezoneTest extends AbstractBrowserKitTestCase
             ->type('3', 'add[mountain]')
             ->press('Re-Zone')
             ->see('One or more errors occurred')
-            ->see('You do not have enough platinum to re-zone 3 acres of land.')
-            ->assertDominionUnchanged(['resource_platinum' => 0]);
+            ->see('You do not have enough gold to re-zone 3 acres of land.')
+            ->assertDominionUnchanged(['resource_gold' => 0]);
     }
 
     /**
@@ -103,7 +103,7 @@ class RezoneTest extends AbstractBrowserKitTestCase
         // todo: pull up
         return $this->seeInDatabase('dominions', array_merge([
             'id' => $this->dominion->id,
-            'resource_platinum' => 100000,
+            'resource_gold' => 100000,
             'land_plain' => 110,
             'land_mountain' => 20,
         ], $attributes));

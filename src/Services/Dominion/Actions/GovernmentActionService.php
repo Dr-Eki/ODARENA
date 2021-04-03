@@ -12,6 +12,9 @@ use OpenDominion\Services\Realm\HistoryService;
 use OpenDominion\Traits\DominionGuardsTrait;
 use RuntimeException;
 
+
+use OpenDominion\Calculators\Dominion\SpellCalculator;
+
 class GovernmentActionService
 {
     use DominionGuardsTrait;
@@ -22,15 +25,22 @@ class GovernmentActionService
     /** @var NotificationService */
     protected $notificationService;
 
+    /** @var SpellCalculator */
+    protected $spellCalculator;
     /**
      * GovernmentActionService constructor.
      *
      * @param GovernmentService $governmentService
      */
-    public function __construct(GovernmentService $governmentService, NotificationService $notificationService)
+    public function __construct(
+        GovernmentService $governmentService,
+        NotificationService $notificationService,
+        SpellCalculator $spellCalculator
+        )
     {
         $this->governmentService = $governmentService;
         $this->notificationService = $notificationService;
+        $this->spellCalculator = $spellCalculator;
     }
 
     /**
@@ -44,12 +54,40 @@ class GovernmentActionService
     {
         $this->guardLockedDominion($dominion);
 
+        // Qur: Statis
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+            throw new GameException('You cannot take government actions while you are in stasis.');
+        }
+
         $monarch = Dominion::find($monarch_id);
         if ($monarch == null) {
             throw new RuntimeException('Dominion not found.');
         }
         if ($dominion->realm != $monarch->realm) {
-            throw new RuntimeException('You cannot vote for a monarch outside of your realm.');
+            throw new RuntimeException('You cannot vote for a Governor outside of your realm.');
+        }
+        if ($monarch->is_locked)
+        {
+            throw new RuntimeException('You cannot vote for a locked dominion to be your Governor.');
+        }
+        if(request()->getHost() == 'sim.odarena.com')
+        {
+            throw new GameException('Voting is disabled in the sim.');
+        }
+        if($dominion->race->getPerkValue('cannot_vote'))
+        {
+            throw new GameException($dominion->race->name . ' cannot vote for Governor.');
+        }
+        if($monarch->race->getPerkValue('cannot_vote'))
+        {
+            throw new GameException($monarch->race->name . ' cannot be Governor.');
+        }
+
+        // Qur: Statis
+        if($this->spellCalculator->getPassiveSpellPerkValue($monarch, 'stasis'))
+        {
+            throw new GameException($monarch->name . ' is in stasis and cannot be voted for Governor.');
         }
 
         $dominion->monarchy_vote_for_dominion_id = $monarch->id;
@@ -65,29 +103,71 @@ class GovernmentActionService
      * @param string $name
      * @throws GameException
      */
-    public function updateRealm(Dominion $dominion, ?string $motd, ?string $name)
+    public function updateRealm(Dominion $dominion, ?string $motd, ?string $name, ?int $contribution, ?string $discordLink)
     {
         $this->guardLockedDominion($dominion);
 
+        // Qur: Statis
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+            throw new GameException('You cannot take government actions while you are in stasis.');
+        }
+
         if (!$dominion->isMonarch()) {
-            throw new GameException('Only the monarch can make changes to their realm.');
+            throw new GameException('Only the Governor can make changes to their realm.');
         }
 
-        if ($motd && strlen($motd) > 256) {
-            throw new GameException('Realm messages are limited to 256 characters.');
+        if ($motd && strlen($motd) > 400) {
+            throw new GameException('Realm messages are limited to 400 characters.');
         }
 
-        if ($name && strlen($name) > 64) {
-            throw new GameException('Realm names are limited to 64 characters.');
+        if ($name && strlen($name) > 100) {
+            throw new GameException('Realm names are limited to 100 characters.');
         }
 
-        if ($motd) {
+        if (isset($contribution) and ($contribution < 0 or $contribution > 10))
+        {
+            throw new GameException('Contribution must be a value between 0 and 10.');
+        }
+
+        if ($discordLink)
+        {
+            if(
+                !filter_var($discordLink, FILTER_VALIDATE_URL) or
+                (strlen($discordLink) >= strlen('https://discord.gg/xxxxxxx') and strlen($discordLink) <= strlen('https://discord.gg/xxxxxx')) or
+                substr($discordLink,0,19) !== 'https://discord.gg/' or
+                $discordLink == 'https://discord.gg/xxxxxxx'
+              )
+            {
+                throw new GameException('"' . $discordLink . '" is not a valid Discord link. It should be in the format of https://discord.gg/xxxxxxx');
+            }
+
+            if($discordLink == config('app.discord_invite_link'))
+            {
+                throw new GameException('You cannot use ' . config('app.discord_invite_link') . ' because it is the ODARENA Discord link. Please insert your Realm\'s own Discord link here.');
+            }
+
+        }
+
+        if ($motd)
+        {
             $dominion->realm->motd = $motd;
             $dominion->realm->motd_updated_at = now();
         }
-        if ($name) {
+        if ($name)
+        {
             $dominion->realm->name = $name;
         }
+        if ($discordLink)
+        {
+            $dominion->realm->discord_link = $discordLink;
+        }
+
+        if (isset($contribution))
+        {
+            $dominion->realm->contribution = $contribution;
+        }
+
         $dominion->realm->save(['event' => HistoryService::EVENT_ACTION_REALM_UPDATED]);
     }
 
@@ -99,15 +179,23 @@ class GovernmentActionService
      * @throws GameException
      * @throws RuntimeException
      */
+     /*
     public function declareWar(Dominion $dominion, int $realm_number)
     {
+
+        // Qur: Statis
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+            throw new GameException('You cannot take government actions while you are in stasis.');
+        }
+
         $target = Realm::where(['round_id'=>$dominion->round_id, 'number'=>$realm_number])->first();
         if ($target == null || $dominion->realm->round_id != $target->round_id) {
             throw new RuntimeException('Realm not found.');
         }
 
         if (!$dominion->isMonarch()) {
-            throw new GameException('Only the monarch can declare war.');
+            throw new GameException('Only the Governor can declare war.');
         }
 
         if ($dominion->realm->id == $target->id) {
@@ -152,6 +240,7 @@ class GovernmentActionService
                 ->sendNotifications($hostileDominion, 'irregular_realm');
         }
     }
+    */
 
     /**
      * Cancels the current war
@@ -159,10 +248,18 @@ class GovernmentActionService
      * @param Dominion $dominion
      * @throws GameException
      */
+     /*
     public function cancelWar(Dominion $dominion)
     {
+
+        // Qur: Statis
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+            throw new GameException('You cannot take government actions while you are in stasis.');
+        }
+
         if (!$dominion->isMonarch()) {
-            throw new GameException('Only the monarch can declare war.');
+            throw new GameException('Only the Governor can declare war.');
         }
 
         $hoursBeforeCancelWar = $this->governmentService->getHoursBeforeCancelWar($dominion->realm);
@@ -184,4 +281,6 @@ class GovernmentActionService
         $dominion->realm->war_active_at = null;
         $dominion->realm->save(['event' => HistoryService::EVENT_ACTION_CANCEL_WAR]);
     }
+    */
+
 }

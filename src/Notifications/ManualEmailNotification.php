@@ -60,7 +60,7 @@ class ManualEmailNotification extends Notification implements ShouldQueue
     public function toMail(User $user): MailMessage
     {
         $mailMessage = (new MailMessage)
-            ->replyTo('info@odarena.com', 'OD Arena')
+            ->replyTo('info@odarena.com', 'ODARENA')
             ->subject($this->subject)
             ->greeting($this->greeting);
 
@@ -76,7 +76,7 @@ class ManualEmailNotification extends Notification implements ShouldQueue
 
         $mailMessage = $mailMessage->line('You are receiving this email because you have turned on email notifications for generic emails manually sent by the administrators.')
             ->line('To unsubscribe, please update your notification settings at: ' . route('settings'))
-            ->salutation('-OD Arena');
+            ->salutation('-ODARENA');
 
         return $mailMessage;
     }

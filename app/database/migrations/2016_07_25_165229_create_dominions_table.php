@@ -44,26 +44,25 @@ class CreateDominionsTable extends Migration
             $table->integer('resource_boats')->unsigned();
             $table->integer('resource_champion')->unsigned();
             $table->integer('resource_soul')->unsigned();
+            $table->integer('resource_wild_yeti')->unsigned();
 
             #$table->integer('improvement_science')->unsigned();
-            $table->integer('improvement_markets')->unsigned();
-            $table->integer('improvement_keep')->unsigned();
-            $table->integer('improvement_towers')->unsigned();
-            $table->integer('improvement_forges')->unsigned();
-            $table->integer('improvement_walls')->unsigned();
-            $table->integer('improvement_irrigation')->unsigned();
-            $table->integer('improvement_armory')->unsigned();
-            $table->integer('improvement_infirmary')->unsigned();
-
-            $table->integer('improvement_workshops')->unsigned();
-            $table->integer('improvement_observatory')->unsigned();
-            $table->integer('improvement_cartography')->unsigned();
-            $table->integer('improvement_hideouts')->unsigned();
-            $table->integer('improvement_forestry')->unsigned();
-            $table->integer('improvement_refinery')->unsigned();
-            $table->integer('improvement_granaries')->unsigned();
-
-            $table->integer('improvement_tissue')->unsigned();
+            $table->integer('improvement_markets')->unsigned()->default(0);
+            $table->integer('improvement_keep')->unsigned()->default(0);
+            $table->integer('improvement_towers')->unsigned()->default(0);
+            $table->integer('improvement_forges')->unsigned()->default(0);
+            $table->integer('improvement_walls')->unsigned()->default(0);
+            $table->integer('improvement_irrigation')->unsigned()->default(0);
+            $table->integer('improvement_armory')->unsigned()->default(0);
+            $table->integer('improvement_infirmary')->unsigned()->default(0);
+            $table->integer('improvement_workshops')->unsigned()->default(0);
+            $table->integer('improvement_observatory')->unsigned()->default(0);
+            $table->integer('improvement_cartography')->unsigned()->default(0);
+            $table->integer('improvement_hideouts')->unsigned()->default(0);
+            $table->integer('improvement_forestry')->unsigned()->default(0);
+            $table->integer('improvement_refinery')->unsigned()->default(0);
+            $table->integer('improvement_granaries')->unsigned()->default(0);
+            $table->integer('improvement_tissue')->unsigned()->default(0);
 
             $table->integer('military_draftees')->unsigned();
             $table->integer('military_unit1')->unsigned();
@@ -101,6 +100,15 @@ class CreateDominionsTable extends Migration
             $table->integer('building_shrine')->unsigned();
             $table->integer('building_barracks')->unsigned();
             $table->integer('building_dock')->unsigned();
+
+            $table->integer('building_ziggurat')->unsigned();
+            $table->integer('building_mycelia')->unsigned();
+            $table->integer('building_tissue')->unsigned();
+
+            $table->integer('npc_modifier')->unsigned();
+            $table->integer('protection_ticks')->unsigned();
+            $table->string('most_recent_improvement_resource')->default('gems');
+            $table->integer('stat_total_land_lost')->unsigned()->default(0);
 
             $table->timestamps();
 

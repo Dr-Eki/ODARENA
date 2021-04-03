@@ -1,51 +1,82 @@
 name: Orc
 alignment: evil
-description: >-
-  <p>Orcs are proud warriors with a strong sense of honor. The more they fight, the stronger they become.</p>
-  <p>With the emergence of the Empire, their reputation as brutish, uncivilized warriors has changed under the visionary leadership of the Orcish Empress.</p>
-  <p>They form the backbone of the Imperial army but consider themselves equal, at least to most. Many look with envy at the elite that make it into the Black Orc battalions.</p>
+description:
 home_land_type: forest
 playable: 1
 
 attacking: 3
 exploring : 1
 converting: 1
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
+  max_population: 10
   food_consumption: 20
   lumber_production: 50
-  prestige_gains: 100
-  tech_costs: 20
+
 units:
-  - name: Savage
+  - name: Impaler
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 375
-      ore: 0
+      gold: 500
+      ore: 50
     power:
-      offense: 4
+      offense: 3
       defense: 0
-  - name: Guard
+    perks:
+      offense_from_pairing: 4,2,0.1 # slot, amount, num required
+
+  - name: Shieldbearer
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 275
-      ore: 15
+      gold: 400
+      ore: 40
     power:
       offense: 0
       defense: 3
+    perks:
+      defense_from_pairing: 4,2,0.1 # slot, amount
+
   - name: Voodoo Mage
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 800
+      gold: 1000
       ore: 0
     power:
       offense: 0
-      defense: 4
+      defense: 8
     perks:
-      defense_from_prestige: 500,4 # amount, max
-  - name: Bone Breaker
+      pairing_limit: 4,1 # Unit slot, amount (max 2 of this unit per each Unit 4)
+      counts_as_wizard_defense: 0.1
+
+  - name: Warboss
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
     cost:
-      platinum: 900
-      ore: 100
+      gold: 1400
+      ore: 200
+      gem: 1
     power:
-      offense: 4
+      offense: 8
       defense: 3
     perks:
-      offense_from_victories: 0.25,4 # +0.25 OP per Victory, max +4 (at 16 Victories)
+      offense_from_pairing: 1,2,10 # slot, amount, num required
+      reduces_casualties: 1

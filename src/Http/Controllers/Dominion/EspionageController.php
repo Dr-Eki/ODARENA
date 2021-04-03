@@ -16,11 +16,18 @@ use OpenDominion\Services\Dominion\ProtectionService;
 
 # ODA
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\NetworthCalculator;
+use OpenDominion\Models\Spyop;
 
 class EspionageController extends AbstractDominionController
 {
     public function getEspionage()
     {
+
+        #$infoOps = Spyop::all()->where('scope','info')->where('enabled',1)->sortBy('key');
+        $theftOps = Spyop::all()->where('scope','theft')->where('enabled',1)->sortBy('key');
+        $hostileOps = Spyop::all()->where('scope','hostile')->where('enabled',1)->sortBy('key');
+
         return view('pages.dominion.espionage', [
             'espionageCalculator' => app(EspionageCalculator::class),
             'espionageHelper' => app(EspionageHelper::class),
@@ -28,6 +35,12 @@ class EspionageController extends AbstractDominionController
             'protectionService' => app(ProtectionService::class),
             'rangeCalculator' => app(RangeCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
+
+            #ODA
+            'networthCalculator' => app(NetworthCalculator::class),
+            #'infoOps' => $infoOps,
+            'theftOps' => $theftOps,
+            'hostileOps' => $hostileOps,
         ]);
     }
 

@@ -16,10 +16,15 @@ class CreateRealmsTable extends Migration
             $table->increments('id');
             $table->integer('round_id')->unsigned();
             $table->integer('monarch_dominion_id')->unsigned()->nullable();
-            $table->enum('alignment', ['good', 'neutral', 'evil']);
+            $table->string('alignment');
             $table->integer('number');
             $table->string('name')->nullable();
             $table->timestamps();
+
+
+            #$table->integer('stat_total_land_conquered')->unsigned()->default(0);
+            #$table->integer('stat_total_land_explored')->unsigned()->default(0);
+            #$table->integer('stat_attacking_success')->unsigned()->default(0);
 
             $table->foreign('round_id')->references('id')->on('rounds');
         });

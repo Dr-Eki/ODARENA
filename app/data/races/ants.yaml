@@ -1,61 +1,73 @@
 name: Ants
 alignment: good
-description: >-
-  <p>After the disappearance of some magic crystals deep in the forest long ago, giant swarms of ants have been seen forming enormous colonies and growing in size.</p>
-  <p>Their units are weak, but they are both numerous and belligerent.</p>
+description:
 home_land_type: forest
 playable: 1
+
+peasants_alias: ant
+draftees_alias: drone
 
 attacking: 3
 exploring : 3
 converting: 3
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
-  max_population: 160
   construction_cost: -25
-  spy_strength: -20
-  wizard_strength: -20
   food_consumption: -50
-  boat_capacity: 70
-  platinum_production: -15
-  population_growth: 100
+  gold_production: -15
   explore_cost: 25
-  reduce_conversions: 25
+  reduced_conversions: 35
   draftee_dp: 0.1
+  population_growth: 50
+
+
 units:
   - name: Soldier Ant
-    need_boat: true
+    training_time: 6
+    type:
+      - living
     cost:
-      platinum: 50
+      gold: 0
       ore: 0
     power:
       offense: 1
       defense: 0
+
   - name: Worker Ant
-    need_boat: true
+    training_time: 6
+    type:
+      - living
     cost:
-      platinum: 150
+      gold: 150
       ore: 0
     power:
       offense: 0
-      defense: 2
+      defense: 1.5
     perks:
+      food_production: 0.25
       lumber_production: 0.5
+
   - name: Giant Ant
-    need_boat: true
+    training_time: 12
+    type:
+      - living
     cost:
-      platinum: 320
+      gold: 320
       ore: 0
     power:
       offense: 0
       defense: 3
+
   - name: Flying Ant
-    need_boat: false
+    training_time: 12
+    type:
+      - living
     cost:
-      platinum: 500
+      gold: 500
       ore: 0
     power:
-      offense: 2
-      defense: 2
-    perks:
-      offense_from_building: forest_haven,10,1 # building type, ratio%, max
+      offense: 3
+      defense: 1.5

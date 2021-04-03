@@ -12,6 +12,8 @@ use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\User;
 
+use OpenDominion\Helpers\RealmHelper;
+
 class ValhallaController extends AbstractController
 {
     public function getIndex()
@@ -52,7 +54,7 @@ class ValhallaController extends AbstractController
             '#' => ['width' => 50, 'align-center' => true],
             'player' => ['width' => 150, 'align-center' => true],
             'players' => ['align-center' => true],
-            'race' => ['width' => 100, 'align-center' => true],
+            'faction' => ['width' => 100, 'align-center' => true],
             'realm' => ['width' => 100, 'align-center' => true],
             'alignment' => ['width' => 100, 'align-center' => true],
             'number' => ['width' => 50, 'align-center' => true],
@@ -83,17 +85,18 @@ class ValhallaController extends AbstractController
             case 'stat-defending-success': $data = $this->getDominionsByStatistic($round, 'stat_defending_success'); break;
             case 'stat-espionage-success': $data = $this->getDominionsByStatistic($round, 'stat_espionage_success'); break;
             case 'stat-spell-success': $data = $this->getDominionsByStatistic($round, 'stat_spell_success'); break;
-            //case 'stat-total-platinum-production': $data = $this->getDominionsByStatistic($round, 'stat_total_platinum_production'); break;
-            //case 'stat-total-food-production': $data = $this->getDominionsByStatistic($round, 'stat_total_food_production'); break;
-            //case 'stat-total-lumber-production': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_production'); break;
-            //case 'stat-total-mana-production': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_production'); break;
-            //case 'stat-total-ore-production': $data = $this->getDominionsByStatistic($round, 'stat_total_ore_production'); break;
-            //case 'stat-total-gem-production': $data = $this->getDominionsByStatistic($round, 'stat_total_gem_production'); break;
+            case 'stat-total-gold-production': $data = $this->getDominionsByStatistic($round, 'stat_total_gold_production'); break;
+            case 'stat-total-food-production': $data = $this->getDominionsByStatistic($round, 'stat_total_food_production'); break;
+            case 'stat-total-lumber-production': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_production'); break;
+            case 'stat-total-mana-production': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_production'); break;
+            case 'stat-total-ore-production': $data = $this->getDominionsByStatistic($round, 'stat_total_ore_production'); break;
+            case 'stat-total-gem-production': $data = $this->getDominionsByStatistic($round, 'stat_total_gem_production'); break;
             case 'stat-total-tech-production': $data = $this->getDominionsByStatistic($round, 'stat_total_tech_production'); break;
-            //case 'stat-total-boat-production': $data = $this->getDominionsByStatistic($round, 'stat_total_boat_production'); break;
+            case 'stat-total-boat-production': $data = $this->getDominionsByStatistic($round, 'stat_total_boat_production'); break;
             case 'stat-total-land-explored': $data = $this->getDominionsByStatistic($round, 'stat_total_land_explored'); break;
+            case 'stat-total-land-discovered': $data = $this->getDominionsByStatistic($round, 'stat_total_land_discovered'); break;
             case 'stat-total-land-conquered': $data = $this->getDominionsByStatistic($round, 'stat_total_land_conquered'); break;
-            case 'stat-total-platinum-stolen': $data = $this->getDominionsByStatistic($round, 'stat_total_platinum_stolen'); break;
+            case 'stat-total-gold-stolen': $data = $this->getDominionsByStatistic($round, 'stat_total_gold_stolen'); break;
             case 'stat-total-food-stolen': $data = $this->getDominionsByStatistic($round, 'stat_total_food_stolen'); break;
             case 'stat-total-lumber-stolen': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_stolen'); break;
             case 'stat-total-mana-stolen': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_stolen'); break;
@@ -110,6 +113,108 @@ class ValhallaController extends AbstractController
             case 'stat-masters-of-water': $data = $this->getDominionsByStatistic($round, 'stat_water_hours'); break;
             case 'stat-masters-of-earth': $data = $this->getDominionsByStatistic($round, 'stat_earthquake_hours'); break;
             case 'stat-top-spy-disbanders': $data = $this->getDominionsByStatistic($round, 'stat_disband_spies_damage'); break;
+
+            # ODA NEW
+            case 'stat-total-units-killed': $data = $this->getDominionsByStatistic($round, 'stat_total_units_killed'); break;
+            case 'stat-total-units-converted': $data = $this->getDominionsByStatistic($round, 'stat_total_units_converted'); break;
+            case 'stat-total-land-lost': $data = $this->getDominionsByStatistic($round, 'stat_total_land_lost'); break;
+
+
+            case 'stat-total-gold-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_gold_spent_training'); break;
+            case 'stat-total-gold-spent-building': $data = $this->getDominionsByStatistic($round, 'stat_total_gold_spent_building'); break;
+            case 'stat-total-gold-spent-rezoning': $data = $this->getDominionsByStatistic($round, 'stat_total_gold_spent_rezoning'); break;
+            case 'stat-total-gold-spent-exploring': $data = $this->getDominionsByStatistic($round, 'stat_total_gold_spent_exploring'); break;
+            case 'stat-total-gold-spent-improving': $data = $this->getDominionsByStatistic($round, 'stat_total_gold_spent_improving'); break;
+            case 'stat-total-gold-plundered': $data = $this->getDominionsByStatistic($round, 'stat_total_gold_plundered'); break;
+            case 'stat-total-gold-salvaged': $data = $this->getDominionsByStatistic($round, 'stat_total_gold_salvaged'); break;
+            case 'stat-total-gold-sold': $data = $this->getDominionsByStatistic($round, 'stat_total_gold_sold'); break;
+            case 'stat-total-gold-bought': $data = $this->getDominionsByStatistic($round, 'stat_total_gold_bought'); break;
+
+            case 'stat-total-food-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_food_spent_training'); break;
+            case 'stat-total-food-spent-building': $data = $this->getDominionsByStatistic($round, 'stat_total_food_spent_building'); break;
+            case 'stat-total-food-spent-rezoning': $data = $this->getDominionsByStatistic($round, 'stat_total_food_spent_rezoning'); break;
+            case 'stat-total-food-spent-exploring': $data = $this->getDominionsByStatistic($round, 'stat_total_food_spent_exploring'); break;
+            case 'stat-total-food-spent-improving': $data = $this->getDominionsByStatistic($round, 'stat_total_food_spent_improving'); break;
+            case 'stat-total-food-plundered': $data = $this->getDominionsByStatistic($round, 'stat_total_food_plundered'); break;
+            case 'stat-total-food-salvaged': $data = $this->getDominionsByStatistic($round, 'stat_total_food_salvaged'); break;
+            case 'stat-total-food-decayed': $data = $this->getDominionsByStatistic($round, 'stat_total_food_decayed'); break;
+            case 'stat-total-food-consumed': $data = $this->getDominionsByStatistic($round, 'stat_total_food_consumed'); break;
+            case 'stat-total-food-sold': $data = $this->getDominionsByStatistic($round, 'stat_total_food_sold'); break;
+            case 'stat-total-food-bought': $data = $this->getDominionsByStatistic($round, 'stat_total_food_bought'); break;
+
+            case 'stat-total-ore-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_ore_spent_training'); break;
+            case 'stat-total-ore-spent-building': $data = $this->getDominionsByStatistic($round, 'stat_total_ore_spent_building'); break;
+            case 'stat-total-ore-spent-rezoning': $data = $this->getDominionsByStatistic($round, 'stat_total_ore_spent_rezoning'); break;
+            case 'stat-total-ore-spent-exploring': $data = $this->getDominionsByStatistic($round, 'stat_total_ore_spent_exploring'); break;
+            case 'stat-total-ore-spent-improving': $data = $this->getDominionsByStatistic($round, 'stat_total_ore_spent_improving'); break;
+            case 'stat-total-ore-plundered': $data = $this->getDominionsByStatistic($round, 'stat_total_ore_plundered'); break;
+            case 'stat-total-ore-salvaged': $data = $this->getDominionsByStatistic($round, 'stat_total_ore_salvaged'); break;
+            case 'stat-total-ore-sold': $data = $this->getDominionsByStatistic($round, 'stat_total_ore_sold'); break;
+            case 'stat-total-ore-bought': $data = $this->getDominionsByStatistic($round, 'stat_total_ore_bought'); break;
+
+            case 'stat-total-lumber-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_spent_training'); break;
+            case 'stat-total-lumber-spent-building': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_spent_building'); break;
+            case 'stat-total-lumber-spent-rezoning': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_spent_rezoning'); break;
+            case 'stat-total-lumber-spent-exploring': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_spent_exploring'); break;
+            case 'stat-total-lumber-spent-improving': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_spent_improving'); break;
+            case 'stat-total-lumber-plundered': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_plundered'); break;
+            case 'stat-total-lumber-salvaged': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_salvaged'); break;
+            case 'stat-total-lumber-rotted': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_rotted'); break;
+            case 'stat-total-lumber-sold': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_sold'); break;
+            case 'stat-total-lumber-bought': $data = $this->getDominionsByStatistic($round, 'stat_total_lumber_bought'); break;
+
+            case 'stat-total-gem-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_gem_spent_training'); break;
+            case 'stat-total-gem-spent-building': $data = $this->getDominionsByStatistic($round, 'stat_total_gem_spent_building'); break;
+            case 'stat-total-gem-spent-rezoning': $data = $this->getDominionsByStatistic($round, 'stat_total_gem_spent_rezoning'); break;
+            case 'stat-total-gem-spent-exploring': $data = $this->getDominionsByStatistic($round, 'stat_total_gem_spent_exploring'); break;
+            case 'stat-total-gem-spent-improving': $data = $this->getDominionsByStatistic($round, 'stat_total_gem_spent_improving'); break;
+            case 'stat-total-gem-plundered': $data = $this->getDominionsByStatistic($round, 'stat_total_gems_plundered'); break;
+            case 'stat-total-gem-salvaged': $data = $this->getDominionsByStatistic($round, 'stat_total_gem_salvaged'); break;
+            case 'stat-total-gem-sold': $data = $this->getDominionsByStatistic($round, 'stat_total_gems_sold'); break;
+
+            case 'stat-total-mana-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_spent_training'); break;
+            case 'stat-total-mana-spent-building': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_spent_building'); break;
+            case 'stat-total-mana-spent-rezoning': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_spent_rezoning'); break;
+            case 'stat-total-mana-spent-exploring': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_spent_exploring'); break;
+            case 'stat-total-mana-spent-improving': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_spent_improving'); break;
+            case 'stat-total-mana-plundered': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_plundered'); break;
+            #case 'stat-total-mana-salvaged': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_salvaged'); break;
+            case 'stat-total-mana-drained': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_drained'); break;
+            case 'stat-total-mana-cast': $data = $this->getDominionsByStatistic($round, 'stat_total_mana_cast'); break;
+
+            case 'stat-total-champion-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_champion_spent_training'); break;
+            case 'stat-total-soul-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_soul_spent_training'); break;
+            case 'stat-total-soul-spent-improving': $data = $this->getDominionsByStatistic($round, 'stat_total_soul_spent_improving'); break;
+
+            case 'stat-total-unit1-trained': $data = $this->getDominionsByStatistic($round, 'stat_total_unit1_trained'); break;
+            case 'stat-total-unit1-lost': $data = $this->getDominionsByStatistic($round, 'stat_total_unit1_lost'); break;
+            case 'stat-total-unit1-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_unit1_spent_training'); break;
+
+            case 'stat-total-unit2-trained': $data = $this->getDominionsByStatistic($round, 'stat_total_unit2_trained'); break;
+            case 'stat-total-unit2-lost': $data = $this->getDominionsByStatistic($round, 'stat_total_unit2_lost'); break;
+            case 'stat-total-unit2-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_unit2_spent_training'); break;
+
+            case 'stat-total-unit3-trained': $data = $this->getDominionsByStatistic($round, 'stat_total_unit3_trained'); break;
+            case 'stat-total-unit3-lost': $data = $this->getDominionsByStatistic($round, 'stat_total_unit3_lost'); break;
+            case 'stat-total-unit3-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_unit3_spent_training'); break;
+
+            case 'stat-total-unit4-trained': $data = $this->getDominionsByStatistic($round, 'stat_total_unit4_trained'); break;
+            case 'stat-total-unit4-lost': $data = $this->getDominionsByStatistic($round, 'stat_total_unit4_lost'); break;
+            case 'stat-total-unit4-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_unit4_spent_training'); break;
+
+            case 'stat-total-spies-trained': $data = $this->getDominionsByStatistic($round, 'stat_total_spies_trained'); break;
+            case 'stat-total-spies-lost': $data = $this->getDominionsByStatistic($round, 'stat_total_spies_lost'); break;
+            case 'stat-total-spies-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_spies_spent_training'); break;
+
+            case 'stat-total-wizards-trained': $data = $this->getDominionsByStatistic($round, 'stat_total_wizards_trained'); break;
+            case 'stat-total-wizards-lost': $data = $this->getDominionsByStatistic($round, 'stat_total_wizards_lost'); break;
+            case 'stat-total-wizards-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_wizards_spent_training'); break;
+
+            case 'stat-total-archmages-trained': $data = $this->getDominionsByStatistic($round, 'stat_total_archmages_trained'); break;
+            case 'stat-total-archmages-lost': $data = $this->getDominionsByStatistic($round, 'stat_total_archmages_lost'); break;
+            case 'stat-total-archmages-spent-training': $data = $this->getDominionsByStatistic($round, 'stat_total_archmages_spent_training'); break;
+
+
 
             default:
                 if (!preg_match('/(strongest|largest|stat)-([-\w]+)/', $type, $matches)) {
@@ -183,12 +288,12 @@ class ValhallaController extends AbstractController
                 $data = [
                     '#' => null,
                     'dominion' => $dominion->name,
-                    'player' => $dominion->user->display_name,
+                    'player' => $dominion->isAbandoned() ? $dominion->ruler_name . ' (abandoned)' : $dominion->user->display_name,
                 ];
 
                 if ($race === null) {
                     $data += [
-                        'race' => $dominion->race->name,
+                        'faction' => $dominion->race->name,
                     ];
                 }
 
@@ -308,12 +413,12 @@ class ValhallaController extends AbstractController
                 $data = [
                     '#' => null,
                     'dominion' => $dominion->name,
-                    'player' => $dominion->user->display_name,
+                    'player' => $dominion->isAbandoned() ? $dominion->ruler_name . ' (abandoned)' : $dominion->user->display_name,
                 ];
 
                 if ($race === null) {
                     $data += [
-                        'race' => $dominion->race->name,
+                        'faction' => $dominion->race->name,
                     ];
                 }
 
@@ -424,8 +529,8 @@ class ValhallaController extends AbstractController
                 $data = [
                     '#' => null,
                     'dominion' => $dominion->name,
-                    'player' => $dominion->user->display_name,
-                    'race' => $dominion->race->name,
+                    'player' => $dominion->isAbandoned() ? $dominion->ruler_name . ' (abandoned)' : $dominion->user->display_name,
+                    'faction' => $dominion->race->name,
                     'realm' => $dominion->realm->number,
                     'value' => $dominion->{$stat},
                 ];

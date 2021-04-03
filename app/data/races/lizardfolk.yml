@@ -1,54 +1,77 @@
 name: Lizardfolk
 alignment: evil
-description: >-
-  <p>The Lizardfolk race took everyone by surprise when they slithered out of the oceans in great numbers less than a century ago, attacking and pillaging coastal settlements before gradually pushing further inland. Their origins are pure speculation, ranging from Human scientific experimentation to Merfolk slave liberation.</p>
-  <p>With chameleonic warriors that melt into the shadows and blend in perfectly with their environments, by the time you realise the Lizardfolk are coming... it's already too late.</p>
+description:
 home_land_type: water
-playable: 1
+playable: 0
 
 attacking: 3
-exploring : 3
+exploring : 2
 converting: 3
+skill_level: 1
+
+construction_materials: gold,lumber
 
 perks:
   food_consumption: -25
+  max_population: 10
 units:
   - name: Reptile
+    
+    type:
+      - living
+      - sentient
+      - intelligent
+    training_time: 9
     cost:
-      platinum: 250
+      gold: 250
     power:
       offense: 3
       defense: 0
-    need_boat: false
+
   - name: Serpent
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 250
+      gold: 250
     power:
       offense: 0
       defense: 3
+
   - name: Chameleon
-    type: hybrid_elite
+    
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 900
+      gold: 900
     power:
       offense: 4
       defense: 6
     perks:
-      counts_as_spy_offense: 0.25
-      counts_as_spy_defense: 0.25
+      counts_as_spy_offense: 0.2
+      counts_as_spy_defense: 0.2
       sink_boats_offense: 1
       sink_boats_defense: 1
-    need_boat: false
+
   - name: Archaesaur
+    
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - massive
     cost:
-      platinum: 2800
+      gold: 2800
     power:
-      offense: 12
-      defense: 8
+      offense: 16
+      defense: 10
     perks:
       sink_boats_offense: 1
       sink_boats_defense: 1
       food_consumption: 0.75
-      reduce_combat_losses: 1
-      pairing_limit: 3,1 # Unit slot, amount (max 1 of this unit per each Unit 3)
-    need_boat: false
+      only_dies_vs_raw_power: 7 # >=

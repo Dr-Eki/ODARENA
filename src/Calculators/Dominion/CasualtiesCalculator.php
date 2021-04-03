@@ -12,49 +12,20 @@ use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 
 class CasualtiesCalculator
 {
-    /** @var LandCalculator */
-    protected $landCalculator;
 
-    /** @var PopulationCalculator */
-    private $populationCalculator;
-
-    /** @var SpellCalculator */
-    private $spellCalculator;
-
-    /** @var UnitHelper */
-    protected $unitHelper;
-
-    /** @var MilitaryCalculator */
-    protected $militaryCalculator;
-
-    /** @var RangeCalculator */
-    protected $rangeCalculator;
-
-    /**
+    /*
      * CasualtiesCalculator constructor.
-     *
-     * @param LandCalculator $landCalculator
-     * @param PopulationCalculator $populationCalculator
-     * @param SpellCalculator $spellCalculator
-     * @param UnitHelper $unitHelper
-     * @param MilitaryCalculator $militaryCalculator
-     * @param RangeCalculator $rangeCalculator
      */
-    public function __construct(
-        LandCalculator $landCalculator,
-        PopulationCalculator $populationCalculator,
-        SpellCalculator $spellCalculator,
-        UnitHelper $unitHelper,
-        ImprovementCalculator $improvementCalculator,
-        MilitaryCalculator $militaryCalculator)
+    public function __construct()
     {
-        $this->landCalculator = $landCalculator;
-        $this->populationCalculator = $populationCalculator;
-        $this->spellCalculator = $spellCalculator;
-        $this->unitHelper = $unitHelper;
-        $this->populationCalculator = $populationCalculator;
-        $this->improvementCalculator = $improvementCalculator;
-        $this->militaryCalculator = $militaryCalculator;
+        $this->landCalculator = app(LandCalculator::class);
+        $this->populationCalculator = app(PopulationCalculator::class);
+        $this->spellCalculator = app(SpellCalculator::class);
+        $this->unitHelper = app(UnitHelper::class);
+        $this->populationCalculator = app(PopulationCalculator::class);
+        $this->improvementCalculator = app(ImprovementCalculator::class);
+        $this->militaryCalculator = app(MilitaryCalculator::class);
+        $this->spellDamageCalculator = app(SpellDamageCalculator::class);
     }
 
     /**
@@ -69,9 +40,10 @@ class CasualtiesCalculator
      * @param bool $isOverwhelmed
      * @param bool $attackingForceOP
      * @param bool $targetDP
+     * @param bool $isInvasionSuccessful - True/False flag whether invasion was successful
      * @return float
      */
-    public function getOffensiveCasualtiesMultiplierForUnitSlot(Dominion $dominion, Dominion $target, int $slot, array $units, float $landRatio, bool $isOverwhelmed, float $attackingForceOP, float $targetDP): float
+    public function getOffensiveCasualtiesMultiplierForUnitSlot(Dominion $dominion, Dominion $target, int $slot, array $units, float $landRatio, bool $isOverwhelmed, float $attackingForceOP, float $targetDP, bool $isInvasionSuccessful, bool $isAmbush): float
     {
         $multiplier = 1;
 
@@ -87,42 +59,46 @@ class CasualtiesCalculator
         # This means that OFFENSIVE CASUALTIES are zero when INVADING a Lux.
         if($target->race->getPerkValue('does_not_kill') == 1)
         {
-          $multiplier = 0;
+            $multiplier = 0;
         }
 
         // Then check immortality, so we can skip the other remaining checks if we indeed have immortal units, since
         // casualties will then always be 0 anyway
 
-        // Immortality never triggers upon being overwhelmed
-        if (!$isOverwhelmed)
+        // General "Almost never dies" type of immortality.
+        if ($dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal') or $dominion->race->getUnitPerkValueForUnitSlot($slot, 'spirit_immortal'))
         {
-            // General "Almost never dies" type of immortality.
-            if ((bool)$dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal'))
+            if (!$this->spellCalculator->getPassiveSpellPerkMultiplier($target, 'can_kill_immortal'))
             {
                 $multiplier = 0;
             }
+        }
 
-            // True immortality: only dies when overwhelmed.
-            if ((bool)$dominion->race->getUnitPerkValueForUnitSlot($slot, 'true_immortal'))
-            {
-                // For now the same as SPUD-style immortal, but separate in code for future usage.
-                $multiplier = 0;
-            }
+        // True immortality (cannot be overridden)
+        if ((bool)$dominion->race->getUnitPerkValueForUnitSlot($slot, 'true_immortal'))
+        {
+            $multiplier = 0;
+        }
 
-            // Range-based immortality
-            if (($immortalVsLandRange = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_vs_land_range')) !== 0)
-            {
-                if ($landRatio >= ($immortalVsLandRange / 100))
-                {
-                    $multiplier = 0;
-                }
-            }
-
-            // Race perk-based immortality
-            if ($this->isImmortalVersusRacePerk($dominion, $target, $slot))
+        // Range-based immortality
+        if (($immortalVsLandRange = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_vs_land_range')) !== 0)
+        {
+            if ($landRatio >= ($immortalVsLandRange / 100))
             {
                 $multiplier = 0;
             }
+        }
+
+        // Race perk-based immortality
+        if ($this->isImmortalVersusRacePerk($dominion, $target, $slot))
+        {
+            $multiplier = 0;
+        }
+
+        // Perk: immortal on victory
+        if ($dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_on_victory') and $isInvasionSuccessful)
+        {
+            $multiplier = 0;
         }
         # END CHECK IMMORTALITY
 
@@ -143,11 +119,7 @@ class CasualtiesCalculator
             }
 
             # How much of the DP is from units that kill?
-            $multiplier = $dpFromUnitsThatKill / $this->militaryCalculator->getDefensivePowerRaw($target);
-
-            #dd($multiplier);
-
-            #$multiplier = $dpFromUnitsThatKillRatio;
+            $multiplier = $dpFromUnitsThatKill / $this->militaryCalculator->getDefensivePowerRaw($target, $dominion, $landRatio, null, 0, false, $isAmbush, false);
         }
         # END CHECK ONLY DIES VS X RAW POWER
 
@@ -156,39 +128,37 @@ class CasualtiesCalculator
         if ($multiplier != 0)
         {
 
-            // Non-Unit bonuses
-            #$multiplier = $multiplier; -- Removed to not cause issues with $multiplier set by only_dies_vs_raw_power perk.
-
-            # Shrines
-            $multiplier -= $this->getOffensiveCasualtiesReductionFromShrines($dominion);
+            # Buildings
+            $multiplier -= $dominion->getBuildingPerkMultiplier('offensive_casualties');
 
             # Land-based reductions
             $multiplier -= $this->getCasualtiesReductionFromLand($dominion, $slot, 'offense');
             $multiplier -= $this->getCasualtiesReductionVersusLand($dominion, $target, $slot, 'offense');
 
-            # Orc and Black Orc spell: increases casualties by 10%.
-            if ($this->spellCalculator->isSpellActive($dominion, 'bloodrage'))
-            {
-              $multiplier += 0.10;
-            }
-            # Norse spell: increases casualties by 15%.
-            if ($this->spellCalculator->isSpellActive($dominion, 'fimbulwinter'))
-            {
-              $multiplier += 0.15;
-            }
-            # Troll and Lizardfolk spell: decreases casualties by 25%.
-            if ($this->spellCalculator->isSpellActive($dominion, 'regeneration'))
-            {
-              $multiplier -= 0.25;
-            }
+            // Spells
+            # 1. Attacker's general casualty modifier
+            # 2. Attacker's specifically offensive casualties modifier
+            # 3. Target's general casualty modifier for invader
+            # 4. Target's general specific defensive modifier for invader
+            $multiplier += $dominion->getSpellPerkMultiplier('casualties');
+            $multiplier += $dominion->getSpellPerkMultiplier('offensive_casualties');
+            $multiplier += $target->getSpellPerkMultiplier('increases_casualties');
+            $multiplier += $target->getSpellPerkMultiplier('increases_casualties_on_defense');
+
             # Invasion Spell: Unhealing Wounds
-            if ($this->spellCalculator->isSpellActive($dominion, 'unhealing_wounds'))
+            if ($this->spellCalculator->isSpellActive($dominion, 'festering_wounds'))
             {
-              $multiplier += 0.50;
+                $multiplier += 0.50 * $this->spellDamageCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, 'festering_wounds', null);
             }
 
             // Techs
             $multiplier -= $dominion->getTechPerkMultiplier('fewer_casualties_offense');
+
+            // Techs
+            if(isset($dominion->title))
+            {
+                $multiplier += $dominion->title->getPerkMultiplier('casualties') * $dominion->title->getPerkBonus($dominion);
+            }
 
             # Infirmary
             $multiplier -= $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'infirmary');
@@ -198,34 +168,11 @@ class CasualtiesCalculator
             # Unit Perk: Fewer Casualties
             $multiplier -= ($dominion->race->getUnitPerkValueForUnitSlot($slot, ['fewer_casualties', 'fewer_casualties_offense']) / 100);
 
-            # Unit Perk: Reduce Combat Losses
-            $unitsSentPerSlot = [];
-            $unitsSentRCLSlot = null;
-            $reducedCombatLossesMultiplierAddition = 0;
+            # Unit Perk: Reduces or increases casualties.
+            $unitCasualtiesPerk = $this->getUnitCasualtiesPerk($dominion, $target, $units, $landRatio, 'offensive', $isAmbush);
 
-            // todo: inefficient to do run this code per slot. needs refactoring
-            foreach ($dominion->race->units as $unit) {
-                $slot = $unit->slot;
-
-                if (!isset($units[$slot])) {
-                    continue;
-                }
-                $unitsSentPerSlot[$slot] = $units[$slot];
-
-                if ($unit->getPerkValue('reduce_combat_losses') !== 0) {
-                    $unitsSentRCLSlot = $slot;
-                }
-            }
-
-            // We have a unit with RCL!
-            if ($unitsSentRCLSlot !== null) {
-                $totalUnitsSent = array_sum($unitsSentPerSlot);
-
-                $reducedCombatLossesMultiplierAddition += (($unitsSentPerSlot[$unitsSentRCLSlot] / $totalUnitsSent) / 2);
-            }
-
-            # Apply RCL do uBM.
-            $multiplier -= $reducedCombatLossesMultiplierAddition;
+            $multiplier += $unitCasualtiesPerk['defender']['increases_casualties_on_defense'];
+            $multiplier -= $unitCasualtiesPerk['attacker']['reduces_casualties'];
 
             // Absolute cap at 90% reduction.
             $multiplier = max(0.10, $multiplier);
@@ -245,7 +192,7 @@ class CasualtiesCalculator
      * @param int|null $slot Null is for non-racial units and thus used as draftees casualties multiplier
      * @return float
      */
-    public function getDefensiveCasualtiesMultiplierForUnitSlot(Dominion $dominion, Dominion $attacker, ?int $slot, array $units, float $landRatio): float
+    public function getDefensiveCasualtiesMultiplierForUnitSlot(Dominion $dominion, Dominion $attacker, ?int $slot, array $units, float $landRatio, bool $isAmbush, bool $isInvasionSuccessful): float
     {
         $multiplier = 1;
 
@@ -256,21 +203,31 @@ class CasualtiesCalculator
         if ($slot !== null)
         {
             // Global immortality
-            if ((bool)$dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal'))
+            if ($dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal'))
             {
-                if (!$this->spellCalculator->isSpellActive($attacker, 'crusade'))
+                if (!$this->spellCalculator->getPassiveSpellPerkMultiplier($attacker, 'can_kill_immortal'))
                 {
                     $multiplier = 0;
                 }
             }
-            if ((bool)$dominion->race->getUnitPerkValueForUnitSlot($slot, 'true_immortal'))
+            if ($dominion->race->getUnitPerkValueForUnitSlot($slot, 'spirit_immortal') and !$isInvasionSuccessful)
             {
-                // Note: true_immortal is used for non-SPUD races to be exempt from Crusade.
+                $multiplier = 0;
+            }
+            if ($dominion->race->getUnitPerkValueForUnitSlot($slot, 'true_immortal'))
+            {
+                // Note: true_immortal is used for non-SPUD races to be exempt from Divine Intervention.
                 $multiplier = 0;
             }
 
             // Race perk-based immortality
             if (($multiplier !== 1) && $this->isImmortalVersusRacePerk($dominion, $attacker, $slot))
+            {
+                $multiplier = 0;
+            }
+
+            // Perk: immortal on victory
+            if ($dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_on_fending_off') and !$isInvasionSuccessful)
             {
                 $multiplier = 0;
             }
@@ -281,7 +238,7 @@ class CasualtiesCalculator
         # This means that Defensive CASUALTIES are zero when INVADED BY a Lux.
         if($attacker->race->getPerkValue('does_not_kill') == 1)
         {
-          $multiplier = 0;
+            $multiplier = 0;
         }
 
         # CHECK ONLY DIES VS X RAW POWER
@@ -316,28 +273,39 @@ class CasualtiesCalculator
 
         if ($multiplier != 0)
         {
-            // Non-unit bonuses (hero, tech, wonders), capped at -80%
-            #$multiplier = $multiplier; -- Removed to not cause issues with $multiplier set by only_dies_vs_raw_power perk.
-
             // Spells
-            # Troll and Lizardfolk spell: decreases casualties by 25%.
-            if ($this->spellCalculator->isSpellActive($dominion, 'regeneration'))
-            {
-              $multiplier -= 0.25;
-            }
-            # Invasion Spell: Unhealing Wounds
-            if ($this->spellCalculator->isSpellActive($dominion, 'unhealing_wounds'))
-            {
-              $multiplier += 0.50;
-            }
+            $multiplier += $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'casualties');
 
+            # 1. Target's general casualty modifier
+            # 2. Target's specifically offensive casualties modifier
+            # 3. Attacker's general casualty modifier for invader
+            # 4. Attacker's general specific defensive modifier for invader
+            $multiplier += $dominion->getSpellPerkMultiplier('casualties');
+            $multiplier += $dominion->getSpellPerkMultiplier('defensive_casualties');
+            $multiplier += $attacker->getSpellPerkMultiplier('increases_casualties');
+            $multiplier += $attacker->getSpellPerkMultiplier('increases_casualties_on_offense');
+
+            # Invasion Spell: Unhealing Wounds
+            if ($this->spellCalculator->isSpellActive($dominion, 'festering_wounds'))
+            {
+                $multiplier += 0.50 * $this->spellDamageCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, 'festering_wounds', null);
+            }
 
             # Land-based reductions
             $multiplier -= $this->getCasualtiesReductionFromLand($dominion, $slot, 'defense');
             #$multiplier -= $this->getCasualtiesReductionVersusLand($dominion, $target, $slot, 'defense'); -- Doesn't make sense in this context (attacker has no defensive casualties).
 
+            // Buildings
+            $multiplier -= $dominion->getBuildingPerkMultiplier('defensive_casualties');
+
             // Techs
             $multiplier -= $dominion->getTechPerkMultiplier('fewer_casualties_defense');
+
+            // Title
+            if(isset($dominion->title))
+            {
+                $multiplier += $dominion->title->getPerkMultiplier('casualties') * $dominion->title->getPerkBonus($dominion);
+            }
 
             // Infirmary
             $multiplier -= $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'infirmary');
@@ -349,63 +317,17 @@ class CasualtiesCalculator
                 $multiplier -= ($dominion->race->getUnitPerkValueForUnitSlot($slot, ['fewer_casualties', 'fewer_casualties_defense']) / 100);
             }
 
-            // Unit Perk: Reduce Combat Losses
-            $unitsAtHomePerSlot = [];
-            $unitsAtHomeRCLSlot = null;
-            $reducedCombatLosses = 0;
+            # Unit Perk: Reduces or increases casualties.
+            $unitCasualtiesPerk = $this->getUnitCasualtiesPerk($attacker, $dominion, $units, $landRatio, 'defensive', $isAmbush);
 
-            // todo: inefficient to do run this code per slot. needs refactoring
-            foreach ($dominion->race->units as $unit) {
-                $slot = $unit->slot;
-                $unitKey = "military_unit{$slot}";
-
-                $unitsAtHomePerSlot[$slot] = $dominion->$unitKey;
-
-                if ($unit->getPerkValue('reduce_combat_losses') !== 0) {
-                    $unitsAtHomeRCLSlot = $slot;
-                }
-            }
-
-            // We have a unit with RCL!
-            if ($unitsAtHomeRCLSlot !== null) {
-                $totalUnitsAtHome = array_sum($unitsAtHomePerSlot);
-
-                if ($totalUnitsAtHome > 0) {
-                    $reducedCombatLosses += (($unitsAtHomePerSlot[$unitsAtHomeRCLSlot] / $totalUnitsAtHome) / 2);
-                }
-            }
-
-            # Apply RCL do uBM.
-            $multiplier -= $reducedCombatLosses;
+            $multiplier += $unitCasualtiesPerk['attacker']['increases_casualties_on_offense'];
+            $multiplier -= $unitCasualtiesPerk['defender']['reduces_casualties'];
 
             // Absolute cap at 90% reduction.
             $multiplier = max(0.10, $multiplier);
         }
-
         return $multiplier;
     }
-
-    /**
-     * Returns the Dominion's offensive casualties reduction from shrines.
-     *
-     * This number is in the 0 - 0.8 range, where 0 is no casualty reduction
-     * (0%) and 0.8 is full (-80%). Used additive in a multiplier formula.
-     *
-     * @param Dominion $dominion
-     * @return float
-     */
-    public function getOffensiveCasualtiesReductionFromShrines(Dominion $dominion): float
-    {
-        // Values (percentage)
-        $casualtyReductionPerShrine = 5.5;
-        $maxCasualtyReductionFromShrines = 80;
-
-        return min(
-            (($casualtyReductionPerShrine * $dominion->building_shrine) / $this->landCalculator->getTotalLand($dominion)),
-            ($maxCasualtyReductionFromShrines / 100)
-        );
-    }
-
 
     /**
      * Returns the Dominion's casualties by unit type.
@@ -586,37 +508,90 @@ class CasualtiesCalculator
         return $powerFromPerk;
       }
 
-      /**
-       * @param Dominion $dominion
-       * @param Unit $unit
-       * @return float
-       */
+
       protected function getCasualtiesReductionVersusLand(Dominion $dominion, Dominion $target, int $slot = NULL, string $powerType): float
       {
-        if ($target === null or $slot == NULL)
-        {
-            return 0;
-        }
+          if ($target === null or $slot == NULL)
+          {
+              return 0;
+          }
 
-        $versusLandPerkData = $dominion->race->getUnitPerkValueForUnitSlot($slot, "fewer_casualties_{$powerType}_vs_land", null);
+          $versusLandPerkData = $dominion->race->getUnitPerkValueForUnitSlot($slot, "fewer_casualties_{$powerType}_vs_land", null);
 
-        if(!$versusLandPerkData)
-        {
-            return 0;
-        }
+          if(!$versusLandPerkData)
+          {
+              return 0;
+          }
 
-        $landType = $versusLandPerkData[0];
-        $ratio = (float)$versusLandPerkData[1];
-        $max = (float)$versusLandPerkData[2];
+          $landType = $versusLandPerkData[0];
+          $ratio = (float)$versusLandPerkData[1];
+          $max = (float)$versusLandPerkData[2];
 
-        $totalLand = $this->landCalculator->getTotalLand($target);
-        $landPercentage = ($target->{"land_{$landType}"} / $totalLand) * 100;
+          $totalLand = $this->landCalculator->getTotalLand($target);
+          $landPercentage = ($target->{"land_{$landType}"} / $totalLand) * 100;
 
-        $powerFromLand = $landPercentage / $ratio;
+          $powerFromLand = $landPercentage / $ratio;
 
-        $powerFromPerk = min($powerFromLand, $max)/100;
+          $powerFromPerk = min($powerFromLand, $max)/100;
 
-        return $powerFromPerk;
+          return $powerFromPerk;
       }
+      
+
+      /**
+      *   Calculates reduces_casualties or increases_casualties.
+      *   reduces_casualties: lowers casualties of all friendly units participating in the battle. ([Perk Units]/[All Units])/2
+      *   increases_casualties: increases casualties of enemy units participating in the battle. ([Perk Units]/[All Units])/4
+      *   $mode is either OFFENSIVE or DEFENSIVE
+      **/
+      protected function getUnitCasualtiesPerk(Dominion $attacker, Dominion $defender, array $units, float $landRatio, string $mode, bool $isAmbush): array
+      {
+
+          $rawOpFromSentUnits = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, $landRatio, $units, []);
+          $rawDpFromHomeUnits = $this->militaryCalculator->getDefensivePowerRaw($defender, $attacker, $landRatio, null, 0, false, $isAmbush, false);
+          $defenderUnitsHome = ($defender->military_unit1 + $defender->military_unit2 + $defender->military_unit3 + $defender->military_unit4);
+
+          $unitCasualtiesPerk['attacker']['increases_casualties_on_offense'] = 0;
+          $unitCasualtiesPerk['attacker']['reduces_casualties'] = 0;
+
+          $unitCasualtiesPerk['defender']['increases_casualties_on_defense'] = 0;
+          $unitCasualtiesPerk['defender']['reduces_casualties'] = 0;
+
+          # Check if attacker has increases_casualties or reduces_casualties
+          foreach($units as $slot => $amount)
+          {
+              if($increasesCasualties = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'increases_casualties_on_offense'))
+              {
+                  $unitCasualtiesPerk['attacker']['increases_casualties_on_offense'] += $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, $landRatio, [$slot => $amount], []) / $rawOpFromSentUnits;
+              }
+              if($decreasesCasualties = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'reduces_casualties'))
+              {
+                  $unitCasualtiesPerk['attacker']['reduces_casualties'] += $amount / array_sum($units);
+              }
+          }
+
+          # Check if defender has increases_casualties or reduces_casualties
+          for ($slot = 1; $slot <= 4; $slot++)
+          {
+              if($increasesCasualties = $defender->race->getUnitPerkValueForUnitSlot($slot, 'increases_casualties_on_defense'))
+              {
+                  $unitCasualtiesPerk['defender']['increases_casualties_on_defense'] += $this->militaryCalculator->getDefensivePowerRaw($attacker, $defender, $landRatio, [$slot => $amount], 0, false, $isAmbush, false) / $rawDpFromHomeUnits;
+              }
+              if($decreasesCasualties = $defender->race->getUnitPerkValueForUnitSlot($slot, 'reduces_casualties'))
+              {
+                  $unitCasualtiesPerk['defender']['reduces_casualties'] += $defender->{'military_unit'.$slot} / $defenderUnitsHome;
+              }
+          }
+
+          $unitCasualtiesPerk['attacker']['increases_casualties_on_offense'] /= 2;
+          $unitCasualtiesPerk['attacker']['reduces_casualties'] /= 2;
+
+          $unitCasualtiesPerk['defender']['increases_casualties_on_defense'] /= 2;
+          $unitCasualtiesPerk['defender']['reduces_casualties'] /= 2;
+
+          return $unitCasualtiesPerk;
+
+      }
+
 
 }

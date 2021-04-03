@@ -14,6 +14,14 @@ use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Helpers\UnitHelper;
 use OpenDominion\Services\Dominion\QueueService;
 
+# ODA
+use DB;
+use OpenDominion\Helpers\HistoryHelper;
+use OpenDominion\Calculators\RealmCalculator;
+use OpenDominion\Helpers\RaceHelper;
+use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
+use OpenDominion\Models\Spell;
+
 class AdvisorsController extends AbstractDominionController
 {
     public function getAdvisors()
@@ -26,6 +34,9 @@ class AdvisorsController extends AbstractDominionController
         return view('pages.dominion.advisors.production', [
             'populationCalculator' => app(PopulationCalculator::class),
             'productionCalculator' => app(ProductionCalculator::class),
+            'landCalculator' => app(LandCalculator::class),
+            'realmCalculator' => app(RealmCalculator::class),
+            'raceHelper' => app(RaceHelper::class),
         ]);
     }
 
@@ -43,6 +54,8 @@ class AdvisorsController extends AbstractDominionController
             'landCalculator' => app(LandCalculator::class),
             'landHelper' => app(LandHelper::class),
             'queueService' => app(QueueService::class),
+            'landImprovementCalculator' => app(LandImprovementCalculator::class),
+            'militaryCalculator' => app(MilitaryCalculator::class),
         ]);
     }
 
@@ -58,15 +71,31 @@ class AdvisorsController extends AbstractDominionController
 
     public function getAdvisorsMagic()
     {
-        return view('pages.dominion.advisors.magic', [
-            'spellCalculator' => app(SpellCalculator::class),
-            'spellHelper' => app(SpellHelper::class),
-        ]);
-    }
+        $spellHelper = app(SpellHelper::class);
+        $spellCalculator = app(SpellCalculator::class);
+        $activeSpells = $spellCalculator->getActiveSpells($this->getSelectedDominion());
 
-    public function getAdvisorsRankings()
-    {
-        // todo
+        foreach($activeSpells as $spell)
+        {
+            $activeSpellKeys[] = $spell->spell;
+        }
+
+        if(count($activeSpells) > 0)
+        {
+            $activeSpells = Spell::all()->whereIn('key',$activeSpellKeys)->keyBy('key');
+        }
+        else
+        {
+            $activeSpells = null;
+        }
+
+
+
+        return view('pages.dominion.advisors.magic', [
+            'spellCalculator' => $spellCalculator,
+            'spellHelper' => $spellHelper,
+            'activeSpells' => $activeSpells,
+        ]);
     }
 
     public function getAdvisorsStatistics()
@@ -75,6 +104,26 @@ class AdvisorsController extends AbstractDominionController
             'landCalculator' => app(LandCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'populationCalculator' => app(PopulationCalculator::class),
+            'unitHelper' => app(UnitHelper::class),
+            'raceHelper' => app(RaceHelper::class),
         ]);
     }
+
+    public function getHistory()
+    {
+        $resultsPerPage = 25;
+        $selectedDominion = $this->getSelectedDominion();
+
+        $history = DB::table('dominion_history')
+                            ->where('dominion_history.dominion_id', '=', $selectedDominion->id)
+                            ->orderBy('dominion_history.created_at', 'desc')
+                            ->get();
+
+
+        return view('pages.dominion.advisors.history', [
+            'historyHelper' => app(HistoryHelper::class),
+            'history' => $history
+        ]);
+    }
+
 }

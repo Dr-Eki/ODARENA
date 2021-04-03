@@ -1,59 +1,85 @@
 name: Simian
 alignment: independent
-description: >-
-  <p>Simians live in the rain forests where neither Orcs nor elves or even Sylvans venture. Until recently, their only contact has been with the Beastfolks.</p>
-  <p>During the rainy season, the Simians take shelter in the thickets and hunker down behind strong barricades to keep the rain and unwanted visitors away.</p>
+description:
 home_land_type: forest
 playable: 1
 
 attacking: 3
 exploring : 3
-converting: 3
+converting: 1
+skill_level: 2
+
+construction_materials: gold,lumber
+
+archmages_cost: 1200,gold
 
 perks:
   spy_strength: 10
   wizard_strength: -10
   construction_cost: -20
-  extra_barren_max_population: 15
-  cannot_train_archmages: 1
-  tech_costs: 10
+  forest_construction_cost: -100
+  defense_from_forest: 0.30 # from every 1% forest
+  extra_barren_max_population: 10
   lumber_improvement_points: 50
+  increased_construction_speed: 3
+  max_population: 20
 units:
   - name: Chimpanzee
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 200
-      ore: 0
+      gold: 200
     power:
       offense: 3
       defense: 0
     perks:
-      fewer_casualties_offense_vs_land: forest,0.5,80 # land_type, ratio%, max
+      fewer_casualties_offense_vs_land: forest,1,80 # land_type, ratio%, max
+      offense_from_victories: 0.05,1.5 # +0.10 OP per Victory, max +3 (at 30 Victories)
+
   - name: Bonobo
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 200
-      ore: 0
+      gold: 200
     power:
       offense: 0
       defense: 3
     perks:
       fewer_casualties_defense_from_land: forest,1,80 # land_type, ratio%, max
+
   - name: Orangutan
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1200
-      ore: 0
+      gold: 1000
     power:
       offense: 4
       defense: 7
     perks:
       fewer_casualties_defense_from_land: forest,1,80 # land_type, ratio%, max
-      fewer_casualties_offense_vs_land: forest,0.5,80 # land_type, ratio%, max
+      fewer_casualties_offense_vs_land: forest,1,80 # land_type, ratio%, max
+
   - name: Gorilla
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1200
-      ore: 0
+      gold: 1000
     power:
       offense: 7
       defense: 4
     perks:
       fewer_casualties_defense_from_land: forest,1,80 # land_type, ratio%, max
-      fewer_casualties_offense_vs_land: forest,0.5,80 # land_type, ratio%, max
+      fewer_casualties_offense_vs_land: forest,1,80 # land_type, ratio%, max
+      offense_from_victories: 0.10,3 # +0.10 OP per Victory, max +3 (at 30 Victories)

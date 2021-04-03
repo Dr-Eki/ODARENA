@@ -1,0 +1,93 @@
+name: Cult
+alignment: independent
+description: >-
+  <p>The Cult has many unique spells:</p>
+  <ul>
+  <li><b>Mind Control</b> (<em>self-spell</em>): When defending, each Mystic takes control of one invading unit's mind. Mindcontrolled units provide 2 raw DP.
+  <ul><li>Only units which have the attribute Sentient and neither of the attributes Ammunition, Equipment, Magical, Massive, Mechanical, Mindless, Ship, or Wise can be mindcontrolled.</li></ul></li>
+  <li><b>Menticide</b> (<em>self-spell</em>):Units affected by Mind Control join the Cult as Thralls immediately after the invasion.</li>
+  <li><b>Persuasion</b> (<em>self-spell</em>):Captured spies and espionage units join the Cult as spies. It takes two ticks to complete persuasion.</li>
+  <li><b>Cogency</b> (<em>self-spell</em>): Wizardry casualties are saved and join the Cult as wizards. It takes eight ticks for the new wizards to be ready.</li>
+  <li><b>Enthralling</b> (<em>hostile spell</em>): Some of the units and draftees released by the target join you as Thralls. The new units take between 6 and 12 ticks to arrive.</li>
+  <li><b>Treachery</b> (<em>hostile spell</em>): The target's spies return some of what they steal to you.</li>
+  </ul>
+home_land_type: forest
+playable: 0
+
+attacking: 3
+exploring : 3
+converting: 3
+skill_level: 3
+
+construction_materials: gold,lumber
+
+perks:
+  population_growth: 15
+  min_rounds_played: 5
+  max_per_round: 1
+  cannot_explore: 1
+  max_population: 20
+units:
+  - name: Thrall
+    type:
+      - living
+      - mindless
+    cost:
+      gold: 0
+      ore: 0
+    power:
+      offense: 3
+      defense: 0
+    perks:
+      cannot_be_trained: 1
+      attrition: 1 # 1% lost each tick.
+      does_not_count_as_population: 1
+      wins_into: 2
+  - name: Initiate
+    training_time: 9
+    type:
+      - living
+    cost:
+      gold: 300
+      mana: 8
+    power:
+      offense: 4
+      defense: 3
+    perks:
+      attrition: 0.2 # 0.2% lost each tick.
+  - name: Disciple
+    training_time: 12
+    type:
+      - living
+      - sentient
+    cost:
+      gold: 800
+      mana: 8
+    power:
+      offense: 0
+      defense: 6
+    perks:
+      food_production: 1
+      gold_production: 2.7
+      reduces_attrition: 1
+      displaced_peasants_conversion: 1 # Slot
+  - name: Mystic
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 1000
+      mana: 25
+      wizard: 1
+    power:
+      offense: 6
+      defense: 3
+    perks:
+      no_draftee: 1
+      counts_as_wizard_defense: 0.2
+      counts_as_wizard_offense: 0.2
+      unit_production: 2,0.0333333 # Every 30 Mystics produce 1 Initiate
+      displaced_peasants_conversion: 1 # slot
+      immortal_wizard: 1

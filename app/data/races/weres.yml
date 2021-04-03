@@ -1,0 +1,86 @@
+name: Weres
+alignment: evil
+description:
+home_land_type: forest
+playable: 1
+
+attacking: 3
+exploring : 2
+converting: 1
+skill_level: 2
+
+construction_materials: gold,lumber
+
+perks:
+  population_growth: 25
+  extra_barren_max_population: 5
+  converts_executed_spies: 4 # into slot 2
+  construction_cost: -10
+  increased_construction_speed: 2
+
+units:
+  - name: Wolf
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - wild
+    cost:
+      gold: 400
+      food: 20
+    power:
+      offense: 4
+      defense: 0
+    perks:
+      no_draftee: 1
+      housing_count: 0.25
+      increases_casualties_on_offense: 1
+      cannot_be_trained: 1
+
+  - name: Bear
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - wild
+    cost:
+      gold: 300
+      food: 20
+    power:
+      offense: 0
+      defense: 4
+    perks:
+      no_draftee: 1
+      housing_count: 0.25
+      increases_casualties_on_defense: 1
+      cannot_be_trained: 1
+
+  - name: Werebear
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 1100
+      food: 50
+    power:
+      offense: 0
+      defense: 10
+    perks:
+      strength_conversion: 5,4,3 #  threshold,under,over
+
+  - name: Werewolf
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 1100
+      food: 35
+    power:
+      offense: 8
+      defense: 4
+    perks:
+      strength_conversion: 5,4,3 # threshold,under,over

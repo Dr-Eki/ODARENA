@@ -1,64 +1,82 @@
 name: Norse
 alignment: good
-description: >-
-  <p>Rarely before have the Norse ventured south for anything other than trade.</p>
-  <p>The emergence of the Empire has forced even these northern stalwarts to pick a side, joining the Commonwealth.</p>
-  <p>They are fierce warriors, into death and beyond.</p>
+description:
 home_land_type: plain
 playable: 1
 
 attacking: 3
 exploring : 1
 converting: 1
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   exchange_bonus: 10
   lumber_production: 10
+  draftee_dp: 2
+  reduced_conversions: 100
 units:
   - name: Berserk
-    need_boat: true
+    training_time: 3
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 320
-      ore: 10
+      gold: 300
+      ore: 20
     power:
-      offense: 3
-      defense: 0
-    perks:
-      afterlife_norse: 1
-  - name: Norn
-    cost:
-      platinum: 300
-      ore: 50
-      mana: 10
-    power:
-      offense: 0
+      offense: 4
       defense: 3
     perks:
-      true_immortal: 1
+      afterlife_norse: 1
+
   - name: Valkyrja
-    need_boat: false
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
-      ore: 200
-      mana: 25
-    power:
-      offense: 3
-      defense: 6
-    perks:
-      fewer_casualties_offense: 50
-      fewer_casualties_defense: 25
-      offense_from_prestige: 250,4 # amount, max
-  - name: Einherjar
-    need_boat: false
-    cost:
-      platinum: 0
-      ore: 0
-      mana: 15
       champion: 1
     power:
-      offense: 8
-      defense: 0
+      offense: 0
+      defense: 12
     perks:
-      no_draftee: 1
       true_immortal: 1
+      no_draftee: 1
+
+  - name: Jötunn
+    training_time: 12
+    type:
+      - living
+      - massive
+    cost:
+      gold: 10000
+      gem: 10000
+    power:
+      offense: 800
+      defense: 800
+    perks:
+      only_dies_vs_raw_power: 100 # >=
+      pairing_limit: 4,0.02 # slot, factor
+      no_draftee: 1
       does_not_count_as_population: 1
+
+  - name: Einherjar
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - legendary
+      - intelligent
+
+    cost:
+      champion: 1
+    power:
+      offense: 12
+      defense: 6
+    perks:
+      true_immortal: 1
+      no_draftee: 1

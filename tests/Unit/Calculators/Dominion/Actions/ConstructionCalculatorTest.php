@@ -36,23 +36,23 @@ class ConstructionCalculatorTest extends AbstractBrowserKitTestCase
         ])->makePartial();
     }
 
-    public function testGetPlatinumCost()
+    public function testGetGoldCost()
     {
         $scenarios = [
-            ['totalBuildings' => 90, 'totalLand' => 250, 'expectedPlatinumCost' => 850],
-            ['totalBuildings' => 2000, 'totalLand' => 2000, 'expectedPlatinumCost' => 3528],
-            ['totalBuildings' => 4000, 'totalLand' => 4000, 'expectedPlatinumCost' => 6588],
-            ['totalBuildings' => 6000, 'totalLand' => 6000, 'expectedPlatinumCost' => 9648],
-            ['totalBuildings' => 8000, 'totalLand' => 8000, 'expectedPlatinumCost' => 12708],
+            ['totalBuildings' => 90, 'totalLand' => 250, 'expectedGoldCost' => 850],
+            ['totalBuildings' => 2000, 'totalLand' => 2000, 'expectedGoldCost' => 3528],
+            ['totalBuildings' => 4000, 'totalLand' => 4000, 'expectedGoldCost' => 6588],
+            ['totalBuildings' => 6000, 'totalLand' => 6000, 'expectedGoldCost' => 9648],
+            ['totalBuildings' => 8000, 'totalLand' => 8000, 'expectedGoldCost' => 12708],
         ];
 
-        $this->sut->shouldReceive('getPlatinumCostMultiplier')->with($this->dominionMock)->atLeast($this->once())->andReturn(1);
+        $this->sut->shouldReceive('getGoldCostMultiplier')->with($this->dominionMock)->atLeast($this->once())->andReturn(1);
 
         foreach ($scenarios as $scenario) {
             $this->buildingCalculator->shouldReceive('getTotalBuildings')->with($this->dominionMock)->atLeast($this->once())->andReturn($scenario['totalBuildings'])->byDefault();
             $this->landCalculator->shouldReceive('getTotalLand')->with($this->dominionMock)->atLeast($this->once())->andReturn($scenario['totalLand'])->byDefault();
 
-            $this->assertEquals($scenario['expectedPlatinumCost'], $this->sut->getPlatinumCost($this->dominionMock));
+            $this->assertEquals($scenario['expectedGoldCost'], $this->sut->getGoldCost($this->dominionMock));
         }
     }
 
@@ -84,12 +84,12 @@ class ConstructionCalculatorTest extends AbstractBrowserKitTestCase
         int $totalBuildings,
         int $totalLand,
         int $totalBarrenLand,
-        int $platinum,
+        int $gold,
         int $lumber,
         int $discountedLand,
         int $expectedMaxAfford
     ) {
-        $this->dominionMock->shouldReceive('getAttribute')->with('resource_platinum')->andReturn($platinum)->byDefault();
+        $this->dominionMock->shouldReceive('getAttribute')->with('resource_gold')->andReturn($gold)->byDefault();
         $this->dominionMock->shouldReceive('getAttribute')->with('resource_lumber')->andReturn($lumber)->byDefault();
         $this->dominionMock->shouldReceive('getAttribute')->with('discounted_land')->andReturn($discountedLand)->byDefault();
 
@@ -98,7 +98,7 @@ class ConstructionCalculatorTest extends AbstractBrowserKitTestCase
         $this->landCalculator->shouldReceive('getTotalBarrenLand')->with($this->dominionMock)->atLeast($this->once())->andReturn($totalBarrenLand)->byDefault();
         $this->landCalculator->shouldReceive('getTotalLand')->with($this->dominionMock)->atLeast($this->once())->andReturn($totalLand)->byDefault();
 
-        $this->sut->shouldReceive('getPlatinumCostMultiplier')->with($this->dominionMock)->atLeast($this->once())->andReturn(1);
+        $this->sut->shouldReceive('getGoldCostMultiplier')->with($this->dominionMock)->atLeast($this->once())->andReturn(1);
         $this->sut->shouldReceive('getLumberCostMultiplier')->with($this->dominionMock)->atLeast($this->once())->andReturn(1);
 
         $this->assertEquals($expectedMaxAfford, $this->sut->getMaxAfford($this->dominionMock));
@@ -112,7 +112,7 @@ class ConstructionCalculatorTest extends AbstractBrowserKitTestCase
                 'totalBuildings' => 90,
                 'totalLand' => 250,
                 'totalBarrenLand' => 160,
-                'platinum' => 100000,
+                'gold' => 100000,
                 'lumber' => 15000,
                 'discounted_land' => 0,
                 'expectedMaxAfford' => 117,
@@ -121,7 +121,7 @@ class ConstructionCalculatorTest extends AbstractBrowserKitTestCase
                 'totalBuildings' => 2000,
                 'totalLand' => 5000,
                 'totalBarrenLand' => 3000,
-                'platinum' => 1000000,
+                'gold' => 1000000,
                 'lumber' => 150000,
                 'discounted_land' => 0,
                 'expectedMaxAfford' => 114,
@@ -130,7 +130,7 @@ class ConstructionCalculatorTest extends AbstractBrowserKitTestCase
                 'totalBuildings' => 4000,
                 'totalLand' => 8000,
                 'totalBarrenLand' => 4000,
-                'platinum' => 10000000,
+                'gold' => 10000000,
                 'lumber' => 1500000,
                 'discounted_land' => 0,
                 'expectedMaxAfford' => 714,

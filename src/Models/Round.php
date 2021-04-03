@@ -87,8 +87,17 @@ class Round extends AbstractModel
     {
         $now = new Carbon();
 
-        return $query->where('start_date', '<=', $now)
-            ->where('end_date', '>', $now);
+        if($this->end_date == Null)
+        {
+            return $query->where('start_date', '<=', $now)
+                  ->whereNull('end_date');
+        }
+        else
+        {
+            return $query->where('start_date', '<=', $now)
+                  ->where('end_date', '>', $now);
+        }
+
     }
 
     /**
@@ -98,7 +107,8 @@ class Round extends AbstractModel
      */
     public function openForRegistration()
     {
-        return ($this->start_date <= new Carbon('+3 days midnight'));
+        return $this->hasEnded() ? false : true;
+        #return ($this->start_date <= new Carbon('+30 days midnight'));
     }
 
     /**
@@ -108,7 +118,7 @@ class Round extends AbstractModel
      */
     public function daysUntilRegistration()
     {
-        return $this->start_date->diffInDays(new Carbon('+3 days midnight'));
+        return $this->start_date->diffInDays(new Carbon('+30 days midnight'));
     }
 
     public function userAlreadyRegistered(User $user)
@@ -137,9 +147,30 @@ class Round extends AbstractModel
      *
      * @return bool
      */
+    public function hasCountdown()
+    {
+        if(GameEvent::where('round_id', $this->id)->where('type','round_countdown')->first())
+        {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns whether a round has ended.
+     *
+     * @return bool
+     */
     public function hasEnded()
     {
-        return ($this->end_date <= now());
+        if($this->end_date === NULL)
+        {
+            return false;
+        }
+        else
+        {
+            return ($this->end_date <= now());
+        }
     }
 
     /**
@@ -160,18 +191,6 @@ class Round extends AbstractModel
         return ($this->offensive_actions_prohibited_at <= now());
     }
 
-
-      /**
-       * Returns whether exploration is allowed this round.
-       *
-       * @return bool
-       */
-      public function isExploringAllowed(): int
-      {
-        return $this->allow_exploring;
-      }
-
-
     /**
      * Returns whether a round is active.
      *
@@ -179,7 +198,14 @@ class Round extends AbstractModel
      */
     public function isActive()
     {
-        return ($this->hasStarted() && !$this->hasEnded());
+        if($this->end_date == Null)
+        {
+            return true;
+        }
+        else
+        {
+            return ($this->hasStarted() && !$this->hasEnded());
+        }
     }
 
     /**
@@ -193,13 +219,41 @@ class Round extends AbstractModel
     }
 
     /**
+     * Returns the amount in days until the round starts.
+     *
+     * @return int
+     */
+    public function hoursUntilStart()
+    {
+        return $this->start_date->diffInHours(now());
+    }
+
+    /**
      * Returns the amount in days until the round ends.
      *
      * @return int
      */
     public function daysUntilEnd()
     {
-        return $this->end_date->diffInDays(today());
+        if($this->end_date !== Null)
+        {
+            return $this->end_date->diffInDays(today());
+        }
+        return 'unknown';
+    }
+
+    /**
+     * Returns the amount in days until the round ends.
+     *
+     * @return int
+     */
+    public function hoursUntilEnd()
+    {
+        if($this->end_date !== Null)
+        {
+            return $this->end_date->diffInHours(now());
+        }
+        return 'unknown';
     }
 
     /**

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-    <title>@yield('title', 'OpenDominion')</title>
+    <title>@yield('title', 'ODARENA')</title>
 
     @include('partials.styles')
 
@@ -26,9 +26,9 @@
 
                 <!-- Navbar Header -->
                 <div class="navbar-header">
-                    <a href="{{ url('') }}" class="navbar-brand">Open<b>Dominion</b></a>
+                    <a href="{{ url('') }}" class="navbar-brand">OD<b>ARENA</b></a>
                     <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
-                        <i class="fa fa-bars"></i>
+                        <i class="fas fa-compress"></i>
                     </button>
                 </div>
 
@@ -59,9 +59,9 @@
                             <div class="box-body">
                                 <p>
                                     @if ($exception instanceof \Illuminate\Foundation\Http\Exceptions\MaintenanceModeException)
-                                        OpenDominion is currently down for maintenance.
+                                        ODARENA is currently down for maintenance.
                                     @else
-                                        OpenDominion encountered a server error.
+                                        ODARENA encountered a server error.
                                     @endif
                                 </p>
                                 <p>

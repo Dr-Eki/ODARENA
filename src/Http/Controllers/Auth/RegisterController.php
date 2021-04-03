@@ -44,7 +44,7 @@ class RegisterController extends AbstractController
         $this->validate($request, [
             'display_name' => 'required|unique:users',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|confirmed|min:8',
             'terms' => 'required',
         ]);
 
@@ -102,11 +102,28 @@ class RegisterController extends AbstractController
      */
     protected function create(array $data)
     {
-        return User::create([
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'display_name' => $data['display_name'],
-            'activation_code' => str_random(),
-        ]);
+
+      if(request()->getHost() == 'odarena.local')
+      {
+          return User::create([
+              'email' => $data['email'],
+              'password' => Hash::make($data['password']),
+              'display_name' => $data['display_name'],
+              'activation_code' => str_random(),
+              'activated' => true,
+          ]);
+
+      }
+      else
+      {
+          return User::create([
+              'email' => $data['email'],
+              'password' => Hash::make($data['password']),
+              'display_name' => $data['display_name'],
+              'activation_code' => str_random(),
+          ]);
+      }
+
+
     }
 }

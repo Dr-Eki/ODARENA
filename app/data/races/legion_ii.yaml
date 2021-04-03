@@ -6,29 +6,34 @@ description: >-
   <hr />
   <p>This is the Second Legion, consisting of subjugates of Demon, Lycanthrope, and and Icekin origin. The Reanimated can only be obtained through conversion. Unlike the First Legion, this one can train Spies and Wizards.</p>
 home_land_type: hill
-playable: 1
+playable: 0
 
 attacking: 2
 exploring : 2
 converting: 1
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   max_population: 20
   guard_tax_exemption: 1
-  all_units_trained_in_9hrs: 1
-  extra_barracks_housing: 36
-  cannot_build_homes: 1
+  extra_barracks_housing: 100
   prestige_gains: 20
   food_consumption: -25
   boat_capacity: 10
   cannot_train_archmages: 1
+  salvaging: 25
 units:
   - name: Reanimated
-    type: hybrid_specialist
-    need_boat: true
+    training_time: 9
+    type:
+      - living
+      - mindless
+    
     static_networth: 5
     cost:
-      platinum: 0
+      gold: 0
       ore: 0
     power:
       offense: 2
@@ -38,10 +43,13 @@ units:
       cannot_be_trained: 1
       faster_return: 2
   - name: Demon
-    type: hybrid_specialist
-    need_boat: true
+    training_time: 9
+    type:
+      - living
+      - sentient
+    
     cost:
-      platinum: 820
+      gold: 820
       ore: 80
     power:
       offense: 4
@@ -50,10 +58,13 @@ units:
       fewer_casualties: 50
       offense_from_military_percentage: 1 # Gets up to +1 OP per % military
   - name: Lycanthrope
-    type: hybrid_specialist
-    need_boat: false
+    training_time: 9
+    type:
+      - living
+      - sentient
+    
     cost:
-      platinum: 820
+      gold: 820
       ore: 80
     power:
       offense: 4
@@ -62,10 +73,13 @@ units:
       conversion: 1
       offense_from_military_percentage: 1 # Gets up to +1 OP per % military
   - name: Icekin
-    type: hybrid_specialist
-    need_boat: true
+    training_time: 9
+    type:
+      - living
+      - sentient
+    
     cost:
-      platinum: 820
+      gold: 820
       ore: 80
     power:
       offense: 4

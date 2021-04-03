@@ -14,12 +14,21 @@ class BankingCalculator
      */
     public function getResources(Dominion $dominion): array
     {
+
+        $manaSell = 0;
+        $foodSell = 0.10;
+
+        if($dominion->race->getPerkMultiplier('can_sell_mana'))
+        {
+          $manaSell = 0.10;
+        }
+
         $resources = [
-            'resource_platinum' => [
-                'label' => 'Platinum',
+            'resource_gold' => [
+                'label' => 'Gold',
                 'buy' => 1.0,
                 'sell' => 0.5,
-                'max' => $dominion->resource_platinum,
+                'max' => $dominion->resource_gold,
             ],
             'resource_lumber' => [
                 'label' => 'Lumber',
@@ -42,22 +51,42 @@ class BankingCalculator
             'resource_food' => [
                 'label' => 'Food',
                 'buy' => 0.5,
-                'sell' => 0.0,
+                'sell' => $foodSell,
                 'max' => $dominion->resource_food,
+            ],
+            'resource_mana' => [
+                'label' => 'Mana',
+                'buy' => 0,
+                'sell' => $manaSell,
+                'max' => $dominion->resource_mana,
             ],
         ];
 
+          $bonus = 1;
+
           // Get racial bonus
-          $bonus = $dominion->race->getPerkMultiplier('exchange_bonus');
+          $bonus += $dominion->race->getPerkMultiplier('exchange_bonus');
 
           // Techs
           $bonus += $dominion->getTechPerkMultiplier('exchange_rate');
 
-          $resources['resource_platinum']['sell'] *= (1 + $bonus);
-          $resources['resource_lumber']['sell'] *= (1 + $bonus);
-          $resources['resource_ore']['sell'] *= (1 + $bonus);
-          $resources['resource_gems']['sell'] *= (1 + $bonus);
-          $resources['resource_food']['sell'] *= (1 + $bonus);
+          // Spells
+          $bonus += $dominion->getSpellPerkMultiplier('exchange_rate');
+
+          // Buildings
+          $bonus += $dominion->getBuildingPerkMultiplier('exchange_rate');
+
+          // Ruler Title: Merchant
+          $bonus += $dominion->title->getPerkMultiplier('exchange_rate') * $dominion->title->getPerkBonus($dominion);
+
+          $bonus = min($bonus, 2);
+
+          $resources['resource_gold']['sell'] *= $bonus;
+          $resources['resource_lumber']['sell'] *= $bonus;
+          $resources['resource_ore']['sell'] *= $bonus;
+          $resources['resource_gems']['sell'] *= $bonus;
+          $resources['resource_food']['sell'] *= $bonus;
+          $resources['resource_mana']['sell'] *= $bonus;
 
         return $resources;
     }

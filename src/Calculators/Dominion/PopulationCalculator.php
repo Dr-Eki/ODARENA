@@ -4,49 +4,18 @@ namespace OpenDominion\Calculators\Dominion;
 
 use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\UnitHelper;
+use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\QueueService;
 
 class PopulationCalculator
 {
-    /** @var BuildingHelper */
-    protected $buildingHelper;
-
-    /** @var ImprovementCalculator */
-    protected $improvementCalculator;
-
-    /** @var LandCalculator */
-    protected $landCalculator;
-
-    /** @var MilitaryCalculator */
-    protected $militaryCalculator;
-
-    /** @var PrestigeCalculator */
-    private $prestigeCalculator;
-
-    /** @var QueueService */
-    protected $queueService;
-
-    /** @var SpellCalculator */
-    protected $spellCalculator;
-
-    /** @var UnitHelper */
-    protected $unitHelper;
 
     /** @var bool */
     protected $forTick = false;
 
-    /**
+    /*
      * PopulationCalculator constructor.
-     *
-     * @param BuildingHelper $buildingHelper
-     * @param ImprovementCalculator $improvementCalculator
-     * @param LandCalculator $landCalculator
-     * @param MilitaryCalculator $militaryCalculator
-     * @param PrestigeCalculator $prestigeCalculator
-     * @param QueueService $queueService
-     * @param SpellCalculator $spellCalculator
-     * @param UnitHelper $unitHelper
      */
     public function __construct(
         BuildingHelper $buildingHelper,
@@ -56,16 +25,20 @@ class PopulationCalculator
         PrestigeCalculator $prestigeCalculator,
         QueueService $queueService,
         SpellCalculator $spellCalculator,
-        UnitHelper $unitHelper
+        UnitHelper $unitHelper,
+        LandImprovementCalculator $landImprovementCalculator
     ) {
-        $this->buildingHelper = $buildingHelper;
-        $this->improvementCalculator = $improvementCalculator;
-        $this->landCalculator = $landCalculator;
-        $this->militaryCalculator = $militaryCalculator;
-        $this->prestigeCalculator = $prestigeCalculator;
-        $this->queueService = $queueService;
-        $this->spellCalculator = $spellCalculator;
-        $this->unitHelper = $unitHelper;
+          $this->buildingHelper = app(BuildingHelper::class);
+          $this->improvementCalculator = app(ImprovementCalculator::class);
+          $this->landCalculator = app(LandCalculator::class);
+          $this->landHelper = app(LandHelper::class);
+          $this->landImprovementCalculator = app(LandImprovementCalculator::class);
+          $this->militaryCalculator = app(MilitaryCalculator::class);
+          $this->prestigeCalculator = app(PrestigeCalculator::class);
+          $this->queueService = app(QueueService::class);
+          $this->spellCalculator = app(SpellCalculator::class);
+          $this->spellDamageCalculator = app(SpellDamageCalculator::class);
+          $this->unitHelper = app(UnitHelper::class);
     }
 
     /**
@@ -86,6 +59,10 @@ class PopulationCalculator
      */
     public function getPopulation(Dominion $dominion): int
     {
+        if($dominion->race->getPerkValue('no_population'))
+        {
+            return 0;
+        }
         return ($dominion->peasants + $this->getPopulationMilitary($dominion));
     }
 
@@ -117,11 +94,19 @@ class PopulationCalculator
       # Check each Unit for does_not_count_as_population perk.
       for ($unitSlot = 1; $unitSlot <= 4; $unitSlot++)
       {
-        if (!$dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'does_not_count_as_population'))
-        {
-          $military += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unitSlot);
-          $military += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unitSlot}");
-        }
+          if (!$dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'does_not_count_as_population'))
+          {
+              $unitAmount = $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unitSlot);
+              $unitAmount += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unitSlot}");
+
+              # Check for housing_count
+              if($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'housing_count'))
+              {
+                  $unitAmount = ceil($unitAmount * $nonStandardHousing);
+              }
+
+              $military += $unitAmount;
+          }
       }
 
       return $military;
@@ -135,16 +120,22 @@ class PopulationCalculator
      */
     public function getMaxPopulation(Dominion $dominion): int
     {
+        if($dominion->race->getPerkValue('no_population'))
+        {
+            return 0;
+        }
         return round(
             ($this->getMaxPopulationRaw($dominion) * $this->getMaxPopulationMultiplier($dominion))
-            + $this->getMaxPopulationMilitaryBonus($dominion)
+            + $this->getUnitsHousedInForestHavens($dominion)
+            + $this->getUnitsHousedInWizardGuilds($dominion)
+            + $this->getUnitsHousedInBarracks($dominion)
         );
     }
 
     /**
      * Returns the Dominion's raw max population.
      *
-     * Maximum population is determined by housing in homes, other buildings (sans barracks) and barren land.
+     * Maximum population is determined by housing in homes, other buildings (sans barracks, FH, and WG), and barren land.
      *
      * @param Dominion $dominion
      * @return int
@@ -153,43 +144,19 @@ class PopulationCalculator
     {
         $population = 0;
 
-        // Constructed buildings
-        foreach ($this->buildingHelper->getBuildingTypes($dominion) as $buildingType) {
-            switch ($buildingType) {
-                case 'home':
-                    $housing = 30;
-                    break;
-
-                case 'barracks':
-                    $housing = 0;
-                    break;
-
-                case 'ziggurat':
-                    $housing = 20;
-                    break;
-
-                case 'tissue':
-                    $housing = 160;
-                    break;
-
-                case 'mycelia':
-                    $housing = 30;
-                    break;
-
-                default:
-                    $housing = 15;
-                    break;
-            }
-
-            $population += ($dominion->{'building_' . $buildingType} * $housing);
-        }
+        $population += $dominion->getBuildingPerkValue('housing');
 
         // Constructing buildings
         $population += ($this->queueService->getConstructionQueueTotal($dominion) * 15);
 
         // Barren land
-        $housingPerBarrenLand = (5 + $dominion->race->getPerkValue('extra_barren_max_population'));
-        $population += ($this->landCalculator->getTotalBarrenLand($dominion) * $housingPerBarrenLand);
+        $housingPerBarrenAcre = 5;
+        $housingPerBarrenAcre += $dominion->race->getPerkValue('extra_barren_max_population');
+
+        foreach ($this->landHelper->getLandTypes($dominion) as $landType)
+        {
+            $population += $this->landCalculator->getTotalBarrenLandByLandType($dominion, $landType) * ($housingPerBarrenAcre + $dominion->race->getPerkValue('extra_barren_' . $landType . '_max_population'));
+        }
 
         return $population;
     }
@@ -214,7 +181,7 @@ class PopulationCalculator
         $multiplier += $dominion->race->getPerkMultiplier('max_population');
 
         // Techs
-        $multiplier += $dominion->getTechPerkMultiplier('max_population');
+        #$multiplier += $dominion->getTechPerkMultiplier('max_population');
 
         // Improvement: Keep
         $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'keep');
@@ -222,43 +189,142 @@ class PopulationCalculator
         // Improvement: Tissue (Growth)
         $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'tissue');
 
-        // Beastfolk: Forest increases population
-        if($dominion->race->name == 'Beastfolk')
-        {
-          $multiplier += ($dominion->{'land_forest'} / $this->landCalculator->getTotalLand($dominion));
-        }
+        // Land improvements
+        $multiplier += $this->landImprovementCalculator->getPopulationBonus($dominion);
 
         // Prestige Bonus
         $prestigeMultiplier = $this->prestigeCalculator->getPrestigeMultiplier($dominion);
 
-        return (1 + $multiplier) * (1 + $prestigeMultiplier);
+        return (1 + $multiplier) * (1 + $dominion->getTechPerkMultiplier('max_population')) * (1 + $prestigeMultiplier);
     }
 
-    /**
-     * Returns the Dominion's max population military bonus.
-     *
-     * @param Dominion $dominion
-     * @return float
-     */
-    public function getMaxPopulationMilitaryBonus(Dominion $dominion): float
+    /*
+    *   Calculate how many units can be fit in this Dominion's Barracks.
+    */
+    public function getAvailableHousingFromBarracks(Dominion $dominion): int
     {
 
-        // Race
-        if($dominion->race->getPerkValue('extra_barracks_housing'))
+        $militaryHousingMultiplier = 0;
+        $militaryHousingMultiplier += $dominion->race->getPerkMultiplier('extra_barracks_housing');
+        $militaryHousingMultiplier += $dominion->getTechPerkMultiplier('barracks_housing');
+
+        return round($dominion->getBuildingPerkValue('military_housing') * (1 + $militaryHousingMultiplier) + $this->getAvailableHousingFromUnits($dominion));
+
+    }
+
+    /*
+    *   Calculate how many units can be fit in this Dominion's Forest Havens.
+    */
+    public function getAvailableHousingFromForestHavens(Dominion $dominion): int
+    {
+        return $dominion->getBuildingPerkValue('spy_housing') * (1 + $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'hideouts'));
+    }
+
+    /*
+    *   Calculate how many units can be fit in this Dominion's Wizard Guilds.
+    */
+    public function getAvailableHousingFromWizardGuilds(Dominion $dominion): int
+    {
+        return $dominion->getBuildingPerkValue('wizard_housing') * (1 + $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'spires'));
+    }
+
+    /*
+    *   Calculate how many units can be fit in this Dominion's Units that can house military units.
+    *   This is added to getAvailableHousingFromBarracks().
+    */
+    public function getAvailableHousingFromUnits(Dominion $dominion): int
+    {
+        $housingFromUnits = 0;
+        for ($slot = 1; $slot <= 4; $slot++)
         {
-          $troopsPerBarracks += $dominion->race->getPerkValue('extra_barracks_housing');
+            if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'houses_military_units'))
+            {
+                $housingFromUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot) * $dominion->race->getUnitPerkValueForUnitSlot($slot, 'houses_military_units');
+            }
         }
 
-        // Tech
-        if($dominion->getTechPerkMultiplier('barracks_housing'))
+        return $housingFromUnits;
+    }
+
+    /*
+    *   Calculate how many units live in Barracks.
+    *   Units start to live in barracks as soon as their military training begins.
+    *   Spy and wiz units prefer to live in FHs or WGs, and will only live in Barracks if FH/WG are full or unavailable.
+    */
+    public function getUnitsHousedInBarracks(Dominion $dominion): int
+    {
+        $units = 0;
+        $units -= $this->getUnitsHousedInForestHavens($dominion);
+        $units -= $this->getUnitsHousedInWizardGuilds($dominion);
+        $units += $dominion->military_spies;
+        $units += $dominion->military_wizards;
+        $units += $dominion->military_archmages;
+        $units += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_spies");
+        $units += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_wizards");
+        $units += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_archmages");
+
+        for ($slot = 1; $slot <= 4; $slot++)
         {
-            $troopsPerBarracks *= (1 + $dominion->getTechPerkMultiplier('barracks_housing'));
+            if(!$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population'))
+            {
+                $units += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
+                $units += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+            }
         }
 
-        return min(
-            ($this->getPopulationMilitary($dominion) - $dominion->military_draftees),
-            ($dominion->building_barracks * 36)
-        );
+        $units = max(0, $units);
+
+        return min($units, $this->getAvailableHousingFromBarracks($dominion));
+    }
+
+    /*
+    *   Calculate how many units live in Forest Havens.
+    *   Spy units start to live in FHs as soon as their military training begins.
+    */
+    public function getUnitsHousedInForestHavens(Dominion $dominion): int
+    {
+        $spyUnits = $dominion->military_spies;
+        $spyUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_spies");
+
+        for ($slot = 1; $slot <= 4; $slot++)
+        {
+            if(($dominion->race->getUnitPerkValueForUnitSlot($slot, 'counts_as_spy_offense') or $dominion->race->getUnitPerkValueForUnitSlot($slot, 'counts_as_spy_defense')) and $dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population') !== 1)
+            {
+                if(!$dominion->race->getUnitPerkValueForUnitSlot($slot, 'counts_as_wizard_offense') and !$dominion->race->getUnitPerkValueForUnitSlot($slot, 'counts_as_wizard_defense'))
+                {
+                    $spyUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
+                    $spyUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+                }
+            }
+        }
+
+        return min($spyUnits, $this->getAvailableHousingFromForestHavens($dominion));
+    }
+
+    /*
+    *   Calculate how many units live in Wizard Guilds.
+    *   Wiz units start to live in WGs as soon as their military training begins.
+    */
+    public function getUnitsHousedInWizardGuilds(Dominion $dominion): int
+    {
+        $wizUnits = $dominion->military_wizards;
+        $wizUnits += $dominion->military_archmages;
+        $wizUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_wizards");
+        $wizUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_archmages");
+
+        for ($slot = 1; $slot <= 4; $slot++)
+        {
+            if(($dominion->race->getUnitPerkValueForUnitSlot($slot, 'counts_as_wizard_offense') or $dominion->race->getUnitPerkValueForUnitSlot($slot, 'counts_as_wizard_defense')) and !$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population'))
+            {
+                if(!$dominion->race->getUnitPerkValueForUnitSlot($slot, 'counts_as_spy_offense') and !$dominion->race->getUnitPerkValueForUnitSlot($slot, 'counts_as_spy_defense'))
+                {
+                    $wizUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
+                    $wizUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+                }
+            }
+        }
+
+        return min($wizUnits, $this->getAvailableHousingFromWizardGuilds($dominion));
     }
 
     /**
@@ -273,6 +339,27 @@ class PopulationCalculator
         return $populationBirth;
     }
 
+    public function getPopulationGrowthRate(Dominion $dominion): float
+    {
+          $growthRate = 0;
+          $multiplier = 0;
+
+          // Buildings
+          $multiplier += $dominion->getBuildingPerkMultiplier('population_growth');
+
+          // Racial Perk
+          $multiplier += $dominion->race->getPerkMultiplier('population_growth');
+
+          // Spell
+          $multiplier += $dominion->getSpellPerkMultiplier('population_growth');
+
+          // Tech
+          $multiplier += $dominion->getTechPerkMultiplier('population_growth');
+
+          return $growthRate * (1 + $multiplier);
+
+    }
+
     /**
      * Returns the Dominions raw population birth.
      *
@@ -281,14 +368,17 @@ class PopulationCalculator
      */
     public function getPopulationBirthRaw(Dominion $dominion): float
     {
-        // Growth only if food > 0 or race doesn't eat food.
-        if($dominion->resource_food > 0 or $dominion->race->getPerkMultiplier('food_consumption') == -1)
-        {
-          $growthFactor = 0.03;
-        }
+
+        $growthFactor = 0.03 * $this->militaryCalculator->getMoraleMultiplier($dominion);
 
         // Population births
-        $birth = (($dominion->peasants - $this->getPopulationDrafteeGrowth($dominion)) * $growthFactor);
+        $birth = ($dominion->peasants - $this->getPopulationDrafteeGrowth($dominion)) * $growthFactor;
+
+        // In case of 0 peasants:
+        if($dominion->peasants === 0)
+        {
+            $birth = ($this->getMaxPopulation($dominion) - $this->getPopulation($dominion) - $this->getPopulationDrafteeGrowth($dominion)) * $growthFactor;
+        }
 
         return $birth;
     }
@@ -304,13 +394,14 @@ class PopulationCalculator
         $peasantsSacrificed = 0;
         for ($unitSlot = 1; $unitSlot <= 4; $unitSlot++)
         {
-          if ($dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'sacrifices_peasants'))
-          {
-            $sacrificingUnits = $dominion->{"military_unit".$unitSlot};
-            $peasantsSacrificedPerUnit = $dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'sacrifices_peasants');
-            $peasantsSacrificed += floor($sacrificingUnits * $peasantsSacrificedPerUnit);
-          }
+            if ($dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'sacrifices_peasants'))
+            {
+                $sacrificingUnits = $dominion->{"military_unit".$unitSlot};
+                $peasantsSacrificedPerUnit = $dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'sacrifices_peasants');
+                $peasantsSacrificed += floor($sacrificingUnits * $peasantsSacrificedPerUnit);
+            }
         }
+
         return min($dominion->peasants, $peasantsSacrificed);
     }
 
@@ -320,6 +411,7 @@ class PopulationCalculator
      * @param Dominion $dominion
      * @return float
      */
+
     public function getPopulationBirthMultiplier(Dominion $dominion): float
     {
         $multiplier = 0;
@@ -328,38 +420,26 @@ class PopulationCalculator
         $multiplier += $dominion->race->getPerkMultiplier('population_growth');
 
         // Temples
-        $multiplier += (($dominion->building_temple / $this->landCalculator->getTotalLand($dominion)) * 6);
+        $multiplier += $dominion->getBuildingPerkMultiplier('population_growth');
 
-        # SPELLS
+        // Spells
+        $multiplier += $dominion->getSpellPerkMultiplier('population_growth');
 
-        // Spell: Harmony (+50%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'harmony'))
+        // Advancement
+        $multiplier += $dominion->getTechPerkMultiplier('population_growth');
+
+        # Look for population_growth in units
+        for ($slot = 1; $slot <= 4; $slot++)
         {
-            $multiplier += 0.50;
+            if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'population_growth'))
+            {
+                $multiplier += ($dominion->{"military_unit".$slot} / $this->getMaxPopulation($dominion)) * $dominion->race->getUnitPerkValueForUnitSlot($slot, 'population_growth');
+            }
         }
-
-        // Spell: Rainy Season (+100%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'rainy_season'))
-        {
-            $multiplier += 1.00;
-        }
-
-        // Spell: Plague (-25%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'plague'))
-        {
-            $multiplier -= 0.25;
-        }
-
-        // Spell: Great Fever (-100%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'great_fever'))
-        {
-            $multiplier -= 0.25;
-        }
-
-        # /SPELLS
 
         return (1 + $multiplier);
     }
+
 
     /**
      * Returns the Dominion's population peasant growth.
@@ -404,21 +484,28 @@ class PopulationCalculator
      */
     public function getPopulationDrafteeGrowth(Dominion $dominion): int
     {
+
         $draftees = 0;
+
+        if($dominion->getSpellPerkValue('no_drafting'))
+        {
+            return $draftees;
+        }
 
         // Values (percentages)
         $growthFactor = 0.01;
 
-        // Racial Spell: Swarming (Ants)
-        if ($this->spellCalculator->isSpellActive($dominion, 'swarming'))
-        {
-            $growthFactor = 0.02;
-        }
+        // Advancement: Conscription
+        $growthFactor *= 1 + $dominion->getTechPerkMultiplier('drafting');
+
+        // Spell
+        $growthFactor *= 1 + $dominion->getSpellPerkMultiplier('drafting');
 
         if ($this->getPopulationMilitaryPercentage($dominion) < $dominion->draft_rate)
         {
             $draftees += round($dominion->peasants * $growthFactor);
         }
+
 
         return $draftees;
     }
@@ -463,26 +550,22 @@ class PopulationCalculator
      */
     public function getEmploymentJobs(Dominion $dominion): int
     {
-        # Does not include Homes, Barracks, Ziggurats, Tissue, and Mycelia
-        return (20 * (
-                $dominion->building_alchemy
-                + $dominion->building_farm
-                + $dominion->building_smithy
-                + $dominion->building_masonry
-                + $dominion->building_ore_mine
-                + $dominion->building_gryphon_nest
-                + $dominion->building_tower
-                + $dominion->building_wizard_guild
-                + $dominion->building_temple
-                + $dominion->building_diamond_mine
-                + $dominion->building_school
-                + $dominion->building_lumberyard
-                + $dominion->building_forest_haven
-                + $dominion->building_factory
-                + $dominion->building_guard_tower
-                + $dominion->building_shrine
-                + $dominion->building_dock
-            ));
+
+        $jobs = 0;
+
+        $jobs += $dominion->getBuildingPerkValue('jobs');
+
+        for ($slot = 1; $slot <= 4; $slot++)
+        {
+            if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'provides_jobs'))
+            {
+                $jobs += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot) * $dominion->race->getUnitPerkValueForUnitSlot($slot, 'provides_jobs');
+            }
+        }
+
+        $jobs *= 1 + $dominion->getTechPerkMultiplier('jobs_per_building');
+
+        return $jobs;
     }
 
     /**

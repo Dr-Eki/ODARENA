@@ -1,61 +1,74 @@
 name: Black Orc
 alignment: evil
-description: >-
-  <p>Part of The Empress' elite of distinguished warriors, the Black Orc &mdash; so called for their black armour and black weapons forged with moonsoot &mdash; are the preeminent infantry of the Empire.</p>
+description:
 home_land_type: forest
 playable: 1
 
 attacking: 3
 exploring : 1
 converting: 1
+skill_level: 3
+
+construction_materials: gold,lumber
 
 perks:
   food_consumption: 20
   lumber_production: 50
-  prestige_gains: 100
-  max_population: 10
-  extra_barracks_housing: 18
-  tech_costs: 20
+
 units:
-  - name: Impaler
+  - name: Bone Breaker
+    training_time: 9
+    type:
+      - living
+      - sentient
     cost:
-      platinum: 500
-      ore: 25
+      gold: 750
+      ore: 100
     power:
-      offense: 3
+      offense: 6
       defense: 0
-    perks:
-      offense_from_pairing: 4,2,0.1 # slot, amount, num required
-  - name: Shieldbearer
+
+  - name: Sootshield
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 400
-      ore: 20
+      gold: 600
+      ore: 100
     power:
       offense: 0
-      defense: 3
-    perks:
-      defense_from_pairing: 4,2,0.1 # slot, amount
+      defense: 6
+
   - name: Warlock
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 700
-      lumber: 20
-      gem: 1
+      gold: 900
+      ore: 0
     power:
       offense: 0
       defense: 2
     perks:
-      defense_from_prestige: 500,10 # amount, max
-      mana_production: 0.5
-      counts_as_wizard_offense: 0.20
-      counts_as_wizard_defense: 0.10
-  - name: Warboss
+      defense_from_net_victories: 0.6,8 # +0.40 DP per Victory, max +8 (at 20 Victories)
+      counts_as_wizard_offense: 0.2
+      immortal_wizard: 1
+
+  - name: Skull Crusher
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1400
-      ore: 200
-      gem: 1
+      gold: 1000
+      ore: 100
     power:
-      offense: 8
-      defense: 3
+      offense: 4
+      defense: 4
     perks:
-      offense_from_pairing: 1,2,10 # slot, amount, num required
-      reduce_combat_losses: 1
+      offense_from_net_victories: 0.5,6 # +0.3 OP per Victory, max +6 (at 12 Victories)

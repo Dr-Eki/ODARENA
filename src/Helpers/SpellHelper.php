@@ -4,740 +4,588 @@ namespace OpenDominion\Helpers;
 
 use Illuminate\Support\Collection;
 use OpenDominion\Models\Race;
+use OpenDominion\Models\Spell;
+
 # ODA
 use OpenDominion\Models\Dominion;
 
-
 class SpellHelper
 {
+    # ROUND 37
 
-    public function getSpellInfo(string $spellKey, Dominion $dominion, bool $isInvasionSpell = false, bool $isViewOnly = false): array
+    public function getSpellClass(Spell $spell)
     {
-        return $this->getSpells($dominion, $isInvasionSpell, $isViewOnly)->filter(function ($spell) use ($spellKey) {
-            return ($spell['key'] === $spellKey);
-        })->first();
+        $classes = [
+            'active'  => 'Impact',
+            'passive' => 'Aura',
+            'invasion'=> 'Invasion',
+            'info'    => 'Information'
+        ];
+
+        return $classes[$spell->class];
     }
 
-    public function isSelfSpell(string $spellKey, Dominion $dominion): bool
+    public function getSpellScope(Spell $spell)
     {
-        return $this->getSelfSpells($dominion)->filter(function ($spell) use ($spellKey) {
-            return ($spell['key'] === $spellKey);
-        })->isNotEmpty();
+        $scopes = [
+            'self'      => 'Self',
+            'friendly'  => 'Friendly',
+            'hostile'   => 'Hostile'
+        ];
+
+        return $scopes[$spell->scope];
     }
 
-    public function isOffensiveSpell(string $spellKey, Dominion $dominion = null, bool $isInvasionSpell = false, bool $isViewOnly = false): bool
-    {
-        return $this->getOffensiveSpells($dominion, $isInvasionSpell, $isViewOnly)->filter(function ($spell) use ($spellKey) {
-            return ($spell['key'] === $spellKey);
-        })->isNotEmpty();
-    }
-
-    public function isInfoOpSpell(string $spellKey): bool
-    {
-        return $this->getInfoOpSpells()->filter(function ($spell) use ($spellKey) {
-            return ($spell['key'] === $spellKey);
-        })->isNotEmpty();
-    }
-
-    public function isHostileSpell(string $spellKey, Dominion $dominion, bool $isInvasionSpell = false, bool $isViewOnly = false): bool
-    {
-        return $this->getHostileSpells($dominion, $isInvasionSpell, $isViewOnly)->filter(function ($spell) use ($spellKey) {
-            return ($spell['key'] === $spellKey);
-        })->isNotEmpty();
-    }
-
-    public function isBlackOpSpell(string $spellKey): bool
-    {
-        return $this->getBlackOpSpells($dominion)->filter(function ($spell) use ($spellKey) {
-            return ($spell['key'] === $spellKey);
-        })->isNotEmpty();
-    }
-
-    public function isWarSpell(string $spellKey, Dominion $dominion): bool
-    {
-        return $this->getWarSpells($dominion)->filter(function ($spell) use ($spellKey) {
-            return ($spell['key'] === $spellKey);
-        })->isNotEmpty();
-    }
-
-
-    public function getSpells(Dominion $dominion, bool $isInvasionSpell = false, bool $isViewOnly = false): Collection
+    public function getSpellEffectsString(Spell $spell): array
     {
 
-        return $this->getSelfSpells($dominion)
-            ->merge($this->getOffensiveSpells($dominion, $isInvasionSpell, $isViewOnly));
-/*
-        if($isInvasionSpell)
+        $effectStrings = [];
+
+        $spellEffects = [
+
+            // Info
+            'clear_sight' => 'Reveal status screen',
+            'vision' => 'Reveal advancements',
+            'revelation' => 'Reveal active spells',
+
+            // Production
+            'ore_production' => '%s%% ore production',
+            'mana_production' => '%s%% mana production',
+            'lumber_production' => '%s%% lumber production',
+            'food_production' => '%s%% food production',
+            'gem_production' => '%s%% gem production',
+            'gold_production' => '%s%% gold production',
+            'boat_production' => '%s%% boat production',
+            'tech_production' => '%s%% XP generation',
+
+            'alchemy_production' => '+%s gold production per alchemy',
+
+            'food_production_raw' => '%s%% raw food production',
+
+            'food_production_docks' => '%s%% food production from Docks',
+
+            'no_gold_production' => 'No gold production or revenue',
+            'no_ore_production' => 'No ore production',
+            'no_lumber_production' => 'No lumber production',
+            'no_mana_production' => 'No mana production',
+            'no_food_production' => 'No food production',
+            'no_boat_production' => 'No boat production',
+            'no_gem_production' => 'No gem production',
+
+            'rezone_all_land' => 'Rezones %1s%% of all other land types to %2$s.',
+
+            // Military
+            'drafting' => '+%s%% drafting',
+            'training_time' => '%s ticks training time for military units (does not include Spies, Wizards, or Archmages)',
+            'training_costs' => '+%s%% military unit training costs',
+            'unit_gold_costs' => '%s%% military unit gold costs',
+            'unit_ore_costs' => '%s%% military unit ore costs',
+            'unit_lumber_costs' => '%s%% military unit lumber costs',
+
+            'additional_units_trained_from_land' => '1%% extra %1$s%% for every %3$s%% %2$s.',
+
+            'faster_return' => 'Units return %s ticks faster from invasions',
+
+            'increase_morale' => 'Restores target morale by %s%% (up to maximum of 100%%).',
+            'decrease_morale' => 'Lowers target morale by %s%% (minimum 0%%).',
+
+            'kills_draftees' => 'Kills %1$s%% of the target\'s draftees.',
+
+            'kills_faction_units_percentage' => 'Kills %3$s%% of %1$s %2$s.',
+            'kills_faction_units_amount' => 'Kills %3$s%s of %1$s %2$s.',
+
+            'cannot_send_boats' => 'Cannot send boats.',
+            'boats_sunk' => '%s%% boats lost to sinking.',
+
+            'summon_units_from_land' => 'Summon up to %2$s %1$s per acre of %3$s.',
+            'summon_units_from_land_by_time' => 'Summon up to %2$s %1$s per acre of %4$s. Amount summoned when cast increased by %3$s%%  per hour into the round.',
+
+            'no_drafting' => 'No draftees are drafted.',
+
+            // Improvements
+            'improvements_damage' => 'Destroys %s%% of the target\'s improvements.',
+
+            // Population
+            'population_growth' => '%s%% population growth rate',
+            'kills_peasants' => 'Kills %1$s%% of the target\'s peasants.',
+
+            // Resources
+            'destroys_resource' => 'Destroys %2$s%% of the target\'s %1$s.',
+
+            'resource_conversion' => 'Converts %3$s%% of your %1$s to %2$s at a rate of %4$s:1.',
+
+            // Magic
+            'damage_from_spells' => '%s%% damage from spells',
+            'chance_to_reflect_spells' => '%s%% chance to reflect spells',
+            'reveal_ops' => 'Reveals the dominion casting spells or spying on you',
+            'damage_from_fireballs' => '%s%% damage from fireballs',
+            'damage_from_lightning_bolts' => '%s%% damage from lightning bolts',
+
+            // Espionage
+            'disband_spies' => 'Disbands %s%% of enemy spies.',
+            'spy_strength' => '%s%% spy strength',
+            'immortal_spies' => 'Spies become immortal',
+
+            'gold_theft' => '%s%% gold lost to theft.',
+            'mana_theft' => '%s%% mana lost to theft.',
+            'lumber_theft' => '%s%% lumber lost to theft.',
+            'ore_theft' => '%s%% ore lost to theft.',
+            'gems_theft' => '%s%% gems lost to theft.',
+            'all_theft' => '%s%% resources lost to theft',
+
+            // Conversions
+            'conversions' => '%s%% conversions',
+            'converts_crypt_bodies' => 'Every %1$s %2$ss raise dead a body from the crypt into one %3$s per tick.',
+            'convert_enemy_casualties_to_food' => 'Enemy casualties converted to food.',
+            'no_conversions' => 'No enemy units are converted.',
+
+            'convert_peasants_to_champions' => 'All peasants converted to champions each tick.',
+
+            // Casualties
+            'increases_enemy_draftee_casualties' => '%s%% enemy draftee casualties',
+            'increases_casualties_on_offense' => '%s%% enemy casualties when invading',
+            'increases_casualties_on_defense' => '%s%% enemy casualties when defending',
+
+            'casualties' => '%s%% casualties',
+            'offensive_casualties' => '%s%% casualties suffered when invading',
+            'defensive_casualties' => '%s%% casualties suffered when defending',
+
+            // OP/DP
+            'offensive_power' => '%s%% offensive power',
+            'defensive_power' => '%s%% defensive power',
+
+            'offensive_power_on_retaliation' => '%s%% offensive power if target recently invaded your realm',
+
+            'defensive_power_vs_insect_swarm' => '%s%% offensive power if attacker has Insect Swarm',
+
+            'reduces_target_raw_defense_from_land' => 'Targets raw defensive power lowered by %1$s%% for every %3$s%% forest, max %4$s%% reduction ',# 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
+
+            'increases_casualties_on_offense_from_wizard_ratio' => 'Enemy casualties increased by %s%% for every 1 wizard ratio.',
+
+            'immune_to_temples' => 'Defensive modifiers are not affected by Temples.',
+
+            'defensive_power_from_peasants' => '%s raw defensive power per peasant',
+
+            // Improvements
+            'improvements' => '%s%% improvement points from investments made while spell is active',
+
+            // Explore
+            'land_discovered' => '%s%% land discovered on successful invasions',
+            'stop_land_generation' => 'Stops land generation from units',
+
+            // Buildings and Land
+            'buildings_destroyed' => '%s%% of all buildings destroyed per tick',
+            'barren_land_rezoned' => 'All barren land becomes %1$s',
+
+            // Special
+            'opens_portal' => 'Opens a portal required to teleport otherwordly units to enemy lands',
+
+            'burns_extra_buildings' => 'Destroy up to 10%% additional buildings when successfully invading someone, if buildings are built with lumber. Dragons must account for at least 90%% of the offensive power.',
+
+            'stasis' => 'Freezes time. No production, cannot take actions, and cannot have actions taken against it. Units returning from battle continue to return but do not finish and arrive home until Stasis is over.',
+
+            'mind_control' => 'When defending, each Mystic takes control of one invading unit\'s mind. Mindcontrolled units provide 2 raw DP. Only units which have the attribute Sentient and neither of the attributes Ammunition, Equipment, Magical, Massive, Mechanical, Mindless, Ship, or Wise can be mindcontrolled.',
+
+        ];
+
+        foreach ($spell->perks as $perk)
         {
-          return $this->getInvasionSpells($dominion, Null, $isViewOnly);
-        }
-        else
-        {
-          return $this->getSelfSpells($dominion)
-              ->merge($this->getOffensiveSpells($dominion));
-        }
-        */
-    }
+            if (!array_key_exists($perk->key, $spellEffects))
+            {
+                //\Debugbar::warning("Missing perk help text for unit perk '{$perk->key}'' on unit '{$unit->name}''.");
+                continue;
+            }
 
-    public function getSelfSpells(?Dominion $dominion): Collection
-    {
-        $spells = collect(array_filter([
-            [
-                'name' => 'Gaia\'s Watch',
-                'description' => '+10% food production',
-                'key' => 'gaias_watch',
-                'mana_cost' => 2,
-                'duration' => 12*4,
-                'cooldown' => 0,
-            ],
-            /*
-            [
-                'name' => 'Ares\' Call',
-                'description' => '+10% defensive power',
-                'key' => 'ares_call',
-                'mana_cost' => 2.5,
-                'duration' => 12*4,
-            ],
-            [
-                'name' => 'Midas Touch',
-                'description' => '+10% platinum production',
-                'key' => 'midas_touch',
-                'mana_cost' => 2.5,
-                'duration' => 12*4,
-            ],
-            */
-            [
-                'name' => 'Mining Strength',
-                'description' => '+10% ore production',
-                'key' => 'mining_strength',
-                'mana_cost' => 2,
-                'duration' => 12*4,
-                'cooldown' => 0,
-            ],
-            [
-                'name' => 'Harmony',
-                'description' => '+50% population growth',
-                'key' => 'harmony',
-                'mana_cost' => 2.5,
-                'duration' => 12*4,
-                'cooldown' => 0,
-            ],
-            [
-                'name' => 'Fool\'s Gold',
-                'description' => 'Platinum theft protection for 10 hours, 22 hour recharge',
-                'key' => 'fools_gold',
-                'mana_cost' => 5,
-                'duration' => 10*4,
-                'cooldown' => 20,
-            ],
-            [
-                'name' => 'Surreal Perception',
-                'description' => 'Reveals the dominion casting offensive spells or committing spy ops against you for 8 hours',
-                'key' => 'surreal_perception',
-                'mana_cost' => 4,
-                'duration' => 8*4,# * $this->militaryCalculator->getWizardRatio($target, 'defense'),
-                'cooldown' => 0,
-            ],
-            [
-                'name' => 'Energy Mirror',
-                'description' => '20% chance to reflect incoming offensive spells for 8 hours',
-                'key' => 'energy_mirror',
-                'mana_cost' => 3,
-                'duration' => 8*4,
-                'cooldown' => 0,
-            ]
-        ]));
+            $perkValue = $perk->pivot->value;
 
-        if($dominion !== null)
-        {
-            $racialSpell = $this->getRacialSelfSpell($dominion);
-            $spells->push($racialSpell);
-        }
+            // Handle array-based perks
+            $nestedArrays = false;
 
-        return $spells;
-    }
+            // todo: refactor all of this
+            // partially copied from Race::getUnitPerkValueForUnitSlot
+            if (str_contains($perkValue, ','))
+            {
+                $perkValue = explode(',', $perkValue);
 
-    # Hacky fix for round 13.
-    public function getRacialSelfSpell(Dominion $dominion)
-    {
-        $raceName = $dominion->race->name;
-        return $this->getRacialSelfSpells()->filter(function ($spell) use ($raceName) {
-            return $spell['races']->contains($raceName);
-        })->first();
-    }
+                foreach ($perkValue as $key => $value)
+                {
+                    if (!str_contains($value, ';'))
+                    {
+                        continue;
+                    }
 
-    public function getRacialSelfSpellForScribes(?Race $race)
-    {
+                    $nestedArrays = true;
+                    $perkValue[$key] = explode(';', $value);
+                }
+            }
 
-        $raceName = $race->name;
-        return $this->getRacialSelfSpells()->filter(function ($spell) use ($raceName) {
-            return $spell['races']->contains($raceName);
-        })->first();
-    }
+            // Special case for pairings
+            if ($perk->key === 'defense_from_pairing' || $perk->key === 'offense_from_pairing' || $perk->key === 'pairing_limit')
+            {
+                $slot = (int)$perkValue[0];
+                $pairedUnit = $race->units->filter(static function ($unit) use ($slot) {
+                    return ($unit->slot === $slot);
+                })->first();
+
+                $perkValue[0] = $pairedUnit->name;
+                if (isset($perkValue[2]) && $perkValue[2] > 0)
+                {
+                    $perkValue[0] = str_plural($perkValue[0]);
+                }
+                else
+                {
+                    $perkValue[2] = 1;
+                }
+            }
+
+            // Special case for returns faster if pairings
+            if ($perk->key === 'faster_return_if_paired')
+            {
+                $slot = (int)$perkValue[0];
+                $pairedUnit = $race->units->filter(static function ($unit) use ($slot) {
+                    return ($unit->slot === $slot);
+                })->first();
+
+                $perkValue[0] = $pairedUnit->name;
+                if (isset($perkValue[2]) && $perkValue[2] > 0)
+                {
+                    $perkValue[0] = str_plural($perkValue[0]);
+                }
+                else
+                {
+                    $perkValue[2] = 1;
+                }
+            }
+
+            // Special case for pairing_limit_increasable
+            if ($perk->key === 'pairing_limit_increasable')
+            {
+                $slot = (int)$perkValue[0];
+                $pairedUnit = $race->units->filter(static function ($unit) use ($slot) {
+                    return ($unit->slot === $slot);
+                })->first();
+
+                $perkValue[0] = $pairedUnit->name;
+            }
+
+            // Special case for conversions
+            if ($perk->key === 'conversion' or $perk->key === 'displaced_peasants_conversion' or $perk->key === 'casualties_conversion')
+            {
+                $unitSlotsToConvertTo = array_map('intval', str_split($perkValue));
+                $unitNamesToConvertTo = [];
+
+                foreach ($unitSlotsToConvertTo as $slot) {
+                    $unitToConvertTo = $race->units->filter(static function ($unit) use ($slot) {
+                        return ($unit->slot === $slot);
+                    })->first();
+
+                    $unitNamesToConvertTo[] = str_plural($unitToConvertTo->name);
+                }
+
+                $perkValue = generate_sentence_from_array($unitNamesToConvertTo);
+            }
+            if($perk->key === 'staggered_conversion')
+            {
+                foreach ($perkValue as $index => $conversion) {
+                    [$convertAboveLandRatio, $slots] = $conversion;
+
+                    $unitSlotsToConvertTo = array_map('intval', str_split($slots));
+                    $unitNamesToConvertTo = [];
+
+                    foreach ($unitSlotsToConvertTo as $slot) {
+                        $unitToConvertTo = $race->units->filter(static function ($unit) use ($slot) {
+                            return ($unit->slot === $slot);
+                        })->first();
+
+                        $unitNamesToConvertTo[] = str_plural($unitToConvertTo->name);
+                    }
+
+                    $perkValue[$index][1] = generate_sentence_from_array($unitNamesToConvertTo);
+                }
+            }
+            if($perk->key === 'strength_conversion')
+            {
+                $limit = (float)$perkValue[0];
+                $under = (int)$perkValue[1];
+                $over = (int)$perkValue[2];
+
+                $underLimitUnit = $race->units->filter(static function ($unit) use ($under)
+                    {
+                        return ($unit->slot === $under);
+                    })->first();
+
+                $overLimitUnit = $race->units->filter(static function ($unit) use ($over)
+                    {
+                        return ($unit->slot === $over);
+                    })->first();
+
+                $perkValue = [$limit, str_plural($underLimitUnit->name), str_plural($overLimitUnit->name)];
+            }
+            if($perk->key === 'passive_conversion')
+            {
+                $slotFrom = (int)$perkValue[0];
+                $slotTo = (int)$perkValue[1];
+                $rate = (float)$perkValue[2];
+                $building = (string)$perkValue[3];
+
+                $unitFrom = $race->units->filter(static function ($unit) use ($slotFrom)
+                    {
+                        return ($unit->slot === $slotFrom);
+                    })->first();
+
+                $unitTo = $race->units->filter(static function ($unit) use ($slotTo)
+                    {
+                        return ($unit->slot === $slotTo);
+                    })->first();
+
+                $perkValue = [$unitFrom->name, $unitTo->name, $rate, $building];
+            }
+            if($perk->key === 'value_conversion')
+            {
+                $multiplier = (float)$perkValue[0];
+                $convertToSlot = (int)$perkValue[1];
+
+                $unitToConvertTo = $race->units->filter(static function ($unit) use ($convertToSlot)
+                    {
+                        return ($unit->slot === $convertToSlot);
+                    })->first();
+
+                $perkValue = [$multiplier, str_plural($unitToConvertTo->name)];
+            }
+
+            if($perk->key === 'plunders')
+            {
+                foreach ($perkValue as $index => $plunder) {
+                    [$resource, $amount] = $plunder;
+
+                    $perkValue[$index][1] = generate_sentence_from_array([$amount]);
+                }
+            }
+
+            // Special case for dies_into, wins_into ("change_into"), fends_off_into
+            if ($perk->key === 'dies_into' or $perk->key === 'wins_into' or $perk->key === 'fends_off_into')
+            {
+                $unitSlotsToConvertTo = array_map('intval', str_split($perkValue));
+                $unitNamesToConvertTo = [];
+
+                foreach ($unitSlotsToConvertTo as $slot) {
+                    $unitToConvertTo = $race->units->filter(static function ($unit) use ($slot) {
+                        return ($unit->slot === $slot);
+                    })->first();
+
+                    $unitNamesToConvertTo[] = $unitToConvertTo->name;
+                }
+
+                $perkValue = generate_sentence_from_array($unitNamesToConvertTo);
+            }
+
+            // Special case for returns faster if pairings
+            if ($perk->key === 'dies_into_multiple')
+            {
+                $slot = (int)$perkValue[0];
+                $pairedUnit = $race->units->filter(static function ($unit) use ($slot) {
+                    return ($unit->slot === $slot);
+                })->first();
+
+                $amount = (int)$perkValue[1];
+
+                $perkValue[0] = $pairedUnit->name;
+                if (isset($perkValue[1]) && $perkValue[1] > 0)
+                {
+                    $perkValue[0] = str_plural($perkValue[0]);
+                }
+                else
+                {
+                    $perkValue[1] = 1;
+                }
+            }
+
+            // Special case for unit_production
+            if ($perk->key === 'unit_production')
+            {
+                $unitSlotToProduce = intval($perkValue[0]);
+
+                $unitToProduce = $race->units->filter(static function ($unit) use ($unitSlotToProduce) {
+                    return ($unit->slot === $unitSlotToProduce);
+                })->first();
+
+                $unitNameToProduce[] = str_plural($unitToProduce->name);
+
+                $perkValue = generate_sentence_from_array($unitNameToProduce);
+            }
 
 
-    public function getRacialSelfSpells(): Collection
-    {
-        return collect([
-            [
-                'name' => 'Crusade',
-                'description' => '+10% offensive power and allows you to kill Undead and Demon units.',
-                'key' => 'crusade',
-                'mana_cost' => 10,
-                'duration' => 12*4,
-                'races' => collect(['Human', 'Sacred Order', 'Templars']),
-            ],
-            [
-                'name' => 'Miner\'s Sight',
-                'description' => '+10% ore and +5% gem production',
-                'key' => 'miners_sight',
-                'mana_cost' => 8,
-                'duration' => 12*4,
-                'races' => collect(['Dwarf', 'Gnome', 'Artillery']),
-            ],
-            [
-                'name' => 'Killing Rage',
-                'description' => '+10% offensive power',
-                'key' => 'killing_rage',
-                'mana_cost' => 8,
-                'duration' => 12*4,
-                'races' => collect(['Goblin']),
-            ],
-            [
-                'name' => 'Alchemist Flame',
-                'description' => '+30 alchemy platinum production',
-                'key' => 'alchemist_flame',
-                'mana_cost' => 10,
-                'duration' => 12*4,
-                'races' => collect(['Firewalker','Spirit']),
-            ],
-            [
-                'name' => 'Blizzard',
-                'description' => '+5% defensive strength',
-                'key' => 'blizzard',
-                'mana_cost' => 8,
-                'duration' => 12*4,
-                'races' => collect(['Icekin']),
-            ],
-            [
-                'name' => 'Bloodrage',
-                'description' => '+10% offensive strength, +10% offensive casualties',
-                'key' => 'bloodrage',
-                'mana_cost' => 8,
-                'duration' => 12*4,
-                'races' => collect(['Orc', 'Black Orc']),
-            ],
-            [
-                'name' => 'Dragon\'s Roar',
-                'description' => 'Enemy draftees do not participate in battle',
-                'key' => 'unholy_ghost',
-                'mana_cost' => 10,
-                'duration' => 12*4,
-                'races' => collect(['Dragon']),
-            ],
-            [
-                'name' => 'Unholy Ghost',
-                'description' => 'Enemy draftees do not participate in battle',
-                'key' => 'unholy_ghost',
-                'mana_cost' => 10,
-                'duration' => 12*4,
-                'races' => collect(['Dark Elf']),
-            ],
-            [
-                'name' => 'Defensive Frenzy',
-                'description' => '+10% defensive strength',
-                'key' => 'defensive_frenzy',
-                'mana_cost' => 8,
-                'duration' => 12*4,
-                'races' => collect(['Halfling']),
-            ],
-            [
-                'name' => 'Howling',
-                'description' => '+10% offensive strength, +10% defensive strength',
-                'key' => 'howling',
-                'mana_cost' => 10,
-                'duration' => 12*4,
-                'races' => collect(['Kobold']),
-            ],
-            [
-                'name' => 'Warsong',
-                'description' => '+10% offensive power',
-                'key' => 'warsong',
-                'mana_cost' => 8,
-                'duration' => 12*4,
-                'races' => collect(['Wood Elf']),
-            ],
-            [
-                'name' => 'Regeneration',
-                'description' => '-25% combat losses',
-                'key' => 'regeneration',
-                'mana_cost' => 10,
-                'duration' => 12*4,
-                'races' => collect(['Troll', 'Lizardfolk']),
-            ],
-            [
-                'name' => 'Parasitic Hunger',
-                'description' => '+50% conversion rate',
-                'key' => 'parasitic_hunger',
-                'mana_cost' => 10,
-                'duration' => 12*4,
-                'races' => collect(['Lycanthrope', 'Afflicted']),
-            ],
-            [
-                'name' => 'Gaia\'s Blessing',
-                'description' => '+20% food production, +10% lumber production',
-                'key' => 'gaias_blessing',
-                'mana_cost' => 10,
-                'duration' => 12*4,
-                'races' => collect(['Sylvan']),
-            ],
-            [
-                'name' => 'Nightfall',
-                'description' => '+5% offensive power',
-                'key' => 'nightfall',
-                'mana_cost' => 8,
-                'duration' => 12*4,
-                'races' => collect(['Nox']),
-            ],
-            [
-                'name' => 'Campaign',
-                'description' => '+25% land generated for successful attack',
-                'key' => 'campaign',
-                'mana_cost' => 8,
-                'duration' => 1*4,
-                'races' => collect(['Nomad']),
-            ],
-            [
-                'name' => 'Swarming',
-                'description' => 'Double drafting speed (2% instead of 1%)',
-                'key' => 'swarming',
-                'mana_cost' => 6,
-                'duration' => 12*4,
-                'races' => collect(['Ants']),
-            ],
-            [
-                'name' => '𒉡𒌋𒆷',
-                'description' => 'Void defensive modifiers immune to Temples.',
-                'key' => 'voidspell',
-                'mana_cost' => 8,
-                'duration' => 12*4,
-                'races' => collect(['Void']),
-            ],
-            [
-                'name' => 'Metabolism',
-                'description' => '+200% food production.',
-                'key' => 'metabolism',
-                'mana_cost' => 8,
-                'duration' => 6*4, # 24 ticks / 6 hours
-                'cooldown' => 36, # Once every day and a half.
-                'races' => collect(['Growth']),
-            ],
-            [
-                'name' => 'Ambush',
-                'description' => 'For every 5% Forest, removes 1% of target\'s raw defensive power (max 10% reduction).',
-                'key' => 'ambush',
-                'mana_cost' => 2,
-                'duration' => 1*4,
-                'cooldown' => 18, # Once every 18 hours.
-                'races' => collect(['Beastfolk']),
-            ],
-            [
-                'name' => 'Coastal Cannons',
-                'description' => '+1% Defensive Power for every 1% Water. Max +20%.',
-                'key' => 'coastal_cannons',
-                'mana_cost' => 10,
-                'duration' => 12*4,
-                'races' => collect(['Armada']),
-            ],
-            [
-                'name' => 'Spiral Architecture',
-                'description' => '+10% value for investments into castle improvements performed when active.',
-                'key' => 'spiral_architecture',
-                'mana_cost' => 8,
-                'duration' => 12*4,
-                'races' => collect(['Imperial Gnome']),
-            ],
-            [
-                'name' => 'Fimbulwinter',
-                'description' => '+10% Defensive Power, +15% casualties.',
-                'key' => 'fimbulwinter',
-                'mana_cost' => 8,
-                'duration' => 12*4,
-                'races' => collect(['Norse']),
-            ],
-            [
-                'name' => 'Desecration',
-                'description' => 'Triples enemy draftees casualties.',
-                'key' => 'Desecration',
-                'mana_cost' => 8,
-                'duration' => 12*4,
-                'races' => collect(['Undead']),
-            ],
-            [
-                'name' => 'Infernal Fury',
-                'description' => 'Increases enemy casualties by 20% on successful invasions over 75%.',
-                'key' => 'infernal_fury',
-                'mana_cost' => 6,
-                'duration' => 6*4,
-                'races' => collect(['Demon']),
-            ],
-            [
-                'name' => 'Aurora',
-                'description' => 'Reduces unit training times by 2 ticks.',
-                'key' => 'aurora',
-                'mana_cost' => 6,
-                'duration' => 6*4, # Half a day
-                'races' => collect(['Lux']),
-            ],
-            [
-                'name' => 'Gryphon\'s Call',
-                'description' => '4x yeti trapping. Removes offensive power bonus from Gryphon Nests.',
-                'key' => 'gryphons_call',
-                'mana_cost' => 4,
-                'duration' => 1.5*4, # 6 ticks (3 hours)
-                'races' => collect(['Snow Elf']),
-            ],
-            [
-                'name' => 'Charybdis\' Gape',
-                'description' => 'Increases offensive casualties by 50% against invading forces.',
-                'key' => 'charybdis_gape',
-                'mana_cost' => 6,
-                'duration' => 12*4,
-                'races' => collect(['Merfolk']),
-            ],
-            [
-                'name' => 'Portal',
-                'description' => 'Must be cast in order to send units on attack. Portal closes quickly and should be used immediately.',
-                'key' => 'portal',
-                'mana_cost' => 12,
-                'duration' => 1,
-                'cooldown' => 6, # Every 6 hours.
-                'races' => collect(['Dimensionalists']),
-            ],
-            [
-                'name' => 'Call To Arms',
-                'description' => 'Training times reduced by 2 for every recent invasion (max -8 ticks).',
-                'key' => 'call_to_arms',
-                'mana_cost' => 10,
-                'duration' => 12*4,
-                'races' => collect(['Legion II']),
-                #'races' => collect(['Legion', 'Legion II', 'Legion III', 'Legion IV', 'Legion V', 'Legion VI']),
-            ],
-            [
-                'name' => 'Underground Caves',
-                'description' => 'Psilocybe experience point production replaced by gem production (10x).',
-                'key' => 'underground_caves',
-                'mana_cost' => 5,
-                'duration' => 12*4,
-                'races' => collect(['Myconid']),
-            ],
-            [
-                'name' => 'Chitin',
-                'description' => 'Cocoons receive 1 DP each. Unaffected by Unholy Ghost or Dragon\'s Roar.',
-                'key' => 'chitin',
-                'mana_cost' => 10,
-                'duration' => 12*4,
-                'races' => collect(['Swarm']),
-            ],
-            [
-                'name' => 'Rainy Season',
-                'description' => '+100% defensive power, +100% population growth, +50% food production, +50% lumber production, cannot invade or explore, and no boat, ore, or gem production',
-                'key' => 'rainy_season',
-                'mana_cost' => 12,
-                'duration' => 24*4, # Lasts one day
-                'cooldown' => 24*7, # Every seven days
-                'races' => collect(['Simian']),
-            ],
-            [
-                'name' => 'Retribution',
-                'description' => '+10% offensive power if target has recently invaded your realm (in the last six hours).',
-                'key' => 'retribution',
-                'mana_cost' => 6,
-                'duration' => 6*4, # Six hours
-                'races' => collect(['Jagunii']),
-            ],
-            [
-                'name' => 'Aether',
-                'description' => '+10% offensive power and defensive power if your military is composed of equal amounts of every Elemental unit.',
-                'key' => 'aether',
-                'mana_cost' => 6,
-                'duration' => 12*4, # Six hours
-                'races' => collect(['Elementals']),
-            ],
-        ]);
-    }
+            /*****/
 
-    public function getOffensiveSpells(Dominion $dominion, bool $isInvasionSpell = false, bool $isViewOnly = false): Collection
-    {
+            if($perk->key === 'kills_faction_units_percentage' or $perk->key === 'kills_faction_units_amount')
+            {
+                $faction = (string)$perkValue[0];
+                $slot = (int)$perkValue[1];
+                $percentage = (float)$perkValue[2];
 
-      # Return invasion spells only when specifically asked to.
-      if($isInvasionSpell or $isViewOnly)
-      {
-      return $this->getInfoOpSpells()
-          ->merge($this->getBlackOpSpells($dominion))
-          ->merge($this->getWarSpells($dominion))
-          ->merge($this->getInvasionSpells($dominion, Null, $isViewOnly));
-      }
-      else
-      {
-        return $this->getInfoOpSpells()
-            ->merge($this->getBlackOpSpells($dominion))
-            ->merge($this->getWarSpells($dominion));
-      }
-    }
+                $race = Race::where('name', $faction)->first();
 
-    public function getInfoOpSpells(): Collection
-    {
-        return collect([
-            [
-                'name' => 'Clear Sight',
-                'description' => 'Reveal status screen',
-                'key' => 'clear_sight',
-                'mana_cost' => 0.3,
-            ],
-            [
-                'name' => 'Vision',
-                'description' => 'Reveal tech and heroes',
-                'key' => 'vision',
-                'mana_cost' => 0.5,
-            ],
-            [
-                'name' => 'Revelation',
-                'description' => 'Reveal active spells',
-                'key' => 'revelation',
-                'mana_cost' => 0.75,
-            ],
-//            [
-//                'name' => 'Clairvoyance',
-//                'description' => 'Reveal realm town crier',
-//                'key' => 'clairvoyance',
-//                'mana_cost' => 1.2,
-//            ],
-//            [
-//                'name' => 'Disclosure',
-//                'description' => 'Reveal wonder',
-//                'key' => 'disclosure',
-//                'mana_cost' => 1.2,
-//            ],
-        ]);
-    }
+                $unit = $race->units->filter(static function ($unit) use ($slot)
+                    {
+                        return ($unit->slot === $slot);
+                    })->first();
 
-    public function getHostileSpells(?Dominion $dominion, bool $isInvasionSpell = false, bool $isViewOnly = false): Collection
-    {
-        if($isInvasionSpell or $isViewOnly)
-        {
-          return $this->getBlackOpSpells($dominion)
-              ->merge($this->getWarSpells($dominion))
-              ->merge($this->getInvasionSpells($dominion, Null, $isViewOnly));
-        }
-        else
-        {
-          return $this->getBlackOpSpells($dominion)
-              ->merge($this->getWarSpells($dominion));
-        }
-    }
+                $perkValue = [$faction, str_plural($unit->name), $percentage];
+            }
 
-    # Available all the time (after first day).
-    public function getBlackOpSpells(?Dominion $dominion): Collection
-    {
+            if($perk->key === 'summon_units_from_land')
+            {
+                $unitSlots = (array)$perkValue[0];
+                $maxPerAcre = (float)$perkValue[1];
+                $landType = (string)$perkValue[2];
 
-      return collect([
-          [
-              'name' => 'Plague',
-              'description' => 'Slows population growth by 25%.',
-              'key' => 'plague',
-              'mana_cost' => 3,
-              'duration' => 12*2,
-          ],
-          [
-              'name' => 'Insect Swarm',
-              'description' => 'Slows food production by 5%.',
-              'key' => 'insect_swarm',
-              'mana_cost' => 3,
-              'duration' => 12*2,
-          ],
-          [
-              'name' => 'Great Flood',
-              'description' => 'Slows boat production by 25%.',
-              'key' => 'great_flood',
-              'mana_cost' => 3,
-              'duration' => 12*2,
-          ],
-          [
-              'name' => 'Earthquake',
-              'description' => 'Slows ore and diamond mine production by 5%.',
-              'key' => 'earthquake',
-              'mana_cost' => 3,
-              'duration' => 12*2,
-          ],
-      ]);
+                // Rue the day this perk is used for other factions.
+                $race = Race::where('name', 'Weres')->firstOrFail();
 
-    }
+                foreach ($unitSlots as $index => $slot)
+                {
+                    $slot = (int)$slot;
+                    $unit = $race->units->filter(static function ($unit) use ($slot)
+                        {
+                            return ($unit->slot === $slot);
+                        })->first();
 
-    # War only.
-    public function getWarSpells(?Dominion $dominion): Collection
-    {
-        $spells = collect([
-            [
-                'name' => 'Lightning Bolt',
-                'description' => 'Destroy the target\'s improvements (0.33% base damage).',
-                'key' => 'lightning_bolt',
-                'mana_cost' => 1,
-                'decreases' => [
-                    'improvement_markets',
-                    'improvement_keep',
-                    'improvement_towers',
-                    'improvement_forges',
-                    'improvement_walls',
-                    'improvement_harbor',
-                    'improvement_armory',
-                    'improvement_infirmary',
-                    'improvement_workshops',
-                    'improvement_observatory',
-                    'improvement_cartography',
-                    'improvement_hideouts',
-                    'improvement_forestry',
-                    'improvement_refinery',
-                    'improvement_granaries',
-                    'improvement_tissue',
-                ],
-                'percentage' => 0.33,
-                'max_damage_per_wizard' => 10,
-            ],
-            [
-                'name' => 'Fireball',
-                'description' => 'Burn target\'s peasants and food (0.33% base damage).',
-                'key' => 'fireball',
-                'mana_cost' => 1,
-                'decreases' => ['peasants', 'resource_food'],
-                'percentage' => 0.33,
-                'max_damage_per_wizard' => 10,
-            ],
-            [
-                'name' => 'Disband Spies',
-                'description' => 'Turns spies into draftees (1% base damage).',
-                'key' => 'disband_spies',
-                'mana_cost' => 1,
-                'decreases' => ['military_spies'],
-                'increases' => ['military_draftees'],
-                'percentage' => 1,
-            ],
-        ]);
 
-        if(in_array($dominion->race->name, ['Human', 'Sacred Order', 'Dwarf']))
-        {
-            $spells = $spells->concat([
-                [
-                    'name' => 'Purification',
-                    'description' => 'Eradicates Abominations. Only effective against the Afflicted.',
-                    'key' => 'purification',
-                    'mana_cost' => 3,
-                    'decreases' => [
-                        'military_unit1',
-                    ],
-                    'percentage' => 1
-                ],
-            ]);
+                    $units[$index] = str_plural($unit->name);
+                }
+
+                $unitsString = generate_sentence_from_array($units);
+
+                $perkValue = [$unitsString, $maxPerAcre, $landType];
+                $nestedArrays = false;
+
+            }
+
+            if($perk->key === 'summon_units_from_land_by_time')
+            {
+                $unitSlots = (array)$perkValue[0];
+                $basePerAcre = (float)$perkValue[1];
+                $hourlyPercentIncrease = (float)$perkValue[2];
+                $landType = (string)$perkValue[3];
+
+                // Rue the day this perk is used for other factions.
+                $race = Race::where('name', 'Weres')->firstOrFail();
+
+                foreach ($unitSlots as $index => $slot)
+                {
+                    $slot = (int)$slot;
+                    $unit = $race->units->filter(static function ($unit) use ($slot)
+                        {
+                            return ($unit->slot === $slot);
+                        })->first();
+
+
+                    $units[$index] = str_plural($unit->name);
+                }
+
+                $unitsString = generate_sentence_from_array($units);
+
+                $perkValue = [$unitsString, $basePerAcre, $hourlyPercentIncrease, $landType];
+                $nestedArrays = false;
+
+            }
+
+            if($perk->key === 'converts_crypt_bodies')
+            {
+                $race = Race::where('name', 'Undead')->firstOrFail();
+
+                $raisingUnits = (int)$perkValue[0];
+                $raisingUnitsSlot = (int)$perkValue[1];
+                $unitsRaisedSlot = (int)$perkValue[2];
+
+                # Get the raising unit
+                $raisingUnit = $race->units->filter(static function ($unit) use ($raisingUnitsSlot)
+                        {
+                            return ($unit->slot === $raisingUnitsSlot);
+                        })->first();
+
+                # Get the raised unit
+                $raisedUnit = $race->units->filter(static function ($unit) use ($unitsRaisedSlot)
+                        {
+                            return ($unit->slot === $unitsRaisedSlot);
+                        })->first();
+                #$unitsString = generate_sentence_from_array([$createdUnit, $createdUnit]);
+
+                $perkValue = [$raisingUnits, $raisingUnit->name, $raisedUnit->name];
+
+                #$perkValue = [$unitsString, $maxPerAcre, $landType];
+            }
+
+
+
+            /*****/
+
+            if (is_array($perkValue))
+            {
+                if ($nestedArrays)
+                {
+                    foreach ($perkValue as $nestedKey => $nestedValue)
+                    {
+                        foreach($nestedValue as $key => $value)
+                        {
+                            $nestedValue[$key] = ucwords(str_replace('level','level ',str_replace('_', ' ',$value)));
+                        }
+                        $effectStrings[] = vsprintf($spellEffects[$perk->key], $nestedValue);
+                    }
+                }
+                else
+                {
+                    #var_dump($perkValue);
+                    foreach($perkValue as $key => $value)
+                    {
+                        $perkValue[$key] = ucwords(str_replace('_', ' ',$value));
+                    }
+                    $effectStrings[] = vsprintf($spellEffects[$perk->key], $perkValue);
+                }
+            }
+            else
+            {
+                $perkValue = str_replace('_', ' ',ucwords($perkValue));
+                $effectStrings[] = sprintf($spellEffects[$perk->key], $perkValue);
+            }
         }
 
-
-        return $spells;
+        return $effectStrings;
     }
 
-
-    /*
-    *
-    * These spells are automatically cast during invasion based on conditions:
-    * - Type: is $dominion the attacker or defender?
-    * - Invasion successful? True (must be successful), False (must be unsuccessful), or Null (can be either).
-    * - OP relative to DP? Null = not checked. Float = OP/DP must be this float or greater.
-    *
-    * @param Dominion $dominion - the caster
-    * @param Dominion $target - the target
-    *
-    */
-    public function getInvasionSpells(Dominion $dominion, ?Dominion $target = Null, bool $isViewOnly = false): Collection
+    public function getExclusivityString(Spell $spell): string
     {
-        if($dominion->race->name == 'Afflicted' or $isViewOnly)
-        {
-          return collect([
-              [
-                  'name' => 'Pestilence',
-                  'description' => 'Peasants die and return to the Afflicted as Abominations.',
-                  'key' => 'pestilence',
-                  'type' => 'offense',
-                  'invasion_must_be_successful' => Null,
-                  'op_dp_ratio' => 0.50,
-                  'duration' => 12,
-                  'mana_cost' => 0,
-              ],
-              [
-                  'name' => 'Great Fever',
-                  'description' => 'No population growth, -10% platinum production, -20% food production.',
-                  'key' => 'great_fever',
-                  'type' => 'offense',
-                  'invasion_must_be_successful' => True,
-                  'op_dp_ratio' => Null,
-                  'duration' => 12,
-                  'mana_cost' => 0,
-              ],
-              [
-                  'name' => 'Unhealing Wounds',
-                  'description' => '+50% casualties, +15% food consumption.',
-                  'key' => 'unhealing_wounds',
-                  'type' => 'defense',
-                  'invasion_must_be_successful' => Null,
-                  'op_dp_ratio' => Null,
-                  'duration' => 12,
-                  'mana_cost' => 0,
-              ],
-          ]);
-        }
-        else
-        {
-          return collect([]);
-        }
-    }
 
+        $exclusivityString = '<br><small class="text-muted">';
 
-    /*
-    *
-    * These spells can be cast on friendly dominions:
-    *
-    * @param Dominion $dominion - the caster
-    * @param Dominion $target - the target
-    *
-    */
-    public function getFriendlySpells(Dominion $dominion): Collection
-    {
-        if($dominion->race->name == 'Sacred Order')
+        if($exclusives = count($spell->exclusive_races))
         {
-          return collect([
-            [
-                'name' => 'Holy Aura',
-                'description' => '-10% casualties, +10% population growth rate',
-                'key' => 'holy_aura',
-                'mana_cost' => 16,
-                'duration' => 6*4,
-            ],
-          ]);
+            foreach($spell->exclusive_races as $raceName)
+            {
+                $exclusivityString .= $raceName;
+                if($exclusives > 1)
+                {
+                    $exclusivityString .= ', ';
+                }
+                $exclusives--;
+            }
+
+            $exclusivityString .= ' only';
         }
-        elseif($dominion->race->name == 'Sylvan')
+        elseif($excludes = count($spell->excluded_races))
         {
-          return collect([
-            [
-                'name' => 'Holy Aura',
-                'description' => '-10% casualties, +10% population growth rate',
-                'key' => 'holy_aura',
-                'mana_cost' => 16,
-                'duration' => 6*4,
-            ],
-          ]);
+            $exclusivityString .= 'All except ';
+            foreach($spell->excluded_races as $raceName)
+            {
+                $exclusivityString .= $raceName;
+                $exclusives--;
+            }
         }
-        else
-        {
-          return collect([]);
-        }
+
+        $exclusivityString .= '</small>';
+
+        return $exclusivityString;
+
     }
 
 }

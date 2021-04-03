@@ -16,6 +16,12 @@ use OpenDominion\Models\Realm;
 use OpenDominion\Services\Dominion\InfoOpService;
 use OpenDominion\Services\GameEventService;
 
+# ODA
+use OpenDominion\Helpers\RaceHelper;
+use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
+use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Models\Tech;
+
 class OpCenterController extends AbstractDominionController
 {
     public function getIndex()
@@ -33,21 +39,13 @@ class OpCenterController extends AbstractDominionController
             ->get()
             ->groupBy('target_dominion_id');
 
-        $clairvoyances = $dominion->realm->infoOps()
-            ->with('sourceDominion')
-            ->with('targetDominion')
-            ->with('targetRealm')
-            ->where('type', '=', 'clairvoyance')
-            ->where('latest', '=', true)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
         return view('pages.dominion.op-center.index', [
             'infoOpService' => app(InfoOpService::class),
             'rangeCalculator' => app(RangeCalculator::class),
             'spellHelper' => app(SpellHelper::class),
-            'latestInfoOps' => $latestInfoOps,
-            'clairvoyances' => $clairvoyances
+            'landImprovementCalculator' => app(LandImprovementCalculator::class),
+            'militaryCalculator' => app(MilitaryCalculator::class),
+            'latestInfoOps' => $latestInfoOps
         ]);
     }
 
@@ -76,6 +74,9 @@ class OpCenterController extends AbstractDominionController
             'spellHelper' => app(SpellHelper::class),
             'techHelper' => app(TechHelper::class),
             'unitHelper' => app(UnitHelper::class),
+            'raceHelper' => app(RaceHelper::class),
+            'landImprovementCalculator' => app(LandImprovementCalculator::class),
+            'militaryCalculator' => app(MilitaryCalculator::class),
             'dominion' => $dominion,
             'latestInfoOps' => $latestInfoOps
         ]);
@@ -110,6 +111,9 @@ class OpCenterController extends AbstractDominionController
             'spellHelper' => app(SpellHelper::class),
             'techHelper' => app(TechHelper::class),
             'unitHelper' => app(UnitHelper::class),
+            'raceHelper' => app(RaceHelper::class),
+            'landImprovementCalculator' => app(LandImprovementCalculator::class),
+            'militaryCalculator' => app(MilitaryCalculator::class),
             'dominion' => $dominion,
             'infoOpArchive' => $infoOpArchive
         ]);
@@ -142,7 +146,7 @@ class OpCenterController extends AbstractDominionController
         $gameEvents = $clairvoyanceData['gameEvents'];
         $dominionIds = $clairvoyanceData['dominionIds'];
 
-        return view('pages.dominion.town-crier', compact(
+        return view('pages.dominion.world-news', compact(
             'gameEvents',
             'dominionIds',
             'clairvoyanceInfoOp'

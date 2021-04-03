@@ -1,0 +1,264 @@
+# <Info>
+
+barracks_spy:
+  name: Barracks Spy
+  scope: info
+  perks:
+    barracks_spy: 15
+
+castle_spy:
+  name: Castle Spy
+  scope: info
+  perks:
+    castle_spy: 1
+
+land_spy:
+  name: Land Spy
+  scope: info
+  perks:
+    land_spy: 1
+
+survey_dominion:
+  name: Survey Dominion
+  scope: info
+  perks:
+    survey_dominion: 1
+
+# <Theft>
+
+steal_gold:
+  name: Steal Gold
+  scope: theft
+  perks:
+    resource_theft: gold,0.5,16 # resource, rate, max per spy
+
+steal_food:
+  name: Steal Food
+  scope: theft
+  perks:
+    resource_theft: food,0.5,24 # resource, rate, max per spy
+
+steal_lumber:
+  name: Steal Lumber
+  scope: theft
+  perks:
+    resource_theft: lumber,1.25,12 # resource, rate, max per spy
+
+steal_mana:
+  name: Steal Mana
+  scope: theft
+  perks:
+    resource_theft: mana,1,8 # resource, rate, max per spy
+
+steal_ore:
+  name: Steal Ore
+  scope: theft
+  perks:
+    resource_theft: ore,1,12 # resource, rate, max per spy
+
+steal_gems:
+  name: Steal Gems
+  scope: theft
+  perks:
+    resource_theft: gems,1,8 # resource, rate, max per spy
+
+abduct_draftees:
+  name: Abduct Draftees
+  scope: theft
+  exclusive_races:
+    - Afflicted
+    - Armada
+    - Cult
+    - Dimensionalists
+    - Dragon
+    - Human
+    - Jagunii
+    - Kerranad
+    - Nomad
+    - Norse
+    - Sacred Order
+    - Vampires
+  perks:
+    abduct_draftees: 2,0.5 # rate, max per spy
+
+abduct_peasants:
+  name: Abduct Peasants
+  scope: theft
+  exclusive_races:
+    - Afflicted
+    - Armada
+    - Artillery
+    - Cult
+    - Dimensionalists
+    - Dragon
+    - Human
+    - Jagunii
+    - Kerranad
+    - Nomad
+    - Norse
+    - Sacred Order
+    - Vampires
+  perks:
+    abduct_peasants: 2,0.75 # rate, max per spy
+
+seize_boats:
+  name: Seize Boats
+  scope: theft
+  spy_strength: 6
+  enabled: 0
+  perks:
+    resource_theft: boats,0.25,0.02 # resource, rate, max per spy
+
+# <Hostile>
+
+assassinate_draftees:
+  name: Assassinate Draftees
+  scope: hostile
+  excluded_races:
+    - Demon
+    - Growth
+    - Weres
+  perks:
+    kill_draftees: 2
+
+assassinate_wizards:
+  name: Assassinate Wizards
+  scope: hostile
+  excluded_races:
+    - Demon
+    - Growth
+    - Weres
+  perks:
+    kill_wizards: 2
+
+# WERES SLAUGHTER
+
+slaughter_draftees:
+  name: Slaughter Draftees
+  scope: hostile
+  exclusive_races:
+    - Weres
+  perks:
+    slaughter_draftees: 1.5,40 # ratio, food per killed unit
+
+slaughter_peasants:
+  name: Slaughter Peasants
+  scope: hostile
+  exclusive_races:
+    - Weres
+  perks:
+    slaughter_peasants: 0.35,40 # ratio, food per killed unit
+
+# /WERES SLAUGHTER
+
+# GROWTH CONSUME
+
+consume_draftees:
+  name: Consume Draftees
+  scope: hostile
+  exclusive_races:
+    - Growth
+  perks:
+  slaughter_draftees: 1,400 # ratio, food per killed unit
+
+consume_peasants:
+  name: Consume Peasants
+  scope: hostile
+  exclusive_races:
+    - Growth
+  perks:
+  slaughter_peasants: 0.25,100 # ratio, food per killed unit
+
+# /GROWTH CONSUME
+
+# DEMONIC BUTCHER
+
+butcher_draftees:
+  name: Butcher Draftees
+  scope: hostile
+  exclusive_races:
+    - Demon
+  perks:
+    butcher_draftees: 1.25,1,12,40 # ratio, souls, blood, food per killed unit
+
+butcher_peasants:
+  name: Butcher Peasants
+  scope: hostile
+  exclusive_races:
+    - Demon
+  perks:
+    butcher_peasants: 0.25,1,8,40 # ratio, souls, blood, food per killed unit
+
+butcher_wizards:
+  name: Butcher Wizards
+  scope: hostile
+  exclusive_races:
+    - Demon
+  perks:
+    butcher_wizards: 1.25,1,6,40 # ratio, souls, blood, food per killed unit
+
+# /DEMONIC BUTCHER
+
+magic_snare:
+  name: Magic Snare
+  scope: hostile
+  perks:
+    reduce_wizard_strength: 2
+
+sabotage_boats:
+  name: Sabotage Boats
+  enabled: 0
+  scope: hostile
+  perks:
+    sabotage_boats: 2
+
+sabotage_buildings:
+  name: Sabotage Buildings
+  scope: hostile
+  enabled: 0
+  spy_strength: 5
+  exclusive_races:
+    - Ants
+    - Goblin
+    - Halfling
+    - Kerranad
+    - Reptilians
+    - Myconid
+  perks:
+    sabotage_buildings: 2 #
+
+destroy_buildings:
+  name: Destroy Buildings
+  scope: hostile
+  enabled: 0
+  spy_strength: 5
+  exclusive_races:
+    - Firewalker
+    - Nomad
+    - Beastfolk
+  perks:
+    destroy_buildings: 2 #
+
+sabotage_walls:
+  name: Sabotage Walls
+  scope: hostile
+  exclusive_races:
+    - Reptilians
+  perks:
+    sabotage_improvement: walls,3 # resource, rate, max per spy
+
+sabotage_forges:
+  name: Sabotage Forges
+  scope: hostile
+  exclusive_races:
+    - Reptilians
+  perks:
+    sabotage_improvement: forges,3 # resource, rate, max per spy
+
+sabotage_harbor:
+  name: Sabotage Harbour
+  scope: hostile
+  exclusive_races:
+    - Reptilians
+  perks:
+    sabotage_improvement: harbor,5 # resource, rate, max per spy

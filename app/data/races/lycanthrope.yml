@@ -1,34 +1,49 @@
 name: Lycanthrope
 alignment: evil
-description: >-
-  <p>Once thought to be an ancient curse that transformed men into wolves under the light of a full moon, little is understood about the Lycanthropic affliction. But one thing's for certain&#58; once bitten, you'll never be the same again.</p>
-  <p>Capable of agonising transformations into half-beast monsters, Lycanthropes are a hardy and fast-growing race, turning their enemies into werewolves and regenerating non-lethal wounds mid-combat.</p>
+description:
 home_land_type: forest
-playable: 1
+playable: 0
 
 attacking: 3
 exploring : 2
 converting: 1
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   max_population: 20
 units:
   - name: Warg
+    training_time: 9
+    type:
+      - living
+      - sentient
     cost:
-      platinum: 250
+      gold: 250
     power:
       offense: 3
       defense: 0
+
   - name: Ratman
+    training_time: 9
+    type:
+      - living
+      - sentient
     cost:
-      platinum: 250
+      gold: 250
     power:
       offense: 0
       defense: 3
+
   - name: Werewolf
-    type: hybrid_elite
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 850
+      gold: 850
     power:
       offense: 4
       defense: 5
@@ -37,9 +52,15 @@ units:
       fewer_casualties_offense: 50
       offense_from_pairing: 4,1 # slot, amount
       conversion: 3 # Werewolves
+
   - name: Garou
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 900
+      gold: 900
     power:
       offense: 7
       defense: 0

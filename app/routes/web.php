@@ -52,6 +52,10 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
     $router->get('settings')->uses('SettingsController@getIndex')->name('settings');
     $router->post('settings')->uses('SettingsController@postIndex');
 
+    // Settings
+    $router->get('patreon')->uses('PatreonController@getPatreonAccessToken')->name('patreon');
+    $router->get('patreon/pledge')->uses('PatreonController@getPatreonPledge')->name('patreon/pledge');
+
     // Round Register
     $router->get('round/{round}/register')->uses('RoundController@getRegister')->name('round.register');
     $router->post('round/{round}/register')->uses('RoundController@postRegister');
@@ -61,6 +65,7 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
         // Dominion Select
 //        $router->get('{dominion}/select')->uses(function () { return redirect()->route('dashboard'); });
         $router->post('{dominion}/select')->uses('Dominion\SelectController@postSelect')->name('select');
+        $router->post('{dominion}/abandon')->uses('Dominion\MiscController@postAbandonDominion')->name('abandon');
 
         // Dominion
         $router->group(['middleware' => 'dominionselected'], static function (Router $router) {
@@ -71,19 +76,34 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('status')->uses('Dominion\StatusController@getStatus')->name('status');
             $router->post('status')->uses('Dominion\StatusController@postTick');
 
+            # Resources
+            $router->get('resources')->uses('Dominion\ResourcesController@getResources')->name('resources');
+            $router->post('resources')->uses('Dominion\ResourcesController@postResources');
+
             // Advisors
             $router->get('advisors')->uses('Dominion\AdvisorsController@getAdvisors')->name('advisors');
             $router->get('advisors/production')->uses('Dominion\AdvisorsController@getAdvisorsProduction')->name('advisors.production');
-            $router->get('advisors/military')->uses('Dominion\AdvisorsController@getAdvisorsMilitary')->name('advisors.military');
-            $router->get('advisors/land')->uses('Dominion\AdvisorsController@getAdvisorsLand')->name('advisors.land');
-            $router->get('advisors/construct')->uses('Dominion\AdvisorsController@getAdvisorsConstruction')->name('advisors.construct');
-            $router->get('advisors/magic')->uses('Dominion\AdvisorsController@getAdvisorsMagic')->name('advisors.magic');
-//            $router->get('advisors/rankings')->uses('Dominion\AdvisorsController@getAdvisorsRankings')->name('advisors.rankings');
+            #$router->get('advisors/military')->uses('Dominion\AdvisorsController@getAdvisorsMilitary')->name('advisors.military');
+            #$router->get('advisors/land')->uses('Dominion\AdvisorsController@getAdvisorsLand')->name('advisors.land');
+            #$router->get('advisors/construct')->uses('Dominion\AdvisorsController@getAdvisorsConstruction')->name('advisors.construct');
+            #$router->get('advisors/magic')->uses('Dominion\AdvisorsController@getAdvisorsMagic')->name('advisors.magic');
             $router->get('advisors/statistics')->uses('Dominion\AdvisorsController@getAdvisorsStatistics')->name('advisors.statistics');
+            $router->get('advisors/history')->uses('Dominion\AdvisorsController@getHistory')->name('advisors.history');
+
+            // Mentor
+            $router->get('mentor')->uses('Dominion\MentorController@getMentor')->name('mentor');
+            $router->get('mentor/general')->uses('Dominion\MentorController@getMentorGeneral')->name('mentor.general');
+            $router->get('mentor/advancements')->uses('Dominion\MentorController@getMentorAdvancements')->name('mentor.advancements');
+            $router->get('mentor/buildings')->uses('Dominion\MentorController@getMentorBuildings')->name('mentor.buildings');
+            $router->get('mentor/espionage')->uses('Dominion\MentorController@getMentorEspionage')->name('mentor.espionage');
+            $router->get('mentor/explore')->uses('Dominion\MentorController@getMentorExplore')->name('mentor.explore');
+            $router->get('mentor/invade')->uses('Dominion\MentorController@getMentorInvade')->name('mentor.invade');
+            $router->get('mentor/magic')->uses('Dominion\MentorController@getMentorMagic')->name('mentor.magic');
+            $router->get('mentor/military')->uses('Dominion\MentorController@getMentorMilitary')->name('mentor.military');
 
             // Daily
             $router->get('bonuses')->uses('Dominion\DailyBonusesController@getBonuses')->name('bonuses');
-            $router->post('bonuses/platinum')->uses('Dominion\DailyBonusesController@postBonusesPlatinum')->name('bonuses.platinum');
+            $router->post('bonuses/gold')->uses('Dominion\DailyBonusesController@postBonusesGold')->name('bonuses.gold');
             $router->post('bonuses/land')->uses('Dominion\DailyBonusesController@postBonusesLand')->name('bonuses.land');
 
             // Exploration
@@ -91,10 +111,20 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->post('explore')->uses('Dominion\ExplorationController@postExplore');
 
             // Construction
-            $router->get('construct')->uses('Dominion\ConstructionController@getConstruction')->name('construct');
-            $router->post('construct')->uses('Dominion\ConstructionController@postConstruction');
-            $router->get('destroy')->uses('Dominion\ConstructionController@getDestroy')->name('destroy');
-            $router->post('destroy')->uses('Dominion\ConstructionController@postDestroy');
+            #$router->get('construct')->uses('Dominion\ConstructionController@getConstruction')->name('construct');
+            #$router->post('construct')->uses('Dominion\ConstructionController@postConstruction');
+            #$router->get('destroy')->uses('Dominion\ConstructionController@getDestroy')->name('destroy');
+            #$router->post('destroy')->uses('Dominion\ConstructionController@postDestroy');
+
+            # Buildings
+            $router->get('buildings')->uses('Dominion\BuildingController@getBuildings')->name('buildings');
+            $router->post('buildings')->uses('Dominion\BuildingController@postBuildings');
+            $router->get('demolish')->uses('Dominion\BuildingController@getDemolish')->name('demolish');
+            $router->post('demolish')->uses('Dominion\BuildingController@postDemolish');
+
+            # Land
+            $router->get('land')->uses('Dominion\LandController@getLand')->name('land');
+            $router->post('land')->uses('Dominion\LandController@postLand');
 
             // Rezoning
             $router->get('rezone')->uses('Dominion\RezoneController@getRezone')->name('rezone');
@@ -105,12 +135,12 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->post('improvements')->uses('Dominion\ImprovementController@postImprovements');
 
             // National Bank
-            $router->get('bank')->uses('Dominion\BankController@getBank')->name('bank');
-            $router->post('bank')->uses('Dominion\BankController@postBank');
+            $router->get('exchange')->uses('Dominion\ExchangeController@getBank')->name('exchange');
+            $router->post('exchange')->uses('Dominion\ExchangeController@postBank');
 
             // Techs
-            $router->get('techs')->uses('Dominion\TechController@getTechs')->name('techs');
-            $router->post('techs')->uses('Dominion\TechController@postTechs');
+            $router->get('advancements')->uses('Dominion\TechController@getTechs')->name('advancements');
+            $router->post('advancements')->uses('Dominion\TechController@postTechs');
 
             // Military
             $router->get('military')->uses('Dominion\MilitaryController@getMilitary')->name('military');
@@ -125,6 +155,21 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
 
             // Event result
             $router->get('event/{uuid}')->uses('Dominion\EventController@index')->name('event');
+
+            // Calculations
+            $router->get('calculations')->uses('Dominion\CalculationsController@getIndex')->name('calculations');
+
+            // Intelligence
+            $router->get('intelligence')->uses('Dominion\IntelligenceController@getIntelligence')->name('intelligence');
+            $router->post('intelligence')->uses('Dominion\IntelligenceController@postIntelligence');
+
+            // Hostile Ops
+            $router->get('offensive-ops')->uses('Dominion\OffensiveOpsController@getOffensiveOps')->name('offensive-ops');
+            $router->post('offensive-ops')->uses('Dominion\OffensiveOpsController@postOffensiveOps');
+
+            // Friendly Magic
+            $router->get('friendly-ops')->uses('Dominion\FriendlyOpsController@getFriendlyOps')->name('friendly-ops');
+            $router->post('friendly-ops')->uses('Dominion\FriendlyOpsController@postFriendlyOps');
 
             // Magic
             $router->get('magic')->uses('Dominion\MagicController@getMagic')->name('magic');
@@ -166,18 +211,23 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->post('government/war/cancel')->uses('Dominion\GovernmentController@postCancelWar')->name('government.war.cancel');
 
             // Rankings
-            $router->get('rankings/{type?}')->uses('Dominion\RankingsController@getRankings')->name('rankings');
+            #$router->get('rankings/{type?}')->uses('Dominion\RankingsController@getRankings')->name('rankings');
 
             // Realm
             $router->get('realm/{realmNumber?}')->uses('Dominion\RealmController@getRealm')->name('realm');
             $router->post('realm/change-realm')->uses('Dominion\RealmController@postChangeRealm')->name('realm.change-realm');
 
             // Town Crier
-            $router->get('town-crier/{realmNumber?}')->uses('Dominion\TownCrierController@getIndex')->name('town-crier');
+            $router->get('world-news/{realmNumber?}')->uses('Dominion\WorldNewsController@getIndex')->name('world-news');
+
+            // Notes
+            $router->get('notes')->uses('Dominion\NotesController@getNotes')->name('notes');
+            $router->post('notes')->uses('Dominion\NotesController@postNotes');
 
             // Misc
             $router->post('misc/clear-notifications')->uses('Dominion\MiscController@postClearNotifications')->name('misc.clear-notifications');
             $router->post('misc/close-pack')->uses('Dominion\MiscController@postClosePack')->name('misc.close-pack');
+            $router->post('misc/delete')->uses('Dominion\MiscController@postDeleteDominion')->name('misc.delete');
 
             // Debug
             // todo: remove me later
@@ -208,12 +258,20 @@ $router->group(['prefix' => 'about', 'as' => 'about.'], static function (Router 
 
 // Scribes
 $router->group(['prefix' => 'scribes', 'as' => 'scribes.'], static function (Router $router) {
-    $router->get('races')->uses('ScribesController@getRaces')->name('races');
-    $router->get('construction')->uses('ScribesController@getConstruction')->name('construction');
+    $router->get('factions')->uses('ScribesController@getRaces')->name('factions');
+    #$router->get('construction')->uses('ScribesController@getConstruction')->name('construction');
+    $router->get('buildings')->uses('ScribesController@getBuildings')->name('buildings');
     $router->get('espionage')->uses('ScribesController@getEspionage')->name('espionage');
-    $router->get('magic')->uses('ScribesController@getMagic')->name('magic');
-    $router->get('{race}')->uses('ScribesController@getRace')->name('race');
+    #$router->get('magic')->uses('ScribesController@getMagic')->name('magic');
+    $router->get('titles')->uses('ScribesController@getTitles')->name('titles');
+    $router->get('advancements')->uses('ScribesController@getAdvancements')->name('advancements');
+    $router->get('spells')->uses('ScribesController@getSpells')->name('spells');
+    $router->get('spy-ops')->uses('ScribesController@getSpyops')->name('spy-ops');
+
+    $router->get('{race}')->uses('ScribesController@getRace')->name('faction');
 });
+
+
 
 // Valhalla
 

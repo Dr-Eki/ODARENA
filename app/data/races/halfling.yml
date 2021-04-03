@@ -1,48 +1,75 @@
 name: Halfling
 alignment: good
-description: >-
-  <p>The only creature to match drinking pace with a Dwarf, Halflings are a cheerful and adventurous race with a mischievous streak. Hairy feet and light fingers characterise Halflings, who are just as quick to steal a pie from a neighbour as they are to line their pockets with the hard-earned platinum of a foreigner.</p>
-  <p>Despite their happy-go-lucky natures, Halflings can be very dangerous when cornered, flying into a wild frenzy whenever their friends are threatened.</p>>
+description:
 home_land_type: hill
 playable: 1
 
 attacking: 3
 exploring : 3
 converting: 2
+skill_level: 1
+
+construction_materials: gold,lumber
 
 perks:
-  max_population: 20
+  max_population: 30
   extra_barren_max_population: 10
   food_consumption: -30
+  salvaging: 25
+  amount_stolen: 200
 units:
+
   - name: Slinger
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 275
+      gold: 275
       ore: 15
     power:
       offense: 3
+
   - name: Defender
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 300
+      gold: 300
     power:
       defense: 3
+
   - name: Master Thief
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 900
+      gold: 900
       ore: 50
     power:
       offense: 3
       defense: 6
     perks:
-      counts_as_spy_offense: 0.25
-      counts_as_spy_defense: 0.25
+      counts_as_spy_offense: 0.2
+      counts_as_spy_defense: 0.2
+      plunders: gold;2,gems;0.1
+
   - name: Staff Master
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1150
-      ore: 25
+      gold: 1100
+      lumber: 5
     power:
       offense: 5
       defense: 3
     perks:
-      fewer_casualties: 50
-      offense_spy_ratio: 1,3 # ratio%, max
+      offense_spy_ratio: 0.85,3 # ratio%, max

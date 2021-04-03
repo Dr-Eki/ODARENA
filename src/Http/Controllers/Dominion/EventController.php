@@ -9,6 +9,10 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Realm;
 
+
+# ODA
+use OpenDominion\Helpers\RaceHelper;
+
 class EventController extends AbstractDominionController
 {
     public function index(string $eventUuid)
@@ -41,6 +45,7 @@ class EventController extends AbstractDominionController
             'event' => $event, // todo: compact()
             'unitHelper' => app(UnitHelper::class), // todo: only load if event->type == 'invasion'
             'militaryCalculator' => app(MilitaryCalculator::class), // todo: same thing here
+            'raceHelper' => app(RaceHelper::class), // todo: same thing here
         ]);
     }
 

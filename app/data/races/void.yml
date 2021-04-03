@@ -1,70 +1,86 @@
 name: Void
 alignment: independent
-description: >-
-  <p>Nothing is known about the Void except that they emerge from deep, abandoned mines high up in the Imperial mountains.</p>
-  <p>The longer they stay in this world, the stronger they become and the more terrifying the nightmares are.</p>
-  <p>After their mighty ziggurats came into physical existence, the Void have ended their loyalty to the empire and will now join either side of the conflict.</p>
-  <hr />
-  <ul>
-  <li>All peasants (including unemployed) produce 2.7 plat/hr raw.</li>
-  <li>Unique building: Ziggurat - houses 20, produces 10 mana/tick, and provides 4 raw DP.</li>
-  <li>Starts with 500 Ziggurats.</li>
-  </ul>
+description:
 home_land_type: mountain
 playable: 1
 
-attacking: 3
-exploring : 2
-converting: 2
+attacking: 2
+exploring : 0
+converting: 3
+skill_level: 2
+
+construction_materials: mana
+
+spies_cost: 1000,mana
+wizards_cost: 1000,mana
+archmages_cost: 2000,mana
 
 perks:
-#  cannot_construct: 1
-#  cannot_tech: 1
-#  extra_barren_max_population: 19 - Removed in favour of new building: Ziggurat
-#  max_population: 10 - Removed in favour of turning extra barren to 19 (17*1.1)
-  food_consumption: -100
-  platinum_production: -20
-  can_invest_mana: 1
-  castle_max: 100
+  no_food_consumption: 1
   population_growth: 40
-  reduce_conversions: 100
-  construction_cost_only_mana: 1
-  can_only_build_ziggurat: 1
-  cannot_build_homes: 1
+  reduced_conversions: 100
+  no_gold_production: 1
+  cannot_improve_castle: 1
+
 units:
-  - name: Fallen
-    need_boat: false
+  - name: Figure
+    
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
     cost:
-      platinum: 200
+      gold: 0
       mana: 50
     power:
       offense: 3
       defense: 0
+
   - name: Shadow
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
     cost:
-      platinum: 200
+      gold: 0
       mana: 50
     power:
       offense: 0
       defense: 3
-    perks:
-      mana_production: 1.5
+
   - name: Vision
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
     cost:
-      platinum: 550
-      mana: 150
+      gold: 0
+      mana: 175
     power:
       offense: 0
       defense: 5
     perks:
-      mana_production: 4
-  - name: Nightmare
-    need_boat: false
+      mana_production: 1
+
+  - name: Distortion
+    
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
     cost:
-      platinum: 400
-      mana: 400
+      gold: 0
+      mana: 500
     power:
       offense: 5
       defense: 3
     perks:
-      offense_per_hour: 0.003,1 # amount, max
+      offense_per_hour: 0.006,2 # amount, max

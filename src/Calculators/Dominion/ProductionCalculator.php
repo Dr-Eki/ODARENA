@@ -3,200 +3,144 @@
 namespace OpenDominion\Calculators\Dominion;
 
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Realm;
+use OpenDominion\Models\Spell;
 use OpenDominion\Services\Dominion\GuardMembershipService;
+use OpenDominion\Services\Dominion\QueueService;
 
-// Morale affects production
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
+use OpenDominion\Helpers\UnitHelper;
+use OpenDominion\Helpers\LandHelper;
 
 class ProductionCalculator
 {
-    /** @var ImprovementCalculator */
-    protected $improvementCalculator;
-
-    /** @var LandCalculator */
-    protected $landCalculator;
-
-    /** @var PopulationCalculator */
-    protected $populationCalculator;
-
-    /** @var PrestigeCalculator */
-    private $prestigeCalculator;
-
-    /** @var SpellCalculator */
-    protected $spellCalculator;
-
-    /** @var GuardMembershipService */
-    private $guardMembershipService;
-
-    /** @var MilitaryCalculator */
-    protected $militaryCalculator;
-
-    /**
-     * ProductionCalculator constructor.
-     *
-     * @param ImprovementCalculator $improvementCalculator
-     * @param LandCalculator $landCalculator
-     * @param PopulationCalculator $populationCalculator
-     * @param PrestigeCalculator $prestigeCalculator
-     * @param SpellCalculator $spellCalculator
-     * @param GuardMembershipService $guardMembershipService
-     * @param MilitaryCalculator $militaryCalculator
-     */
-    public function __construct(
-        ImprovementCalculator $improvementCalculator,
-        LandCalculator $landCalculator,
-        PopulationCalculator $populationCalculator,
-        PrestigeCalculator $prestigeCalculator,
-        SpellCalculator $spellCalculator,
-        GuardMembershipService $guardMembershipService,
-        MilitaryCalculator $militaryCalculator)
+    public function __construct()
     {
-        $this->improvementCalculator = $improvementCalculator;
-        $this->landCalculator = $landCalculator;
-        $this->populationCalculator = $populationCalculator;
-        $this->prestigeCalculator = $prestigeCalculator;
-        $this->spellCalculator = $spellCalculator;
-        $this->guardMembershipService = $guardMembershipService;
-        $this->militaryCalculator = $militaryCalculator;
+        $this->improvementCalculator = app(ImprovementCalculator::class);
+        $this->landCalculator = app(LandCalculator::class);
+        $this->landHelper = app(LandHelper::class);
+        $this->populationCalculator = app(PopulationCalculator::class);
+        $this->prestigeCalculator = app(PrestigeCalculator::class);
+        $this->spellCalculator = app(SpellCalculator::class);
+        $this->guardMembershipService = app(GuardMembershipService::class);
+        $this->militaryCalculator = app(MilitaryCalculator::class);
+        $this->landImprovementCalculator = app(LandImprovementCalculator::class);
+        $this->unitHelper = app(UnitHelper::class);
+        $this->spellDamageCalculator = app(SpellDamageCalculator::class);
+        $this->queueService = app(QueueService::class);
     }
 
-    //<editor-fold desc="Platinum">
-
     /**
-     * Returns the Dominion's platinum production.
+     * Returns the Dominion's gold production.
      *
      * @param Dominion $dominion
      * @return int
      */
-    public function getPlatinumProduction(Dominion $dominion): int
+    public function getGoldProduction(Dominion $dominion): int
     {
-        $platinum = 0;
+        $gold = 0;
 
-        $platinum = floor($this->getPlatinumProductionRaw($dominion) * $this->getPlatinumProductionMultiplier($dominion));
+        $gold = floor($this->getGoldProductionRaw($dominion) * $this->getGoldProductionMultiplier($dominion));
 
-        // Tech: Interest (% of stockpile)
-        if($dominion->getTechPerkMultiplier('platinum_interest'))
-        {
-          $platinum += $dominion->resource_platinum * $dominion->getTechPerkMultiplier('platinum_interest');
-        }
-
-        return max(0,$platinum);
+        return max(0,$gold);
     }
 
     /**
-     * Returns the Dominion's raw platinum production.
+     * Returns the Dominion's raw gold production.
      *
-     * Platinum is produced by:
+     * Gold is produced by:
      * - Employed Peasants (2.7 per)
      * - Building: Alchemy (45 per, or 60 with Alchemist Flame racial spell active)
      *
      * @param Dominion $dominion
      * @return float
      */
-    public function getPlatinumProductionRaw(Dominion $dominion): float
+    public function getGoldProductionRaw(Dominion $dominion): float
     {
-        $platinum = 0;
+        $gold = 0;
+
+        if($dominion->getSpellPerkValue('no_gold_production') or $dominion->race->getPerkValue('no_gold_production') or ($dominion->race->getPerkValue('peasants_produce_food') and $dominion->race->name === 'Growth'))
+        {
+            return $gold;
+        }
 
         // Values
         $peasantTax = 2.7;
-        $platinumPerAlchemy = 45;
 
-        // Race specialty: Void peasants
-        if($dominion->race->name === 'Void' or $dominion->race->name === 'Swarm')
+        // Race specialty: Swarm peasants
+        if($dominion->race->getPerkValue('unemployed_peasants_produce_gold'))
         {
-            $platinum += $dominion->peasants * $peasantTax;
+            $gold += $dominion->peasants * $dominion->race->getPerkValue('unemployed_peasants_produce_gold');
         }
         // Myconid: no plat from peasants
         elseif($dominion->race->name == 'Myconid')
         {
-          $platinum = 0;
+            $gold = 0;
         }
         else
         {
-          // Peasant Tax
-          $platinum += ($this->populationCalculator->getPopulationEmployed($dominion) * $peasantTax);
-        }
-
-        // Spell: Alchemist Flame
-        if ($this->spellCalculator->isSpellActive($dominion, 'alchemist_flame'))
-        {
-            $platinumPerAlchemy += 30;
+            // Peasant Tax
+            $gold += ($this->populationCalculator->getPopulationEmployed($dominion) * $peasantTax);
         }
 
         // Building: Alchemy
-        $platinum += ($dominion->building_alchemy * $platinumPerAlchemy);
+        $gold += $dominion->getBuildingPerkValue('gold_production');
 
-        // Unit Perk Production Reduction (Dragon Unit: Mercenary)
-        $upkeep = $dominion->getUnitPerkProductionBonus('platinum_upkeep');
+        // Unit Perk: Production Bonus
+        $gold += $dominion->getUnitPerkProductionBonus('gold_production');
 
-        $platinum = max(0, $platinum-$upkeep);
+        // Unit Perk Production Reduction
+        $upkeep = $dominion->getUnitPerkProductionBonus('upkeep_gold');
 
-        return $platinum;
+        // Unit Perk: production_from_title
+        $gold += $dominion->getUnitPerkProductionBonusFromTitle('gold');
+
+        $gold = max(0, $gold-$upkeep);
+
+        return $gold;
     }
 
     /**
-     * Returns the Dominion's platinum production multiplier.
+     * Returns the Dominion's gold production multiplier.
      *
-     * Platinum production is modified by:
+     * Gold production is modified by:
      * - Racial Bonus
      * - Spell: Midas Touch (+10%)
      * - Improvement: Science
      * - Guard Tax (-2%)
      * - Tech: Treasure Hunt (+12.5%) or Banker's Foresight (+5%)
      *
-     * Platinum production multiplier is capped at +50%.
+     * Gold production multiplier is capped at +50%.
      *
      * @param Dominion $dominion
      * @return float
      */
-    public function getPlatinumProductionMultiplier(Dominion $dominion): float
+    public function getGoldProductionMultiplier(Dominion $dominion): float
     {
         $multiplier = 0;
 
-        // Values (percentages)
-        $spellMidasTouch = 10;
-
-        if($dominion->race->getPerkValue('guard_tax_exemption'))
-        {
-          $guardTax = 0;
-        }
-        else {
-          $guardTax = -0.02;
-        }
-
         // Racial Bonus
-        $multiplier += $dominion->race->getPerkMultiplier('platinum_production');
+        $multiplier += $dominion->race->getPerkMultiplier('gold_production');
 
         // Techs
-        $multiplier += $dominion->getTechPerkMultiplier('platinum_production');
+        $multiplier += $dominion->getTechPerkMultiplier('gold_production');
 
-        // Improvement: Markets (formerly "Science")
+        // Buildings
+        $multiplier += $dominion->getBuildingPerkMultiplier('gold_production_modifier');
+
+        // Improvement: Markets
         $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'markets');
 
-        // Guard Tax
-        if ($this->guardMembershipService->isGuardMember($dominion)) {
-            $multiplier += $guardTax;
-        }
+        // Land improvements
+        $multiplier += $this->landImprovementCalculator->getGoldProductionBonus($dominion);
 
-        // Beastfolk: Mountain increases platinum production.
-        if($dominion->race->name == 'Beastfolk')
-        {
-          $multiplier += $dominion->{"land_mountain"} / $this->landCalculator->getTotalLand($dominion);
-        }
-
-        // Invasion Spell: Unhealing Wounds (-5% production)
-        if ($this->spellCalculator->isSpellActive($dominion, 'great_fever'))
-        {
-            $multiplier -= 0.05;
-        }
+        // Spells
+        $multiplier += $dominion->getSpellPerkMultiplier('gold_production');
 
         // Apply Morale multiplier to production multiplier
         return (1 + $multiplier) * $this->militaryCalculator->getMoraleMultiplier($dominion);
     }
-
-    //</editor-fold>
-
-    //<editor-fold desc="Food">
 
     /**
      * Returns the Dominion's food production.
@@ -223,20 +167,19 @@ class ProductionCalculator
     {
         $food = 0;
 
-        // Building: Farm
-        $food += ($dominion->building_farm * 80);
+        if($dominion->getSpellPerkValue('no_food_production') or ($dominion->race->getPerkValue('no_food_consumption') and $dominion->race->name !== 'Growth') or $dominion->race->getPerkValue('no_food_production'))
+        {
+            return $food;
+        }
 
-        // Building: Dock
-        $food += ($dominion->building_dock * 35);
-
-        // Building: Tissue
-        $food += ($dominion->building_tissue * 4);
-
-        // Building: Mycelia
-        $food += ($dominion->building_mycelia * 4);
+        // Building
+        $food += $dominion->getBuildingPerkValue('food_production');
 
         // Unit Perk: Production Bonus (Growth Unit)
         $food += $dominion->getUnitPerkProductionBonus('food_production');
+
+        // Unit Perk: sacrified peasants
+        $food += $this->populationCalculator->getPeasantsSacrificed($dominion) * 2;
 
         // Racial Perk: peasants_produce_food
         if($dominion->race->getPerkValue('peasants_produce_food'))
@@ -244,24 +187,13 @@ class ProductionCalculator
           $food += $dominion->peasants * $dominion->race->getPerkValue('peasants_produce_food');
         }
 
-        // Racial Spell: Metabolism (Growth) - Double food production
-        if ($this->spellCalculator->isSpellActive($dominion, 'metabolism'))
-        {
-            $food *= 2;
-        }
+        $food *= 1 + $dominion->getSpellPerkMultiplier('food_production_raw');
 
         return max(0,$food);
     }
 
     /**
      * Returns the Dominion's food production multiplier.
-     *
-     * Food production is modified by:
-     * - Racial Bonus
-     * - Spell: Gaia's Blessing (+20%) or Gaia's Watch (+10%)
-     * - Improvement: Harbor and Tissue
-     * - Tech: Farmer's Growth (+10%)
-     * - Prestige (+1% per 100 prestige, multiplicative)
      *
      * @param Dominion $dominion
      * @return float
@@ -276,58 +208,33 @@ class ProductionCalculator
         // Techs
         $multiplier += $dominion->getTechPerkMultiplier('food_production');
 
-        # SPELLS
+        // Spells
+        $multiplier += $dominion->getSpellPerkMultiplier('food_production');
 
-        // Spell:  Gaia's Blessing (+20%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'gaias_blessing'))
-        {
-            $multiplier += 0.20;
-        }
-
-        // Spell: Gaia's Watch (+10%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'gaias_watch'))
-        {
-            $multiplier += 0.10;
-        }
-
-        // Spell: Rainy Season (+50%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'rainy_season'))
-        {
-            $multiplier += 0.50;
-        }
-
-        // Spell [hostile]: Insect Swarm (-5%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'insect_swarm'))
-        {
-            $multiplier -= 0.05;
-            $multiplier *= (1 - $dominion->race->getPerkMultiplier('damage_from_insect_swarm'));
-        }
-
-        // Invasion Spell: Great Fever (-5% food production)
-        if ($this->spellCalculator->isSpellActive($dominion, 'great_fever'))
-        {
-            $multiplier -= 0.05;
-        }
-
-        # /SPELLS
+        // Buildings
+        $multiplier += $dominion->getBuildingPerkMultiplier('food_production_modifier');
 
         // Improvement: Harbor
         $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'harbor');
 
-        // Improvement: Tissue (growth)
+        // Improvement: Tissue (Growth)
         $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'tissue');
 
         // Prestige Bonus
         $prestigeMultiplier = $this->prestigeCalculator->getPrestigeMultiplier($dominion);
 
-        // Beastfolk: Water increases food production
-        if($dominion->race->name == 'Beastfolk')
-        {
-          $multiplier += 5 * ($dominion->{"land_water"} / $this->landCalculator->getTotalLand($dominion));
-        }
+        // Land improvements
+        $multiplier += $this->landImprovementCalculator->getFoodProductionBonus($dominion);
 
         // Apply Morale multiplier to production multiplier
-        return ((1 + $multiplier) * (1 + $prestigeMultiplier)) * $this->militaryCalculator->getMoraleMultiplier($dominion);
+
+        $moraleMultiplier = $this->militaryCalculator->getMoraleMultiplier($dominion);
+        if($dominion->getSpellPerkMultiplier('food_production') > 0)
+        {
+            $moraleMultiplier = max(1, $moraleMultiplier);
+        }
+
+        return max(-1, ((1 + $multiplier) * (1 + $prestigeMultiplier)) * $moraleMultiplier);
     }
 
     /**
@@ -342,34 +249,83 @@ class ProductionCalculator
      */
     public function getFoodConsumption(Dominion $dominion): float
     {
+        $consumers = 0;
         $consumption = 0;
         $multiplier = 0;
+
+        if($dominion->race->getPerkValue('no_food_consumption'))
+        {
+            return 0;
+        }
+
+        $nonConsumingUnitAttributes = [
+            'ammunition',
+            'equipment',
+            'magical',
+            'machine',
+            'ship',
+            'ethereal'
+          ];
+
+        $consumers += $dominion->peasants;
+
+        # Check each Unit for does_not_count_as_population perk.
+        for ($slot = 1; $slot <= 4; $slot++)
+        {
+              # Get the $unit
+              $unit = $dominion->race->units->filter(function ($unit) use ($slot) {
+                      return ($unit->slot == $slot);
+                  })->first();
+
+              $amount = $dominion->{'military_unit'.$slot};
+
+              # Check for housing_count
+              if($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'housing_count'))
+              {
+                  $amount *= $nonStandardHousing;
+              }
+
+              # Get the unit attributes
+              $unitAttributes = $this->unitHelper->getUnitAttributes($unit);
+
+              if (!$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population') and count(array_intersect($nonConsumingUnitAttributes, $unitAttributes)) === 0)
+              {
+                  $consumers += $dominion->{'military_unit'.$slot};
+                  $consumers += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+              }
+        }
+
+        $consumers += $dominion->military_draftees;
+        $consumers += $dominion->military_spies;
+        $consumers += $dominion->military_wizards;
+        $consumers += $dominion->military_archmages;
 
         // Values
         $populationConsumption = 0.25;
 
         // Population Consumption
-        $consumption += ($this->populationCalculator->getPopulation($dominion) * $populationConsumption);
+        $consumption += $consumers * $populationConsumption;
 
         // Racial Bonus
         $multiplier = $dominion->race->getPerkMultiplier('food_consumption');
 
         // Invasion Spell: Unhealing Wounds (+10% consumption)
-        if ($multiplier !== -1 and $this->spellCalculator->isSpellActive($dominion, 'unhealing_wounds'))
+        if ($multiplier !== -1.00 and $this->spellCalculator->isSpellActive($dominion, 'festering_wounds'))
         {
-            $multiplier += 0.10;
+            $spell = Spell::where('key', 'festering_wounds')->first();
+            $multiplier += 0.10 * $this->spellDamageCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, $spell, null);
         }
 
         // Unit Perk: food_consumption
         $extraFoodEaten = 0;
         for ($unitSlot = 1; $unitSlot <= 4; $unitSlot++)
         {
-          if ($dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'food_consumption'))
-          {
-            $extraFoodUnits = $dominion->{"military_unit".$unitSlot};
-            $extraFoodEatenPerUnit = $dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'food_consumption');
-            $extraFoodEaten += intval($extraFoodUnits * $extraFoodEatenPerUnit);
-          }
+            if ($dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'food_consumption'))
+            {
+                $extraFoodUnits = $dominion->{'military_unit'.$unitSlot};
+                $extraFoodEatenPerUnit = $dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'food_consumption');
+                $extraFoodEaten += intval($extraFoodUnits * $extraFoodEatenPerUnit);
+            }
         }
 
         $consumption += $extraFoodEaten;
@@ -381,48 +337,6 @@ class ProductionCalculator
     }
 
     /**
-     * Returns the Dominion's food decay.
-     *
-     * Food decays 1% per hour.
-     *
-     * @param Dominion $dominion
-     * @return float
-     */
-    public function getFoodDecay(Dominion $dominion): float
-    {
-        $decay = 0;
-
-        $foodDecay = 0.01;
-
-        $decayProtection = 0;
-        $food = $dominion->resource_food;
-
-        # Check for decay protection
-        for ($slot = 1; $slot <= 4; $slot++)
-        {
-          $decayProtectionPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'decay_protection');
-          $amountPerUnit = $decayProtectionPerk[0];
-          $resource = $decayProtectionPerk[1];
-
-          if($decayProtectionPerk and $resource == 'lumber' and $amountPerUnit > 0)
-          {
-            $decayProtection += $dominion->{"military_unit".$slot} * $amountPerUnit;
-          }
-        }
-
-        $food = max(0, $food - $decayProtection);
-
-        // Improvement: Granaries (max -100% decay)
-        $multiplier = 1 - min(1, $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'granaries'));
-
-        $foodDecay *= $multiplier;
-
-        $decay += $food * $foodDecay;
-
-        return $decay;
-    }
-
-    /**
      * Returns the Dominion's net food change.
      *
      * @param Dominion $dominion
@@ -430,7 +344,16 @@ class ProductionCalculator
      */
     public function getFoodNetChange(Dominion $dominion): int
     {
-        return round($this->getFoodProduction($dominion) - $this->getFoodConsumption($dominion) - $this->getFoodDecay($dominion));
+        return round($this->getFoodProduction($dominion) - $this->getFoodConsumption($dominion) - $this->getContribution($dominion, 'food'));
+    }
+
+    public function isOnBrinkOfStarvation(Dominion $dominion): bool
+    {
+        if($dominion->resource_food + $this->getFoodNetChange($dominion) < 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     //</editor-fold>
@@ -461,16 +384,33 @@ class ProductionCalculator
     {
         $lumber = 0;
 
+        if($dominion->getSpellPerkValue('no_lumber_production'))
+        {
+            return $lumber;
+        }
+
         // Values
         $lumberPerLumberyard = 50;
 
         // Building: Lumberyard
-        $lumber += ($dominion->building_lumberyard * $lumberPerLumberyard);
+        $lumber += $dominion->getBuildingPerkValue('lumber_production');
 
         // Unit Perk Production Bonus (Ant Unit: Worker Ant)
         $lumber += $dominion->getUnitPerkProductionBonus('lumber_production');
 
-        return max(0,$lumber);
+        // Unit Perk Production Reduction
+        $upkeep = $dominion->getUnitPerkProductionBonus('upkeep_lumber');
+
+        // Unit Perk: production_from_title
+        $lumber += $dominion->getUnitPerkProductionBonusFromTitle('lumber');
+
+        // Faction Perk: barren_forest_lumber_production
+        foreach ($this->landHelper->getLandTypes($dominion) as $landType)
+        {
+            $lumber += $this->landCalculator->getTotalBarrenLand($dominion, $landType) * $dominion->race->getPerkValue('barren_' . $landType . '_lumber_production');
+        }
+
+        return max(0,$lumber - $upkeep);
     }
 
     /**
@@ -494,21 +434,17 @@ class ProductionCalculator
         // Techs
         $multiplier += $dominion->getTechPerkMultiplier('lumber_production');
 
-        # SPELLS
+        // Buildings
+        $multiplier += $dominion->getBuildingPerkMultiplier('lumber_production_modifier');
 
-        // Spell:  Gaia's Blessing (+20%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'gaias_blessing'))
+        // Title
+        if(isset($dominion->title))
         {
-            $multiplier += 0.10;
+            $multiplier += $dominion->title->getPerkMultiplier('lumber_production') * $dominion->title->getPerkBonus($dominion);
         }
 
-        // Spell: Rainy Season (+50%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'rainy_season'))
-        {
-            $multiplier += 0.50;
-        }
-
-        # /SPELLS
+        // Spells
+        $multiplier += $dominion->getSpellPerkMultiplier('lumber_production');
 
         // Improvement: Forestry
         $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'forestry');
@@ -516,63 +452,6 @@ class ProductionCalculator
         // Apply Morale multiplier to production multiplier
         return (1 + $multiplier) * $this->militaryCalculator->getMoraleMultiplier($dominion);
     }
-
-    /**
-     * Returns the Dominion's lumber decay.
-     *
-     * Lumber decays 1% per hour.
-     *
-     * @param Dominion $dominion
-     * @return float
-     */
-    public function getLumberDecay(Dominion $dominion): float
-    {
-        $decay = 0;
-
-        $lumberDecay = 0.01;
-
-        $decayProtection = 0;
-        $lumber = $dominion->resource_lumber;
-
-        # Check for decay protection
-        for ($slot = 1; $slot <= 4; $slot++)
-        {
-          $decayProtectionPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'decay_protection');
-          $amountPerUnit = $decayProtectionPerk[0];
-          $resource = $decayProtectionPerk[1];
-
-          if($decayProtectionPerk and $resource == 'lumber' and $amountPerUnit > 0)
-          {
-            $decayProtection += $dominion->{"military_unit".$slot} * $amountPerUnit;
-          }
-        }
-
-        $lumber = max(0, $lumber - $decayProtection);
-
-        // Improvement: Granaries (max -100% decay)
-        $multiplier = 1 - min(1, $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'granaries'));
-
-        $lumberDecay *= $multiplier;
-
-        $decay += ($lumber * $lumberDecay);
-
-        return $decay;
-    }
-
-    /**
-     * Returns the Dominion's net lumber change.
-     *
-     * @param Dominion $dominion
-     * @return int
-     */
-    public function getLumberNetChange(Dominion $dominion): int
-    {
-        return round($this->getLumberProduction($dominion) - $this->getLumberDecay($dominion));
-    }
-
-    //</editor-fold>
-
-    //<editor-fold desc="Mana">
 
     /**
      * Returns the Dominion's mana production.
@@ -583,6 +462,11 @@ class ProductionCalculator
     public function getManaProduction(Dominion $dominion): int
     {
         return floor($this->getManaProductionRaw($dominion) * $this->getManaProductionMultiplier($dominion));
+    }
+
+    public function getManaNetChange(Dominion $dominion): int
+    {
+        return round($this->getManaProduction($dominion) - $this->getContribution($dominion, 'mana'));
     }
 
     /**
@@ -598,19 +482,25 @@ class ProductionCalculator
     {
         $mana = 0;
 
-        // Building: Tower
-        $mana += ($dominion->building_tower * 25);
+        if($dominion->getSpellPerkValue('no_mana_production'))
+        {
+            return $mana;
+        }
 
-        // Building: Ziggurat
-        $mana += ($dominion->building_ziggurat * 10);
+        // Buildings
+        $mana += $dominion->getBuildingPerkValue('mana_production');
 
         // Unit Perk Production Bonus
         $mana += $dominion->getUnitPerkProductionBonus('mana_production');
 
-        if($dominion->race->getPerkValue('draftee_mana_production'))
-        {
-          $mana += $dominion->military_draftees * $dominion->race->getPerkValue('draftee_mana_production');
-        }
+        // Unit Perk: production_from_title
+        $mana += $dominion->getUnitPerkProductionBonusFromTitle('mana');
+
+        // Perk: draftee mana production
+        $mana += $dominion->military_draftees * $dominion->race->getPerkValue('draftees_produce_mana');
+
+        // Perk: peasants mana production
+        $mana += $dominion->peasants * $dominion->race->getPerkValue('peasants_produce_mana');
 
         return max(0,$mana);
     }
@@ -630,7 +520,13 @@ class ProductionCalculator
         $multiplier = 0;
 
         // Improvement: Tower
-        $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'towers');
+        #$multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'towers');
+
+        // Spells
+        $multiplier += $dominion->getSpellPerkMultiplier('mana_production');
+
+        // Improvement: Spires
+        $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'spires');
 
         // Racial Bonus
         $multiplier += $dominion->race->getPerkMultiplier('mana_production');
@@ -638,70 +534,11 @@ class ProductionCalculator
         // Techs
         $multiplier += $dominion->getTechPerkMultiplier('mana_production');
 
+        // Buildings
+        $multiplier += $dominion->getBuildingPerkMultiplier('mana_production_modifier');
+
         return (1 + $multiplier);
     }
-
-    /**
-     * Returns the Dominion's mana decay.
-     *
-     * Mana decays 2% per hour.
-     *
-     * @param Dominion $dominion
-     * @return float
-     */
-    public function getManaDecay(Dominion $dominion): float
-    {
-        $decay = 0;
-
-        $manaDecay = 0.02;
-
-        if($dominion->race->getPerkMultiplier('mana_drain'))
-        {
-          $manaDecay *= (1 + $dominion->race->getPerkMultiplier('mana_drain'));
-        }
-
-        $decayProtection = 0;
-        $mana = $dominion->resource_mana;
-
-        # Check for decay protection
-        for ($slot = 1; $slot <= 4; $slot++)
-        {
-          $decayProtectionPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'decay_protection');
-          $amountPerUnit = $decayProtectionPerk[0];
-          $resource = $decayProtectionPerk[1];
-
-          if($decayProtectionPerk and $resource == 'mana' and $amountPerUnit > 0)
-          {
-            $decayProtection += $dominion->{"military_unit".$slot} * $amountPerUnit;
-          }
-        }
-
-        $mana = max(0, $mana - $decayProtection);
-
-        $decay += ($mana * $manaDecay);
-
-        // Unit Perk Production Bonus (Dimensionalists Units)
-        $decay += min($dominion->resource_mana, $dominion->getUnitPerkProductionBonus('mana_drain'));
-
-        return $decay;
-    }
-
-    /**
-     * Returns the Dominion's net mana change.
-     *
-     * @param Dominion $dominion
-     * @return int
-     */
-    public function getManaNetChange(Dominion $dominion): int
-    {
-        $manaDecay = $this->getManaDecay($dominion);
-
-        return round($this->getManaProduction($dominion) - $this->getManaDecay($dominion));
-    }
-
-    //</editor-fold>
-
-    //<editor-fold desc="Ore">
 
     /**
      * Returns the Dominion's ore production.
@@ -728,16 +565,27 @@ class ProductionCalculator
     {
         $ore = 0;
 
+        if($dominion->getSpellPerkValue('no_ore_production'))
+        {
+            return $ore;
+        }
+
         // Values
         $orePerOreMine = 60;
 
-        // Building: Ore Mine
-        $ore += ($dominion->building_ore_mine * $orePerOreMine);
+        // Building
+        $ore += $dominion->getBuildingPerkValue('ore_production');
 
         // Unit Perk Production Bonus (Dwarf Unit: Miner)
         $ore += $dominion->getUnitPerkProductionBonus('ore_production');
 
-        return max(0,$ore);
+        // Unit Perk Production Reduction
+        $upkeep = $dominion->getUnitPerkProductionBonus('upkeep_ore');
+
+        // Unit Perk: production_from_title
+        $ore += $dominion->getUnitPerkProductionBonusFromTitle('ore');
+
+        return max(0,$ore - $upkeep);
     }
 
     /**
@@ -756,43 +604,26 @@ class ProductionCalculator
         // Techs
         $multiplier += $dominion->getTechPerkMultiplier('ore_production');
 
+        // Buildings
+        $multiplier += $dominion->getBuildingPerkMultiplier('ore_production_modifier');
+
+        // Title
+        if(isset($dominion->title))
+        {
+            $multiplier += $dominion->title->getPerkMultiplier('ore_production') * $dominion->title->getPerkBonus($dominion);
+        }
+
         // Improvement: Refinery
         $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'refinery');
 
-        # SPELLS
-        // Spell: Miner's Sight (+10%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'miners_sight'))
-        {
-            $multiplier += 0.10;
-        }
+        // Spells
+        $multiplier += $dominion->getSpellPerkMultiplier('ore_production');
 
-        // Spell: Mining Strength (+10%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'mining_strength'))
-        {
-            $multiplier += 0.10;
-        }
-
-        if ($this->spellCalculator->isSpellActive($dominion, 'earthquake'))
-        {
-            $multiplier -= 0.05;
-        }
-
-        // Spell: Rainy Season (-100%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'rainy_season'))
-        {
-            $multiplier = -1;
-        }
-
-        # /SPELLS
-
+        $multiplier = max(-1, $multiplier);
 
         // Apply Morale multiplier to production multiplier
         return (1 + $multiplier) * $this->militaryCalculator->getMoraleMultiplier($dominion);
     }
-
-    //</editor-fold>
-
-    //<editor-fold desc="Gems">
 
     /**
      * Returns the Dominion's gem production.
@@ -809,7 +640,7 @@ class ProductionCalculator
      * Returns the Dominion's raw gem production.
      *
      * Gems are produced by:
-     * - Building: Diamond Mine (15 per)
+     * - Building: Gem Mine (15 per)
      * - Dwarf Unit: Miner (0.5 per)
      *
      * @param Dominion $dominion
@@ -819,21 +650,19 @@ class ProductionCalculator
     {
         $gems = 0;
 
-        // Values
-        $gemsPerDiamondMine = 15;
+        if($dominion->getSpellPerkValue('no_gem_production'))
+        {
+            return $gems;
+        }
 
-        // Building: Diamond Mine
-        $gems += ($dominion->building_diamond_mine * $gemsPerDiamondMine);
+        // Buildings
+        $gems += $dominion->getBuildingPerkValue('gem_production');
 
         // Unit Perk Production Bonus (Dwarf Unit: Miner)
         $gems += $dominion->getUnitPerkProductionBonus('gem_production');
 
-        // Myconid spell: if Underground Caves is cast, the tech_production
-        // bonus on Psilocybe becomes a gem production bonus.
-        if ($this->spellCalculator->isSpellActive($dominion, 'underground_caves'))
-        {
-            $gems += $dominion->getUnitPerkProductionBonus('tech_production') * 10;
-        }
+        // Unit Perk: production_from_title
+        $gems += $dominion->getUnitPerkProductionBonusFromTitle('gem');
 
         return max(0,$gems);
     }
@@ -855,29 +684,24 @@ class ProductionCalculator
         // Racial Bonus
         $multiplier += $dominion->race->getPerkMultiplier('gem_production');
 
+        // Spell
+        $multiplier += $dominion->getSpellPerkMultiplier('gem_production');
+
         // Techs
         $multiplier += $dominion->getTechPerkMultiplier('gem_production');
 
-        # SPELLS
-        // Spell: Miner's Sight (+5%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'miners_sight'))
+        // Buildings
+        $multiplier += $dominion->getBuildingPerkMultiplier('gem_production_modifier');
+
+        // Title
+        if(isset($dominion->title))
         {
-            $multiplier += 0.05;
+            $multiplier += $dominion->title->getPerkMultiplier('gem_production') * $dominion->title->getPerkBonus($dominion);
         }
 
-        // Spell: Earthquake (-5%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'earthquake'))
-        {
-            $multiplier -= 0.05;
-        }
+        $multiplier += $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'gem_production');
 
-        // Spell: Rainy Season (-100%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'rainy_season'))
-        {
-            $multiplier = -1;
-        }
-
-        # /SPELLS
+        $multiplier = max(-1, $multiplier);
 
         // Apply Morale multiplier to production multiplier
         return (1 + $multiplier) * $this->militaryCalculator->getMoraleMultiplier($dominion);
@@ -907,24 +731,23 @@ class ProductionCalculator
      * @param Dominion $dominion
      * @return float
      */
-    public function getTechProductionRaw(Dominion $dominion): float
-    {
-        $tech = 0;
+     public function getTechProductionRaw(Dominion $dominion): float
+     {
 
-        $tech = max(0, $dominion->prestige);
+         if($dominion->getSpellPerkValue('no_tech_production'))
+         {
+             return 0;
+         }
 
-        // Unit Perk Production Bonus (Sacred Order: Monk)
-        $tech += $dominion->getUnitPerkProductionBonus('tech_production');
+         $tech = max(0, $dominion->prestige);
 
-        // Myconid spell: if Underground Caves is cast, the tech_production
-        // bonus on Psilocybe becomes a gem production bonus.
-        if (!$this->spellCalculator->isSpellActive($dominion, 'underground_caves'))
-        {
-            $tech += $dominion->getUnitPerkProductionBonus('tech_production');
-        }
+         $tech += $dominion->getUnitPerkProductionBonus('tech_production');
 
-        return max(0,$tech);
-    }
+         // Unit Perk: production_from_title
+         $tech += $dominion->getUnitPerkProductionBonusFromTitle('tech');
+
+         return max(0,$tech);
+     }
 
     /**
      * Returns the Dominion's experience point production multiplier.
@@ -941,6 +764,18 @@ class ProductionCalculator
 
         // Racial Bonus
         $multiplier += $dominion->race->getPerkMultiplier('tech_production');
+
+        // Buildings
+        $multiplier += $dominion->getBuildingPerkMultiplier('tech_production_modifier');
+
+        // Title
+        if(isset($dominion->title))
+        {
+            $multiplier += $dominion->title->getPerkMultiplier('tech_production') * $dominion->title->getPerkBonus($dominion);
+        }
+
+        // Spell
+        $multiplier += $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'tech_production');
 
         # Observatory
         $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'observatory');
@@ -960,7 +795,8 @@ class ProductionCalculator
      */
     public function getBoatProduction(Dominion $dominion): float
     {
-        return ($this->getBoatProductionRaw($dominion) * $this->getBoatProductionMultiplier($dominion));
+        return 0;
+        #return ($this->getBoatProductionRaw($dominion) * $this->getBoatProductionMultiplier($dominion));
     }
 
     /**
@@ -976,10 +812,16 @@ class ProductionCalculator
     {
         $boats = 0;
 
-        // Values
-        $docksPerBoatPerTick = 20;
+        if($dominion->getSpellPerkValue('no_boat_production'))
+        {
+            return $boats;
+        }
 
-        $boats += ($dominion->building_dock / $docksPerBoatPerTick);
+        // Buildings
+        $boats += $dominion->getBuildingPerkValue('boat_production');
+
+        // Unit Perk: production_from_title
+        $boats += $dominion->getUnitPerkProductionBonusFromTitle('boats');
 
         return max(0,$boats);
     }
@@ -997,112 +839,71 @@ class ProductionCalculator
     {
         $multiplier = 0;
 
-        // Spell: Great Flood (-25%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'great_flood'))
-        {
-            $multiplier -= 0.25;
-        }
-
-        // Spell: Rainy Season (-100%)
-        if ($this->spellCalculator->isSpellActive($dominion, 'rainy_season'))
-        {
-            $multiplier = -1;
-        }
+        // Spells
+        $multiplier += $dominion->getSpellPerkMultiplier('boat_production');
 
         // Improvement: Harbor
         $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'harbor');
 
-        // Beastfolk: Water increases boat production.
-        if($dominion->race->name == 'Beastfolk')
-        {
-          $multiplier += 5 * ($dominion->{"land_water"} / $this->landCalculator->getTotalLand($dominion));
-        }
-
-
+        // Land improvements
+        $multiplier += $this->landImprovementCalculator->getBoatProductionBonus($dominion);
 
         // Apply Morale multiplier to production multiplier
         return (1 + $multiplier) * $this->militaryCalculator->getMoraleMultiplier($dominion);
     }
 
+    /**
+     * Returns the Dominion's soul production, based on peasants sacrificed.
+     *
+     * @param Dominion $dominion
+     * @return float
+     */
+    public function getSoulProduction(Dominion $dominion): float
+    {
+        return $this->populationCalculator->getPeasantsSacrificed($dominion) * 1;
+    }
 
-        /**
-         * Returns the Dominion's wild yeti production per hour.
-         *
-         * Boats are produced by:
-         * - Building: Gryphon Nest (1 per)
-         *
-         * @param Dominion $dominion
-         * @return float
-         */
-        public function getWildYetiProduction(Dominion $dominion): float
+    /**
+     * Returns the Dominion's blood production, based on peasants sacrificed.
+     *
+     * @param Dominion $dominion
+     * @return float
+     */
+    public function getBloodProduction(Dominion $dominion): float
+    {
+        return $this->populationCalculator->getPeasantsSacrificed($dominion) * 1.5;
+    }
+
+    public function getContributionRate(Realm $realm): float
+    {
+        return max(min($realm->contribution / 100, 0.10),0);
+    }
+
+    public function getContribution(Dominion $dominion, string $resource): float
+    {
+
+        $contribution = 0;
+
+        if($resource === 'food')
         {
-            if(!$dominion->race->getPerkValue('gryphon_nests_generates_wild_yetis'))
-            {
-              return 0;
-            }
-
-            $wildYetis = 0;
-
-            // Values
-            $wildYetisPerGryphonNest = 0.1;
-
-            $wildYetis += intval($dominion->building_gryphon_nest * $wildYetisPerGryphonNest);
-
-            // Snow Elf: Spell (triples wild yeti production)
-            if ($this->spellCalculator->isSpellActive($dominion, 'gryphons_call'))
-            {
-              $wildYetis = $wildYetis * 4;
-            }
-
-            return max(0,$wildYetis);
+            $contribution = $this->getFoodProduction($dominion) * $this->getContributionRate($dominion->realm);
+        }
+        elseif($resource === 'mana')
+        {
+            $contribution = $this->getManaProduction($dominion) * $this->getContributionRate($dominion->realm);
+        }
+        else
+        {
+            return $contribution;
         }
 
-        /**
-         * Returns the Dominion's wild yeti escapees.
-         *
-         * Between 0% and 5% wild yetis escape.
-         *
-         * @param Dominion $dominion
-         * @return float
-         */
-        public function getWildYetiEscaped(Dominion $dominion): float
+        if($contribution > $dominion->{'resource_'.$resource})
         {
-            if(!$dominion->race->getPerkValue('gryphon_nests_generates_wild_yetis'))
-            {
-              return 0;
-            }
-
-            $escaped = 0;
-
-            // Escaped percentage
-            $escaped = rand(0,50) / 1000;
-
-            $escaped += intval($dominion->resource_wild_yeti * $escaped);
-
-            return $escaped;
+            $contribution = ($dominion->{'resource_'.$resource} / 2);
         }
 
-        /**
-         * Returns the Dominion's net wild yeti change.
-         *
-         * @param Dominion $dominion
-         * @return int
-         */
-        public function getWildYetiNetChange(Dominion $dominion): int
-        {
-            #return intval($this->getWildYetiProduction($dominion));
-            return intval($this->getWildYetiProduction($dominion) - $this->getWildYetiEscaped($dominion));
-        }
+        return floor(max(0, $contribution));
 
-        /**
-         * Returns the Dominion's soul production, based on peasants sacrificed.
-         *
-         * @param Dominion $dominion
-         * @return float
-         */
-        public function getSoulProduction(Dominion $dominion): float
-        {
-            return $this->populationCalculator->getPeasantsSacrificed($dominion);
-        }
+    }
 
 }

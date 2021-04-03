@@ -1,42 +1,67 @@
 name: Firewalker
 alignment: good
-description: >-
-  <p>The first Firewalkers of this age were brought into this world by foolhardy icekin miners, who tried to cool down lava sources they found in the mountains and caverns.</p>
-  <p>This unprovoked attack awoke the Firewalkers from their ancient slumber. They drove out the Icekin from the caverns and set up enormous furnaces to resume their endless pursuit into alchemy.</p>
+description:
 home_land_type: mountain
 playable: 1
 
 attacking: 3
 exploring : 2
 converting: 1
+skill_level: 1
+
+construction_materials: gold
 
 perks:
-  gem_production: 10
-  lumber_production: -15
-  damage_from_fireballs: -50
+  damage_from_fireballs: -100
+  max_population: 15
+
 units:
   - name: Fire Sprite
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 250
+      gold: 250
     power:
       offense: 3
+
   - name: Flamewolf
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 250
+      gold: 250
     power:
       defense: 3
+
   - name: Phoenix
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
+      gold: 1000
     power:
-      defense: 6.5
+      defense: 7
     perks:
-      true_immortal: 1
+      dies_into: 3
+
   - name: Magma Giant
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1100
+      gold: 1300
     power:
-      offense: 7
-      defense: 4
+      offense: 10
+      defense: 6
     perks:
       burns_peasants_on_attack: 0.333
+      dies_into_multiple: 1,3

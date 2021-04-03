@@ -59,6 +59,10 @@ if (!function_exists('generate_sentence_from_array')) {
         string $delimiter = ', ',
         string $lastDelimiter = ' and '
     ): string {
+        if(count($stringParts) > 2)
+        {
+            $lastDelimiter = ', and ';
+        }
         return str_replace_last($delimiter, $lastDelimiter, implode($delimiter, $stringParts));
     }
 }
@@ -77,7 +81,7 @@ if (!function_exists('dominion_attr_display')) {
             'morale' => 'morale',
             'spy_strength' => 'percent spy strength',
             'wizard_strength' => 'percent wizard strength',
-            'resource_platinum' => 'platinum',
+            'resource_gold' => 'gold',
             'resource_food' => 'food',
             'resource_lumber' => 'lumber',
             'resource_mana' => 'mana',

@@ -3,13 +3,21 @@
 namespace OpenDominion\Calculators\Dominion;
 
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Race;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Unit;
+use OpenDominion\Models\Spell;
+use Log;
+
 use OpenDominion\Services\Dominion\GovernmentService;
 use OpenDominion\Services\Dominion\QueueService;
 
 # ODA
 use Illuminate\Support\Carbon;
+use OpenDominion\Services\Dominion\GuardMembershipService;
+use OpenDominion\Models\Tech;
+use OpenDominion\Calculators\Dominion\Actions\TechCalculator;
+use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
 
 class MilitaryCalculator
 {
@@ -39,6 +47,15 @@ class MilitaryCalculator
     /** @var SpellCalculator */
     protected $spellCalculator;
 
+    /** @var GuardMembershipService */
+    protected $guardMembershipService;
+
+    /** @var TechCalculator */
+    protected $techCalculator;
+
+    /** @var LandImprovementCalculator */
+    protected $landImprovementCalculator;
+
     /** @var bool */
     protected $forTick = false;
 
@@ -51,6 +68,7 @@ class MilitaryCalculator
      * @param PrestigeCalculator $prestigeCalculator
      * @param QueueService $queueService
      * @param SpellCalculator $spellCalculator
+     * @param TechCalculator $spellCalculator
      */
     public function __construct(
         BuildingCalculator $buildingCalculator,
@@ -59,7 +77,10 @@ class MilitaryCalculator
         LandCalculator $landCalculator,
         PrestigeCalculator $prestigeCalculator,
         QueueService $queueService,
-        SpellCalculator $spellCalculator
+        SpellCalculator $spellCalculator,
+        GuardMembershipService $guardMembershipService,
+        TechCalculator $techCalculator,
+        LandImprovementCalculator $landImprovementCalculator
         )
     {
         $this->buildingCalculator = $buildingCalculator;
@@ -69,6 +90,9 @@ class MilitaryCalculator
         $this->prestigeCalculator = $prestigeCalculator;
         $this->queueService = $queueService;
         $this->spellCalculator = $spellCalculator;
+        $this->guardMembershipService = $guardMembershipService;
+        $this->techCalculator = $techCalculator;
+        $this->landImprovementCalculator = $landImprovementCalculator;
     }
 
     /**
@@ -90,16 +114,17 @@ class MilitaryCalculator
      * @return float
      */
     public function getOffensivePower(
-        Dominion $dominion,
-        Dominion $target = null,
+        Dominion $attacker,
+        Dominion $defender = null,
         float $landRatio = null,
         array $units = null,
-        array $calc = []
+        array $calc = [],
+        array $mindControlledUnits = []
     ): float
     {
-        $op = ($this->getOffensivePowerRaw($dominion, $target, $landRatio, $units, $calc) * $this->getOffensivePowerMultiplier($dominion, $target));
+        $op = ($this->getOffensivePowerRaw($attacker, $defender, $landRatio, $units, $calc, $mindControlledUnits) * $this->getOffensivePowerMultiplier($attacker, $defender));
 
-        return ($op * $this->getMoraleMultiplier($dominion));
+        return ($op * $this->getMoraleMultiplier($attacker));
     }
 
     /**
@@ -112,27 +137,37 @@ class MilitaryCalculator
      * @return float
      */
     public function getOffensivePowerRaw(
-        Dominion $dominion,
-        Dominion $target = null,
+        Dominion $attacker,
+        Dominion $defender = null,
         float $landRatio = null,
         array $units = null,
-        array $calc = []
+        array $calc = [],
+        array $mindControlledUnits = []
     ): float
     {
         $op = 0;
 
-        foreach ($dominion->race->units as $unit) {
-            $powerOffense = $this->getUnitPowerWithPerks($dominion, $target, $landRatio, $unit, 'offense', $calc);
+        foreach ($attacker->race->units as $unit)
+        {
+            $powerOffense = $this->getUnitPowerWithPerks($attacker, $defender, $landRatio, $unit, 'offense', $calc, $units);
             $numberOfUnits = 0;
 
-            if ($units === null) {
-                $numberOfUnits = (int)$dominion->{'military_unit' . $unit->slot};
-            } elseif (isset($units[$unit->slot]) && ((int)$units[$unit->slot] !== 0)) {
+            if ($units === null)
+            {
+                $numberOfUnits = (int)$attacker->{'military_unit' . $unit->slot};
+            }
+            elseif (isset($units[$unit->slot]) && ((int)$units[$unit->slot] !== 0))
+            {
                 $numberOfUnits = (int)$units[$unit->slot];
+                if(isset($mindControlledUnits[$unit->slot]) and $mindControlledUnits[$unit->slot] > 0)
+                {
+                    $numberOfUnits -= $mindControlledUnits[$unit->slot];
+                }
             }
 
-            if ($numberOfUnits !== 0) {
-                $bonusOffense = $this->getBonusPowerFromPairingPerk($dominion, $unit, 'offense', $units);
+            if ($numberOfUnits !== 0)
+            {
+                $bonusOffense = $this->getBonusPowerFromPairingPerk($attacker, $unit, 'offense', $units);
                 $powerOffense += $bonusOffense / $numberOfUnits;
             }
 
@@ -148,32 +183,38 @@ class MilitaryCalculator
      * @param Dominion $dominion
      * @return float
      */
-    public function getOffensivePowerMultiplier(Dominion $dominion, Dominion $target = null): float
+    public function getOffensivePowerMultiplier(Dominion $attacker, Dominion $defender = null): float
     {
         $multiplier = 0;
 
-        // Building: Gryphon Nests
-        $multiplier += $this->getGryphonNestMultiplier($dominion);
+        // Buildings
+        $multiplier += $attacker->getBuildingPerkMultiplier('offensive_power');
+
+        // League: Peacekeepers League
+        $multiplier += $this->getLeagueMultiplier($attacker, $defender, 'offense');
 
         // Improvement: Forges
-        $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'forges');
+        $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($attacker, 'forges');
 
         // Racial Bonus
-        $multiplier += $dominion->race->getPerkMultiplier('offense');
+        $multiplier += $attacker->race->getPerkMultiplier('offense');
 
         // Techs
-        $multiplier += $dominion->getTechPerkMultiplier('offense');
+        $multiplier += $attacker->getTechPerkMultiplier('offense');
 
         // Spell
-        $multiplier += $this->getSpellMultiplier($dominion, $target, 'offense');
+        $multiplier += $this->getSpellMultiplier($attacker, $defender, 'offense');
 
         // Prestige
-        $multiplier += $this->prestigeCalculator->getPrestigeMultiplier($dominion);
+        $multiplier += $this->prestigeCalculator->getPrestigeMultiplier($attacker);
 
-        // Beastfolk: Plains increases OP
-        if($dominion->race->name == 'Beastfolk')
+        // Land improvements
+        $multiplier += $this->landImprovementCalculator->getOffensivePowerBonus($attacker);
+
+        // Nomad: offense_from_barren
+        if($attacker->race->getPerkValue('offense_from_barren'))
         {
-          $multiplier += 0.20 * ($dominion->{"land_plain"} / $this->landCalculator->getTotalLand($dominion));
+            $multiplier += $attacker->race->getPerkValue('offense_from_barren') * ($this->landCalculator->getTotalBarrenLand($attacker) / $this->landCalculator->getTotalLand($attacker));
         }
 
         return (1 + $multiplier);
@@ -211,22 +252,27 @@ class MilitaryCalculator
      * @param float $multiplierReduction
      * @param bool $ignoreDraftees
      * @param bool $isAmbush
+     * @param bool $ignoreRawDpFromBuildings
+     * @param array $invadingUnits
      * @return float
      */
     public function getDefensivePower(
-        Dominion $dominion,
-        Dominion $target = null,
-        float $landRatio = null,
-        array $units = null,
-        float $multiplierReduction = 0,
-        bool $ignoreDraftees = false,
-        bool $isAmbush = false
+        Dominion $defender,                     # 1
+        Dominion $attacker = null,              # 2
+        float $landRatio = null,                # 3
+        array $units = null,                    # 4
+        float $multiplierReduction = 0,         # 5
+        bool $ignoreDraftees = false,           # 6
+        bool $isAmbush = false,                 # 7
+        bool $ignoreRawDpFromBuildings = false, # 8
+        array $invadingUnits = null,            # 9
+        array $mindControlledUnits = null       # 10
     ): float
     {
-        $dp = $this->getDefensivePowerRaw($dominion, $target, $landRatio, $units, $ignoreDraftees, $isAmbush);
-        $dp *= $this->getDefensivePowerMultiplier($dominion, $multiplierReduction);
+        $dp = $this->getDefensivePowerRaw($defender, $attacker, $landRatio, $units, $multiplierReduction, $ignoreDraftees, $isAmbush, $ignoreRawDpFromBuildings, $invadingUnits, $mindControlledUnits);
+        $dp *= $this->getDefensivePowerMultiplier($defender, $attacker, $multiplierReduction);
 
-        return ($dp * $this->getMoraleMultiplier($dominion));
+        return ($dp * $this->getMoraleMultiplier($defender));
     }
 
     /**
@@ -241,13 +287,16 @@ class MilitaryCalculator
      * @return float
      */
     public function getDefensivePowerRaw(
-        Dominion $dominion,
-        Dominion $target = null,
+        Dominion $defender,
+        Dominion $attacker = null,
         float $landRatio = null,
         array $units = null,
         float $multiplierReduction = 0,
         bool $ignoreDraftees = false,
-        bool $isAmbush = false
+        bool $isAmbush = false,
+        bool $ignoreRawDpFromBuildings = false,
+        array $invadingUnits = null,
+        array $mindControlledUnits = null
     ): float
     {
         $dp = 0;
@@ -256,48 +305,52 @@ class MilitaryCalculator
         $minDPPerAcre = 10; # LandDP
         $forestHavenDpPerPeasant = 0.75;
         $peasantsPerForestHaven = 20;
+        $dpPerDraftee = 1;
 
-        # Some draftees are weaker (Ants, Growth), and some draftees
-        # count as no DP. If no DP, draftees do not participate in battle.
-        if($dominion->race->getPerkValue('draftee_dp') !== NULL)
+        if($ignoreDraftees)
         {
-          if($dominion->race->getPerkValue('draftee_dp') == 0)
-          {
-            // EXCEPTION CHECK: Swarm Spell: Chitin (+1 DP per Draftee)
-            if ($this->spellCalculator->isSpellActive($dominion, 'chitin'))
-            {
-              $dpPerDraftee = 1;
-            }
-            else
-            {
-              $dpPerDraftee = 0;
-              $ignoreDraftees = True;
-            }
-          }
-          elseif($dominion->race->getPerkValue('draftee_dp') !== 0)
-          {
-            $dpPerDraftee = $dominion->race->getPerkValue('draftee_dp');
-          }
+            $dpPerDraftee = 0;
         }
         else
         {
-          $dpPerDraftee = 1;
+            if($defender->race->getPerkValue('draftee_dp'))
+            {
+                $dpPerDraftee = $defender->race->getPerkValue('draftee_dp');
+            }
+            else
+            {
+                $dpPerDraftee = 1;
+            }
         }
 
+        # If DP per draftee is 0, ignore them (no casualties).
+        if($dpPerDraftee == 0)
+        {
+          $ignoreDraftees = True;
+        }
+
+        // Peasants
+        $dp += $defender->peasants * $defender->getSpellPerkValue('defensive_power_from_peasants');
+
         // Military
-        foreach ($dominion->race->units as $unit) {
-            $powerDefense = $this->getUnitPowerWithPerks($dominion, $target, $landRatio, $unit, 'defense');
+        foreach ($defender->race->units as $unit)
+        {
+            $powerDefense = $this->getUnitPowerWithPerks($defender, $attacker, $landRatio, $unit, 'defense', null, $units, $invadingUnits);
 
             $numberOfUnits = 0;
 
-            if ($units === null) {
-                $numberOfUnits = (int)$dominion->{'military_unit' . $unit->slot};
-            } elseif (isset($units[$unit->slot]) && ((int)$units[$unit->slot] !== 0)) {
+            if ($units === null)
+            {
+                $numberOfUnits = (int)$defender->{'military_unit' . $unit->slot};
+            }
+            elseif (isset($units[$unit->slot]) && ((int)$units[$unit->slot] !== 0))
+            {
                 $numberOfUnits = (int)$units[$unit->slot];
             }
 
-            if ($numberOfUnits !== 0) {
-                $bonusDefense = $this->getBonusPowerFromPairingPerk($dominion, $unit, 'defense', $units);
+            if ($numberOfUnits !== 0)
+            {
+                $bonusDefense = $this->getBonusPowerFromPairingPerk($defender, $unit, 'defense', $units);
                 $powerDefense += $bonusDefense / $numberOfUnits;
             }
 
@@ -305,31 +358,42 @@ class MilitaryCalculator
         }
 
         // Draftees
-        if (!$ignoreDraftees)
+        if (!$ignoreDraftees or isset($units['draftees']))
         {
-            if ($units !== null && isset($units[0])) {
+
+            if ($units !== null && isset($units[0]))
+            {
                 $dp += ((int)$units[0] * $dpPerDraftee);
-            } else {
-                $dp += ($dominion->military_draftees * $dpPerDraftee);
+            }
+            elseif ($units !== null && isset($units['draftees']))
+            {
+                $dp += ((int)$units['draftees'] * $dpPerDraftee);
+            }
+            else
+            {
+                $dp += ($defender->military_draftees * $dpPerDraftee);
             }
         }
 
-        // Building: Forest Havens
-        $dp += min(
-            ($dominion->peasants * $forestHavenDpPerPeasant),
-            ($dominion->building_forest_haven * $forestHavenDpPerPeasant * $peasantsPerForestHaven)
-        ); // todo: recheck this
+        if (!$ignoreRawDpFromBuildings)
+        {
+            // Buildings
+            $dp += $defender->getBuildingPerkValue('raw_defense');
+        }
 
-        // Void: Ziggurat
-        $dp += $dominion->building_ziggurat * 4;
-
-        // Beastfolk: Ambush (reduce raw DP by 2 x Forest %, max -10)
+        // Beastfolk: Ambush (reduce raw DP by 2 x Forest %, max -10%, which get by doing $forestRatio/5)
         if($isAmbush)
         {
-          $forestRatio = $target->{'land_forest'} / $this->landCalculator->getTotalLand($target);
-          $forestRatioModifier = $forestRatio / 5;
-          $ambushReduction = min($forestRatioModifier, 0.10);
-          $dp = $dp * (1 - $ambushReduction);
+            #echo "<pre>\tAmbush!\t";
+            #echo 'Reduction: ' . $this->getRawDefenseAmbushReductionRatio($attacker) . '%, lowering $dp from '. $dp;
+            $dp = $dp * (1 - $this->getRawDefenseAmbushReductionRatio($attacker));
+            #echo ' to '. $dp . '</pre>';
+        }
+
+        // Cult: Mind Controlled units provide 2 DP each
+        if(isset($mindControlledUnits) and array_sum($mindControlledUnits) > 0)
+        {
+            $dp += array_sum($mindControlledUnits) * 2;
         }
 
         // Attacking Forces skip land-based defenses
@@ -338,10 +402,9 @@ class MilitaryCalculator
             return $dp;
         }
 
-        return max(
-            $dp,
-            ($minDPPerAcre * $this->landCalculator->getTotalLand($dominion))
-        );
+        $dp = max($dp, $minDPPerAcre * $this->landCalculator->getTotalLand($defender));
+
+        return $dp;
     }
 
     /**
@@ -351,12 +414,12 @@ class MilitaryCalculator
      * @param float $multiplierReduction
      * @return float
      */
-    public function getDefensivePowerMultiplier(Dominion $dominion, float $multiplierReduction = 0): float
+    public function getDefensivePowerMultiplier(Dominion $dominion, Dominion $attacker = null, float $multiplierReduction = 0): float
     {
         $multiplier = 0;
 
-        // Building: Guard Towers
-        $multiplier += $this->getGuardTowerMultiplier($dominion);
+        // Buildings
+        $multiplier += $dominion->getBuildingPerkMultiplier('defensive_power');
 
         // Improvement: Forges
         $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'walls');
@@ -368,12 +431,15 @@ class MilitaryCalculator
         $multiplier += $dominion->getTechPerkMultiplier('defense');
 
         // Spell
-        $multiplier += $this->getSpellMultiplier($dominion, null, 'defense');
+        $multiplier += $this->getSpellMultiplier($dominion, $attacker, 'defense');
 
-        // Beastfolk: Plains increases DP
-        if($dominion->race->name == 'Beastfolk')
+        // Land improvements
+        $multiplier += $this->landImprovementCalculator->getDefensivePowerBonus($dominion);
+
+        // Simian: defense_from_forest
+        if($dominion->race->getPerkValue('defense_from_forest'))
         {
-          $multiplier += 0.2 * ($dominion->{"land_hill"} / $this->landCalculator->getTotalLand($dominion));
+            $multiplier += $this->getDefensivePowerModifierFromLandType($dominion, 'forest');
         }
 
         // Multiplier reduction when we want to factor in temples from another dominion
@@ -410,7 +476,9 @@ class MilitaryCalculator
         ?float $landRatio,
         Unit $unit,
         string $powerType,
-        array $calc = []
+        ?array $calc = [],
+        array $units = null,
+        array $invadingUnits = null
     ): float
     {
         $unitPower = $unit->{"power_$powerType"};
@@ -426,19 +494,29 @@ class MilitaryCalculator
         $unitPower += $this->getUnitPowerFromHoursPerk($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromMilitaryPercentagePerk($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromVictoriesPerk($dominion, $unit, $powerType);
+        $unitPower += $this->getUnitPowerFromNetVictoriesPerk($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromResourcePerk($dominion, $unit, $powerType);
+        $unitPower += $this->getUnitPowerFromResourceExhaustingPerk($dominion, $unit, $powerType);
+        $unitPower += $this->getUnitPowerFromTimePerk($dominion, $unit, $powerType);
+        $unitPower += $this->getUnitPowerFromSpell($dominion, $unit, $powerType);
+        $unitPower += $this->getUnitPowerFromAdvancement($dominion, $unit, $powerType);
+        $unitPower += $this->getUnitPowerFromRulerTitle($dominion, $unit, $powerType);
+        $unitPower += $this->getUnitPowerFromBuildingsBasedPerk($dominion, $unit, $powerType); # This perk uses multiple buildings!
 
-        if ($landRatio !== null) {
+        if ($landRatio !== null)
+        {
             $unitPower += $this->getUnitPowerFromStaggeredLandRangePerk($dominion, $landRatio, $unit, $powerType);
         }
 
-        if ($target !== null || !empty($calc)) {
-            $unitPower += $this->getUnitPowerFromVersusRacePerk($dominion, $target, $unit, $powerType);
+        if ($target !== null || !empty($calc))
+        {
             $unitPower += $this->getUnitPowerFromVersusBuildingPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromVersusLandPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromVersusBarrenLandPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromVersusPrestigePerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromVersusResourcePerk($dominion, $target, $unit, $powerType, $calc);
+            $unitPower += $this->getUnitPowerFromMob($dominion, $target, $unit, $powerType, $calc, $units, $invadingUnits);
+            $unitPower += $this->getUnitPowerFromVersusSpellPerk($dominion, $target, $unit, $powerType, $calc);
         }
 
         return $unitPower;
@@ -455,20 +533,9 @@ class MilitaryCalculator
         $landType = $landPerkData[0];
         $ratio = (int)$landPerkData[1];
         $max = (int)$landPerkData[2];
-        $constructedOnly = false;
-        //$constructedOnly = $landPerkData[3]; todo: implement for Nox?
         $totalLand = $this->landCalculator->getTotalLand($dominion);
 
-        if (!$constructedOnly)
-        {
-            $landPercentage = ($dominion->{"land_{$landType}"} / $totalLand) * 100;
-        }
-        else
-        {
-            $buildingsForLandType = $this->buildingCalculator->getTotalBuildingsForLandType($dominion, $landType);
-
-            $landPercentage = ($buildingsForLandType / $totalLand) * 100;
-        }
+        $landPercentage = ($dominion->{"land_{$landType}"} / $totalLand) * 100;
 
         $powerFromLand = $landPercentage / $ratio;
         $powerFromPerk = min($powerFromLand, $max);
@@ -480,7 +547,8 @@ class MilitaryCalculator
     {
         $buildingPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_building", null);
 
-        if (!$buildingPerkData) {
+        if (!$buildingPerkData)
+        {
             return 0;
         }
 
@@ -488,7 +556,7 @@ class MilitaryCalculator
         $ratio = (int)$buildingPerkData[1];
         $max = (int)$buildingPerkData[2];
         $totalLand = $this->landCalculator->getTotalLand($dominion);
-        $landPercentage = ($dominion->{"building_{$buildingType}"} / $totalLand) * 100;
+        $landPercentage = ($this->buildingCalculator->getBuildingAmountOwned($dominion, null, $buildingType) / $totalLand) * 100;
 
         $powerFromBuilding = $landPercentage / $ratio;
         $powerFromPerk = min($powerFromBuilding, $max);
@@ -616,7 +684,7 @@ class MilitaryCalculator
             $range = ((int)$rangePerk[0]) / 100;
             $power = (float)$rangePerk[1];
 
-            if ($range > $landRatio) { // TODO: Check this, might be a bug here
+            if ($range > $landRatio) {
                 continue;
             }
 
@@ -624,22 +692,6 @@ class MilitaryCalculator
         }
 
         return $powerFromPerk;
-    }
-
-    protected function getUnitPowerFromVersusRacePerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType): float
-    {
-        if ($target === null) {
-            return 0;
-        }
-
-        $raceNameFormatted = strtolower($target->race->name);
-        $raceNameFormatted = str_replace(' ', '_', $raceNameFormatted);
-
-        $versusRacePerk = $dominion->race->getUnitPerkValueForUnitSlot(
-            $unit->slot,
-            "{$powerType}_vs_{$raceNameFormatted}");
-
-        return $versusRacePerk;
     }
 
     protected function getBonusPowerFromPairingPerk(Dominion $dominion, Unit $unit, string $powerType, array $units = null): float
@@ -652,7 +704,7 @@ class MilitaryCalculator
         }
 
         $unitSlot = (int)$pairingPerkData[0];
-        $amount = (int)$pairingPerkData[1];
+        $amount = (float)$pairingPerkData[1];
         if (isset($pairingPerkData[2]))
         {
             $numRequired = (float)$pairingPerkData[2];
@@ -679,7 +731,7 @@ class MilitaryCalculator
         return $powerFromPerk;
     }
 
-    protected function getUnitPowerFromVersusBuildingPerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, array $calc = []): float
+    protected function getUnitPowerFromVersusBuildingPerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = []): float
     {
         if ($target === null && empty($calc)) {
             return 0;
@@ -702,7 +754,7 @@ class MilitaryCalculator
             }
         } elseif ($target !== null) {
             $totalLand = $this->landCalculator->getTotalLand($target);
-            $landPercentage = ($target->{"building_{$buildingType}"} / $totalLand) * 100;
+            $landPercentage = ($this->buildingCalculator->getBuildingAmountOwned($dominion, null, $buildingType) / $totalLand) * 100;
         }
 
         $powerFromBuilding = $landPercentage / $ratio;
@@ -716,7 +768,7 @@ class MilitaryCalculator
     }
 
 
-    protected function getUnitPowerFromVersusLandPerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, array $calc = []): float
+    protected function getUnitPowerFromVersusLandPerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = []): float
     {
         if ($target === null && empty($calc)) {
             return 0;
@@ -752,7 +804,7 @@ class MilitaryCalculator
         return $powerFromPerk;
     }
 
-    protected function getUnitPowerFromVersusBarrenLandPerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, array $calc = []): float
+    protected function getUnitPowerFromVersusBarrenLandPerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = []): float
     {
         if ($target === null && empty($calc))
         {
@@ -766,9 +818,10 @@ class MilitaryCalculator
         }
 
         $ratio = (int)$versusLandPerkData[0];
-        $max = (int)$versusLandPerkData[1];
+        $max = (float)$versusLandPerkData[1];
 
         $barrenLandPercentage = 0;
+
         if (!empty($calc))
         {
             # Override land percentage for invasion calculator
@@ -784,8 +837,8 @@ class MilitaryCalculator
             $barrenLandPercentage = ($barrenLand / $totalLand) * 100;
         }
 
-
         $powerFromLand = $barrenLandPercentage / $ratio;
+
         if ($max < 0)
         {
             $powerFromPerk = max(-1 * $powerFromLand, $max);
@@ -793,12 +846,6 @@ class MilitaryCalculator
         else
         {
             $powerFromPerk = min($powerFromLand, $max);
-        }
-
-        # No barren bonus vs. Barbarian (for now)
-        if($target !== null and $target->race->name == 'Barbarian')
-        {
-          $powerFromPerk = 0;
         }
 
         return $powerFromPerk;
@@ -818,6 +865,7 @@ class MilitaryCalculator
 
     protected function getUnitPowerFromHoursPerk(Dominion $dominion, Unit $unit, string $powerType): float
     {
+
         $hoursPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_per_hour", null);
 
         if (!$hoursPerkData or !$dominion->round->hasStarted())
@@ -869,7 +917,6 @@ class MilitaryCalculator
         return $powerFromPerk;
     }
 
-
     protected function getUnitPowerFromMilitaryPercentagePerk(Dominion $dominion, Unit $unit, string $powerType): float
     {
         $militaryPercentagePerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, $powerType . "_from_military_percentage");
@@ -892,19 +939,15 @@ class MilitaryCalculator
         $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_wizards');
         $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_archmages');
 
-        # Check each Unit for does_not_count_as_population perk.
         for ($unitSlot = 1; $unitSlot <= 4; $unitSlot++)
         {
-          if (!$dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'does_not_count_as_population'))
-          {
             $military += $this->getTotalUnitsForSlot($dominion, $unitSlot);
             $military += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unitSlot}");
-          }
         }
 
         $militaryPercentage = min(1, $military / ($military + $dominion->peasants));
 
-        $powerFromPerk = min($militaryPercentagePerk * $militaryPercentage, 1);
+        $powerFromPerk = min($militaryPercentagePerk * $militaryPercentage, 2);
 
         return $powerFromPerk;
     }
@@ -928,7 +971,27 @@ class MilitaryCalculator
         return $powerFromPerk;
     }
 
-    protected function getUnitPowerFromVersusResourcePerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, array $calc = []): float
+
+    protected function getUnitPowerFromNetVictoriesPerk(Dominion $dominion, Unit $unit, string $powerType): float
+    {
+        $victoriesPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, $powerType . "_from_net_victories");
+
+        if (!$victoriesPerk)
+        {
+            return 0;
+        }
+        $netVictories = $this->getNetVictories($dominion);
+        $netVictoriesForPerk = max(0, $netVictories);
+
+        $powerPerVictory = (float)$victoriesPerk[0];
+        $max = (float)$victoriesPerk[1];
+
+        $powerFromPerk = min($powerPerVictory * $netVictoriesForPerk, $max);
+
+        return $powerFromPerk;
+    }
+
+    protected function getUnitPowerFromVersusResourcePerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = []): float
     {
         if ($target === null && empty($calc))
         {
@@ -1012,6 +1075,260 @@ class MilitaryCalculator
         return $powerFromPerk;
     }
 
+    protected function getUnitPowerFromResourceExhaustingPerk(Dominion $dominion, Unit $unit, string $powerType): float
+    {
+
+        $fromResourcePerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_resource_exhausting", null);
+
+        if(!$fromResourcePerkData)
+        {
+            return 0;
+        }
+
+        $resource = (string)$fromResourcePerkData[0];
+        $ratio = (float)$fromResourcePerkData[1];
+
+        $powerFromPerk = $dominion->{'resource_' . $resource} / $ratio;
+
+        return $powerFromPerk;
+    }
+
+      protected function getUnitPowerFromMob(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = [], array $units = null, array $invadingUnits = null): float
+      {
+
+          if ($target === null and empty($calc))
+          {
+              return 0;
+          }
+
+          $mobPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_mob", null);
+
+          if(!$mobPerk)
+          {
+              return 0;
+          }
+
+          $powerFromPerk = 0;
+
+          if (!empty($calc))
+          {
+              #return 0;
+              # Override resource amount for invasion calculator
+              if (isset($calc['opposing_units']))
+              {
+                  if($calc['units_sent'] > $calc['opposing_units'])
+                  {
+                      $powerFromPerk = $mobPerk[0];
+                  }
+              }
+          }
+          elseif ($target !== null)
+          {
+              # mob_on_offense: Do we ($units) outnumber the defenders ($target)?
+              if($powerType == 'offense')
+              {
+                  $targetUnits = 0;
+                  $targetUnits += $target->draftees;
+                  $targetUnits += $target->military_unit1;
+                  $targetUnits += $target->military_unit2;
+                  $targetUnits += $target->military_unit3;
+                  $targetUnits += $target->military_unit4;
+
+                  if(isset($units))
+                  {
+                      if(array_sum($units) > $targetUnits)
+                      {
+                          $powerFromPerk = $mobPerk[0];
+                      }
+                  }
+
+              }
+
+              # mob_on_offense: Do we ($dominion) outnumber the attackers ($units)?
+              if($powerType == 'defense')
+              {
+                  $mobUnits = 0;
+                  $mobUnits += $dominion->draftees;
+                  $mobUnits += $dominion->military_unit1;
+                  $mobUnits += $dominion->military_unit2;
+                  $mobUnits += $dominion->military_unit3;
+                  $mobUnits += $dominion->military_unit4;
+
+                  if(isset($invadingUnits) and $mobUnits > array_sum($invadingUnits))
+                  {
+                      $powerFromPerk = $mobPerk[0];
+                  }
+              }
+          }
+
+          return $powerFromPerk;
+      }
+
+      protected function getUnitPowerFromTimePerk(Dominion $dominion, Unit $unit, string $powerType): float
+      {
+
+          $timePerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_time", null);
+
+          if (!$timePerkData or !$dominion->round->hasStarted())
+          {
+              return 0;
+          }
+
+          $powerFromTime = (float)$timePerkData[2];
+
+          $hourFrom = $timePerkData[0];
+          $hourTo = $timePerkData[1];
+          if (
+              (($hourFrom < $hourTo) and (now()->hour >= $hourFrom and now()->hour < $hourTo)) or
+              (($hourFrom > $hourTo) and (now()->hour >= $hourFrom or now()->hour < $hourTo))
+          )
+          {
+              $powerFromPerk = $powerFromTime;
+          }
+          else
+          {
+              $powerFromPerk = 0;
+          }
+
+          return $powerFromPerk;
+      }
+
+      protected function getUnitPowerFromSpell(Dominion $dominion, Unit $unit, string $powerType): float
+      {
+
+          $spellPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_spell", null);
+          $powerFromPerk = 0;
+
+          if (!$spellPerkData)
+          {
+              return 0;
+          }
+
+          $powerFromSpell = (float)$spellPerkData[1];
+          $spell = (string)$spellPerkData[0];
+
+          if ($this->spellCalculator->isSpellActive($dominion, $spell))
+          {
+              $powerFromPerk = $powerFromSpell;
+          }
+
+          return $powerFromPerk;
+
+      }
+
+      # Untested/unused
+      protected function getUnitPowerFromVersusSpellPerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = []): float
+      {
+          if ($target === null && empty($calc))
+          {
+              return 0;
+          }
+
+          $spellPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_versus_spell", null);
+
+          if(!$spellPerkData)
+          {
+              return 0;
+          }
+
+          $powerVersusSpell = (float)$spellPerkData[1];
+          $spell = $spellPerkData[0];
+
+          if (!empty($calc))
+          {
+              # Override resource amount for invasion calculator
+              if (isset($calc[$spell]))
+              {
+                  $powerFromPerk = $powerVersusSpell;
+              }
+          }
+          elseif ($target !== null)
+          {
+              if($targetSpellActive = $this->spellCalculator->isSpellActive($target, $spell));
+              {
+                  $powerFromPerk = $powerVersusSpell;
+              }
+          }
+
+          return $powerFromPerk;
+      }
+
+
+
+      protected function getUnitPowerFromAdvancement(Dominion $dominion, Unit $unit, string $powerType): float
+      {
+
+          $advancementPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_advancements", null);
+          $powerFromPerk = 0;
+
+          if (!$advancementPerkData)
+          {
+              return 0;
+          }
+
+          foreach($advancementPerkData as $advancementSet)
+          {
+                $key = $advancementSet[0];
+                $power = (float)$advancementSet[1];
+                $tech = Tech::where('key', $key)->first();
+
+                if($this->techCalculator->hasTech($dominion, $tech))
+                {
+                    $powerFromPerk += $power;
+                }
+          }
+
+          return $powerFromPerk;
+      }
+
+      protected function getUnitPowerFromRulerTitle(Dominion $dominion, Unit $unit, string $powerType): float
+      {
+
+          $titlePerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_title", null);
+          $powerFromPerk = 0;
+
+          if (!$titlePerkData)
+          {
+              return 0;
+          }
+
+          if($dominion->title->key == $titlePerkData[0])
+          {
+              $powerFromPerk += $titlePerkData[1];
+          }
+
+          return $powerFromPerk;
+      }
+
+      protected function getUnitPowerFromBuildingsBasedPerk(Dominion $dominion, Unit $unit, string $powerType): float
+      {
+          $buildingsPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_buildings", null);
+
+          if (!$buildingsPerkData)
+          {
+              return 0;
+          }
+
+          $buildingTypes = $buildingsPerkData[0];
+          $ratio = (int)$buildingsPerkData[1];
+          $max = (int)$buildingsPerkData[2];
+          $totalLand = $this->landCalculator->getTotalLand($dominion);
+          $buildingsLand = 0;
+
+          foreach($buildingTypes as $buildingKey)
+          {
+              $buildingsLand += $this->buildingCalculator->getBuildingAmountOwned($dominion, null, $buildingKey);
+              $buildingsLand += $this->queueService->getConstructionQueueTotalByResource($dominion, 'building_' . $buildingKey);
+          }
+
+          $landPercentage = ($buildingsLand / $totalLand) * 100;
+
+          $powerFromBuilding = $landPercentage / $ratio;
+          $powerFromPerk = min($powerFromBuilding, $max);
+
+          return $powerFromPerk;
+      }
+
     /**
      * Returns the Dominion's morale modifier.
      *
@@ -1033,7 +1350,7 @@ class MilitaryCalculator
      */
     public function getSpyRatio(Dominion $dominion, string $type = 'offense'): float
     {
-        return ($this->getSpyRatioRaw($dominion, $type) * $this->getSpyRatioMultiplier($dominion));
+        return ($this->getSpyRatioRaw($dominion, $type) * $this->getSpyRatioMultiplier($dominion)  * (0.9 + $dominion->spy_strength / 1000));
     }
 
     /**
@@ -1047,15 +1364,21 @@ class MilitaryCalculator
         $spies = $dominion->military_spies;
 
         // Add units which count as (partial) spies (Lizardfolk Chameleon)
-        foreach ($dominion->race->units as $unit) {
-            if ($type === 'offense' && $unit->getPerkValue('counts_as_spy_offense')) {
+        foreach ($dominion->race->units as $unit)
+        {
+            if ($type === 'offense' && $unit->getPerkValue('counts_as_spy_offense'))
+            {
                 $spies += floor($dominion->{"military_unit{$unit->slot}"} * (float) $unit->getPerkValue('counts_as_spy_offense'));
             }
 
-            if ($type === 'defense' && $unit->getPerkValue('counts_as_spy_defense')) {
+            if ($type === 'defense' && $unit->getPerkValue('counts_as_spy_defense'))
+            {
                 $spies += floor($dominion->{"military_unit{$unit->slot}"} * (float) $unit->getPerkValue('counts_as_spy_defense'));
             }
         }
+
+        // Shroud
+        $spies *= 1 + $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'spy_strength');
 
         return ($spies / $this->landCalculator->getTotalLand($dominion));
     }
@@ -1079,10 +1402,13 @@ class MilitaryCalculator
         // Tech
         $multiplier += $dominion->getTechPerkMultiplier('spy_strength');
 
-        // Beastfolk: Cavern increases Spy Strength
-        if($dominion->race->name == 'Beastfolk')
+        // Buildings
+        $multiplier += $dominion->getBuildingPerkMultiplier('spy_strength');
+
+        // Title
+        if(isset($dominion->title))
         {
-          $multiplier += 1 * ($dominion->{"land_cavern"} / $this->landCalculator->getTotalLand($dominion));
+            $multiplier += $dominion->title->getPerkMultiplier('spy_strength') * $dominion->title->getPerkBonus($dominion);
         }
 
         return (1 + $multiplier);
@@ -1111,7 +1437,7 @@ class MilitaryCalculator
      */
     public function getWizardRatio(Dominion $dominion, string $type = 'offense'): float
     {
-        return ($this->getWizardRatioRaw($dominion, $type) * $this->getWizardRatioMultiplier($dominion));
+        return ($this->getWizardRatioRaw($dominion, $type) * $this->getWizardRatioMultiplier($dominion) * (0.9 + $dominion->wizard_strength / 1000));
     }
 
     /**
@@ -1125,13 +1451,28 @@ class MilitaryCalculator
         $wizards = $dominion->military_wizards + ($dominion->military_archmages * 2);
 
         // Add units which count as (partial) spies (Dark Elf Adept)
-        foreach ($dominion->race->units as $unit) {
-            if ($type === 'offense' && $unit->getPerkValue('counts_as_wizard_offense')) {
+        foreach ($dominion->race->units as $unit)
+        {
+            if ($type === 'offense' && $unit->getPerkValue('counts_as_wizard_offense'))
+            {
                 $wizards += floor($dominion->{"military_unit{$unit->slot}"} * (float) $unit->getPerkValue('counts_as_wizard_offense'));
             }
 
-            if ($type === 'defense' && $unit->getPerkValue('counts_as_wizard_defense')) {
+            if ($type === 'defense' && $unit->getPerkValue('counts_as_wizard_defense'))
+            {
                 $wizards += floor($dominion->{"military_unit{$unit->slot}"} * (float) $unit->getPerkValue('counts_as_wizard_defense'));
+            }
+
+            # Check for wizard_from_title
+            $titlePerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "wizard_from_title", null);
+            if($titlePerkData)
+            {
+                $titleKey = $titlePerkData[0];
+                $titlePower = $titlePerkData[1];
+                if($dominion->title->key == $titleKey)
+                {
+                    $wizards += floor($dominion->{"military_unit{$unit->slot}"} * (float) $titlePower);
+                }
             }
         }
 
@@ -1151,17 +1492,17 @@ class MilitaryCalculator
         // Racial bonus
         $multiplier += $dominion->race->getPerkMultiplier('wizard_strength');
 
-        // Improvement: Towers
-        $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'towers');
+        // Improvement: Spires
+        $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'spires');
 
         // Tech
         $multiplier += $dominion->getTechPerkMultiplier('wizard_strength');
 
-        // Beastfolk: Swamp increases Wizard Strength
-        if($dominion->race->name == 'Beastfolk')
-        {
-          $multiplier += 2 * ($dominion->{"land_swamp"} / $this->landCalculator->getTotalLand($dominion))  * $this->prestigeCalculator->getPrestigeMultiplier($dominion);
-        }
+        // Buildings
+        $multiplier += $dominion->getBuildingPerkMultiplier('wizard_strength');
+
+        // Land improvements
+        $multiplier += $this->landImprovementCalculator->getWizardPowerBonus($dominion);
 
         return (1 + $multiplier);
     }
@@ -1183,6 +1524,59 @@ class MilitaryCalculator
     }
 
     /**
+     * Returns the Dominion's raw wizard ratio.
+     *
+     * @param Dominion $dominion
+     * @return float
+     */
+    public function getWizardPoints(Dominion $dominion, string $type = 'offense'): float
+    {
+        $wizardPoints = $dominion->military_wizards + ($dominion->military_archmages * 2);
+
+        // Add units which count as (partial) spies (Dark Elf Adept)
+        foreach ($dominion->race->units as $unit)
+        {
+            if ($type === 'offense' && $unit->getPerkValue('counts_as_wizard_offense'))
+            {
+                $wizardPoints += floor($dominion->{"military_unit{$unit->slot}"} * (float) $unit->getPerkValue('counts_as_wizard_offense'));
+            }
+
+            if ($type === 'defense' && $unit->getPerkValue('counts_as_wizard_defense'))
+            {
+                $wizardPoints += floor($dominion->{"military_unit{$unit->slot}"} * (float) $unit->getPerkValue('counts_as_wizard_defense'));
+            }
+        }
+
+        return $wizardPoints * $this->getWizardRatioMultiplier($dominion);
+    }
+
+    /**
+     * Returns the Dominion's raw wizard ratio.
+     *
+     * @param Dominion $dominion
+     * @return float
+     */
+    public function getSpyPoints(Dominion $dominion, string $type = 'offense'): float
+    {
+        $spyPoints = $dominion->military_spies;
+
+        foreach ($dominion->race->units as $unit)
+        {
+            if ($type === 'offense' && $unit->getPerkValue('counts_as_spy_offense'))
+            {
+                $spyPoints += floor($dominion->{"military_unit{$unit->slot}"} * (float) $unit->getPerkValue('counts_as_wizard_offense'));
+            }
+
+            if ($type === 'defense' && $unit->getPerkValue('counts_as_spy_defense'))
+            {
+                $spyPoints += floor($dominion->{"military_unit{$unit->slot}"} * (float) $unit->getPerkValue('counts_as_spy_defense'));
+            }
+        }
+
+        return $spyPoints * $this->getSpyRatioMultiplier($dominion);
+    }
+
+    /**
      * Returns the number of boats protected by a Dominion's docks and harbor improvements.
      *
      * @param Dominion $dominion
@@ -1191,7 +1585,7 @@ class MilitaryCalculator
     public function getBoatsProtected(Dominion $dominion): float
     {
         // Docks
-        $boatsProtected = static::BOATS_PROTECTED_PER_DOCK * $dominion->building_dock;
+        $boatsProtected = $dominion->getBuildingPerkValue('boat_protection');
         // Habor
         $boatsProtected *= 1 + $this->improvementCalculator->getImprovementMultiplierBonus($dominion, 'harbor');
         return $boatsProtected;
@@ -1222,12 +1616,12 @@ class MilitaryCalculator
      * @param Dominion $dominion
      * @return int
      */
-    public function getRecentlyInvadedCount(Dominion $dominion): int
+    public function getRecentlyInvadedCount(Dominion $dominion, int $hours = 6): int
     {
         // todo: this touches the db. should probably be in invasion or military service instead
         $invasionEvents = GameEvent::query()
             #->where('created_at', '>=', now()->subDay(1))
-            ->where('created_at', '>=', now()->subHours(6))
+            ->where('created_at', '>=', now()->subHours($hours))
             ->where([
                 'target_type' => Dominion::class,
                 'target_id' => $dominion->id,
@@ -1240,7 +1634,8 @@ class MilitaryCalculator
             return 0;
         }
 
-        $invasionEvents = $invasionEvents->filter(function (GameEvent $event) {
+        $invasionEvents = $invasionEvents->filter(function (GameEvent $event)
+        {
             return !$event->data['result']['overwhelmed'];
         });
 
@@ -1250,18 +1645,18 @@ class MilitaryCalculator
     /**
      * Returns the number of time the Dominion was recently invaded by the attacker.
      *
-     * 'Recent' refers to the past 6 hours.
+     * 'Recent' refers to the past 2 hours by default.
      *
      * @param Dominion $dominion
      * @return int
      */
-    public function getRecentlyInvadedCountByAttacker(Dominion $dominion, Dominion $attacker, int $hours = 2): int
+    public function getRecentlyInvadedCountByAttacker(Dominion $defender, Dominion $attacker, int $hours = 2): int
     {
         $invasionEvents = GameEvent::query()
             ->where('created_at', '>=', now()->subHours($hours))
             ->where([
                 'target_type' => Dominion::class,
-                'target_id' => $dominion->id,
+                'target_id' => $defender->id,
                 'source_id' => $attacker->id,
                 'type' => 'invasion',
             ])
@@ -1281,45 +1676,15 @@ class MilitaryCalculator
     }
 
     /**
-     * Checks Dominion was recently invaded by attacker.
-     *
-     * 'Recent' refers to the past 24 hours.
-     *
-     * @param Dominion $dominion
-     * @param Dominion $attacker
-     * @return bool
-     */
-    public function recentlyInvadedBy(Dominion $dominion, Dominion $attacker): bool
-    {
-        // todo: this touches the db. should probably be in invasion or military service instead
-        $invasionEvents = GameEvent::query()
-            ->where('created_at', '>=', now()->subDay(1))
-            ->where([
-                'target_type' => Dominion::class,
-                'target_id' => $dominion->id,
-                'source_id' => $attacker->id,
-                'type' => 'invasion',
-            ])
-            ->get();
-
-        if (!$invasionEvents->isEmpty()) {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    /**
      * Checks if $defender recently invaded $attacker's realm.
      *
-     * 'Recent' refers to the past 24 hours.
+     * 'Recent' refers to the past 6 hours.
      *
      * @param Dominion $dominion
      * @param Dominion $attacker
      * @return bool
      */
-    public function recentlyInvadedAttackersRealm(Dominion $attacker, Dominion $defender = null): bool
+    public function isOwnRealmRecentlyInvadedByTarget(Dominion $attacker, Dominion $defender = null): bool
     {
         if($defender)
         {
@@ -1329,7 +1694,7 @@ class MilitaryCalculator
                               ->where('game_events.created_at', '>=', now()->subHours(6))
                               ->where([
                                   'game_events.type' => 'invasion',
-                                  'source_dominion.realm_id' => $defender->realm_id,
+                                  'game_events.source_id' => $defender->id,
                                   'target_dominion.realm_id' => $attacker->realm_id,
                               ])
                               ->get();
@@ -1350,156 +1715,42 @@ class MilitaryCalculator
 
     }
 
-
-    # ODA functions
-
-    /**
-     * Gets the dominion's bonus from Gryphon Nests.
-     *
-     * @param Dominion $dominion
-     * @return float
-     */
-    public function getGryphonNestMultiplier(Dominion $dominion): float
-    {
-      if ($this->spellCalculator->isSpellActive($dominion, 'gryphons_call'))
-      {
-          return 0;
-      }
-      $multiplier = 0;
-      $multiplier = ($dominion->building_gryphon_nest / $this->landCalculator->getTotalLand($dominion)) * 2;
-
-      return min($multiplier, 0.40);
-    }
-
     /**
      * Gets the dominion's OP or DP ($power) bonus from spells.
      *
      * @param Dominion $dominion
      * @return float
      */
-    public function getSpellMultiplier(Dominion $dominion, Dominion $target = null, string $power = null): float
+    public function getSpellMultiplier(Dominion $dominion, Dominion $target = null, string $power): float
     {
 
       $multiplier = 0;
 
       if($power == 'offense')
       {
-        // Spell: Bloodrage (+10% OP)
-        if ($this->spellCalculator->isSpellActive($dominion, 'bloodrage'))
-        {
-          $multiplier += 0.10;
-        }
+          $multiplier += $dominion->getSpellPerkMultiplier('offensive_power');# $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'offensive_power');
 
-        // Spell: Crusade (+10% OP)
-        if ($this->spellCalculator->isSpellActive($dominion, 'crusade'))
-        {
-          $multiplier += 0.10;
-        }
-
-        // Spell: Howling (+10% OP)
-        if ($this->spellCalculator->isSpellActive($dominion, 'howling'))
-        {
-          $multiplier += 0.10;
-        }
-
-        // Spell: Coastal Cannons
-        if ($this->spellCalculator->isSpellActive($dominion, 'killing_rage'))
-        {
-          $multiplier += 0.10;
-        }
-
-        // Spell: Warsong (+10% OP)
-        if ($this->spellCalculator->isSpellActive($dominion, 'warsong'))
-        {
-          $multiplier += 0.10;
-        }
-
-        // Spell: Nightfall (+5% OP)
-        if ($this->spellCalculator->isSpellActive($dominion, 'nightfall'))
-        {
-          $multiplier += 0.05;
-        }
-
-        // Spell: Aether (+10% OP)
-        # Condition: must have equal amounts of every unit.
-        if ($this->spellCalculator->isSpellActive($dominion, 'aether'))
-        {
-          if($dominion->military_unit1 > 0
-            and $dominion->military_unit1 == $dominion->military_unit2
-            and $dominion->military_unit2 == $dominion->military_unit3
-            and $dominion->military_unit3 == $dominion->military_unit4)
-            {
-              $multiplier += 0.10;
-            }
-        }
-
-        // Spell: Retribution (+10% OP)
-        # Condition: target must have invaded $dominion's realm in the last six hours.
-        if ($this->spellCalculator->isSpellActive($dominion, 'retribution'))
-        {
-          if($this->recentlyInvadedAttackersRealm($dominion, $target))
+          // Spell: Retribution (+20% OP)
+          # Condition: target must have invaded $dominion's realm in the last six hours.
+          if ($dominion->getSpellPerkValue('offensive_power_on_retaliation') and $this->isOwnRealmRecentlyInvadedByTarget($dominion, $target))
           {
-            $multiplier += 0.10;
+              $multiplier += $dominion->getSpellPerkMultiplier('offensive_power_on_retaliation');
           }
-        }
 
       }
       elseif($power == 'defense')
       {
-        // Spell: Howling (+10% DP)
-        if ($this->spellCalculator->isSpellActive($dominion, 'howling'))
-        {
-          $multiplier += 0.10;
-        }
+          $multiplier += $dominion->getSpellPerkMultiplier('defensive_power');# $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'defensive_power');
 
-        // Spell: Icekin Blizzard (+5% DP)
-        if ($this->spellCalculator->isSpellActive($dominion, 'blizzard'))
-        {
-          $multiplier += 0.5;
-        }
+          // Spell: Chitin
+          if(isset($target))
+          {
+              if ($dominion->getSpellPerkValue('defensive_power_vs_insect_swarm') and $this->spellCalculator->isSpellActive($target, 'insect_swarm'))
+              {
+                  $multiplier += $dominion->getSpellPerkValue('defensive_power_vs_insect_swarm');
+              }
+          }
 
-        // Spell: Halfling Defensive Frenzy (+20% DP)
-        if ($this->spellCalculator->isSpellActive($dominion, 'defensive_frenzy'))
-        {
-          $multiplier += 0.10;
-        }
-
-        // Spell: Coastal Cannons
-        if ($this->spellCalculator->isSpellActive($dominion, 'coastal_cannons'))
-        {
-          $multiplierFromCoastalCannons = $dominion->{'land_water'} / $this->landCalculator->getTotalLand($dominion);
-          $multiplier += min($multiplierFromCoastalCannons,0.20);
-        }
-
-        // Spell: Norse Fimbulwinter (+10% DP)
-        if ($this->spellCalculator->isSpellActive($dominion, 'fimbulwinter'))
-        {
-          $multiplier += 0.10;
-        }
-
-        // Spell: Simian Rainy Season (+100% DP)
-        if ($this->spellCalculator->isSpellActive($dominion, 'rainy_season'))
-        {
-          $multiplier += 1.00;
-        }
-
-        // Spell: Aether (+10% DP)
-        # Condition: must have equal amounts of every unit.
-        if ($this->spellCalculator->isSpellActive($dominion, 'aether'))
-        {
-          if($dominion->military_unit1 > 0
-            and $dominion->military_unit1 == $dominion->military_unit2
-            and $dominion->military_unit2 == $dominion->military_unit3
-            and $dominion->military_unit3 == $dominion->military_unit4)
-            {
-              $multiplier += 0.10;
-            }
-        }
-
-      }
-      else
-      {
-        $multiplier = 0; # Remove this eventually.
       }
 
       return $multiplier;
@@ -1507,16 +1758,212 @@ class MilitaryCalculator
     }
 
     /**
-     * Gets the dominion's bonus from Guard Towers.
+     * Gets the dominion's bonus from League.
      *
      * @param Dominion $dominion
      * @return float
      */
-    public function getGuardTowerMultiplier(Dominion $dominion): float
+    public function getLeagueMultiplier(Dominion $attacker, Dominion $defender = Null, string $type): float
     {
-      $multiplier = 0;
-      $multiplier = ($dominion->building_guard_tower / $this->landCalculator->getTotalLand($dominion)) * 2;
+        $multiplier = 0;
 
-      return min($multiplier, 0.40);
+        if($type == 'offense')
+        {
+            if(isset($defender))
+            {
+                if($this->guardMembershipService->isEliteGuardMember($attacker) and $this->guardMembershipService->isEliteGuardMember($defender))
+                {
+                    $multiplier += 0.05;
+                }
+            }
+        }
+
+        return $multiplier;
     }
+
+
+    /**
+     * Get the dominion's base morale modifier.
+     *
+     * @param Dominion $dominion
+     * @return float
+     */
+    public function getBaseMoraleModifier(Dominion $dominion, int $population): float
+    {
+        $modifier = 0;
+        $unitsIncreasingMorale = 0;
+        $population = max($population, 1);
+        # Look for increases_morale
+        for ($slot = 1; $slot <= 4; $slot++)
+        {
+            if($increasesMorale = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'increases_morale'))
+            {
+                # $increasesMorale is 1 for Immortal Guard and 2 for Immortal Knight
+                $unitsIncreasingMorale += $this->getTotalUnitsForSlot($dominion, $slot) * $increasesMorale;
+            }
+        }
+
+        $modifier += $unitsIncreasingMorale / $population;
+
+        $modifier += $dominion->getBuildingPerkMultiplier('base_morale');
+
+        return $modifier;
+
+    }
+
+    /**
+     * Get the dominion's prestige gain perk.
+     *
+     * @param Dominion $dominion
+     * @return float
+     */
+    public function getPrestigeGainsPerk(Dominion $dominion, array $units): float
+    {
+        $unitsIncreasingPrestige = 0;
+        # Look for increases_prestige_gains
+        foreach($units as $slot => $amount)
+        {
+            if($increasesPrestige = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'increases_prestige_gains'))
+            {
+                $unitsIncreasingPrestige += $amount * $increasesPrestige;
+            }
+        }
+
+        return $unitsIncreasingPrestige / array_sum($units);
+    }
+
+
+    /**
+     * Simple true/false if Dominion has units returning from battle.
+     *
+     * @param Dominion $dominion
+     * @return float
+     */
+    public function hasReturningUnits(Dominion $dominion): bool
+    {
+        $hasReturningUnits = 0;
+        for ($slot = 1; $slot <= 4; $slot++)
+        {
+            $hasReturningUnits += $this->queueService->getInvasionQueueTotalByResource($dominion, "military_unit{$slot}");
+        }
+
+        return $hasReturningUnits;
+    }
+
+
+    /*
+    *   Land gains formula go here, because they break the game when they were in the Land Calculator.
+    *   (???)
+    *
+    */
+
+    public function getLandConquered(Dominion $attacker, Dominion $defender, float $landRatio): int
+    {
+        $rangeMultiplier = $landRatio/100;
+
+        $attackerLandWithRatioModifier = ($this->landCalculator->getTotalLand($attacker));
+
+        if ($landRatio < 55)
+        {
+            $landConquered = (0.304 * ($rangeMultiplier ** 2) - 0.227 * $rangeMultiplier + 0.048) * $attackerLandWithRatioModifier;
+        }
+        elseif ($landRatio < 75)
+        {
+            $landConquered = (0.154 * $rangeMultiplier - 0.069) * $attackerLandWithRatioModifier;
+        }
+        else
+        {
+            $landConquered = (0.129 * $rangeMultiplier - 0.048) * $attackerLandWithRatioModifier;
+        }
+
+        $landConquered *= 0.75;
+
+        return round(max(10, $landConquered));
+    }
+
+    public function checkDiscoverLand(Dominion $attacker, Dominion $defender): int
+    {
+        if($this->getRecentlyInvadedCountByAttacker($defender,$attacker) == 0 and !$defender->isAbandoned())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public function getExtraLandDiscovered(Dominion $attacker, Dominion $defender, bool $discoverLand, int $landConquered): int
+    {
+        $multiplier = 0;
+
+        if(!$discoverLand)
+        {
+            return 0;
+        }
+
+        if($defender->race->name === 'Barbarian')
+        {
+            $landConquered /= 3;
+        }
+
+        // Spells
+        $multiplier += $attacker->getSpellPerkMultiplier('land_discovered');
+
+        // Buildings
+        $multiplier += $attacker->getBuildingPerkMultiplier('land_discovered');
+
+        // Improvement
+        $multiplier += $this->improvementCalculator->getImprovementMultiplierBonus($attacker, 'cartography');
+
+        // Resource: XP (max +100% from 1,000,000 XP) – only for factions which cannot take advancements (Troll)
+        if($attacker->race->getPerkValue('cannot_tech'))
+        {
+            $multiplier += min($attacker->resource_tech, 1000000) / 1000000;
+        }
+
+        return round($landConquered * $multiplier);
+
+    }
+
+    public function getRawDefenseAmbushReductionRatio(Dominion $attacker): float
+    {
+        $ambushSpellKey = 'ambush';
+        $ambushReductionRatio = 0.0;
+
+        if(!$this->spellCalculator->isSpellActive($attacker, $ambushSpellKey))
+        {
+            return $ambushReductionRatio;
+        }
+
+        $spell = Spell::where('key', $ambushSpellKey)->first();
+
+        $spellPerkValues = $spell->getActiveSpellPerkValues($spell->key, 'reduces_target_raw_defense_from_land');
+
+        $reduction = $spellPerkValues[0];
+        $ratio = $spellPerkValues[1];
+        $landType = $spellPerkValues[2];
+        $max = $spellPerkValues[3] / 100;
+
+        $landTypeRatio = $attacker->{'land_' . $landType} / $this->landCalculator->getTotalLand($attacker);
+
+        $ambushReductionRatio = min(($landTypeRatio / $ratio) * $reduction, $max);
+
+        return $ambushReductionRatio;
+    }
+
+    public function getDefensivePowerModifierFromLandType(Dominion $dominion, string $landType): float
+    {
+        $multiplier = 0.0;
+
+        $multiplier += $dominion->race->getPerkValue('defense_from_'.$landType) * ($dominion->{'land_'.$landType} / $this->landCalculator->getTotalLand($dominion));
+
+        return $multiplier;
+    }
+
+    public function getNetVictories(Dominion $dominion): int
+    {
+        return $dominion->stat_attacking_success - $dominion->stat_defending_failures;
+    }
+
 }

@@ -1,1346 +1,2565 @@
 # <Ladder: Casualties>
 
-casualties_level1:
-  name: Tactics (1/6)
-  cost_multiplier: 0
+tactics_level1:
+  name: Tactics
+  level: 1
   perks:
     fewer_casualties_offense: 5
     fewer_casualties_defense: 5
 
-casualties_level2:
-  name: Tactics (2/6)
-  cost_multiplier: 10
+tactics_level2:
+  name: Tactics
+  level: 2
   perks:
     fewer_casualties_offense: 10
     fewer_casualties_defense: 10
   requires:
-    - casualties_level1
+    - tactics_level1
 
-casualties_level3:
-  name: Tactics (3/6)
-  cost_multiplier: 20
+tactics_level3:
+  name: Tactics
+  level: 3
   perks:
     fewer_casualties_offense: 15
     fewer_casualties_defense: 15
   requires:
-    - casualties_level2
+    - tactics_level2
 
-casualties_level4:
-  name: Tactics (4/6)
-  cost_multiplier: 30
+tactics_level4:
+  name: Tactics
+  level: 4
   perks:
     fewer_casualties_offense: 20
     fewer_casualties_defense: 20
   requires:
-    - casualties_level3
+    - tactics_level3
 
-casualties_level5:
-  name: Tactics (5/6)
-  cost_multiplier: 40
+tactics_level5:
+  name: Tactics
+  level: 5
   perks:
     fewer_casualties_offense: 25
     fewer_casualties_defense: 25
   requires:
-    - casualties_level4
+    - tactics_level4
 
-casualties_level6:
-  name: Tactics (6/6)
-  cost_multiplier: 50
+tactics_level6:
+  name: Tactics
+  level: 6
   perks:
     fewer_casualties_offense: 30
     fewer_casualties_defense: 30
   requires:
-    - casualties_level5
+    - tactics_level5
+
+tactics_level7:
+  name: Tactics
+  level: 7
+  perks:
+    fewer_casualties_offense: 32.5
+    fewer_casualties_defense: 32.5
+  requires:
+    - tactics_level6
+
+tactics_level8:
+  name: Tactics
+  level: 8
+  perks:
+    fewer_casualties_offense: 35
+    fewer_casualties_defense: 35
+  requires:
+    - tactics_level7
+
+tactics_level9:
+  name: Tactics
+  level: 9
+  perks:
+    fewer_casualties_offense: 37.5
+    fewer_casualties_defense: 37.5
+  requires:
+    - tactics_level8
+
+tactics_level10:
+  name: Tactics
+  level: 10
+  perks:
+    fewer_casualties_offense: 40
+    fewer_casualties_defense: 40
+  requires:
+    - tactics_level9
 
 # </Ladder: Casualties>
 
 # <Ladder: Training Costs>
 
-training_costs_level1:
-  name: Anvils (1/6)
-  cost_multiplier: 0
+anvils_level1:
+  name: Anvils
+  level: 1
   perks:
     military_cost: -2.5
 
-training_costs_level2:
-  name: Anvils (2/6)
-  cost_multiplier: 10
+anvils_level2:
+  name: Anvils
+  level: 2
   perks:
     military_cost: -5
   requires:
-    - training_costs_level1
+    - anvils_level1
 
-training_costs_level3:
-  name: Anvils (3/6)
-  cost_multiplier: 20
+anvils_level3:
+  name: Anvils
+  level: 3
   perks:
     military_cost: -7.5
   requires:
-    - training_costs_level2
+    - anvils_level2
 
-training_costs_level4:
-  name: Anvils (4/6)
-  cost_multiplier: 30
+anvils_level4:
+  name: Anvils
+  level: 4
   perks:
     military_cost: -10
   requires:
-    - training_costs_level3
+    - anvils_level3
 
-training_costs_level5:
-  name: Anvils (5/6)
-  cost_multiplier: 40
+anvils_level5:
+  name: Anvils
+  level: 5
   perks:
     military_cost: -12.5
   requires:
-    - training_costs_level4
+    - anvils_level4
 
-training_costs_level6:
-  name: Anvils (6/6)
-  cost_multiplier: 50
+anvils_level6:
+  name: Anvils
+  level: 6
   perks:
     military_cost: -15
   requires:
-    - training_costs_level5
+    - anvils_level5
+
+anvils_level7:
+  name: Anvils
+  level: 7
+  perks:
+    military_cost: -16.25
+  requires:
+    - anvils_level6
+
+anvils_level8:
+  name: Anvils
+  level: 8
+  perks:
+    military_cost: -17.5
+  requires:
+    - anvils_level7
+
+anvils_level9:
+  name: Anvils
+  level: 9
+  perks:
+    military_cost: -18.75
+  requires:
+    - anvils_level8
+
+anvils_level10:
+  name: Anvils
+  level: 10
+  perks:
+    military_cost: -20
+  requires:
+    - anvils_level9
 
 # </Ladder: Training Costs>
 
 # <Ladder: Offensive Power>
 
-offensive_power_level1:
-  name: Strategy (1/6)
-  cost_multiplier: 0
+strategy_level1:
+  name: Strategy
+  level: 1
   perks:
     offense: 2.5
 
-offensive_power_level2:
-  name: Strategy (2/6)
-  cost_multiplier: 10
+strategy_level2:
+  name: Strategy
+  level: 2
   perks:
     offense: 5
   requires:
-    - offensive_power_level1
+    - strategy_level1
 
-offensive_power_level3:
-  name: Strategy (3/6)
-  cost_multiplier: 20
+strategy_level3:
+  name: Strategy
+  level: 3
   perks:
     offense: 7.5
   requires:
-    - offensive_power_level2
+    - strategy_level2
 
-offensive_power_level4:
-  name: Strategy (4/6)
-  cost_multiplier: 30
+strategy_level4:
+  name: Strategy
+  level: 4
   perks:
     offense: 10
   requires:
-    - offensive_power_level3
+    - strategy_level3
 
-offensive_power_level5:
-  name: Strategy (5/6)
-  cost_multiplier: 40
+strategy_level5:
+  name: Strategy
+  level: 5
   perks:
     offense: 12.5
   requires:
-    - offensive_power_level4
+    - strategy_level4
 
-offensive_power_level6:
-  name: Strategy (6/6)
-  cost_multiplier: 50
+strategy_level6:
+  name: Strategy
+  level: 6
   perks:
     offense: 15
   requires:
-    - offensive_power_level5
+    - strategy_level5
+
+strategy_level7:
+  name: Strategy
+  level: 7
+  perks:
+    offense: 16.25
+  requires:
+    - strategy_level6
+
+strategy_level8:
+  name: Strategy
+  level: 8
+  perks:
+    offense: 17.5
+  requires:
+    - strategy_level7
+
+strategy_level9:
+  name: Strategy
+  level: 9
+  perks:
+    offense: 18.75
+  requires:
+    - strategy_level8
+
+strategy_level10:
+  name: Strategy
+  level: 10
+  perks:
+    offense: 20
+  requires:
+    - strategy_level9
 
 # </Ladder: Offensive Power>
 
 # <Ladder: Architecture>
 
-construction_rezoning_level1:
-  name: Architecture (1/6)
-  cost_multiplier: 0
+architecture_level1:
+  name: Architecture
+  level: 1
   perks:
     construction_cost: -5
     rezone_cost: -5
 
-construction_rezoning_level2:
-  name: Architecture (2/6)
-  cost_multiplier: 10
+architecture_level2:
+  name: Architecture
+  level: 2
   perks:
     construction_cost: -10
     rezone_cost: -10
   requires:
-    - construction_rezoning_level1
+    - architecture_level1
 
-construction_rezoning_level3:
-  name: Architecture (3/6)
-  cost_multiplier: 20
+architecture_level3:
+  name: Architecture
+  level: 3
   perks:
     construction_cost: -15
     rezone_cost: -15
   requires:
-    - construction_rezoning_level2
+    - architecture_level2
 
-construction_rezoning_level4:
-  name: Architecture (4/6)
-  cost_multiplier: 30
+architecture_level4:
+  name: Architecture
+  level: 4
   perks:
     construction_cost: -20
     rezone_cost: -20
   requires:
-    - construction_rezoning_level3
+    - architecture_level3
 
-construction_rezoning_level5:
-  name: Architecture (5/6)
-  cost_multiplier: 40
+architecture_level5:
+  name: Architecture
+  level: 5
   perks:
     construction_cost: -25
     rezone_cost: -25
   requires:
-    - construction_rezoning_level4
+    - architecture_level4
 
-construction_rezoning_level6:
-  name: Architecture (6/6)
-  cost_multiplier: 50
+architecture_level6:
+  name: Architecture
+  level: 6
   perks:
     construction_cost: -30
     rezone_cost: -30
   requires:
-    - construction_rezoning_level5
+    - architecture_level5
+
+architecture_level7:
+  name: Architecture
+  level: 7
+  perks:
+    construction_cost: -32.5
+    rezone_cost: -32.5
+  requires:
+    - architecture_level6
+
+architecture_level8:
+  name: Architecture
+  level: 8
+  perks:
+    construction_cost: -35
+    rezone_cost: -35
+  requires:
+    - architecture_level7
+
+architecture_level9:
+  name: Architecture
+  level: 9
+  perks:
+    construction_cost: -37.5
+    rezone_cost: -37.5
+  requires:
+    - architecture_level8
+
+architecture_level10:
+  name: Architecture
+  level: 10
+  perks:
+    construction_cost: -40
+    rezone_cost: -40
+  requires:
+    - architecture_level9
 
 # </Ladder: Architecture>
 
 # <Ladder: Scouts>
 
-explore_platinum_level1:
-  name: Scouts (1/6)
-  cost_multiplier: 0
+scounts_level1:
+  name: Scouts
+  level: 1
   perks:
-    explore_platinum_cost: -5
+    explore_gold_cost: -5
 
-explore_platinum_level2:
-  name: Scouts (2/6)
-  cost_multiplier: 10
+scounts_level2:
+  name: Scouts
+  level: 2
   perks:
-    explore_platinum_cost: -10
+    explore_gold_cost: -10
   requires:
-    - explore_platinum_level1
+    - scounts_level1
 
-explore_platinum_level3:
-  name: Scouts (3/6)
-  cost_multiplier: 20
+scounts_level3:
+  name: Scouts
+  level: 3
   perks:
-    explore_platinum_cost: -15
+    explore_gold_cost: -15
   requires:
-    - explore_platinum_level2
+    - scounts_level2
 
-explore_platinum_level4:
-  name: Scouts (4/6)
-  cost_multiplier: 30
+scounts_level4:
+  name: Scouts
+  level: 4
   perks:
-    explore_platinum_cost: -20
+    explore_gold_cost: -20
   requires:
-    - explore_platinum_level3
+    - scounts_level3
 
-explore_platinum_level5:
-  name: Scouts (5/6)
-  cost_multiplier: 40
+scounts_level5:
+  name: Scouts
+  level: 5
   perks:
-    explore_platinum_cost: -25
+    explore_gold_cost: -25
   requires:
-    - explore_platinum_level4
+    - scounts_level4
 
-explore_platinum_level6:
-  name: Scouts (6/6)
-  cost_multiplier: 50
+scounts_level6:
+  name: Scouts
+  level: 6
   perks:
-    explore_platinum_cost: -30
+    explore_gold_cost: -30
   requires:
-    - explore_platinum_level5
+    - scounts_level5
+
+scounts_level7:
+  name: Scouts
+  level: 7
+  perks:
+    explore_gold_cost: -32.5
+  requires:
+    - scounts_level6
+
+scounts_level8:
+  name: Scouts
+  level: 8
+  perks:
+    explore_gold_cost: -35
+  requires:
+    - scounts_level7
+
+scounts_level9:
+  name: Scouts
+  level: 9
+  perks:
+    explore_gold_cost: -37.5
+  requires:
+    - scounts_level8
+
+scounts_level10:
+  name: Scouts
+  level: 10
+  perks:
+    explore_gold_cost: -40
+  requires:
+    - scounts_level9
 
 # </Ladder: Scouts>
 
 # <Ladder: Convoy>
 
-explore_draftee_level1:
-  name: Convoy (1/6)
-  cost_multiplier: 0
+convoy_level1:
+  name: Convoy
+  level: 1
   perks:
     explore_draftee_cost: -1
 
-explore_draftee_level2:
-  name: Convoy (2/6)
-  cost_multiplier: 10
+convoy_level2:
+  name: Convoy
+  level: 2
   perks:
     explore_draftee_cost: -2
   requires:
-    - explore_draftee_level1
+    - convoy_level1
 
-explore_draftee_level3:
-  name: Convoy (3/6)
-  cost_multiplier: 20
+convoy_level3:
+  name: Convoy
+  level: 3
   perks:
     explore_draftee_cost: -3
   requires:
-    - explore_draftee_level2
+    - convoy_level2
 
-explore_draftee_level4:
-  name: Convoy (4/6)
-  cost_multiplier: 30
+convoy_level4:
+  name: Convoy
+  level: 4
   perks:
     explore_draftee_cost: -4
   requires:
-    - explore_draftee_level3
+    - convoy_level3
 
-explore_draftee_level5:
-  name: Convoy (5/6)
-  cost_multiplier: 40
+convoy_level5:
+  name: Convoy
+  level: 5
   perks:
     explore_draftee_cost: -5
   requires:
-    - explore_draftee_level4
+    - convoy_level4
 
-explore_draftee_level6:
-  name: Convoy (6/6)
-  cost_multiplier: 50
+convoy_level6:
+  name: Convoy
+  level: 6
   perks:
     explore_draftee_cost: -6
   requires:
-    - explore_draftee_level5
+    - convoy_level5
+
+convoy_level7:
+  name: Convoy
+  level: 7
+  perks:
+    explore_draftee_cost: -6
+  requires:
+    - convoy_level6
+
+convoy_level8:
+  name: Convoy
+  level: 8
+  perks:
+    explore_draftee_cost: -7
+  requires:
+    - convoy_level7
+
+convoy_level9:
+  name: Convoy
+  level: 9
+  perks:
+    explore_draftee_cost: -7
+  requires:
+    - convoy_level8
+
+convoy_level10:
+  name: Convoy
+  level: 10
+  perks:
+    explore_draftee_cost: -8
+  requires:
+    - convoy_level9
 
 # </Ladder: Convoy>
 
 # <Ladder: Agents Costs>
 
-spy_costs_losses_level1:
-  name: Agents (1/6)
-  cost_multiplier: 0
+agents_level1:
+  name: Agents
+  level: 1
   perks:
     spy_cost: -5
     spy_losses: -5
 
-spy_costs_losses_level2:
-  name: Agents (2/6)
-  cost_multiplier: 10
+agents_level2:
+  name: Agents
+  level: 2
   perks:
     spy_cost: -10
     spy_losses: -10
   requires:
-    - spy_costs_losses_level1
+    - agents_level1
 
-spy_costs_losses_level3:
-  name: Agents (3/6)
-  cost_multiplier: 20
+agents_level3:
+  name: Agents
+  level: 3
   perks:
     spy_cost: -15
     spy_losses: -15
   requires:
-    - spy_costs_losses_level2
+    - agents_level2
 
-spy_costs_losses_level4:
-  name: Agents (4/6)
-  cost_multiplier: 30
+agents_level4:
+  name: Agents
+  level: 4
   perks:
     spy_cost: -20
     spy_losses: -20
   requires:
-    - spy_costs_losses_level3
+    - agents_level3
 
-spy_costs_losses_level5:
-  name: Agents (5/6)
-  cost_multiplier: 40
+agents_level5:
+  name: Agents
+  level: 5
   perks:
     spy_cost: -25
     spy_losses: -25
   requires:
-    - spy_costs_losses_level4
+    - agents_level4
 
-spy_costs_losses_level6:
-  name: Agents (6/6)
-  cost_multiplier: 50
+agents_level6:
+  name: Agents
+  level: 6
   perks:
     spy_cost: -30
     spy_losses: -30
   requires:
-    - spy_costs_losses_level5
+    - agents_level5
+
+agents_level7:
+  name: Agents
+  level: 7
+  perks:
+    spy_cost: -32.5
+    spy_losses: -32.5
+  requires:
+    - agents_level6
+
+agents_level8:
+  name: Agents
+  level: 8
+  perks:
+    spy_cost: -35
+    spy_losses: -35
+  requires:
+    - agents_level7
+
+agents_level9:
+  name: Agents
+  level: 9
+  perks:
+    spy_cost: -37.5
+    spy_losses: -37.5
+  requires:
+    - agents_level8
+
+agents_level10:
+  name: Agents
+  level: 10
+  perks:
+    spy_cost: -40
+    spy_losses: -40
+  requires:
+    - agents_level9
 
 # </Ladder: Agents Costs>
 
-
 # <Ladder: Intelligence Costs>
 
-spy_strength_and_recovery_level1:
-  name: Intelligence (1/6)
-  cost_multiplier: 0
+intelligence_level1:
+  name: Intelligence
+  level: 1
   perks:
     spy_strength: 2.5
     spy_strength_recovery: 0
 
-spy_strength_and_recovery_level2:
-  name: Intelligence (2/6)
-  cost_multiplier: 10
+intelligence_level2:
+  name: Intelligence
+  level: 2
   perks:
     spy_strength: 5
     spy_strength_recovery: 0
   requires:
-    - spy_strength_and_recovery_level1
+    - intelligence_level1
 
-spy_strength_and_recovery_level3:
-  name: Intelligence (3/6)
-  cost_multiplier: 20
+intelligence_level3:
+  name: Intelligence
+  level: 3
   perks:
     spy_strength: 7.5
     spy_strength_recovery: 1
   requires:
-    - spy_strength_and_recovery_level2
+    - intelligence_level2
 
-spy_strength_and_recovery_level4:
-  name: Intelligence (4/6)
-  cost_multiplier: 30
+intelligence_level4:
+  name: Intelligence
+  level: 4
   perks:
     spy_strength: 10
     spy_strength_recovery: 1
   requires:
-    - spy_strength_and_recovery_level3
+    - intelligence_level3
 
-spy_strength_and_recovery_level5:
-  name: Intelligence (5/6)
-  cost_multiplier: 40
+intelligence_level5:
+  name: Intelligence
+  level: 5
   perks:
     spy_strength: 12.5
     spy_strength_recovery: 1
   requires:
-    - spy_strength_and_recovery_level4
+    - intelligence_level4
 
-spy_strength_and_recovery_level6:
-  name: Intelligence (6/6)
-  cost_multiplier: 50
+intelligence_level6:
+  name: Intelligence
+  level: 6
   perks:
     spy_strength: 15
     spy_strength_recovery: 2
   requires:
-    - spy_strength_and_recovery_level5
+    - intelligence_level5
+
+intelligence_level7:
+  name: Intelligence
+  level: 7
+  perks:
+    spy_strength: 16.25
+    spy_strength_recovery: 2
+  requires:
+    - intelligence_level6
+
+intelligence_level8:
+  name: Intelligence
+  level: 8
+  perks:
+    spy_strength: 17.5
+    spy_strength_recovery: 2.5
+  requires:
+    - intelligence_level7
+
+intelligence_level9:
+  name: Intelligence
+  level: 9
+  perks:
+    spy_strength: 18.75
+    spy_strength_recovery: 2.5
+  requires:
+    - intelligence_level8
+
+intelligence_level10:
+  name: Intelligence
+  level: 10
+  perks:
+    spy_strength: 20
+    spy_strength_recovery: 3
+  requires:
+    - intelligence_level9
 
 # </Ladder: Intelligence Costs>
 
 # <Ladder: Agents Costs>
 
-wiz_and_spell_costs_level1:
-  name: Wizardry Tradition (1/6)
-  cost_multiplier: 0
+wizardry_tradition_level1:
+  name: Wizardry Tradition
+  level: 1
   perks:
     wizard_cost: -5
     spell_cost: -5
 
-wiz_and_spell_costs_level2:
-  name: Wizardry Tradition (2/6)
-  cost_multiplier: 10
+wizardry_tradition_level2:
+  name: Wizardry Tradition
+  level: 2
   perks:
     wizard_cost: -10
     spell_cost: -10
   requires:
-    - wiz_and_spell_costs_level1
+    - wizardry_tradition_level1
 
-wiz_and_spell_costs_level3:
-  name: Wizardry Tradition (3/6)
-  cost_multiplier: 20
+wizardry_tradition_level3:
+  name: Wizardry Tradition
+  level: 3
   perks:
     wizard_cost: -15
     spell_cost: -15
   requires:
-    - wiz_and_spell_costs_level2
+    - wizardry_tradition_level2
 
-wiz_and_spell_costs_level4:
-  name: Wizardry Tradition (4/6)
-  cost_multiplier: 30
+wizardry_tradition_level4:
+  name: Wizardry Tradition
+  level: 4
   perks:
     wizard_cost: -20
     spell_cost: -20
   requires:
-    - wiz_and_spell_costs_level3
+    - wizardry_tradition_level3
 
-wiz_and_spell_costs_level5:
-  name: Wizardry Tradition (5/6)
-  cost_multiplier: 40
+wizardry_tradition_level5:
+  name: Wizardry Tradition
+  level: 5
   perks:
     wizard_cost: -25
     spell_cost: -25
   requires:
-    - wiz_and_spell_costs_level4
+    - wizardry_tradition_level4
 
-wiz_and_spell_costs_level6:
-  name: Wizardry Tradition (6/6)
-  cost_multiplier: 50
+wizardry_tradition_level6:
+  name: Wizardry Tradition
+  level: 6
   perks:
     wizard_cost: -30
     spell_cost: -30
   requires:
-    - wiz_and_spell_costs_level5
+    - wizardry_tradition_level5
+
+wizardry_tradition_level7:
+  name: Wizardry Tradition
+  level: 7
+  perks:
+    wizard_cost: -32.5
+    spell_cost: -32.5
+  requires:
+    - wizardry_tradition_level6
+
+wizardry_tradition_level8:
+  name: Wizardry Tradition
+  level: 8
+  perks:
+    wizard_cost: -35
+    spell_cost: -35
+  requires:
+    - wizardry_tradition_level7
+
+wizardry_tradition_level9:
+  name: Wizardry Tradition
+  level: 9
+  perks:
+    wizard_cost: -37.5
+    spell_cost: -37.5
+  requires:
+    - wizardry_tradition_level8
+
+wizardry_tradition_level10:
+  name: Wizardry Tradition
+  level: 10
+  perks:
+    wizard_cost: -40
+    spell_cost: -40
+  requires:
+    - wizardry_tradition_level9
 
 # </Ladder: Agents Costs>
 
 # <Ladder: Concentration Costs>
 
-wiz_strength_and_recovery_level1:
-  name: Concentration (1/6)
-  cost_multiplier: 0
+concentration_level1:
+  name: Concentration
+  level: 1
   perks:
     wizard_strength: 2.5
     wizard_strength_recovery: 0
 
-wiz_strength_and_recovery_level2:
-  name: Concentration (2/6)
-  cost_multiplier: 10
+concentration_level2:
+  name: Concentration
+  level: 2
   perks:
     wizard_strength: 5
     wizard_strength_recovery: 0
   requires:
-    - wiz_strength_and_recovery_level1
+    - concentration_level1
 
-wiz_strength_and_recovery_level3:
-  name: Concentration (3/6)
-  cost_multiplier: 20
+concentration_level3:
+  name: Concentration
+  level: 3
   perks:
     wizard_strength: 7.5
     wizard_strength_recovery: 1
   requires:
-    - wiz_strength_and_recovery_level2
+    - concentration_level2
 
-wiz_strength_and_recovery_level4:
-  name: Concentration (4/6)
-  cost_multiplier: 30
+concentration_level4:
+  name: Concentration
+  level: 4
   perks:
     wizard_strength: 10
     wizard_strength_recovery: 1
   requires:
-    - wiz_strength_and_recovery_level3
+    - concentration_level3
 
-wiz_strength_and_recovery_level5:
-  name: Concentration (5/6)
-  cost_multiplier: 40
+concentration_level5:
+  name: Concentration
+  level: 5
   perks:
     wizard_strength: 12.5
     wizard_strength_recovery: 1
   requires:
-    - wiz_strength_and_recovery_level4
+    - concentration_level4
 
-wiz_strength_and_recovery_level6:
-  name: Concentration (6/6)
-  cost_multiplier: 50
+concentration_level6:
+  name: Concentration
+  level: 6
   perks:
     wizard_strength: 15
     wizard_strength_recovery: 2
   requires:
-    - wiz_strength_and_recovery_level5
+    - concentration_level5
+
+concentration_level7:
+  name: Concentration
+  level: 7
+  perks:
+    wizard_strength: 16.25
+    wizard_strength_recovery: 2
+  requires:
+    - concentration_level6
+
+concentration_level8:
+  name: Concentration
+  level: 8
+  perks:
+    wizard_strength: 17.5
+    wizard_strength_recovery: 2.5
+  requires:
+    - concentration_level7
+
+concentration_level9:
+  name: Concentration
+  level: 9
+  perks:
+    wizard_strength: 18.75
+    wizard_strength_recovery: 2.5
+  requires:
+    - concentration_level8
+
+concentration_level10:
+  name: Concentration
+  level: 10
+  perks:
+    wizard_strength: 20
+    wizard_strength_recovery: 3
+  requires:
+    - concentration_level9
 
 # </Ladder: Concentration Costs>
 
 # <Ladder: Agriculture>
 
-food_production_level1:
-  name: Agriculture (1/6)
-  cost_multiplier: 0
+agriculture_level1:
+  name: Agriculture
+  level: 1
   perks:
     food_production: 2.5
 
-food_production_level2:
-  name: Agriculture (2/6)
-  cost_multiplier: 10
+agriculture_level2:
+  name: Agriculture
+  level: 2
   perks:
     food_production: 5
   requires:
-    - food_production_level1
+    - agriculture_level1
 
-food_production_level3:
-  name: Agriculture (3/6)
-  cost_multiplier: 20
+agriculture_level3:
+  name: Agriculture
+  level: 3
   perks:
     food_production: 7.5
   requires:
-    - food_production_level2
+    - agriculture_level2
 
-food_production_level4:
-  name: Agriculture (4/6)
-  cost_multiplier: 30
+agriculture_level4:
+  name: Agriculture
+  level: 4
   perks:
     food_production: 10
   requires:
-    - food_production_level3
+    - agriculture_level3
 
-food_production_level5:
-  name: Agriculture (5/6)
-  cost_multiplier: 40
+agriculture_level5:
+  name: Agriculture
+  level: 5
   perks:
     food_production: 12.5
   requires:
-    - food_production_level4
+    - agriculture_level4
 
-food_production_level6:
-  name: Agriculture (6/6)
-  cost_multiplier: 50
+agriculture_level6:
+  name: Agriculture
+  level: 6
   perks:
     food_production: 15
   requires:
-    - food_production_level5
+    - agriculture_level5
+
+agriculture_level7:
+  name: Agriculture
+  level: 7
+  perks:
+    food_production: 16.25
+  requires:
+    - agriculture_level6
+
+agriculture_level8:
+  name: Agriculture
+  level: 8
+  perks:
+    food_production: 17.5
+  requires:
+    - agriculture_level7
+
+agriculture_level9:
+  name: Agriculture
+  level: 9
+  perks:
+    food_production: 18.75
+  requires:
+    - agriculture_level8
+
+agriculture_level10:
+  name: Agriculture
+  level: 10
+  perks:
+    food_production: 20
+  requires:
+    - agriculture_level9
 
 # </Ladder: Agriculture>
 
-
 # <Ladder: Drills>
 
-gem_production_level1:
-  name: Drills (1/6)
-  cost_multiplier: 0
+drills_level1:
+  name: Drills
+  level: 1
   perks:
     gem_production: 2.5
 
-gem_production_level2:
-  name: Drills (2/6)
-  cost_multiplier: 10
+drills_level2:
+  name: Drills
+  level: 2
   perks:
     gem_production: 5
   requires:
-    - gem_production_level1
+    - drills_level1
 
-gem_production_level3:
-  name: Drills (3/6)
-  cost_multiplier: 20
+drills_level3:
+  name: Drills
+  level: 3
   perks:
     gem_production: 7.5
   requires:
-    - gem_production_level2
+    - drills_level2
 
-gem_production_level4:
-  name: Drills (4/6)
-  cost_multiplier: 30
+drills_level4:
+  name: Drills
+  level: 4
   perks:
     gem_production: 10
   requires:
-    - gem_production_level3
+    - drills_level3
 
-gem_production_level5:
-  name: Drills (5/6)
-  cost_multiplier: 40
+drills_level5:
+  name: Drills
+  level: 5
   perks:
     gem_production: 12.5
   requires:
-    - gem_production_level4
+    - drills_level4
 
-gem_production_level6:
-  name: Drills (6/6)
-  cost_multiplier: 50
+drills_level6:
+  name: Drills
+  level: 6
   perks:
     gem_production: 15
   requires:
-    - gem_production_level5
+    - drills_level5
+
+drills_level7:
+  name: Drills
+  level: 7
+  perks:
+    gem_production: 16.25
+  requires:
+    - drills_level6
+
+drills_level8:
+  name: Drills
+  level: 8
+  perks:
+    gem_production: 17.5
+  requires:
+    - drills_level7
+
+drills_level9:
+  name: Drills
+  level: 9
+  perks:
+    gem_production: 18.75
+  requires:
+    - drills_level8
+
+drills_level10:
+  name: Drills
+  level: 10
+  perks:
+    gem_production: 20
+  requires:
+    - drills_level9
 
 # </Ladder: Drills>
 
-
 # <Ladder: Mills>
 
-lumber_production_level1:
-  name: Mills (1/6)
-  cost_multiplier: 0
+mills_level1:
+  name: Mills
+  level: 1
   perks:
     lumber_production: 2.5
 
-lumber_production_level2:
-  name: Mills (2/6)
-  cost_multiplier: 10
+mills_level2:
+  name: Mills
+  level: 2
   perks:
     lumber_production: 5
   requires:
-    - lumber_production_level1
+    - mills_level1
 
-lumber_production_level3:
-  name: Mills (3/6)
-  cost_multiplier: 20
+mills_level3:
+  name: Mills
+  level: 3
   perks:
     lumber_production: 7.5
   requires:
-    - lumber_production_level2
+    - mills_level2
 
-lumber_production_level4:
-  name: Mills (4/6)
-  cost_multiplier: 30
+mills_level4:
+  name: Mills
+  level: 4
   perks:
     lumber_production: 10
   requires:
-    - lumber_production_level3
+    - mills_level3
 
-lumber_production_level5:
-  name: Mills (5/6)
-  cost_multiplier: 40
+mills_level5:
+  name: Mills
+  level: 5
   perks:
     lumber_production: 12.5
   requires:
-    - lumber_production_level4
+    - mills_level4
 
-lumber_production_level6:
-  name: Mills (6/6)
-  cost_multiplier: 50
+mills_level6:
+  name: Mills
+  level: 6
   perks:
     lumber_production: 15
   requires:
-    - lumber_production_level5
+    - mills_level5
+
+mills_level7:
+  name: Mills
+  level: 7
+  perks:
+    lumber_production: 16.25
+  requires:
+    - mills_level6
+
+mills_level8:
+  name: Mills
+  level: 8
+  perks:
+    lumber_production: 17.5
+  requires:
+    - mills_level7
+
+mills_level9:
+  name: Mills
+  level: 9
+  perks:
+    lumber_production: 18.75
+  requires:
+    - mills_level8
+
+mills_level10:
+  name: Mills
+  level: 10
+  perks:
+    lumber_production: 20
+  requires:
+    - mills_level9
 
 # </Ladder: Mills>
 
-
 # <Ladder: Invocations>
 
-mana_production_level1:
-  name: Invocations (1/6)
-  cost_multiplier: 0
+invocations_level1:
+  name: Invocations
+  level: 1
   perks:
     mana_production: 2.5
 
-mana_production_level2:
-  name: Invocations (2/6)
-  cost_multiplier: 10
+invocations_level2:
+  name: Invocations
+  level: 2
   perks:
     mana_production: 5
   requires:
-    - mana_production_level1
+    - invocations_level1
 
-mana_production_level3:
-  name: Invocations (3/6)
-  cost_multiplier: 20
+invocations_level3:
+  name: Invocations
+  level: 3
   perks:
     mana_production: 7.5
   requires:
-    - mana_production_level2
+    - invocations_level2
 
-mana_production_level4:
-  name: Invocations (4/6)
-  cost_multiplier: 30
+invocations_level4:
+  name: Invocations
+  level: 4
   perks:
     mana_production: 10
   requires:
-    - mana_production_level3
+    - invocations_level3
 
-mana_production_level5:
-  name: Invocations (5/6)
-  cost_multiplier: 40
+invocations_level5:
+  name: Invocations
+  level: 5
   perks:
     mana_production: 12.5
   requires:
-    - mana_production_level4
+    - invocations_level4
 
-mana_production_level6:
-  name: Invocations (6/6)
-  cost_multiplier: 50
+invocations_level6:
+  name: Invocations
+  level: 6
   perks:
     mana_production: 15
   requires:
-    - mana_production_level5
+    - invocations_level5
+
+invocations_level7:
+  name: Invocations
+  level: 7
+  perks:
+    mana_production: 16.25
+  requires:
+    - invocations_level6
+
+invocations_level8:
+  name: Invocations
+  level: 8
+  perks:
+    mana_production: 17.5
+  requires:
+    - invocations_level7
+
+invocations_level9:
+  name: Invocations
+  level: 9
+  perks:
+    mana_production: 18.75
+  requires:
+    - invocations_level8
+
+invocations_level10:
+  name: Invocations
+  level: 10
+  perks:
+    mana_production: 20
+  requires:
+    - invocations_level9
 
 # </Ladder: Invocations>
 
 # <Ladder: Quarries>
 
-ore_production_level1:
-  name: Quarries (1/6)
-  cost_multiplier: 0
+quarries_level1:
+  name: Quarries
+  level: 1
   perks:
     ore_production: 2.5
 
-ore_production_level2:
-  name: Quarries (2/6)
-  cost_multiplier: 10
+quarries_level2:
+  name: Quarries
+  level: 2
   perks:
     ore_production: 5
   requires:
-    - ore_production_level1
+    - quarries_level1
 
-ore_production_level3:
-  name: Quarries (3/6)
-  cost_multiplier: 20
+quarries_level3:
+  name: Quarries
+  level: 3
   perks:
     ore_production: 7.5
   requires:
-    - ore_production_level2
+    - quarries_level2
 
-ore_production_level4:
-  name: Quarries (4/6)
-  cost_multiplier: 30
+quarries_level4:
+  name: Quarries
+  level: 4
   perks:
     ore_production: 10
   requires:
-    - ore_production_level3
+    - quarries_level3
 
-ore_production_level5:
-  name: Quarries (5/6)
-  cost_multiplier: 40
+quarries_level5:
+  name: Quarries
+  level: 5
   perks:
     ore_production: 12.5
   requires:
-    - ore_production_level4
+    - quarries_level4
 
-ore_production_level6:
-  name: Quarries (6/6)
-  cost_multiplier: 50
+quarries_level6:
+  name: Quarries
+  level: 6
   perks:
     ore_production: 15
   requires:
-    - ore_production_level5
+    - quarries_level5
+
+quarries_level7:
+  name: Quarries
+  level: 7
+  perks:
+    ore_production: 16.25
+  requires:
+    - quarries_level6
+
+quarries_level8:
+  name: Quarries
+  level: 8
+  perks:
+    ore_production: 17.5
+  requires:
+    - quarries_level7
+
+quarries_level9:
+  name: Quarries
+  level: 9
+  perks:
+    ore_production: 18.75
+  requires:
+    - quarries_level8
+
+quarries_level10:
+  name: Quarries
+  level: 10
+  perks:
+    ore_production: 20
+  requires:
+    - quarries_level9
 
 # </Ladder: Quarries>
 
 # <Ladder: Minting>
 
-platinum_production_level1:
-  name: Minting (1/6)
-  cost_multiplier: 0
+minting_level1:
+  name: Minting
+  level: 1
   perks:
-    platinum_production: 2.5
+    gold_production: 2.5
 
-platinum_production_level2:
-  name: Minting (2/6)
-  cost_multiplier: 10
+minting_level2:
+  name: Minting
+  level: 2
   perks:
-    platinum_production: 5
+    gold_production: 5
   requires:
-    - platinum_production_level1
+    - minting_level1
 
-platinum_production_level3:
-  name: Minting (3/6)
-  cost_multiplier: 20
+minting_level3:
+  name: Minting
+  level: 3
   perks:
-    platinum_production: 7.5
+    gold_production: 7.5
   requires:
-    - platinum_production_level2
+    - minting_level2
 
-platinum_production_level4:
-  name: Minting (4/6)
-  cost_multiplier: 30
+minting_level4:
+  name: Minting
+  level: 4
   perks:
-    platinum_production: 10
+    gold_production: 10
   requires:
-    - platinum_production_level3
+    - minting_level3
 
-platinum_production_level5:
-  name: Minting (5/6)
-  cost_multiplier: 40
+minting_level5:
+  name: Minting
+  level: 5
   perks:
-    platinum_production: 12.5
+    gold_production: 12.5
   requires:
-    - platinum_production_level4
+    - minting_level4
 
-platinum_production_level6:
-  name: Minting (6/6)
-  cost_multiplier: 50
+minting_level6:
+  name: Minting
+  level: 6
   perks:
-    platinum_production: 15
+    gold_production: 15
   requires:
-    - platinum_production_level5
+    - minting_level5
+
+minting_level7:
+  name: Minting
+  level: 7
+  perks:
+    gold_production: 16.25
+  requires:
+    - minting_level6
+
+minting_level8:
+  name: Minting
+  level: 8
+  perks:
+    gold_production: 17.5
+  requires:
+    - minting_level7
+
+minting_level9:
+  name: Minting
+  level: 9
+  perks:
+    gold_production: 18.75
+  requires:
+    - minting_level8
+
+minting_level10:
+  name: Minting
+  level: 10
+  perks:
+    gold_production: 20
+  requires:
+    - minting_level9
 
 # </Ladder: Minting>
 
 # <Ladder: Population>
 
-population_level1:
-  name: Quarters (1/6)
-  cost_multiplier: 0
+quarters_level1:
+  name: Quarters
+  level: 1
   perks:
     max_population: 1.25
 
-population_level2:
-  name: Quarters (2/6)
-  cost_multiplier: 10
+quarters_level2:
+  name: Quarters
+  level: 2
   perks:
     max_population: 2.5
   requires:
-    - population_level1
+    - quarters_level1
 
-population_level3:
-  name: Quarters (3/6)
-  cost_multiplier: 20
+quarters_level3:
+  name: Quarters
+  level: 3
   perks:
     max_population: 3.75
   requires:
-    - population_level2
+    - quarters_level2
 
-population_level4:
-  name: Quarters (4/6)
-  cost_multiplier: 30
+quarters_level4:
+  name: Quarters
+  level: 4
   perks:
     max_population: 5
   requires:
-    - population_level3
+    - quarters_level3
 
-population_level5:
-  name: Quarters (5/6)
-  cost_multiplier: 40
+quarters_level5:
+  name: Quarters
+  level: 5
   perks:
     max_population: 6.25
   requires:
-    - population_level4
+    - quarters_level4
 
-population_level6:
-  name: Quarters (6/6)
-  cost_multiplier: 50
+quarters_level6:
+  name: Quarters
+  level: 6
   perks:
     max_population: 7.5
   requires:
-    - population_level5
+    - quarters_level5
+
+quarters_level7:
+  name: Quarters
+  level: 7
+  perks:
+    max_population: 8.125
+  requires:
+    - quarters_level6
+
+quarters_level8:
+  name: Quarters
+  level: 8
+  perks:
+    max_population: 8.75
+  requires:
+    - quarters_level7
+
+quarters_level9:
+  name: Quarters
+  level: 9
+  perks:
+    max_population: 9.375
+  requires:
+    - quarters_level8
+
+quarters_level10:
+  name: Quarters
+  level: 10
+  perks:
+    max_population: 10
+  requires:
+    - quarters_level9
 
 # </Ladder: Population>
 
+
 # <Ladder: Prestige>
 
-prestige_level1:
-  name: Prestige (1/6)
-  cost_multiplier: 0
-  perks:
-    prestige_gains: 2.5
-
-prestige_level2:
-  name: Prestige (2/6)
-  cost_multiplier: 10
+honour_level1:
+  name: Honour
+  level: 1
   perks:
     prestige_gains: 5
-  requires:
-    - prestige_level1
 
-prestige_level3:
-  name: Prestige (3/6)
-  cost_multiplier: 20
-  perks:
-    prestige_gains: 7.5
-  requires:
-    - prestige_level2
-
-prestige_level4:
-  name: Prestige (4/6)
-  cost_multiplier: 30
+honour_level2:
+  name: Honour
+  level: 2
   perks:
     prestige_gains: 10
   requires:
-    - prestige_level3
+    - honour_level1
 
-prestige_level5:
-  name: Prestige (5/6)
-  cost_multiplier: 40
-  perks:
-    prestige_gains: 12.5
-  requires:
-    - prestige_level4
-
-prestige_level6:
-  name: Prestige (6/6)
-  cost_multiplier: 50
+honour_level3:
+  name: Honour
+  level: 3
   perks:
     prestige_gains: 15
   requires:
-    - prestige_level5
+    - honour_level2
+
+honour_level4:
+  name: Honour
+  level: 4
+  perks:
+    prestige_gains: 20
+  requires:
+    - honour_level3
+
+honour_level5:
+  name: Honour
+  level: 5
+  perks:
+    prestige_gains: 25
+  requires:
+    - honour_level4
+
+honour_level6:
+  name: Honour
+  level: 6
+  perks:
+    prestige_gains: 30
+  requires:
+    - honour_level5
+
+honour_level7:
+  name: Honour
+  level: 7
+  perks:
+    prestige_gains: 32.5
+  requires:
+    - honour_level6
+
+honour_level8:
+  name: Honour
+  level: 8
+  perks:
+    prestige_gains: 35
+  requires:
+    - honour_level7
+
+honour_level9:
+  name: Honour
+  level: 9
+  perks:
+    prestige_gains: 37.5
+  requires:
+    - honour_level8
+
+honour_level10:
+  name: Honour
+  level: 10
+  perks:
+    prestige_gains: 40
+  requires:
+    - honour_level9
 
 # </Ladder: Prestige>
 
 # <Ladder: Improvements>
 
-improvements_level1:
-  name: Infrastructure (1/6)
-  cost_multiplier: 0
+infrastructure_level1:
+  name: Infrastructure
+  level: 1
   perks:
     improvements: 5
 
-improvements_level2:
-  name: Infrastructure (2/6)
-  cost_multiplier: 10
+infrastructure_level2:
+  name: Infrastructure
+  level: 2
   perks:
     improvements: 10
   requires:
-    - improvements_level1
+    - infrastructure_level1
 
-improvements_level3:
-  name: Infrastructure (3/6)
-  cost_multiplier: 20
+infrastructure_level3:
+  name: Infrastructure
+  level: 3
   perks:
     improvements: 15
   requires:
-    - improvements_level2
+    - infrastructure_level2
 
-improvements_level4:
-  name: Infrastructure (4/6)
-  cost_multiplier: 30
+infrastructure_level4:
+  name: Infrastructure
+  level: 4
   perks:
     improvements: 20
   requires:
-    - improvements_level3
+    - infrastructure_level3
 
-improvements_level5:
-  name: Infrastructure (5/6)
-  cost_multiplier: 40
+infrastructure_level5:
+  name: Infrastructure
+  level: 5
   perks:
     improvements: 25
   requires:
-    - improvements_level4
+    - infrastructure_level4
 
-improvements_level6:
-  name: Infrastructure (6/6)
-  cost_multiplier: 50
+infrastructure_level6:
+  name: Infrastructure
+  level: 6
   perks:
     improvements: 30
   requires:
-    - improvements_level5
+    - infrastructure_level5
+
+infrastructure_level7:
+  name: Infrastructure
+  level: 7
+  perks:
+    improvements: 32.5
+  requires:
+    - infrastructure_level6
+
+infrastructure_level8:
+  name: Infrastructure
+  level: 8
+  perks:
+    improvements: 35
+  requires:
+    - infrastructure_level7
+
+infrastructure_level9:
+  name: Infrastructure
+  level: 9
+  perks:
+    improvements: 37.5
+  requires:
+    - infrastructure_level8
+
+infrastructure_level10:
+  name: Infrastructure
+  level: 10
+  perks:
+    improvements: 40
+  requires:
+    - infrastructure_level9
 
 # </Ladder: Improvements>
 
+
 # <Ladder: Conversions>
 
-conversions_level1:
-  name: Recalling (1/6)
-  cost_multiplier: 0
+recalling_level1:
+  name: Recalling
+  level: 1
+  enabled: 0
   perks:
     conversions: 2.5
 
-conversions_level2:
-  name: Recalling (2/6)
-  cost_multiplier: 10
+recalling_level2:
+  name: Recalling
+  level: 2
+  enabled: 0
   perks:
     conversions: 5
   requires:
-    - conversions_level1
+    - recalling_level1
 
-conversions_level3:
-  name: Recalling (3/6)
-  cost_multiplier: 20
+recalling_level3:
+  name: Recalling
+  level: 3
+  enabled: 0
   perks:
     conversions: 7.5
   requires:
-    - conversions_level2
+    - recalling_level2
 
-conversions_level4:
-  name: Recalling (4/6)
-  cost_multiplier: 30
+recalling_level4:
+  name: Recalling
+  level: 4
+  enabled: 0
   perks:
     conversions: 10
   requires:
-    - conversions_level3
+    - recalling_level3
 
-conversions_level5:
-  name: Recalling (5/6)
-  cost_multiplier: 40
+recalling_level5:
+  name: Recalling
+  level: 5
+  enabled: 0
   perks:
     conversions: 12.5
   requires:
-    - conversions_level4
+    - recalling_level4
 
-conversions_level6:
-  name: Recalling (6/6)
-  cost_multiplier: 50
+recalling_level6:
+  name: Recalling
+  level: 6
+  enabled: 0
   perks:
     conversions: 15
   requires:
-    - conversions_level5
+    - recalling_level5
+
+recalling_level7:
+  name: Recalling
+  level: 7
+  enabled: 0
+  perks:
+    conversions: 16.25
+  requires:
+    - recalling_level6
+
+recalling_level8:
+  name: Recalling
+  level: 8
+  enabled: 0
+  perks:
+    conversions: 17.5
+  requires:
+    - recalling_level7
+
+recalling_level9:
+  name: Recalling
+  level: 9
+  enabled: 0
+  perks:
+    conversions: 18.75
+  requires:
+    - recalling_level8
+
+recalling_level10:
+  name: Recalling
+  level: 10
+  enabled: 0
+  perks:
+    conversions: 20
+  requires:
+    - recalling_level9
 
 # </Ladder: Conversions>
 
+
 # <Ladder: Garrisons Housing>
 
-barracks_housing_level1:
-  name: Garrisons (1/6)
-  cost_multiplier: 0
+garrisons_level1:
+  name: Garrisons
+  enabled: 0
+  level: 1
   perks:
     barracks_housing: 1.25
 
-barracks_housing_level2:
-  name: Garrisons (2/6)
-  cost_multiplier: 10
+garrisons_level2:
+  name: Garrisons
+  enabled: 0
+  level: 2
   perks:
     barracks_housing: 2.5
   requires:
-    - barracks_housing_level1
+    - garrisons_level1
 
-barracks_housing_level3:
-  name: Garrisons (3/6)
-  cost_multiplier: 20
+garrisons_level3:
+  name: Garrisons
+  enabled: 0
+  level: 3
   perks:
     barracks_housing: 3.75
   requires:
-    - barracks_housing_level2
+    - garrisons_level2
 
-barracks_housing_level4:
-  name: Garrisons (4/6)
-  cost_multiplier: 30
+garrisons_level4:
+  name: Garrisons
+  enabled: 0
+  level: 4
   perks:
     barracks_housing: 5
   requires:
-    - barracks_housing_level3
+    - garrisons_level3
 
-barracks_housing_level5:
-  name: Garrisons (5/6)
-  cost_multiplier: 40
+garrisons_level5:
+  name: Garrisons
+  enabled: 0
+  level: 5
   perks:
     barracks_housing: 6.25
   requires:
-    - barracks_housing_level4
+    - garrisons_level4
 
-barracks_housing_level6:
-  name: Garrisons (6/6)
-  cost_multiplier: 50
+garrisons_level6:
+  name: Garrisons
+  enabled: 0
+  level: 6
   perks:
     barracks_housing: 7.5
   requires:
-    - barracks_housing_level5
+    - garrisons_level5
+
+garrisons_level7:
+  name: Garrisons
+  enabled: 0
+  level: 7
+  perks:
+    barracks_housing: 8.125
+  requires:
+    - garrisons_level6
+
+garrisons_level8:
+  name: Garrisons
+  enabled: 0
+  level: 8
+  perks:
+    barracks_housing: 8.75
+  requires:
+    - garrisons_level7
+
+garrisons_level9:
+  name: Garrisons
+  enabled: 0
+  level: 9
+  perks:
+    barracks_housing: 9.375
+  requires:
+    - garrisons_level8
+
+garrisons_level10:
+  name: Garrisons
+  enabled: 0
+  level: 10
+  perks:
+    barracks_housing: 10
+  requires:
+    - garrisons_level9
 
 # </Ladder: Garrisons Housing>
 
 # <Ladder: Gemcutting>
 
 gemcutting_level1:
-  name: Gemcutting (1/6)
-  cost_multiplier: 0
+  name: Gemcutting
+  level: 1
   perks:
     gemcutting: 2.5
 
 gemcutting_level2:
-  name: Gemcutting (2/6)
-  cost_multiplier: 10
+  name: Gemcutting
+  level: 2
   perks:
     gemcutting: 5
   requires:
     - gemcutting_level1
 
 gemcutting_level3:
-  name: Gemcutting (3/6)
-  cost_multiplier: 20
+  name: Gemcutting
+  level: 3
   perks:
     gemcutting: 7.5
   requires:
     - gemcutting_level2
 
 gemcutting_level4:
-  name: Gemcutting (4/6)
-  cost_multiplier: 30
+  name: Gemcutting
+  level: 4
   perks:
     gemcutting: 10
   requires:
     - gemcutting_level3
 
 gemcutting_level5:
-  name: Gemcutting (5/6)
-  cost_multiplier: 40
+  name: Gemcutting
+  level: 5
   perks:
     gemcutting: 12.5
   requires:
     - gemcutting_level4
 
 gemcutting_level6:
-  name: Gemcutting (6/6)
-  cost_multiplier: 50
+  name: Gemcutting
+  level: 6
   perks:
     gemcutting: 15
   requires:
     - gemcutting_level5
+
+gemcutting_level7:
+  name: Gemcutting
+  level: 7
+  perks:
+    gemcutting: 16.25
+  requires:
+    - gemcutting_level6
+
+gemcutting_level8:
+  name: Gemcutting
+  level: 8
+  perks:
+    gemcutting: 17.5
+  requires:
+    - gemcutting_level7
+
+gemcutting_level9:
+  name: Gemcutting
+  level: 9
+  perks:
+    gemcutting: 18.75
+  requires:
+    - gemcutting_level8
+
+gemcutting_level10:
+  name: Gemcutting
+  level: 10
+  perks:
+    gemcutting: 20
+  requires:
+    - gemcutting_level9
 
 # </Ladder: Gemcutting>
 
 
 # <Ladder: Interest>
 
-platinum_interest_level1:
-  name: Interest (1/6)
-  cost_multiplier: 0
+gold_interest_level1:
+  name: Interest
+  level: 1
   enabled: 0
   perks:
-    platinum_interest: 0.1
+    gold_interest: 0.1
 
-platinum_interest_level2:
-  name: Interest (2/6)
-  cost_multiplier: 10
+gold_interest_level2:
+  name: Interest
+  level: 2
   enabled: 0
   perks:
-    platinum_interest: 0.2
+    gold_interest: 0.2
   requires:
-    - platinum_interest_level1
+    - gold_interest_level1
 
-platinum_interest_level3:
-  name: Interest (3/6)
-  cost_multiplier: 20
+gold_interest_level3:
+  name: Interest
+  level: 3
   enabled: 0
   perks:
-    platinum_interest: 0.3
+    gold_interest: 0.3
   requires:
-    - platinum_interest_level2
+    - gold_interest_level2
 
-platinum_interest_level4:
-  name: Interest (4/6)
-  cost_multiplier: 30
+gold_interest_level4:
+  name: Interest
+  level: 4
   enabled: 0
   perks:
-    platinum_interest: 0.4
+    gold_interest: 0.4
   requires:
-    - platinum_interest_level3
+    - gold_interest_level3
 
-platinum_interest_level5:
-  name: Interest (5/6)
-  cost_multiplier: 40
+gold_interest_level5:
+  name: Interest
+  level: 5
   enabled: 0
   perks:
-    platinum_interest: 0.5
+    gold_interest: 0.5
   requires:
-    - platinum_interest_level4
+    - gold_interest_level4
 
-platinum_interest_level6:
-  name: Interest (6/6)
-  cost_multiplier: 50
+gold_interest_level6:
+  name: Interest
+  level: 6
   enabled: 0
   perks:
-    platinum_interest: 0.6
+    gold_interest: 0.6
   requires:
-    - platinum_interest_level5
+    - gold_interest_level5
+
+gold_interest_level7:
+  name: Interest
+  level: 7
+  enabled: 0
+  perks:
+    gold_interest: 0.65
+  requires:
+    - gold_interest_level6
+
+gold_interest_level8:
+  name: Interest
+  level: 8
+  enabled: 0
+  perks:
+    gold_interest: 0.7
+  requires:
+    - gold_interest_level7
+
+gold_interest_level9:
+  name: Interest
+  level: 9
+  enabled: 0
+  perks:
+    gold_interest: 0.75
+  requires:
+    - gold_interest_level8
+
+gold_interest_level10:
+  name: Interest
+  level: 10
+  enabled: 0
+  perks:
+    gold_interest: 0.8
+  requires:
+    - gold_interest_level9
 
 # </Ladder: Interest>
 
 # <Ladder: Lean Mass>
 
 lean_mass_level1:
-  name: Lean Mass (1/6)
-  cost_multiplier: 0
+  name: Lean Mass
+  level: 1
   perks:
     military_cost_food: -1.75
 
 lean_mass_level2:
-  name: Lean Mass (2/6)
-  cost_multiplier: 10
+  name: Lean Mass
+  level: 2
   perks:
     military_cost_food: -3.5
   requires:
     - lean_mass_level1
 
 lean_mass_level3:
-  name: Lean Mass (3/6)
-  cost_multiplier: 20
+  name: Lean Mass
+  level: 3
   perks:
     military_cost_food: -5.25
   requires:
     - lean_mass_level2
 
 lean_mass_level4:
-  name: Lean Mass (4/6)
-  cost_multiplier: 30
+  name: Lean Mass
+  level: 4
   perks:
     military_cost_food: -7
   requires:
     - lean_mass_level3
 
 lean_mass_level5:
-  name: Lean Mass (5/6)
-  cost_multiplier: 40
+  name: Lean Mass
+  level: 5
   perks:
     military_cost_food: -8.75
   requires:
     - lean_mass_level4
 
 lean_mass_level6:
-  name: Lean Mass (6/6)
-  cost_multiplier: 50
+  name: Lean Mass
+  level: 6
   perks:
     military_cost_food: -10.5
   requires:
     - lean_mass_level5
 
+lean_mass_level7:
+  name: Lean Mass
+  level: 7
+  perks:
+    military_cost_food: -11.375
+  requires:
+    - lean_mass_level6
+
+lean_mass_level8:
+  name: Lean Mass
+  level: 8
+  perks:
+    military_cost_food: -12.25
+  requires:
+    - lean_mass_level7
+
+lean_mass_level9:
+  name: Lean Mass
+  level: 9
+  perks:
+    military_cost_food: -13.125
+  requires:
+    - lean_mass_level8
+
+lean_mass_level10:
+  name: Lean Mass
+  level: 10
+  perks:
+    military_cost_food: -14
+  requires:
+    - lean_mass_level9
+
 # </Ladder: Lean Mass>
+
 
 # <Ladder: Magic Weapons>
 
 magical_weapons_level1:
-  name: Magical Weapons (1/6)
-  cost_multiplier: 0
+  name: Magical Weapons
+  level: 1
   perks:
     military_cost_mana: -2.5
 
 magical_weapons_level2:
-  name: Magical Weapons (2/6)
-  cost_multiplier: 10
+  name: Magical Weapons
+  level: 2
   perks:
     military_cost_mana: -5
   requires:
     - magical_weapons_level1
 
 magical_weapons_level3:
-  name: Magical Weapons (3/6)
-  cost_multiplier: 20
+  name: Magical Weapons
+  level: 3
   perks:
     military_cost_mana: -7.5
   requires:
     - magical_weapons_level2
 
 magical_weapons_level4:
-  name: Magical Weapons (4/6)
-  cost_multiplier: 30
+  name: Magical Weapons
+  level: 4
   perks:
     military_cost_mana: -10
   requires:
     - magical_weapons_level3
 
 magical_weapons_level5:
-  name: Magical Weapons (5/6)
-  cost_multiplier: 40
+  name: Magical Weapons
+  level: 5
   perks:
     military_cost_mana: -12.5
   requires:
     - magical_weapons_level4
 
 magical_weapons_level6:
-  name: Magical Weapons (6/6)
-  cost_multiplier: 50
+  name: Magical Weapons
+  level: 6
   perks:
     military_cost_mana: -15
   requires:
     - magical_weapons_level5
+
+magical_weapons_level7:
+  name: Magical Weapons
+  level: 7
+  perks:
+    military_cost_mana: -16.25
+  requires:
+    - magical_weapons_level6
+
+magical_weapons_level8:
+  name: Magical Weapons
+  level: 8
+  perks:
+    military_cost_mana: -17.5
+  requires:
+    - magical_weapons_level7
+
+magical_weapons_level9:
+  name: Magical Weapons
+  level: 9
+  perks:
+    military_cost_mana: -18.75
+  requires:
+    - magical_weapons_level8
+
+magical_weapons_level10:
+  name: Magical Weapons
+  level: 10
+  perks:
+    military_cost_mana: -20
+  requires:
+    - magical_weapons_level9
 
 # </Ladder: Magic Weapons>
 
 # <Ladder: Commerce>
 
 commerce_level1:
-  name: Commerce (1/6)
-  cost_multiplier: 0
-  perks:
-    exchange_rate: 2.5
-
-commerce_level2:
-  name: Commerce (2/6)
-  cost_multiplier: 10
+  name: Commerce
+  enabled: 0 # Erik's fault
+  level: 1
   perks:
     exchange_rate: 5
+
+commerce_level2:
+  name: Commerce
+  enabled: 0 # Erik's fault
+  level: 2
+  perks:
+    exchange_rate: 10
   requires:
     - commerce_level1
 
 commerce_level3:
-  name: Commerce (3/6)
-  cost_multiplier: 20
+  name: Commerce
+  enabled: 0 # Erik's fault
+  level: 3
   perks:
-    exchange_rate: 7.5
+    exchange_rate: 15
   requires:
     - commerce_level2
 
 commerce_level4:
-  name: Commerce (4/6)
-  cost_multiplier: 30
+  name: Commerce
+  enabled: 0 # Erik's fault
+  level: 4
   perks:
-    exchange_rate: 10
+    exchange_rate: 20
   requires:
     - commerce_level3
 
 commerce_level5:
-  name: Commerce (5/6)
-  cost_multiplier: 40
+  name: Commerce
+  enabled: 0 # Erik's fault
+  level: 5
   perks:
-    exchange_rate: 12.5
+    exchange_rate: 25
   requires:
     - commerce_level4
 
 commerce_level6:
-  name: Commerce (6/6)
-  cost_multiplier: 50
+  name: Commerce
+  enabled: 0 # Erik's fault
+  level: 6
   perks:
-    exchange_rate: 15
+    exchange_rate: 30
   requires:
     - commerce_level5
 
+commerce_level7:
+  name: Commerce
+  enabled: 0 # Erik's fault
+  level: 7
+  perks:
+    exchange_rate: 32.5
+  requires:
+    - commerce_level6
+
+commerce_level8:
+  name: Commerce
+  enabled: 0 # Erik's fault
+  level: 8
+  perks:
+    exchange_rate: 35
+  requires:
+    - commerce_level7
+
+commerce_level9:
+  name: Commerce
+  enabled: 0 # Erik's fault
+  level: 9
+  perks:
+    exchange_rate: 37.5
+  requires:
+    - commerce_level8
+
+commerce_level10:
+  name: Commerce
+  enabled: 0 # Erik's fault
+  level: 10
+  perks:
+    exchange_rate: 40
+  requires:
+    - commerce_level9
+
 # </Ladder: Commerce>
+
+# <Ladder: Employment>
+
+craftsmanship_level1:
+  name: Craftsmanship
+  level: 1
+  perks:
+    jobs_per_building: 2.5
+
+craftsmanship_level2:
+  name: Craftsmanship
+  level: 2
+  perks:
+    jobs_per_building: 5
+  requires:
+    - craftsmanship_level1
+
+craftsmanship_level3:
+  name: Craftsmanship
+  level: 3
+  perks:
+    jobs_per_building: 7.5
+  requires:
+    - craftsmanship_level2
+
+craftsmanship_level4:
+  name: Craftsmanship
+  level: 4
+  perks:
+    jobs_per_building: 10
+  requires:
+    - craftsmanship_level3
+
+craftsmanship_level5:
+  name: Craftsmanship
+  level: 5
+  perks:
+    jobs_per_building: 12.5
+  requires:
+    - craftsmanship_level4
+
+craftsmanship_level6:
+  name: Craftsmanship
+  level: 6
+  perks:
+    jobs_per_building: 15
+  requires:
+    - craftsmanship_level5
+
+craftsmanship_level7:
+  name: Craftsmanship
+  level: 7
+  perks:
+    jobs_per_building: 16.25
+  requires:
+    - craftsmanship_level6
+
+craftsmanship_level8:
+  name: Craftsmanship
+  level: 8
+  perks:
+    jobs_per_building: 17.5
+  requires:
+    - craftsmanship_level7
+
+craftsmanship_level9:
+  name: Craftsmanship
+  level: 9
+  perks:
+    jobs_per_building: 18.75
+  requires:
+    - craftsmanship_level8
+
+craftsmanship_level10:
+  name: Craftsmanship
+  level: 10
+  perks:
+    jobs_per_building: 20
+  requires:
+    - craftsmanship_level9
+
+# </Ladder: Employment>
+
+
+# <Ladder: Drafting>
+
+conscription_level1:
+  name: Conscription
+  level: 1
+  perks:
+    drafting: 2.5
+
+conscription_level2:
+  name: Conscription
+  level: 2
+  perks:
+    drafting: 5
+  requires:
+    - conscription_level1
+
+conscription_level3:
+  name: Conscription
+  level: 3
+  perks:
+    drafting: 7.5
+  requires:
+    - conscription_level2
+
+conscription_level4:
+  name: Conscription
+  level: 4
+  perks:
+    drafting: 10
+  requires:
+    - conscription_level3
+
+conscription_level5:
+  name: Conscription
+  level: 5
+  perks:
+    drafting: 12.5
+  requires:
+    - conscription_level4
+
+conscription_level6:
+  name: Conscription
+  level: 6
+  perks:
+    drafting: 15
+  requires:
+    - conscription_level5
+
+conscription_level7:
+  name: Conscription
+  level: 7
+  perks:
+    drafting: 16.25
+  requires:
+    - conscription_level6
+
+conscription_level8:
+  name: Conscription
+  level: 8
+  perks:
+    drafting: 17.5
+  requires:
+    - conscription_level7
+
+conscription_level9:
+  name: Conscription
+  level: 9
+  perks:
+    drafting: 18.75
+  requires:
+    - conscription_level8
+
+conscription_level10:
+  name: Conscription
+  level: 10
+  perks:
+    drafting: 20
+  requires:
+    - conscription_level9
+
+# </Ladder: Drafting>
+
+# <Ladder: Defensive Power>
+
+fortifications_level1:
+  name: Fortifications
+  level: 1
+  perks:
+    defense: 2.5
+
+fortifications_level2:
+  name: Fortifications
+  level: 2
+  perks:
+    defense: 5
+  requires:
+    - fortifications_level1
+
+fortifications_level3:
+  name: Fortifications
+  level: 3
+  perks:
+    defense: 7.5
+  requires:
+    - fortifications_level2
+
+fortifications_level4:
+  name: Fortifications
+  level: 4
+  perks:
+    defense: 10
+  requires:
+    - fortifications_level3
+
+fortifications_level5:
+  name: Fortifications
+  level: 5
+  perks:
+    defense: 12.5
+  requires:
+    - fortifications_level4
+
+fortifications_level6:
+  name: Fortifications
+  level: 6
+  perks:
+    defense: 15
+  requires:
+    - fortifications_level5
+
+fortifications_level7:
+  name: Fortifications
+  level: 7
+  perks:
+    defense: 16.25
+  requires:
+    - fortifications_level6
+
+fortifications_level8:
+  name: Fortifications
+  level: 8
+  perks:
+    defense: 17.5
+  requires:
+    - fortifications_level7
+
+fortifications_level9:
+  name: Fortifications
+  level: 9
+  perks:
+    defense: 18.75
+  requires:
+    - fortifications_level8
+
+fortifications_level10:
+  name: Fortifications
+  level: 10
+  perks:
+    defense: 20
+  requires:
+    - fortifications_level9
+
+# </Ladder: Defensive Power>
+
+# <Ladder: Spy Carry>
+
+deep_pockets_level1:
+  name: Deep Pockets
+  level: 1
+  perks:
+    amount_stolen: 5
+
+deep_pockets_level2:
+  name: Deep Pockets
+  level: 2
+  perks:
+    amount_stolen: 10
+  requires:
+    - deep_pockets_level1
+
+deep_pockets_level3:
+  name: Deep Pockets
+  level: 3
+  perks:
+    amount_stolen: 15
+  requires:
+    - deep_pockets_level2
+
+deep_pockets_level4:
+  name: Deep Pockets
+  level: 4
+  perks:
+    amount_stolen: 20
+  requires:
+    - deep_pockets_level3
+
+deep_pockets_level5:
+  name: Deep Pockets
+  level: 5
+  perks:
+    amount_stolen: 25
+  requires:
+    - deep_pockets_level4
+
+deep_pockets_level6:
+  name: Deep Pockets
+  level: 6
+  perks:
+    amount_stolen: 30
+  requires:
+    - deep_pockets_level5
+
+deep_pockets_level7:
+  name: Deep Pockets
+  level: 7
+  perks:
+    amount_stolen: 32.5
+  requires:
+    - deep_pockets_level6
+
+deep_pockets_level8:
+  name: Deep Pockets
+  level: 8
+  perks:
+    amount_stolen: 35
+  requires:
+    - deep_pockets_level7
+
+deep_pockets_level9:
+  name: Deep Pockets
+  level: 9
+  perks:
+    amount_stolen: 37.5
+  requires:
+    - deep_pockets_level8
+
+deep_pockets_level10:
+  name: Deep Pockets
+  level: 10
+  perks:
+    amount_stolen: 40
+  requires:
+    - deep_pockets_level9
+
+# </Ladder: Spy Carry>

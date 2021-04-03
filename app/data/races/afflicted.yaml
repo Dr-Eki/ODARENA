@@ -1,72 +1,89 @@
 name: Afflicted
 alignment: evil
 description: >-
-  <p>So named for the sickness that festers through their bodies and through their minds, the Afflicted are a vile gathering of beasts and misfits.</p>
-  <p>Under the chaotic leadership of torturous and immortal Reapers, brought to this world by cruel Necromancers, the Afflicted seek vengeance against anything that is whole and pure.</p>
-  <p>A patchwork of limbs, skins, bone, and meat and held together by forbidden magic, the stench of Abominations can be detected long before battle begins. Once the battle is over, they will plunder the enemies' corpses and fuse together more Abominations.</p>
-  <hr />
   <p>For any invasion where the Afflicted are at least half as strong as the defender, a <strong>Pestilence</strong> will linger with the defender causing their peasants to die and quickly decompose into Abominations which start the long walk back to their Afflicted masters.</p>
   <p>If the invasion is successful, a malady known only as <strong>Great Fever</strong> will also befall the defender.</p>
-  <p>Anyone invading the Afflicted will bring back with them a terrible disease called <strong>Unhealing Wounds</strong>.</p>
+  <p>Anyone invading the Afflicted will bring back with them a terrible disease called <strong>Festering Wounds</strong>.</p>
   <hr />
   <ul>
-  <li><strong>Pestilence</strong>: 1% of peasants die and return to the Afflicted as Abominations (takes 12 ticks).</li>
-  <li><strong>Great Fever</strong>: no population growth, -10% platinum production, -20% food production.</li>
-  <li><strong>Unhealing Wounds</strong>: +50% casualties, +15% food consumption.</li>
+  <li><strong>Pestilence</strong>: (1% * [Land Ratio]) of target's peasants die and return to the Afflicted as Abominations (takes 12 ticks).</li>
+  <li><strong>Great Fever</strong>: no population growth, -10% gold production, -20% food production.</li>
+  <li><strong>Festering Wounds</strong>: +25% casualties, +25% food consumption.</li>
   </ul>
   <p>Each spell lasts 12 ticks.</p>
 home_land_type: hill
 playable: 1
 
 attacking: 3
-exploring : 2
-converting: 1
+exploring : 0
+converting: 0
+skill_level: 3
+
+construction_materials: gold,lumber
 
 perks:
   max_population: 20
-  population_growth: -5
+  population_growth: 30
+  converts_assassinated_draftees: 1 # into slot 1
+  converts_executed_spies: 3 # into slot 3
 units:
   - name: Abomination
-    need_boat: true
+    training_time: 9
+    type:
+      - living
+      - mindless
     cost:
       food: 100
     power:
       offense: 2
       defense: 0
     perks:
-      conversion: 1
+      value_conversion: 2,1 # [Killed]*2 = number of unit1 created
+      food_consumption: 0.125
+      attrition: 0.5 # 0.5% lost each tick.
       does_not_count_as_population: 1
-      food_consumption: 0.15
+
   - name: Pest Rat
-    need_boat: true
+    training_time: 9
+    type:
+      - living
+      - sentient
     cost:
-      platinum: 300
+      gold: 300
       ore: 0
     power:
-      offense: 1
+      offense: 0
       defense: 3
-  - name: Necromancer
-    need_boat: true
-    cost:
-      platinum: 800
-      ore: 10
-    power:
-      offense: -1
-      defense: 5
     perks:
-      conversion: 4
-      counts_as_wizard_offense: 0.25
-      counts_as_wizard_defense: 0.10
-      fewer_casualties_offense: 80
-  - name: Reaper
-    need_boat: true
+      housing_count: 0.75
+
+  - name: Wretch
+    training_time: 12
+    type:
+      - living
+      - sentient
     cost:
-      platinum: 600
-      ore: 200
-      prestige: 1
+      gold: 800
+    power:
+      offense: 0
+      defense: 6
+
+  - name: Reaper
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 600
+      mana: 40
+      morale: 5
     power:
       offense: 10
       defense: -1
     perks:
       immortal: 1
-      conversion: 1
+      value_conversion: 4,1 # [Killed]*4 = number of unit1 created
+      counts_as_spy_offense: 0.5
+      counts_as_spy_defense: 0.25
+      immortal_spy: 1

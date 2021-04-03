@@ -7,10 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Image;
 use OpenDominion\Helpers\NotificationHelper;
+use OpenDominion\Helpers\SettingHelper;
 use OpenDominion\Models\User;
 use RuntimeException;
 use Storage;
 use Throwable;
+
+use Carbon;
 
 class SettingsController extends AbstractController
 {
@@ -24,9 +27,15 @@ class SettingsController extends AbstractController
 
         $notificationSettings = $user->settings['notifications'] ?? $notificationHelper->getDefaultUserNotificationSettings();
 
+
+        $settingHelper = app(SettingHelper::class);
+
+        $settingSettings = $user->settings['settings'] ?? $settingHelper->getDefaultUserNotificationSettings();
+
         return view('pages.settings', [
             'notificationHelper' => $notificationHelper,
             'notificationSettings' => $notificationSettings,
+            'settingHelper' => $settingHelper,
         ]);
     }
 
@@ -44,7 +53,8 @@ class SettingsController extends AbstractController
 
         $this->updateUser($request->input());
         $this->updateNotifications($request->input());
-//        $this->updateNotificationSettings($request->input());
+        $this->updateSettings($request->input());
+        $this->updateNotificationSettings($request->input());
 
         $request->session()->flash('alert-success', 'Your settings have been updated.');
         return redirect()->route('settings');
@@ -139,12 +149,76 @@ class SettingsController extends AbstractController
         $user->save();
     }
 
+    protected function updateSettings(array $data)
+    {
+        if (!isset($data['settings']) || empty($data['settings'])) {
+            return;
+        }
+
+        $user = Auth::user();
+
+        $settingHelper = app(SettingsHelper::class);
+        $settingCategories = $settingHelper->getSettingCategories();
+
+        $settingKeys = [];
+        $enabledSettingKeys = [];
+        $newNotifications = [];
+
+        // Get list of all ingame notifications (for default values)
+        foreach ($settingCategories as $key => $types)
+        {
+            foreach ($types as $type => $channels)
+            {
+                $notificationKeys["{$key}.{$type}.ingame"] = false;
+            }
+        }
+
+        // Set checked boxes to true
+        foreach ($data['settings'] as $key => $types)
+        {
+            foreach ($types as $type => $channels)
+            {
+                foreach ($channels as $channel => $enabled)
+                {
+                    if ($enabled === 'on')
+                    {
+                        $enabledNotificationKeys["{$key}.{$type}.{$channel}"] = true;
+                        array_set($newNotifications, "{$key}.{$type}.{$channel}", true);
+                    }
+                }
+            }
+        }
+
+        // Set other types to false
+        foreach ($notificationKeys as $key => $value)
+        {
+            if (!isset($enabledNotificationKeys[$key]))
+            {
+                array_set($newNotifications, $key, false);
+            }
+        }
+
+        $settings = ($user->settings ?? []);
+        $settings['settings'] = $newNotifications;
+
+        $user->settings = $settings;
+        $user->save();
+    }
+
     protected function updateNotificationSettings(array $data)
     {
         /** @var User $user */
         $user = Auth::user();
 
         $settings = ($user->settings ?? []);
+
+        dd($settings, $data);
+
+        if(!isset($data['notification_digest']))
+        {
+        #    $data['notification_digest'] = 'hourly';
+        }
+
         $settings['notification_digest'] = $data['notification_digest'];
 
         $user->settings = $settings;

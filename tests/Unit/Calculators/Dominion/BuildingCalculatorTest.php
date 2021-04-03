@@ -60,7 +60,7 @@ class BuildingCalculatorTest extends AbstractBrowserKitTestCase
             'tower',
             'wizard_guild',
             'temple',
-            'diamond_mine',
+            'gem_mine',
             'school',
             'lumberyard',
             'forest_haven',

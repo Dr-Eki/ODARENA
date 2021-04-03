@@ -13,7 +13,7 @@ $factory->define(\OpenDominion\Models\Dominion::class, function (Faker $faker) {
         'morale' => 100,
         'spy_strength' => 100,
         'wizard_strength' => 100,
-        'resource_platinum' => 100000,
+        'resource_gold' => 100000,
         'resource_food' => 15000,
         'resource_lumber' => 15000,
         'resource_mana' => 0,
@@ -24,11 +24,13 @@ $factory->define(\OpenDominion\Models\Dominion::class, function (Faker $faker) {
         # New resources
         'resource_champion' => 0,
         'resource_soul' => 0,
+        'resource_wild_yeti' => 0,
+        'resource_blood' => 0,
         # End new resources
-        #'improvement_science' => 0,
         'improvement_markets' => 0,
         'improvement_keep' => 0,
-        'improvement_towers' => 0,
+        'improvement_towers' => 0, # Remove eventually
+        'improvement_spires' => 0,
         'improvement_forges' => 0,
         'improvement_walls' => 0,
         'improvement_harbor' => 0,
@@ -68,7 +70,7 @@ $factory->define(\OpenDominion\Models\Dominion::class, function (Faker $faker) {
         'building_tower' => 0,
         'building_wizard_guild' => 0,
         'building_temple' => 0,
-        'building_diamond_mine' => 0,
+        'building_gem_mine' => 0,
         'building_school' => 0,
         'building_lumberyard' => 20,
         'building_forest_haven' => 0,

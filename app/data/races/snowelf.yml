@@ -1,73 +1,98 @@
 name: Snow Elf
 alignment: good
-description: >-
-  <p>Snow Elves are an isolated elven people living at the highest mountain peaks overlooking the plains of the Commonwealth.</p>
-  <p>Hidden by the clouds, they build enormous trebuchets and use powerful magic to throw ice bou lders at great distances.</p>
-  <p>They have learned to live with the mighty snowmen, the Yeti, and use their hunger for gryphon eggs to trap and tame them.</p>
-  <hr />
-  <p>For every ten Gryphon Nests, one wild yeti per tick is trapped. This is doubled if Gryphon's Call is cast.</p>
-  <p>Up to 5% of all wild yetis in captivity escape every tick.</p>
-  <hr />
-  <p>Each Trebuchet can throw one Ice Boulder, which is destroyed upon impact. It takes one tick for the Trebuchet to  be able to throw another Ice Boulder.</p>
+description:
+  <p>While Gryphons cannot be tried, Gryphon Nests attract 0.1 Gryphon per tick. Each Gryphon Nest can host one Gryphon, up to a maximum of 20% of your land being Gryphon Nests.</p>
 home_land_type: mountain
 playable: 1
 
-attacking: 3
-exploring : 1
+attacking: 2
+exploring : 2
 converting: 2
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
-  mana_production: 10
   food_consumption: -25
-  gryphon_nests_generates_wild_yetis: 1
-  invest_bonus: 20
-  mana_drain: -50
+  invest_bonus: 30
+  max_population: -20
+  gryphon_nests_generate_gryphons: 0.1
+  can_invest_mana: 0.08
+
 units:
   - name: Arbalist
-    need_boat: true
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 500
-      ore: 50
-      lumber: 5
+      gold: 720
+      ore: 75
+      lumber: 25
     power:
       offense: 0
-      defense: 4
-  - name: Ice Boulder
-    need_boat: false
+      defense: 7
+    perks:
+      immortal_on_fending_off: 1
+
+  - name: Ballista
+
+    training_time: 12
+    type:
+      - machine
     cost:
-      platinum: 800
-      mana: 110
+      lumber: 250
+      ore: 750
     power:
-      offense: 1
+      offense: 10
+      defense: 5
+    perks:
+      faster_return: 6
+      immortal_on_victory: 1
+      immortal_on_fending_off: 1
+      provides_jobs: 1
+      plunder: mana,10
+
+  - name: Hailstorm Cannon
+
+    training_time: 12
+    type:
+      - machine
+    cost:
+      gold: 1000000
+      ore: 400000
+      lumber: 200000
+      mana: 200000
+    power:
+      offense: 0
       defense: 0
     perks:
+      offense_from_resource_exhausting: mana,4 # +1 OP per 4 mana, no max, exhausts mana upon firing
+      amount_limit: 1
       does_not_count_as_population: 1
-      no_draftee: 1
-      offense_from_pairing: 3,24 # slot, amount
-      fixed_casualties: 100
-  - name: Trebuchet
-    need_boat: false
-    cost:
-      platinum: 1800
-      lumber: 150
-    power:
-      offense: 1
-      defense: 0
-    perks:
-      no_draftee: 1
-      does_not_count_as_population: 1
+      sendable_with_zero_op: 1
+      provides_jobs: 1
+      advancements_required_to_train: invocations_level4;anvils_level4;architecture_level4
       true_immortal: 1
-      faster_return: 11
-  - name: Yeti
-    need_boat: true
+
+  - name: Gryphon
+
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wild
+      - massive
     cost:
-      wild_yeti: 1
-      platinum: 1500
-      ore: 120
-      food: 120
+      food: 100
     power:
-      offense: 8
-      defense: 8
+      offense: 100
+      defense: 100
     perks:
+      cannot_be_trained: 1
       no_draftee: 1
-      offense_vs_building: gryphon_nest,10,2
+      does_not_count_as_population: 1
+      building_limit_prestige: gryphon_nest,1 # Unit slot, amount (max 2 of this unit per each Unit 4), imp to increase, imp multiplier
+      food_consumption: 0.75

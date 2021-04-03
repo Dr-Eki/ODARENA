@@ -1,55 +1,78 @@
 name: Dragon
 alignment: evil
-description: >-
-  <p>Dragons enslave small mountain villages. There is an uneasy coexistence between the servant villagers and their dragon masters, continioned on hard labour by the villagers to provide the dragons with food which to eat and gems upon which to slumber.</p>
-  <p>To keep themselves safe from fortune-seeking would-be dragonslayers and Commonwealth harrassment, the villagers have formed a tattered army of peasants armed with scythes, sickles, and rudimentary bows. They complement this with for-hire Mercenaries to provide basic protection from those seeking to take their lands.</p>
-  <p>Solitary beings, the dragons require vast distance between each other. They will however band together to protect their mountain ranges and its villages. And, of course, to take over new lands.</p>
-  <hr />
-  <p>Dragon can only build Homes, Farms, Towers, Ore Mines, Diamond Mines, Lumberyards, Barracks, and Docks.</p>
+description:
 home_land_type: mountain
 playable: 1
 
-attacking: 2
+attacking: 3
 exploring : 0
-converting: 2
+converting: 3
+skill_level: 2
+
+construction_materials: gold,ore
 
 perks:
-    gem_production: 10
     max_population: -10
     population_growth: -10
     cannot_explore: 1
 units:
-  - name: Militia
-    need_boat: true
+
+  - name: Farmer
+    training_time: 2
+    type:
+      - living
+      - sentient
+      - intelligent
+
     cost:
-      platinum: 80
+      gold: 120
       ore: 10
     power:
-      offense: 2
-      defense: 0
+      offense: 0
+      defense: 2
     perks:
-      faster_training: 7
-  - name: Lookout
+      food_production: 6
+
+  - name: Driller
+    training_time: 3
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 100
-      ore: 35
+      gold: 120
+      ore: 20
     power:
       offense: 0
-      defense: 3
+      defense: 0
     perks:
-      faster_training: 7
+      gem_production: 1.2
+      building_limit: gem_mine,20,workshops # building, buildings per unit, imp to increase
+
   - name: Mercenary
-    need_boat: true
+    training_time: 4
+    type:
+      - living
+      - sentient
+      - intelligent
+
     cost:
-      platinum: 500
+      gold: 250
     power:
-      offense: 6
+      offense: 0
       defense: 6
     perks:
-      platinum_upkeep: 0.5
+      upkeep_gold: 5
       no_draftee: 1
+
   - name: Dragon
-    need_boat: false
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - massive
+
     cost:
       gem: 50000
     power:
@@ -60,5 +83,9 @@ units:
       no_draftee: 1
       fewer_casualties_offense: 90
       fewer_casualties_defense: 50
-      land_limit: mountain,6 # Max 1 unit per 300 acres of Mountain
       food_consumption: 55
+      burns_peasants_on_attack: 20
+      plunders: food;50,gems;100
+      protects_resource_from_theft: gems,50000
+      immortal_on_victory: 1
+      immortal_on_fending_off: 1

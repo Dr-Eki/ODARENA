@@ -34,23 +34,52 @@ class TechCalculator
      * @param Dominion $dominion
      * @return int
      */
-    public function getTechCost(Dominion $dominion, Tech $techToUnlock = Null): int
+    public function getTechCost(Dominion $dominion, Tech $techToUnlock = Null, int $level = 1): int
     {
+        # Start at 0
+        $cost = 0;
 
-        $baseTechCostMultiplier = 10;
-        $minimumCost = 10000;
-        $multiplier = 1 + $this->getTechCostMultiplier($dominion);
+        # Add 5 x acres, minimum 5,000
+        $cost += max($this->landCalculator->getTotalLand($dominion) * 5, 5000);
 
-        if($techToUnlock == Null)
+        # Add extra cost from level (from $techToUnlock, if known, or from $level)
+        if($techToUnlock !== null)
         {
-            return max($minimumCost, $this->landCalculator->getTotalLand($dominion) * $baseTechCostMultiplier * $multiplier);
+            $techToUnlock = Tech::where('key', $techToUnlock->key)->first();
+            $cost *= 1 + ($techToUnlock->level - 1) / 10;
+        }
+        elseif(isset($level) and ($level >= 1 and $level <= 10))
+        {
+            $cost *= 1 + ($level - 1) / 10;
         }
 
-        $techToUnlock = Tech::where('key', $techToUnlock->key)->first();
-        $techCostMultiplier = (1 + $techToUnlock->cost_multiplier / 100);
-        $cost = max($minimumCost,($baseTechCostMultiplier * $this->landCalculator->getTotalLand($dominion))) * $techCostMultiplier;
+        $cost *= 1 + $this->getTechCostMultiplier($dominion);
 
         return $cost;
+    }
+
+    public function maxLevelAfforded(Dominion $dominion)
+    {
+        $xp = $dominion->resource_tech;
+        if($xp > 4999)
+        {
+            for ($level = 10; $level >= 1; $level--)
+            {
+                if($xp >= $this->getTechCost($dominion, null, $level))
+                {
+                    return $level;
+                }
+            }
+        }
+        return 0;
+
+    }
+
+    public function canAffordTech(Dominion $dominion, int $level = 1): bool
+    {
+        $cost = $this->getTechCost($dominion, null, $level);
+
+        return $dominion->resource_tech >= $cost;
 
     }
 
@@ -79,4 +108,19 @@ class TechCalculator
 
         return count(array_diff($tech->prerequisites, $unlockedTechs)) == 0;
     }
+
+
+    /**
+     * Determine if the Dominion has a tech.
+     *
+     * @param Dominion $dominion
+     * @return bool
+     */
+    public function hasTech(Dominion $dominion, Tech $tech): bool
+    {
+        $unlockedTechs = $dominion->techs->pluck('key')->all();
+
+        return in_array($tech->key, $unlockedTechs);
+    }
+
 }

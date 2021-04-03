@@ -6,6 +6,10 @@ use Illuminate\Console\Command;
 use OpenDominion\Console\Commands\CommandInterface;
 use OpenDominion\Services\Dominion\TickService;
 
+# ODA
+#use Illuminate\Support\Carbon;
+#use OpenDominion\Models\Round;
+
 class TickCommand extends Command implements CommandInterface
 {
     /** @var string The name and signature of the console command. */
@@ -42,7 +46,10 @@ class TickCommand extends Command implements CommandInterface
     public function handle(): void
     {
         $this->tickService->tickHourly();
-        if (now()->hour === 0 && now()->minute < 15) {
+        #$hoursSinceRoundStarted = now()->startOfHour()->diffInHours(Carbon::parse($round->start_date)->startOfHour());
+        #if ($hoursSinceRoundStarted % 24 === 0 && now()->minute < 15)
+        if (now()->hour === 0 && now()->minute < 15)
+        {
             $this->tickService->tickDaily();
         }
     }

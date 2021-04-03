@@ -1,40 +1,45 @@
 @extends('layouts.master')
 
+{{--
 @section('page-header', 'Military')
+--}}
 
 @section('content')
-    <div class="row">
+<div class="row">
 
-        <div class="col-sm-12 col-md-9">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="ra ra-sword"></i> Military</h3>
-                </div>
-                <form action="{{ route('dominion.military.train') }}" method="post" role="form">
-                    @csrf
-                    <div class="box-body table-responsive no-padding">
-                        <table class="table">
-                            <colgroup>
-                                <col>
-                                <col width="100">
-                                <col width="100">
-                                <col width="150">
-                                <col width="150">
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th>Unit</th>
-                                    <th class="text-center">OP / DP</th>
-                                    <th class="text-center">Trained<br>(Training)</th>
-                                    <th class="text-center">Train</th>
-                                    <th class="text-center">Cost</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($unitHelper->getUnitTypes() as $unitType)
+    <div class="col-sm-12 col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="ra ra-sword"></i> Military</h3>
+                <a href="{{ route('dominion.mentor.military') }}" class="pull-right"><span><i class="ra ra-help"></i> Mentor</span></a>
+            </div>
+            <form action="{{ route('dominion.military.train') }}" method="post" role="form">
+                @csrf
+                <div class="box-body table-responsive no-padding">
+                    <table class="table">
+                        <colgroup>
+                            <col>
+                            <col width="100">
+                            <col width="100">
+                            <col width="150">
+                            <col width="150">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Unit</th>
+                                <th class="text-center">OP / DP</th>
+                                <th class="text-center">Trained<br>(Training)</th>
+                                <th class="text-center">Train</th>
+                                <th class="text-center">Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($unitHelper->getUnitTypes() as $unitType)
+                                @if(($selectedDominion->race->getPerkValue('cannot_train_spies') and $unitType == 'spies') or ($selectedDominion->race->getPerkValue('cannot_train_wizards') and $unitType == 'wizards') or ($selectedDominion->race->getPerkValue('cannot_train_archmages') and $unitType == 'archmages'))
+                                {{-- Do nothing --}}
+                                @else
                                     <tr>
-                                        <td>  <!-- Unit Name -->
-                                            {!! $unitHelper->getUnitTypeIconHtml($unitType, $selectedDominion->race) !!}
+                                        <td>
                                             <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $selectedDominion->race) }}">
                                                 {{ $unitHelper->getUnitName($unitType, $selectedDominion->race) }}
                                             </span>
@@ -70,7 +75,6 @@
                                               </td>
                                               <td class="text-center">  <!-- Trained -->
                                                   {{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unit->slot)) }}
-
                                                   @if($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}") > 0)
                                                   <br>
                                                   ({{ number_format($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}")) }})
@@ -88,13 +92,7 @@
                                               </td>
                                               @endif
                                         <td class="text-center">  <!-- Train -->
-                                          @if ($selectedDominion->race->getPerkValue('cannot_train_spies') and $unitType == 'spies')
-                                            &mdash;
-                                          @elseif ($selectedDominion->race->getPerkValue('cannot_train_wizards') and $unitType == 'wizards')
-                                            &mdash;
-                                          @elseif ($selectedDominion->race->getPerkValue('cannot_train_archmages') and $unitType == 'archmages')
-                                            &mdash;
-                                          @elseif ($selectedDominion->race->getUnitPerkValueForUnitSlot(intval($unitType), 'cannot_be_trained'))
+                                          @if ($selectedDominion->race->getUnitPerkValueForUnitSlot(intval(str_replace('unit','',$unitType)), 'cannot_be_trained'))
                                             &mdash;
                                           @else
                                             <input type="number" name="train[military_{{ $unitType }}]" class="form-control text-center" placeholder="{{ number_format($trainingCalculator->getMaxTrainable($selectedDominion)[$unitType]) }}" min="0" max="" size="8" style="min-width:5em;" value="{{ old('train.' . $unitType) }}" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
@@ -102,365 +100,316 @@
                                         </td>
 
                                         <td class="text-center">  <!-- Cost -->
-                                            @php
-                                                // todo: move this shit to view presenter or something
-                                                $labelParts = [];
+                                            @if ($selectedDominion->race->getUnitPerkValueForUnitSlot(intval(str_replace('unit','',$unitType)), 'cannot_be_trained'))
+                                              &mdash;
+                                            @else
+                                                @php
+                                                    // todo: move this shit to view presenter or something
+                                                    $labelParts = [];
 
-                                                foreach ($trainingCalculator->getTrainingCostsPerUnit($selectedDominion)[$unitType] as $costType => $value) {
+                                                    foreach ($trainingCalculator->getTrainingCostsPerUnit($selectedDominion)[$unitType] as $costType => $value) {
 
-                                                  # Only show resource if there is a corresponding cost
-                                                  if($value > 0)
-                                                  {
+                                                      # Only show resource if there is a corresponding cost
+                                                      if($value !== 0)
+                                                      {
 
-                                                    switch ($costType) {
-                                                        case 'platinum':
-                                                            $labelParts[] = number_format($value) . ' platinum';
-                                                            break;
+                                                        switch ($costType) {
+                                                            case 'gold':
+                                                                $labelParts[] = number_format($value) . ' gold';
+                                                                break;
 
-                                                        case 'ore':
-                                                            $labelParts[] = number_format($value) . ' ore';
-                                                            break;
+                                                            case 'ore':
+                                                                $labelParts[] = number_format($value) . ' ore';
+                                                                break;
 
-                                                        case 'food':
-                                                            $labelParts[] =  number_format($value) . ' food';
-                                                            break;
+                                                            case 'food':
+                                                                $labelParts[] =  number_format($value) . ' food';
+                                                                break;
 
-                                                        case 'mana':
-                                                            $labelParts[] =  number_format($value) . ' mana';
-                                                            break;
+                                                            case 'mana':
+                                                                $labelParts[] =  number_format($value) . ' mana';
+                                                                break;
 
-                                                        case 'lumber':
-                                                            $labelParts[] =  number_format($value) . ' lumber';
-                                                            break;
+                                                            case 'lumber':
+                                                                $labelParts[] =  number_format($value) . ' lumber';
+                                                                break;
 
-                                                        case 'gem':
-                                                            $labelParts[] =  number_format($value) . ' ' . str_plural('gem', $value);
-                                                            break;
+                                                            case 'gem':
+                                                                $labelParts[] =  number_format($value) . ' ' . str_plural('gem', $value);
+                                                                break;
 
-                                                        case 'prestige':
-                                                            $labelParts[] =  number_format($value) . ' Prestige';
-                                                            break;
+                                                            case 'prestige':
+                                                                $labelParts[] =  number_format($value) . ' Prestige';
+                                                                break;
 
-                                                        case 'boat':
-                                                            $labelParts[] =  number_format($value) . ' ' . str_plural('boat', $value);
-                                                            break;
+                                                            case 'boat':
+                                                                $labelParts[] =  number_format($value) . ' ' . str_plural('boat', $value);
+                                                                break;
 
-                                                        case 'champion':
-                                                            $labelParts[] =  number_format($value) . ' ' . str_plural('Champion', $value);
-                                                            break;
+                                                            case 'champion':
+                                                                $labelParts[] =  number_format($value) . ' ' . str_plural('Champion', $value);
+                                                                break;
 
-                                                        case 'soul':
-                                                            $labelParts[] =  number_format($value) . ' ' . str_plural('Soul', $value);
-                                                            break;
+                                                            case 'soul':
+                                                                $labelParts[] =  number_format($value) . ' ' . str_plural('Soul', $value);
+                                                                break;
 
-                                                        case 'unit1':
-                                                        case 'unit2':
-                                                        case 'unit3':
-                                                        case 'unit4':
-                                                            $labelParts[] =  number_format($value) . ' ' . str_plural($unitHelper->getUnitName($costType, $selectedDominion->race), $value);
-                                                            break;
+                                                            case 'blood':
+                                                                $labelParts[] =  number_format($value) . ' blood';
+                                                                break;
 
-                                                        case 'morale':
-                                                            $labelParts[] =  number_format($value) . '% morale';
-                                                            break;
+                                                            case 'unit1':
+                                                            case 'unit2':
+                                                            case 'unit3':
+                                                            case 'unit4':
+                                                                $labelParts[] =  number_format($value) . ' ' . str_plural($unitHelper->getUnitName($costType, $selectedDominion->race), $value);
+                                                                break;
 
-                                                        case 'wild_yeti':
-                                                            $labelParts[] =  number_format($value) . ' ' . str_plural('wild yeti', $value);
-                                                            break;
+                                                            case 'morale':
+                                                                $labelParts[] =  number_format($value) . '% morale';
+                                                                break;
 
-                                                        case 'spy':
-                                                            $labelParts[] =  number_format($value) . ' ' . str_plural('Spy', $value);
-                                                            break;
+                                                            case 'peasant':
+                                                                $labelParts[] =  number_format($value) . ' peasant';
+                                                                break;
 
-                                                        case 'wizard':
-                                                            $labelParts[] =  number_format($value) . ' ' . str_plural('Wizard', $value);
-                                                            break;
+                                                            case 'wild_yeti':
+                                                                $labelParts[] =  number_format($value) . ' ' . str_plural('wild yeti', $value);
+                                                                break;
 
-                                                        case 'archmage':
-                                                            $labelParts[] =  number_format($value) . ' ' . str_plural('Archmage', $value);
-                                                            break;
+                                                            case 'spy':
+                                                                $labelParts[] =  number_format($value) . ' ' . str_plural('Spy', $value);
+                                                                break;
 
-                                                        case 'wizards':
-                                                            $labelParts[] = '1 Wizard';
-                                                            break;
+                                                            case 'wizard':
+                                                                $labelParts[] =  number_format($value) . ' ' . str_plural('Wizard', $value);
+                                                                break;
 
-                                                        default:
-                                                            break;
-                                                        }
+                                                            case 'archmage':
+                                                                $labelParts[] =  number_format($value) . ' ' . str_plural('Archmage', $value);
+                                                                break;
 
-                                                    } #ENDIF
-                                                }
+                                                            case 'wizards':
+                                                                $labelParts[] = '1 Wizard';
+                                                                break;
 
-                                                echo implode(',<br>', $labelParts);
-                                            @endphp
+                                                            default:
+                                                                break;
+                                                            }
+
+                                                        } #ENDIF
+                                                    }
+
+                                                    echo implode(',<br>', $labelParts);
+                                                @endphp
+                                            @endif
                                         </td>
                                     </tr>
-                                @endforeach
+                                @endif
+                            @endforeach
 
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="box-footer">
-                        <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
-                          @if ($selectedDominion->race->name == 'Growth')
+                        </tbody>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
+                      @if ($selectedDominion->race->name == 'Growth')
                           Mutate
-                          @elseif ($selectedDominion->race->name == 'Myconid')
+                      @elseif ($selectedDominion->race->name == 'Myconid')
                           Grow
-                          @elseif ($selectedDominion->race->name == 'Swarm')
+                      @elseif ($selectedDominion->race->name == 'Swarm')
                           Hatch
-                          @else
+                      @else
                           Train
-                          @endif
-                        </button>
-                        <div class="pull-right">
-                          @if ($selectedDominion->race->name == 'Growth')
-                            You have <strong>{{ number_format($selectedDominion->military_draftees) }}</strong> amoeba available to mutate.
-                          @elseif ($selectedDominion->race->name == 'Myconid')
-                            You have <strong>{{ number_format($selectedDominion->military_draftees) }}</strong> sporelings available to grow.
-                          @elseif ($selectedDominion->race->name == 'Swarm')
-                            You have <strong>{{ number_format($selectedDominion->military_draftees) }}</strong> cocoons available to hatch.
-                          @else
-                            You have <strong>{{ number_format($selectedDominion->military_draftees) }}</strong> {{ str_plural('draftee', $selectedDominion->military_draftees) }} available to train.
-                          @endif
+                      @endif
+                    </button>
+                    <div class="pull-right">
+                      You have <strong>{{ number_format($selectedDominion->military_draftees) }}</strong> {{ ucwords(str_plural($raceHelper->getDrafteesTerm($selectedDominion->race))) }} available.
 
-                          @if ($selectedDominion->race->name == 'Snow Elf')
-                          <br> You also have <strong>{{ number_format($selectedDominion->resource_wild_yeti) }}</strong>  wild yeti trapped.
-                          @endif
+                      @if ($selectedDominion->race->name == 'Demon')
+                          <br> You also have <strong>{{ number_format($selectedDominion->resource_soul) }}</strong> souls and <strong>{{ number_format($selectedDominion->resource_blood) }}</strong> gallons of blood.
+                      @endif
 
-                          @if ($selectedDominion->race->name == 'Demon')
-                          <br> You also have <strong>{{ number_format($selectedDominion->resource_soul) }}</strong> souls collected.
-                          @endif
+                      @if ($selectedDominion->race->name == 'Norse')
+                          <br> You also have <strong>{{ number_format($selectedDominion->resource_champion) }}</strong> legendary champions waiting.
+                      @endif
 
-                          @if ($selectedDominion->race->name == 'Norse')
-                          <br> You also have <strong>{{ number_format($selectedDominion->resource_champion) }}</strong> legendary champions awaiting.
-                          @endif
-
-                          @if ($militaryCalculator->getRecentlyInvadedCount($selectedDominion) and $selectedDominion->race->name == 'Sylvan')
+                      @if ($militaryCalculator->getRecentlyInvadedCount($selectedDominion) and $selectedDominion->race->name == 'Sylvan')
                           <br> You were recently invaded, enraging your Spriggan and Leshy.
-                          @endif
-                        </div>
+                      @endif
                     </div>
-                </form>
-            </div>
-
+                </div>
+            </form>
         </div>
 
-        <div class="col-sm-12 col-md-3">
-
-            <div class="box">
+        <div class="col-sm-12 col-md-6">
+            <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Information</h3>
-                    <a href="{{ route('dominion.advisors.military') }}" class="pull-right">Military Advisor</a>
-                </div>
-                <div class="box-body">
-                    @if ($selectedDominion->race->name == 'Growth')
-                    <p>Here you can mutate your amoeba into military units. Mutating Abscess and Blisters take <b>9 ticks</b> to process, while mutating Cysts and Ulcers take <b>12 ticks</b>.</p>
-                    <p>You have {{ number_format($selectedDominion->military_draftees) }} amoeba.</p>
-
-                    @elseif ($selectedDominion->race->name == 'Myconid')
-                    <p>Here you can grow your sporelings into Mushrooms, which can then be grown into Mold, Psilocybe, and Amanita.</p>
-                    <p>It takes three ticks to grow Mycelia, six ticks to grow Mold, nine ticks to grow a Psilocybe, and 12 ticks to grow an Amanita.</p>
-                    <p>You have {{ number_format($selectedDominion->military_draftees) }} sporelings.</p>
-
-                    @elseif ($selectedDominion->race->name == 'Swarm')
-                    <p>Here you can hatch your cocoons into units.</p>
-                    <p>You have {{ number_format($selectedDominion->military_draftees) }} cocoons.</p>
-
-                    @else
-                    <p>Here you can train your draftees into stronger military units. Training specialist units take <b>9 ticks</b> to process, while training your other units take <b>12 ticks</b>.</p>
-                    <p>You have {{ number_format($selectedDominion->resource_platinum) }} platinum, {{ number_format($selectedDominion->resource_ore) }} ore and {{ number_format($selectedDominion->military_draftees) }} {{ str_plural('draftee', $selectedDominion->military_draftees) }}.</p>
-                    @endif
-
-                    <p>You may also <a href="{{ route('dominion.military.release') }}">release your troops</a> if you wish.</p>
-                </div>
-            </div>
-
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Statistics</h3>
+                    <h3 class="box-title"><i class="ra ra-sword"></i> Units in training and home</h3>
                 </div>
                 <div class="box-body table-responsive no-padding">
                     <table class="table">
                         <colgroup>
-                            <col width="50%">
-                            <col width="50%">
+                            <col>
+                            @for ($i = 1; $i <= 12; $i++)
+                                <col width="20">
+                            @endfor
+                            <col width="100">
                         </colgroup>
                         <thead>
                             <tr>
-                                <th class="text-center">Population</th>
-                                <th class="text-center">Amount</th>
+                                <th>Unit</th>
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <th class="text-center">{{ $i }}</th>
+                                @endfor
+                                <th class="text-center">Home (Training)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                              @if ($selectedDominion->race->name == 'Growth')
-                                <td class="text-center">Cells</td>
-                              @elseif ($selectedDominion->race->name == 'Myconid')
-                                <td class="text-center">Spores</td>
-                              @elseif ($selectedDominion->race->name == 'Swarm')
-                                <td class="text-center">Larvae</td>
-                              @else
-                                <td class="text-center">Peasants</td>
-                              @endif
-                                <td class="text-center">
-                                    {{ number_format($selectedDominion->peasants) }}
-                                    ({{ number_format($populationCalculator->getPopulationPeasantPercentage($selectedDominion), 2) }}%)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center">Military</td>
-                                <td class="text-center">
-                                    {{ number_format($populationCalculator->getPopulationMilitary($selectedDominion)) }}
-                                    ({{ number_format($populationCalculator->getPopulationMilitaryPercentage($selectedDominion), 2) }}%)
-                                </td>
-                            </tr>
+                            @foreach ($unitHelper->getUnitTypes() as $unitType)
+                                <tr>
+                                    <td>
+
+                                        <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $selectedDominion->race) }}">
+                                            {{ $unitHelper->getUnitName($unitType, $selectedDominion->race) }}
+                                        </span>
+                                    </td>
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        <td class="text-center">
+                                            @if ($queueService->getTrainingQueueAmount($selectedDominion, "military_{$unitType}", $i) === 0)
+                                                -
+                                            @else
+                                                {{ number_format($queueService->getTrainingQueueAmount($selectedDominion, "military_{$unitType}", $i)) }}
+                                            @endif
+                                        </td>
+                                    @endfor
+                                    <td class="text-center">
+                                        {{ number_format($selectedDominion->{'military_' . $unitType}) }}
+                                        ({{ number_format($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}")) }})
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
 
-            @if ($selectedDominion->race->name !== 'Growth')
+        <div class="col-sm-12 col-md-6">
             <div class="box">
                 <div class="box-header with-border">
-                    @if ($selectedDominion->race->name == 'Myconid')
-                    <h3 class="box-title">Sporelings</h3>
-                    @elseif ($selectedDominion->race->name == 'Swarm')
-                    <h3 class="box-title">Cocoons</h3>
-                    @else
-                    <h3 class="box-title">Draftees</h3>
-                    @endif
+                    <h3 class="box-title"><i class="fa fa-clock-o"></i> Units returning from battle</h3>
                 </div>
-                <form action="{{ route('dominion.military.change-draft-rate') }}" method="post" role="form">
-                    @csrf
-                    <div class="box-body table-responsive no-padding">
-                        <table class="table">
-                            <colgroup>
-                                <col width="50%">
-                                <col width="50%">
-                            </colgroup>
-                            <tbody>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table">
+                        <colgroup>
+                            <col>
+                            @for ($i = 1; $i <= 12; $i++)
+                                <col width="20">
+                            @endfor
+                            <col width="100">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Unit</th>
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <th class="text-center">{{ $i }}</th>
+                                @endfor
+                                <th class="text-center">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (range(1, 4) as $slot)
+                                @php($unitType = ('unit' . $slot))
                                 <tr>
-                                    @if ($selectedDominion->race->name == 'Myconid')
-                                    <td class="text-center">Germination:</td>
-                                    @else
-                                    <td class="text-center">Draft Rate:</td>
-                                    @endif
+                                    <td>
+
+                                        <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $selectedDominion->race) }}">
+                                            {{ $unitHelper->getUnitName($unitType, $selectedDominion->race) }}
+                                        </span>
+                                    </td>
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        <td class="text-center">
+                                            @if ($queueService->getInvasionQueueAmount($selectedDominion, "military_{$unitType}", $i) === 0)
+                                                -
+                                            @else
+                                                {{ number_format($queueService->getInvasionQueueAmount($selectedDominion, "military_{$unitType}", $i)) }}
+                                            @endif
+                                        </td>
+                                    @endfor
                                     <td class="text-center">
-                                        <input type="number" name="draft_rate" class="form-control text-center"
-                                               style="display: inline-block; width: 80px;" placeholder="0" min="0"
-                                               max="100"
-                                               value="{{ $selectedDominion->draft_rate }}" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
-                                        %
+                                        {{ number_format($queueService->getInvasionQueueTotalByResource($selectedDominion, "military_{$unitType}")) }}
                                     </td>
                                 </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="box-footer">
-                        <button type="submit"
-                                class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>Change
-                        </button>
-                    </div>
-                </form>
-            </div>
-            @endif
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="ra ra-sword"></i> Military Modifiers</h3>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                    <div class="box-body table-responsive no-padding">
-                        <table class="table">
-                            <colgroup>
-                                <col width="25%">
-                                <col width="25%">
-                            </colgroup>
-                            <thead>
-                              <tr>
-                                <td colspan="2"><h4>Offensive Modifiers</h4></td>
-                              </tr>
-                                <tr>
-                                    <th class="text-center">Modifier</th>
-                                    <th class="text-center">Multiplier</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Total: </strong></td>
-                                    <td><strong>{{ number_format(($militaryCalculator->getOffensivePowerMultiplier($selectedDominion) - 1) * 100, 2) }}%</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>Prestige: </td>
-                                    <td>{{ number_format($prestigeCalculator->getPrestigeMultiplier($selectedDominion) * 100, 2) }}%</td>
-                                </tr>
-                                <tr>
-                                    <td>Forges: </td>
-                                    <td>{{ number_format($improvementCalculator->getImprovementMultiplierBonus($selectedDominion, 'forges') * 100, 2) }}%</td>
-                                </tr>
-                                <tr>
-                                    <td>Advancements: </td>
-                                    <td>{{ number_format($selectedDominion->getTechPerkMultiplier('offense') * 100, 2) }}%</td>
-                                </tr>
-                                <tr>
-                                    <td>Spell: </td>
-                                    <td>{{ number_format($militaryCalculator->getSpellMultiplier($selectedDominion, null, 'offense') * 100, 2) }}%</td>
-                                </tr>
-                                <tr>
-                                    <td>Gryphon Nests: </td>
-                                    <td>{{ number_format($militaryCalculator->getGryphonNestMultiplier($selectedDominion) * 100, 2) }}%</td>
-                                </tr>
-                                <tr>
-                                    <td>Faction bonus: </td>
-                                    <td>{{ number_format($selectedDominion->race->getPerkMultiplier('offense') * 100, 2) }}%</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="box-body table-responsive no-padding">
-                        <table class="table">
-                            <colgroup>
-                                <col width="25%">
-                                <col width="25%">
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                  <td colspan="2"><h4>Defensive Modifiers</h4></td>
-                                </tr>
-                                <tr>
-                                    <th class="text-center">Modifier</th>
-                                    <th class="text-center">Multiplier</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Total: </strong></td>
-                                    <td><strong>{{ number_format(($militaryCalculator->getDefensivePowerMultiplier($selectedDominion) - 1) * 100, 2) }}%</strong></td>
-                                </tr>
-                                <tr>
-                                    <td>Walls: </td>
-                                    <td>{{ number_format($improvementCalculator->getImprovementMultiplierBonus($selectedDominion, 'walls') * 100, 2) }}%</td>
-                                </tr>
-                                <tr>
-                                    <td>Advancements: </td>
-                                    <td>{{ number_format($selectedDominion->getTechPerkMultiplier('defense') * 100, 2) }}%</td>
-                                </tr>
-                                <tr>
-                                    <td>Spell: </td>
-                                    <td>{{ number_format($militaryCalculator->getSpellMultiplier($selectedDominion, null, 'defense') * 100, 2) }}%</td>
-                                </tr>
-                                <tr>
-                                    <td>Guard Towers: </td>
-                                    <td>{{ number_format($militaryCalculator->getGuardTowerMultiplier($selectedDominion) * 100, 2) }}%</td>
-                                </tr>
-                                <tr>
-                                    <td>Faction bonus: </td>
-                                    <td>{{ number_format($selectedDominion->race->getPerkMultiplier('defense') * 100, 2) }}%</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
             </div>
-
+        </div>
 
     </div>
+
+    <div class="col-sm-12 col-md-3">
+
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Housing</h3>
+                <a href="{{ route('dominion.military.release') }}" class="pull-right">Release Units</a>
+            </div>
+            <form action="{{ route('dominion.military.change-draft-rate') }}" method="post" role="form">
+                @csrf
+                <div class="box-body table-responsive no-padding">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td class="text">Military</td>
+                                <td class="text">
+                                    {{ number_format($populationCalculator->getPopulationMilitary($selectedDominion)) }}
+                                    ({{ number_format($populationCalculator->getPopulationMilitaryPercentage($selectedDominion), 2) }}%)
+                                </td>
+                            </tr>
+                            @if ($selectedDominion->race->name !== 'Growth')
+                            <tr>
+                                @if ($selectedDominion->race->name == 'Myconid')
+                                <td class="text">Germination</td>
+                                @else
+                                <td class="text">Draft Rate</td>
+                                @endif
+                                <td class="text">
+                                    <input type="number" name="draft_rate" class="form-control text-center"
+                                           style="display: inline-block; width: 4em;" placeholder="0" min="0" max="100"
+                                           value="{{ $selectedDominion->draft_rate }}" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>&nbsp;%
+                                </td>
+                            </tr>
+                            @endif
+                            <tr>
+                              <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by Barracks:<br>Filled / Available">Barracks housing:</span></td>
+                              <td>{{ number_format($populationCalculator->getUnitsHousedInBarracks($selectedDominion)) }} / {{ number_format($populationCalculator->getAvailableHousingFromBarracks($selectedDominion)) }}</td>
+                            </tr>
+                            <tr>
+                              <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by Forest Havens:<br>Filled / Available">Spy housing:</span></td>
+                              <td>{{ number_format($populationCalculator->getUnitsHousedInForestHavens($selectedDominion)) }} / {{ number_format($populationCalculator->getAvailableHousingFromForestHavens($selectedDominion)) }}</td>
+                            </tr>
+                            <tr>
+                              <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by Wizard Guilds:<br>Filled / Available">Wizard housing:</span></td>
+                              <td>{{ number_format($populationCalculator->getUnitsHousedInWizardGuilds($selectedDominion)) }} / {{ number_format($populationCalculator->getAvailableHousingFromWizardGuilds($selectedDominion)) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                @if ($selectedDominion->race->name !== 'Growth')
+                <div class="box-footer">
+                    <button type="submit"
+                            class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>Change
+                    </button>
+                </div>
+                @endif
+            </form>
+        </div>
+        @include('partials.dominion.military-cost-modifiers')
+        @include('partials.dominion.military-power-modifiers')
+    </div>
+
+</div>
 @endsection

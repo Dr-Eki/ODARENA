@@ -1,6 +1,8 @@
 @extends('layouts.master')
 
+{{--
 @section('page-header', 'Rankings')
+--}}
 
 @section('content')
     <div class="row">

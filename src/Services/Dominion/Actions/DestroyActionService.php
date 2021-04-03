@@ -7,9 +7,21 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Traits\DominionGuardsTrait;
 
+use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\BuildingCalculator;
+
 class DestroyActionService
 {
     use DominionGuardsTrait;
+
+        /** @var SpellCalculator */
+        protected $spellCalculator;
+
+        public function __construct()
+        {
+            $this->spellCalculator = app(SpellCalculator::class);
+            $this->buildingCalculator = app(BuildingCalculator::class);
+        }
 
     /**
      * Does a destroy buildings action for a Dominion.
@@ -23,6 +35,12 @@ class DestroyActionService
     {
         $this->guardLockedDominion($dominion);
 
+        // Qur: Statis
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+            throw new GameException('You cannot destroy buildings while you are in stasis.');
+        }
+
         $data = array_map('\intval', $data);
 
         $totalBuildingsToDestroy = array_sum($data);
@@ -31,7 +49,8 @@ class DestroyActionService
             throw new GameException('The destruction was not completed due to bad input.');
         }
 
-        foreach ($data as $buildingType => $amount) {
+        foreach ($data as $buildingType => $amount)
+        {
             if ($amount === 0) {
                 continue;
             }
@@ -45,9 +64,8 @@ class DestroyActionService
             }
         }
 
-        foreach ($data as $buildingType => $amount) {
-            $dominion->{'building_' . $buildingType} -= $amount;
-        }
+        # BV2
+        $this->buildingCalculator->removeBuildings($dominion, $data);
 
         $dominion->save(['event' => HistoryService::EVENT_ACTION_DESTROY]);
 

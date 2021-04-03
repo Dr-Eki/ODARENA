@@ -1,0 +1,98 @@
+name: Vampires
+alignment: independent
+description: >-
+  <p><strong>Vampiric Conversion</strong></p>
+  <p>Vampires have a unique method for converting. Units are converted to different unit types depending on the raw military power of the unit slain.</p>
+  <ul>
+  <li>Weak units (up to and including 3 OP/DP) become Servants.</li>
+  <li>Average units (4 to 7 OP/DP) become Gnarls.</li>
+  <li>Strong units (greater than 7 OP/DP) become Ravagers.</li>
+  </ul>
+home_land_type: plain
+playable: 1
+
+attacking: 3
+exploring : 1
+converting: 1
+skill_level: 2
+
+construction_materials: gold,lumber
+
+perks:
+  max_population: 20
+  food_consumption: -80
+  title_bonus: 100
+units:
+  - name: Servant
+    type:
+      - living
+      - mindless
+
+    static_networth: 5
+    cost:
+      food: 0
+    power:
+      offense: 0
+      defense: 6
+    perks:
+      cannot_be_trained: 1
+      does_not_count_as_population: 1
+      vampiric_conversion: 4,7 # <=3: unit1, >3 <=7: unit2, >7: unit3
+
+  - name: Gnarl
+    type:
+      - living
+      - sentient
+
+    static_networth: 10
+    cost:
+      gold: 0
+    power:
+      offense: 9
+      defense: 9
+    perks:
+      cannot_be_trained: 1
+      fewer_casualties: 50
+      defense_from_time: 06,18,1 # Between the hours 18:00 and 06:00, gains +1 DP
+      offense_from_time: 18,06,1 # Between the hours 18:00 and 06:00, gains +1 OP
+      vampiric_conversion: 4,7
+
+  - name: Ravager
+    type:
+      - living
+      - sentient
+      - massive
+      - intelligent
+
+    static_networth: 18
+    cost:
+      gold: 0
+    power:
+      offense: 22
+      defense: 12
+    perks:
+      cannot_be_trained: 1
+      fewer_casualties: 75
+      extra_food_consumption: 0.5
+      offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP
+      vampiric_conversion: 4,7
+
+  - name: Noble
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+
+    cost:
+      gold: 1350
+    power:
+      offense: 6
+      defense: 6
+    perks:
+      fewer_casualties: 50
+      vampiric_conversion: 4,7
+      defense_from_time: 06,18,1 # Between the hours 18:00 and 06:00, gains +1 DP
+      offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP
+      counts_as_spy_defense: 0.125
+      faster_return: 4

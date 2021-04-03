@@ -21,12 +21,18 @@ class HistoryService
     public const EVENT_ACTION_TRAIN = 'train';
     public const EVENT_ACTION_RELEASE = 'release';
     public const EVENT_ACTION_CAST_SPELL = 'cast spell';
+    public const EVENT_ACTION_BREAK_SPELL = 'break spell';
     public const EVENT_ACTION_PERFORM_ESPIONAGE_OPERATION = 'perform espionage operation';
     public const EVENT_ACTION_INVADE = 'invade';
-    public const EVENT_ACTION_JOIN_ROYAL_GUARD = 'join royal guard';
-    public const EVENT_ACTION_JOIN_ELITE_GUARD = 'join elite guard';
-    public const EVENT_ACTION_LEAVE_ROYAL_GUARD = 'leave royal guard';
-    public const EVENT_ACTION_LEAVE_ELITE_GUARD = 'leave elite guard';
+    public const EVENT_ACTION_JOIN_ROYAL_GUARD = 'join peacekeepers league';
+    public const EVENT_ACTION_JOIN_ELITE_GUARD = 'join warriors league';
+    public const EVENT_ACTION_LEAVE_ROYAL_GUARD = 'leave peacekeepers league';
+    public const EVENT_ACTION_LEAVE_ELITE_GUARD = 'leave warriors league';
+    public const EVENT_ROUND_VICTORY = 'round victory';
+    public const EVENT_ROUND_COUNTDOWN = 'round countdown';
+
+    public const EVENT_ACTION_NOTE = 'update notes';
+    public const EVENT_ACTION_SEND_UNITS = 'units sent';
 
     /**
      * Returns a cloned dominion instance with state at a certain time.
@@ -103,10 +109,12 @@ class HistoryService
         $newAttributes = collect($dominion->getAttributes())
             ->intersectByKeys(array_flip($attributeKeys));
 
-        return $newAttributes->map(function ($value, $key) use ($dominion, $oldAttributes) {
+        return $newAttributes->map(function ($value, $key) use ($dominion, $oldAttributes)
+        {
             $attributeType = gettype($dominion->getAttribute($key));
 
-            switch ($attributeType) {
+            switch ($attributeType)
+            {
                 case 'boolean':
                     return (bool)$value;
                     break;
@@ -147,18 +155,22 @@ class HistoryService
                 'round_id',
                 'realm_id',
                 'race_id',
+                'title_id',
                 'name',
                 'ruler_name',
                 'peasants_last_hour',
                 'created_at',
                 'updated_at',
-                'daily_platinum',
+                'daily_gold',
                 'daily_land',
                 'council_last_read',
+                'news_last_read',
                 'royal_guard_active_at',
                 'elite_guard_active_at',
+                'barbarian_guard_active_at',
                 'last_tick_at',
-                'monarch_dominion_id',
+                'monarchy_vote_for_dominion_id',
+                'most_recent_improvement_resource',
             ])->keys()->toArray();
     }
 }

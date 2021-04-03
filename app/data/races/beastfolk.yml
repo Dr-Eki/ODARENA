@@ -1,67 +1,84 @@
 name: Beastfolk
 alignment: independent
-description: >-
-  <p>Arcane magic has given life to the beasts of the forest, which have been seen building villages in the forests of the Commonwealth.</p>
-  <p>Beastfolk take shelter in the forests and excel at fighting on the open plains.</p>
-  <p>Malcontent with their treatment as a part of the Commonwealth, the Beastfolk have broken their treaty and decided to be as they feel best: independent.</p>
-  <hr />
-  <p>Instead of castle improvements, Beastfolk use natural resources (land types) to strengthen their dominion. All bonuses except the OP and DP bonuses from Plains and Hills are increased by prestige.</p>
+description:
+  <p>Instead of traditional improvements, Beastfolk use natural resources (land types) to strengthen their dominion.</p>
   <ul>
-  <li>Platinum production increased by Mountains % (<em>Markets</em>).</li>
-  <li>Max population increased by Forest % (<em>Keep</em>).</li>
-  <li>Wizard Strength increased by 2 x Swamp % (<em>Tower</em>).</li>
-  <li>Defensive Power increased by Hills % (<em>Walls</em>).</li>
-  <li>Offensive Power increased by 0.2 x Plains % (<em>Forges</em>).</li>
-  <li>Food and Boat production increased by 5 x Water % (<em>Harbor</em>).</li>
+  <li>Gold production increased by 0.75 x Mountains %.</li>
+  <li>Max population increased by 0.75 x Forest %.</li>
+  <li>Wizard Strength increased by 2 x Swamp %.</li>
+  <li>Defensive Power increased by 0.65 x Hills %.</li>
+  <li>Offensive Power increased by 0.15 x Plains %.</li>
+  <li>Food and Boat production increased by 5 x Water %.</li>
   </ul>
-  <hr />
-  <p>Beastfolk Smithies are 2.5% reduction for every 1% Smithies (max 50%) instead of 2.0% per 1% Smithies (max 40%).</p>
+  <p>These bonuses are increased by Prestige using the standard prestige multiplier.</p>
 home_land_type: forest
 playable: 1
 
 attacking: 3
 exploring : 2
 converting: 2
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
   extra_barren_max_population: 10
   cannot_improve_castle: 1
   cannot_train_archmages: 1
   max_population: 10
+  land_improvements: 1
 units:
   - name: Boarman
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 265
+      gold: 265
       ore: 25
     power:
       offense: 3
       defense: 0
   - name: Ram
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 325
+      gold: 325
       ore: 25
     power:
       offense: 0
       defense: 4
   - name: Goat Witch
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
+      gold: 900
       ore: 0
     power:
-      offense: 1
+      offense: 5
       defense: 3
     perks:
-      offense_vs_land: plain,10,3 # land type, ratio%, max
       defense_from_land: forest,10,3 # land type, ratio%, max
       counts_as_wizard_offense: 0.25
       counts_as_wizard_defense: 0.25
   - name: Minotaur
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1200
-      ore: 90
+      gold: 1000
+      ore: 100
     power:
-      offense: 4
-      defense: 1
+      offense: 7
+      defense: 2
     perks:
-      offense_vs_land: plain,10,3 # land type, ratio%, max
       defense_from_land: forest,10,3 # land type, ratio%, max

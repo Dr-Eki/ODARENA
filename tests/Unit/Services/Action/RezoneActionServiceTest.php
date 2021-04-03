@@ -51,11 +51,11 @@ class RezoneActionServiceTest extends AbstractBrowserKitTestCase
      */
     public function testDoingNothing()
     {
-        $this->assertEquals(100000, $this->dominion->resource_platinum);
+        $this->assertEquals(100000, $this->dominion->resource_gold);
 
         $this->rezoneActionService->rezone($this->dominion, [], []);
 
-        $this->assertEquals(100000, $this->dominion->resource_platinum);
+        $this->assertEquals(100000, $this->dominion->resource_gold);
     }
 
     /**
@@ -79,12 +79,12 @@ class RezoneActionServiceTest extends AbstractBrowserKitTestCase
      */
     public function testConvertingToSameTypeIsFree()
     {
-        $this->assertEquals(100000, $this->dominion->resource_platinum);
+        $this->assertEquals(100000, $this->dominion->resource_gold);
         $this->assertEquals(20, $this->dominion->land_cavern);
 
         $this->rezoneActionService->rezone($this->dominion, ['cavern' => 5], ['cavern' => 5]);
 
-        $this->assertEquals(100000, $this->dominion->resource_platinum);
+        $this->assertEquals(100000, $this->dominion->resource_gold);
         $this->assertEquals(20, $this->dominion->land_cavern);
     }
 
@@ -142,7 +142,7 @@ class RezoneActionServiceTest extends AbstractBrowserKitTestCase
     public function testRemovingMoreThanBarrenLand()
     {
         $this->dominion->land_cavern = 20;
-        $this->dominion->building_diamond_mine = 15;
+        $this->dominion->building_gem_mine = 15;
 
         $this->assertEquals(5, $this->landCalculator->getTotalBarrenLandByLandType($this->dominion, 'cavern'));
 
@@ -156,7 +156,7 @@ class RezoneActionServiceTest extends AbstractBrowserKitTestCase
      */
     public function testRemovingMoreThanCanBeAfforded()
     {
-        $this->dominion->resource_platinum = 0;
+        $this->dominion->resource_gold = 0;
 
         $this->rezoneActionService->rezone($this->dominion, ['cavern' => 1], ['hill' => 1]);
     }

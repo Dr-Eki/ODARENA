@@ -9,6 +9,8 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Traits\DominionGuardsTrait;
 
+use OpenDominion\Calculators\Dominion\SpellCalculator;
+
 class BankActionService
 {
     use DominionGuardsTrait;
@@ -21,9 +23,13 @@ class BankActionService
      *
      * @param BankingCalculator $bankingCalculator
      */
-    public function __construct(BankingCalculator $bankingCalculator)
+    public function __construct(
+        BankingCalculator $bankingCalculator,
+        SpellCalculator $spellCalculator
+        )
     {
         $this->bankingCalculator = $bankingCalculator;
+        $this->spellCalculator = $spellCalculator;
     }
 
     /**
@@ -41,7 +47,14 @@ class BankActionService
     {
         $this->guardLockedDominion($dominion);
 
-        if($amount < 0) {
+        // Qur: Statis
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+            throw new GameException('You cannot exchange resources while you are in stasis.');
+        }
+
+        if($amount < 0)
+        {
             throw new LogicException('Amount less than 0.');
         }
 
@@ -66,16 +79,22 @@ class BankActionService
 
         if($source == 'peasants' and $amount > ($dominion->peasants - 1000))
         {
-          throw new GameException(sprintf(
-              'You cannot sacrifice %s peasants. You must leave at least 1,000 peasants alive.',
-              number_format($amount),
-          ));
+            throw new GameException(sprintf(
+                'You cannot sacrifice %s peasants. You must leave at least 1,000 peasants alive.',
+                number_format($amount),
+            ));
         }
 
         $targetAmount = floor($amount * $sourceResource['sell'] * $targetResource['buy']);
 
         $dominion->{$source} -= $amount;
         $dominion->{$target} += $targetAmount;
+
+        $dominion->most_recent_exchange_from = $source;
+        $dominion->most_recent_exchange_to = $target;
+
+        $dominion->{'stat_total_'.str_replace('resource_','',$source).'_sold'} += $amount;
+        $dominion->{'stat_total_'.str_replace('resource_','',$target).'_bought'} += $targetAmount;
 
         $dominion->save(['event' => HistoryService::EVENT_ACTION_BANK]);
 

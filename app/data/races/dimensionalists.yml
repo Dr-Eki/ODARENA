@@ -1,41 +1,48 @@
 name: Dimensionalists
-alignment: evil
+alignment: independent
 description: >-
-  <p>The Dimensionalists are a small cult of worshippers of the starry night sky and cosmic visions.</p>
-  <p>They are led by Summoners, who surrender their minds to the stars for the ability to summon powerful beings from distant worlds.</p>
-  <p>Dark Elves, Nox, and Nomads have been seen joining the cult. A few other corrupt minds have joined its devotion to the impossible, black expanses.</p>
-  <hr />
   <p>In order to attack, a Portal must be opened and used quickly, before it closes. Surviving units return when the portal closes.</p>
-  <p>You start with 33 Summoners.</p>
 home_land_type: swamp
 playable: 1
 
-attacking: 2
-exploring : 2
+attacking: 1
+exploring : 1
 converting: 2
+skill_level: 3
+
+construction_materials: gold,lumber
 
 perks:
   construction_cost: 15
   max_population: -50
-  cannot_build_homes: 1
   food_consumption: -80
 units:
+
   - name: Summoner
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 3000
+      gold: 3000
       archmage: 1
     power:
       offense: 0
       defense: 0
     perks:
-        faster_training: 3
         no_draftee: 1
         counts_as_wizard_offense: 0.25
         counts_as_wizard_defense: 0.25
-        decay_protection: 250,mana
         immortal_wizard: 1
+
   - name: Tl'Tl
-    need_boat: false
+    
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - otherworldly
     cost:
       mana: 30
     power:
@@ -43,13 +50,17 @@ units:
       defense: 1
     perks:
       no_draftee: 1
-      faster_training: 3
       does_not_count_as_population: 1
       mana_drain: 0.02
       faster_return: 11
       pairing_limit: 1,16 # Unit slot, amount
+
   - name: Sft'Rm
-    #need_boat: false
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - otherworldly
     cost:
       mana: 192
     power:
@@ -60,8 +71,14 @@ units:
       does_not_count_as_population: 1
       mana_drain: 0.05
       pairing_limit: 1,8 # Unit slot, amount
+
   - name: Ze'Tk
-    need_boat: false
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - otherworldly
+    
     cost:
       mana: 240
     power:

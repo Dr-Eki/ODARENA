@@ -1,79 +1,94 @@
-# Peasants = Larvae
-# Draftees = Cocoons
-
 name: Swarm
 alignment: good
 description: >-
-  <p>Living entirely underground, the Swarm are a civilisation of intelligent and mostly benevolent being that take up dwelling in vast tunnels.</p>
-  <p>Every swarmling is born as a larva ("peasant"), which can be turned into cocoon ("draftee") and then into Scarabs, Burrowers, Arachnids, and the fierce Naga.</p>
-  <p>They dig tunnels underground and attack from below, preferring to assault barren land or unfinished buildings.</p>
-  <hr>
-  <ul>
-  <li><strong>Tunnels</strong> (plains): every tunnel allows 1,000 units to return from battle two ticks faster. No housing.</li>
-  <li><strong>Roots</strong> (forest): increases population growth rate and max population by 1% per 1% (no max), houses 15.</li>
-  <li><strong>Caverns</strong> (mountains): produces 20 gems per tick.</li>
-  <li><strong>Den</strong> (hills): Houses 60 people.</li>
-  <li><strong>Marsh</strong> (swamps): Houses 72 military units.</li>
-  <li><strong>Wells</strong> (water): increases food production %, houses 15</li>
-  </ul>
+  <p>Buildings under construction count as barren land for the purpose of Scarab, Arachnid, and Naga offensive power perk.</p>
 home_land_type: plain
 playable: 1
 
-attacking: 2
+peasants_alias: larva
+draftees_alias: cocoon
+
+attacking: 3
 exploring : 2
-converting: 1
+converting: 3
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
-  extra_barren_max_population: 25
-  #cannot_construct: 1
-  can_only_build_tunnels: 1
-  construction_cost_only_platinum: 1
-  cannot_build_homes: 1
+  extra_barren_max_population: 27
+  cannot_construct: 1
   food_consumption: -50
   immortal_spies: 1
   immortal_wizards: 1
   damage_from_lightning_bolts: -100
-  damage_from_fireballs: -50
   damage_from_insect_swarm: -100
-  draftee_dp: 0
-  draftee_mana_production: 1
+  draftees_produce_mana: 1.5
   peasants_produce_food: 0.5
+  unemployed_peasants_produce_gold: 2.7
+  explore_cost: 25
+  explore_time: 2
+
 units:
   - name: Scarab
-    need_boat: false
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
+    
     cost:
-      platinum: 250
+      gold: 250
     power:
       offense: 3
       defense: 0
     perks:
-      offense_vs_barren_land: 10,1 # ratio%, max
+      offense_vs_barren_land: 12,1.25 # ratio%, max
+
   - name: Burrower
+    training_time: 9
+    type:
+      - living
+      - sentient
     cost:
-      platinum: 375
+      gold: 375
     power:
       offense: 0
       defense: 4
     perks:
-      true_immortal: 1
-      gem_production: 0.75
+      gem_production: 0.5
+      immortal_on_fending_off: 1
+
   - name: Arachnid
-    need_boat: false
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+    
     cost:
-      platinum: 1000
+      gold: 1000
     power:
       offense: 4
       defense: 7
     perks:
-      offense_vs_barren_land: 10,1 # ratio%, max
+      offense_vs_barren_land: 10,1.5 # ratio%, max
       fewer_casualties_defense: 80
+      immortal_on_fending_off: 1
+
   - name: Naga
-    need_boat: false
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+    
     cost:
-      platinum: 700
+      gold: 700
     power:
       offense: 5
       defense: 3
     perks:
-      offense_vs_barren_land: 5,2 # ratio%, max
+      offense_vs_barren_land: 6,2.5 # ratio%, max
       fewer_casualties_defense: 80
+      immortal_on_fending_off: 1

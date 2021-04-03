@@ -45,13 +45,13 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
     public function toMail(User $user): MailMessage
     {
         return (new MailMessage)
-            ->replyTo('info@odarena.com', 'OD Arena')
-            ->subject('OD Arena Password Reset')
-            ->greeting('OD Arena Password Reset')
+            ->replyTo('info@odarena.com', 'ODARENA')
+            ->subject('ODARENA Password Reset')
+            ->greeting('ODARENA Password Reset')
             ->line('Hi, ' . $user->display_name . '!')
             ->line('You are receiving this email because we received a password reset request for your account.')
             ->action('Reset Password', route('auth.password.reset', $this->token))
             ->line('If you did not request a password reset, no further action is required.')
-            ->salutation('-OD Arena');
+            ->salutation('-ODARENA');
     }
 }

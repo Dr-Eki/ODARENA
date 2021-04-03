@@ -13,7 +13,8 @@ class CastSpellRequest extends AbstractDominionRequest
     {
         return [
             'spell' => 'required',
-            'target_dominion' => 'integer|exists:dominions,id', // todo: not in own realm && not cross round?
+            'target_dominion' => 'integer|exists:dominions,id',
+            'friendly_dominion' => 'integer|exists:dominions,id',
         ];
     }
 }

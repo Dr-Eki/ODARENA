@@ -1,61 +1,85 @@
 name: Icekin
 alignment: evil
-description: >-
-  <p>Slow, lumbering elementals of frost and stone, Icekin were long hidden behind blizzards and enormous snow-tipped mountains.</p>
-  <p>After long wars with the Snow Elves and failing to put out fires brought on by lava in deep mines which ultimately brought the Firewalkers back to live, Icekin have joined the Empire as among the most powerful wizards in the Imperial Academy of Dark Arts.</p>
-  <p>While Ice Elementals do most of the fighting, it is the Frost Mages and Snow Witches which are in control of the Icekin domains.</p>
+description:
 home_land_type: mountain
 playable: 1
 
-attacking: 2
+attacking: 3
 exploring : 3
 converting: 3
+skill_level: 2
+
+construction_materials: gold,ore
+
+archmages_cost: 500,gold
 
 perks:
   food_consumption: -50
-  gem_production: -25
-  ore_production: 20
-  archmage_cost: -200
+  title_bonus: 50
+
 units:
   - name: Icebeast
+    training_time: 6
+    type:
+      - living
+      - sentient
     cost:
-      platinum: 300
-      ore: 10
+      gold: 300
     power:
       offense: 3
       defense: 0
     perks:
-      offense_wizard_ratio: 4,1 # ratio%, max
+      offense_wizard_ratio: 1,2 # ratio%, max
+      offense_from_title: commander,1 # title, op
+
   - name: Snow Witch
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 350
-      ore: 35
+      gold: 350
     power:
       offense: 0
       defense: 3
     perks:
-      reduce_combat_losses: 1
+      reduces_casualties: 1
       counts_as_wizard_offense: 0.05
       counts_as_wizard_defense: 0.05
+      defense_from_land: mountain,50,2
+      production_from_title: conjurer,mana,5 # resource, OP, title
+
   - name: Frost Mage
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
-      ore: 100
+      gold: 1000
     power:
-      offense: 4
-      defense: 4
+      offense: 0
+      defense: 5
     perks:
       defense_from_land: mountain,20,5
       counts_as_wizard_offense: 0.25
       counts_as_wizard_defense: 0.25
+      wizard_from_title: conjurer,0.125 # wizard power, title
+      offense_from_title: commander,6 # title, op
+      sendable_with_zero_op: 1
+
   - name: Ice Elemental
+    training_time: 12
+    type:
+      - magical
     cost:
-      platinum: 1100
-      ore: 50
-      mana: 15
+      gold: 800
+      mana: 50
     power:
       offense: 4
-      defense: 1
+      defense: 2
     perks:
       offense_wizard_ratio: 1,4 # ratio%, max
       defense_from_land: mountain,20,5
+      offense_from_title: commander,1 # title, op

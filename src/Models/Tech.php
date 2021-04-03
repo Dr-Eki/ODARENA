@@ -9,7 +9,7 @@ namespace OpenDominion\Models;
  * @property string $key
  * @property string $name
  * @property array $prerequisites
- * @property int $costMultiplier
+ * @property int $level
  * @property int $enabled
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -21,6 +21,7 @@ class Tech extends AbstractModel
 
     protected $casts = [
         'prerequisites' => 'array',
+        'level' => 'int',
     ];
 
     public function perks()

@@ -63,7 +63,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         Gate::define('viewTelescope', function ($user) {
             return in_array($user->email, [
-                base64_decode('ZW1haWxAd2F2ZWhhY2submV0'), // WaveHack
+                base64_decode('ZHJla2lAb2RhcmVuYS5jb20='),
             ]);
         });
     }

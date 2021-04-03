@@ -71,6 +71,10 @@ class CreateDominionTickTable extends Migration
             $table->integer('building_dock')->default(0);
 
             #ODA
+            $table->integer('building_mycelia')->default(0);
+            $table->integer('building_tissue')->default(0);
+            $table->integer('building_ziggurat')->default(0);
+
             $table->integer('generated_land')->default(0);
             $table->integer('generated_unit1')->default(0);
             $table->integer('generated_unit2')->default(0);
@@ -81,6 +85,27 @@ class CreateDominionTickTable extends Migration
 
             $table->text('starvation_casualties')->nullable();
             $table->text('pestilence_units')->nullable();
+            $table->integer('protection_ticks')->default(0);
+            $table->integer('peasants_sacrificed')->default(0);
+
+
+            $table->integer('improvement_markets')->default(0);
+            $table->integer('improvement_keep')->default(0);
+            $table->integer('improvement_forges')->default(0);
+            $table->integer('improvement_walls')->default(0);
+            $table->integer('improvement_armory')->default(0);
+            $table->integer('improvement_infirmary')->default(0);
+            $table->integer('improvement_workshops')->default(0);
+            $table->integer('improvement_observatory')->default(0);
+            $table->integer('improvement_cartography')->default(0);
+            $table->integer('improvement_towers')->default(0);
+            $table->integer('improvement_hideouts')->default(0);
+            $table->integer('improvement_granaries')->default(0);
+            $table->integer('improvement_harbor')->default(0);
+            $table->integer('improvement_forestry')->default(0);
+            $table->integer('improvement_refinery')->default(0);
+            $table->integer('improvement_tissue')->default(0);
+
             $table->timestamp('updated_at')->nullable();
         });
 

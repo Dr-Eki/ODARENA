@@ -94,7 +94,7 @@ class TickTest extends AbstractBrowserKitTestCase
             'morale' => 0,
             'spy_strength' => 0,
             'wizard_strength' => 0,
-            'resource_platinum' => 0,
+            'resource_gold' => 0,
             'building_home' => 100,
             'building_alchemy' => 100,
         ])->save();
@@ -113,7 +113,7 @@ class TickTest extends AbstractBrowserKitTestCase
                 'morale' => 0,
                 'spy_strength' => 0,
                 'wizard_strength' => 0,
-                'resource_platinum' => 0,
+                'resource_gold' => 0,
             ])
             ->seeInDatabase('dominion_queue', ['dominion_id' => $dominion->id, 'source' => 'exploration', 'resource' => 'land_plain', 'hours' => 3, 'amount' => 10])
             ->seeInDatabase('dominion_queue', ['dominion_id' => $dominion->id, 'source' => 'construction', 'resource' => 'building_home', 'hours' => 3, 'amount' => 10]);
@@ -131,7 +131,7 @@ class TickTest extends AbstractBrowserKitTestCase
         $dominion->resource_mana = 0;
         $dominion->save();
 
-        $queueService->queueResources('construction', $dominion, ['building_diamond_mine' => 20], 1);
+        $queueService->queueResources('construction', $dominion, ['building_gem_mine' => 20], 1);
         $queueService->queueResources('construction', $dominion, ['building_tower' => 20], 1);
         // Manually precalculate when queuing for next hour
         $tickService->precalculateTick($dominion);
@@ -146,7 +146,7 @@ class TickTest extends AbstractBrowserKitTestCase
     }
 
     // https://github.com/WaveHack/OpenDominion/issues/217
-    public function testTheProperAmountOfPlatinumGetsAddedOnTick()
+    public function testTheProperAmountOfGoldGetsAddedOnTick()
     {
         $user1 = $this->createUser();
         $user2 = $this->createUser();
@@ -161,7 +161,7 @@ class TickTest extends AbstractBrowserKitTestCase
 
         $dominion1->fill([
             'peasants' => 30000,
-            'resource_platinum' => 1000,
+            'resource_gold' => 1000,
             'resource_mana' => 9999999,
             'building_alchemy' => 850,
         ])->save();
@@ -169,7 +169,7 @@ class TickTest extends AbstractBrowserKitTestCase
         // just duplicate values, yolo
         $dominion2->fill([
             'peasants' => 30000,
-            'resource_platinum' => 1000,
+            'resource_gold' => 1000,
             'resource_mana' => 9999999,
             'building_alchemy' => 850,
         ])->save();
@@ -180,11 +180,11 @@ class TickTest extends AbstractBrowserKitTestCase
         $platToBeAdded = 86850;
 
         $this->assertEquals(18000, $populationCalculator->getPopulationEmployed($dominion1));
-        $this->assertEquals($platToBeAdded, $productionCalculator->getPlatinumProduction($dominion1));
+        $this->assertEquals($platToBeAdded, $productionCalculator->getGoldProduction($dominion1));
         $this->assertFalse($spellCalculator->isSpellActive($dominion1, 'midas_touch'));
 
         $this->assertEquals(18000, $populationCalculator->getPopulationEmployed($dominion2));
-        $this->assertEquals($platToBeAdded, $productionCalculator->getPlatinumProduction($dominion2));
+        $this->assertEquals($platToBeAdded, $productionCalculator->getGoldProduction($dominion2));
         $this->assertFalse($spellCalculator->isSpellActive($dominion2, 'midas_touch'));
 
         // cast self spell for dominion 2 ONLY
@@ -195,18 +195,18 @@ class TickTest extends AbstractBrowserKitTestCase
         // Refresh active spells
         $spellCalculator->getActiveSpells($dominion1, true);
         $this->assertFalse($spellCalculator->isSpellActive($dominion1, 'midas_touch'));
-        $this->assertEquals($platToBeAdded * 1.0, $productionCalculator->getPlatinumProduction($dominion1));
+        $this->assertEquals($platToBeAdded * 1.0, $productionCalculator->getGoldProduction($dominion1));
 
         $spellCalculator->getActiveSpells($dominion2, true);
         $this->assertTrue($spellCalculator->isSpellActive($dominion2, 'midas_touch'));
-        $this->assertEquals($platToBeAdded * 1.1, $productionCalculator->getPlatinumProduction($dominion2));
+        $this->assertEquals($platToBeAdded * 1.1, $productionCalculator->getGoldProduction($dominion2));
 
         Artisan::call('game:tick');
         $dominion1->refresh();
         $dominion2->refresh();
 
-        $this->assertEquals(1000 + $platToBeAdded * 1.0, $dominion1->resource_platinum);
-        $this->assertEquals(1000 + $platToBeAdded * 1.1, $dominion2->resource_platinum);
+        $this->assertEquals(1000 + $platToBeAdded * 1.0, $dominion1->resource_gold);
+        $this->assertEquals(1000 + $platToBeAdded * 1.1, $dominion2->resource_gold);
     }
 
     // https://github.com/WaveHack/OpenDominion/issues/227

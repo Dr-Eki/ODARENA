@@ -9,15 +9,21 @@ use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Helpers\UnitHelper;
+use OpenDominion\Models\Building;
 use OpenDominion\Models\Race;
+use OpenDominion\Models\Title;
+use OpenDominion\Helpers\TitleHelper;
+use OpenDominion\Helpers\TechHelper;
+use OpenDominion\Models\Tech;
+use OpenDominion\Models\Spell;
+use OpenDominion\Models\Spyop;
 
 class ScribesController extends AbstractController
 {
     public function getRaces()
     {
-
         $races = collect(Race::orderBy('name')->get())->groupBy('alignment')->toArray();
-        return view('pages.scribes.races', [
+        return view('pages.scribes.factions', [
             'goodRaces' => $races['good'],
             'evilRaces' => $races['evil'],
             'npcRaces' => $races['npc'],
@@ -29,16 +35,21 @@ class ScribesController extends AbstractController
     {
         $raceName = ucwords(str_replace('-', ' ', $raceName));
 
-        $race = Race::where('name', $raceName)
-            ->firstOrFail();
+        $race = Race::where('name', $raceName)->firstOrFail();
 
-        return view('pages.scribes.race', [
+        $buildingHelper = app(BuildingHelper::class);
+
+        $buildings = $buildingHelper->getBuildingsByRace($race)->sortBy('name');
+
+        return view('pages.scribes.faction', [
             'landHelper' => app(LandHelper::class),
             'unitHelper' => app(UnitHelper::class),
             'raceHelper' => app(RaceHelper::class),
             'spellHelper' => app(SpellHelper::class),
             'trainingCalculator' => app(TrainingCalculator::class),
             'race' => $race,
+            'buildings' => $buildings,
+            'buildingHelper' => $buildingHelper,
         ]);
     }
 
@@ -70,6 +81,15 @@ class ScribesController extends AbstractController
         ]);
     }
 
+    public function getBuildings()
+    {
+        return view('pages.scribes.buildings', [
+            'buildingHelper' => app(BuildingHelper::class),
+            'landHelper' => app(LandHelper::class),
+            'buildings' => Building::all()->where('enabled',1)->sortBy('name'),
+        ]);
+    }
+
     public function getEspionage()
     {
         return view('pages.scribes.espionage', [
@@ -83,4 +103,56 @@ class ScribesController extends AbstractController
             'spellHelper' => app(SpellHelper::class)
         ]);
     }
+
+    public function getTitles()
+    {
+        $titles = Title::all()->where('enabled',1)->keyBy('key')->sortBy('key');
+        return view('pages.scribes.titles', [
+            'titles' => $titles,
+            'titleHelper' => app(TitleHelper::class),
+        ]);
+    }
+
+    public function getAdvancements()
+    {
+
+        $techs = Tech::all()->where('enabled',1)->keyBy('key');
+
+
+        $techs = $techs->sortBy(function ($tech, $key)
+        {
+            return $tech['name'] . str_pad($tech['level'], 2, '0', STR_PAD_LEFT);
+        });
+
+
+        foreach($techs as $tech)
+        {
+            $techNames[] = $tech['name'];
+        }
+
+        $techNames = array_unique($techNames);
+
+        return view('pages.scribes.advancements', [
+            'techs' => $techs,
+            'techNames' => $techNames,
+            'techHelper' => app(TechHelper::class),
+        ]);
+    }
+
+    public function getSpells()
+    {
+        return view('pages.scribes.spells', [
+            'spells' => Spell::all()->where('enabled',1)->keyBy('key')->sortBy('key'),
+            'spellHelper' => app(SpellHelper::class),
+        ]);
+    }
+
+    public function getSpyops()
+    {
+        return view('pages.scribes.spy-ops', [
+            'spyops' => Spyop::all()->where('enabled',1)->keyBy('key')->sortBy('key'),
+            'espionageHelper' => app(EspionageHelper::class),
+        ]);
+    }
+
 }

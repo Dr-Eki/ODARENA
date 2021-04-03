@@ -1,52 +1,87 @@
 name: Dwarf
 alignment: good
-description: >-
-  <p>Dwarves are a short and ill-tempered race well-known for their majestic beards, their love of ale and tireless labour. Their spirited chants and songs echo long into the night as they hollow out entire mountains for their ore.</p>
-  <p>Dwarven mines are the most productive in the lands, producing a steady flow of ore used to fortify their great cities, and craft legendary Dwarven armour for their military forces.</p>
+description:
 home_land_type: mountain
 playable: 1
 
 attacking: 3
 exploring : 2
-converting: 1
+converting: 2
+skill_level: 1
+
+construction_materials: gold,ore
 
 perks:
-  max_population: 10
   extra_barren_max_population: 10
   ore_improvement_points: 100
+  salvaging: 25
+
 units:
-  - name: Soldier
+  - name: Thundermaul
+    training_time: 12
+    type:
+      - equipment
     cost:
-      platinum: 200
-      ore: 50
+      gold: 0
+      ore: 100000
+      mana: 500
+      gem: 150
     power:
-      offense: 3
+      offense: 0
       defense: 0
+    perks:
+      offense_from_pairing: 4,90,1 # slot, amount, num required
+      defense_from_pairing: 4,30,1 # slot, amount, num required
+      sendable_with_zero_op: 1
+      damages_improvements_on_attack: 100
+      does_not_count_as_population: 1
+      no_draftee: 1
+      fewer_casualties: 50
+      immortal_on_fending_off: 1
+
   - name: Miner
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 300
+      gold: 300
       ore: 75
     power:
       offense: 0
       defense: 3
     perks:
       ore_production: 2
+
   - name: Cleric
-    type: hybrid_elite
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
+      gold: 1000
       ore: 100
     power:
       offense: 4
       defense: 6
     perks:
-      reduce_combat_losses: 1
-      counts_as_wizard_offense: 0.25
-      counts_as_wizard_defense: 0.25
-  - name: Warrior
+      reduces_casualties: 1
+      counts_as_wizard_offense: 0.2
+      counts_as_wizard_defense: 0.2
+
+  - name: Hammerer
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
+      gold: 1000
       ore: 200
     power:
       offense: 8
       defense: 3
+    perks:
+      stuns_units: 10,2 # Stuns units up to 10 DP for 2 ticks

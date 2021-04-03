@@ -1,23 +1,19 @@
-# Peasant = Spores
-# Draftee = Sporeling
-
 name: Myconid
 alignment: independent
 description: >-
-  <p>The Myconids are network of semi-independent but fully sentient beings. They are one, and they are many.</p>
-  <p>Whether they cannot or simply do not want to, Myconids do not invade other dominions nor do their stationary disposition allow them to explore. They only gain land by spreading their underground network through the Amanita.</p>
-  <hr />
-  <hr />
-  <ul>
-  <li>Unique building: Mycelia - houses 10 and produces 4 food/tick.</li>
-  <li>Starts with 1,000 Mycelia.</li>
-  </ul>
+  <p>Unique building: Mycelia - houses 30 and produces 4 food/tick. Starts with 1,000 Mycelia.</p>
 home_land_type: forest
 playable: 1
 
+peasants_alias: spore
+draftees_alias: sporeling
+
 attacking: 0
-exploring : 3
+exploring : 2
 converting: 0
+skill_level: 3
+
+construction_materials: food
 
 perks:
   cannot_train_spies: 1
@@ -25,50 +21,66 @@ perks:
   cannot_train_archmages: 1
   cannot_invade: 1
   cannot_explore: 1
-  #cannot_construct: 1
-  construction_cost_only_food: 1
-  can_only_build_mycelia: 1
-  cannot_build_homes: 1
   cannot_join_guards: 1
   peasants_produce_food: 2
+  min_rounds_played: 1
+
 units:
-  - name: Mushroom
-    need_boat: false
+  - name: Fruitbody
+    training_time: 3
+    type:
+      - living
+
     cost:
-      food: 100
+      food: 25
     power:
       offense: 0
       defense: 1
-    perks:
-      faster_training: 6
-  - name: Mold
+
+  - name: Mushroom
+    training_time: 6
+    type:
+      - living
+      - sentient
     cost:
-      food: 25
+      food: 100
       unit1: 1
     power:
       offense: 0
       defense: 3
     perks:
-      faster_training: 3
       no_draftee: 1
-      #dies_into: 1
+      dies_into: 1
+      gem_production: 0.111
+      unit_production: 1,0.0001
+
   - name: Psilocybe
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      food: 1000
+      food: 875
       unit2: 1
     power:
       offense: 0
-      defense: 9
+      defense: 6
     perks:
       no_draftee: 1
-      #dies_into: 1
-      #unit_production: 1,0.0005 # Unit Type, Amount
-      #land_per_tick: 0.0003
-      mana_production: 1
-      tech_production: 0.05
-      counts_as_wizard_offense: 0.1111
-      counts_as_wizard_defense: 0.1111
+      dies_into: 1
+      mana_production: 0.5
+      counts_as_wizard_offense: 0.16666
+      counts_as_wizard_defense: 0.16666
+      unit_production: 1,0.0003
+      gem_production: 0.222
+
   - name: Amanita
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
       food: 1250
       unit2: 1
@@ -77,8 +89,10 @@ units:
       defense: 9
     perks:
       no_draftee: 1
-      #dies_into: 1
-      #unit_production: 1,0.001 # Unit Type, Amount
-      land_per_tick: 0.00025
+      dies_into: 1
+      land_per_tick: 0.0002
       counts_as_spy_offense: 0.1111
       counts_as_spy_defense: 0.1111
+      unit_production: 1,0.0002
+      defense_from_spell: defensive_warts,2
+      gem_production: 0.111

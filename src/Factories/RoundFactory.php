@@ -8,7 +8,6 @@ use OpenDominion\Models\RoundLeague;
 
 class RoundFactory
 {
-    private const ROUND_DURATION_IN_DAYS = 14;
 
     /**
      * Creates and returns a new Round in a RoundLeague.
@@ -29,46 +28,29 @@ class RoundFactory
         int $playersPerRace,
         bool $mixedAlignment
     ): Round {
-        $number = ($this->getLastRoundNumber($league) + 1);
-        $endDate = (clone $startDate)->addDays(static::ROUND_DURATION_IN_DAYS);
+        $number = $this->getLastRoundNumber() + 1;
+        $endDate = NULL;#(clone $startDate)->addDays(14);
 
-        $invasionEndHours = [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            12,
-            12,
-            13,
-            13,
-            13,
-            14,
-            14,
-            14,
-            15,
-            15,
-            15,
-            16,
-            16,
-            16,
-        ];
+        if($number % 2 === 0)
+        {
+            $startDate = (clone $startDate)->addHours(16);
+            #$endDate = (clone $endDate)->addHours(16);
+        }
+        else
+        {
+            $startDate = (clone $startDate)->addHours(4);
+            #$endDate = (clone $endDate)->addHours(4);
+        }
 
-        $hoursBeforeRoundEnd = array_random($invasionEndHours);
+        # End offensive actions between 180 and 360 minutes before round end
+        $minutesBeforeRoundEnd = rand(180, 360);
 
-        $offensiveActionsEndDate = (clone $endDate)->addHours(-$hoursBeforeRoundEnd);
+        $offensiveActionsEndDate = NULL;#(clone $endDate)->subMinutes($minutesBeforeRoundEnd);
 
         return Round::create([
             'round_league_id' => $league->id,
             'number' => $number,
-            'name' => "Round {$number}", // todo
+            'name' => 'Round ' . $number,
             'start_date' => $startDate,
             'end_date' => $endDate,
             'offensive_actions_prohibited_at' => $offensiveActionsEndDate,
@@ -85,16 +67,9 @@ class RoundFactory
      * @param RoundLeague $league
      * @return int
      */
-    protected function getLastRoundNumber(RoundLeague $league): int
+    protected function getLastRoundNumber(): int
     {
-        $round = Round::where('round_league_id', $league->id)
-            ->orderBy('number', 'desc')
-            ->first();
-
-        if ($round) {
-            return $round->number;
-        }
-
-        return 0;
+        $round = Round::query()->max('number');
+        return $round ? $round : 0;
     }
 }

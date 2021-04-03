@@ -8,6 +8,8 @@ use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\InfoOp;
 use OpenDominion\Models\Realm;
+use OpenDominion\Models\Spell;
+use OpenDominion\Models\Spyop;
 
 class InfoOpService
 {
@@ -175,21 +177,9 @@ class InfoOpService
     public function getInfoOpName(InfoOp $infoOp): string
     {
         if ($infoOp->type == 'clairvoyance') return 'Clairvoyance';
-        return $this->espionageHelper->getInfoGatheringOperations()
-            ->merge($this->spellHelper->getInfoOpSpells())
-            ->filter(function ($op) use ($infoOp) {
-                return ($op['key'] === $infoOp->type);
-            })
-            ->first()['name'];
-    }
 
-    public function getLastClairvoyance(Realm $sourceRealm, Realm $targetRealm): ?InfoOp
-    {
-        return $sourceRealm->infoOps->filter(function ($infoOp) use ($targetRealm) {
-            return ($infoOp->target_realm_id === $targetRealm->id && $infoOp->type == 'clairvoyance');
-        })
-            ->sortByDesc('created_at')
-            ->first();
+        return $infoOp->type;
+        dd($infoOp->type);
     }
 
     public function getNumberOfActiveInfoOps(Collection $ops): int
@@ -202,8 +192,10 @@ class InfoOpService
 
     public function getMaxInfoOps(): int
     {
-        return $this->espionageHelper->getInfoGatheringOperations()
-            ->merge($this->spellHelper->getInfoOpSpells())
-            ->count();// - 1; // refactor: Removes Clairvoyance from count
+        $infoSpells = Spell::where('class', 'info')->count();
+        $infoSpyops = Spyop::where('scope', 'info')->count();
+
+        return $infoSpells + $infoSpyops;
+
     }
 }

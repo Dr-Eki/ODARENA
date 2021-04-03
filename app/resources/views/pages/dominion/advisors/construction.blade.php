@@ -34,7 +34,6 @@
                                         <span data-toggle="tooltip" data-placement="top" title="{{ $buildingHelper->getBuildingHelpString($buildingType) }}">
                                             {{ ucwords(str_replace('_', ' ', $buildingType)) }}
                                         </span>
-                                        {!! $buildingHelper->getBuildingImplementedString($buildingType) !!}
                                     </td>
                                     <td class="text-center">{{ number_format($selectedDominion->{'building_' . $buildingType}) }}</td>
                                     <td class="text-center">{{ number_format((($selectedDominion->{'building_' . $buildingType} / $landCalculator->getTotalLand($selectedDominion)) * 100), 2) }}%</td>
@@ -76,7 +75,6 @@
                                         <span data-toggle="tooltip" data-placement="top" title="{{ $buildingHelper->getBuildingHelpString($buildingType) }}">
                                             {{ ucwords(str_replace('_', ' ', $buildingType)) }}
                                         </span>
-                                        {!! $buildingHelper->getBuildingImplementedString($buildingType) !!}
                                     </td>
                                     @for ($i = 1; $i <= 12; $i++)
                                         <td class="text-center">

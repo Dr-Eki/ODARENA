@@ -18,7 +18,7 @@ class CreateTechsTable extends Migration
             $table->string('key');
             $table->string('name');
             $table->text('prerequisites')->nullable();
-            $table->integer('cost_multiplier')->default(0);
+            $table->integer('level')->default(0);
             $table->integer('enabled')->default(1);
             $table->timestamps();
         });

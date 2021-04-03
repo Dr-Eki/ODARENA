@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
-    <title>@yield('title', 'OD Arena')</title>
+    <title>@yield('title', 'ODARENA')</title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -47,8 +47,6 @@
                             @yield('page-subheader')
                         </small>
                     @endif
-
-                    @include('partials.tickers')
 
                 </h1>
                 {{--<ol class="breadcrumb">

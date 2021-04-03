@@ -1,39 +1,51 @@
 name: Lux
 alignment: good
-description: >-
-  <p>The Lux are the children of the Suns.</p>
-  <p>Some believe they are elves which transcended. Others say they are not of this world at all.</p>
-  <hr />
-  <p>Essences are trained from draftees.</p>
-  <p>Hex and Vex are trained from Essences and cost no draftees. They both take 12 ticks to train.</p>
-  <p>Pax is trained by combining one Hex and one Vex. No draftee required.</p>
+description:
 home_land_type: water
 playable: 1
 
 attacking: 2
 exploring : 2
-converting: 2
+converting: 3
+skill_level: 3
+
+construction_materials: gold,lumber
+
+peasants_alias: shimmerling
+draftees_alias: ray
 
 perks:
   food_consumption: -50
-  mana_production: 10
   does_not_kill: 1
   cannot_train_spies: 1
   cannot_train_wizards: 1
   cannot_train_archmages: 1
-  invest_bonus: -10
-  platinum_production: -15
+  gold_production: -15
+  mana_production: 10
 units:
   - name: Essence
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - ethereal
+      - intelligent
     static_networth: 5
     cost:
-      platinum: 250
+      gold: 250
       mana: 10
     power:
       offense: 0
       defense: 0
+
   - name: Hex
-    need_boat: false
+    
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - ethereal
+      - intelligent
     static_networth: 7
     cost:
       unit1: 1
@@ -47,8 +59,15 @@ units:
       fewer_casualties: 50
       counts_as_wizard_offense: 0.05
       counts_as_wizard_defense: 0.03
+
   - name: Vex
-    need_boat: false
+    
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - ethereal
+      - intelligent
     static_networth: 7
     cost:
       unit1: 1
@@ -62,8 +81,16 @@ units:
       fewer_casualties: 50
       counts_as_spy_offense: 0.05
       counts_as_spy_defense: 0.03
+
   - name: Pax
-    need_boat: false
+    
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - ethereal
+      - intelligent
+      - wise
     static_networth: 14
     cost:
       unit2: 1
@@ -80,3 +107,6 @@ units:
       counts_as_wizard_defense: 0.08
       counts_as_spy_offense: 0.12
       counts_as_spy_defense: 0.08
+      plunders: mana;1,gems;0.2
+      immortal_wizard: 1
+      immortal_spy: 1

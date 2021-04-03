@@ -1,58 +1,87 @@
 name: Nox
 alignment: evil
-description: >-
-  <p>The Nox, also called The Children of the Night, are a collection of hopeless and corrupt beings, neither living nor dead, neither spirit nor flesh, and so old their ancestry is only ever described as "arcane."</p>
-  <p>Abandoned by the deities and forgotten by the ancient ones, the Nox are on a relentless pursuit into the darkness to find meaning and purpose.</p>
-  <p>The Nox can be found in the deepest, gloomiest swamplands where even the Undead and Dark Elves dare not venture.</p>
-  <p>Their allegiance to the Empire is absolute and the Empress holds them in high regard.</p>
-  <p>Many believe their vile burial pits are to blame for the Growth.</p>
+description:
 home_land_type: swamp
 playable: 1
 
 attacking: 3
 exploring : 3
-converting: 3
+converting: 2
+skill_level: 2
+
+construction_materials: gold,mana
 
 perks:
   food_consumption: -50
+  mana_production: 50
 units:
   - name: Imp
-    need_boat: false
+    
+    training_time: 0
+    static_networth: 5
+    type:
+      - magical
+      - flying
     cost:
       mana: 10
     power:
-      offense: 3
+      offense: 2
       defense: 0
     perks:
       does_not_count_as_population: 1
       no_draftee: 1
       instant_training: 1
-      pairing_limit: 4,2 # Unit slot, amount (max 2 of this unit per each Unit 4)
-      fixed_casualties: 100
-    static_networth: 10
-  - name: Gloom
+      pairing_limit_increasable: 4,2,spires,1 # Unit slot, amount (max 4 of this unit per each Unit 4), imp to increase, imp multiplier
+      fixed_casualties: 75
+      plunder: mana,2.5
+
+  - name: Acolyte
+    training_time: 4
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 350
+      gold: 300
       mana: 5
     power:
       offense: 0
-      defense: 3
+      defense: 4
+    perks:
+      counts_as_wizard_offense: 0.1667
+      counts_as_wizard_defense: 0.1667
+      mana_production: 0.05
+
   - name: Nightshade
+    training_time: 8
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 1000
+      gold: 500
       mana: 10
+      unit2: 1
     power:
       offense: 0
-      defense: 2
+      defense: 4
     perks:
-      defense_from_land: swamp,12,5 # land type, ratio%,max
+      defense_from_buildings: home;temple;wizard_guild;tower,10,6 # buildings; ratio; max
+      no_draftee: 1
+
   - name: Lich
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
     cost:
-      platinum: 1100
+      gold: 1000
       mana: 15
     power:
-      offense: 6
-      defense: 2.5
+      offense: 3
+      defense: 4
     perks:
-      fewer_casualties: 80
-      counts_as_wizard_offense: 0.1
+      true_immortal: 1
+      offense_wizard_ratio: 2,6 # ratio%, max

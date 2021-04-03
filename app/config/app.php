@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'OD Arena'),
+    'name' => env('APP_NAME', 'ODARENA'),
 
     /*
     |--------------------------------------------------------------------------
@@ -152,8 +152,8 @@ return [
          */
         Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        Ipunkt\LaravelAnalytics\AnalyticsServiceProvider::class,
-        Superbalist\LaravelGoogleCloudStorage\GoogleCloudStorageServiceProvider::class,
+        #Ipunkt\LaravelAnalytics\AnalyticsServiceProvider::class,
+        #Superbalist\LaravelGoogleCloudStorage\GoogleCloudStorageServiceProvider::class,
 
         /*
          * Application Service Providers...

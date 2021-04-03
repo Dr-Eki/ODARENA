@@ -1,0 +1,102 @@
+name: Yeti
+alignment: independent
+description: >-
+home_land_type: mountain
+playable: 1
+
+peasants_alias: wild yeti
+draftees_alias: yeti
+
+attacking: 2
+exploring : 2
+converting: 2
+skill_level: 3
+
+construction_materials: food,lumber
+
+spies_cost: 100,food
+wizards_cost: 200,food
+archmages_cost: 400,food
+
+perks:
+  no_gold_production: 1
+  cannot_train_wizards: 1
+  cannot_train_archmages: 1
+  construction_cost: -50
+units:
+  - name: Worker Yeti
+    training_time: 1
+    type:
+      - living
+      - sentient
+      - intelligent
+
+    cost:
+      food: 24
+      ore: 2
+      lumber: 2
+    power:
+      offense: 0
+      defense: 0
+    perks:
+      gem_production: 0.65
+      lumber_production: 1
+      food_consumption: 0.5
+
+  - name: Wizard Yeti
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+    cost:
+      food: 180
+      mana: 8
+    power:
+      offense: 0
+      defense: 6
+    perks:
+      counts_as_wizard_offense: 0.25
+      counts_as_wizard_defense: 0.25
+      immortal_wizard: 1
+      food_consumption: 0.25
+
+  - name: Guard Yeti
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+
+    cost:
+      food: 300
+      lumber: 200
+      ore: 200
+    power:
+      offense: 0
+      defense: 12
+    perks:
+      only_dies_vs_raw_power: 6 # >=
+      food_consumption: 0.25
+
+  - name: War Yeti
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+
+    cost:
+      food: 200
+      lumber: 200
+      ore: 600
+    power:
+      offense: 12
+      defense: 10
+    perks:
+      only_dies_vs_raw_power: 6 # >=
+      offense_vs_building: gryphon_nest,10,2
+      food_consumption: 0.5

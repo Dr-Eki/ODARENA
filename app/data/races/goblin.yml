@@ -1,55 +1,81 @@
 name: Goblin
 alignment: evil
-description: >-
-  <p>Greedy and reclusive, the Goblins are small in stature but great in number. They live at the foot of the mountains, often found raiding mines. Nothing triggers their bloodlust like the thought of laying their hands on a dead enemy's wealths.</p>
-  <p>Goblin populations can grow quickly out of control if left unchecked, and these short, green and ugly wretches have been known to completely ransack well-fortified castles in their relentless and violent pursuit of gems, gems and more gems.</p>
+description:
 home_land_type: hill
 playable: 1
 
 attacking: 3
 exploring : 3
 converting: 1
+skill_level: 2
+
+construction_materials: gold,lumber
 
 perks:
-  max_population: 50
+  max_population: 100
   population_growth: 25
   extra_barren_max_population: 5
   gem_production: 20
   invest_bonus: 20
+  explore_cost: 50
+
 units:
-  - name: Raider
+  - name: Kaboom
+    training_time: 3
+    type:
+      - living
+      - sentient
     cost:
-      platinum: 200
-      ore: 10
+      gold: 80
+      peasant: 1
     power:
       offense: 2
       defense: 0
+    perks:
+      no_draftee: 1
+      fixed_casualties: 100
+
   - name: Shaman
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 350
+      gold: 350
       ore: 20
     power:
       offense: 0
       defense: 3
     perks:
-      reduce_combat_losses: 1
+      reduces_casualties: 1
       counts_as_wizard_offense: 0.025
       counts_as_wizard_defense: 0.025
+
   - name: Skulker
-    type: offensive_elite
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 600
-      ore: 50
+      gold: 500
+      ore: 40
     power:
-      offense: 4
+      offense: 3
       defense: 2
     perks:
-      plunders_resources_on_attack: 1
-      offense_vs_resource: gems,20000,3 # +1 OP per 20,000 gems, max +2
+      plunders: gold;1,gems;0.35
+      offense_vs_resource: gold,300000,3 # +1 OP per 20,000 gems, max +3
+
   - name: Wolf Rider
-    type: offensive_elite
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
     cost:
-      platinum: 700
+      gold: 700
       ore: 100
     power:
       offense: 5

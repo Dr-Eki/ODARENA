@@ -1,0 +1,143 @@
+# Markets
+commerce:
+  name: Commerce
+  coefficient: 4000
+  excluded_races:
+    - Growth
+  perks:
+    gold_production: 25
+
+# Keep
+housing:
+  name: Housing
+  coefficient: 4000
+  excluded_races:
+    - Growth
+  perks:
+    population: 20
+
+# Spires/Towers
+wizardry:
+  name: Wizardry
+  coefficient: 5000
+  excluded_races:
+    - Growth
+  perks:
+    wizard_strength: 45
+    mana_production: 45
+    spell_damage: 45
+    wizard_guild_housing: 45
+
+# Hideouts
+espionage:
+  name: Espionage
+  coefficient: 5000
+  excluded_races:
+    - Growth
+  perks:
+    spy_strength: 45
+    spy_losses: 45
+
+# Forges
+offense:
+  name: Offense
+  coefficient: 7500
+  excluded_races:
+    - Growth
+  perks:
+    offensive_power: 25
+
+# Walls
+defense:
+  name: Defense
+  coefficient: 7500
+  excluded_races:
+    - Growth
+  perks:
+    defensive_power: 25
+
+# Harbour/Irrigation
+irrigation:
+  name: Irrigation
+  coefficient: 5000
+  excluded_races:
+    - Growth
+  perks:
+    food_production: 45
+
+# Armory
+mobilisation:
+  name: Mobilisation
+  coefficient: 4000
+  excluded_races:
+    - Growth
+  perks:
+    unit_gold_costs: 25
+    unit_ore_costs: 25
+
+# Infirmary
+medicine:
+  name: Medicine
+  coefficient: 4000
+  excluded_races:
+    - Growth
+  perks:
+    defensive_casualties: 25
+    offensive_casualties: 25
+
+# Workshops
+construction:
+  name: Construction
+  coefficient: 4000
+  excluded_races:
+    - Growth
+  perks:
+    construction_cost: 25
+    rezone_cost: 25
+
+# Observatory
+research:
+  name: Research
+  coefficient: 5000
+  excluded_races:
+    - Growth
+  perks:
+    tech_production: 25
+
+# Cartography
+cartography:
+  name: Cartography
+  coefficient: 4000
+  excluded_races:
+    - Growth
+  perks:
+    tech_production: 35
+
+# Forestry
+logging:
+  name: Logging
+  coefficient: 4000
+  excluded_races:
+    - Growth
+    - Sylvan
+    - Wood Elf
+  perks:
+    ore_production: 25
+
+# Refinery
+mining:
+  name: Mining
+  coefficient: 4000
+  excluded_races:
+    - Growth
+  perks:
+    ore_production: 25
+
+# Growth: Tissue
+tissue:
+  name: Tissue
+  coefficient: 75000
+  excluded_races:
+    - Growth
+  perks:
+    population: 100

@@ -1,14 +1,15 @@
 @extends('layouts.master')
 
+{{--
 @section('page-header', 'Status')
+--}}
 
 @section('content')
     <div class="row">
-
         <div class="col-sm-12 col-md-9">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa fa-bar-chart"></i> The Dominion of {{ $selectedDominion->name }}</h3>
+                    <h3 class="box-title"><i class="fa fa-chart-bar"></i> The Dominion of {{ $selectedDominion->name }}</h3>
                 </div>
                 <div class="box-body no-padding">
                     <div class="row">
@@ -27,7 +28,18 @@
                                 <tbody>
                                     <tr>
                                         <td>Ruler:</td>
-                                        <td>{{ $selectedDominion->ruler_name }}</td>
+                                        <td>
+                                            @if(isset($selectedDominion->title->name))
+                                                  <em>
+                                                      <span data-toggle="tooltip" data-placement="top" title="{!! $titleHelper->getRulerTitlePerksForDominion($selectedDominion) !!}">
+                                                          {{ $selectedDominion->title->name }}
+                                                      </span>
+                                                  </em>
+                                            @endif
+
+                                            {{ $selectedDominion->ruler_name }}
+
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Faction:</td>
@@ -35,18 +47,10 @@
                                     </tr>
                                     <tr>
                                         <td>Land:</td>
-                                        <td>{{ number_format($landCalculator->getTotalLand($selectedDominion)) }}</td>
+                                        <td>{{ number_format($landCalculator->getTotalLand($selectedDominion, true)) }}</td>
                                     </tr>
                                     <tr>
-                                      @if ($selectedDominion->race->name == 'Growth')
-                                        <td>Cells:</td>
-                                      @elseif ($selectedDominion->race->name == 'Myconid')
-                                        <td>Spores:</td>
-                                      @elseif ($selectedDominion->race->name == 'Swarm')
-                                        <td>Larvae:</td>
-                                      @else
-                                        <td>Peasants:</td>
-                                      @endif
+                                        <td>{{ $raceHelper->getPeasantsTerm($selectedDominion->race) }}:</td>
                                         <td>{{ number_format($selectedDominion->peasants) }}</td>
                                     </tr>
                                     <tr>
@@ -58,12 +62,20 @@
                                         <td>{{ number_format($networthCalculator->getDominionNetworth($selectedDominion)) }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Prestige:</td>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="<ul><li>Prestige increases your offensive power, food production, and population.</li><li>Each prestige produces 1 XP per tick.</li><li>Multiplier: {{ 1+$prestigeCalculator->getPrestigeMultiplier($selectedDominion) }}x</li></ul>">
+                                              Prestige:
+                                            </span>
+                                        </td>
                                         <td>{{ number_format($selectedDominion->prestige) }}</td>
                                     </tr>
                                     <tr>
                                         <td>Victories:</td>
                                         <td>{{ number_format($selectedDominion->stat_attacking_success) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Net Victories:</td>
+                                        <td>{{ number_format($militaryCalculator->getNetVictories($selectedDominion)) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -82,8 +94,8 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Platinum:</td>
-                                        <td>{{ number_format($selectedDominion->resource_platinum) }}</td>
+                                        <td>Gold:</td>
+                                        <td>{{ number_format($selectedDominion->resource_gold) }}</td>
                                     </tr>
                                     <tr>
                                         <td>Food:</td>
@@ -106,12 +118,12 @@
                                         <td>{{ number_format($selectedDominion->resource_gems) }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Experience Points:</td>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="<p>Used to unlock Advancements.</p><p>Unspent XP increases the perk from your Ruler Title.</p>">
+                                              Experience Points:
+                                            </span>
+                                        </td>
                                         <td>{{ number_format($selectedDominion->resource_tech) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Boats:</td>
-                                        <td>{{ number_format(floor($selectedDominion->resource_boats + $queueService->getInvasionQueueTotalByResource($selectedDominion, "resource_boats"))) }}</td>
                                     </tr>
                                     @if ($selectedDominion->race->name == 'Norse')
                                     <tr>
@@ -123,10 +135,9 @@
                                         <td>Souls:</td>
                                         <td>{{ number_format($selectedDominion->resource_soul) }}</td>
                                     </tr>
-                                    @elseif ($selectedDominion->race->name == 'Snow Elf')
                                     <tr>
-                                        <td>Wild yetis:</td>
-                                        <td>{{ number_format($selectedDominion->resource_wild_yeti) }}</td>
+                                        <td>Blood:</td>
+                                        <td>{{ number_format($selectedDominion->resource_blood) }}</td>
                                     </tr>
                                     @endif
                                 </tbody>
@@ -147,18 +158,14 @@
                                 <tbody>
                                     <tr>
                                         <td>Morale:</td>
-                                        <td>{{ number_format($selectedDominion->morale) }}%</td>
+                                        <td>{{ number_format($selectedDominion->morale) }}% / {{ number_format(100 * (1 + $militaryCalculator->getBaseMoraleModifier($selectedDominion, $populationCalculator->getPopulation($selectedDominion)))) }}%</td>                                 </td>
                                     </tr>
                                     <tr>
-                                      @if ($selectedDominion->race->name == 'Growth')
-                                        <td>Amoeba:</td>
-                                      @elseif ($selectedDominion->race->name == 'Myconid')
-                                        <td>Sporelings:</td>
-                                      @elseif ($selectedDominion->race->name == 'Swarm')
-                                        <td>Cocoons:</td>
-                                      @else
-                                        <td>Draftees:</td>
-                                      @endif
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString( $selectedDominion->race) }}">
+                                                {{ $raceHelper->getDrafteesTerm($selectedDominion->race) }}:
+                                            </span>
+                                        </td>
                                         <td>{{ number_format($selectedDominion->military_draftees) }}</td>
                                     </tr>
                                     <tr>
@@ -194,21 +201,21 @@
                                         <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, 4)) }}</td>
                                     </tr>
 
-                                    @if ((bool)$selectedDominion->race->getPerkValue('cannot_train_spies') == False)
+                                    @if (!(bool)$selectedDominion->race->getPerkValue('cannot_train_spies'))
                                     <tr>
                                         <td>Spies:</td>
                                         <td>{{ number_format($selectedDominion->military_spies) }}</td>
                                     </tr>
                                     @endif
 
-                                    @if ((bool)$selectedDominion->race->getPerkValue('cannot_train_wizards') == False)
+                                    @if (!(bool)$selectedDominion->race->getPerkValue('cannot_train_wizards'))
                                     <tr>
                                         <td>Wizards:</td>
                                         <td>{{ number_format($selectedDominion->military_wizards) }}</td>
                                     </tr>
                                     @endif
 
-                                    @if ((bool)$selectedDominion->race->getPerkValue('cannot_train_archmages') == False)
+                                    @if (!(bool)$selectedDominion->race->getPerkValue('cannot_train_archmages'))
                                     <tr>
                                         <td>ArchMages:</td>
                                         <td>{{ number_format($selectedDominion->military_archmages) }}</td>
@@ -224,18 +231,121 @@
             </div>
         </div>
 
-        <div class="col-sm-12 col-md-3">
+        <div class="col-md-12 col-md-3">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Information</h3>
+                    <h3 class="box-title">Statistics</h3>
+                    <a href="{{ route('dominion.advisors.statistics') }}" class="pull-right"><span>Statistics Advisor</span></a>
                 </div>
                 <div class="box-body">
-                    <p>This section gives you a quick overview of your dominion.</p>
-                    <p>Your total land size is {{ number_format($landCalculator->getTotalLand($selectedDominion)) }} and networth is {{ number_format($networthCalculator->getDominionNetworth($selectedDominion)) }}.</p>
-                    <p><a href="{{ route('dominion.rankings', 'land') }}">My Rankings</a></p>
+                      <table class="table">
+                          <colgroup>
+                              <col width="50%">
+                              <col width="50%">
+                          </colgroup>
+                        <tbody>
+                            <tr>
+                                <td colspan="2" class="text-center"><strong>Military</strong></td>
+                            </tr>
+                            <tr>
+                                <td><span data-toggle="tooltip" data-placement="top" title="Your current Defensive Power (DP)">Defensive Power:</span></td>
+                                <td>
+                                    {{ number_format($militaryCalculator->getDefensivePower($selectedDominion)) }}
+                                    @if ($militaryCalculator->getDefensivePowerMultiplier($selectedDominion) !== 1.0)
+                                        <small class="text-muted">({{ number_format(($militaryCalculator->getDefensivePowerRaw($selectedDominion))) }} raw)</small>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span data-toggle="tooltip" data-placement="top" title="Your current Offensive Power (OP)">Offensive Power:</span></td>
+                                <td>
+                                    {{ number_format($militaryCalculator->getOffensivePower($selectedDominion)) }}
+                                    @if ($militaryCalculator->getOffensivePowerMultiplier($selectedDominion) !== 1.0)
+                                        <small class="text-muted">({{ number_format(($militaryCalculator->getOffensivePowerRaw($selectedDominion))) }} raw)</small>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span data-toggle="tooltip" data-placement="top" title="Your current Spies Per Acre (SPA) on offense">Offensive Spy Ratio:</span></td>
+                                <td>
+                                    {{ number_format($militaryCalculator->getSpyRatio($selectedDominion, 'offense'), 3) }}
+                                    @if ($militaryCalculator->getSpyRatioMultiplier($selectedDominion) !== 1.0)
+                                        <small class="text-muted">({{ number_format(($militaryCalculator->getSpyRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span data-toggle="tooltip" data-placement="top" title="Your current Wizards Per Acre (WPA) on offense">Offensive Wizard Ratio:</span></td>
+                                <td>
+                                    {{ number_format($militaryCalculator->getWizardRatio($selectedDominion, 'offense'), 3) }}
+                                    @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
+                                        <small class="text-muted">({{ number_format(($militaryCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2" class="text-center"><strong>Population</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Current Population:</td>
+                                <td>
+                                    {{ number_format($populationCalculator->getPopulation($selectedDominion)) }}
+                                </td>
+                            </tr>
+                            @if(!$selectedDominion->race->getPerkMultiplier('no_population'))
+                            <tr>
+                                <td>{{ str_plural($raceHelper->getPeasantsTerm($selectedDominion->race)) }}:</td>
+                                <td>
+                                    {{ number_format($selectedDominion->peasants) }}
+                                    <small class="text-muted">({{ number_format((($selectedDominion->peasants / $populationCalculator->getPopulation($selectedDominion)) * 100), 2) }}%)</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Military Population:</td>
+                                <td>
+                                    {{ number_format($populationCalculator->getPopulationMilitary($selectedDominion)) }}
+                                    <small class="text-muted">({{ number_format((100 - ($selectedDominion->peasants / $populationCalculator->getPopulation($selectedDominion)) * 100), 2) }}%)</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by Barracks:<br>Filled / Available">Barracks housing:</span></td>
+                                <td>{{ number_format($populationCalculator->getUnitsHousedInBarracks($selectedDominion)) }} / {{ number_format($populationCalculator->getAvailableHousingFromBarracks($selectedDominion)) }}</td>
+                            </tr>
+                            <tr>
+                                <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by Forest Havens:<br>Filled / Available">Spy housing:</span></td>
+                                <td>{{ number_format($populationCalculator->getUnitsHousedInForestHavens($selectedDominion)) }} / {{ number_format($populationCalculator->getAvailableHousingFromForestHavens($selectedDominion)) }}</td>
+                            </tr>
+                            <tr>
+                                <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by Wizard Guilds:<br>Filled / Available">Wizard housing:</span></td>
+                                <td>{{ number_format($populationCalculator->getUnitsHousedInWizardGuilds($selectedDominion)) }} / {{ number_format($populationCalculator->getAvailableHousingFromWizardGuilds($selectedDominion)) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Max Population:</td>
+                                <td>
+                                    {{ number_format($populationCalculator->getMaxPopulation($selectedDominion)) }}
+                                    @if ($populationCalculator->getMaxPopulationMultiplier($selectedDominion) !== 1.0)
+                                        <small class="text-muted">({{ number_format($populationCalculator->getMaxPopulationRaw($selectedDominion)) }} raw)</small>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endif
+                            <tr>
+                                <td>Population Multiplier:</td>
+                                <td>
+                                    {{ number_string((($populationCalculator->getMaxPopulationMultiplier($selectedDominion) - 1) * 100), 3, true) }}%
+                                </td>
+                            </tr>
+
+
+
+                        </tbody>
+                      </table>
+
                 </div>
             </div>
         </div>
+
 
         @if ($selectedDominion->realm->motd && ($selectedDominion->realm->motd_updated_at > now()->subDays(3)))
             <div class="col-sm-12 col-md-9">
@@ -248,32 +358,61 @@
             </div>
         @endif
 
-        @if ($dominionProtectionService->isUnderProtection($selectedDominion))
-
+        @if ($dominionProtectionService->canTick($selectedDominion) or $dominionProtectionService->canDelete($selectedDominion))
         <div class="col-sm-12 col-md-9">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="ra ra-shield text-aqua"></i> Protection</h3>
-                </div>
-                  <div class="box-body">
-                      <p>You are under a magical state of protection. You have <b>{{ $selectedDominion->protection_ticks }}</b> protection {{ str_plural('tick', $selectedDominion->protection_ticks) }} left.</p>
-                      <p>During protection you cannot be attacked or attack other dominions. You can neither cast any offensive spells or engage in espionage.</p>
-                      <p>Regularly scheduled ticks do not count towards your dominion while you are in protection.</p>
-                      <p>Click the button below to proceed to the next tick.</p>
-                      <form action="{{ route('dominion.status') }}" method="post" role="form" id="tick_form">
-                      @csrf
-                      <button type="submit"
-                              class="btn btn-info"
-                              {{ $selectedDominion->isLocked() ? 'disabled' : null }}
-                              id="tick-button">
-                          <i class="ra ra-shield"></i>
-                          Proceed to next tick
-                      </button>
-                    </form>
-                  </div>
-            </div>
-        </div>
+            @if ($dominionProtectionService->canTick($selectedDominion))
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="ra ra-shield text-aqua"></i> Protection</h3>
+                    </div>
+                      <div class="box-body">
+                          <p>You are under a magical state of protection. You have <b>{{ $selectedDominion->protection_ticks }}</b> protection {{ str_plural('tick', $selectedDominion->protection_ticks) }} left.</p>
+                          <p>During protection you cannot be attacked or attack other dominions. You can neither cast any offensive spells or engage in espionage.</p>
+                          <p>Regularly scheduled ticks do not count towards your dominion while you are in protection.</p>
+                          <p>Click the button below to proceed to the next tick. <em>There is no undo option so make sure you are ready to proceed.</em> </p>
+                          <form action="{{ route('dominion.status') }}" method="post" role="form" id="tick_form">
+                          @csrf
+                          <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
+                          <select class="btn btn-warning" name="ticks">
+                              @for ($i = 1; $i <= $selectedDominion->protection_ticks; $i++)
+                              <option value="{{ $i }}">{{ $i }}</option>
+                              @endfor
+                          </select>
 
+                          <button type="submit"
+                                  class="btn btn-info"
+                                  {{ $selectedDominion->isLocked() ? 'disabled' : null }}
+                                  id="tick-button">
+                              <i class="ra ra-shield"></i>
+                              Proceed tick(s) ({{ $selectedDominion->protection_ticks }} {{ str_plural('tick', $selectedDominion->protection_ticks) }} left)
+                        </form>
+                      </div>
+                </div>
+            @endif
+            @if ($dominionProtectionService->canDelete($selectedDominion))
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="ra ra-broken-shield text-red"></i> Delete Dominion</h3>
+                    </div>
+                      <div class="box-body">
+                          <p>You can delete your dominion and create a new one.</p>
+                          <p><strong>There is no way to undo this action.</strong></p>
+                          <form id="delete-dominion" class="form-inline" action="{{ route('dominion.misc.delete') }}" method="post">
+                              @csrf
+                              <div class="form-group">
+                                  <select class="form-control">
+                                      <option value="0">Delete?</option>
+                                      <option value="1">Confirm Delete</option>
+                                  </select>
+                                  <p>
+                                    <button type="submit" class="btn btn-sm btn-danger" disabled>Delete my dominion</button>
+                                  </p>
+                              </div>
+                          </form>
+                      </div>
+                </div>
+            @endif
+        </div>
         @endif
 
         <div class="col-sm-12 col-md-9">
@@ -374,3 +513,17 @@
 
     </div>
 @endsection
+@push('inline-scripts')
+     <script type="text/javascript">
+         (function ($) {
+             $('#delete-dominion select').change(function() {
+                 var confirm = $(this).val();
+                 if (confirm == "1") {
+                     $('#delete-dominion button').prop('disabled', false);
+                 } else {
+                     $('#delete-dominion button').prop('disabled', true);
+                 }
+             });
+         })(jQuery);
+     </script>
+ @endpush

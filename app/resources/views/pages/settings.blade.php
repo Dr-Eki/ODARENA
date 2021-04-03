@@ -7,190 +7,244 @@
         $user = Auth::user();
     @endphp
 
-    <form action="{{ route('settings') }}" method="post" enctype="multipart/form-data" role="form">
-        @csrf
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <form action="{{ route('settings') }}" method="post" enctype="multipart/form-data" role="form">
+            @csrf
 
-        <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#account" data-toggle="tab">Account</a></li>
-                <li><a href="#notifications" data-toggle="tab">Notifications</a></li>
-                {{--<li><a href="#security" data-toggle="tab">Security</a></li>--}}
-            </ul>
-            <div class="tab-content">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#account" data-toggle="tab">Account</a></li>
+                    <li><a href="#notifications" data-toggle="tab">Notifications</a></li>
+                    <li><a href="#settings" data-toggle="tab">Settings</a></li>
+                </ul>
+                <div class="tab-content">
 
-                <div class="tab-pane active" id="account">
-                    <div class="row form-horizontal">
-                        <div class="col-md-6">
+                    <div class="tab-pane active" id="account">
+                        <div class="row form-horizontal">
+                            <div class="col-md-6">
 
-                            <h2 class="page-header">Basic Information</h2>
+                                <h2 class="page-header">Basic Information</h2>
 
-                            {{-- Display Name --}}
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Display Name</label>
-                                <div class="col-sm-9">
-                                    <p class="form-control-static">{{ $user->display_name }}</p>
-                                    <p class="help-block">Visible on your <a href="#">public profile</a>.</p>
-                                    <p class="help-block">Your display name cannot be changed.</p>
-                                </div>
-                            </div>
-
-                            {{-- Email --}}
-                            <div class="form-group">
-                                <label for="email" class="col-sm-3 control-label">Email</label>
-                                <div class="col-sm-9">
-                                    <input type="email" name="account_email" id="email" class="form-control" value="{{ $user->email }}" readonly>
-                                    <p class="help-block">Your email address cannot be changed at the moment.</p>
-                                </div>
-                            </div>
-
-                            {{-- Skins --}}
-                            <div class="form-group">
-                                <label for="skin" class="col-sm-3 control-label">Skin</label>
-                                <div class="col-sm-9">
-                                    <select name="skin" id="skin" class="form-control">
-                                        <option value="skin-red">Default</option>
-                                        <option value="skin-dark-red" {{ Auth::user()->skin == 'skin-dark-red' ? 'selected' : null }}>Dark</option>
-                                    </select>
-                                    <p class="help-block">Select a new color scheme for the website.</p>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="col-md-6">
-
-                            <h2 class="page-header">Avatar</h2>
-
-                            {{-- Avatar --}}
-                            <div class="form-group">
-                                <div class="col-xs-12">
-                                    <div style="margin-bottom: 10px;">
-                                        <img src="{{ $user->getAvatarUrl() }}" class="img-responsive" alt="Avatar of {{ $user->display_name }}">
+                                {{-- Display Name --}}
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Display Name</label>
+                                    <div class="col-sm-9">
+                                        <p class="form-control-static">{{ $user->display_name }}</p>
+                                        <p class="help-block">Visible on your <a href="#">public profile</a>.</p>
+                                        <p class="help-block">Your display name cannot be changed.</p>
                                     </div>
-                                    @if ($user->avatar === null)
-                                        <p class="help-block">Your are currently using your <a href="https://en.gravatar.com/" target="_blank">Gravatar <i class="fa fa-external-link"></i></a>.</p>
-                                    {{--@else--}}
-                                        {{--<p class="help-block">You are using a custom uploaded avatar. <a href="#">Reset to Gravatar</a>.</p>--}}
-                                    @endif
-
-                                    <label class="btn btn-default btn-file">
-                                        Upload new avatar <input type="file" name="account_avatar" accept="image/*">
-                                    </label>
-
-                                    <span class="new-avatar-filename" style="padding-left: 8px;"></span>
-
-                                    <p class="help-block">Uploaded avatars will be cropped/resized to 200x200 pixels and converted to PNG. Upload a square image for best results.</p>
-                                    <p class="help-block">Supported formats are JPG, PNG, WebP and non-animated GIF.</p>
                                 </div>
-                            </div>
 
+                                {{-- Email --}}
+                                <div class="form-group">
+                                    <label for="email" class="col-sm-3 control-label">Email</label>
+                                    <div class="col-sm-9">
+                                        <input type="email" name="account_email" id="email" class="form-control" value="{{ $user->email }}" readonly>
+                                        <p class="help-block">Your email address cannot be changed at the moment.</p>
+                                    </div>
+                                </div>
+
+                                {{-- Skins --}}
+                                <div class="form-group">
+                                    <label for="skin" class="col-sm-3 control-label">Skin</label>
+                                    <div class="col-sm-9">
+                                        <select name="skin" id="skin" class="form-control">
+                                            <option value="skin-red">Default</option>
+                                            <option value="skin-dark-red" {{ Auth::user()->skin == 'skin-dark-red' ? 'selected' : null }}>Dark</option>
+                                        </select>
+                                        <p class="help-block">Select a new color scheme for the website.</p>
+                                    </div>
+                                </div>
+
+                                {{-- Barbarian Events --}}
+                                <div class="form-group">
+                                    <label for="skin" class="col-sm-3 control-label">Hide Barbarian events from the World News <small class="pull-right text-muted">&nbsp;NYI</small></label>
+                                    <div class="col-sm-9">
+                                        <input type="checkbox" name="settings[hide_barbarian_world_news]" value=1>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+
+                                <h2 class="page-header">Avatar</h2>
+
+                                {{-- Avatar --}}
+                                <div class="form-group">
+                                    <div class="col-xs-12">
+                                        <div style="margin-bottom: 10px;">
+                                            <img src="{{ $user->getAvatarUrl() }}" class="img-responsive" alt="Avatar of {{ $user->display_name }}">
+                                        </div>
+                                        @if ($user->avatar === null)
+                                            <p class="help-block">Your are currently using your <a href="https://en.gravatar.com/" target="_blank">Gravatar <i class="fa fa-external-link"></i></a>.</p>
+                                        {{--@else--}}
+                                            {{--<p class="help-block">You are using a custom uploaded avatar. <a href="#">Reset to Gravatar</a>.</p>--}}
+                                        @endif
+
+                                        <label class="btn btn-default btn-file">
+                                            Upload new avatar <input type="file" name="account_avatar" accept="image/*">
+                                        </label>
+
+                                        <span class="new-avatar-filename" style="padding-left: 8px;"></span>
+
+                                        <p class="help-block">Uploaded avatars will be cropped/resized to 200x200 pixels and converted to PNG. Upload a square image for best results.</p>
+                                        <p class="help-block">Supported formats are JPG, PNG, WebP and non-animated GIF.</p>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="tab-pane" id="notifications">
-                    <div class="row">
-                        <div class="col-sm-6">
+                    <div class="tab-pane" id="notifications">
+                        <div class="row">
+                            <div class="col-sm-6">
 
-                            <h2 class="page-header">Notifications</h2>
+                                <h2 class="page-header">Notifications</h2>
 
-                            @foreach ($notificationHelper->getNotificationCategories() as $category => $notifications)
-                                <table class="table table-striped table-hover">
-                                    <colgroup>
-                                        <col>
-                                        <col width="100">
-                                        <col width="100">
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th>{{ $notificationHelper->getNotificationTypeLabel($category) }}</th>
-                                            <th class="text-center">Email</th>
-                                            <th class="text-center">Ingame</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><em>All {{ $notificationHelper->getNotificationTypeLabel($category) }}</em></td>
-                                            <td class="text-center">
-                                                <input type="checkbox" data-check-all data-check-all-type="email" {{ collect($notificationSettings[$category] ?? [])->map(function ($notification) { return $notification['email'] ?? false; })->reduce(function ($carry, $item) { return (($carry || ($carry === null)) && $item); }) ? 'checked' : null }}>
-                                            </td>
-                                            <td class="text-center">
-                                                <input type="checkbox" data-check-all data-check-all-type="ingame" {{ collect($notificationSettings[$category] ?? [])->map(function ($notification) { return $notification['ingame'] ?? false; })->reduce(function ($carry, $item) { return (($carry || ($carry === null)) && $item); }) ? 'checked' : null }}>
-                                            </td>
-                                        </tr>
-                                        @foreach ($notifications as $type => $notification)
+                                @foreach ($notificationHelper->getNotificationCategories() as $category => $notifications)
+                                    <table class="table table-striped table-hover">
+                                        <colgroup>
+                                            <col>
+                                            <col width="100">
+                                            <col width="100">
+                                        </colgroup>
+                                        <thead>
                                             <tr>
-                                                <td>{{ $notification['label'] }}</td>
+                                                <th>{{ $notificationHelper->getNotificationTypeLabel($category) }}</th>
+                                                <th class="text-center">Email</th>
+                                                <th class="text-center">Ingame</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><em>All {{ $notificationHelper->getNotificationTypeLabel($category) }}</em></td>
                                                 <td class="text-center">
-                                                    <input type="checkbox" name="notifications[{{ $category }}][{{ $type }}][email]" {{ array_get($notificationSettings, "{$category}.{$type}.email", $notification['defaults']['email']) ? 'checked' : null }} data-check-all-type="email">
+                                                    <input type="checkbox" data-check-all data-check-all-type="email" {{ collect($notificationSettings[$category] ?? [])->map(function ($notification) { return $notification['email'] ?? false; })->reduce(function ($carry, $item) { return (($carry || ($carry === null)) && $item); }) ? 'checked' : null }}>
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($notification['onlyemail'] ?? false)
-                                                        &nbsp;
-                                                    @else
-                                                        <input type="checkbox" name="notifications[{{ $category }}][{{ $type }}][ingame]" {{ array_get($notificationSettings, "{$category}.{$type}.ingame", $notification['defaults']['ingame']) ? 'checked' : null }} data-check-all-type="ingame">
-                                                    @endif
+                                                    <input type="checkbox" data-check-all data-check-all-type="ingame" {{ collect($notificationSettings[$category] ?? [])->map(function ($notification) { return $notification['ingame'] ?? false; })->reduce(function ($carry, $item) { return (($carry || ($carry === null)) && $item); }) ? 'checked' : null }}>
                                                 </td>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            @endforeach
+                                            @foreach ($notifications as $type => $notification)
+                                                <tr>
+                                                    <td>{{ $notification['label'] }}</td>
+                                                    <td class="text-center">
+                                                        <input type="checkbox" name="notifications[{{ $category }}][{{ $type }}][email]" {{ array_get($notificationSettings, "{$category}.{$type}.email", $notification['defaults']['email']) ? 'checked' : null }} data-check-all-type="email">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if ($notification['onlyemail'] ?? false)
+                                                            &nbsp;
+                                                        @else
+                                                            <input type="checkbox" name="notifications[{{ $category }}][{{ $type }}][ingame]" {{ array_get($notificationSettings, "{$category}.{$type}.ingame", $notification['defaults']['ingame']) ? 'checked' : null }} data-check-all-type="ingame">
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @endforeach
 
-                        </div>
-                        {{--<div class="col-sm-6">
-
-                            <h2 class="page-header">Notification Settings</h2>--}}
-
-                            {{-- Disable email notifications --}}
-                            {{--<div class="checkbox">
-                                <label>
-                                    <input type="checkbox">
-                                    Disable email notifications
-                                </label>
-                                <p class="help-text">foo</p>
-                            </div>--}}
-
-                            {{-- Digest Email --}}
-                            {{--<div class="form-group">
-                                <label>Digest Irregular Email Notifications</label>
-                                <br>
-                                <div class="btn-group" data-toggle="buttons">
-                                    @foreach ([
-                                        'off' => 'Off',
-                                        '5min' => '5 Min',
-                                        'hourly' => 'Hourly',
-                                        'daily' => 'Daily',
-                                    ] as $notificationKey => $label)
-                                        @php
-                                        if ($user->getSetting('notification_digest') === null) {
-                                            $isActive = ($notificationKey === 'hourly');
-                                        } else {
-                                            $isActive = ($user->getSetting('notification_digest')  === $notificationKey);
-                                        }
-                                        @endphp
-                                        <label class="btn btn-default {{ $isActive ? 'active' : null }}">
-                                            <input type="radio" name="notification_digest" value="{{ $notificationKey }}" autocomplete="off" {{ $isActive ? 'checked' : null }}>
-                                            {{ $label }}
-                                        </label>
-                                    @endforeach
-                                </div>
-                                <p class="help-text">Having a low digest setting can result in a lot of emails.</p>
                             </div>
-
-                        </div>--}}
-
+                        </div>
                     </div>
+
+                    <div class="tab-pane" id="notifications">
+                        <div class="row">
+                            <div class="col-sm-6">
+
+                                <h2 class="page-header">Settings</h2>
+
+                                @foreach ($settingHelper->getNotificationCategories() as $category => $settings)
+                                    <table class="table table-striped table-hover">
+                                        <colgroup>
+                                            <col>
+                                            <col width="100">
+                                            <col width="100">
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>{{ $settingHelper->getNotificationTypeLabel($category) }}</th>
+                                                <th class="text-center">Email</th>
+                                                <th class="text-center">Ingame</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><em>All {{ $settingHelper->getNotificationTypeLabel($category) }}</em></td>
+                                                <td class="text-center">
+                                                    <input type="checkbox" data-check-all data-check-all-type="email" {{ collect($notificationSettings[$category] ?? [])->map(function ($notification) { return $notification['email'] ?? false; })->reduce(function ($carry, $item) { return (($carry || ($carry === null)) && $item); }) ? 'checked' : null }}>
+                                                </td>
+                                                <td class="text-center">
+                                                    <input type="checkbox" data-check-all data-check-all-type="ingame" {{ collect($notificationSettings[$category] ?? [])->map(function ($notification) { return $notification['ingame'] ?? false; })->reduce(function ($carry, $item) { return (($carry || ($carry === null)) && $item); }) ? 'checked' : null }}>
+                                                </td>
+                                            </tr>
+                                            @foreach ($settings as $type => $setting)
+                                                <tr>
+                                                    <td>{{ $setting['label'] }}</td>
+                                                    <td class="text-center">
+                                                        <input type="checkbox" name="notifications[{{ $category }}][{{ $type }}][email]" {{ array_get($notificationSettings, "{$category}.{$type}.email", $notification['defaults']['email']) ? 'checked' : null }} data-check-all-type="email">
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if ($setting['onlyemail'] ?? false)
+                                                            &nbsp;
+                                                        @else
+                                                            <input type="checkbox" name="notifications[{{ $category }}][{{ $type }}][ingame]" {{ array_get($notificationSettings, "{$category}.{$type}.ingame", $notification['defaults']['ingame']) ? 'checked' : null }} data-check-all-type="ingame">
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @endforeach
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Update Settings</button>
                 </div>
-
-                {{--<div class="tab-pane" id="security">
-                    security
-                </div>--}}
-
             </div>
-        </div>
 
-        <button type="submit" class="btn btn-primary">Update Settings</button>
-    </form>
+        </form>
+      </div>
+</div>
+{{--
+<div class="row">
+    <div class="col-sm-12 col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="ra ra-player"></i> Patreon</h3>
+            </div>
+            <div class="box-body">
+                @if($user->patreon_access_token == NULL or now()->diffInDays($user->patreon_access_token_last_updated) >= 30)
+                    <p>If you support ODARENA by becoming a Patreon, you get access to a some special features.</p>
+                    <p>Click the button below to associate this account (<strong>{{ $user->display_name }}</strong>) to Patreon and receive benefits.</p>
+                    <p>You can only associate one ODARENA account to your Patreon account. <em>This lasts for 30 days.</em></p>
+                    <p>If you have done this already but still see this message, it means at least 30 days have passed since you last associated your account with Patreon.</p>
+                    <form action="https://www.patreon.com/oauth2/authorize" method="get" enctype="multipart/form-data" role="form" id="patreon">
+                            <button type="submit" class="btn btn-primary" form="patreon">Link your Patreon account</button>
+                            <input type="hidden" name="response_type" value="code">
+                            <input type="hidden" name="client_id" value="zmWG1cS3XRWBJeBZThMpC-YEBt0rRv-1wfuKnXs7hEh5tNzkBpSs5gHYDkegI3Gd" form="patreon">
+                            @if(request()->getHost() == 'odarena.local')
+                                <input type="hidden" name="redirect_uri" value="http://odarena.local/patreon">
+                            @else
+                                <input type="hidden" name="redirect_uri" value="https://odarena.com/patreon">
+                            @endif
+                    </form>
+                @else
+                    <form action="patreon/pledge" method="get" enctype="multipart/form-data" role="form" id="patreon">
+                            <button type="submit" class="btn btn-primary" form="patreon">Update Pledge</button>
+                    </form>
+                @endif
+
+              </div>
+          </div>
+      </div>
+--}}
+
+</div>
 
 @endsection
 

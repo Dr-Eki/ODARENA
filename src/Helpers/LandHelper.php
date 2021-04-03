@@ -3,6 +3,7 @@
 namespace OpenDominion\Helpers;
 
 use OpenDominion\Models\Race;
+use OpenDominion\Models\Building;
 
 class LandHelper
 {
@@ -12,7 +13,6 @@ class LandHelper
             'plain',
             'mountain',
             'swamp',
-            #'cavern',
             'forest',
             'hill',
             'water',
@@ -24,112 +24,27 @@ class LandHelper
         return $this->getLandTypesByBuildingType($race)[$building];
     }
 
-    public function getLandTypesByBuildingType(Race $race): array
-    {
-
-      if($race->name == 'Dragon')
-      {
-        $buildings = [
-          'tower' => 'mountain',
-          'farm' => 'mountain',
-          'ore_mine' => 'mountain',
-          'diamond_mine' => 'mountain',
-          'lumberyard' => 'forest',
-          'barracks' => 'hill',
-          'dock' => 'water',
-        ];
-      }
-      elseif($race->name == 'Merfolk')
-      {
-        $buildings = [
-          'farm' => 'water',
-          'tower' => 'water',
-          'temple' => 'water',
-          'diamond_mine' => 'water',
-          'shrine' => 'water',
-        ];
-      }
-      elseif($race->name == 'Void')
-      {
-        $buildings = [
-          'ziggurat' => 'mountain'
-        ];
-      }
-      elseif($race->name == 'Growth')
-      {
-        $buildings = [
-          'tissue' => 'swamp'
-        ];
-      }
-      elseif($race->name == 'Myconid')
-      {
-        $buildings = [
-          'mycelia' => 'forest'
-        ];
-      }
-      elseif($race->name == 'Swarm')
-      {
-        $buildings = [
-            'tunnels' => 'plain',
-            'tunnels' => 'mountain',
-            'tunnels' => 'swamp',
-            'tunnels' => 'forest',
-            'tunnels' => 'hill',
-            'tunnels' => 'water',
-        ];
-      }
-      else
-      {
-        $buildings = [
-            'alchemy' => 'plain',
-            'farm' => 'plain',
-            'smithy' => 'plain',
-            'masonry' => 'plain',
-            'ore_mine' => 'mountain',
-            'gryphon_nest' => 'mountain',
-            'tower' => 'swamp',
-            'wizard_guild' => 'swamp',
-            'temple' => 'swamp',
-            'diamond_mine' => 'mountain',
-            #'school' => 'cavern',
-            'lumberyard' => 'forest',
-            'forest_haven' => 'forest',
-            'factory' => 'hill',
-            'guard_tower' => 'hill',
-            'shrine' => 'hill',
-            'barracks' => 'hill',
-            'dock' => 'water',
-        ];
-      }
-
-        $buildings = (['home' => $race->home_land_type] + $buildings);
-
-        return $buildings;
-    }
-
     public function getLandTypeIconHtml(string $landType): string
     {
-        switch ($landType) {
+        switch ($landType)
+        {
             case 'plain':
-                return '<i class="ra ra-grass-patch text-green"></i>';
+                return '<i class="ra ra-grass-patch ra-fw text-green"></i>';
 
             case 'mountain':
-                return '<i class="ra ra-mountains text-red"></i>';
+                return '<i class="fa fa-mountain fa-fw text-blue"></i>';
 
             case 'swamp':
-                return '<i class="ra ra-skull text-black"></i>';
-
-            #case 'cavern':
-            #    return '<i class="ra ra-mining-diamonds text-blue"></i>';
+                return '<i class="fas fa-frog fa-fw text-purple"></i>';
 
             case 'forest':
-                return '<i class="ra ra-pine-tree text-green"></i>';
+                return '<i class="fa fa-tree fa-fw text-green"></i>';
 
             case 'hill':
-                return '<i class="ra ra-grass text-green"></i>';
+                return '<i class="ra ra-grass fa-fw text-green"></i>';
 
             case 'water':
-                return '<i class="ra ra-water-drop text-light-blue"></i>';
+                return '<i class="fas fa-water fa-fw text-aqua"></i>';
 
             default:
                 return '';

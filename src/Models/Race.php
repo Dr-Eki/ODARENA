@@ -68,7 +68,8 @@ class Race extends AbstractModel
             return ($racePerkType->key === $key);
         });
 
-        if ($perks->isEmpty()) {
+        if ($perks->isEmpty())
+        {
             return 0;
         }
 

@@ -6,13 +6,18 @@ use OpenDominion\Models\Tech;
 
 class TechHelper
 {
+    public function getTechs()
+    {
+        return Tech::all()->keyBy('key');
+    }
+
     public function getTechDescription(Tech $tech): string
     {
         $perkTypeStrings = [
             // Military related
             'defense' => '%s%% defensive power',
             'offense' => '%s%% offensive power',
-            'military_cost' => '%s%% military training platinum, ore, and lumber costs',
+            'military_cost' => '%s%% military training gold, ore, and lumber costs',
 
 
             'military_cost_food' => '%s%% military training food costs',
@@ -23,17 +28,18 @@ class TechHelper
             'fewer_casualties_offense' => '%s%% fewer casualties on offense',
 
             // Logistics
-            'construction_cost' => '%s%% construction platinum cost',
+            'construction_cost' => '%s%% construction costs',
             'explore_draftee_cost' => '%s draftee per acre explore cost (min 3)',
-            'explore_platinum_cost' => '%s%% exploring platinum cost',
-            'max_population' => '%s%% maximum population',
-            'rezone_cost' => '%s%% rezoning platinum cost',
+            'explore_gold_cost' => '%s%% exploring gold cost',
+            'max_population' => '%s%% maximum population (multiplicative bonus)',
+            'rezone_cost' => '%s%% rezoning costs',
 
             // Spy related
             'spy_cost' => '%s%% cost of spies',
             'spy_losses' => '%s%% spy losses on failed operations',
             'spy_strength' => '%s%% spy strength',
             'spy_strength_recovery' => '%s spy strength per hour',
+            'amount_stolen' => '%s%% amount stolen',
 
             // Wizard related
             'spell_cost' => '%s%% cost of spells',
@@ -47,16 +53,18 @@ class TechHelper
             'lumber_production' => '%s%% lumber production',
             'mana_production' => '%s%% mana production',
             'ore_production' => '%s%% ore production',
-            'platinum_production' => '%s%% platinum production',
+            'gold_production' => '%s%% gold production',
 
             // ODA
             'prestige_gains' => '%s%% higher prestige gains',
             'improvements' => '%s%% higher improvement bonus',
-            'conversions' => '%s%% more conversions (only applicable to converting units)',
-            'barracks_housing' => '%s%% more unit housing per barracks',
+            'conversions' => '%s%% more conversions (only applicable to Afflicted, Cult, and Sacred Order)',
+            'barracks_housing' => '%s%% higher military housing in buildings that provide military housing',
             'gemcutting' => '%s%% more improvement points per gem',
-            'platinum_interest' => '%s%% interest on your platinum stockpile per tick',
+            'gold_interest' => '%s%% interest on your gold stockpile per tick',
             'exchange_rate' => '%s%% better exchange rates',
+            'jobs_per_building' => '%s%% more jobs per building',
+            'drafting' => '%s%% drafting',
 
         ];
 
@@ -72,6 +80,6 @@ class TechHelper
             }
         }
 
-        return implode($perkStrings, ', ');
+        return implode( ', ', $perkStrings);
     }
 }

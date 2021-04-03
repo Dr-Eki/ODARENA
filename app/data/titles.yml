@@ -1,0 +1,81 @@
+commander:
+  name: Commander
+  perks:
+    unit_gold_costs: -5
+    unit_ore_costs: -5
+    unit_lumber_costs: -2
+    unit_mana_costs: -2
+    unit_food_costs: -2
+
+conjurer:
+  name: Conjurer
+  perks:
+    spell_cost: -50
+    unit_mana_costs: -7.5
+
+surveyor:
+  name: Surveyor
+  perks:
+    construction_cost: -15
+    rezone_cost: -15
+
+engineer:
+  name: Engineer
+  perks:
+    improvements: 10
+
+investigator:
+  name: Investigator
+  perks:
+    spy_strength: 15
+    spy_strength_recovery: 1
+
+pathfinder:
+  name: Pathfinder
+  perks:
+    explore_cost: -10
+    explore_time: -2
+
+excavator:
+  name: Excavator
+  perks:
+    ore_production: 10
+    gem_production: 10
+
+researcher:
+  name: Researcher
+  perks:
+    tech_production: 5
+
+healer:
+  name: Healer
+  perks:
+    casualties: -10
+
+embalmer:
+  name: Embalmer
+  enabled: 0
+  perks:
+    conversions: 5
+
+warden:
+  name: Warden
+  enabled: 0
+  perks:
+    lumber_production: 10
+
+forester:
+  name: Forester
+  perks:
+    lumber_production: 10
+
+merchant:
+  name: Merchant
+  perks:
+    exchange_rate: 10
+
+general:
+  name: General
+  perks:
+    prestige_gains: 10
+    morale_gains: 25

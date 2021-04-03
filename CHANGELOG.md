@@ -64,7 +64,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/). 
 - Land generation changed to 85:65 (from 75:75)
 - Base defensive casualties changed to 3.825% (from 3.375%)
 - Conversion multiplier change to 1.75% (from 2%)
-- Adjusted explore platinum cost formula
+- Adjusted explore gold cost formula
 - Sending less than 85% of your target's defense will no longer cause defensive casualties
 - Failed invasions when sending over 85% of the target's defense will now properly reduce defensive casualties for subsequent invasions
 - Slightly tweaked starvation casualties to now kill off population types based on proportion
@@ -140,7 +140,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/). 
 - Dwarf Cleric: -40p
 - Gnome: Now has Miner's Sight as racial spell. Mechanical Genius has been removed
 - Gnome Juggernaut: Increased max staggered OP to +2.5 at 90% land
-- Icekin: Removed +5% platinum production, ArchMage -25p
+- Icekin: Removed +5% gold production, ArchMage -25p
 - Lycanthrope Werewolf: -25p, +1 OP
 - Nox Nightshade: +50p
 - Nox Lich: -50p

@@ -14,6 +14,10 @@ input[type="number"] {
   }
 }
 
+.main-header .sidebar-toggle:before {
+  display: none !important;
+}
+
 .sidebar-menu > li > a > .ra {
   display: inline-block;
   width: 20px;
@@ -66,6 +70,14 @@ input[type="number"] {
   white-space: normal !important;
 
   .fa {
+    width: 15px !important;
+  }
+
+  .fas {
+    width: 15px !important;
+  }
+
+  .fab {
     width: 15px !important;
   }
 }

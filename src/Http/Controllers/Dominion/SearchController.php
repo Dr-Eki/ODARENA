@@ -9,6 +9,10 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\GuardMembershipService;
 use OpenDominion\Services\Dominion\ProtectionService;
 
+#ODA
+use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\SpellCalculator;
+
 class SearchController extends AbstractDominionController
 {
     public function getSearch()
@@ -18,8 +22,11 @@ class SearchController extends AbstractDominionController
         $networthCalculator = app(NetworthCalculator::class);
         $protectionService = app(ProtectionService::class);
         $rangeCalculator = app(RangeCalculator::class);
+        $militaryCalculator = app(MilitaryCalculator::class);
+        $spellCalculator = app(SpellCalculator::class);
 
         $dominion = $this->getSelectedDominion();
+
         $dominions = Dominion::query()
             ->with([
                 'queues',
@@ -39,6 +46,8 @@ class SearchController extends AbstractDominionController
             'networthCalculator',
             'protectionService',
             'rangeCalculator',
+            'militaryCalculator',
+            'spellCalculator',
             'dominions'
         ));
     }

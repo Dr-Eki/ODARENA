@@ -3,7 +3,7 @@
 @section('content')
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">About OD Arena</h3>
+            <h3 class="box-title">About ODARENA</h3>
         </div>
         <div class="box-body">
           <a href="{{ $url_youtube }}" target="_blank" style="border:none; text-decoration:none;">

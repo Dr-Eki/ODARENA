@@ -1,9 +1,11 @@
 @extends('layouts.master')
 
+{{--
 @section('page-header', 'Rezone Land')
+--}}
 
 @section('content')
-@if (!(bool)$selectedDominion->race->getPerkValue('cannot_construct'))
+@if (!(bool)$selectedDominion->race->getPerkValue('cannot_rezone'))
     <div class="row">
 
         <div class="col-sm-12 col-md-9">
@@ -50,6 +52,7 @@
                                     <td class="text-center">{{ ucfirst($landType) }}</td>
                                     <td class="text-center">
                                         <input name="add[{{ $landType }}]" type="number"
+
                                                class="form-control text-center" placeholder="0" min="0"
                                                max="{{ $rezoningCalculator->getMaxAfford($selectedDominion) }}"
                                                value="{{ old('add.' . $landType) }}" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
@@ -74,27 +77,18 @@
                 <div class="box-body">
                     <p>Land rezoning is the art of converting barren land of one type into another type. Rezoning is instant.</p>
 
-                    <p>Each acre costs
-                    @if ($selectedDominion->race->getPerkValue('construction_cost_only_mana'))
-                      {{ number_format($rezoningCalculator->getManaCost($selectedDominion)) }} mana
-                    @elseif ($selectedDominion->race->getPerkValue('construction_cost_only_food'))
-                      {{ number_format($rezoningCalculator->getFoodCost($selectedDominion)) }} food
-                    @else
-                      {{ number_format($rezoningCalculator->getPlatinumCost($selectedDominion)) }} platinum
-                    @endif
-                     to rezone.
-                    </p>
+                    <p>Each acre costs {{ number_format($rezoningCalculator->getRezoningCost($selectedDominion)) }} {{ $rezoningCalculator->getRezoningMaterial($selectedDominion) }} to rezone.</p>
 
                     @if (1-$rezoningCalculator->getCostMultiplier($selectedDominion) !== 0)
-                      <p>Bonuses are
+                      <p>Your rezoning costs are
 
                       @if (1-$rezoningCalculator->getCostMultiplier($selectedDominion) > 0)
-                        decreasing
+                        decreased
                       @else
-                        increasing
+                        increased
                       @endif
 
-                       your rezoning costs by <strong>{{ number_format((abs(1-$rezoningCalculator->getCostMultiplier($selectedDominion)))*100, 2) }}%</strong>.</p>
+                       by <strong>{{ number_format((abs(1-$rezoningCalculator->getCostMultiplier($selectedDominion)))*100, 2) }}%</strong>.</p>
 
                     @endif
 
@@ -110,7 +104,7 @@
 <div class="row">
     <div class="col-sm-12 col-md-9">
         <div class="box box-primary">
-            <p>Your faction is not able to rezone land.</p>
+            <p>{{ $selectedDominion->race->name }} cannot rezone land.</p>
         </div>
     </div>
 </div>

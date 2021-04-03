@@ -50,53 +50,57 @@ class NotificationService
      */
     public function sendNotifications(Dominion $dominion, string $category): void
     {
-        $user = $dominion->user;
 
-        $emailNotifications = [];
-        $defaultSettings = $this->notificationHelper->getDefaultUserNotificationSettings();
+        if(!$dominion->isAbandoned())
+        {
+            $user = $dominion->user;
 
-        foreach ($this->notifications as $type => $data) {
-            $ingameSetting = $user->getSetting("notifications.{$category}.{$type}.ingame");
-            if ($ingameSetting === null) {
-                $ingameSetting = $defaultSettings[$category][$type]['ingame'];
-            }
-            if ($ingameSetting) {
-                $dominion->notify(new WebNotification($category, $type, $data));
+            $emailNotifications = [];
+            $defaultSettings = $this->notificationHelper->getDefaultUserNotificationSettings();
+
+            foreach ($this->notifications as $type => $data)
+            {
+                $ingameSetting = $user->getSetting("notifications.{$category}.{$type}.ingame");
+                if ($ingameSetting === null) {
+                    $ingameSetting = $defaultSettings[$category][$type]['ingame'];
+                }
+                if ($ingameSetting) {
+                    $dominion->notify(new WebNotification($category, $type, $data));
+                }
+
+                $emailSetting = $user->getSetting("notifications.{$category}.{$type}.email");
+                if ($emailSetting === null) {
+                    $emailSetting = $defaultSettings[$category][$type]['email'];
+                }
+                if ($emailSetting) {
+                    $emailNotifications[] = [
+                        'category' => $category,
+                        'type' => $type,
+                        'data' => $data,
+                    ];
+                }
             }
 
-            $emailSetting = $user->getSetting("notifications.{$category}.{$type}.email");
-            if ($emailSetting === null) {
-                $emailSetting = $defaultSettings[$category][$type]['email'];
+            if (!empty($emailNotifications)) {
+                switch ($category) {
+                    case 'general':
+                        throw new \LogicException('todo');
+                    case 'hourly_dominion':
+                        $dominion->notify(new HourlyEmailDigestNotification($emailNotifications));
+                        break;
+
+                    case 'irregular_dominion':
+                        $dominion->notify(new IrregularDominionEmailNotification($emailNotifications));
+                        break;
+
+                }
+
             }
-            if ($emailSetting) {
-                $emailNotifications[] = [
-                    'category' => $category,
-                    'type' => $type,
-                    'data' => $data,
-                ];
-            }
+
+            $this->notifications = [];
+
         }
 
-        if (!empty($emailNotifications)) {
-            switch ($category) {
-                case 'general':
-                    throw new \LogicException('todo');
-                case 'hourly_dominion':
-                    $dominion->notify(new HourlyEmailDigestNotification($emailNotifications));
-                    break;
-
-                case 'irregular_dominion':
-                    $dominion->notify(new IrregularDominionEmailNotification($emailNotifications));
-                    break;
-
-//                case 'irregular_realm':
-//                    $dominion->notify(new IrregularRealmEmailNotification($emailNotifications));
-//                    break;
-            }
-
-        }
-
-        $this->notifications = [];
     }
 
 //    public function addIrregularNotification(Dominion $dominion, string $notificationType, array $notificationData): void
