@@ -3,7 +3,11 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Dr-Eki/ODArena/blob/ODA/LICENSE"><img src="https://img.shields.io/github/license/Dr-Eki/ODArena?style=for-the-badge" alt="GNU AGPLv3 licensed"></a>&nbsp;<a href="https://discord.gg/HpzetmR"><img src="https://img.shields.io/discord/611467600701947905?style=for-the-badge" alt="Chat on Discord"></a>&nbsp;<a href="https://twitter.com/OD_Arena"><img src="https://img.shields.io/twitter/follow/OD_Arena?style=for-the-badge" alt="OD_Arena @ Twitter"></a>
+  <a href="https://github.com/Dr-Eki/ODArena/blob/ODA/LICENSE"><img src="https://img.shields.io/github/license/Dr-Eki/ODArena?style=for-the-badge" alt="GNU AGPLv3 licensed"></a>
+  
+  <a href="https://discord.gg/HpzetmR"><img src="https://img.shields.io/discord/611467600701947905?style=for-the-badge" alt="Chat on Discord"></a>
+  
+  <a href="https://twitter.com/OD_Arena"><img src="https://img.shields.io/twitter/follow/OD_Arena?style=for-the-badge" alt="OD_Arena @ Twitter"></a>
 </p>
 
 
@@ -11,9 +15,7 @@
 
 OD Arena is a persistent browser-based fantasy game where you control a dominion and is charged with defending its lands and competing with other players to become the largest in the current round.
 
-It is a fork of [OpenDominion](https://www.github.com/WaveHack/OpenDominion/) by WaveHack. 
-
-OpenDominion is written in PHP on the Laravel framework.
+It is a fork of [OpenDominion](https://www.github.com/WaveHack/OpenDominion/) by WaveHack.
 
 ## Contributing
 
