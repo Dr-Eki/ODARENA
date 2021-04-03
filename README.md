@@ -3,11 +3,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Dr-Eki/ODArena/blob/ODA/LICENSE"><img src="https://img.shields.io/github/license/Dr-Eki/ODArena?style=for-the-badge" alt="GNU AGPLv3 licensed"></a>
-  
-  <a href="https://discord.gg/HpzetmR"><img src="https://img.shields.io/discord/611467600701947905?style=for-the-badge" alt="Chat on Discord"></a>
-  
-  <a href="https://twitter.com/OD_Arena"><img src="https://img.shields.io/twitter/follow/OD_Arena?style=for-the-badge" alt="OD_Arena @ Twitter"></a>
+  <a href="https://github.com/Dr-Eki/ODArena/blob/ODA/LICENSE"><img src="https://img.shields.io/github/license/wavehack/opendominion.svg?maxAge=2592000" alt="GNU AGPLv3 licensed"></a>
+  <a href="https://discord.gg/HpzetmR"><img src="https://img.shields.io/discord/325315157335212032.svg?label=chat%20&#40;discord&#41;" alt="Chat on Discord"></a>
 </p>
 
 
