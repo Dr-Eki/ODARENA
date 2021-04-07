@@ -528,7 +528,7 @@ tissue:
     jobs: 0
 
 tissue_plain:
-  name: Tissue
+  name: Plain Tissue
   exclusive_races:
     - Growth
   land_type: plain
@@ -549,7 +549,7 @@ sinew:
     jobs: 0
 
 tissue_forest:
-  name: Tissue
+  name: Forest Tissue
   exclusive_races:
     - Growth
   land_type: forest
@@ -569,7 +569,7 @@ tendon:
     jobs: 0
 
 tissue_mountain:
-  name: Tissue
+  name: Mountain Tissue
   exclusive_races:
     - Growth
   land_type: mountain
@@ -589,7 +589,7 @@ cartilage:
     jobs: 0
 
 tissue_hill:
-  name: Tissue
+  name: Hill Tissue
   exclusive_races:
     - Growth
   land_type: hill
@@ -609,7 +609,7 @@ incisor:
     jobs: 0
 
 tissue_swamp:
-  name: Tissue
+  name: Swamp Tissue
   exclusive_races:
     - Growth
   land_type: swamp
@@ -629,7 +629,7 @@ sac:
     jobs: 0
 
 tissue_water:
-  name: Tissue
+  name: Water Tissue
   exclusive_races:
     - Growth
   land_type: water
