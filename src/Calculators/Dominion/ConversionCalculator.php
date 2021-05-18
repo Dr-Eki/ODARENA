@@ -128,8 +128,8 @@ class ConversionCalculator
         $casualtiesBasedConversionsOnOffense = $this->getCasualtiesBasedConversions($attacker, $defender, $invasion, $rawOp, $rawDp, $landRatio, 'offense', $rawDpLost, 0);
         $casualtiesBasedConversionsOnDefense = $this->getCasualtiesBasedConversions($attacker, $defender, $invasion, $rawOp, $rawDp, $landRatio, 'defense', 0, $rawOpLost);
 
-        $strengthBasedConversionsOnOffense = $this->getStrengthBasedConversions($attacker, $defender, $invasion, $rawOp, $rawDp, $landRatio, 'offense', $rawOPLost, $rawDPLost);
-        $strengthBasedConversionsOnDefense = $this->getStrengthBasedConversions($attacker, $defender, $invasion, $rawOp, $rawDp, $landRatio, 'defense', $rawOPLost, $rawDPLost);
+        $strengthBasedConversionsOnOffense = $this->getStrengthBasedConversions($attacker, $defender, $invasion, $rawOp, $rawDp, $landRatio, 'offense');
+        $strengthBasedConversionsOnDefense = $this->getStrengthBasedConversions($attacker, $defender, $invasion, $rawOp, $rawDp, $landRatio, 'defense');
 
         $vampiricConversionsOnOffense = $this->getVampiricConversions($attacker, $defender, $invasion, $rawOp, $rawDp, $landRatio, 'offense');
         $vampiricConversionsOnDefense = $this->getVampiricConversions($attacker, $defender, $invasion, $rawOp, $rawDp, $landRatio, 'defense');
@@ -474,7 +474,7 @@ class ConversionCalculator
         return $convertedUnits;
     }
 
-    public function getStrengthBasedConversions(Dominion $attacker, Dominion $defender, array $invasion, int $rawOp, int $rawDp, float $landRatio, string $mode, int $rawOPLost, int $rawDPLost): array
+    public function getStrengthBasedConversions(Dominion $attacker, Dominion $defender, array $invasion, int $rawOp, int $rawDp, float $landRatio, string $mode): array
     {
         $convertedUnits = array_fill(1, 4, 0);
         $convertingUnits = array_fill(1, 4, 0);
@@ -520,7 +520,7 @@ class ConversionCalculator
 
                 $unitRawOp = $this->militaryCalculator->getUnitPowerWithPerks($attacker, $defender, $landRatio, $unit, 'offense');
 
-                $convertingUnitsOpRatio[$slot] = ($unitRawOp * $amount) / ($rawOp - $rawOPLost);
+                $convertingUnitsOpRatio[$slot] = ($unitRawOp * $amount) / $rawOp;
              }
 
             foreach($invasion['defender']['unitsLost'] as $slot => $amount)
@@ -647,7 +647,7 @@ class ConversionCalculator
 
                 $unitRawDp = $this->militaryCalculator->getUnitPowerWithPerks($attacker, $defender, $landRatio, $unit, 'defense');
 
-                $convertingUnitsDpRatio[$slot] = ($unitRawDp * $amount) / ($rawDp - $rawDPLost);
+                $convertingUnitsDpRatio[$slot] = ($unitRawDp * $amount) / $rawDp;
              }
 
             foreach($invasion['attacker']['unitsLost'] as $slot => $amount)
