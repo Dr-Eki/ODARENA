@@ -5,14 +5,13 @@ namespace OpenDominion\Calculators\Dominion\Actions;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Helpers\UnitHelper;
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\Building;
+#use OpenDominion\Models\Building;
 use OpenDominion\Models\Unit;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Services\Dominion\QueueService;
-use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\ResourceHelper;
@@ -352,6 +351,7 @@ class TrainingCalculator
 
         // Decrees
         $multiplier += $dominion->getDecreePerkMultiplier('unit_' . $resourceType . '_costs');
+        $multiplier += $dominion->getDecreePerkMultiplier('unit_' . $resourceType . '_costs_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($dominion);
 
         # Cap reduction at -50%
         $multiplier = max(-0.50, $multiplier);

@@ -43,6 +43,7 @@ farm:
     - Lux
     - Monster
     - Myconid
+    - Qur
     - Reptilians
     - Swarm
     - Sylvan
@@ -737,6 +738,23 @@ wizard_guild:
 
 # BEGIN ONE-OFF/FEW-OFF FACTION BUILDINGS
 
+armoury:
+  name: Armoury
+  exclusive_races:
+    - Artillery
+  land_type: plain
+  perks:
+    ammunition_units_housing: 100
+
+hunting_lodge:
+  name: Hunting Lodge
+  exclusive_races:
+    - Qur
+  land_type: forest
+  perks:
+    food_production_raw: 80
+    draftee_housing: 10
+
 mass_grave:
   name: Mass Grave
   exclusive_races:
@@ -753,15 +771,6 @@ yak_breeder:
   perks:
     yak_production_raw: 1
     food_upkeep_raw: 800
-
-
-armoury:
-  name: Armoury
-  exclusive_races:
-    - Artillery
-  land_type: plain
-  perks:
-    ammunition_units_housing: 100
 
 # END ONE-OFF/FEW-OFF FACTION BUILDINGS
 

@@ -69,6 +69,9 @@ class DecreeHelper
             'unit_blood_costs' => '%s%% unit blood costs.',
             'unit_food_costs' => '%s%% unit food costs.',
 
+            'unit_gold_costs_from_wizard_ratio' => '%s%% unit gold costs per 1 WPA.',
+            'unit_lumber_costs_from_wizard_ratio' => '%s%% unit gold costs per 1 WPA.',
+
             'extra_units_trained' => '%s additional units trained for free.',
 
             'morale_gains' => '%s%% morale gains.',
@@ -97,6 +100,7 @@ class DecreeHelper
             'defensive_power' => '%s%% defensive power.',
 
             'can_send_cannonballs' => 'Can fire cannonballs.',
+            'can_send_ammunition_units' => 'Can launch ammunition units.',
 
             # Improvements
             'improvements' => '%s%% improvements.',
@@ -106,12 +110,17 @@ class DecreeHelper
             'construction_cost' => '%s%% construction costs.',
             'rezone_cost' => '%s%% rezoning costs.',
 
+            'construction_cost_from_wizard_ratio' => '%s%% construction costs per 1 WPA.',
+            'construction_time_from_wizard_ratio' => '%s%% construction time per 1 WPA.',
+
             # Espionage and Wizardry
             'spy_losses' => '%s%% spy losses.',
             'spell_damage' => '%s%% spell damage.',
             'spy_cost' => '%s%% spy costs.',
             'wizard_cost' => '%s%% wizard costs.',
             'spell_cost' => '%s%% spell costs.',
+            'spell_cost_from_wizard_ratio' => '%s%% spell costs per 1 WPA.',
+            'sorcery_cost_from_wizard_ratio' => '%s%% sorcery costs per 1 WPA.',
 
             'gold_theft_reduction' => '%s%% gold stolen from you.',
             'gems_theft_reduction' => '%s%% gems stolen from you.',
@@ -131,6 +140,8 @@ class DecreeHelper
             'wizard_strength' => '%s%% wizard strength.',
             'wizard_strength_on_defense' => '%s%% wizard strength on defense.',
             'wizard_strength_on_offense' => '%s%% wizard strength on offense.',
+
+            'wizards_count_as_spies' => 'Wizards count as %s spies.',
 
             # Growth specific
             'generate_building' => 'Generate %s.',

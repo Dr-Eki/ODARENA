@@ -142,6 +142,11 @@ class RangeCalculator
     {
         if($dominion->hasDeity())
         {
+            if($decreeRangeMultiplier = $dominion->getDecreePerkValue('range_multiplier'))
+            {
+                return $decreeRangeMultiplier;
+            }
+            
             return $dominion->deity->range_multiplier;
         }
         elseif($dominion->getPendingDeitySubmission() and !$isTarget)

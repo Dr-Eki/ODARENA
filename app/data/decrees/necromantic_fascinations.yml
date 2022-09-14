@@ -5,6 +5,7 @@ exclusive_races:
   - Undead
 states:
   - name: Mangled Flesh
+    enabled: 0
     perks:
       undead_unit1_production_raw: 1,0.06,4 # slot, amount, perUnit
 
@@ -21,3 +22,12 @@ states:
       wizard_strength: 30
       mana_production_mod: 10
       wizard_strength_recovery: 5
+
+  - name: Champions of Undeath
+    perks:
+      undead_unit1_production_raw: 1,0.03,4 # amount, perUnit
+      attrition_mod: -90
+      wizard_strength: 30
+      mana_production_mod: 10
+      wizard_strength_recovery: 5
+    

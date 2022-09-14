@@ -5,6 +5,7 @@ namespace OpenDominion\Calculators\Dominion\Actions;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Models\Dominion;
 
@@ -39,6 +40,7 @@ class ConstructionCalculator
         BuildingCalculator $buildingCalculator,
         LandCalculator $landCalculator,
         ImprovementCalculator $improvementCalculator,
+        MilitaryCalculator $militaryCalculator,
         LandHelper $landHelper,
         RaceHelper $raceHelper,
         ResourceCalculator $resourceCalculator
@@ -48,6 +50,7 @@ class ConstructionCalculator
         $this->landCalculator = $landCalculator;
         $this->improvementCalculator = $improvementCalculator;
         $this->landHelper = $landHelper;
+        $this->militaryCalculator = $militaryCalculator;
         $this->raceHelper = $raceHelper;
         $this->resourceCalculator = $resourceCalculator;
     }
@@ -212,6 +215,7 @@ class ConstructionCalculator
 
         // Decree
         $multiplier += $dominion->getDecreePerkMultiplier('construction_cost');
+        $multiplier += $dominion->getDecreePerkMultiplier('construction_cost_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($dominion);
 
         // Title
         if(isset($dominion->title))
@@ -221,6 +225,7 @@ class ConstructionCalculator
 
         // Improvements
         $multiplier += $dominion->getImprovementPerkMultiplier('construction_cost');
+
 
         // Cap at max -90%.
         $multiplier = max($multiplier, $maxReduction);
@@ -239,6 +244,7 @@ class ConstructionCalculator
         $multiplier -= $dominion->getImprovementPerkMultiplier('construction_time');
         $multiplier -= $dominion->getBuildingPerkMultiplier('construction_time');
         $multiplier += $dominion->getAdvancementPerkMultiplier('construction_time');
+        $multiplier += $dominion->getDecreePerkMultiplier('construction_time_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($dominion);
 
         $ticks *= $multiplier;
 

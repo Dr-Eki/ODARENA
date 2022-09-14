@@ -3,16 +3,14 @@
 namespace OpenDominion\Calculators\Dominion;
 
 use DB;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 use OpenDominion\Helpers\SpellHelper;
 
-#use OpenDominion\Calculators\Dominion\ResourceCalculator;
+#use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionSpell;
-use OpenDominion\Models\Race;
 use OpenDominion\Models\Spell;
 
 class SpellCalculator
@@ -21,7 +19,7 @@ class SpellCalculator
     public function __construct()
     {
         $this->landCalculator = app(LandCalculator::class);
-        #$this->resourceCalculator = app(ResourceCalculator::class);
+        #$this->militaryCalculator = app(MilitaryCalculator::class);
         $this->spellHelper = app(SpellHelper::class);
     }
 
@@ -57,6 +55,8 @@ class SpellCalculator
         $multiplier += $dominion->getImprovementPerkMultiplier('spell_cost');
         $multiplier += $dominion->getDeityPerkMultiplier('spell_cost');
         $multiplier += $dominion->getSpellPerkMultiplier('spell_cost');
+
+        #$multiplier += $dominion->getDecreePerkMultiplier('spell_cost_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($dominion);
 
         if(isset($dominion->title))
         {

@@ -1838,6 +1838,8 @@ class MilitaryCalculator
             }
         }
 
+        $spies += $this->getWizardPoints($dominion) * $dominion->getDecreePerkValue('wizards_count_as_spies');
+
         $multiplier = 1;
         $multiplier += $dominion->getSpellPerkMultiplier('spy_strength');
         $multiplier += $dominion->getSpellPerkMultiplier('spy_strength_on_' . $type);

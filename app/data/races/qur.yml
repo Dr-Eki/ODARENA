@@ -5,6 +5,8 @@ home_land_type: forest
 playable: 1
 skill_level: 2
 
+draftees_alias: hunter
+
 resources:
   - gold
   - food
@@ -12,9 +14,17 @@ resources:
   - gems
   - mana
 
+improvement_resources:
+  gold: 1
+  ore: 2
+  lumber: 2
+  gems: 12
+  mana: 12
+
 perks:
   salvaging: 65
   gems_production_mod: 20
+  food_production_raw_from_draftees: 1
 
 units:
   - name: Artificer
@@ -46,7 +56,7 @@ units:
       does_not_count_as_population: 1
       mana_upkeep_raw: 0.005
       instant_training: 1
-      pairing_limit: 1,4 # Unit slot, amount (max 2 of this unit per each Unit 4), imp to increase, imp multiplier
+      pairing_limit: 1,4 # Unit slot, amount (max 2 of this unit per each Unit 4)
 
   - name: Chariot
     training_time: 12
@@ -66,7 +76,7 @@ units:
       sendable_with_zero_op: 1
       does_not_count_as_population: 1
       no_draftee: 1
-      pairing_limit: 1,1 # Unit slot, amount (max 2 of this unit per each Unit 4), imp to increase, imp multiplier
+      pairing_limit: 1,1 # Unit slot, amount (max 2 of this unit per each Unit 4)
 
   - name: Zealot
     training_time: 12

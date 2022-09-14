@@ -1,0 +1,24 @@
+name: Channeling
+cooldown: 48
+description: Focus magical powers on an aspect of the physical world.
+exclusive_races:
+  - Qur
+states:
+  - name: Magical Engineering
+    perks:
+      construction_cost_from_wizard_ratio: -20
+      construction_time_from_wizard_ratio: -20
+      mana_production_mod: -20
+  - name: Imbuements
+    perks:
+      unit_gold_costs_from_wizard_ratio: -5
+      unit_lumber_costs_from_wizard_ratio: -5
+      mana_production_mod: -20
+  - name: Spellcasting
+    perks:
+      sorcery_cost_from_wizard_ratio: -20
+      mana_production_mod: 10
+  - name: Mind's Eye
+    perks:
+      wizards_count_as_spies: 0.25
+      mana_production_mod: -35

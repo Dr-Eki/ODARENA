@@ -213,6 +213,14 @@ class InvadeActionService
                 throw new GameException('You don\'t have enough units at home to send this many units.');
             }
 
+            if ($dominion->race->name == 'Artillery')
+            {
+                if(!$dominion->getDecreePerkValue('can_send_cannonballs'))
+                {
+                    throw new GameException('You must issue the Load The Cannons decree in order to fire cannonballs.');
+                }
+            }
+
             if ($dominion->race->name !== 'Barbarian')
             {
                 if ($dominion->morale < static::MIN_MORALE)

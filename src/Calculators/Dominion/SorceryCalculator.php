@@ -10,7 +10,6 @@ use OpenDominion\Models\Spell;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
-#use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
 
@@ -27,7 +26,6 @@ class SorceryCalculator
         $this->improvementCalculator = app(ImprovementCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
-        #$this->populationCalculator = app(PopulationCalculator::class);
         $this->spellCalculator = app(SpellCalculator::class);
         $this->spellDamageCalculator = app(SpellDamageCalculator::class);
     }
@@ -128,6 +126,8 @@ class SorceryCalculator
         $multiplier += $dominion->getImprovementPerkMultiplier('sorcery_cost');
         $multiplier += $dominion->getDeityPerkMultiplier('sorcery_cost');
         $multiplier += $dominion->getSpellPerkMultiplier('sorcery_cost');
+
+        $multiplier += $dominion->getDecreePerkMultiplier('sorcery_cost_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($dominion);
 
         if(isset($dominion->title))
         {
