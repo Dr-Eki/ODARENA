@@ -20,7 +20,7 @@ improvement_resources:
   ore: 2
   lumber: 2
   gems: 12
-  mana: 12
+  mana: 10
 
 perks:
   salvaging: 65

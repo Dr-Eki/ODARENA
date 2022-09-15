@@ -448,9 +448,14 @@ class UnitHelper
             'increases_morale_by_population' => 'Increases base morale by %s%% for every 1%% of population.',
             'increases_morale_fixed' => 'Increases base morale by %s%%.',
             'increases_morale_gains' => 'Increases morale gains by %s%% for every 1%% of units sent.',
+            'increases_morale_gains_fixed' => 'Increases morale gains by %s%% per unit sent.',
+
+            'increases_prestige_interest' => 'Increases prestige interest %s%% per unit.',
+            
             'lowers_target_morale_on_successful_invasion' => 'On successful invasion, lowers target\'s morale by %s%%.',
 
             'increases_prestige_gains' => 'Increases prestige gains by %s%% for every 1%% of units sent.',
+
             'stuns_units' => 'Stuns some units with up to %1$s DP for %2$s ticks, whereafter the units return unharmed.',
 
             'gold_improvements' => 'Increases improvement points from gold by (([Units]/[Land])/100)%%.',

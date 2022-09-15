@@ -1152,15 +1152,25 @@ class InvadeActionService
             $attackerMoraleChangeMultiplier += $attacker->title->getPerkMultiplier('morale_gains') * $attacker->getTitlePerkMultiplier();
 
             # Look for lowers_target_morale_on_successful_invasion
-            for ($slot = 1; $slot <= $attacker->race->units->count(); $slot++)
+            foreach($attacker->race->units as $unit)
             {
                 if(
-                    $increasesMoraleGainsPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'increases_morale_gains') and
-                    isset($units[$slot]) and
+                    $increasesMoraleGainsPerk = $attacker->race->getUnitPerkValueForUnitSlot($unit->slot, 'increases_morale_gains') and
+                    isset($units[$unit->slot]) and
                     $this->invasionResult['result']['success']
                     )
                 {
-                    $attackerMoraleChangeMultiplier += ($this->invasionResult['attacker']['units_sent'][$slot] / array_sum($this->invasionResult['attacker']['units_sent'])) * $increasesMoraleGainsPerk;
+                    $attackerMoraleChangeMultiplier += ($this->invasionResult['attacker']['units_sent'][$unit->slot] / array_sum($this->invasionResult['attacker']['units_sent'])) * $increasesMoraleGainsPerk;
+                }
+
+
+                if(
+                    $increasesMoraleGainsPerk = $attacker->race->getUnitPerkValueForUnitSlot($unit->slot, 'increases_morale_gains_fixed') and
+                    isset($units[$unit->slot]) and
+                    $this->invasionResult['result']['success']
+                    )
+                {
+                    $attackerMoraleChange += $this->invasionResult['attacker']['units_sent'][$unit->slot] * $increasesMoraleGainsPerk;
                 }
             }
 

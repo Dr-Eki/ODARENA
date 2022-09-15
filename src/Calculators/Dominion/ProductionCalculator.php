@@ -87,6 +87,13 @@ class ProductionCalculator
         {
             return 0;
         }
+
+        $interestMultiplier = 1;
+        foreach($dominion->race->units as $unit)
+        {
+            $interestMultiplier += $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'increases_morale_gains_fixed') * $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot);
+        }
+
         return $dominion->prestige * max(0, $this->militaryCalculator->getNetVictories($dominion) / 40000);
     }
 }
