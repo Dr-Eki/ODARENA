@@ -31,6 +31,7 @@ class Decree extends AbstractModel
     public function states()
     {
         return $this->hasMany(DecreeState::class)
+            ->where('enabled',1)
             ->orderBy('name');
     }
 

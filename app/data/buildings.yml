@@ -1726,7 +1726,7 @@ tomb:
   perks:
     housing: 30
     jobs: 0
-    crypt_bodies_decay_protection: 30
+    #crypt_bodies_decay_protection: 30
 
 pit:
   name: Pit

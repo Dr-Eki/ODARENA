@@ -217,7 +217,7 @@ class PopulationCalculator
     */
     public function getAvailableHousingFromMilitaryHousing(Dominion $dominion): int
     {
-        $militaryHousingMultiplier = 0;
+        $militaryHousingMultiplier = 1;
         $militaryHousingMultiplier += $dominion->race->getPerkMultiplier('extra_barracks_housing');
         $militaryHousingMultiplier += $dominion->getAdvancementPerkMultiplier('barracks_housing');
 
@@ -225,7 +225,14 @@ class PopulationCalculator
         $militaryHousingMultiplier += $dominion->getAdvancementPerkMultiplier('military_housing');
         $militaryHousingMultiplier += $dominion->getDecreePerkMultiplier('military_housing');
 
-        return round(($dominion->getBuildingPerkValue('military_housing') + $dominion->getBuildingPerkValue('military_housing_increasing')) * (1 + $militaryHousingMultiplier) + $this->getAvailableHousingFromUnits($dominion));
+        $militaryHousing = 0;
+        $militaryHousing += $dominion->getBuildingPerkValue('military_housing');
+        $militaryHousing += $dominion->getBuildingPerkValue('military_housing_increasing');
+        $militaryHousing *= $militaryHousingMultiplier;
+        $militaryHousing += $this->getAvailableHousingFromUnits($dominion);
+
+        return round($militaryHousing);
+        
     }
 
     /*
@@ -376,6 +383,9 @@ class PopulationCalculator
                 $units += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
             }
         }
+
+        $units += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'draftees');
+        $units += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_draftees");
 
         $units = max(0, $units);
 

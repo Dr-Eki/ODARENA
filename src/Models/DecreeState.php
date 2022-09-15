@@ -26,6 +26,7 @@ class DecreeState extends AbstractModel
 {
     protected $casts = [
         'key' => 'text',
+        'enabled' => 'integer',
     ];
 
     public function perks()

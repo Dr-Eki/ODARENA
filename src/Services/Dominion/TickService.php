@@ -503,9 +503,6 @@ class TickService
                 $bodiesAmount = $this->resourceCalculator->getRealmAmount($realm, 'body');
                 if($bodiesAmount > 0)
                 {
-                    # Imperial Crypt: handle decay (handleDecay)
-                    $bodiesDecayed = $this->realmCalculator->getCryptBodiesDecayed($realm);
-
                     $bodiesSpent = DB::table('dominion_tick')
                         ->join('dominions', 'dominion_tick.dominion_Id', '=', 'dominions.id')
                         ->join('races', 'dominions.race_id', '=', 'races.id')
@@ -516,13 +513,12 @@ class TickService
                         ->where('dominions.is_locked', '=', 0)
                         ->first();
 
-                    $bodiesToRemove = intval($bodiesDecayed + $bodiesSpent->cryptBodiesSpent);
+                    $bodiesToRemove = intval($bodiesSpent->cryptBodiesSpent);
                     $bodiesToRemove = max(0, min($bodiesToRemove, $bodiesAmount));
 
                     $cryptLogString = '[CRYPT] ';
                     $cryptLogString .= "Current: " . number_format($this->resourceCalculator->getRealmAmount($realm, 'body')) . ". ";
-                    $cryptLogString .= "Decayed: " . number_format($bodiesDecayed) . ". ";
-                    #$cryptLogString .= "Spent: " . number_format($bodiesSpent->cryptBodiesSpent) . ". ";
+                    $cryptLogString .= "Spent: " . number_format($bodiesSpent->cryptBodiesSpent) . ". ";
                     $cryptLogString .= "Removed: " . number_format($bodiesToRemove) . ". ";
 
                     $this->resourceService->updateRealmResources($realm, ['body' => (-$bodiesToRemove)]);
@@ -1207,6 +1203,50 @@ class TickService
                 {
                     $unitsToSummon = $unitSummoning;
                 }
+            }
+
+
+            $decreeUnitSummoningFromCryptRaw = $dominion->getDecreePerkValue($raceKey . '_unit' . $slot . '_production_raw_from_crypt');
+
+            if($decreeUnitSummoningFromCryptRaw)
+            {
+                $decreeUnitSummoningPerks = explode(',', $decreeUnitSummoningFromCryptRaw);
+                
+                $slotProduced = (int)$decreeUnitSummoningPerks[0];
+                $amountProduced = (float)$decreeUnitSummoningPerks[1];
+                $slotProducing = (int)$decreeUnitSummoningPerks[2];
+
+                $unitSummoningMultiplier = 1;
+                $unitSummoningMultiplier += $dominion->getBuildingPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
+                $unitSummoningMultiplier += $dominion->getSpellPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
+
+                $unitSummoning = $dominion->{'military_unit' . $slotProducing} * $amountProduced * $unitSummoningMultiplier;
+    
+                # Check for capacity limit
+                if($this->unitHelper->unitHasCapacityLimit($dominion, $slot))
+                {
+                    $maxCapacity = $this->unitHelper->getUnitMaxCapacity($dominion, $slot);
+    
+                    $usedCapacity = $dominion->{'military_unit' . $slot};
+                    $usedCapacity += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getInvasionQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
+    
+                    $availableCapacity = max(0, $maxCapacity - $usedCapacity);
+    
+                    $unitsToSummon = floor(min($unitSummoning, $availableCapacity));
+                }
+                # If no capacity limit
+                else
+                {
+                    $unitsToSummon = $unitSummoning;
+                }
+
+                $unitsToSummon = min($unitsToSummon, $this->resourceCalculator->getRealmAmount($dominion->realm, 'crypt_body'));
+
+                $tick->crypt_bodies_spent = $unitsToSummon;
             }
 
             # Because you never know...

@@ -1265,6 +1265,7 @@ class DataSyncCommand extends Command implements CommandInterface
                 $decreeState->fill([
                     'name' => $stateName,
                     'key' => $this->generateKeyFromNameString($decree->name . '_' . $stateName),
+                    'enabled' => object_get($stateData, 'enabled', 1),
                 ]);
 
                 if ($decreeState->exists)

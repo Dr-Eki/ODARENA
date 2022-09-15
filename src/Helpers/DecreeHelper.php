@@ -49,7 +49,7 @@ class DecreeHelper
             # Deity
             'deity_power' => '%s%% deity perks.',
 
-            'range_multiplier' => '%s x range multiplier.',
+            'range_multiplier' => '%sx range multiplier.',
 
             # Military
             'offensive_casualties' => '%s%% casualties on offense.',
@@ -222,6 +222,11 @@ class DecreeHelper
                     })->first();
 
                 $perkValue = [str_plural($unitProduced->name, $amountProduced), floatval($amountProduced), $unitProducing->name];
+            }
+
+            if($perk->key == 'range_multiplier')
+            {
+                $perkValue = number_format($perkValue, 2);
             }
 
             if (is_array($perkValue))
