@@ -32,6 +32,8 @@ perks:
   cannot_train_wizards: 1
   cannot_train_archmages: 1
   unemployed_peasants_produce: 1
+  starts_devoted_to_druva: 1
+  cannot_renounce_deity: 1
 
 units:
   - name: Fruitbody

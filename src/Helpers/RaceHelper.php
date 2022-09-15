@@ -126,6 +126,12 @@ class RaceHelper
                 $booleanValue = 'static';
                 $valueType = ' / tick';
                 break;
+            case 'food_production_raw_from_draftees':
+                $negativeBenefit = false;
+                $description = 'Food produced per draftee';
+                $booleanValue = 'static';
+                $valueType = ' / tick';
+                break;
             case 'gold_production_raw_from_draftees':
                 $negativeBenefit = false;
                 $description = 'Gold produced per draftee';
@@ -621,6 +627,11 @@ class RaceHelper
             case 'starts_devoted_to_azk_hurum':
                 $negativeBenefit = false;
                 $description = 'Starts devoted to Azk\'Hurum';
+                $booleanValue = true;
+                break;
+            case 'starts_devoted_to_druva':
+                $negativeBenefit = false;
+                $description = 'Starts devoted to Druva';
                 $booleanValue = true;
                 break;
             case 'starts_devoted_to_elskas':

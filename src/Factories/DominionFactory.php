@@ -355,6 +355,12 @@ class DominionFactory
             $deity = Deity::where('key','glimj')->first();
             $this->deityService->completeSubmissionToDeity($dominion, $deity);
         }
+
+        if($race->getPerkValue('starts_devoted_to_druva'))
+        {
+            $deity = Deity::where('key','druva')->first();
+            $this->deityService->completeSubmissionToDeity($dominion, $deity);
+        }
         
         # Starting spells on cooldown
         DB::transaction(function () use ($dominion)
