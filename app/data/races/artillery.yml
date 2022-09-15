@@ -4,6 +4,7 @@ description:
 home_land_type: hill
 playable: 1
 skill_level: 2
+experimental: 1
 
 perks:
   max_population: -20

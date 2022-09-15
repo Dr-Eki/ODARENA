@@ -3,7 +3,6 @@ alignment: independent
 description: >-
 home_land_type: mountain
 playable: 1
-experimental: 0
 skill_level: 3
 
 peasants_alias: wild yeti
