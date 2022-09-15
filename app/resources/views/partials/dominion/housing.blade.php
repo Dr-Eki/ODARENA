@@ -12,12 +12,23 @@
 </tr>
 @endif
 
+@foreach($selectedDominion->race->units as $unit)
+    @if($populationCalculator->getAvailableHousingFromUnitSpecificBuildings($selectedDominion, $unit->slot) > 0)
+        <tr>
+            <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by buildings for specific unit:<br>Filled / Available">{{ $unit->name }} housing:</span></td>
+            <td>{{ number_format($populationCalculator->getUnitsHousedInUnitSpecificBuildings($selectedDominion, $unit->slot)) }} / {{ number_format($populationCalculator->getAvailableHousingFromUnitSpecificBuildings($selectedDominion, $unit->slot)) }}</td>
+        </tr>
+    @endif
+@endforeach
+
+{{-- 
 @if($populationCalculator->getAvailableHousingFromUnitSpecificBuildings($selectedDominion) > 0)
 <tr>
     <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by buildings for specific units:<br>Filled / Available">Unit specific housing:</span></td>
     <td>{{ number_format($populationCalculator->getUnitsHousedInUnitSpecificBuildings($selectedDominion)) }} / {{ number_format($populationCalculator->getAvailableHousingFromUnitSpecificBuildings($selectedDominion)) }}</td>
 </tr>
 @endif
+--}}
 
 @if($populationCalculator->getAvailableHousingFromUnitAttributeSpecificBuildings($selectedDominion) > 0)
 <tr>

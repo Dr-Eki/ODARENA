@@ -231,15 +231,21 @@ class PopulationCalculator
     /*
     *   Calculate how many units can be fit in this Dominion's Barracks.
     */
-    public function getAvailableHousingFromUnitSpecificBuildings(Dominion $dominion): int
+    public function getAvailableHousingFromUnitSpecificBuildings(Dominion $dominion, ?int $slot = null): int
     {
-        $raceKey = str_replace(' ', '_', strtolower($dominion->race->name));
-
         $unitSpecificBuildingHousing = 0;
 
-        for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
+        if($slot)
         {
-            $unitSpecificBuildingHousing += $dominion->getBuildingPerkValue($raceKey . '_unit' . $slot . '_housing');
+            $unitSpecificBuildingHousing += $dominion->getBuildingPerkValue($dominion->race->key . '_unit' . $slot . '_housing');
+
+        }
+        else
+        {
+            for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
+            {
+                $unitSpecificBuildingHousing += $dominion->getBuildingPerkValue($dominion->race->key . '_unit' . $slot . '_housing');
+            }
         }
 
         $multiplier = 1;
@@ -377,35 +383,50 @@ class PopulationCalculator
     }
 
 
-      /*
-      *   Calculate how many units live in Barracks.
-      *   Units start to live in barracks as soon as their military training begins.
-      *   Spy and wiz units prefer to live in FHs or WGs, and will only live in Barracks if FH/WG are full or unavailable.
-      */
-      public function getUnitsHousedInUnitSpecificBuildings(Dominion $dominion): int
-      {
+        /*
+        *   Calculate how many units live in Barracks.
+        *   Units start to live in barracks as soon as their military training begins.
+        *   Spy and wiz units prefer to live in FHs or WGs, and will only live in Barracks if FH/WG are full or unavailable.
+        */
+        public function getUnitsHousedInUnitSpecificBuildings(Dominion $dominion, ?int $housedSlot = null): int
+        {
 
-          $raceKey = str_replace(' ', '_', strtolower($dominion->race->name));
+            $units = 0;
 
-          $units = 0;
+            if($housedSlot !== null)
+            {
+                $slotUnits = 0;
+                if($unitSpecificBuildingHousing = $dominion->getBuildingPerkValue($dominion->race->key . '_unit' . $housedSlot . '_housing'))
+                {
+                    if(!$dominion->race->getUnitPerkValueForUnitSlot($housedSlot, 'does_not_count_as_population'))
+                    {
+                        $slotUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $housedSlot);
+                        $slotUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$housedSlot}");
+                    }
 
-          for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
-          {
-              $slotUnits = 0;
-              if($unitSpecificBuildingHousing = $dominion->getBuildingPerkValue($raceKey . '_unit' . $slot . '_housing'))
-              {
-                  if(!$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population'))
-                  {
-                      $slotUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
-                      $slotUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
-                  }
+                    $units += min($slotUnits, $this->getAvailableHousingFromUnitSpecificBuildings($dominion));
+                }
+            }
+            else
+            {
+                for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
+                {
+                    $slotUnits = 0;
+                    if($unitSpecificBuildingHousing = $dominion->getBuildingPerkValue($dominion->race->key . '_unit' . $slot . '_housing'))
+                    {
+                        if(!$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population'))
+                        {
+                            $slotUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
+                            $slotUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+                        }
 
-                  $units += min($slotUnits, $this->getAvailableHousingFromUnitSpecificBuildings($dominion));
-              }
-          }
-
-          return min($units, $this->getAvailableHousingFromUnitSpecificBuildings($dominion));
-      }
+                        $units += min($slotUnits, $this->getAvailableHousingFromUnitSpecificBuildings($dominion));
+                    }
+                }
+            }
+            
+            return min($units, $this->getAvailableHousingFromUnitSpecificBuildings($dominion, $housedSlot));
+        }
 
         /*
         *   Calculate how many units live in Barracks.
