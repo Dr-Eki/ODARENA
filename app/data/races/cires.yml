@@ -43,7 +43,7 @@ units:
     perks:
       net_victories_limit: 1,1
       sendable_with_zero_op: 1
-      increases_morale_gains_fixed: 2
+      increases_morale_gains_fixed: 1
       increases_prestige_interest: 1
       immortal_on_victory: 1
 

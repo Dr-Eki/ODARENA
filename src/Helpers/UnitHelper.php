@@ -448,9 +448,9 @@ class UnitHelper
             'increases_morale_by_population' => 'Increases base morale by %s%% for every 1%% of population.',
             'increases_morale_fixed' => 'Increases base morale by %s%%.',
             'increases_morale_gains' => 'Increases morale gains by %s%% for every 1%% of units sent.',
-            'increases_morale_gains_fixed' => 'Increases morale gains by %s%% per unit sent.',
+            'increases_morale_gains_fixed' => 'Increases morale gains by %s%% each.',
 
-            'increases_prestige_interest' => 'Increases prestige interest %s%% per unit.',
+            'increases_prestige_interest' => 'Increases prestige interest %s%% each.',
             
             'lowers_target_morale_on_successful_invasion' => 'On successful invasion, lowers target\'s morale by %s%%.',
 
