@@ -15,7 +15,7 @@ resources:
   - mana
 
 perks:
-  max_population: -25
+  max_population: -35
   wizards_training_time: 6
   converts_executed_spies: 3 # into slot 3
 units:
