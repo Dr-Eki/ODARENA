@@ -6,8 +6,8 @@ exclusive_races:
 states:
   - name: Magical Engineering
     perks:
-      construction_cost_from_wizard_ratio: -10
-      construction_time_from_wizard_ratio: -10
+      construction_cost_from_wizard_ratio: -20
+      construction_time_from_wizard_ratio: -20
       mana_production_mod: -20
   - name: Imbuements
     perks:
