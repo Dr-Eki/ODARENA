@@ -46,6 +46,18 @@ class DecreeService
             throw new GameException($dominion->race->name . ' cannot issue decrees.');
         }
 
+        if(!$decree->enabled)
+        {
+
+            throw new GameException('Decree ' . $decree->name . ' has been disabled.');
+        }
+
+        if(!$decreeState->enabled)
+        {
+
+            throw new GameException('State ' . $decreeState->name . ' for decree ' . $decree->name . ' has been disabled.');
+        }
+
         # Create the dominion decree state
         DB::transaction(function () use ($dominion, $decree, $decreeState)
         {

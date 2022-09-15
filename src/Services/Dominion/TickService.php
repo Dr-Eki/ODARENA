@@ -1205,7 +1205,7 @@ class TickService
                 }
             }
 
-
+            # Passive unit generation from decrees
             $decreeUnitSummoningFromCryptRaw = $dominion->getDecreePerkValue($raceKey . '_unit' . $slot . '_production_raw_from_crypt');
 
             if($decreeUnitSummoningFromCryptRaw)
@@ -1244,15 +1244,15 @@ class TickService
                     $unitsToSummon = $unitSummoning;
                 }
 
-                $unitsToSummon = min($unitsToSummon, $this->resourceCalculator->getRealmAmount($dominion->realm, 'crypt_body'));
+                $unitsToSummon = min($unitsToSummon, $this->resourceCalculator->getRealmAmount($dominion->realm, 'body'));
 
-                $tick->crypt_bodies_spent = $unitsToSummon;
             }
 
             # Because you never know...
             $unitsToSummon = intval(max($unitsToSummon, 0));
 
             $tick->{'generated_unit'.$slot} += $unitsToSummon;
+            $tick->crypt_bodies_spent += $unitsToSummon;
         }
 
         # Passive conversions

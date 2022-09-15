@@ -88,10 +88,11 @@ class DecreeHelper
 
             'unit_pairing' => '%s%% unit pairing capacity.',
 
-            'undead_unit1_production_raw' => 'Each %3$s produces %2$s %1$s per tick.',
-            'undead_unit2_production_raw' => 'Each %3$s produces %2$s %1$s per tick.',
-            'undead_unit3_production_raw' => 'Each %3$s produces %2$s %1$s per tick.',
-            'undead_unit4_production_raw' => 'Each %3$s produces %2$s %1$s per tick.',
+            'undead_unit1_production_raw' => 'Each %3$s raises %2$s %1$s per tick.',
+            'undead_unit2_production_raw' => 'Each %3$s raises %2$s %1$s per tick.',
+            'undead_unit3_production_raw' => 'Each %3$s raises %2$s %1$s per tick.',
+            'undead_unit4_production_raw' => 'Each %3$s raises %2$s %1$s per tick.',
+            'undead_unit3_production_raw_from_crypt' => 'Each %3$s raises %2$s %1$s per tick from the crypt.',
             
             'attrition_mod' => '%s%% attrition.',
 
@@ -203,6 +204,7 @@ class DecreeHelper
             if($perk->key === 'undead_unit1_production_raw' or
                 $perk->key === 'undead_unit2_production_raw' or
                 $perk->key === 'undead_unit3_production_raw' or
+                $perk->key === 'undead_unit3_production_raw_from_crypt' or
                 $perk->key === 'undead_unit4_production_raw'
             )
             {

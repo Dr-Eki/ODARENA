@@ -1547,6 +1547,10 @@ class Dominion extends AbstractModel
                 'undead_unit2_production_raw',
                 'undead_unit3_production_raw',
                 'undead_unit4_production_raw',
+                'undead_unit1_production_raw_from_crypt',
+                'undead_unit2_production_raw_from_crypt',
+                'undead_unit3_production_raw_from_crypt',
+                'undead_unit4_production_raw_from_crypt',
             ];
    
         if (isset($perks[$key]))

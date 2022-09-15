@@ -11,13 +11,13 @@ states:
 
   - name: Bone Hoarder's Horde
     perks:
-      undead_unit3_production_raw: 3,0.005,4 # slot, amount, perUnit
+      undead_unit3_production_raw_from_crypt: 3,0.005,4 # slot, amount, perUnit
       undead_unit2_production_raw: 2,1,4 # slot, amount, perUnit
       attrition_mod: -100
 
   - name: An Army of The Damned
     perks:
-      undead_unit3_production_raw: 3,0.01,4 # amount, perUnit
+      undead_unit3_production_raw_from_crypt: 3,0.01,4 # amount, perUnit
       attrition_mod: -90
       wizard_strength: 30
       mana_production_mod: 10
@@ -25,4 +25,4 @@ states:
 
   - name: Champions of Undeath
     perks:
-      undead_unit3_production_raw: 3,0.02,4 # slot, amount, perUnit
+      undead_unit3_production_raw_from_crypt: 3,0.02,4 # slot, amount, perUnit

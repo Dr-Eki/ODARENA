@@ -106,11 +106,11 @@ class ResourceCalculator
     {
         $resource = Resource::where('key', $resourceKey)->first();
 
-        $realmnResourceAmount = RealmResource::where('realm_id', $realm->id)->where('resource_id', $resource->id)->first();
+        $realmResourceAmount = RealmResource::where('realm_id', $realm->id)->where('resource_id', $resource->id)->first();
 
-        if($realmnResourceAmount)
+        if($realmResourceAmount)
         {
-            return $realmnResourceAmount->amount;
+            return $realmResourceAmount->amount;
         }
 
         return 0;
