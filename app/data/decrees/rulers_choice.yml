@@ -1,8 +1,8 @@
 name: Ruler's Choice
 cooldown: 96
 description: Azk'Hurum grants you the permission to slaughter freely or limit the search to the nearest foes.
-excluded_races:
-  - Growth
+exclusive_races:
+  - Demon
 states:
   - name: Judgement For All
     perks:
