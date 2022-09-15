@@ -142,7 +142,7 @@ class DecreeHelper
             'wizard_strength_on_defense' => '%s%% wizard strength on defense.',
             'wizard_strength_on_offense' => '%s%% wizard strength on offense.',
 
-            'wizards_count_as_spies' => 'Wizards count as %s spies.',
+            'wizards_count_as_spies' => 'Wizards also count as %s %s.',
 
             # Growth specific
             'generate_building' => 'Generate %s.',
@@ -224,6 +224,11 @@ class DecreeHelper
                     })->first();
 
                 $perkValue = [str_plural($unitProduced->name, $amountProduced), floatval($amountProduced), $unitProducing->name];
+            }
+
+            if($perk->key == 'wizards_count_as_spies')
+            {
+                $perkValue = [$perkValue, str_plural('spy', $perkValue)];
             }
 
             if($perk->key == 'range_multiplier')

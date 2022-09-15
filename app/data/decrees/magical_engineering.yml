@@ -6,8 +6,8 @@ exclusive_races:
 states:
   - name: Magical Engineering
     perks:
-      construction_cost_from_wizard_ratio: -20
-      construction_time_from_wizard_ratio: -20
+      construction_cost_from_wizard_ratio: -10
+      construction_time_from_wizard_ratio: -10
       mana_production_mod: -20
   - name: Imbuements
     perks:
@@ -17,8 +17,6 @@ states:
   - name: Spellcasting
     perks:
       sorcery_cost_from_wizard_ratio: -20
-      mana_production_mod: 10
   - name: Mind's Eye
     perks:
-      wizards_count_as_spies: 0.25
-      mana_production_mod: -35
+      wizards_count_as_spies: 1

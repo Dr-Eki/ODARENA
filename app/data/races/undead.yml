@@ -15,7 +15,7 @@ resources:
   - mana
 
 perks:
-  max_population: -50
+  max_population: -25
   wizards_training_time: 6
   converts_executed_spies: 3 # into slot 3
 units:
@@ -53,9 +53,6 @@ units:
     type:
       - sentient
       - intelligent
-    cost:
-      mana: 400
-      crypt_body: 1
     power:
       offense: 8
       defense: 8
