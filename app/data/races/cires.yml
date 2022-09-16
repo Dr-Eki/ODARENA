@@ -89,6 +89,7 @@ units:
       spends_resource_on_offense: gunpowder,1
       spends_resource_on_defense: gunpowder,1
       plunder: gunpowder,1
+      casualties_on_victory: -25
 
   - name: Field Cannon
     training_time: 12
@@ -104,6 +105,7 @@ units:
     perks:
       spends_resource_on_offense: gunpowder,1
       spends_resource_on_defense: gunpowder,1
+      casualties_on_victory: -50
 
   - name: Cavalry
     training_time: 12
