@@ -99,6 +99,7 @@ units:
       offense: 0
       defense: 2200
     perks:
+      no_draftee: 1
       immortal: 1
       offensive_power_mod: 0.10
       cost_increase_to_train_per_unit: 2

@@ -296,6 +296,8 @@ load_the_cannons:
   cost: 4
   duration: 12
   cooldown: 12
+  exclusive_races:
+    - Artillery
   perks:
     defensive_power: -30
     can_send_ammunition_units: 1
