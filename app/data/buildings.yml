@@ -814,7 +814,7 @@ turret:
   perks:
     defensive_power: 1,1.8,36 # Every 1% gives 1.5% DP, max +60% DP
     casualties_on_defense: 1,-1.5,30 # 1% gives -2% max -20%
-    cires_unit1_housing: 20
+    cires_unit2_housing: 20
 
 # END CIRES BUILDINGS
 
