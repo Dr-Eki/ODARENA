@@ -73,7 +73,6 @@ units:
       fixed_casualties: 100
       no_draftee: 1
       damages_improvements_on_attack: 150
-      decree_state_required_to_send: load_the_cannons_enabled
 
   - name: Burning Cannonball
     training_time: 12
@@ -90,7 +89,6 @@ units:
       no_draftee: 1
       burns_peasants_on_attack: 1
       destroy_resource: food,20
-      decree_state_required_to_send: load_the_cannons_enabled
 
   - name: Cluster Cannonball
     training_time: 12
@@ -106,7 +104,6 @@ units:
       fixed_casualties: 100
       no_draftee: 1
       increases_enemy_casualties_on_offense: 1
-      decree_state_required_to_send: load_the_cannons_enabled
 
   - name: Shockwave Cannonball
     training_time: 12
@@ -122,4 +119,3 @@ units:
       fixed_casualties: 100
       no_draftee: 1
       stuns_units: 15,2 # Stuns units up to 10 DP for 2 ticks
-      decree_state_required_to_send: load_the_cannons_enabled
