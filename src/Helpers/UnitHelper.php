@@ -448,9 +448,9 @@ class UnitHelper
             'increases_morale_by_population' => 'Increases base morale by %s%% for every 1%% of population.',
             'increases_morale_fixed' => 'Increases base morale by %s%%.',
             'increases_morale_gains' => 'Increases morale gains by %s%% for every 1%% of units sent.',
-            'increases_morale_gains_fixed' => 'Increases morale gains by %s%% each.',
+            'increases_morale_gains_fixed' => 'Increases morale gains by %s%% each of this unit sent.',
 
-            'increases_prestige_interest' => 'Increases prestige interest %s%% each.',
+            'increases_prestige_interest' => 'Increases prestige interest by %s%% for each of this unit.',
             
             'lowers_target_morale_on_successful_invasion' => 'On successful invasion, lowers target\'s morale by %s%%.',
 
@@ -459,6 +459,8 @@ class UnitHelper
             'stuns_units' => 'Stuns some units with up to %1$s DP for %2$s ticks, whereafter the units return unharmed.',
 
             'gold_improvements' => 'Increases improvement points from gold by (([Units]/[Land])/100)%%.',
+
+            'cost_increase_to_train_per_unit' => 'Cost increased by %s%% each.',
 
             // Decree
             'decree_state_required_to_send' => '%1$s decree must be issued in %2$s state to send this unit.',

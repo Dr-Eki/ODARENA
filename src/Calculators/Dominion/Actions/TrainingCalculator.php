@@ -125,6 +125,8 @@ class TrainingCalculator
                         $multiplier += $this->getSpecialistEliteCostMultiplier($dominion, $costResourceKey);
                         $multiplier += $this->getAttributeCostMultiplier($dominion, $unit);
 
+                        $multiplier += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot) * ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'cost_increase_to_train_per_unit') / 100);
+
                         $cost[$costResourceKey] = ceil($amount * $multiplier);
                     }
 
@@ -380,7 +382,6 @@ class TrainingCalculator
         }
 
         return $multiplier;
-
     }
 
     /**

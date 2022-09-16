@@ -115,6 +115,9 @@ class SpellHelper
 
             'additional_units_trained_from_land' => '1%% extra %1$s%% for every %3$s%% %2$s.',
 
+            'can_send_cannonballs' => 'Can fire cannonballs.',
+            'can_send_ammunition_units' => 'Can launch ammunition units.',
+
             'faster_return' => 'Units return %s ticks faster from invasions',
 
             'increase_morale' => 'Restores target morale by %s%% (up to maximum of 100%%).',

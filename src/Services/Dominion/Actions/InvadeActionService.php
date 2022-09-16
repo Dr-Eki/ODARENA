@@ -217,7 +217,12 @@ class InvadeActionService
             {
                 if(!$dominion->getDecreePerkValue('can_send_cannonballs'))
                 {
-                    throw new GameException('You must issue the Load The Cannons decree in order to fire cannonballs.');
+                    #throw new GameException('You must issue the Load The Cannons decree in order to fire cannonballs.');
+                }
+
+                if(!$dominion->getSpellPerkValue('can_send_ammunition') and (array_sum($units) - $units[1]) > 0)
+                {
+                    throw new GameException('You must cast the spell Load The Cannons to launch cannonballs.');
                 }
             }
 

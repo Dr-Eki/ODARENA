@@ -1,5 +1,7 @@
 name: Load The Cannons
+enabled: 0
 cooldown: 12
+duration: 12 # NYI
 description: Prepare for firing the cannons. 
 exclusive_races:
   - Artillery

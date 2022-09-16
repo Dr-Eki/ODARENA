@@ -289,6 +289,17 @@ waterwall:
     boats_sunk: -80
     food_production_docks: -100
 
+load_the_cannons:
+  name: Load The Cannons
+  scope: self
+  class: passive
+  cost: 4
+  duration: 12
+  cooldown: 12
+  perks:
+    defensive_power: -30
+    can_send_ammunition_units: 1
+
 iceshield:
   name: Iceshield
   scope: friendly
