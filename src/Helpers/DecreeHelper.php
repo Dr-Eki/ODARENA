@@ -70,7 +70,7 @@ class DecreeHelper
             'unit_food_costs' => '%s%% unit food costs.',
 
             'unit_gold_costs_from_wizard_ratio' => '%s%% unit gold costs per 1 WPA.',
-            'unit_lumber_costs_from_wizard_ratio' => '%s%% unit gold costs per 1 WPA.',
+            'unit_lumber_costs_from_wizard_ratio' => '%s%% unit lumber costs per 1 WPA.',
 
             'extra_units_trained' => '%s additional units trained for free.',
 
