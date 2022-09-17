@@ -7,13 +7,13 @@ use File;
 use Exception;
 use Log;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
+#use Illuminate\Support\Collection;
 
 use OpenDominion\Calculators\RealmCalculator;
 use OpenDominion\Calculators\Dominion\BarbarianCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\ConversionCalculator;
-use OpenDominion\Calculators\Dominion\DeityCalculator;
+#use OpenDominion\Calculators\Dominion\DeityCalculator;
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
@@ -33,7 +33,7 @@ use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\DominionBuilding;
+#use OpenDominion\Models\DominionBuilding;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Realm;
@@ -827,10 +827,7 @@ class TickService
 
         $tick->peasants = $populationPeasantGrowth;
 
-        #dd($populationPeasantGrowth, $peasantConversionsData['from']['peasants']);
-
-        $tick->peasants_sacrificed = 0;#min($this->populationCalculator->getPeasantsSacrificed($dominion), ($dominion->peasants + $tick->peasants)) * -1;
-        #$tick->peasants_sacrificed = max($tick->peasants_sacrificed, ($dominion->peasants + $tick->peasants)*-1);
+        $tick->peasants_sacrificed = 0;
 
         $tick->military_draftees = $drafteesGrowthRate;
 
@@ -931,8 +928,6 @@ class TickService
         $attritionMultiplier += $dominion->getImprovementPerkMultiplier('attrition_mod'); # Negative value, hence +
         $attritionMultiplier += $dominion->getDecreePerkMultiplier('attrition_mod'); # Negative value, hence +
         $attritionMultiplier += $dominion->getSpellPerkMultiplier('attrition_mod'); # Negative value, hence +
-
-        #dd($dominion->getDecreePerkMultiplier('attrition_mod'));
 
         # Cap at -100%
         $attritionMultiplier = max(-1, $attritionMultiplier);
@@ -1337,6 +1332,8 @@ class TickService
         }
 
         $tick->save();
+
+        
     }
 
     # SINGLE DOMINION TICKS, MANUAL TICK

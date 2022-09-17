@@ -126,6 +126,7 @@ class PopulationCalculator
          $maxPopulation += $this->getUnitsHousedInUnitSpecificBuildings($dominion);
          $maxPopulation += $this->getUnitsHousedInSpyHousing($dominion);
          $maxPopulation += $this->getUnitsHousedInWizardHousing($dominion);
+         $maxPopulation += $this->getDrafteesHousedInDrafteeSpecificBuildings($dominion);
          $maxPopulation += $this->getUnitsHousedInMilitaryHousing($dominion);
 
          # For barbs, lower pop by NPC modifier.
@@ -477,7 +478,10 @@ class PopulationCalculator
     *   Spy and wiz units prefer to live in FHs or WGs, and will only live in Barracks if FH/WG are full or unavailable.
     */
     public function getDrafteesHousedInDrafteeSpecificBuildings(Dominion $dominion): int
-    {
+    {        
+        $draftees = $dominion->military_draftees;
+        $draftees += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'draftees');
+        $draftees += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_draftees"); # From stun?
         return min($dominion->military_draftees, $this->getAvailableHousingFromDrafteeSpecificBuildings($dominion));
     }
 
@@ -574,12 +578,13 @@ class PopulationCalculator
         $growthFactor = 0.03 * $this->militaryCalculator->getMoraleMultiplier($dominion);
 
         // Population births
-        $birth = ($dominion->peasants - $this->getPopulationDrafteeGrowth($dominion)) * $growthFactor;
+        $birth = ($dominion->peasants - $this->getUnhousedDraftees($dominion)) * $growthFactor;
 
         // In case of 0 peasants:
         if($dominion->peasants === 0)
         {
-            $birth = ($this->getMaxPopulation($dominion) - $this->getPopulation($dominion) - $this->getPopulationDrafteeGrowth($dominion)) * $growthFactor;
+            #$birth = ($this->getMaxPopulation($dominion) - $this->getPopulation($dominion) - $this->getPopulationDrafteeGrowth($dominion)) * $growthFactor;
+            $birth = ($this->getMaxPopulation($dominion) - $this->getPopulation($dominion) - $this->getUnhousedDraftees($dominion)) * $growthFactor;
         }
 
         return $birth;
@@ -641,15 +646,13 @@ class PopulationCalculator
 
         $maximumPeasantDeath = ((-0.05 * $dominion->peasants) - $this->getPopulationDrafteeGrowth($dominion));
 
-        $roomForPeasants = ($this->getMaxPopulation($dominion) - $this->getPopulation($dominion) - $this->getPopulationDrafteeGrowth($dominion));
+        $roomForPeasants = ($this->getMaxPopulation($dominion) - $this->getPopulation($dominion));# - $this->getUnhousedDraftees($dominion));
 
-        $currentPopulationChange = ($this->getPopulationBirth($dominion) - $this->getPopulationDrafteeGrowth($dominion));
+        $currentPopulationChange = ($this->getPopulationBirth($dominion) - $this->getUnhousedDraftees($dominion));
 
         $maximumPopulationChange = min($roomForPeasants, $currentPopulationChange);
 
         $peasantGrowth = max($maximumPeasantDeath, $maximumPopulationChange);
-
-        #dump($peasantGrowth);
 
         return $peasantGrowth;
     }
@@ -664,7 +667,6 @@ class PopulationCalculator
      */
     public function getPopulationDrafteeGrowth(Dominion $dominion): int
     {
-
         $draftees = 0;
 
         if($dominion->getSpellPerkValue('no_drafting') or $dominion->race->getPerkValue('no_drafting') or $dominion->draft_rate == 0)
@@ -677,7 +679,7 @@ class PopulationCalculator
 
         $multiplier = 1;
 
-        // Advancement: Conscription
+        // Advancement
         $multiplier += $dominion->getAdvancementPerkMultiplier('drafting');
 
         // Spell
@@ -703,7 +705,6 @@ class PopulationCalculator
         }
 
         return $draftees;
-        return max(0, $draftees);
     }
 
     /**
@@ -821,5 +822,23 @@ class PopulationCalculator
         return $annexedPeasants;
     }
 
+    public function getUnhousedDraftees(Dominion $dominion): int
+    {
+        $availableDrafteeHousing = $this->getAvailableHousingFromDrafteeSpecificBuildings($dominion) - $this->getDrafteesHousedInDrafteeSpecificBuildings($dominion);
+        $newDraftees = $this->getPopulationDrafteeGrowth($dominion);
+
+        $unhousedDraftees = $availableDrafteeHousing - $newDraftees;
+
+        if($unhousedDraftees > 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return abs($unhousedDraftees);
+        }
+
+        #return $unhousedDraftees;
+    }
 
 }

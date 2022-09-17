@@ -65,13 +65,17 @@ class DominionTickStateService
 
         $basics = sprintf(
 "
-name: %s (%s) Quickstart by %s
-description: 
+tick: %s
+daily_land: %s
+daily_gold: %s
+monarchy_vote_for_dominion_id: %s
 race: %s
 title: %s
-deity: %s
-offensive_power: 0
-defensive_power: 0\n",
+deity: %s\n",
+            $dominion->round->tick,
+            $dominion->daily_land,
+            $dominion->daily_gold,
+            $dominion->monarchy_vote_for_dominion_id,
             $dominion->race->name,
             $dominion->title->name,
             Auth::user()->display_name,
