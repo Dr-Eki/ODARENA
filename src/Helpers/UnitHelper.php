@@ -423,8 +423,8 @@ class UnitHelper
             'building_limit_fixed' => 'You can at most have %2$s of this unit per %1$s.',
             'building_limit_prestige' => 'You can at most have %2$s of this unit per %1$s. Increased by prestige multiplier.',
 
-            'victories_limit' => 'You can at most have %2$s of this unit per %1$s victories.',
-            'net_victories_limit' => 'You can at most have %1$s of this unit per net victories.',
+            'victories_limit' => 'You can at most have %2$s of this unit per %1$s %2$s.',
+            'net_victories_limit' => 'You can at most have %1$s of this unit per net %2$s.',
 
             'archmage_limit' => 'You can at most have %1$s of this unit per Archmage.',
             'wizard_limit' => 'You can at most have %1$s of this unit per Wizard.',
@@ -916,6 +916,11 @@ class UnitHelper
                     $perkValue = [$decree->name, $decreeState->name];
                 }
 
+                if($perk->key === 'victories_limit' or 'net_victories_limit')
+                {
+                #    $perkValue = [$perkValue, str_plural('victory', $perkValue)];
+                #    $nestedArrays = false;
+                }
                 
 
 

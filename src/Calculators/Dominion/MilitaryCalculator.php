@@ -222,7 +222,7 @@ class MilitaryCalculator
         // Units
         foreach($attacker->race->units as $unit)
         {
-            $multiplier += $attacker->race->getUnitPerkValueForUnitSlot($unit->slot, 'offensive_power_mod') * $this->getTotalUnitsForSlot($attacker, $unit->slot);
+            $multiplier += $attacker->race->getUnitPerkValueForUnitSlot($unit->slot, 'offensive_power_mod') / 100 * $this->getTotalUnitsForSlot($attacker, $unit->slot);
         }
 
         return $multiplier;
