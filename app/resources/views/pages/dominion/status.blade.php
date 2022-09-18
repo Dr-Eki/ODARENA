@@ -443,17 +443,6 @@
                     @endforeach
                 </div>
 
-                <legend>generateDominionState()</legend>
-                <textarea cols=100 rows=30>
-                    {!! $dominionStateService->generateDominionState($selectedDominion) !!}
-                </textarea>
-
-                <legend>late()</legend>
-                <textarea cols=100 rows=30>
-                    {!! print_r($selectedDominion->states->first()->toArray()) !!}
-                </textarea>
-                
-
                 <div class="box-footer">
                     <small class="text-muted">This is an experimental feature. Use at your own risk.</small>
                 </div>
