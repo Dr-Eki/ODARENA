@@ -1345,6 +1345,24 @@ class TickService
     public function tickManually(Dominion $dominion)
     {
 
+
+        if($this->dominionStateService->saveDominionState($dominion))
+        {
+            Log::info(sprintf(
+                '[TICK] Dominion %s (# %s) state saved.',
+                $dominion->name,
+                $dominion->realm->number
+            ));
+        }
+        else
+        {
+            Log::error(sprintf(
+                '[TICK] Could not save state for %s (# %s) state saved.',
+                $dominion->name,
+                $dominion->realm->number
+            ));
+        }
+
         Log::debug(sprintf(
             '[TICK] Manual tick started for %s.',
             $dominion->name
@@ -1422,25 +1440,6 @@ class TickService
             $dominion->name,
             number_format($this->now->diffInMilliseconds(now()))
         ));
-
-        /*
-        if($this->dominionStateService->saveDominionState($dominion))
-        {
-            Log::info(sprintf(
-                'Dominion %s (# %s) state saved.',
-                $dominion->name,
-                $dominion->realm->number
-            ));
-        }
-        else
-        {
-            Log::error(sprintf(
-                'Could not save state for %s (# %s) state saved.',
-                $dominion->name,
-                $dominion->realm->number
-            ));
-        }
-        */
 
         $this->now = now();
     }

@@ -70,7 +70,7 @@ class DominionStateService
         $dominionState = DominionState::updateOrCreate(['dominion_id' => $dominion->id, 'dominion_protection_tick' => $dominion->protection_ticks],
         [
             'dominion_id' => $dominion->id,
-            'dominion_protection_tick' => (int)$dominion->round->tick,
+            'dominion_protection_tick' => $dominion->protection_ticks,
             
             'daily_land' => object_get($stateData, 'daily_land', 0),
             'daily_gold' => object_get($stateData, 'daily_gold', 0),
