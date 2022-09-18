@@ -43,6 +43,7 @@ class CreateDominionTickStates extends Migration
 
             $table->text('buildings')->nullable();
             $table->text('cooldown')->nullable();
+            $table->text('decree_states')->nullable();
             $table->text('improvements')->nullable();
             $table->text('land')->nullable();
             $table->text('resources')->nullable();

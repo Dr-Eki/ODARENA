@@ -387,6 +387,7 @@
             </div>
         </div>
     @endif
+
     @if ($dominionProtectionService->canDelete($selectedDominion))
         <div class="col-sm-12 col-md-9">
             <div class="box box-primary">
@@ -408,6 +409,36 @@
                             </span>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    @endif
+    
+    @if ($dominionProtectionService->canDelete($selectedDominion) and $selectedDominion->states->count() > 0 and in_array(request()->getHost(), ['sim.odarena.com', 'odarena.local', 'odarena.virtual']))
+        <div class="col-sm-12 col-md-9">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fas fa-history text-purple"></i> Go Back To Previous Tick</h3>
+                </div>
+                <div class="box-body">
+                <p>Click a tick number below to restore your dominion to the state it was when that tick began.</p>
+                <p><span class="label label-danger">Warning!</span> All ticks that happened after the point you go back to will be deleted.</p>
+                <div class="row">
+                    @foreach($selectedDominion->states->sortDesc() as $dominionState)
+                        <div class="col-md-1">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <form class="form-inline" action="{{ route('dominion.misc.restore-dominion-state') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" name="dominion_state" id="dominion_state" value="{{ $dominionState->id }}">
+                                        <button class="btn btn-block btn-info">
+                                            {{ $dominionState->dominion_protection_tick }}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>

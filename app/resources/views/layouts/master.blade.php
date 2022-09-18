@@ -20,7 +20,7 @@
     <meta name="theme-color" content="#ffffff">
 
 
-    @if(request()->getHost() !== 'sim.odarena.com' and request()->getHost() !== 'odarena.local')
+    @if(!in_array(request()->getHost(), ['sim.odarena.com', 'odarena.local', 'odarena.virtual']))
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-174957772-1"></script>
         <script>

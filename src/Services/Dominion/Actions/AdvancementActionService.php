@@ -148,7 +148,5 @@ class AdvancementActionService
                 $newLevel
             )
         ];
-
-
     }
 }

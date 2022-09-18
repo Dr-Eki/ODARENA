@@ -33,13 +33,12 @@ use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 
 use OpenDominion\Services\Dominion\DeityService;
+use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\ResourceService;
 
 class DominionFactory
 {
-
-
     public function __construct()
     {
         $this->raceHelper = app(RaceHelper::class);
@@ -49,6 +48,7 @@ class DominionFactory
         $this->spellCalculator = app(SpellCalculator::class);
 
         $this->deityService = app(DeityService::class);
+        $this->dominionStateService = app(DominionStateService::class);
         $this->resourceService = app(ResourceService::class);
         $this->queueService = app(QueueService::class);
     }
@@ -381,6 +381,8 @@ class DominionFactory
                 'cooldown' => 192,
             ]);
         });
+
+        $this->dominionStateService->saveDominionState($dominion);
 
         return $dominion;
 

@@ -3,14 +3,21 @@
 namespace OpenDominion\Services\Dominion;
 
 use Auth;
+use DB;
 use Symfony\Component\Yaml\Yaml;
+use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Models\Advancement;
 use OpenDominion\Models\Decree;
 use OpenDominion\Models\DecreeState;
+use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\DominionAdvancement;
 use OpenDominion\Models\DominionDecreeState;
+use OpenDominion\Models\DominionDeity;
+use OpenDominion\Models\DominionSpell;
 use OpenDominion\Models\DominionState;
+use OpenDominion\Models\Spell;
 
 use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\ImprovementHelper;
@@ -31,6 +38,7 @@ use OpenDominion\Calculators\Dominion\SpellCalculator;
 
 use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Services\Dominion\QueueService;
+use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\StatsService;
 
 
@@ -56,9 +64,10 @@ class DominionStateService
         $this->resourceCalculator = app(ResourceCalculator::class);
         $this->spellCalculator = app(SpellCalculator::class);
 
-        $this->statsService = app(StatsService::class);
         $this->protectionService = app(ProtectionService::class);
         $this->queueService = app(QueueService::class);
+        $this->resourceService = app(ResourceService::class);
+        $this->statsService = app(StatsService::class);
     }
 
     public function saveDominionState(Dominion $dominion): bool
@@ -107,25 +116,194 @@ class DominionStateService
         return (is_a($dominionState, 'OpenDominion\Models\DominionState') ? true : false);
     }
 
-    public function restoreDominionState(DominionState $dominionState)
+    public function restoreDominionState(Dominion $dominion, DominionState $dominionState)
     {
-        // Delete buildings
+        DB::transaction(function () use ($dominion, $dominionState) {
+            
+            // Validate
+            if($dominion->id !== $dominionState->dominion_id)
+            {
+                throw new GameException('The dominion state does not match the selected dominion.');
+            }
 
-        // Delete improvements
+            if(!$this->protectionService->canDelete($dominion))
+            {
+                throw new GameException('You can no longer revert to previous states.');
+            }
 
-        // Delete resources
+            if(!in_array(request()->getHost(),['odarena.local', 'odarena.virtual', 'sim.odarena.com']))
+            {
+                throw new GameException('You can only restore a previous dominion state on the sim or local test environments.');
+            }
 
-        // Delete spells
+            // Delete all subsequent dominionStates
+            DominionState::where('dominion_id', $dominion->id)->where('dominion_protection_tick', '<', $dominionState->dominion_protection_tick)->delete();
 
-        // Delete advancements
+            // Basics
+            $dominion->daily_land = $dominionState->daily_land;
+            $dominion->daily_gold = $dominionState->daily_gold;
+            $dominion->monarchy_vote_for_dominion_id = $dominionState->monarchy_vote_for_dominion_id;
+            $dominion->tick_voted = $dominionState->tick_voted;
+            $dominion->most_recent_improvement_resource = $dominionState->most_recent_improvement_resource;
+            $dominion->most_recent_exchange_from = $dominionState->most_recent_exchange_from;
+            $dominion->most_recent_exchange_to = $dominionState->most_recent_exchange_to;
+            $dominion->notes = $dominionState->notes;
+            $dominion->draft_rate = $dominionState->draft_rate;
+            $dominion->morale = $dominionState->morale;
+            $dominion->peasants = $dominionState->peasants;
+            $dominion->peasants_last_hour = $dominionState->peasants_last_hour;
+            $dominion->prestige = $dominionState->prestige;
+            $dominion->xp = $dominionState->xp;
+            $dominion->spy_strength = $dominionState->spy_strength;
+            $dominion->wizard_strength = $dominionState->wizard_strength;
+            $dominion->protection_ticks = $dominionState->protection_ticks;
+            $dominion->ticks = $dominionState->ticks;
 
-        // Delete decree states
+            // Delete buildings
+            foreach($dominion->buildings as $dominionBuilding)
+            {
+                $this->buildingCalculator->removeBuildings($dominion, [$dominionBuilding->key => ['builtBuildingsToDestroy' => $dominionBuilding->pivot->owned]]);
+            }
 
-        // Delete queues
+            // Add buildings
+            foreach($dominionState->buildings as $buildingKey => $amount)
+            {
+                $this->buildingCalculator->createOrIncrementBuildings($dominion, [$buildingKey => $amount]);
+            }
+    
+            // Delete improvements
+            foreach($dominion->improvements as $dominionImprovement)
+            {
+                $this->improvementCalculator->decreaseImprovements($dominion, [$dominionImprovement->key => $dominionImprovement->pivot->invested]);
+            }
 
-        // Update units
+            // Add improvements
+            foreach($dominionState->improvements as $improvementKey => $amount)
+            {
+                $this->improvementCalculator->createOrIncrementImprovements($dominion, [$improvementKey => $amount]);
+            }
+    
+            // Delete resources
+            foreach($dominion->resources as $resource)
+            {
+                $amountOwned = $this->resourceCalculator->getAmount($dominion, $resource->key);
+                $amountToRemove = $amountOwned * -1;
+                $this->resourceService->updateResources($dominion, [$resource->key => $amountToRemove]);
+            }
 
-        // Update land
+            // Add resources
+            foreach($dominionState->resources as $resourceKey => $amount)
+            {
+                $this->resourceService->updateResources($dominion, [$resourceKey => $amount]);
+            }
+    
+            // Delete spells
+            DB::table('dominion_spells')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_spells')->where('caster_id', '=', $dominion->id)->delete();
+
+            // Add spells
+            foreach($dominionState->spells as $spellKey => $spellRow)
+            {
+                $spellData = explode(',', $spellRow);
+                $duration = (int)$spellData[0];
+                $cooldown = (int)$spellData[1];
+                $spell = Spell::where('key', $spellKey)->first();
+
+                DominionSpell::updateOrCreate(['dominion_id' => $dominion->id, 'spell_id' => $spell->id],
+                [
+                    'caster_id' => $dominion->id,
+                    'duration' => $duration,
+                    'cooldown' => $cooldown
+                ]);
+            }
+
+            // Delete deity
+            DB::table('dominion_deity')->where('dominion_id', '=', $dominion->id)->delete();
+
+            // Add deity
+            if($dominionState->deity)
+            {
+                $deity = Deity::where('name', $dominionState->deity)->first();
+                DominionDeity::updateOrCreate(['dominion_id' => $dominion->id, 'deity_id' => $deity->id],
+                [
+                    'duration' => $dominionState->devotion_ticks
+                ]);
+            }
+
+            // Delete advancements
+            DB::table('dominion_advancements')->where('dominion_id', '=', $dominion->id)->delete();
+
+            // Add advancements
+            foreach($dominionState->advancements as $advancementKey => $level)
+            {
+                $advancement = Advancement::where('key', $advancementKey)->first();
+
+                DominionAdvancement::updateOrCreate(['dominion_id' => $dominion->id, 'advancement_id' => $advancement->id],
+                [
+                    'level' => $level
+                ]);
+            }
+    
+            // Delete queues
+            DB::table('dominion_queue')->where('dominion_id', '=', $dominion->id)->delete();
+    
+            // Add queues
+            foreach($dominionState->queues as $queueRow)
+            {
+                $rowData = explode(',', $queueRow);
+                $source = (string)$rowData[0];
+                $resource = (string)$rowData[1];
+                $ticks = (int)$rowData[2];
+                $amount = (int)$rowData[3];
+
+                $this->queueService->queueResources($source, $dominion, [$resource => $amount], $ticks);
+            }
+    
+            // Delete decree states
+            DB::table('dominion_decree_states')->where('dominion_id', '=', $dominion->id)->delete();
+    
+            // Add decree states
+            foreach($dominionState->decree_states as $dominionDecreeStateRow)
+            {
+                $dominionDecreeStateData = explode(',', $dominionDecreeStateRow);
+                $decreeKey = $dominionDecreeStateData[0];
+                $decreeStateKey = $dominionDecreeStateData[1];
+                $decreeIssueTick = $dominionDecreeStateData[2];
+
+                $decree = Decree::where('key', $decreeKey)->first();
+                $decreeState = DecreeState::where('key', $decreeStateKey)->first();
+
+                DominionDecreeState::updateOrCreate(['dominion_id' => $dominion->id, 'decree_id' => $decree->id],
+                [
+                    'decree_state_id' => $decreeState->id,
+                    'tick' => $decreeIssueTick
+                ]);
+            }
+    
+            // Update units
+            foreach($dominionState->units as $unitType => $amount)
+            {
+                $dominion->{'military_' . $unitType} = $amount;
+            }
+    
+            // Update land
+            foreach($dominionState->land as $landType => $amount)
+            {
+                $dominion->{'land_' . $landType} = $amount;
+            }
+
+            $dominion->save();
+
+        });
+
+        return [
+            'message' => sprintf('You have restored your dominion as it was when you had %s %s left.',
+                    $dominionState->dominion_protection_tick,
+                    str_plural('tick', $dominionState->dominion_protection_tick)
+                ),
+            'alert-type' => 'success',
+            'redirect' => route('dominion.status')
+        ];
 
     }
 

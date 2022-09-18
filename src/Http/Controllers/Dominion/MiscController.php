@@ -9,13 +9,15 @@ use DB;
 use Auth;
 use Log;
 use OpenDominion\Exceptions\GameException;
-use OpenDominion\Services\Dominion\ProtectionService;
+use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\SelectorService;
 
+
+use OpenDominion\Http\Requests\Dominion\Actions\RestoreDominionStateRequest;
+
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\DominionState;
 use OpenDominion\Models\GameEvent;
-use OpenDominion\Models\Title;
-use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Services\Dominion\QueueService;
 
@@ -31,12 +33,14 @@ class MiscController extends AbstractDominionController
      * @param SelectorService $dominionSelectorService
      */
     public function __construct(
+        DominionStateService $dominionStateService,
         SelectorService $dominionSelectorService,
         MilitaryCalculator $militaryCalculator,
         QueueService $queueService
         )
     {
         $this->dominionSelectorService = $dominionSelectorService;
+        $this->dominionStateService = $dominionStateService;
         $this->militaryCalculator = $militaryCalculator;
         $this->queueService = $queueService;
     }
@@ -75,63 +79,67 @@ class MiscController extends AbstractDominionController
 
         $dominion = $this->getSelectedDominion();
 
-        # Can only delete your own dominion.
-        if($dominion->user_id !== Auth::user()->id)
-        {
-            throw new LogicException('You cannot delete other dominions than your own.');
-        }
+        DB::transaction(function () use ($dominion) {
+            
+            # Can only delete your own dominion.
+            if($dominion->user_id !== Auth::user()->id)
+            {
+                throw new LogicException('You cannot delete other dominions than your own.');
+            }
 
-        # If the round has started, can only delete if protection ticks > 0.
-        if($dominion->round->hasStarted() and $dominion->protection_ticks <= 0 and request()->getHost() !== 'sim.odarena.com')
-        {
-            throw new LogicException('You cannot delete your dominion because the round has already started.');
-        }
+            # If the round has started, can only delete if protection ticks > 0.
+            if($dominion->round->hasStarted() and $dominion->protection_ticks <= 0 and request()->getHost() !== 'sim.odarena.com')
+            {
+                throw new LogicException('You cannot delete your dominion because the round has already started.');
+            }
 
-        # If the round has ended or offensive actions are disabled, do not allow delete.
-        if($dominion->round->hasEnded())
-        {
-            throw new LogicException('You cannot delete your dominion because the round has ended.');
-        }
+            # If the round has ended or offensive actions are disabled, do not allow delete.
+            if($dominion->round->hasEnded())
+            {
+                throw new LogicException('You cannot delete your dominion because the round has ended.');
+            }
 
-        # Destroy the dominion.
+            # Destroy the dominion.
 
-        # Remove votes
-        DB::table('dominions')->where('monarchy_vote_for_dominion_id', '=', $dominion->id)->update(['monarchy_vote_for_dominion_id' => null]);
-        DB::table('realms')->where('monarch_dominion_id', '=', $dominion->id)->update(['monarch_dominion_id' => null]);
+            # Remove votes
+            DB::table('dominions')->where('monarchy_vote_for_dominion_id', '=', $dominion->id)->update(['monarchy_vote_for_dominion_id' => null]);
+            DB::table('realms')->where('monarch_dominion_id', '=', $dominion->id)->update(['monarch_dominion_id' => null]);
 
-        DB::table('dominion_spells')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_spells')->where('caster_id', '=', $dominion->id)->delete();
-        DB::table('dominion_buildings')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_improvements')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_decree_states')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_deity')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_resources')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_insight')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_insight')->where('source_dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_spells')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_spells')->where('caster_id', '=', $dominion->id)->delete();
+            DB::table('dominion_buildings')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_improvements')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_decree_states')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_deity')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_resources')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_insight')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_insight')->where('source_dominion_id', '=', $dominion->id)->delete();
 
-        DB::table('council_posts')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('council_threads')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('daily_rankings')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_history')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_queue')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_techs')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_advancements')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_tick')->where('dominion_id', '=', $dominion->id)->delete();
-        
-        DB::table('dominion_stats')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('dominion_states')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('realm_history')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('council_posts')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('council_threads')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('daily_rankings')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_history')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_queue')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_techs')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_advancements')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_tick')->where('dominion_id', '=', $dominion->id)->delete();
+            
+            DB::table('dominion_stats')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_states')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('realm_history')->where('dominion_id', '=', $dominion->id)->delete();
 
-        DB::table('game_events')->where('source_id', '=', $dominion->id)->delete();
-        DB::table('game_events')->where('target_id', '=', $dominion->id)->delete();
+            DB::table('game_events')->where('source_id', '=', $dominion->id)->delete();
+            DB::table('game_events')->where('target_id', '=', $dominion->id)->delete();
 
-        DB::table('info_ops')->where('source_dominion_id', '=', $dominion->id)->delete();
-        DB::table('info_ops')->where('target_dominion_id', '=', $dominion->id)->delete();
+            DB::table('info_ops')->where('source_dominion_id', '=', $dominion->id)->delete();
+            DB::table('info_ops')->where('target_dominion_id', '=', $dominion->id)->delete();
 
-        DB::table('watched_dominions')->where('dominion_id', '=', $dominion->id)->delete();
-        DB::table('watched_dominions')->where('watcher_id', '=', $dominion->id)->delete();
+            DB::table('watched_dominions')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('watched_dominions')->where('watcher_id', '=', $dominion->id)->delete();
 
-        DB::table('dominions')->where('id', '=', $dominion->id)->delete();
+            DB::table('dominions')->where('id', '=', $dominion->id)->delete();
+            
+        });
 
         $this->dominionSelectorService->unsetUserSelectedDominion();
 
@@ -235,6 +243,36 @@ class MiscController extends AbstractDominionController
                 'alert-danger',
                 'Your dominion has been abandoned.'
             );
+    }
+
+    public function restoreDominionState(RestoreDominionStateRequest $request)
+    {
+        $dominion = $this->getSelectedDominion();
+
+        $dominionState = DominionState::findOrFail($request->get('dominion_state'));
+
+        $dominionStateService = app(DominionStateService::class);
+
+        try {
+            $result = $dominionStateService->restoreDominionState($dominion, $dominionState);
+
+        } catch (GameException $e) {
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        $request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
+        return redirect()->to($result['redirect'] ?? route('dominion.status'));
+
+        if($dominion->id == $dominionState->dominion_id)
+        {
+            dump('id match');
+        }
+
+        dd($request);
+
+
     }
 
 }
