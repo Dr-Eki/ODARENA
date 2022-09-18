@@ -44,6 +44,9 @@ class ResourceConversionCalculator
             'kills_into_resources_per_value',
             'converts_displaced_peasants_into_resource',
             'converts_displaced_peasants_into_resources',
+
+            'dies_into_resource',
+            'dies_into_resource_on_success',
         ];
 
         $convertingUnits = array_fill(1, $converter->race->units->count(), 0);
@@ -75,11 +78,13 @@ class ResourceConversionCalculator
         if($mode == 'offense')
         {
             $converterUnits = $invasion['attacker']['surviving_units'];
+            $converterUnitsLost = $invasion['attacker']['units_lost'];
             $enemyUnitsKilled = $invasion['defender']['units_lost'];
         }
         else
         {
             $converterUnits = $invasion['defender']['surviving_units'];
+            $converterUnitsLost = $invasion['defender']['units_lost'];
             $enemyUnitsKilled = $invasion['attacker']['units_lost'];
         }
 
@@ -90,7 +95,7 @@ class ResourceConversionCalculator
         foreach($converterUnits as $converterUnitSlot => $converterUnitAmount)
         {
             if(!in_array($converterUnitSlot, ['draftees','peasants','spies','wizards','archmages']))
-            {                
+            {    
                 $unit = $this->unitHelper->getRaceUnitFromSlot($converter->race, $converterUnitSlot);
 
                 if(
@@ -104,7 +109,13 @@ class ResourceConversionCalculator
                     $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resources_per_casualty']) or
                     ($invasion['result']['success'] and $mode == 'offense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resources_per_casualty_on_success'])) or
                     (!$invasion['result']['success'] and $mode == 'defense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resources_per_casualty_on_success'])) or
-                    $this->unitHelper->checkUnitHasPerks($converter, $unit, ['converts_displaced_peasants_into_resources'])
+                    $this->unitHelper->checkUnitHasPerks($converter, $unit, ['converts_displaced_peasants_into_resources']) or
+
+                    # Dies into resource
+                    $this->unitHelper->checkUnitHasPerks($converter, $unit, ['dies_into_resource']) or
+                    ($invasion['result']['success'] and $mode == 'offense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['dies_into_resource_on_success'])) or
+                    (!$invasion['result']['success'] and $mode == 'defense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['dies_into_resource_on_success']))
+                    
                     )
                 {
                     if($mode == 'offense')
@@ -256,13 +267,33 @@ class ResourceConversionCalculator
                                 
                         }
                     }
+
+                    # Dies into single resource 
+                    $resourcePerOwnCasualtyConversionPerk = $converter->race->getUnitPerkValueForUnitSlot($converterUnitSlot, 'dies_into_resource');
+                    is_array($resourcePerOwnCasualtyConversionPerk) ?: $resourcePerOwnCasualtyConversionPerk = $converter->race->getUnitPerkValueForUnitSlot($converterUnitSlot, 'dies_into_resource_on_success');
+
+                    if($resourcePerOwnCasualtyConversionPerk)
+                    {
+                        $resourceAmount = $resourcePerOwnCasualtyConversionPerk[0];
+                        $resourceKey = $resourcePerOwnCasualtyConversionPerk[1];
+    
+                        foreach($converterUnitsLost as $converterUnitsLostSlot => $converterUnitsLostAmount)
+                        {
+                            if($this->conversionHelper->isSlotConvertible($converterUnitsLostSlot, $converter))
+                            {
+                                $resourceConversions[$resourceKey] += $converterUnitsLostAmount * $resourceAmount;
+                                $resourceConversions[$resourceKey] *= $this->conversionCalculator->getConversionReductionMultiplier($enemy);
+                                #$resourceConversions[$resourceKey] *= $this->getInvasionResultMultiplier($invasion, $mode);
+                            }
+                        }
+                    }
                 }
             }
         }
 
         $resourceConversions = array_map('intval', $resourceConversions);
 
-        dump('--- ' . $converter->name . ':',  $convertingUnits);
+        #dump('--- ' . $converter->name . ':',  $convertingUnits, $resourceConversions);
 
         return $resourceConversions;
 
