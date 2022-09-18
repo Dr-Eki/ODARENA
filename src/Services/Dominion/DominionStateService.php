@@ -67,7 +67,7 @@ class DominionStateService
 
         $stateData = Yaml::parse($dominionState, Yaml::PARSE_OBJECT_FOR_MAP);
 
-        $dominionState = DominionState::updateOrCreate(['dominion_id' => $dominion->id, 'dominion_protection_tick' => (96-$dominion->protection_ticks)],
+        $dominionState = DominionState::updateOrCreate(['dominion_id' => $dominion->id, 'dominion_protection_tick' => $dominion->protection_ticks],
         [
             'dominion_id' => $dominion->id,
             'dominion_protection_tick' => (int)$dominion->round->tick,
