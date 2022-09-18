@@ -64,7 +64,6 @@ construction_artillery:
   perks:
     construction_cost: -25,4000
     rezone_cost: -25,4000
-    unit_pairing: 25,4000
 
 construction_dragon:
   name: Construction
@@ -404,6 +403,7 @@ gryphonry:
 
 armoury:
   name: Armoury
+  enabled: 0
   exclusive_races:
     - Artillery
   perks:
