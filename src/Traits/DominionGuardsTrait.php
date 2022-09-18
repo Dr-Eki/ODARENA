@@ -28,7 +28,7 @@ trait DominionGuardsTrait
      *
      * @param Dominion $dominion
      * @param int $seconds
-     * @throws RuntimeException
+     * @throws GameException
      */
     public function guardActionsDuringTick(Dominion $dominion, int $seconds = 30): void
     {
