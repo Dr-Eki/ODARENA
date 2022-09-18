@@ -334,6 +334,11 @@ class Dominion extends AbstractModel
             ->withPivot('level');
     }
 
+    public function states()
+    {
+        return $this->hasMany(DominionState::class);
+    }
+
 
     public function queues()
     {

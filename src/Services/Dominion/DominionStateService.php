@@ -109,12 +109,28 @@ class DominionStateService
 
     public function restoreDominionState(DominionState $dominionState)
     {
-        //
+        // Delete buildings
+
+        // Delete improvements
+
+        // Delete resources
+
+        // Delete spells
+
+        // Delete advancements
+
+        // Delete decree states
+
+        // Delete queues
+
+        // Update units
+
+        // Update land
+
     }
 
     protected function generateDominionState(Dominion $dominion)
     {
-
         $basics = sprintf(
 "
 daily_land: %s
