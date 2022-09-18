@@ -419,6 +419,7 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="fas fa-history text-purple"></i> Go Back To Previous Tick</h3>
+                    <span class="pull-right label label-danger">Experimental</span>
                 </div>
                 <div class="box-body">
                 <p>Click a tick number below to restore your dominion to the state it was when that tick began.</p>
@@ -439,6 +440,9 @@
                             </div>
                         </div>
                     @endforeach
+                </div>
+                <div class="box-footer">
+                    <small class="text-muted">This is an experimental feature. Use at your own risk.</small>
                 </div>
             </div>
         </div>
