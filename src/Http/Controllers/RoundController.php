@@ -10,7 +10,7 @@ use LogicException;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Factories\DominionFactory;
 use OpenDominion\Factories\RealmFactory;
-use OpenDominion\Helpers\DecreeHelper;
+#use OpenDominion\Helpers\DecreeHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\TitleHelper;
 use OpenDominion\Models\Dominion;
@@ -22,6 +22,7 @@ use OpenDominion\Models\Title;
 use OpenDominion\Models\User;
 use OpenDominion\Services\Analytics\AnalyticsEvent;
 use OpenDominion\Services\Analytics\AnalyticsService;
+use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\SelectorService;
 use OpenDominion\Services\PackService;
 use OpenDominion\Services\RealmFinderService;
@@ -284,6 +285,9 @@ class RoundController extends AbstractController
                     'alert-success',
                     ("You have successfully registered to round {$round->number} ({$round->name})! You have joined realm {$realm->number} ({$realm->name}) with " . ($realm->dominions()->count() - 1) . ' other ' . str_plural('dominion', ($realm->dominions()->count() - 1)) . '.')
                 );
+
+                $dominionStateService = app(DominionStateService::class);
+                $dominionStateService->saveDominionState($dominion);
         
                 return redirect()->route('dominion.status');
 
@@ -465,6 +469,9 @@ class RoundController extends AbstractController
             'alert-success',
             ("You have successfully registered to round {$round->number} ({$round->name})! You have joined realm {$realm->number} ({$realm->name}) with " . ($realm->dominions()->count() - 1) . ' other ' . str_plural('dominion', ($realm->dominions()->count() - 1)) . '.')
         );
+
+        $dominionStateService = app(DominionStateService::class);
+        $dominionStateService->saveDominionState($dominion);
 
         return redirect()->route('dominion.status');
     }

@@ -1166,7 +1166,6 @@ class TickService
 
             if($decreeUnitSummoningRaw)
             {
-                #dump($slot . ':' . $decreeUnitSummoningRaw);
                 $decreeUnitSummoningPerks = explode(',', $decreeUnitSummoningRaw);
                 
                 $slotProduced = (int)$decreeUnitSummoningPerks[0];
@@ -1396,34 +1395,34 @@ class TickService
 
             $this->precalculateTick($dominion, true);
 
-        });
-
-        // Myconid: Land generation
-        if(!empty($dominion->tick->generated_land) and $dominion->protection_ticks > 0)
-        {
-            $homeLandType = 'land_' . $dominion->race->home_land_type;
-            $this->queueService->queueResources('exploration', $dominion, [$homeLandType => $dominion->tick->generated_land], 12);
-        }
-
-        // Myconid and Cult: Unit generation
-        if($dominion->protection_ticks > 0)
-        {
-            foreach($dominion->race->units as $unit)
+            // Myconid: Land generation
+            if(!empty($dominion->tick->generated_land) and $dominion->protection_ticks > 0)
             {
-                if(!empty($dominion->tick->{'generated_unit' . $unit->slot}) and $dominion->protection_ticks > 0)
+                $homeLandType = 'land_' . $dominion->race->home_land_type;
+                $this->queueService->queueResources('exploration', $dominion, [$homeLandType => $dominion->tick->generated_land], 12);
+            }
+
+            // Unit generation
+            if($dominion->protection_ticks > 0)
+            {
+                foreach($dominion->race->units as $unit)
                 {
-                    $this->queueService->queueResources('training', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], 12);
+                    if(!empty($dominion->tick->{'generated_unit' . $unit->slot}) and $dominion->protection_ticks > 0)
+                    {
+                        $this->queueService->queueResources('training', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], 12);
+                    }
                 }
             }
-        }
+
+        });
+        
+        $this->dominionStateService->saveDominionState($dominion);
 
         Log::info(sprintf(
             '[TICK] Cleaned up queues, sent notifications, and precalculated dominion %s in %s ms.',
             $dominion->name,
             number_format($this->now->diffInMilliseconds(now()))
         ));
-
-        $this->dominionStateService->saveDominionState($dominion);
 
         $this->now = now();
     }

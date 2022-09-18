@@ -25,7 +25,7 @@ use OpenDominion\Models\Title;
 use OpenDominion\Models\User;
 use OpenDominion\Models\Deity;
 
-use Illuminate\Support\Carbon;
+#use Illuminate\Support\Carbon;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\BarbarianCalculator;
@@ -33,7 +33,6 @@ use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 
 use OpenDominion\Services\Dominion\DeityService;
-use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\ResourceService;
 
@@ -48,7 +47,6 @@ class DominionFactory
         $this->spellCalculator = app(SpellCalculator::class);
 
         $this->deityService = app(DeityService::class);
-        $this->dominionStateService = app(DominionStateService::class);
         $this->resourceService = app(ResourceService::class);
         $this->queueService = app(QueueService::class);
     }
@@ -381,8 +379,6 @@ class DominionFactory
                 'cooldown' => 192,
             ]);
         });
-
-        $this->dominionStateService->saveDominionState($dominion);
 
         return $dominion;
 
@@ -828,10 +824,10 @@ class DominionFactory
 
             $source = $queueRow[0];
             $resource = $queueRow[1];
-            $hours = $queueRow[2];
+            $ticks = $queueRow[2];
             $amount = $queueRow[3];
 
-            $this->queueService->queueResources($source, $dominion, [$resource => $amount], $hours);
+            $this->queueService->queueResources($source, $dominion, [$resource => $amount], $ticks);
         }
 
         return $dominion;

@@ -20,6 +20,7 @@ use OpenDominion\Models\DominionState;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Services\Dominion\QueueService;
+use OpenDominion\Services\Dominion\TickService;
 
 // misc functions, probably could use a refactor later
 class MiscController extends AbstractDominionController
@@ -36,13 +37,15 @@ class MiscController extends AbstractDominionController
         DominionStateService $dominionStateService,
         SelectorService $dominionSelectorService,
         MilitaryCalculator $militaryCalculator,
-        QueueService $queueService
+        QueueService $queueService,
+        TickService $tickService
         )
     {
         $this->dominionSelectorService = $dominionSelectorService;
         $this->dominionStateService = $dominionStateService;
         $this->militaryCalculator = $militaryCalculator;
         $this->queueService = $queueService;
+        $this->tickService = $tickService;
     }
 
     public function postClearNotifications()
@@ -255,6 +258,7 @@ class MiscController extends AbstractDominionController
 
         try {
             $result = $dominionStateService->restoreDominionState($dominion, $dominionState);
+            $this->tickService->precalculateTick($dominion);
 
         } catch (GameException $e) {
             return redirect()->back()
@@ -264,14 +268,6 @@ class MiscController extends AbstractDominionController
 
         $request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
         return redirect()->to($result['redirect'] ?? route('dominion.status'));
-
-        if($dominion->id == $dominionState->dominion_id)
-        {
-            dump('id match');
-        }
-
-        dd($request);
-
 
     }
 

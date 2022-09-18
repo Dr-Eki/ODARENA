@@ -18,6 +18,7 @@ use OpenDominion\Calculators\Dominion\TitleCalculator;
 
 use OpenDominion\Models\Title;
 
+use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\StatsService;
@@ -49,6 +50,7 @@ class StatusController extends AbstractDominionController
             'dominionProtectionService' => app(ProtectionService::class),
 
             'dominionCalculator' => app(DominionCalculator::class),
+            'dominionStateService' => app(DominionStateService::class),
             'landCalculator' => app(LandCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'moraleCalculator' => app(MoraleCalculator::class),

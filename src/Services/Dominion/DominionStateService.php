@@ -41,7 +41,6 @@ use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\StatsService;
 
-
 class DominionStateService
 {
 
@@ -75,7 +74,7 @@ class DominionStateService
         $dominionState = $this->generateDominionState($dominion);
 
         $stateData = Yaml::parse($dominionState, Yaml::PARSE_OBJECT_FOR_MAP);
-
+        
         $dominionState = DominionState::updateOrCreate(['dominion_id' => $dominion->id, 'dominion_protection_tick' => $dominion->protection_ticks],
         [
             'dominion_id' => $dominion->id,
@@ -293,7 +292,6 @@ class DominionStateService
             }
 
             $dominion->save();
-
         });
 
         return [
@@ -307,7 +305,7 @@ class DominionStateService
 
     }
 
-    protected function generateDominionState(Dominion $dominion)
+    public function generateDominionState(Dominion $dominion)
     {
         $basics = sprintf(
 "
