@@ -109,7 +109,7 @@ class ReleaseActionService
         $rawDpRelease = $this->militaryCalculator->getDefensivePowerRaw($dominion, null, null, $units, 0, false, true, null, true, true);
 
         # Special considerations for releasing military units.
-        if($rawDpRelease > 0 and array_sum($units) > $units['military_draftees'])
+        if($rawDpRelease > 0)
         {
             # Must have at least 1% morale to release.
             if ($dominion->morale < 50)
