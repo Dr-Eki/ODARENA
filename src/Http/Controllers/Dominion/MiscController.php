@@ -259,7 +259,6 @@ class MiscController extends AbstractDominionController
         try {
             $result = $dominionStateService->restoreDominionState($dominion, $dominionState);
             $this->tickService->precalculateTick($dominion);
-
         } catch (GameException $e) {
             return redirect()->back()
                 ->withInput($request->all())

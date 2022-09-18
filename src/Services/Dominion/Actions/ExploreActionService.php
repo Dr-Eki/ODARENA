@@ -84,6 +84,7 @@ class ExploreActionService
     public function explore(Dominion $dominion, array $data): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
 
         throw new GameException('Exploration has been permanently disabled.');

@@ -37,6 +37,8 @@ class DemolishActionService
     public function demolish(Dominion $dominion, array $data): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
+        
         $dominionBuildings = $this->buildingCalculator->getDominionBuildings($dominion);
         $demolishData = [];
 

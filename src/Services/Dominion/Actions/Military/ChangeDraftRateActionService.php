@@ -36,6 +36,7 @@ class ChangeDraftRateActionService
     public function changeDraftRate(Dominion $dominion, int $draftRate): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))

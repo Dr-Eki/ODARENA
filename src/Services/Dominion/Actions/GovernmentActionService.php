@@ -56,6 +56,7 @@ class GovernmentActionService
     public function voteForMonarch(Dominion $dominion, ?int $monarch_id)
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))
@@ -122,6 +123,7 @@ class GovernmentActionService
     public function updateRealm(Dominion $dominion, ?string $motd, ?string $name, ?int $contribution, ?string $discordLink)
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))

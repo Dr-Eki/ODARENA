@@ -51,6 +51,7 @@ class BuildActionService
     public function build(Dominion $dominion, array $data): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         $data = array_only($data, array_map(function ($value) {
             return "building_{$value}";

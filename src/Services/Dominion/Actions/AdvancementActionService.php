@@ -51,6 +51,7 @@ class AdvancementActionService
     public function levelUp(Dominion $dominion, Advancement $advancement): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))

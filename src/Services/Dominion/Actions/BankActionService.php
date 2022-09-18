@@ -43,6 +43,7 @@ class BankActionService
     public function exchange(Dominion $dominion, string $source, string $target, int $amount): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))

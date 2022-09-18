@@ -75,6 +75,7 @@ class ReleaseActionService
     public function release(Dominion $dominion, array $data): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         $data = array_map('\intval', $data);
 

@@ -28,6 +28,8 @@ class WatchDominionActionService
     {
         $this->guardLockedDominion($dominion);
         $this->guardLockedDominion($watcher);
+        $this->guardActionsDuringTick($dominion);
+        $this->guardActionsDuringTick($wath);
 
         // Check if same round
         if($watcher->round->id !== $dominion->round->id)
@@ -72,6 +74,8 @@ class WatchDominionActionService
     {
         $this->guardLockedDominion($dominion);
         $this->guardLockedDominion($watcher);
+        $this->guardActionsDuringTick($dominion);
+        $this->guardActionsDuringTick($watch);
 
         // Check if same round
         if($watcher->round->id !== $dominion->round->id)

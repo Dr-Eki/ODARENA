@@ -56,6 +56,7 @@ class RezoneActionService
     public function rezone(Dominion $dominion, array $remove, array $add): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))

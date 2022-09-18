@@ -71,6 +71,7 @@ class TrainActionService
     public function train(Dominion $dominion, array $data): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))

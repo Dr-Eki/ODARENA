@@ -15,6 +15,8 @@ use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\WatchedDominion;
 
+use OpenDominion\Traits\DominionGuardsTrait;
+
 use OpenDominion\Helpers\ConversionHelper;
 use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Helpers\SpellHelper;
@@ -46,6 +48,7 @@ use OpenDominion\Services\Dominion\Actions\SpellActionService;
 
 class InvadeActionService
 {
+    use DominionGuardsTrait;
 
     /**
      * @var int The minimum morale required to initiate an invasion
@@ -125,6 +128,10 @@ class InvadeActionService
      */
     public function invade(Dominion $dominion, Dominion $target, array $units): array
     {
+        $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
+        $this->guardLockedDominion($target);
+        $this->guardActionsDuringTick($target);
 
         $now = time();
 

@@ -51,6 +51,7 @@ class TechActionService
     public function unlock(Dominion $dominion, string $key): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))

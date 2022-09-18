@@ -43,6 +43,7 @@ class DailyBonusesActionService
     public function claimLand(Dominion $dominion): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))

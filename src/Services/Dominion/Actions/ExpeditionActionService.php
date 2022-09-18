@@ -80,6 +80,7 @@ class ExpeditionActionService
     public function send(Dominion $dominion, array $units): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         DB::transaction(function () use ($dominion, $units)
         {

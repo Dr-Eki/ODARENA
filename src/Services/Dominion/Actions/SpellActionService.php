@@ -82,10 +82,12 @@ class SpellActionService
     public function castSpell(Dominion $dominion, string $spellKey, Dominion $target = null, bool $isInvasionSpell = false): array
     {
         $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         if ($target !== null)
         {
             $this->guardLockedDominion($target);
+            $this->guardActionsDuringTick($target);
         }
 
         // Qur: Statis
