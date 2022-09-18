@@ -31,16 +31,18 @@ class DominionTickState extends AbstractModel
         'most_recent_exchange_from' => 'text',
         'most_recent_exchange_to' => 'text',
         'notes' => 'text',
+        'deity' => 'text',
         'devotion_ticks' => 'integer',
         'draft_rate' => 'integer',
         'morale' => 'integer',
         'peasants' => 'integer',
         'peasants_last_hour' => 'integer',
         'prestige' => 'float',
-        'spy_strength' => 'integer',
-        'protection_ticks' => 'integer',
-        'wizard_strength' => 'integer',
         'xp' => 'integer',
+        'spy_strength' => 'integer',
+        'wizard_strength' => 'integer',
+        'protection_ticks' => 'integer',
+
         'buildings' => 'array',
         'improvements' => 'array',
         'land' => 'array',
@@ -52,19 +54,9 @@ class DominionTickState extends AbstractModel
         'queues' => 'array',
     ];
 
-    public function race()
+    public function dominion()
     {
-        return $this->belongsTo(Race::class);
-    }
-
-    public function title()
-    {
-        return $this->belongsTo(Title::class);
-    }
-
-    public function deity()
-    {
-        return $this->belongsTo(Deity::class);
+        return $this->belongsTo(Dominion::class);
     }
 
 }
