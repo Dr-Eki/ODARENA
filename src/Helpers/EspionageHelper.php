@@ -31,8 +31,8 @@ class EspionageHelper
             'kill_draftees' => 'Assassinate draftees (base damage %s).',
             'kill_peasants' => 'Assassinate peasants (base damage %s).',
 
-            'decrease_wizard_strength' => 'Reduce wizard strength (base damage %s%%).',
-            'decrease_morale' => 'Reduce morale (base damage %s%%).',
+            'decrease_wizard_strength' => 'Reduce wizard strength (base damage %+d%%).',
+            'decrease_morale' => 'Reduce morale (base damage %+d%%).',
 
             'sabotage_building' => 'Sabotage %1$s buildings (base damage %2$s).',
             'sabotage_construction' => 'Sabotage buildings under construction (base damage %1$s).',

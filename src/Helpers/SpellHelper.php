@@ -56,36 +56,36 @@ class SpellHelper
             'fog_of_war' => 'Hidden from Insight',
 
             // Production
-            'ore_production_raw_mod' => '%s%% raw ore production',
+            'ore_production_raw_mod' => '%+d%% raw ore production',
             'mana_production_raw_mod' => '%s% raw mana production',
-            'lumber_production_raw_mod' => '%s%% raw lumber production',
-            'food_production_raw_mod' => '%s%% raw food production',
-            'gems_production_raw_mod' => '%s%% raw gem production',
-            'gold_production_raw_mod' => '%s%% raw gold production',
+            'lumber_production_raw_mod' => '%+d%% raw lumber production',
+            'food_production_raw_mod' => '%+d%% raw food production',
+            'gems_production_raw_mod' => '%+d%% raw gem production',
+            'gold_production_raw_mod' => '%+d%% raw gold production',
 
             'elk_production_raw_from_land' => 'Grants one elk per %1$s acres of %2$s each tick.',
 
-            'ore_production_mod' => '%s%% ore production',
-            'mana_production_mod' => '%s%% mana production',
-            'lumber_production_mod' => '%s%% lumber production',
-            'food_production_mod' => '%s%% food production',
-            'gems_production_mod' => '%s%% gem production',
-            'gold_production_mod' => '%s%% gold production',
-            'swamp_gas_production_mod' => '%s%% swamp gas production',
-            'miasma_production_mod' => '%s%% miasma extraction',
-            'pearls_production_mod_production' => '%s%% pearl production',
-            'cosmic_alignment_production_mod' => '%s%% Cosmic Alignment discovery',
-            'strength_gain_mod' => '%s%% strength gains',
+            'ore_production_mod' => '%+d%% ore production',
+            'mana_production_mod' => '%+d%% mana production',
+            'lumber_production_mod' => '%+d%% lumber production',
+            'food_production_mod' => '%+d%% food production',
+            'gems_production_mod' => '%+d%% gem production',
+            'gold_production_mod' => '%+d%% gold production',
+            'swamp_gas_production_mod' => '%+d%% swamp gas production',
+            'miasma_production_mod' => '%+d%% miasma extraction',
+            'pearls_production_mod_production' => '%+d%% pearl production',
+            'cosmic_alignment_production_mod' => '%+d%% Cosmic Alignment discovery',
+            'strength_gain_mod' => '%+d%% strength gains',
 
-            'food_consumption_mod' => '%s%% food consumption',
+            'food_consumption_mod' => '%+d%% food consumption',
 
-            'tech_production' => '%s%% XP generation',
+            'tech_production' => '%+d%% XP generation',
 
             'alchemy_production' => '%s gold production per alchemy',
 
-            'food_production_raw' => '%s%% raw food production',
+            'food_production_raw' => '%+d%% raw food production',
 
-            'food_production_docks' => '%s%% food production from Docks',
+            'food_production_docks' => '%+d%% food production from Docks',
 
             'no_gold_production' => 'No gold production or revenue',
             'no_ore_production' => 'No ore production',
@@ -96,19 +96,19 @@ class SpellHelper
             'no_gems_production' => 'No gem production',
 
             'rezone_all_land' => 'Rezones %1s%% of all other land types to %2$s.',
-            'land_generation_mod' => '%s%% land generated.',
+            'land_generation_mod' => '%+d%% land generated.',
 
             'resource_theft' => 'Displaces %2$s%% of the target\'s %1$s and returns it to the caster.',
 
             'resource_lost_on_invasion' => '%1s%% of %2$s if invaded (excluding overwhelmed invasions).',
 
             // Military
-            'drafting' => '%s%% drafting',
+            'drafting' => '%+d%% drafting',
             'training_time_raw' => '%s ticks training time for military units (does not include Spies, Wizards, or Archmages)',
-            'training_costs' => '%s%% military unit training costs',
-            'unit_gold_costs' => '%s%% military unit gold costs',
-            'unit_ore_costs' => '%s%% military unit ore costs',
-            'unit_lumber_costs' => '%s%% military unit lumber costs',
+            'training_costs' => '%+d%% military unit training costs',
+            'unit_gold_costs' => '%+d%% military unit gold costs',
+            'unit_ore_costs' => '%+d%% military unit ore costs',
+            'unit_lumber_costs' => '%+d%% military unit lumber costs',
 
             'cannot_invade' => 'Cannot invade',
             'cannot_send_expeditions' => 'Cannot send expeditions',
@@ -120,9 +120,9 @@ class SpellHelper
 
             'faster_return' => 'Units return %s ticks faster from invasions',
 
-            'increase_morale' => 'Restores target morale by %s%% (up to maximum of 100%%).',
-            'decrease_morale' => 'Lowers target morale by %s%% (minimum 0%%).',
-            'increase_morale_from_net_victories' => 'Increases morale by %s%% per net victory (minimum +0%%).',
+            'increase_morale' => 'Restores target morale by %+d%% (up to maximum of 100%%).',
+            'decrease_morale' => 'Lowers target morale by %+d%% (minimum 0%%).',
+            'increase_morale_from_net_victories' => 'Increases morale by %+d%% per net victory (minimum +0%%).',
 
             'kill_draftees' => 'Kills %1$s%% of the target\'s draftees.',
 
@@ -142,18 +142,18 @@ class SpellHelper
 
             'no_attrition' => 'No unit attrition',
 
-            'prestige_gains' => '%s%% prestige gains',
+            'prestige_gains' => '%+d%% prestige gains',
 
             'defense_from_resource' => '%1$s raw defensive power per %2$s.',
             'offense_from_resource' => '%1$s raw offensive power per %2$s.',
 
             // Improvements
-            'improvements_damage' => 'Destroys %s%% of the target\'s improvements.',
+            'improvements_damage' => 'Destroys %+d%% of the target\'s improvements.',
 
             // Population
-            'population_growth' => '%s%% population growth rate',
+            'population_growth' => '%+d%% population growth rate',
             'kill_peasants' => 'Kills %1$s%% of the target\'s peasants.',
-            'peasants_converted' => '%s%% peasants killed in Mass Graves',
+            'peasants_converted' => '%+d%% peasants killed in Mass Graves',
 
             // Resources
             'destroy_resource' => 'Destroys %2$s%% of the target\'s %1$s.',
@@ -165,35 +165,35 @@ class SpellHelper
             'peasant_to_resources_conversion' => 'Sacrifice %1$s%% of your sinners for %2$s each.',
 
             // Magic
-            'damage_from_spells' => '%s%% damage from spells',
-            'chance_to_reflect_spells' => '%s%% chance to reflect spells',
+            'damage_from_spells' => '%+d%% damage from spells',
+            'chance_to_reflect_spells' => '%+d%% chance to reflect spells',
             'reveal_ops' => 'Reveals the dominion casting spells or spying on you',
-            'damage_from_fireball' => '%s%% damage from fireballs',
-            'damage_from_lightning_bolt' => '%s%% damage from lightning bolts',
-            'wizard_strength' => '%s%% wizard strength',
+            'damage_from_fireball' => '%+d%% damage from fireballs',
+            'damage_from_lightning_bolt' => '%+d%% damage from lightning bolts',
+            'wizard_strength' => '%+d%% wizard strength',
             'reset_spell_cooldowns' => 'Resets spell cooldowns.',
 
             'spreads_spell' => 'Spreads %s to any dominion which invades or is invaded by this dominion.',
 
             // Espionage
-            'disband_spies' => 'Disbands %s%% of enemy spies.',
-            'spy_strength' => '%s%% spy strength',
+            'disband_spies' => 'Disbands %+d%% of enemy spies.',
+            'spy_strength' => '%+d%% spy strength',
             'immortal_spies' => 'Spies become immortal',
-            'spy_strength_recovery' => '%s%% spy strength recovery per tick',
+            'spy_strength_recovery' => '%+d%% spy strength recovery per tick',
 
-            'gold_theft' => '%s%% gold lost to theft.',
-            'mana_theft' => '%s%% mana lost to theft.',
-            'lumber_theft' => '%s%% lumber lost to theft.',
-            'food_theft' => '%s%% food lost to theft.',
-            'ore_theft' => '%s%% ore lost to theft.',
-            'gems_theft' => '%s%% gems lost to theft.',
-            'all_theft' => '%s%% resources lost to theft',
+            'gold_theft' => '%+d%% gold lost to theft.',
+            'mana_theft' => '%+d%% mana lost to theft.',
+            'lumber_theft' => '%+d%% lumber lost to theft.',
+            'food_theft' => '%+d%% food lost to theft.',
+            'ore_theft' => '%+d%% ore lost to theft.',
+            'gems_theft' => '%+d%% gems lost to theft.',
+            'all_theft' => '%+d%% resources lost to theft',
 
             'blind_to_reptilian_spies_on_info' => 'Spies blind to Reptilian spies on information gathering ops.',
             'blind_to_reptilian_spies_on_theft' => 'Spies blind to Reptilian spies on theft.',
 
             // Conversions
-            'conversions' => '%s%% conversions',
+            'conversions' => '%+d%% conversions',
             'converts_crypt_bodies' => 'Every %1$s %2$ss raise dead a body from the crypt into one %3$s per tick.',
             'convert_enemy_casualties_to_food' => 'Enemy casualties converted to food.',
             'no_conversions' => 'No enemy units or peasants are converted.',
@@ -203,29 +203,29 @@ class SpellHelper
             'convert_peasants_to_prestige' => 'Sacrifice %1$s peasants for %2$ss prestige.',
 
             // Casualties
-            'increases_enemy_draftee_casualties' => '%s%% enemy draftee casualties',
-            'increases_enemy_casualties_on_offense' => '%s%% enemy casualties when invading',
-            'increases_enemy_casualties_on_defense' => '%s%% enemy casualties when defending',
+            'increases_enemy_draftee_casualties' => '%+d%% enemy draftee casualties',
+            'increases_enemy_casualties_on_offense' => '%+d%% enemy casualties when invading',
+            'increases_enemy_casualties_on_defense' => '%+d%% enemy casualties when defending',
 
-            'casualties' => '%s%% casualties',
-            'offensive_casualties' => '%s%% casualties suffered when invading',
-            'defensive_casualties' => '%s%% casualties suffered when defending',
+            'casualties' => '%+d%% casualties',
+            'offensive_casualties' => '%+d%% casualties suffered when invading',
+            'defensive_casualties' => '%+d%% casualties suffered when defending',
 
             // OP/DP
-            'offensive_power' => '%s%% offensive power',
-            'defensive_power' => '%s%% defensive power',
+            'offensive_power' => '%+d%% offensive power',
+            'defensive_power' => '%+d%% defensive power',
 
-            'target_defensive_power_mod' => '%s%% defensive modifiers for target',
+            'target_defensive_power_mod' => '%+d%% defensive modifiers for target',
 
-            'offensive_power_on_retaliation' => '%s%% offensive power if target recently invaded your realm',
+            'offensive_power_on_retaliation' => '%+d%% offensive power if target recently invaded your realm',
 
-            'defensive_power_vs_insect_swarm' => '%s%% defensive power if attacker has Insect Swarm',
-            'offensive_power_vs_insect_swarm' => '%s%% offensive power if target has Insect Swarm',
+            'defensive_power_vs_insect_swarm' => '%+d%% defensive power if attacker has Insect Swarm',
+            'offensive_power_vs_insect_swarm' => '%+d%% offensive power if target has Insect Swarm',
 
             'reduces_target_raw_defense_from_land' => 'Targets raw defensive power lowered by %1$s%% for every %2$s%% of your own %3$s, max %4$s%% reduction.',# 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
 
-            'increases_enemy_casualties_on_offense_from_wizard_ratio' => 'Enemy casualties on offense increased by %s%% for every 1 wizard ratio.',
-            'increases_enemy_casualties_on_defense_from_wizard_ratio' => 'Enemy casualties on defense increased by %s%% for every 1 wizard ratio.',
+            'increases_enemy_casualties_on_offense_from_wizard_ratio' => 'Enemy casualties on offense increased by %+d%% for every 1 wizard ratio.',
+            'increases_enemy_casualties_on_defense_from_wizard_ratio' => 'Enemy casualties on defense increased by %+d%% for every 1 wizard ratio.',
 
             'immune_to_temples' => 'Defensive modifiers are not affected by Temples and any other defensive modifier reductions.',
 
@@ -235,18 +235,18 @@ class SpellHelper
             'defense_from_devotion' => '%2$s%% offensive power for every tick devoted to %1$s (max %3$s%%).',# 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
 
             // Improvements
-            'invest_bonus' => '%s%% improvement points from investments made while spell is active',
-            'improvements' => '%s%% improvements',
+            'invest_bonus' => '%+d%% improvement points from investments made while spell is active',
+            'improvements' => '%+d%% improvements',
 
             // Explore
-            'land_discovered' => '%s%% land discovered on successful invasions',
+            'land_discovered' => '%+d%% land discovered on successful invasions',
             'stop_land_generation' => 'Stops land generation from units',
             'cannot_explore' => 'Cannot explore',
 
             // Buildings and Land
             'no_land_discovered' => 'No land discovered on invasions.',
-            'construction_cost' => '%s%% construction costs',
-            'rezone_cost' => '%s%% rezoning costs',
+            'construction_cost' => '%+d%% construction costs',
+            'rezone_cost' => '%+d%% rezoning costs',
 
             // Special
             'opens_portal' => 'Opens a portal required to teleport otherwordly units to enemy lands',
@@ -697,7 +697,7 @@ class SpellHelper
                         foreach($nestedValue as $key => $value)
                         {
                             $nestedValue[$key] = ucwords(str_replace('level','level ',str_replace('_', ' ',$value)));
-                            $perkValue[$key] = (is_numeric($value) and $value > 0) ? '+' . $value : $value;
+                            #$perkValue[$key] = (is_numeric($value) and $value > 0) ? '+' . $value : $value;
                         }
 
                         $effectStrings[] = vsprintf($spellEffects[$perk->key], $nestedValue);
@@ -709,7 +709,7 @@ class SpellHelper
                     foreach($perkValue as $key => $value)
                     {
                         $perkValue[$key] = ucwords(str_replace('_', ' ',$value));
-                        $perkValue[$key] = (is_numeric($value) and $value > 0) ? '+' . $value : $value;
+                        #$perkValue[$key] = (is_numeric($value) and $value > 0) ? '+' . $value : $value;
                     }
 
                     $effectStrings[] = vsprintf($spellEffects[$perk->key], $perkValue);
@@ -719,7 +719,7 @@ class SpellHelper
             {
                 $perkValue = str_replace('_', ' ',ucwords($perkValue));
 
-                $perkValue = $perkValue > 0 ? '+' . $perkValue : $perkValue;
+                #$perkValue = $perkValue > 0 ? '+' . $perkValue : $perkValue;
                 $effectStrings[] = sprintf($spellEffects[$perk->key], $perkValue);
             }
         }

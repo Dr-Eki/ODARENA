@@ -2,9 +2,9 @@
 
 namespace OpenDominion\Helpers;
 
-use Illuminate\Support\Collection;
+#use Illuminate\Support\Collection;
 use OpenDominion\Models\Race;
-use OpenDominion\Models\Resource;
+#use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
 
 use OpenDominion\Calculators\Dominion\LandCalculator;

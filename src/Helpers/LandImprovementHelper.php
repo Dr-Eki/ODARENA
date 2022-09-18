@@ -10,8 +10,8 @@ class LandImprovementHelper
     {
         $perks =
         [
-            'offensive_power_mod' => ['%s%% offensive power', ' for every 1%% of this land type.'],
-            'defensive_power_mod' => ['%s%% defensive power', ' for every 1%% of this land type.'],
+            'offensive_power_mod' => ['%+d%% offensive power', ' for every 1%% of this land type.'],
+            'defensive_power_mod' => ['%+d%% defensive power', ' for every 1%% of this land type.'],
 
             'gold_production_raw' => ['%s gold/tick', ' per acre.'],
             'food_production_raw' => ['%s food/tick', ' per acre.'],
@@ -26,19 +26,19 @@ class LandImprovementHelper
             'yak_production_raw' => ['%s yaks/tick', ' per acre.'],
 
 
-            'gold_production_mod' => ['%s%% gold production', ' for every 1%% of this land type.'],
-            'food_production_mod' => ['%s%% food production', ' for every 1%% of this land type.'],
-            'ore_production_mod' => ['%s%% ore production', ' for every 1%% of this land type.'],
-            'lumber_production_mod' => ['%s%% lumber production', ' for every 1%% of this land type.'],
-            'mana_production_mod' => ['%s%% mana production', ' for every 1%% of this land type.'],
-            'gems_production_mod' => ['%s%% gems production', ' for every 1%% of this land type.'],
-            'horse_production_mod' => ['%s%% horse taming', ' for every 1%% of this land type.'],
-            'mud_production_mod' => ['%s%% mud production', ' for every 1%% of this land type.'],
-            'swamp_gas_production_mod' => ['%s%% swamp gas production', ' for every 1%% of this land type.'],
+            'gold_production_mod' => ['%+d%% gold production', ' for every 1%% of this land type.'],
+            'food_production_mod' => ['%+d%% food production', ' for every 1%% of this land type.'],
+            'ore_production_mod' => ['%+d%% ore production', ' for every 1%% of this land type.'],
+            'lumber_production_mod' => ['%+d%% lumber production', ' for every 1%% of this land type.'],
+            'mana_production_mod' => ['%+d%% mana production', ' for every 1%% of this land type.'],
+            'gems_production_mod' => ['%+d%% gems production', ' for every 1%% of this land type.'],
+            'horse_production_mod' => ['%+d%% horse taming', ' for every 1%% of this land type.'],
+            'mud_production_mod' => ['%+d%% mud production', ' for every 1%% of this land type.'],
+            'swamp_gas_production_mod' => ['%+d%% swamp gas production', ' for every 1%% of this land type.'],
 
-            'xp_generation_mod' => ['%s%% XP generation', ' for every 1%% of this land type.'],
+            'xp_generation_mod' => ['%+d%% XP generation', ' for every 1%% of this land type.'],
 
-            'max_population' => ['%s%% population', ' for every 1%% of this land type.'],
+            'max_population' => ['%+d%% population', ' for every 1%% of this land type.'],
         ];
 
         $string = $perks[$perkKey][0];

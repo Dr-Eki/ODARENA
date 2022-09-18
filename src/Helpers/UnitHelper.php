@@ -113,8 +113,8 @@ class UnitHelper
             'kills_displaced_peasants' => 'Kills own displaced peasants.',
 
             // OP/DP related
-            'offensive_power_mod' => 'Offensive power increased by %s%% for each unit trained.',
-            'defensive_power_mod' => 'Defensive power increased by %s%% for each unit trained.',
+            'offensive_power_mod' => '%+d%% offensive power for each unit trained.',
+            'defensive_power_mod' => '%+d%% defensive power for each unit trained.',
 
             'offensive_power_vs_no_deity' => '+%s offensive power vs dominions with no deity.',
             'defensive_power_vs_no_deity' => '+%s defensive power vs dominions with no deity.',
@@ -238,7 +238,7 @@ class UnitHelper
 
             'protects_resource_from_theft' => 'Protects %2$s %1$s from theft when at home.',
 
-            'theft_carry_capacity' => '+%s%% max theft carry.',
+            'theft_carry_capacity' => '+%+d%% max theft carry.',
 
             // Wizard related
             'counts_as_wizard' => 'Counts as %s wizard.',
@@ -252,21 +252,21 @@ class UnitHelper
             'wizard_from_title' => 'Counts as additional %2$s of a wizard (offense and defense) if ruled by a %1$s.',
 
             // Casualties and death related
-            'casualties' => '%s%% casualties.',
-            'casualties_on_defense' => '%s%% casualties on defense.',
-            'casualties_on_offense' => '%s%% casualties on offense.',
+            'casualties' => '%+d%% casualties.',
+            'casualties_on_defense' => '%+d%% casualties on defense.',
+            'casualties_on_offense' => '%+d%% casualties on offense.',
 
-            'casualties_from_wizard_ratio' => '%s%% * Wizard Ratio casualties.',
+            'casualties_from_wizard_ratio' => '%+d%% * Wizard Ratio casualties.',
             'immortal_from_wpa' => 'Immortal if Wizard Ratio is at least %s on offense (if invading) or on defense (if defending).',
 
-            'casualties_from_spy_ratio' => '%s%% * Spy Ratio casualties.',
+            'casualties_from_spy_ratio' => '%+d%% * Spy Ratio casualties.',
             'immortal_from_spa' => 'Immortal if Spy Ratio is at least %s on offense (if invading) or on defense (if defending).',
 
-            'casualties_on_victory' => '%s%% casualties when successfully invading.',
-            'casualties_on_fending_off' => '%s%% casualties when successfully fending off an invasion.',
+            'casualties_on_victory' => '%+d%% casualties when successfully invading.',
+            'casualties_on_fending_off' => '%+d%% casualties when successfully fending off an invasion.',
 
-            'fixed_casualties' => 'Always suffers %s%% casualties.',
-            'fixed_casualties_if_overwhelmed' => 'Always suffers %s%% casualties if overwhelmed.',
+            'fixed_casualties' => 'Always suffers %d%% casualties.',
+            'fixed_casualties_if_overwhelmed' => 'Always suffers %+d%% casualties if overwhelmed.',
             'casualties_from_title' => '%2$s%% fewer casualties if ruled by a %1$s.',
 
             'immortal' => 'Immortal in combat.',
@@ -274,8 +274,6 @@ class UnitHelper
             'spirit_immortal' => 'Immortal on offense and on succesful defense. Dies if successfully invaded.',
             'immortal_on_victory' => 'Immortal on invasion if victorious.',
             'immortal_on_fending_off' => 'Immortal if successfully fending off invader.',
-
-            'immortal_vs_land_range' => 'Near immortal when attacking dominions %s%%+ of your size, except when overwhelmed on attack.',
 
             #'kills_immortal' => 'Kills immortal units.',
 
@@ -445,22 +443,22 @@ class UnitHelper
             'housing_count' => 'Takes up %1$s housing.',
 
             // Other
-            'increases_morale_by_population' => 'Increases base morale by %s%% for every 1%% of population.',
-            'increases_morale_fixed' => 'Increases base morale by %s%%.',
-            'increases_morale_gains' => 'Increases morale gains by %s%% for every 1%% of units sent.',
-            'increases_morale_gains_fixed' => 'Increases morale gains by %s%% each of this unit sent.',
+            'increases_morale_by_population' => '%+d%% base morale for every 1%% of population.',
+            'increases_morale_fixed' => '%+d%% base morale.',
+            'increases_morale_gains' => '%+d%% morale gains for every 1%% of units sent.',
+            'increases_morale_gains_fixed' => 'Increases morale gains by %+d%% each of this unit sent.',
 
-            'increases_prestige_interest' => 'Increases prestige interest by %s%% for each of this unit.',
+            'increases_prestige_interest' => '%+d%% prestige interest for each of this unit.',
             
-            'lowers_target_morale_on_successful_invasion' => 'On successful invasion, lowers target\'s morale by %s%%.',
+            'lowers_target_morale_on_successful_invasion' => 'On successful invasion, lowers target\'s morale by %d%%.',
 
-            'increases_prestige_gains' => 'Increases prestige gains by %s%% for every 1%% of units sent.',
+            'increases_prestige_gains' => '%+d%% prestige gains for every 1%% of units sent.',
 
             'stuns_units' => 'Stuns some units with up to %1$s DP for %2$s ticks, whereafter the units return unharmed.',
 
             'gold_improvements' => 'Increases improvement points from gold by (([Units]/[Land])/100)%%.',
 
-            'cost_increase_to_train_per_unit' => 'Cost increased by %s%% each.',
+            'cost_increase_to_train_per_unit' => 'Cost increased by %d%% each.',
 
             // Decree
             'decree_state_required_to_send' => '%1$s decree must be issued in %2$s state to send this unit.',

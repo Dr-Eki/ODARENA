@@ -18,14 +18,14 @@ class ArtefactHelper
         $artefactEffects = [
 
             // Production / Resources
-            'ore_production_mod' => '%s%% ore production',
-            'mana_production_mod' => '%s%% mana production',
-            'lumber_production_mod' => '%s%% lumber production',
-            'food_production_mod' => '%s%% food production',
-            'gems_production_mod' => '%s%% gem production',
-            'gold_production_mod' => '%s%% gold production',
-            'boat_production_mod' => '%s%% boat production',
-            'xp_generation_mod' => '%s%% XP generation',
+            'ore_production_mod' => '%+d%% ore production',
+            'mana_production_mod' => '%+d%% mana production',
+            'lumber_production_mod' => '%+d%% lumber production',
+            'food_production_mod' => '%+d%% food production',
+            'gems_production_mod' => '%+d%% gem production',
+            'gold_production_mod' => '%+d%% gold production',
+            'boat_production_mod' => '%+d%% boat production',
+            'xp_generation_mod' => '%+d%% XP generation',
 
             'no_gold_production' => 'No gold production or revenue',
             'no_ore_production' => 'No ore production',
@@ -35,120 +35,120 @@ class ArtefactHelper
             'no_boat_production' => 'No boat production',
             'no_gems_production' => 'No gem production',
 
-            'food_consumption_mod' => '%s%% food consumption',
+            'food_consumption_mod' => '%+d%% food consumption',
 
-            'exchange_rate' => '%s%% exchange rates',
+            'exchange_rate' => '%+d%% exchange rates',
 
-            'xp_gains' => '%s%% XP per acre gained',
+            'xp_gains' => '%+d%% XP per acre gained',
 
             // Military
-            'drafting' => '+%s%% drafting',
+            'drafting' => '+%+d%% drafting',
             'training_time_raw' => '%s ticks training time for military units (does not include Spies, Wizards, or Archmages)',
-            'training_costs' => '+%s%% military unit training costs',
-            'unit_gold_costs' => '%s%% military unit gold costs',
-            'unit_ore_costs' => '%s%% military unit ore costs',
-            'unit_lumber_costs' => '%s%% military unit lumber costs',
+            'training_costs' => '+%+d%% military unit training costs',
+            'unit_gold_costs' => '%+d%% military unit gold costs',
+            'unit_ore_costs' => '%+d%% military unit ore costs',
+            'unit_lumber_costs' => '%+d%% military unit lumber costs',
 
             'faster_return' => 'Units return %s ticks faster from invasions',
 
             'can_kill_immortal' => 'Can kill some immortal units.',
 
-            'unit_gold_costs' => '%s%% unit gold costs.',
-            'unit_ore_costs' => '%s%% unit ore costs.',
-            'unit_lumber_costs' => '%s%% unit lumber costs.',
-            'unit_mana_costs' => '%s%% unit mana costs.',
-            'unit_blood_costs' => '%s%% unit blood costs.',
-            'unit_food_costs' => '%s%% unit food costs.',
+            'unit_gold_costs' => '%+d%% unit gold costs.',
+            'unit_ore_costs' => '%+d%% unit ore costs.',
+            'unit_lumber_costs' => '%+d%% unit lumber costs.',
+            'unit_mana_costs' => '%+d%% unit mana costs.',
+            'unit_blood_costs' => '%+d%% unit blood costs.',
+            'unit_food_costs' => '%+d%% unit food costs.',
 
-            'ship_unit_costs' => '%s%% costs for ship units.',
-            'machine_unit_costs' => '%s%% costs for ship units.',
+            'ship_unit_costs' => '%+d%% costs for ship units.',
+            'machine_unit_costs' => '%+d%% costs for ship units.',
 
-            'prestige_gains' => '%s%% prestige gains.',
-            'prestige_gains_on_retaliation' => '%s%% prestige gains on retaliation.',
+            'prestige_gains' => '%+d%% prestige gains.',
+            'prestige_gains_on_retaliation' => '%+d%% prestige gains on retaliation.',
 
             'cannot_send_expeditions' => 'Cannot send expeditions.',
 
-            'reduced_conversions' => '%s%% conversions.',
+            'reduced_conversions' => '%+d%% conversions.',
 
-            'crypt_decay' => '%s%% crypt decay.',
+            'crypt_decay' => '%+d%% crypt decay.',
 
             // Population
-            'population_growth' => '%s%% population growth rate',
-            'max_population' => '%s%% population',
+            'population_growth' => '%+d%% population growth rate',
+            'max_population' => '%+d%% population',
 
             // Magic
-            'damage_from_spells' => '%s%% damage from spells',
-            'chance_to_reflect_spells' => '%s%% chance to reflect spells',
+            'damage_from_spells' => '%+d%% damage from spells',
+            'chance_to_reflect_spells' => '%+d%% chance to reflect spells',
             'reveal_ops' => 'Reveals the dominion casting artefacts or spying on you',
 
-            'wizard_strength' => '%s%% wizard strength',
-            'wizard_cost' => '%s%% wizard cost',
+            'wizard_strength' => '%+d%% wizard strength',
+            'wizard_cost' => '%+d%% wizard cost',
 
-            'base_wizard_strength' => '%s%% base wizard strength.',
+            'base_wizard_strength' => '%+d%% base wizard strength.',
 
-            'sorcery_spell_duration' => '%s%% sorcery spell duration.',
+            'sorcery_spell_duration' => '%+d%% sorcery spell duration.',
 
             // Espionage
-            'spy_strength' => '%s%% spy strength',
+            'spy_strength' => '%+d%% spy strength',
             'immortal_spies' => 'Spies become immortal',
-            'spy_strength_recovery' => '%s%% spy strength recovery per tick',
+            'spy_strength_recovery' => '%+d%% spy strength recovery per tick',
 
-            'gold_theft' => '%s%% gold lost to theft.',
-            'mana_theft' => '%s%% mana lost to theft.',
-            'lumber_theft' => '%s%% lumber lost to theft.',
-            'ore_theft' => '%s%% ore lost to theft.',
-            'gems_theft' => '%s%% gems lost to theft.',
-            'all_theft' => '%s%% resources lost to theft',
+            'gold_theft' => '%+d%% gold lost to theft.',
+            'mana_theft' => '%+d%% mana lost to theft.',
+            'lumber_theft' => '%+d%% lumber lost to theft.',
+            'ore_theft' => '%+d%% ore lost to theft.',
+            'gems_theft' => '%+d%% gems lost to theft.',
+            'all_theft' => '%+d%% resources lost to theft',
 
-            'gold_stolen' => '%s%% gold theft.',
-            'mana_stolen' => '%s%% mana theft.',
-            'lumber_stolen' => '%s%% lumber theft.',
-            'ore_stolen' => '%s%% ore  theft.',
-            'gems_stolen' => '%s%% gem theft.',
-            'amount_stolen' => '%s%% resource theft',
+            'gold_stolen' => '%+d%% gold theft.',
+            'mana_stolen' => '%+d%% mana theft.',
+            'lumber_stolen' => '%+d%% lumber theft.',
+            'ore_stolen' => '%+d%% ore  theft.',
+            'gems_stolen' => '%+d%% gem theft.',
+            'amount_stolen' => '%+d%% resource theft',
 
             // Casualties
-            'casualties' => '%s%% casualties',
-            'offensive_casualties' => '%s%% casualties suffered when invading',
-            'defensive_casualties' => '%s%% casualties suffered when defending',
+            'casualties' => '%+d%% casualties',
+            'offensive_casualties' => '%+d%% casualties suffered when invading',
+            'defensive_casualties' => '%+d%% casualties suffered when defending',
 
-            'increases_enemy_casualties' => '%s%% enemy casualties',
-            'increases_enemy_casualties_on_defense' => '%s%% enemy casualties when defending',
-            'increases_enemy_casualties_on_offense' => '%s%% enemy casualties when invading',
+            'increases_enemy_casualties' => '%+d%% enemy casualties',
+            'increases_enemy_casualties_on_defense' => '%+d%% enemy casualties when defending',
+            'increases_enemy_casualties_on_offense' => '%+d%% enemy casualties when invading',
 
 
-            'increases_enemy_draftee_casualties' => '%s%% enemy draftee casualties',
+            'increases_enemy_draftee_casualties' => '%+d%% enemy draftee casualties',
 
             // OP/DP
-            'offensive_power' => '%s%% offensive power',
-            'defensive_power' => '%s%% defensive power',
+            'offensive_power' => '%+d%% offensive power',
+            'defensive_power' => '%+d%% defensive power',
 
-            'governor_offensive_power' => '%s%% offensive power for realm governor.',
+            'governor_offensive_power' => '%+d%% offensive power for realm governor.',
 
-            'offensive_power_on_retaliation' => '%s%% offensive power if target recently invaded your realm',
+            'offensive_power_on_retaliation' => '%+d%% offensive power if target recently invaded your realm',
 
-            'target_defensive_power_mod' => '%s%% defensive modifier for target',
+            'target_defensive_power_mod' => '%+d%% defensive modifier for target',
 
             // Improvements
-            'improvements' => '%s%% improvements',
-            'improvement_points' => '%s%% improvement points',
+            'improvements' => '%+d%% improvements',
+            'improvement_points' => '%+d%% improvement points',
 
-            'lumber_improvement_points' => '%s%% lumber improvement points',
-            'gems_improvement_points' => '%s%% lumber improvement points',
-            'ore_improvement_points' => '%s%% lumber improvement points',
+            'lumber_improvement_points' => '%+d%% lumber improvement points',
+            'gems_improvement_points' => '%+d%% lumber improvement points',
+            'ore_improvement_points' => '%+d%% lumber improvement points',
 
             // Land and Construction
-            'land_discovered' => '%s%% land discovered on successful invasions',
-            'construction_cost' => '%s%% construction costs',
-            'water_construction_cost' => '%s%% construction costs on water',
-            'rezone_cost' => '%s%% rezoning costs',
+            'land_discovered' => '%+d%% land discovered on successful invasions',
+            'construction_cost' => '%+d%% construction costs',
+            'water_construction_cost' => '%+d%% construction costs on water',
+            'rezone_cost' => '%+d%% rezoning costs',
             'cannot_explore' => 'Cannot explore',
 
-            'conquered_land_rezoned_to_water' => '%s%% conquered land rezoned to water',
+            'conquered_land_rezoned_to_water' => '%+d%% conquered land rezoned to water',
 
             // Special, one-off
 
-            'water_buildings_effect' => '%s%% effect from water buildings (all perks and housing)',
+            'water_buildings_effect' => '%+d%% effect from water buildings (all perks and housing)',
         ];
 
         foreach ($artefact->perks as $perk)

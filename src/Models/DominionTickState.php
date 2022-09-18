@@ -42,7 +42,6 @@ class DominionTickState extends AbstractModel
         'wizard_strength' => 'integer',
         'xp' => 'integer',
         'buildings' => 'array',
-        'cooldown' => 'array',
         'improvements' => 'array',
         'land' => 'array',
         'resources' => 'array',
