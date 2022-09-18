@@ -1344,8 +1344,6 @@ class TickService
      */
     public function tickManually(Dominion $dominion)
     {
-
-
         if($this->dominionStateService->saveDominionState($dominion))
         {
             Log::info(sprintf(
