@@ -1233,8 +1233,6 @@ class TickService
                     $availableCapacity = max(0, $maxCapacity - $usedCapacity);
     
                     $unitsToSummon = floor(min($unitSummoning, $availableCapacity));
-                    
-                    $tick->crypt_bodies_spent += $unitsToSummon;
                 }
                 # If no capacity limit
                 else
@@ -1243,7 +1241,7 @@ class TickService
                 }
 
                 $unitsToSummon = min($unitsToSummon, $this->resourceCalculator->getRealmAmount($dominion->realm, 'body'));
-
+                $tick->crypt_bodies_spent += $unitsToSummon;
             }
 
             # Because you never know...
