@@ -13,31 +13,33 @@ class CreateDominionTickStates extends Migration
      */
     public function up()
     {
-        Schema::create('dominion_tick_states', function (Blueprint $table) {
+        Schema::create('dominion_states', function (Blueprint $table) {
             $table->id();
             
             $table->integer('dominion_id')->unsigned();
             $table->integer('dominion_protection_tick');
+            $table->string('type')->default('tick');
 
-            $table->integer('daily_land')->unsigned();
-            $table->integer('daily_gold')->unsigned();
-            $table->integer('monarchy_vote_for_dominion_id')->unsigned();
-            $table->integer('tick_voted')->unsigned();
-            $table->text('most_recent_improvement_resource');
-            $table->text('most_recent_exchange_from');
-            $table->text('most_recent_exchange_to');
-            $table->text('notes');
-            $table->text('deity');
-            $table->integer('devotion_ticks')->unsigned();
-            $table->integer('draft_rate')->unsigned();
-            $table->integer('morale')->unsigned();
-            $table->integer('peasants')->unsigned();
-            $table->integer('peasants_last_hour');
-            $table->decimal('prestige', 16, 8);
-            $table->integer('xp')->unsigned();
-            $table->integer('spy_strength')->unsigned();
-            $table->integer('wizard_strength')->unsigned();
-            $table->integer('protection_ticks')->unsigned();
+            $table->integer('daily_land')->unsigned()->default(0);
+            $table->integer('daily_gold')->unsigned()->default(0);
+            $table->integer('monarchy_vote_for_dominion_id')->unsigned()->nullable();
+            $table->integer('tick_voted')->unsigned()->nullable();
+            $table->text('most_recent_improvement_resource')->default('gems');
+            $table->text('most_recent_exchange_from')->default('gold');
+            $table->text('most_recent_exchange_to')->default('gold');
+            $table->text('notes')->nullable();
+            $table->text('deity')->nullable();
+            $table->integer('devotion_ticks')->unsigned()->default(0);
+            $table->integer('draft_rate')->unsigned()->default(50);
+            $table->integer('morale')->unsigned()->default(100);
+            $table->integer('peasants')->unsigned()->default(0);
+            $table->integer('peasants_last_hour')->default(0);
+            $table->decimal('prestige', 16, 8)->default(600.0);
+            $table->integer('xp')->unsigned()->default(0);
+            $table->integer('spy_strength')->unsigned()->default(100);
+            $table->integer('wizard_strength')->unsigned()->default(100);
+            $table->integer('ticks')->default(0);
+            $table->integer('protection_ticks')->unsigned()->default(0);
 
             $table->text('buildings')->nullable();
             $table->text('cooldown')->nullable();
@@ -52,6 +54,7 @@ class CreateDominionTickStates extends Migration
             $table->timestamps();
 
             $table->foreign('dominion_id')->references('id')->on('dominions');
+            $table->unique(['dominion_id', 'dominion_protection_tick']);
         });
     }
 
@@ -62,6 +65,6 @@ class CreateDominionTickStates extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dominion_tick_states');
+        Schema::dropIfExists('dominion_states');
     }
 }

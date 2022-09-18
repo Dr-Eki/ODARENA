@@ -3,13 +3,14 @@
 namespace OpenDominion\Services\Dominion;
 
 use Auth;
+use Symfony\Component\Yaml\Yaml;
 
 use OpenDominion\Models\Advancement;
 use OpenDominion\Models\Decree;
 use OpenDominion\Models\DecreeState;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionDecreeState;
-use OpenDominion\Models\DominionTickState;
+use OpenDominion\Models\DominionState;
 
 use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\ImprovementHelper;
@@ -28,12 +29,12 @@ use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 
-use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\ProtectionService;
+use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\StatsService;
 
 
-class DominionTickStateService
+class DominionStateService
 {
 
     public function __construct()
@@ -60,24 +61,62 @@ class DominionTickStateService
         $this->queueService = app(QueueService::class);
     }
 
-    public function saveDominionTickState(Dominion $dominion)
+    public function saveDominionState(Dominion $dominion): bool
     {
-        $dominionTickState = $this->generateDominionTickState($dominion);
+        $dominionState = $this->generateDominionState($dominion);
 
-        DominionTickState::create();
+        $stateData = Yaml::parse($dominionState, Yaml::PARSE_OBJECT_FOR_MAP);
+
+        $dominionState = DominionState::updateOrCreate(['dominion_id' => $dominion->id, 'dominion_protection_tick' => (96-$dominion->protection_ticks)],
+        [
+            'dominion_id' => $dominion->id,
+            'dominion_protection_tick' => (int)$dominion->round->tick,
+            
+            'daily_land' => object_get($stateData, 'daily_land', 0),
+            'daily_gold' => object_get($stateData, 'daily_gold', 0),
+            'monarchy_vote_for_dominion_id' => object_get($stateData, 'monarchy_vote_for_dominion_id', null),
+            'tick_voted' => object_get($stateData, 'tick_voted', null),
+            'most_recent_improvement_resource' => object_get($stateData, 'most_recent_improvement_resource', 'gems'),
+            'most_recent_exchange_from' => object_get($stateData, 'most_recent_exchange_from', 'gold'),
+            'most_recent_exchange_to' => object_get($stateData, 'most_recent_exchange_from', 'gold'),
+            'notes' => object_get($stateData, 'notes', null),
+            'deity' => object_get($stateData, 'deity', null),
+            'devotion_ticks' => object_get($stateData, 'devotion_ticks'),
+            'draft_rate' => object_get($stateData, 'draft_rate'),
+            'morale' => object_get($stateData, 'morale'),
+            'peasants' => object_get($stateData, 'peasants'),
+            'peasants_last_hour' => object_get($stateData, 'peasants_last_hour'),
+            'prestige' => object_get($stateData, 'prestige'),
+            'xp' => object_get($stateData, 'xp'),
+            'spy_strength' => object_get($stateData, 'spy_strength'),
+            'wizard_strength' => object_get($stateData, 'wizard_strength'),
+            'protection_ticks' => object_get($stateData, 'protection_ticks'),
+            'ticks' => object_get($stateData, 'ticks'),
+    
+            'buildings' => object_get($stateData, 'buildings', []),
+            'improvements' => object_get($stateData, 'improvements', []),
+            'land' => object_get($stateData, 'land', []),
+            'resources' => object_get($stateData, 'resources', []),
+            'spells' => object_get($stateData, 'spells', []),
+            'advancements' => object_get($stateData, 'advancements', []),
+            'decree_states' => object_get($stateData, 'decree_states', []),
+            'units' => object_get($stateData, 'units', []),
+            'queues' => object_get($stateData, 'queues', []),
+        ]);
+
+        return (is_a($dominionState, 'OpenDominion\Models\DominionState') ? true : false);
     }
 
-    public function restoreDominionTickState(DominionTickState $dominionTickState)
+    public function restoreDominionState(DominionState $dominionState)
     {
         //
     }
 
-    protected function generateDominionTickState(Dominion $dominion)
+    protected function generateDominionState(Dominion $dominion)
     {
 
         $basics = sprintf(
 "
-tick: %s
 daily_land: %s
 daily_gold: %s
 monarchy_vote_for_dominion_id: %s
@@ -97,10 +136,10 @@ xp: %s
 spy_strength: %s
 wizard_strength: %s
 protection_ticks: %s
+ticks: %s
 \n",
-            $dominion->round->tick,
-            $dominion->daily_land,
-            $dominion->daily_gold,
+            (int)$dominion->daily_land,
+            (int)$dominion->daily_gold,
             $dominion->monarchy_vote_for_dominion_id,
             $dominion->tick_voted,
             $dominion->most_recent_improvement_resource,
@@ -108,16 +147,17 @@ protection_ticks: %s
             $dominion->most_recent_exchange_to,
             $dominion->notes,
             $dominion->hasDeity() ? $dominion->deity->name : null,
-            $dominion->hasDeity() ? $dominion->devotion->duration : 0,
-            $dominion->draft_rate,
-            $dominion->morale,
-            $dominion->peasants,
+            $dominion->hasDeity() ? (int)$dominion->devotion->duration : (int)0,
+            (int)$dominion->draft_rate,
+            (int)$dominion->morale,
+            (int)$dominion->peasants,
             $dominion->peasants_last_hour,
-            $dominion->prestige,
+            (float)$dominion->prestige,
             $dominion->xp,
-            $dominion->spy_strength,
-            $dominion->wizard_strength,
-            $dominion->protection_ticks,
+            (int)$dominion->spy_strength,
+            (int)$dominion->wizard_strength,
+            (int)$dominion->protection_ticks,
+            (int)$dominion->ticks,
           );
 
         $buildings = "\nbuildings:\n";

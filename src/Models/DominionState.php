@@ -18,11 +18,11 @@ namespace OpenDominion\Models;
  * @method static \Illuminate\Database\Eloquent\Builder|\OpenDominion\Models\Race query()
  * @mixin \Eloquent
  */
-class DominionTickState extends AbstractModel
+class DominionState extends AbstractModel
 {
+    protected $table = 'dominion_states';
 
     protected $casts = [
-        'tick' => 'integer',
         'daily_land' => 'integer',
         'daily_gold' => 'integer',
         'monarchy_vote_for_dominion_id' => 'integer',
@@ -42,6 +42,7 @@ class DominionTickState extends AbstractModel
         'spy_strength' => 'integer',
         'wizard_strength' => 'integer',
         'protection_ticks' => 'integer',
+        'ticks' => 'integer',
 
         'buildings' => 'array',
         'improvements' => 'array',

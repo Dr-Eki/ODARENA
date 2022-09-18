@@ -44,6 +44,7 @@ use OpenDominion\Models\Dominion\Tick;
 
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
+use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\InsightService;
 use OpenDominion\Services\Dominion\ProtectionService;
 use Throwable;
@@ -85,6 +86,7 @@ class TickService
         $this->roundHelper = app(RoundHelper::class);
 
         $this->artefactService = app(ArtefactService::class);
+        $this->dominionStateService = app(DominionStateService::class);
         $this->deityService = app(DeityService::class);
         $this->insightService = app(InsightService::class);
         $this->protectionService = app(ProtectionService::class);
@@ -1332,8 +1334,6 @@ class TickService
         }
 
         $tick->save();
-
-        
     }
 
     # SINGLE DOMINION TICKS, MANUAL TICK
@@ -1422,6 +1422,23 @@ class TickService
             $dominion->name,
             number_format($this->now->diffInMilliseconds(now()))
         ));
+
+        if($this->dominionStateService->saveDominionState($dominion))
+        {
+            Log::info(sprintf(
+                'Dominion %s (# %s) state saved.',
+                $dominion->name,
+                $dominion->realm->number
+            ));
+        }
+        else
+        {
+            Log::error(sprintf(
+                'Could not save state for %s (# %s) state saved.',
+                $dominion->name,
+                $dominion->realm->number
+            ));
+        }
 
         $this->now = now();
     }
