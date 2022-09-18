@@ -1423,6 +1423,7 @@ class TickService
             number_format($this->now->diffInMilliseconds(now()))
         ));
 
+        /*
         if($this->dominionStateService->saveDominionState($dominion))
         {
             Log::info(sprintf(
@@ -1439,6 +1440,7 @@ class TickService
                 $dominion->realm->number
             ));
         }
+        */
 
         $this->now = now();
     }
