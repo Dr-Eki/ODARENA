@@ -1233,6 +1233,8 @@ class TickService
                     $availableCapacity = max(0, $maxCapacity - $usedCapacity);
     
                     $unitsToSummon = floor(min($unitSummoning, $availableCapacity));
+                    
+                    $tick->crypt_bodies_spent += $unitsToSummon;
                 }
                 # If no capacity limit
                 else
@@ -1248,7 +1250,6 @@ class TickService
             $unitsToSummon = intval(max($unitsToSummon, 0));
 
             $tick->{'generated_unit'.$slot} += $unitsToSummon;
-            $tick->crypt_bodies_spent += $unitsToSummon;
         }
 
         # Passive conversions
