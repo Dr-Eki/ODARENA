@@ -2361,7 +2361,7 @@ class InvadeActionService
                 $this->queueService->queueResources(
                     'invasion',
                     $converter,
-                    [$resourceKey => max(0, $resourceAmount)],
+                    [('resource_'.$resourceKey) => max(0, $resourceAmount)],
                     12
                 );
             }
@@ -2372,7 +2372,7 @@ class InvadeActionService
         {
             foreach($this->invasionResult['defender']['resource_conversions'] as $resourceKey => $resourceAmount)
             {
-                $this->resourceService->updateResources($converter, [$resourceKey => max(0, $resourceAmount)]);
+                $this->resourceService->updateResources($converter, [('resource_'.$resourceKey) => max(0, $resourceAmount)]);
             }
         }
     }
