@@ -19,74 +19,74 @@ class DecreeHelper
 
         $perkTypeStrings = [
             # Housing and Population
-            'max_population' => '%+F%% population.',
-            'population_growth' => '%+F%% population growth rate.',
-            'drafting' => '%+F%% drafting.',
-            'military_housing' => '%+F%% military housing.',
+            'max_population' => '%s%% population.',
+            'population_growth' => '%s%% population growth rate.',
+            'drafting' => '%s%% drafting.',
+            'military_housing' => '%s%% military housing.',
 
             # Production
-            'gold_production_mod' => '%+F%% gold production.',
-            'food_production_mod' => '%+F%% food production.',
-            'lumber_production_mod' => '%+F%% lumber production.',
-            'ore_production_mod' => '%+F%% ore production.',
-            'gems_production_mod' => '%+F%% gem production.',
-            'mana_production_mod' => '%+F%% mana production.',
-            'pearls_production_mod' => '%+F%% pearl production.',
-            'blood_production_mod' => '%+F%% blood production.',
-            'horse_production_mod' => '%+F%% horse production.',
-            'mud_production_mod' => '%+F%% mud production.',
-            'swamp gas_production_mod' => '%+F%% swamp gas production.',
-            'xp_generation_mod' => '%+F%% XP generation.',
-            'xp_gains' => '%+F%% XP gains.',
+            'gold_production_mod' => '%+d%% gold production.',
+            'food_production_mod' => '%+d%% food production.',
+            'lumber_production_mod' => '%+d%% lumber production.',
+            'ore_production_mod' => '%+d%% ore production.',
+            'gems_production_mod' => '%+d%% gem production.',
+            'mana_production_mod' => '%+d%% mana production.',
+            'pearls_production_mod' => '%+d%% pearl production.',
+            'blood_production_mod' => '%+d%% blood production.',
+            'horse_production_mod' => '%+d%% horse production.',
+            'mud_production_mod' => '%+d%% mud production.',
+            'swamp gas_production_mod' => '%+d%% swamp gas production.',
+            'xp_generation_mod' => '%+d%% XP generation.',
+            'xp_gains' => '%s%% XP gains.',
 
-            'building_gold_mine_production_mod' => '%+F%% production from Gold Mines.',
-            'building_gold_quarry_production_mod' => '%+F%% production from Gold Quarries.',
+            'building_gold_mine_production_mod' => '%+d%% production from Gold Mines.',
+            'building_gold_quarry_production_mod' => '%+d%% production from Gold Quarries.',
 
-            'exchange_rate' => '%+F%% exchange rates.',
+            'exchange_rate' => '%s%% exchange rates.',
 
-            'food_consumption_mod' => '%+F%% food consumption.',
+            'food_consumption_mod' => '%+d%% food consumption.',
 
             # Deity
-            'deity_power' => '%+F%% deity perks.',
+            'deity_power' => '%s%% deity perks.',
 
             'range_multiplier' => '%sx range multiplier.',
 
             # Military
-            'offensive_casualties' => '%+F%% casualties on offense.',
-            'defensive_casualties' => '%+F%% casualties on defense.',
+            'offensive_casualties' => '%s%% casualties on offense.',
+            'defensive_casualties' => '%s%% casualties on defense.',
 
-            'target_defensive_power_mod' => '%+F%% defensive modifier for target.',
+            'target_defensive_power_mod' => '%+d%% defensive modifier for target.',
 
-            'increases_enemy_casualties' => '%+F%% enemy casualties.',
-            'increases_enemy_casualties_on_defense' => '%+F%% enemy casualties on defense.',
-            'increases_enemy_casualties_on_offense' => '%+F%% enemy casualties on offense.',
+            'increases_enemy_casualties' => '%s%% enemy casualties.',
+            'increases_enemy_casualties_on_defense' => '%s%% enemy casualties on defense.',
+            'increases_enemy_casualties_on_offense' => '%s%% enemy casualties on offense.',
 
-            'unit_costs' => '%+F%% unit costs.',
-            'unit_gold_costs' => '%+F%% unit gold costs.',
-            'unit_ore_costs' => '%+F%% unit ore costs.',
-            'unit_lumber_costs' => '%+F%% unit lumber costs.',
-            'unit_mana_costs' => '%+F%% unit mana costs.',
-            'unit_blood_costs' => '%+F%% unit blood costs.',
-            'unit_food_costs' => '%+F%% unit food costs.',
+            'unit_costs' => '%s%% unit costs.',
+            'unit_gold_costs' => '%s%% unit gold costs.',
+            'unit_ore_costs' => '%s%% unit ore costs.',
+            'unit_lumber_costs' => '%s%% unit lumber costs.',
+            'unit_mana_costs' => '%s%% unit mana costs.',
+            'unit_blood_costs' => '%s%% unit blood costs.',
+            'unit_food_costs' => '%s%% unit food costs.',
 
-            'unit_gold_costs_from_wizard_ratio' => '%+F%% unit gold costs per 1 WPA.',
-            'unit_lumber_costs_from_wizard_ratio' => '%+F%% unit lumber costs per 1 WPA.',
+            'unit_gold_costs_from_wizard_ratio' => '%s%% unit gold costs per 1 WPA.',
+            'unit_lumber_costs_from_wizard_ratio' => '%s%% unit lumber costs per 1 WPA.',
 
             'extra_units_trained' => '%s additional units trained for free.',
 
-            'morale_gains' => '%+F%% morale gains.',
-            'base_morale' => '%+F%% base morale.',
-            'prestige_gains' => '%+F%% prestige gains.',
+            'morale_gains' => '%s%% morale gains.',
+            'base_morale' => '%s%% base morale.',
+            'prestige_gains' => '%s%% prestige gains.',
 
-            'land_discovered' => '%+F%% land discovered during invasions.',
+            'land_discovered' => '%s%% land discovered during invasions.',
 
-            'reduces_attrition' => '%+F%% unit attrition.',
+            'reduces_attrition' => '%s%% unit attrition.',
 
-            'reduces_conversions' => '%+F%% conversions for enemies.',
+            'reduces_conversions' => '%s%% conversions for enemies.',
 
-            'training_time_mod' => '%+F%% training time.',
+            'training_time_mod' => '%+d%% training time.',
 
-            'unit_pairing' => '%+F%% unit pairing capacity.',
+            'unit_pairing' => '%s%% unit pairing capacity.',
 
             'undead_unit1_production_raw' => 'Each %3$s raises %2$s %1$s per tick.',
             'undead_unit2_production_raw' => 'Each %3$s raises %2$s %1$s per tick.',
@@ -94,53 +94,53 @@ class DecreeHelper
             'undead_unit4_production_raw' => 'Each %3$s raises %2$s %1$s per tick.',
             'undead_unit3_production_raw_from_crypt' => 'Each %3$s raises %2$s %1$s per tick from the crypt.',
             
-            'attrition_mod' => '%+F%% attrition.',
+            'attrition_mod' => '%+d%% attrition.',
 
             # OP/DP
-            'offensive_power' => '%+F%% offensive power.',
-            'defensive_power' => '%+F%% defensive power.',
+            'offensive_power' => '%s%% offensive power.',
+            'defensive_power' => '%s%% defensive power.',
 
             'can_send_cannonballs' => 'Can fire cannonballs.',
             'can_send_ammunition_units' => 'Can launch ammunition units.',
 
             # Improvements
-            'improvements' => '%+F%% improvements.',
-            'improvement_points' => '%+F%% improvement points when investing.',
+            'improvements' => '%s%% improvements.',
+            'improvement_points' => '%s%% improvement points when investing.',
 
             # Construction and Rezoning
-            'construction_cost' => '%+F%% construction costs.',
-            'rezone_cost' => '%+F%% rezoning costs.',
+            'construction_cost' => '%s%% construction costs.',
+            'rezone_cost' => '%s%% rezoning costs.',
 
-            'construction_cost_from_wizard_ratio' => '%+F%% construction costs per 1 WPA.',
-            'construction_time_from_wizard_ratio' => '%+F%% construction time per 1 WPA.',
+            'construction_cost_from_wizard_ratio' => '%s%% construction costs per 1 WPA.',
+            'construction_time_from_wizard_ratio' => '%s%% construction time per 1 WPA.',
 
             # Espionage and Wizardry
-            'spy_losses' => '%+F%% spy losses.',
-            'spell_damage' => '%+F%% spell damage.',
-            'spy_cost' => '%+F%% spy costs.',
-            'wizard_cost' => '%+F%% wizard costs.',
-            'spell_cost' => '%+F%% spell costs.',
-            'spell_cost_from_wizard_ratio' => '%+F%% spell costs per 1 WPA.',
-            'sorcery_cost_from_wizard_ratio' => '%+F%% sorcery costs per 1 WPA.',
+            'spy_losses' => '%s%% spy losses.',
+            'spell_damage' => '%s%% spell damage.',
+            'spy_cost' => '%s%% spy costs.',
+            'wizard_cost' => '%s%% wizard costs.',
+            'spell_cost' => '%s%% spell costs.',
+            'spell_cost_from_wizard_ratio' => '%s%% spell costs per 1 WPA.',
+            'sorcery_cost_from_wizard_ratio' => '%s%% sorcery costs per 1 WPA.',
 
-            'gold_theft_reduction' => '%+F%% gold stolen from you.',
-            'gems_theft_reduction' => '%+F%% gems stolen from you.',
-            'ore_theft_reduction' => '%+F%% ore stolen from you.',
-            'lumber_theft_reduction' => '%+F%% lumber stolen from you.',
-            'food_theft_reduction' => '%+F%% food stolen from you.',
-            'mana_theft_reduction' => '%+F%% mana stolen from you.',
-            'horse_theft_reduction' => '%+F%% horses stolen from you.',
+            'gold_theft_reduction' => '%s%% gold stolen from you.',
+            'gems_theft_reduction' => '%s%% gems stolen from you.',
+            'ore_theft_reduction' => '%s%% ore stolen from you.',
+            'lumber_theft_reduction' => '%s%% lumber stolen from you.',
+            'food_theft_reduction' => '%s%% food stolen from you.',
+            'mana_theft_reduction' => '%s%% mana stolen from you.',
+            'horse_theft_reduction' => '%s%% horses stolen from you.',
 
-            'wizard_strength_recovery' => '%+F%% wizard strength recovery per tick.',
-            'spy_strength_recovery' => '%+F%% wizard strength recovery per tick.',
+            'wizard_strength_recovery' => '%s%% wizard strength recovery per tick.',
+            'spy_strength_recovery' => '%s%% wizard strength recovery per tick.',
             
-            'spy_strength' => '%+F%% spy strength.',
-            'spy_strength_on_defense' => '%+F%% spy strength on defense.',
-            'spy_strength_on_offense' => '%+F%% spy strength on offense.',
+            'spy_strength' => '%s%% spy strength.',
+            'spy_strength_on_defense' => '%s%% spy strength on defense.',
+            'spy_strength_on_offense' => '%s%% spy strength on offense.',
 
-            'wizard_strength' => '%+F%% wizard strength.',
-            'wizard_strength_on_defense' => '%+F%% wizard strength on defense.',
-            'wizard_strength_on_offense' => '%+F%% wizard strength on offense.',
+            'wizard_strength' => '%s%% wizard strength.',
+            'wizard_strength_on_defense' => '%s%% wizard strength on defense.',
+            'wizard_strength_on_offense' => '%s%% wizard strength on offense.',
 
             'wizards_count_as_spies' => 'Wizards also count as %s %s.',
 
