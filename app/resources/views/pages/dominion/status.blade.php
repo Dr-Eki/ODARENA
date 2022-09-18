@@ -423,7 +423,8 @@
                 </div>
                 <div class="box-body">
                 <p>Click a tick number below to restore your dominion to the state it was when that tick began.</p>
-                <p><span class="label label-danger">Warning!</span> All ticks that happened after the point you go back to will be deleted.</p>
+                <p><span class="label label-danger">Warning</span> All ticks that happened after the point you go back to will be deleted.</p>
+                <p><span class="label label-success">Note</span> The green button is the current tick. Clicking it will undo all actions taken this tick.</p>
                 <div class="row">
                     @foreach($selectedDominion->states->sortDesc() as $dominionState)
                         <div class="col-md-1">
@@ -432,7 +433,7 @@
                                     <form class="form-inline" action="{{ route('dominion.misc.restore-dominion-state') }}" method="post">
                                         @csrf
                                         <input type="hidden" name="dominion_state" id="dominion_state" value="{{ $dominionState->id }}">
-                                        <button class="btn btn-block btn-info">
+                                        <button class="btn btn-block {{ ($dominionState->dominion_protection_tick == $selectedDominion->protection_ticks) ? 'btn-success' : 'btn-info' }}">
                                             {{ $dominionState->dominion_protection_tick }}
                                         </button>
                                     </form>
