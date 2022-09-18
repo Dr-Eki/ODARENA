@@ -319,13 +319,13 @@
                         </tr>
                         <tr>
                             <td>Spy Ratio:</td>
-                            <td>{{ number_format(($militaryCalculator->getSpyRatio($dominion, 'offense'))*100, 2) }}%</td>
-                            <td>{{ number_format(($militaryCalculator->getSpyRatio($dominion, 'defense'))*100, 2) }}%</td>
+                            <td>{{ number_format($militaryCalculator->getSpyRatio($dominion, 'offense'), 2) }}</td>
+                            <td>{{ number_format($militaryCalculator->getSpyRatio($dominion, 'defense'), 2) }}</td>
                         </tr>
                         <tr>
                             <td>Wizard Ratio:</td>
-                            <td>{{ number_format(($militaryCalculator->getWizardRatio($dominion, 'offense'))*100, 2) }}%</td>
-                            <td>{{ number_format(($militaryCalculator->getWizardRatio($dominion, 'defense'))*100, 2) }}%</td>
+                            <td>{{ number_format(($militaryCalculator->getWizardRatio($dominion, 'offense')), 2) }}</td>
+                            <td>{{ number_format(($militaryCalculator->getWizardRatio($dominion, 'defense')), 2) }}%/td>
                         </tr>
                     </tbody>
                 </table>

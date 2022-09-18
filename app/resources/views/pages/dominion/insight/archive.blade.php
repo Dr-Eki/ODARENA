@@ -242,13 +242,13 @@
                         </tr>
                         <tr>
                             <td>Spy ratio:</td>
-                            <td>{{ number_format(($data['mods']['offense']['spy_ratio'])*100, 2) }}%</td>
-                            <td>{{ number_format(($data['mods']['defense']['spy_ratio'])*100, 2) }}%</td>
+                            <td>{{ number_format(($data['mods']['offense']['spy_ratio']), 2) }}</td>
+                            <td>{{ number_format(($data['mods']['defense']['spy_ratio']), 2) }}</td>
                         </tr>
                         <tr>
                             <td>Wizard ratio:</td>
-                            <td>{{ number_format(($data['mods']['offense']['wizard_ratio'])*100, 2) }}%</td>
-                            <td>{{ number_format(($data['mods']['defense']['wizard_ratio'])*100, 2) }}%</td>
+                            <td>{{ number_format(($data['mods']['offense']['wizard_ratio']), 2) }}</td>
+                            <td>{{ number_format(($data['mods']['defense']['wizard_ratio']), 2) }}</td>
                         </tr>
                     </tbody>
                 </table>
