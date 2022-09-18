@@ -23,7 +23,6 @@ units:
     training_time: 12
     type:
       - mindless
-      - magical
     cost:
       gold: 325
       mana: 5
@@ -38,6 +37,7 @@ units:
     training_time: 12
     type:
       - mindless
+      - magical
     power:
       offense: 2
       defense: 2
