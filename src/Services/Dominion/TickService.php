@@ -1007,10 +1007,10 @@ class TickService
                 if($attritionProtection = $dominion->getBuildingPerkValue('attrition_protection'))
                 {
                     $amountProtected = $attritionProtection[0];
-                    $slot = $attritionProtection[1];
+                    $slotProtected = $attritionProtection[1];
                     $amountProtected *= 1 + $dominion->getImprovementPerkMultiplier('attrition_protection');
 
-                    if($slot == $attritionProtection[0])
+                    if($slot == $slotProtected)
                     {
                         $unitAttritionAmount -= $amountProtected;
                     }
