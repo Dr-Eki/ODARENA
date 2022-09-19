@@ -69,7 +69,7 @@
                                         $offenseFromMob = [];
                                         $offenseFromBeingOutnumbered = [];
                                     @endphp
-                                    @foreach (range(1, 4) as $unitSlot)
+                                    @foreach (range(1, $selectedDominion->race->units->count()) as $unitSlot)
                                         @php
                                             $unit = $selectedDominion->race->units->filter(function ($unit) use ($unitSlot) {
                                                 return ($unit->slot === $unitSlot);

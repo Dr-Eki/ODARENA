@@ -32,7 +32,7 @@ trait DominionGuardsTrait
      */
     public function guardActionsDuringTick(Dominion $dominion, int $seconds = 30): void
     {
-        if ($dominion->protection_ticks == 0)
+        if ($dominion->protection_ticks == 0 and !$dominion->race->name == 'Barbarian')
         {
             $requestTimestamp = request()->server('REQUEST_TIME');
             if ($requestTimestamp !== null)

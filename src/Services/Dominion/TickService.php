@@ -249,7 +249,7 @@ class TickService
                 ## Determine how many of each unit type is returning in $tick ticks
                 $tick = 1;
 
-                foreach (range(1, 4) as $slot)
+                foreach (range(1, $stasisDominion->race->units->count()) as $slot)
                 {
                     $unitType = 'unit' . $slot;
                     for ($i = 1; $i <= 12; $i++)

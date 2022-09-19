@@ -109,7 +109,7 @@ class APIController extends AbstractDominionController
             $units[0] = (int) ($calc['draftees_home'] / 0.85);
         }
 
-        foreach(range(1, 4) as $slot) {
+        foreach(range(1, $selectedDominion->race->units->count()) as $slot) {
             if (isset($calc["unit{$slot}"])) {
                 $units[$slot] = $calc["unit{$slot}"];
                 if (isset($calc["unit{$slot}_away"])) {

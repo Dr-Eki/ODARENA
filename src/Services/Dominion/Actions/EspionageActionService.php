@@ -415,7 +415,7 @@ class EspionageActionService
                 array_set($data, 'units.home.wizards',$target->military_wizards);
                 array_set($data, 'units.home.archmages',$target->military_archmages);
 
-                foreach (range(1, 4) as $slot)
+                foreach (range(1, $target->race->units->count()) as $slot)
                 {
                     array_set($data, "units.home.unit{$slot}", $target->{'military_unit' . $slot});
                 }

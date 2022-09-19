@@ -508,7 +508,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (range(1, 4) as $slot)
+                                @foreach (range(1, $selectedDominion->race->units->count()) as $slot)
                                     @php
                                         $unitType = ('unit' . $slot)
                                     @endphp
