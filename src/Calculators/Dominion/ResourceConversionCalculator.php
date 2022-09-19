@@ -277,15 +277,9 @@ class ResourceConversionCalculator
                         $resourceAmount = $resourcePerOwnCasualtyConversionPerk[0];
                         $resourceKey = $resourcePerOwnCasualtyConversionPerk[1];
     
-                        foreach($converterUnitsLost as $converterUnitsLostSlot => $converterUnitsLostAmount)
-                        {
-                            if($this->conversionHelper->isSlotConvertible($converterUnitsLostSlot, $converter))
-                            {
-                                $resourceConversions[$resourceKey] += $converterUnitsLostAmount * $resourceAmount;
-                                $resourceConversions[$resourceKey] *= $this->conversionCalculator->getConversionReductionMultiplier($enemy);
-                                #$resourceConversions[$resourceKey] *= $this->getInvasionResultMultiplier($invasion, $mode);
-                            }
-                        }
+                        $resourceConversions[$resourceKey] += $converterUnitsLost[$converterUnitSlot] * $resourceAmount;
+                        $resourceConversions[$resourceKey] *= $this->conversionCalculator->getConversionReductionMultiplier($enemy);
+                        #$resourceConversions[$resourceKey] *= $this->getInvasionResultMultiplier($invasion, $mode);
                     }
                 }
             }
