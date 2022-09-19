@@ -31,6 +31,9 @@ class TheftHelper
             case 'blood':
                 return 2;
 
+            case 'gunpowder':
+                return 0.1;
+
             case 'horse':
                 return 0.1;
 
