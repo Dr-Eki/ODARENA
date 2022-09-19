@@ -2547,7 +2547,7 @@ class InvadeActionService
             $defensiveBodies = round(array_sum($this->invasionResult['defender']['units_lost']) * $this->conversionCalculator->getConversionReductionMultiplier($defender));
             $offensiveBodies = round(array_sum($this->invasionResult['attacker']['units_lost']) * $this->conversionCalculator->getConversionReductionMultiplier($attacker));
 
-            $cryptLogString .= 'Defensive bodies (raw): ' . number_format($defensiveBodies) . ' | ';
+            $cryptLogString .= '[CRYPT] Defensive bodies (raw): ' . number_format($defensiveBodies) . ' | ';
             $cryptLogString .= 'Offensive bodies (raw): ' . number_format($offensiveBodies) . ' | ';
 
             $this->invasionResult['defender']['crypt']['bodies_available_raw'] = $defensiveBodies;
@@ -2592,7 +2592,7 @@ class InvadeActionService
             $this->invasionResult['defender']['crypt']['bodies_available_net'] = $defensiveBodies;
             $this->invasionResult['attacker']['crypt']['bodies_available_net'] = $offensiveBodies;
 
-            $cryptLogString .= 'Defensive bodies (net): ' . number_format($defensiveBodies) . ' | ';
+            $cryptLogString .= '[CRYPT] Defensive bodies (net): ' . number_format($defensiveBodies) . ' | ';
             $cryptLogString .= 'Offensive bodies (net): ' . number_format($offensiveBodies) . ' | ';
 
             $toTheCrypt = 0;
