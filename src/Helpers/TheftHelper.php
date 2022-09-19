@@ -32,7 +32,7 @@ class TheftHelper
                 return 2;
 
             case 'gunpowder':
-                return 0.1;
+                return 0.05;
 
             case 'horse':
                 return 0.1;
