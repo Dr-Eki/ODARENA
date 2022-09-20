@@ -3,33 +3,22 @@
 namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
-use LogicException;
-use OpenDominion\Calculators\Dominion\AdvancementCalculator;
 use OpenDominion\Exceptions\GameException;
-use OpenDominion\Models\Advancement;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\WatchedDominion;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Traits\DominionGuardsTrait;
 
-
-use OpenDominion\Calculators\Dominion\SpellCalculator;
-
 class WatchDominionActionService
 {
     use DominionGuardsTrait;
-
-    public function __construct()
-    {
-        #$this->militaryCalculator = app(MilitaryCalculator::class);
-    }
 
     public function watchDominion(Dominion $watcher, Dominion $dominion): array
     {
         $this->guardLockedDominion($dominion);
         $this->guardLockedDominion($watcher);
         $this->guardActionsDuringTick($dominion);
-        $this->guardActionsDuringTick($wath);
+        $this->guardActionsDuringTick($watcher);
 
         // Check if same round
         if($watcher->round->id !== $dominion->round->id)

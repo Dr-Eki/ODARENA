@@ -150,7 +150,7 @@
                           You have <strong>{{ number_format($selectedDominion->military_draftees) }}</strong> {{ ucwords(str_plural($raceHelper->getDrafteesTerm($selectedDominion->race), $selectedDominion->military_draftees)) }} available.
                       @endif
 
-                      @if ($militaryCalculator->getRecentlyInvadedCount($selectedDominion) and $selectedDominion->race->name == 'Sylvan')
+                      @if ($dominionHelper->isEnraged($selectedDominion))
                           <br> You were recently invaded, enraging your Spriggan and Leshy.
                       @endif
                     </div>
@@ -360,7 +360,6 @@
     </div>
 
     <div class="col-sm-12 col-md-3">
-
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Housing</h3>
@@ -381,21 +380,27 @@
                                 </td>
                             </tr>
                             @if ($selectedDominion->race->name !== 'Growth' and !$selectedDominion->race->getPerkValue('no_drafting'))
-                            <tr>
-                                @if ($selectedDominion->race->name == 'Myconid')
-                                    <td class="text">Germination</td>
-                                @else
-                                    <td class="text">Draft Rate</td>
-                                @endif
+                                <tr>
+                                    @if ($selectedDominion->race->name == 'Myconid')
+                                        <td class="text">Germination</td>
+                                    @else
+                                        <td class="text">Draft Rate</td>
+                                    @endif
 
-                                <td class="text">
-                                    <input type="number" name="draft_rate" class="form-control text-center"
-                                           style="display: inline-block; width: 4em;" placeholder="0" min="0" max="100"
-                                           value="{{ $selectedDominion->draft_rate }}" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>&nbsp;%
-                                </td>
-                            </tr>
+                                    <td class="text">
+                                        <input type="number" name="draft_rate" class="form-control text-center"
+                                            style="display: inline-block; width: 4em;" placeholder="0" min="0" max="100"
+                                            value="{{ $selectedDominion->draft_rate }}" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>&nbsp;%
+                                    </td>
+                                </tr>
                             @endif
                             @include('partials.dominion.housing')
+                            @if($selectedDominion->race->name == 'Undead')
+                                <tr>
+                                    <td class="text">Crypt bodies:</td>
+                                    <td class="text">{{ number_format($resourceCalculator->getRealmAmount($selectedDominion->realm, 'body')) }}</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -403,7 +408,6 @@
                 <div class="box-footer">
                     <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>Change</button>
                     </form>
-
 
                     <form action="{{ route('dominion.military.release-draftees') }}" method="post" role="form" class="pull-right">
                         @csrf
@@ -413,6 +417,9 @@
                 </div>
                 @endif
         </div>
+
+
+
         @include('partials.dominion.military-cost-modifiers')
         @include('partials.dominion.military-power-modifiers')
         @include('partials.dominion.watched-dominions')

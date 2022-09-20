@@ -107,7 +107,7 @@ class RangeCalculator
     }
 
     /**
-     * Helper function to return a colored <span> class for a $target dominion range.
+     * Helper function to return a coloured <span> class for a $target dominion range.
      *
      * @param Dominion $self
      * @param Dominion $target

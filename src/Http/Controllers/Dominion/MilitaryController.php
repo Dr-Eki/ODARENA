@@ -6,6 +6,7 @@ use OpenDominion\Models\Resource;
 
 use OpenDominion\Exceptions\GameException;
 
+use OpenDominion\Helpers\DominionHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\UnitHelper;
 
@@ -21,6 +22,7 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\PrestigeCalculator;
+use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 
@@ -59,9 +61,11 @@ class MilitaryController extends AbstractDominionController
 
         return view('pages.dominion.military', [
             'casualtiesCalculator' => app(CasualtiesCalculator::class),
+            'dominionHelper' => app(DominionHelper::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'populationCalculator' => app(PopulationCalculator::class),
-            'queueService' => $queueService,#app(QueueService::class),
+            'resourceCalculator' => app(ResourceCalculator::class),
+            'queueService' => $queueService,
             'trainingCalculator' => app(TrainingCalculator::class),
             'unitHelper' => app(UnitHelper::class),
             'improvementCalculator' => app(ImprovementCalculator::class),
