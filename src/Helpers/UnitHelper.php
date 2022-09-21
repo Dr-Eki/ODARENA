@@ -422,7 +422,7 @@ class UnitHelper
             'building_limit_prestige' => 'You can at most have %2$s of this unit per %1$s. Increased by prestige multiplier.',
 
             'victories_limit' => 'You can at most have %2$s of this unit per %1$s %2$s.',
-            'net_victories_limit' => 'You can at most have %1$s of this unit per net %2$s.',
+            'net_victories_limit' => 'You can at most have %1$s of this unit per %2$s net victory.',
 
             'archmage_limit' => 'You can at most have %1$s of this unit per Archmage.',
             'wizard_limit' => 'You can at most have %1$s of this unit per Wizard.',
