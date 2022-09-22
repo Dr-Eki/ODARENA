@@ -62,6 +62,8 @@ class ResourceService
 
                 $owned = $this->resourceCalculator->getAmount($dominion, $resource->key);
 
+                $amountToRemove = min(abs($amount), $owned);
+
                 if($this->resourceCalculator->dominionHasResource($dominion, $resourceKey))
                 {
                     if($amountToRemove <= $owned)
