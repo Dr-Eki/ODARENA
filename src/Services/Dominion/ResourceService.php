@@ -57,15 +57,9 @@ class ResourceService
             # Negative values: update or delete DominionResource
             else
             {
-                $resource = Resource::where('key', $resourceKey)->first();
-
-                if(!$resource)
-                {
-                    dd($resource, $resourceKey);
-                }
+                $resource = Resource::where('key', str_replace('resource_', '', $resourceKey))->first();
 
                 $owned = $this->resourceCalculator->getAmount($dominion, $resource->key);
-
 
                 $amountToRemove = min(abs($amount), $owned);
 
