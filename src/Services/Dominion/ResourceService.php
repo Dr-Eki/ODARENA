@@ -59,10 +59,6 @@ class ResourceService
             {
                 $resource = Resource::where('key', str_replace('resource_', '', $resourceKey))->first();
 
-                if(!$resource)
-                {
-                    dd($resource, $resourceKey,str_replace('resource_', '', $resourceKey));
-                }
 
                 $owned = $this->resourceCalculator->getAmount($dominion, $resource->key);
 
@@ -72,9 +68,16 @@ class ResourceService
                 {
                     if($amountToRemove <= $owned)
                     {
+                        
                         # Let's try storing 0s instead of deleting.
                         DB::transaction(function () use ($dominion, $resource, $amountToRemove)
                         {
+
+                            if(!$dominion)
+                            {
+                                dd($dominion, $resource, $amountToRemove);
+                            }
+                        
                             DominionResource::where('dominion_id', $dominion->id)->where('resource_id', $resource->id)
                             ->decrement('amount', $amountToRemove);
                         });
