@@ -58,12 +58,14 @@ class ResourceService
             else
             {
                 $resource = Resource::where('key', $resourceKey)->first();
-                $owned = $this->resourceCalculator->getAmount($dominion, $resource->key);
 
                 if(!$resource)
                 {
-                    dd($resource, $resourceKey, $owned);
+                    dd($resource, $resourceKey);
                 }
+
+                $owned = $this->resourceCalculator->getAmount($dominion, $resource->key);
+
 
                 $amountToRemove = min(abs($amount), $owned);
 
