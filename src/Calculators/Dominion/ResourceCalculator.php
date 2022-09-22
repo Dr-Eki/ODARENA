@@ -70,6 +70,11 @@ class ResourceCalculator
     {
         $resource = Resource::where('key', $resourceKey)->first();
 
+        if(!$resource)
+        {
+            dd($resource, $dominion, $resourceKey);
+        }
+
         return DominionResource::where('resource_id',$resource->id)->where('dominion_id',$dominion->id)->first() ? true : false;
     }
 
