@@ -68,8 +68,6 @@ class ResourceCalculator
 
     public function dominionHasResource(Dominion $dominion, string $resourceKey): bool
     {
-        $resourceKey = str_replace('resource_', '', $resourceKey);
-        
         $resource = Resource::where('key', $resourceKey)->first();
 
         return DominionResource::where('resource_id',$resource->id)->where('dominion_id',$dominion->id)->first() ? true : false;
