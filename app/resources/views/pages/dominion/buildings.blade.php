@@ -52,7 +52,7 @@
                                               </td>
                                               <td class="text-center">
                                                     @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building) }}
+                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
                                                         <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
                                                     @else
                                                         0 <small class="text-muted">(0%)</small>
@@ -104,7 +104,7 @@
                                               </td>
                                               <td class="text-center">
                                                     @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building) }}
+                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
                                                         <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
                                                     @else
                                                         0 <small class="text-muted">(0%)</small>
@@ -159,7 +159,7 @@
                                               </td>
                                               <td class="text-center">
                                                     @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building) }}
+                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
                                                         <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
                                                     @else
                                                         0 <small class="text-muted">(0%)</small>
@@ -211,7 +211,7 @@
                                               </td>
                                               <td class="text-center">
                                                     @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building) }}
+                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
                                                         <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
                                                     @else
                                                         0 <small class="text-muted">(0%)</small>
@@ -266,7 +266,7 @@
                                               </td>
                                               <td class="text-center">
                                                     @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building) }}
+                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
                                                         <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
                                                     @else
                                                         0 <small class="text-muted">(0%)</small>
@@ -318,7 +318,7 @@
                                               </td>
                                               <td class="text-center">
                                                     @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building) }}
+                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
                                                         <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
                                                     @else
                                                         0 <small class="text-muted">(0%)</small>
