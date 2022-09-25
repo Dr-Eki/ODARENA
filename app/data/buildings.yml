@@ -397,6 +397,7 @@ watermill:
 aqueduct:
   name: Aqueduct
   excluded_races:
+    - Demon
     - Dragon
     - Growth
     - Icekin
@@ -413,7 +414,7 @@ aqueduct:
     - Yeti
   land_type: water
   perks:
-    food_production_mod: 1,8,40 # Every 1% gives +8% food production, max +20%
+    food_production_mod: 1,8,40 # Every 1% gives +8% food production, max +40%
     population_growth: 1,18 # Every 1%, gives 6%, no max
 
 shipyard:
@@ -1359,6 +1360,7 @@ altar:
   perks:
     blood_production_mod: 1,5,100 # ratio, perk, max
     blood_theft_protection: 1000
+    food_production_mod: 1,8,40 # Every 1% gives +8% food production, max +40%
 
 dungeon:
   name: Dungeon
