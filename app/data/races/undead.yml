@@ -26,7 +26,6 @@ units:
     cost:
       gold: 325
       mana: 5
-      crypt_body: 1
     power:
       offense: 3
       defense: 2
@@ -45,7 +44,8 @@ units:
       cannot_be_trained: 1
       does_not_count_as_population: 1
       attrition: 10
-      fixed_casualtied_if_overwhelmed: 100
+      fixed_casualties_if_overwhelmed: 100
+      fixed_casualties: 50
       pairing_limit: 4,5 # Unit slot, amount
 
   - name: Wight

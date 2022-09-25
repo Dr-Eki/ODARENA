@@ -23,12 +23,12 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 720
-      ore: 75
+      gold: 800
+      ore: 80
       lumber: 25
     power:
       offense: 5
-      defense: 7
+      defense: 8
     perks:
       immortal_on_fending_off: 1
 
@@ -39,14 +39,14 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 720
-      ore: 75
+      gold: 800
+      ore: 80
       gems: 2
     power:
       offense: 7
       defense: 5
     perks:
-      casualties: -50
+      casualties: -20
       offense_from_pairing: 4,1,0.01 #,1 # slot, amount, num required
 
   - name: Hailstorm Cannon
@@ -86,6 +86,6 @@ units:
       cannot_be_trained: 1
       does_not_count_as_population: 1
       building_limit: gryphon_nest,2
-      food_consumption_raw: 3.5
+      food_consumption_raw: 4.5
       casualties: -75
       attrition: 10

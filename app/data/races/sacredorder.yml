@@ -58,7 +58,7 @@ units:
       ore: 75
     power:
       offense: 5
-      defense: 7
+      defense: 8
     perks:
       no_draftee: 1
       displaced_peasants_conversion: 1

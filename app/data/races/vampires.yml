@@ -43,7 +43,7 @@ units:
       offense_from_time: 18,06,4 # Between the hours 18:00 and 06:00, gains +6 OP
       strength_conversion: 4,1,2 # threshold,under,over
       displaced_peasants_conversion: 1
-      some_win_into: 1.5,3 # ratio, slot
+      some_win_into: 2.5,3 # ratio, slot
 
   - name: Ravager
     type:
@@ -74,7 +74,6 @@ units:
       offense: 8
       defense: 8
     perks:
-      casualties: -25
       strength_conversion: 4,1,2 # threshold,under,over
       defense_from_time: 06,18,1 # Between the hours 18:00 and 06:00, gains +1 DP
       offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP

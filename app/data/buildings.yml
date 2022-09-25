@@ -807,7 +807,8 @@ strip_mine:
     ore_production_raw: 90
     gems_production_raw: 20
     housing: 0
-    destroys_itself_and_land: 0.01,mountain # amount per tick, land type
+    #destroys_itself_and_land: 0.01,mountain # amount per tick, land type
+    destroys_itself_and_land: 0.01
 
 turret:
   name: Turret

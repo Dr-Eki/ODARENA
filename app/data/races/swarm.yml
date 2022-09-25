@@ -48,8 +48,8 @@ units:
       defense: 4
     perks:
       offense_vs_barren_land: 10,1 # ratio%, max
-      casualties_on_defense: -80
-      casualties_on_victory: -50
+      casualties_on_defense: -25
+      casualties_on_victory: -25
       offense_from_spell: aggression,2
       defense_from_spell: aggression,-2
 
@@ -66,7 +66,7 @@ units:
     perks:
       gems_production_raw: 0.5
       immortal_on_fending_off: 1
-      casualties_on_defense: -50
+      casualties_on_defense: -25
 
   - name: Arachnid
     training_time: 12
@@ -80,7 +80,7 @@ units:
       offense: 0
       defense: 8
     perks:
-      casualties_on_defense: -50
+      casualties_on_defense: -25
       immortal_on_fending_off: 1
       kills_into_resource_per_value: 4,food # each 1 OP killed becomes
 
@@ -97,6 +97,6 @@ units:
       defense: 4
     perks:
       offense_vs_barren_land: 10,1 # ratio%, max
-      casualties_on_defense: -50
+      casualties_on_defense: -25
       immortal_on_fending_off: 1
-      casualties_on_victory: -50
+      casualties_on_victory: -25

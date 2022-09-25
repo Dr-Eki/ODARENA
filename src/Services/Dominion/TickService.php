@@ -1321,6 +1321,18 @@ class TickService
                 $tick->buildings_destroyed = [$buildingKey => ['builtBuildingsToDestroy' => $amountToDestroy]];
             }
         }
+        if($selfDestruction = $dominion->getBuildingPerkValue('destroys_itself'))
+        {
+            $buildingKey = (string)$selfDestruction['building_key'];
+            $amountToDestroy = (int)$selfDestruction['amount'];
+            $landType = (string)$selfDestruction['land_type'];
+
+            if($amountToDestroy > 0)
+            {
+                $tick->{'land_'.$landType} -= min($amountToDestroy, $dominion->{'land_'.$landType});
+                $tick->buildings_destroyed = [$buildingKey => ['builtBuildingsToDestroy' => $amountToDestroy]];
+            }
+        }
 
         foreach ($incomingQueue as $row)
         {

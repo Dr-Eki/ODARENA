@@ -133,7 +133,7 @@ class InvadeActionService
         $this->guardLockedDominion($target);
         $this->guardActionsDuringTick($target);
 
-        if($target->protector)
+        if($target->hasProtector())
         {
             $this->invasionResult['is_protectorate'] = true;
             $this->invasionResult['protectorate']['protector_id'] = $target->protector->id;
@@ -1321,7 +1321,13 @@ class InvadeActionService
         {
             $defenderMoraleChange = ($defender->morale * -1);
         }
+
         $defender->morale += $defenderMoraleChange;
+
+        if($defenderMoraleChange > 0 and $defender->isProtector())
+        {
+            $defender->protectedDominion->morale += $defenderMoraleChange;
+        }
 
         $this->invasionResult['attacker']['morale_change'] = $attackerMoraleChange;
         $this->invasionResult['defender']['morale_change'] = $defenderMoraleChange;
@@ -3014,6 +3020,12 @@ class InvadeActionService
      */
     protected function passes43RatioRule(Dominion $dominion, Dominion $target, float $landRatio, array $units): bool
     {
+        # Artillery is exempt from 4:3.
+        if($dominion->race->name == 'Artillery')
+        {
+            return true;
+        }
+
         $unitsHome = [
             0 => $dominion->military_draftees,
         ];

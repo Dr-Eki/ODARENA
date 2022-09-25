@@ -959,7 +959,15 @@ sacred_duty:
   exclusive_races:
     - Sacred Order
   perks:
-    unit_specific_housing: 30,6500
+    unit_specific_housing: 40,6500
+    jobs_per_building: 10,6500
+
+sacred_service:
+  name: Sacred Service
+  exclusive_races:
+    - Sacred Order
+  perks:
+    population: 20,4000
     jobs_per_building: 10,6500
 
 # END SACRED ORDER #

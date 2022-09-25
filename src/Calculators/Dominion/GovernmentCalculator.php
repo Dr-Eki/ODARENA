@@ -56,7 +56,7 @@ class GovernmentCalculator
 
     public function getAvailableProtecetors(Realm $realm): Collection
     {
-        $protectorRaces = $this->governmentHelper->getProtectorRaces();#'Black Orc', 'Dark Elf', 'Icekin', 'Legion', 'Orc', 'Reptilians'];
+        $protectorRaces = $this->governmentHelper->getProtectorRaces();
         $dominions = $realm->dominions->flatten();
         $availableProtectors = $dominions->filter(function ($dominion, $protectorRaces) {
             return (in_array($dominion->race->name, $protectorRaces) and !$dominion->isProtector());

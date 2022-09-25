@@ -1170,6 +1170,22 @@ class Dominion extends AbstractModel
                     return $result;
                 }
 
+                # Building self-destruction
+                elseif($perkKey == 'destroys_itself')
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+
+                    $amountToDestroyPerBuilding = (float)$perkValues[0];
+                    $buildingOwned = $building->pivot->owned;
+
+                    $amountToDestroy = $buildingOwned * $amountToDestroyPerBuilding;
+                    $amountToDestroy = (int)floor($amountToDestroy);
+
+                    $result = ['building_key' => $building->key, 'amount' => $amountToDestroy];
+
+                    return $result;
+                }
+
                 elseif($perkKey !== 'jobs' and $perkKey !== 'housing')
                 {
                     dd("[Error] Undefined building perk key (\$perkKey): $perkKey");

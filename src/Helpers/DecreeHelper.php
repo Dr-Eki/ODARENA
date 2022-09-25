@@ -117,6 +117,8 @@ class DecreeHelper
             # Espionage and Wizardry
             'spy_losses' => '%s%% spy losses.',
             'spell_damage' => '%s%% spell damage.',
+            'spell_damage_dealt' => '%s%% spell damage per 1 WPA.',
+            'spell_damage_dealt_from_wizard_ratio' => '%s%% spell damage per 1 WPA.',
             'spy_cost' => '%s%% spy costs.',
             'wizard_cost' => '%s%% wizard costs.',
             'spell_cost' => '%s%% spell costs.',

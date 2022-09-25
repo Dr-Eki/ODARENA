@@ -94,7 +94,7 @@ units:
       defense: 8
     perks:
       increases_enemy_casualties_on_offense: 1
-      casualties: -65
+      casualties: -35
 
   - name: Horse Archer
     training_time: 12
@@ -111,4 +111,4 @@ units:
       defense: 6
     perks:
       faster_return: 6
-      casualties: -50
+      casualties: -25

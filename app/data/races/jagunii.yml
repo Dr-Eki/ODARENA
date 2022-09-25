@@ -56,7 +56,6 @@ units:
       does_not_count_as_population: 1
       food_consumption_raw: 0.25
       casualties: -50
-      faster_return: 6
 
   - name: War Mammoth
     training_time: 12
@@ -76,7 +75,7 @@ units:
       defense: 24
     perks:
       dies_into: 3
-      casualties_on_offense: -90
+      casualties_on_offense: -25
       no_draftee: 1
       does_not_count_as_population: 1
       food_consumption_raw: 2
