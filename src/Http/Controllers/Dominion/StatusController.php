@@ -2,6 +2,8 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
+use OpenDominion\Exceptions\GameException;
+
 use OpenDominion\Http\Requests\Dominion\Actions\TickActionRequest;
 use OpenDominion\Http\Requests\Dominion\Actions\TitleChangeActionRequest;
 
@@ -76,17 +78,13 @@ class StatusController extends AbstractDominionController
     public function postTick(TickActionRequest $request)
     {
         $ticks = intval($request->ticks);
-        $ticks = max(min($ticks, 96), 0);
+        $ticks = (int)max(min($ticks, 24), 0);
         $dominion = $this->getSelectedDominion();
         $tickActionService = app(TickActionService::class);
 
         try
         {
-            for ($tick = 1; $tick <= $ticks; $tick++)
-            {
-                $result = $tickActionService->tickDominion($dominion);
-                #usleep(rand(100000,100000)); # WTF was this?
-            }
+            $result = $tickActionService->tickDominion($dominion, $ticks);
         }
         catch (GameException $e)
         {

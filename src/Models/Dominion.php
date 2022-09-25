@@ -339,7 +339,6 @@ class Dominion extends AbstractModel
         return $this->hasMany(DominionState::class);
     }
 
-
     public function queues()
     {
         return $this->hasMany(Dominion\Queue::class);
@@ -354,6 +353,74 @@ class Dominion extends AbstractModel
     {
         return $this->hasOne(Dominion\Tick::class);
     }
+
+    // PROTECTORSHIP STUFF
+    public function protector()
+    {
+        return $this->hasOneThrough(
+            Dominion::class,
+            Protectorship::class,
+            'protected_id',
+            'id',
+            'id',
+            'protector_id'
+        );
+    }
+
+    public function protectedDominion()
+    {
+        return $this->hasOneThrough(
+            Dominion::class,
+            Protectorship::class,
+            'protector_id',
+            'id',
+            'id',
+            'protected_id'
+        );
+    }
+
+    public function hasProtector()
+    {
+        return $this->protector ? true : false;
+    }
+
+    public function isProtector()
+    {
+        return $this->protectedDominion ? true : false;
+    }
+
+    public function protectorshipOffers()
+    {
+        return $this->hasMany(ProtectorshipOffer::class, 'protected_id', 'id');
+        /*
+        return $this->hasManyThrough(
+            Dominion::class,
+            ProtectorshipOffer::class,
+            'protected_id',
+            'id',
+            'id',
+            'protector_id'
+        );
+        */
+    }
+
+    public function protectorshipOffered()
+    {
+        return $this->hasMany(ProtectorshipOffer::class, 'protector_id', 'id');
+
+        /*
+        return $this->hasOneThrough(
+            Dominion::class,
+            ProtectorshipOffer::class,
+            'protector_id',
+            'id',
+            'id',
+            'protected_id'
+        );
+        */
+    }
+
+    // END PROTECTORSHIP STUFF
 
     // Eloquent Query Scopes
 

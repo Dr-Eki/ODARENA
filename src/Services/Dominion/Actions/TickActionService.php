@@ -48,26 +48,43 @@ class TickActionService
      * @return array
      * @throws GameException
      */
-    public function tickDominion(Dominion $dominion): array
+    public function tickDominion(Dominion $dominion, int $ticks = 1): array
     {
         $this->guardLockedDominion($dominion);
 
-        #DB::transaction(function () use ($dominion) {
-            // Checks
-            if($dominion->user_id !== Auth::user()->id)
-            {
-                throw new GameException('You cannot tick for other dominions than your own.');
-            }
+        if($ticks == 0 or !$ticks)
+        {
+            dd('Ticks is 0 or not set');
+        }
 
-            if($dominion->protection_ticks <= 0)
-            {
-                throw new GameException('You do not have any protection ticks left.');
-            }
+        for ($tick = 1; $tick <= $ticks; $tick++)
+        {
+            DB::transaction(function () use ($dominion) {
+                // Checks
+                if($dominion->user_id !== Auth::user()->id)
+                {
+                    throw new GameException('You cannot tick for other dominions than your own.');
+                }
 
-        #});
+                if($dominion->protection_ticks <= 0)
+                {
+                    throw new GameException('You do not have any protection ticks left.');
+                }
 
-        # Run the tick.
-        $this->tickService->tickManually($dominion);
+                if($dominion->round->hasEnded())
+                {
+                    throw new GameException('The round has ended.');
+                }
+                
+                if($dominion->race->name == 'Artillery' and !$dominion->hasProtector() and $dominion->protection_ticks == 1)
+                {
+                    throw new GameException('You cannot leave the magical state of protection until a Protector has guaranteed your protection.');
+                }
+
+                // Run the tick.
+                $this->tickService->tickManually($dominion);
+            });
+        }
 
         $this->notificationService->sendNotifications($dominion, 'irregular_dominion');
         return [

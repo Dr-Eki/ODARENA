@@ -129,7 +129,7 @@
                         <tbody>
                             <tr>
                                 <td>Morale:</td>
-                                <td>{{ number_format($dominion->morale) }}%</td>
+                                <td>{{ number_format($dominion->morale) }}</td>
                             </tr>
                             <tr>
                                 <td>

@@ -275,6 +275,11 @@ class MilitaryCalculator
         bool $ignoreRawDpFromAnnexedDominions = false # 9
     ): float
     {
+        if($defender->hasProtector())
+        {
+            $defender = $defender->protector;
+        }
+
         $dp = $this->getDefensivePowerRaw($defender, $attacker, $landRatio, $units, $multiplierReduction, $isAmbush, $ignoreRawDpFromBuildings, $invadingUnits, $ignoreRawDpFromAnnexedDominions);
         $dp *= $this->getDefensivePowerMultiplier($defender, $attacker, $multiplierReduction);
 
@@ -305,6 +310,12 @@ class MilitaryCalculator
         bool $ignoreRawDpFromSpells = false             # 10
     ): float
     {
+        
+        if($defender->hasProtector())
+        {
+            $defender = $defender->protector;
+        }
+
         $dp = 0;
 
         // Values
@@ -411,6 +422,12 @@ class MilitaryCalculator
      */
     public function getDefensivePowerMultiplier(Dominion $dominion, Dominion $attacker = null, float $multiplierReduction = 0): float
     {
+
+        if($dominion->hasProtector())
+        {
+            $dominion = $dominion->protector;
+        }
+
         $multiplier = 0;
 
         // Buildings

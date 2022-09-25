@@ -27,8 +27,6 @@ units:
     power:
       offense: 3
       defense: 2
-    perks:
-      casualties_on_offense: -50
 
   - name: Frigate
     training_time: 12

@@ -7,124 +7,153 @@
 
 @section('content')
 
+@if($selectedDominion->hasProtector())
 <div class="row">
     <div class="col-sm-12 col-md-9">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fas fa-pray"></i> Deity</h3>
+                <h3 class="box-title"><i class="fas fa-user-shield"></i> Protectorship</h3>
             </div>
             <div class="box-body">
-                @if(!$selectedDominion->hasDeity())
-                <form action="{{ route('dominion.government.deity') }}" method="post" role="form">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-striped">
-                                <colgroup>
-                                    <col width="50">
-                                    <col width="200">
-                                    <col width="100">
-                                    <col>
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Deity</th>
-                                        <th>Range Multiplier</th>
-                                        <th>Perks</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($deityHelper->getDeitiesByRace($selectedDominion->race) as $deity)
-                                    <tr>
-                                        <td>
-                                            @if($selectedDominion->hasPendingDeitySubmission() and $selectedDominion->getPendingDeitySubmission()->key == $deity->key)
-                                                <span class="text-muted"><i class="fas fa-pray"></i></span>
-                                            @else
-                                                <input type="radio" name="key" id="{{ $deity->key }}" value="{{ $deity->key }}" {{ ($selectedDominion->isLocked() || $selectedDominion->hasPendingDeitySubmission()) ? 'disabled' : null }}>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <label for="{{ $deity->key }}">{{ $deity->name }}</label>
-                                            @if($selectedDominion->hasPendingDeitySubmission() and $selectedDominion->getPendingDeitySubmission()->key == $deity->key)
-                                            <br><span class="small text-muted"><strong>{{ $selectedDominion->getPendingDeitySubmissionTicksLeft() }}</strong> {{ str_plural('tick', $selectedDominion->getPendingDeitySubmissionTicksLeft()) }} left until devotion is in effect</span>
-                                            @endif
-                                        </td>
-                                        <td>{{ $deity->range_multiplier }}x</td>
-                                        <td>
-                                            <ul>
-                                                @foreach($deityHelper->getDeityPerksString($deity) as $effect)
-                                                    <li>{{ ucfirst($effect) }}</li>
-                                                @endforeach
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-lg-6">
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-block" {{ ($selectedDominion->isLocked() || $selectedDominion->hasPendingDeitySubmission()) ? 'disabled' : null }}>
-                                Submit To This Deity
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                @elseif($selectedDominion->deity)
-                <form id="renounce-deity" action="{{ route('dominion.government.renounce') }}" method="post" role="form">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-12">
-                            <form action="{{ route('dominion.government.deity') }}" method="post" role="form">
-                            <p>You have been devoted to <strong>{{ $selectedDominion->deity->name }}</strong> for {{ $selectedDominion->devotion->duration }} ticks, granting you the following perks:</p>
-                            <ul>
-                                @foreach($deityHelper->getDeityPerksString($selectedDominion->deity, $selectedDominion->getDominionDeity()) as $effect)
-                                    <li>{{ ucfirst($effect) }}</li>
-                                @endforeach
-                                    <li>Range multiplier: {{ $selectedDominion->deity->range_multiplier }}x</li>
-                            </ul>
-                            @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity'))
-                                <p>If you wish to devote your dominion to another deity, you may renounce your devotion to {{ $selectedDominion->deity->name }} below.</p>
-                            @endif
-                        </div>
-                    </div>
-
-                    @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity'))
-                        <div class="col-sm-6 col-lg-6">
-                            <div class="form-group">
-                                <select id="renounce-deity"  class="form-control">
-                                    <option value="0">Renounce devotion?</option>
-                                    <option value="1">Confirm renounce</option>
-                                </select>
-                                <button id="renounce-deity" type="submit" class="btn btn-danger btn-block" disabled {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
-                                    Renounce This Deity
-                                </button>
-                            </div>
-                        </div>
-                    @endif
-                </form>
-                @endif
-            </div>
-        </div>
-    </div>
-
-    <div class="col-sm-12 col-md-3">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Information</h3>
-            </div>
-            <div class="box-body">
-                <p>You can devote your dominion to a deity in exchange for some perks (good and bad). For every tick that you remain devoted to a deity, the perks are increased by 0.10% per tick to a maximum of +100%, when the perk values are doubled.</p>
-                <p>It takes 48 ticks for a devotion to take effect. Your dominion can only be submitted to one deity at a time. However, you can renounce your deity to select a new one (which resets the ticks counter).</p>
-                <p>The range multiplier is the maximum land size range the deity permits you to interact with, unless recently invaded, and takes effect immediately once you submit to a deity. A dominion with a wider range cannot take actions against a dominion with a more narrow range, unless the two ranges overlap.</p>
-                <p>For more information, see the <a href="{{ route('scribes.deities') }}" target="_blank"><i class="ra ra-scroll-unfurled"></i> Scribes</a>.<p>
+                <p>You are under the guaranteed protection of <a href="{{ route('dominion.insight.show', $selectedDominion->protector) }}">{{ $selectedDominion->protector->name }} (# {{ $selectedDominion->protector->realm->number }})</a>, providing you with {{ number_format($militaryCalculator->getDefensivePower($selectedDominion->protector)) }} DP.</p>
             </div>
         </div>
     </div>
 </div>
+@endif
+
+@if($selectedDominion->isProtector())
+<div class="row">
+    <div class="col-sm-12 col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fas fa-user-shield"></i> Protectorship</h3>
+            </div>
+            <div class="box-body">
+                <p>You are the protector of <a href="{{ route('dominion.insight.show', $selectedDominion->protectedDominion) }}">{{ $selectedDominion->protectedDominion->name }} (# {{ $selectedDominion->protectedDominion->realm->number }})</a>, providing them with {{ number_format($militaryCalculator->getDefensivePower($selectedDominion)) }} DP.</p>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+@if($selectedDominion->protectorshipOffers->count() > 0)
+<div class="row">
+    <div class="col-sm-12 col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fas fa-bomb"></i> Artillery</h3>
+            </div>
+            <div class="box-body table-responsive">
+                <p>You have received the following protection offers:</p>
+                <table class="table table-striped table-hover">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col>
+                    </colgroup>
+                    <tr>
+                        <th>Ruler</th>
+                        <th>Dominion</th>
+                        <th>Respond</th>
+                    </tr>
+                    @foreach($selectedDominion->protectorshipOffers as $protectorshipOffer)
+                        <tr>
+                            <td><em>{{ $protectorshipOffer->protector->title->name }}</em> {{ $protectorshipOffer->protector->ruler_name }}</td>
+                            <td>{{ $protectorshipOffer->protector->name }}</td>
+                            <td>
+                                <div class="btn-toolbar">
+                                    <form action="{{ route('dominion.government.answer-protectorship-offer') }}" method="post" role="form">
+                                        @csrf
+                                        <input type="hidden" name="protectorship_offer_id" value="{{ $protectorshipOffer->id }}">
+                                        <input type="hidden" name="answer" value="accept">
+                                        <button type="submit" class="btn btn-success" {{ !$governmentCalculator->canBeProtected($selectedDominion) ? 'disabled' : ''}}>
+                                            Accept Offer
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('dominion.government.answer-protectorship-offer') }}" method="post" role="form">
+                                        @csrf
+                                        <input type="hidden" name="protectorship_offer_id" value="{{ $protectorshipOffer->id }}">
+                                        <input type="hidden" name="answer" value="decline">
+                                        <button type="submit" class="btn btn-danger" {{ !$governmentCalculator->canBeProtected($selectedDominion) ? 'disabled' : ''}}>
+                                            Decline Offer
+                                        </button>
+                                    </form> 
+                                </div> 
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+                <div class="box-footer">
+                    <p>Accepting an offer will form a permanent protectorship bond between you and the protector. When you accept an offer, all other offers will be cancelled and no further offers can be made.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@elseif(($unprotectedArtilleries = $governmentCalculator->getUnprotectedArtilleryDominions($selectedDominion->realm))->isNotEmpty())
+<div class="row">
+    <div class="col-sm-12 col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fas fa-bomb"></i> Artillery</h3>
+            </div>
+            <div class="box-body">
+                <p>The following Artillery dominions do not yet have a protector:</p>
+                <div class="form-group">
+                    <table class="table table-condensed">
+                            <tr>
+                                <th>Ruler</th>
+                                <th>Dominion</th>
+                                <th>Protectorship</th>
+                        @foreach($unprotectedArtilleries as $unprotectedArtillery)
+                            @php
+                                $protectorshipOffer = null;
+                                if($selectedDominion->protectorshipOffered->contains('protected_id', $unprotectedArtillery->id))
+                                {
+                                    $protectorshipOffer = OpenDominion\Models\ProtectorshipOffer::where('protected_id', $unprotectedArtillery->id)->where('protector_id', $selectedDominion->id)->first();
+                                }
+                            @endphp
+                            <tr>
+                                <td><em>{{ $unprotectedArtillery->title->name }}</em> {{ $unprotectedArtillery->ruler_name }}</td>
+                                <td>{{ $unprotectedArtillery->name }}</td>
+                                <td>
+                                    @if($protectorshipOffer)
+                                        <form action="{{ route('dominion.government.rescind-protectorship-offer') }}" method="post" role="form">
+                                            @csrf
+                                            <input type="hidden" name="protectorship_offer_id" value="{{ $protectorshipOffer->id }}">
+                                            <button type="submit" class="btn btn-warning" {{ !$governmentCalculator->canRescindProtectorshipOffer($selectedDominion, $protectorshipOffer) ? 'disabled' : ''}}>
+                                                Rescind Protectorship Offer
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('dominion.government.offer-protectorship') }}" method="post" role="form">
+                                            @csrf
+                                            <input type="hidden" name="unprotected_dominion" value="{{ $unprotectedArtillery->id }}">
+                                            <button type="submit" class="btn btn-primary" {{ !$governmentCalculator->canOfferProtectorship($selectedDominion) ? 'disabled' : ''}}>
+                                                Offer Protectorship
+                                            </button>
+                                        </form>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
+            <div class="box-footer">
+                @if($selectedDominion->isProtector())
+                    <p><span class="label label-warning">Protector</span> You are already protecting a dominion and cannot protect another one.</p>
+                @elseif(!$governmentCalculator->canOfferProtectorship($selectedDominion) and !$selectedDominion->protectorshipOffered->count())
+                    <p><span class="label label-warning">Cannot Protect</span> {{ $selectedDominion->race->name }} dominions cannot be protectors.</p>
+                @elseif($governmentCalculator->canOfferProtectorship($selectedDominion) and $selectedDominion->protectorshipOffered->count() > 0)
+                    <p><span class="label label-warning">Pending Offer</span> You have already submitted a protectorship offer.</p>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
 @if ($selectedDominion->isMonarch())
 <div class="row">

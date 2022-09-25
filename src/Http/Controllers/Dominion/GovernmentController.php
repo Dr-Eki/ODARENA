@@ -10,13 +10,17 @@ use OpenDominion\Helpers\DeityHelper;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Http\Requests\Dominion\Actions\GovernmentActionRequest;
 use OpenDominion\Services\Dominion\Actions\GovernmentActionService;
-use OpenDominion\Services\Dominion\GovernmentService;
-use OpenDominion\Services\Dominion\DeityService;
+#use OpenDominion\Services\Dominion\GovernmentService;
+#use OpenDominion\Services\Dominion\DeityService;
 use OpenDominion\Calculators\RealmCalculator;
+use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 
-use OpenDominion\Models\Decree;
-use OpenDominion\Models\DecreeState;
-use OpenDominion\Models\Deity;
+use OpenDominion\Models\Dominion;
+use OpenDominion\Models\ProtectorshipOffer;
+use OpenDominion\Services\Dominion\ProtectionService;
+
+#use OpenDominion\Models\DecreeState;
+#use OpenDominion\Models\Deity;
 
 
 class GovernmentController extends AbstractDominionController
@@ -46,6 +50,7 @@ class GovernmentController extends AbstractDominionController
             'landCalculator' => app(LandCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),
             'rangeCalculator' => app(RangeCalculator::class),
+            'militaryCalculator' => app(MilitaryCalculator::class),
             'realmCalculator' => app(RealmCalculator::class),
             'deityHelper' => app(DeityHelper::class)
         ]);
@@ -68,9 +73,6 @@ class GovernmentController extends AbstractDominionController
                 ->withInput($request->all())
                 ->withErrors([$e->getMessage()]);
         }
-
-        
-        
 
         $request->session()->flash('alert-success', 'Your vote has been cast!');
         return redirect()->route('dominion.government');
@@ -99,14 +101,14 @@ class GovernmentController extends AbstractDominionController
         return redirect()->route('dominion.government');
     }
 
-    public function postDeity(GovernmentActionRequest $request)
+    public function postOfferProtectorship(GovernmentActionRequest $request)
     {
-        $dominion = $this->getSelectedDominion();
-        $deityService = app(DeityService::class);
-        $deityKey = $request->get('key');
+        $protector = $this->getSelectedDominion();
+        $protected = Dominion::findOrFail($request->unprotected_dominion);
+        $governmentActionService = app(GovernmentActionService::class);
 
         try {
-            $deityService->submitToDeity($dominion, $deityKey);
+            $governmentActionService->submitProtectorshipOffer($protector, $protected);
         } catch (GameException $e) {
             return redirect()
                 ->back()
@@ -114,20 +116,18 @@ class GovernmentController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $deity = Deity::where('key', $deityKey)->first();
-
-        $request->session()->flash('alert-success', "You have successfully submitted your devotion to {$deity->name}!");
+        $request->session()->flash('alert-success', 'Your offer has been sent.');
         return redirect()->route('dominion.government');
     }
 
-    public function postRenounce(GovernmentActionRequest $request)
+    public function postRescindProtectorshipOffer(GovernmentActionRequest $request)
     {
-        $dominion = $this->getSelectedDominion();
-        $deityService = app(DeityService::class);
-        $deity = $dominion->deity;
+        $responder = $this->getSelectedDominion();
+        $protectorshipOffer = ProtectorshipOffer::findOrFail($request->protectorship_offer_id);
+        $governmentActionService = app(GovernmentActionService::class);
 
         try {
-            $deityService->renounceDeity($dominion, $deity);
+            $governmentActionService->rescindProtectorshipOffer($protectorshipOffer, $responder);
         } catch (GameException $e) {
             return redirect()
                 ->back()
@@ -135,8 +135,27 @@ class GovernmentController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-danger', "You have renounced your devotion to {$deity->name}.");
+        $request->session()->flash('alert-warning', 'Your offer has been rescinded.');
         return redirect()->route('dominion.government');
     }
 
+    public function postAnswerProtectorshipOffer(GovernmentActionRequest $request)
+    {
+        $responder = $this->getSelectedDominion();
+        $protectorshipOffer = ProtectorshipOffer::findOrFail($request->protectorship_offer_id);
+        $governmentActionService = app(GovernmentActionService::class);
+        $answer = $request->get('answer');
+
+        try {
+            $governmentActionService->answerProtectorshipOffer($protectorshipOffer, $answer, $responder);
+        } catch (GameException $e) {
+            return redirect()
+                ->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        $request->session()->flash('alert-success', 'Your answer has been sent.');
+        return redirect()->route('dominion.government');
+    }
 }

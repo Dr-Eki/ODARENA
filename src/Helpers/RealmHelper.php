@@ -88,7 +88,7 @@ class RealmHelper
         {
             $string = sprintf(
                 '<small class="text-muted">Ruler:</small> <em>%s</em> %s<br>
-                <small class="text-muted">Morale:</small> %s%%<br>
+                <small class="text-muted">Morale:</small> %s<br>
                 <small class="text-muted">DP:</small> %s',
                 $dominion->title->name,
                 $dominion->ruler_name,

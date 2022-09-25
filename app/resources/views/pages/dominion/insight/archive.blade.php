@@ -143,7 +143,7 @@
                         <tbody>
                             <tr>
                                 <td>Morale:</td>
-                                <td>{{ number_format($data['morale']) }}%</td>
+                                <td>{{ number_format($data['morale']) }}</td>
                             </tr>
                             <tr>
                                 <td>

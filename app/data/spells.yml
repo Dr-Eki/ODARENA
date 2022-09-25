@@ -291,6 +291,7 @@ waterwall:
 
 load_the_cannons:
   name: Load The Cannons
+  enabled: 0
   scope: self
   class: passive
   cost: 4

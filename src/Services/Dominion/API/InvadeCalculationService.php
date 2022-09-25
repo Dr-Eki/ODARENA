@@ -154,11 +154,21 @@ class InvadeCalculationService
 
         $this->calculationResult['home_defense'] = $this->militaryCalculator->getDefensivePower($dominion, null, null, $unitsHome);
         $this->calculationResult['home_defense_raw'] = $this->militaryCalculator->getDefensivePowerRaw($dominion, null, null, $unitsHome);
+
         $this->calculationResult['home_offense'] = $this->militaryCalculator->getOffensivePower($dominion, $target, $landRatio, $unitsHome, $calc);
         $this->calculationResult['home_dpa'] = $this->calculationResult['home_defense'] / $this->landCalculator->getTotalLand($dominion);
 
         $this->calculationResult['max_op'] = $this->calculationResult['home_defense'] * (4/3);
         $this->calculationResult['min_dp'] = $this->calculationResult['away_offense'] / 3;
+
+
+        if($dominion->hasProtector())
+        {
+            $this->calculationResult['home_defense'] = $this->militaryCalculator->getDefensivePower($dominion->protector);
+            $this->calculationResult['home_defense_raw'] = $this->militaryCalculator->getDefensivePowerRaw($dominion->protector);
+            $this->calculationResult['max_op'] = $this->calculationResult['away_offense'];    
+            $this->calculationResult['min_dp'] = $this->calculationResult['home_defense'];         
+        }
 
         if(isset($target) and $dominion->round->hasStarted() and !$this->protectionService->isUnderProtection($target))
         {

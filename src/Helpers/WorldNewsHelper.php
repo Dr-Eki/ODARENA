@@ -78,6 +78,15 @@ class WorldNewsHelper
             case 'new_dominion':
                 return $this->generateNewDominionString($event->source, $event->target, $viewer);
 
+            case 'protectorship_offered':
+                return $this->generateProtectorshipOfferedString($event->target, $event->source, $viewer);
+
+            case 'protectorship_accepted':
+                return $this->generateProtectorshipAcceptedString($event->target, $event->source, $viewer);
+
+            case 'protectorship_declined':
+                return $this->generateProtectorshipDeclinedString($event->target, $event->source, $viewer);
+
             case 'round_countdown_duration':
             case 'round_countdown':
                 return $this->generateCountdownString($event, $viewer);
@@ -477,6 +486,76 @@ class WorldNewsHelper
         return $string;
     }
 
+    public function generateProtectorshipOfferedString(Dominion $protected, Dominion $protector, Dominion $viewer): string
+    {
+        /*
+            Dark Elf (# 3) has offered to protect Artillery (# 3).
+        */
+
+        $viewerInvolved = ($protector->realm->id == $viewer->realm->id or $protected->realm->id == $viewer->realm->id);
+
+        if(!$viewerInvolved)
+        {
+            $string = sprintf(
+                'A protectorship offer has been made in the %s realm.',
+                $this->generateRealmOnlyString($protected->realm)
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                '%s has offered to protect %s.',
+                $this->generateDominionString($protector, 'neutral', $viewer),
+                $this->generateDominionString($protected, 'neutral', $viewer)
+              );
+        }
+
+        return $string;
+    }
+
+    public function generateProtectorshipAcceptedString(Dominion $protected, Dominion $protector, Dominion $viewer): string
+    {
+        /*
+            Artillery (# 3) is now under the protection of Orc (# 3).
+        */
+
+
+        $string = sprintf(
+            '%s is now under the protection of %s.',
+            $this->generateDominionString($protected, 'neutral', $viewer),
+            $this->generateDominionString($protector, 'neutral', $viewer)
+            );
+
+        return $string;
+    }
+
+    public function generateProtectorshipDeclinedString(Dominion $protected, Dominion $protector, Dominion $viewer): string
+    {
+        /*
+            Artillery (# 3) has declined a protectorship offer by Orc (# 3).
+        */
+
+        $viewerInvolved = ($protector->realm->id == $viewer->realm->id or $protected->realm->id == $viewer->realm->id);
+
+        if(!$viewerInvolved)
+        {
+            $string = sprintf(
+                'A protectorship offer has been declined in the %s realm.',
+                $this->generateRealmOnlyString($protected->realm)
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                '%s has has declined a protectorship offer by %s.',
+                $this->generateDominionString($protected, 'neutral', $viewer),
+                $this->generateDominionString($protector, 'neutral', $viewer)
+              );
+        }
+
+        return $string;
+    }
+
     public function generateSabotageString(Dominion $caster, Dominion $target, GameEvent $sorcery, Dominion $viewer): string
     {
 
@@ -757,6 +836,9 @@ class WorldNewsHelper
             'invasion' => 'Invasion',
             'invasion_support' => 'Invasion support',
             'new_dominion' => 'New dominion',
+            'protectorship_offered' => 'Protectorship offer',
+            'protectorship_accepted' => 'Protectorship established',
+            'protectorship_declined' => 'Protectorship declined',
             'round_countdown_duration' => 'Round countdown (fixed length rounds)',
             'round_countdown' => 'Round countdown (land target rounds)',
             'sabotage' => 'Sabotage',

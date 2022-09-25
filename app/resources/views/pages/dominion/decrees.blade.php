@@ -10,9 +10,6 @@
     $bootstrapColWidth = 12 / $numOfCols;
 @endphp
 
-
-
-
 <div class="row">
     @foreach($decrees as $decree)
         @php
@@ -23,7 +20,6 @@
             $ticksUntilCanRevoke = $decreeCalculator->getTicksUntilDominionCanRevokeDecree($selectedDominion, $decree);
         }
         @endphp
-
 
         <div class="col-md-{{ $bootstrapColWidth }}">
             <div class="box {{ $isIssued ? 'box-success' : '' }}">

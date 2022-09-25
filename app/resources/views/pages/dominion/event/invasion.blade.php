@@ -8,6 +8,18 @@
         {
             $boxColor = ($event->data['result']['success'] ? 'danger' : 'success');
         }
+
+        $isProtectorate = ($event->data['is_protectorate'] ?? false);
+
+        $defender = $event->target;
+        $target = $event->target;
+
+        if ($isProtectorate)
+        {
+            $target = $event->target;
+            $defender = OpenDominion\Models\Dominion::where('id', $event->data['protectorate']['protector_id'])->first();;
+        }
+
     @endphp
     <div class="row">
         <div class="col-sm-12 col-md-8 col-md-offset-2">
@@ -42,7 +54,10 @@
                             and liberated
                         @endif
 
-                        {{ $event->target->name }}
+                        {{ $target->name }}
+                        @if($isProtectorate)
+                            (Protectorate of {{ $defender->name }})
+                        @endif
                         </span>
                     </h3>
                 </div>
@@ -50,24 +65,23 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-4">
                             <div class="text-center">
-
                                 <h4>{{ $event->source->name }}</h4>
-                            @if (isset($event->data['result']['overwhelmed']) && $event->data['result']['overwhelmed'])
-                                <p class="text-center text-red">
-                                    @if ($event->source->id === $selectedDominion->id)
-                                        Because you were severely outmatched, you suffer extra casualties.
-                                    @else
-                                        Because the forces from {{ $event->source->name }} were severely outmatched, they suffer extra casualties.
-                                    @endif
-                                </p>
-                            @endif
-                            @if ($event->source->realm->id === $selectedDominion->realm->id)
-                                @if (isset($event->data['attacker']['instantReturn']))
-                                    <p class="text-center text-blue">
-                                        ⫷⫷◬⫸◬⫸◬<br>The waves align in your favour. <b>The invading units return home instantly.</b>
+                                @if (isset($event->data['result']['overwhelmed']) && $event->data['result']['overwhelmed'])
+                                    <p class="text-center text-red">
+                                        @if ($event->source->id === $selectedDominion->id)
+                                            Because you were severely outmatched, you suffer extra casualties.
+                                        @else
+                                            Because the forces from {{ $event->source->name }} were severely outmatched, they suffer extra casualties.
+                                        @endif
                                     </p>
                                 @endif
-                            @endif
+                                @if ($event->source->realm->id === $selectedDominion->realm->id)
+                                    @if (isset($event->data['attacker']['instantReturn']))
+                                        <p class="text-center text-blue">
+                                            ⫷⫷◬⫸◬⫸◬<br>The waves align in your favour. <b>The invading units return home instantly.</b>
+                                        </p>
+                                    @endif
+                                @endif
                             </div>
 
                             <table class="table">
@@ -256,7 +270,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>XP:</td>
+                                        <td>Experience Points:</td>
                                         <td>
                                         @if (isset($event->data['attacker']['xp']))
                                             <span class="text-green">
@@ -278,20 +292,20 @@
                                             @endphp
                                             @if ($moraleChange < 0)
                                                 <span class="text-red">
-                                                    {{ number_format($moraleChange) }}%
+                                                    {{ number_format($moraleChange) }}
                                                 </span>
                                             @elseif ($moraleChange > 0)
                                                 <span class="text-green">
-                                                    +{{ number_format($moraleChange) }}%
+                                                    +{{ number_format($moraleChange) }}
                                                 </span>
                                             @else
                                                 <span class="text-muted">
-                                                    0%
+                                                    0
                                                 </span>
                                             @endif
                                         @else
                                             <span class="text-muted">
-                                                0%
+                                                0
                                             </span>
                                         @endif
                                         </td>
@@ -512,7 +526,10 @@
 
                         <div class="col-xs-12 col-sm-4">
                             <div class="text-center">
-                            <h4>{{ $event->target->name }}</h4>
+                            <h4>{{ $defender->name }}</h4>
+                            @if($isProtectorate)
+                                <h5>Protector of {{ $target->name }}</h5>
+                            @endif
                             </div>
                             <table class="table">
                                 <colgroup>
@@ -539,8 +556,8 @@
 
                                         <tr>
                                             <td>
-                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString( $event->source->race) }}">
-                                                    {{ $raceHelper->getPeasantsTerm($selectedDominion->race) }}:
+                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString($defender->race) }}">
+                                                    {{ $raceHelper->getPeasantsTerm($defender->race) }}:
                                                 </span>
                                             </td>
                                             <td>
@@ -566,8 +583,8 @@
 
                                         <tr>
                                             <td>
-                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString( $event->source->race) }}">
-                                                    {{ $raceHelper->getDrafteesTerm($event->target->race) }}:
+                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString($defender->race) }}">
+                                                    {{ $raceHelper->getDrafteesTerm($defender->race) }}:
                                                 </span>
                                             </td>
                                             <td>
@@ -581,22 +598,21 @@
                                         </tr>
 
                                     @endif
-                                    @for ($slot = 1; $slot <= $event->target->race->units->count(); $slot++)
+                                    @for ($slot = 1; $slot <= $defender->race->units->count(); $slot++)
                                     @if((isset($event->data['defender']['units_defending'][$slot]) and $event->data['defender']['units_defending'][$slot] > 0) or
                                         (isset($event->data['defender']['units_lost'][$slot]) and $event->data['defender']['units_lost'][$slot] > 0)
                                         )
-
                                         @php
                                             $unitType = "unit{$slot}";
                                         @endphp
                                         <tr>
                                             <td>
-                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $event->target->race, [$militaryCalculator->getUnitPowerWithPerks($event->target, null, null, $event->target->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($event->target, null, null, $event->target->race->units->get(($slot-1)), 'defense'), ]) }}">
-                                                    {{ $event->target->race->units->where('slot', $slot)->first()->name }}
+                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $defender->race, [$militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'defense'), ]) }}">
+                                                    {{ $defender->race->units->where('slot', $slot)->first()->name }}
                                                 </span>
                                             </td>
                                             <td>
-                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $event->target->race, [$militaryCalculator->getUnitPowerWithPerks($event->target, null, null, $event->target->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($event->target, null, null, $event->target->race->units->get(($slot-1)), 'defense'), ]) }}">
+                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $defender->race, [$militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'defense'), ]) }}">
                                                       @if ($event->target->realm->id === $selectedDominion->realm->id)
                                                           @if (isset($event->data['defender']['units_defending'][$slot]))
                                                               {{ number_format($event->data['defender']['units_defending'][$slot]) }}
@@ -740,20 +756,20 @@
                                             @endphp
                                             @if ($moraleChange < 0)
                                                 <span class="text-red">
-                                                    {{ number_format($moraleChange) }}%
+                                                    {{ number_format($moraleChange) }}
                                                 </span>
                                             @elseif ($moraleChange > 0)
                                                 <span class="text-green">
-                                                    +{{ number_format($moraleChange) }}%
+                                                    +{{ number_format($moraleChange) }}
                                                 </span>
                                             @else
                                                 <span class="text-muted">
-                                                    0%
+                                                    0
                                                 </span>
                                             @endif
                                         @else
                                             <span class="text-muted">
-                                                0%
+                                                0
                                             </span>
                                         @endif
                                         </td>

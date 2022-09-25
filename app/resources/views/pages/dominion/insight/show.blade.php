@@ -191,7 +191,7 @@
                         <tbody>
                             <tr>
                                 <td>Morale:</td>
-                                <td>{{ number_format($dominion->morale) }}% / {{ number_format($moraleCalculator->getBaseMorale($dominion)) }}%</td>
+                                <td>{{ number_format($dominion->morale) }}% / {{ number_format($moraleCalculator->getBaseMorale($dominion)) }}</td>
                             </tr>
                             <tr>
                                 <td>

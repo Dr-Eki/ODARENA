@@ -47,7 +47,7 @@
                 <div class="col-xs-2">
                     <div class="row">
                         <div class="col-lg-6"><b>Morale:</b></div>
-                        <div class="col-lg-6">{{ number_format($selectedDominion->morale) }}%</div>
+                        <div class="col-lg-6">{{ number_format($selectedDominion->morale) }}</div>
                     </div>
                 </div>
             </div>
@@ -71,28 +71,28 @@
             </div>
 
             @if ($dominionProtectionService->canTick($selectedDominion))
-            <div class="row">
-                <div class="col-xs-12">
-                    <form action="{{ route('dominion.status') }}" method="post" role="form" id="tick_form">
-                    @csrf
-                    <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form action="{{ route('dominion.status') }}" method="post" role="form" id="tick_form">
+                        @csrf
+                        <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
 
-                    <select class="btn btn-warning" name="ticks">
-                        @for ($i = 1; $i <= min(24, $selectedDominion->protection_ticks); $i++)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
+                        <select class="btn btn-warning" name="ticks">
+                            @for ($i = 1; $i <= min(24, $selectedDominion->protection_ticks); $i++)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
 
-                    <button type="submit"
-                            class="btn btn-info"
-                            {{ $selectedDominion->isLocked() ? 'disabled' : null }}
-                            id="tick-button">
-                        <i class="ra ra-shield"></i>
-                        Proceed tick(s) ({{ $selectedDominion->protection_ticks }} {{ str_plural('tick', $selectedDominion->protection_ticks) }} left)
-                    </button>
-                  </form>
+                        <button type="submit"
+                                class="btn btn-primary"
+                                {{ $selectedDominion->isLocked() ? 'disabled' : null }}
+                                id="tick-button">
+                            <i class="ra ra-shield"></i>
+                            Proceed tick(s) ({{ $selectedDominion->protection_ticks }} {{ str_plural('tick', $selectedDominion->protection_ticks) }} left)
+                        </button>
+                    </form>
+                    </div>
                 </div>
-            </div>
             @endif
 
         </div>

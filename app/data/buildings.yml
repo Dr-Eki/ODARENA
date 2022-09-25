@@ -414,6 +414,7 @@ aqueduct:
   land_type: water
   perks:
     food_production_mod: 1,8,40 # Every 1% gives +8% food production, max +20%
+    population_growth: 1,18 # Every 1%, gives 6%, no max
 
 shipyard:
   name: Shipyard
@@ -507,6 +508,7 @@ obelisk:
 guard_tower:
   name: Guard Tower
   excluded_races:
+    - Artillery
     - Dragon
     - Growth
     - Cires
@@ -549,8 +551,9 @@ gryphon_nest:
 # END SNOW ELF
 
 temple:
-  name: Temple
+  name: Watch Tower
   excluded_races:
+    - Artillery
     - Dragon
     - Growth
     - Icekin
@@ -566,7 +569,6 @@ temple:
   land_type: swamp
   perks:
     target_defensive_power_mod: 1,-1.8,36 # Every 1% gives -2% DP mods, max -40% DP mods
-    population_growth: 1,6 # Every 1%, gives 6%
 
 tavern:
   name: Tavern
@@ -597,6 +599,7 @@ stone_wall:
 shrine:
   name: Shrine
   excluded_races:
+    - Artillery
     - Dragon
     - Growth
     - Icekin

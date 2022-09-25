@@ -98,7 +98,11 @@
                     <li class="{{ Route::is('dominion.decrees') ? 'active' : null }}"><a href="{{ route('dominion.decrees') }}"><i class="fas fa-gavel fw-fw"></i> <span>Decrees</span></a></li>
                 @endif
 
-                @if(!$selectedDominion->race->getPerkValue('cannot_submit_to_deity') and !$selectedDominion->race->getPerkValue('cannot_vote'))
+                @if(!$selectedDominion->race->getPerkValue('cannot_submit_to_deity'))
+                    <li class="{{ Route::is('dominion.deity') ? 'active' : null }}"><a href="{{ route('dominion.deity') }}"><i class="fas fa-pray fa-fw"></i> <span>Deity</span></a></li>
+                @endif
+
+                @if(!$selectedDominion->race->getPerkValue('cannot_vote'))
                     <li class="{{ Route::is('dominion.government') ? 'active' : null }}"><a href="{{ route('dominion.government') }}"><i class="fa fa-university fa-fw"></i> <span>Government</span></a></li>
                 @endif
 

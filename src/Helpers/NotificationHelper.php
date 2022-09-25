@@ -164,6 +164,18 @@ class NotificationHelper
                 'route' => route('dominion.status'),
                 'iconClass' => 'ra ra-crossed-swords text-red',
             ],
+            'protector_received_invasion' => [
+                'label' => 'Your protector got invaded',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.status'),
+                'iconClass' => 'fas fa-user-shield text-red',
+            ],
+            'protector_repelled_invasion' => [
+                'label' => 'Your dominion repelled an invasion',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.status'),
+                'iconClass' => 'fas fa-user-shield text-red',
+            ],
         ];
     }
 
@@ -186,6 +198,40 @@ class NotificationHelper
                 },
                 'iconClass' => 'ra ra-crossed-swords text-orange',
             ],
+            # PROTECTORSHIP
+            'protector_received_invasion' => [
+                'label' => 'Your protector got invaded',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => function (array $routeParams) {
+                    return route('dominion.event', $routeParams);
+                },
+                'iconClass' => 'ra ra-crossed-swords text-red',
+            ],
+            'protector_repelled_invasion' => [
+                'label' => 'Your protector repelled an invasion',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => function (array $routeParams) {
+                    return route('dominion.event', $routeParams);
+                },
+                'iconClass' => 'ra ra-crossed-swords text-orange',
+            ],
+            'received_invasion_as_protector' => [
+                'label' => 'Your protector got invaded',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => function (array $routeParams) {
+                    return route('dominion.event', $routeParams);
+                },
+                'iconClass' => 'ra ra-crossed-swords text-red',
+            ],
+            'repelled_invasion_as_protector' => [
+                'label' => 'Your protector repelled an invasion',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => function (array $routeParams) {
+                    return route('dominion.event', $routeParams);
+                },
+                'iconClass' => 'ra ra-crossed-swords text-orange',
+            ],
+            # END PROTECTORSHIP
             'theft' => [
                 'label' => 'Your dominion was stolen from',
                 'defaults' => ['email' => false, 'ingame' => true],
@@ -254,6 +300,24 @@ class NotificationHelper
                 'label' => 'Friendly spell received',
                 'defaults' => ['email' => false, 'ingame' => true],
                 'iconClass' => 'ra ra-fairy-wand text-green',
+            ],
+            'received_protectorship_offer' => [
+                'label' => 'Protectorship offer received',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fas fa-user-shield text-green',
+                'route' => route('dominion.government'),
+            ],
+            'received_protectorship_offer_accepted' => [
+                'label' => 'Protectorship offer accepted',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fas fa-user-shield text-green',
+                'route' => route('dominion.government'),
+            ],
+            'received_protectorship_offer_declined' => [
+                'label' => 'Protectorship offer declined',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fas fa-user-shield',
+                'route' => route('dominion.government'),
             ],
 
             # Cult
@@ -579,6 +643,58 @@ class NotificationHelper
                     number_format(array_sum($data['units_lost']))
                 );
 
+            # PROTECTORSHIP
+
+            case 'irregular_dominion.protector_received_invasion':
+                $attackerDominion = Dominion::with('realm')->findOrFail($data['attackerDominionId']);
+                $protectorDominion = Dominion::with('realm')->findOrFail($data['protectorDominionId']);
+                return sprintf(
+                    'An army from %s (#%s) invaded our lands after breaking through the defenses of %s (#%s), conquering %s acres of land.',
+                    $attackerDominion->name,
+                    $attackerDominion->realm->number,
+                    $protectorDominion->name,
+                    $protectorDominion->realm->number,
+                    number_format($data['land_lost'])
+                );
+
+            case 'irregular_dominion.protector_repelled_invasion':
+                $attackerDominion = Dominion::with('realm')->findOrFail($data['attackerDominionId']);
+                $protectorDominion = Dominion::with('realm')->findOrFail($data['protectorDominionId']);
+                return sprintf(
+                    'Forces from %s (#%s) tried to invade our lands, but our protector %s (#%s) drove them back!',
+                    $attackerDominion->name,
+                    $attackerDominion->realm->number,
+                    $protectorDominion->name,
+                    $protectorDominion->realm->number
+                );
+
+            case 'irregular_dominion.received_invasion_as_protector':
+                $attackerDominion = Dominion::with('realm')->findOrFail($data['attackerDominionId']);
+                $protectedDominion = Dominion::with('realm')->findOrFail($data['protectedDominionId']);
+                return sprintf(
+                    'An army from %s (#%s) invaded our protectorate of %s (#%s), and we were unable to fight them back. We lost %s units and our protectorate lost %s land.',
+                    $attackerDominion->name,
+                    $attackerDominion->realm->number,
+                    $protectedDominion->name,
+                    $protectedDominion->realm->number,
+                    number_format(array_sum($data['units_lost'])),
+                    number_format($data['land_lost'])
+                );
+
+            case 'irregular_dominion.repelled_invasion_as_protector':
+                $attackerDominion = Dominion::with('realm')->findOrFail($data['attackerDominionId']);
+                $protectedDominion = Dominion::with('realm')->findOrFail($data['protectedDominionId']);
+                return sprintf(
+                    'An army from %s (#%s) tried to invade our protectorate of %s (#%s), but we were unable to fight them back! We lost %s units.',
+                    $attackerDominion->name,
+                    $attackerDominion->realm->number,
+                    $protectedDominion->name,
+                    $protectedDominion->realm->number,
+                    number_format(array_sum($data['units_lost']))
+                );
+
+            # END PROTECTORSHIP
+
             case 'irregular_dominion.theft':
                 $thief = Dominion::with('realm')->findOrFail($data['thiefDominionId']);
                 $resource = Resource::findOrFail($data['resource']);
@@ -636,6 +752,30 @@ class NotificationHelper
                     );
                 }
 
+            case 'irregular_dominion.received_protectorship_offer':
+                $protector = Dominion::with('realm')->findOrFail($data['protectorDominionId']);
+                return sprintf(
+                    'We have received a protectorship offer from %s (# %s).',
+                    $protector->name,
+                    $protector->realm->number
+                );
+
+            case 'irregular_dominion.received_protectorship_offer_accepted':
+                $protected = Dominion::with('realm')->findOrFail($data['protectedDominionId']);
+                return sprintf(
+                    '%s (# %s) has accepted our offer of protectorship.',
+                    $protected->name,
+                    $protected->realm->number
+                );
+
+            case 'irregular_dominion.received_protectorship_offer_declined':
+                $protected = Dominion::with('realm')->findOrFail($data['protectedDominionId']);
+                return sprintf(
+                    '%s (# %s) has declined our offer of protectorship.',
+                    $protected->name,
+                    $protected->realm->number
+                );
+    
             case 'irregular_dominion.received_spy_op':
                 $sourceDominion = Dominion::with('realm')->find($data['sourceDominionId']);
 

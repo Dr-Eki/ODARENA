@@ -102,9 +102,7 @@ class MiscController extends AbstractDominionController
                 throw new LogicException('You cannot delete your dominion because the round has ended.');
             }
 
-            # Destroy the dominion.
-
-            # Remove votes
+            # Delete all traces of the dominion.
             DB::table('dominions')->where('monarchy_vote_for_dominion_id', '=', $dominion->id)->update(['monarchy_vote_for_dominion_id' => null]);
             DB::table('realms')->where('monarch_dominion_id', '=', $dominion->id)->update(['monarch_dominion_id' => null]);
 
@@ -134,12 +132,15 @@ class MiscController extends AbstractDominionController
             DB::table('game_events')->where('source_id', '=', $dominion->id)->delete();
             DB::table('game_events')->where('target_id', '=', $dominion->id)->delete();
 
-            DB::table('info_ops')->where('source_dominion_id', '=', $dominion->id)->delete();
-            DB::table('info_ops')->where('target_dominion_id', '=', $dominion->id)->delete();
-
             DB::table('watched_dominions')->where('dominion_id', '=', $dominion->id)->delete();
             DB::table('watched_dominions')->where('watcher_id', '=', $dominion->id)->delete();
 
+            DB::table('protectorships')->where('protector_id', '=', $dominion->id)->delete();
+            DB::table('protectorships')->where('protected_id', '=', $dominion->id)->delete();
+            DB::table('protectorship_offers')->where('protector_id', '=', $dominion->id)->delete();
+            DB::table('protectorship_offers')->where('protected_id', '=', $dominion->id)->delete();
+
+            # Delete the dominion.
             DB::table('dominions')->where('id', '=', $dominion->id)->delete();
             
         });
@@ -243,7 +244,7 @@ class MiscController extends AbstractDominionController
         return redirect()
             ->to(route('dashboard'))
             ->with(
-                'alert-danger',
+                'alert-success',
                 'Your dominion has been abandoned.'
             );
     }

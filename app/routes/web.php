@@ -182,7 +182,7 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->post('council/post/{post}/delete')->uses('Dominion\CouncilController@postDeletePost');
 
             // Insight
-            $router->get('insight', function(){ return Redirect::to('dominion/status'); });#uses('Dominion\InsightController@getIndex')->name('insight');
+            $router->get('insight', redirect()->route('dominion.status'));#uses('Dominion\InsightController@getIndex')->name('insight');
             $router->get('insight/watched-dominions')->uses('Dominion\InsightController@getWatchedDominions')->name('insight.watched-dominions');
             $router->get('insight/{dominion}')->uses('Dominion\InsightController@getDominion')->name('insight.show');
             $router->get('insight/{dominion}/archive')->uses('Dominion\InsightController@getDominionInsightArchive')->name('insight.archive');
@@ -196,12 +196,14 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->post('government/deity')->uses('Dominion\GovernmentController@postDeity')->name('government.deity');
             $router->post('government/renounce')->uses('Dominion\GovernmentController@postRenounce')->name('government.renounce');
             $router->post('government/realm')->uses('Dominion\GovernmentController@postRealm')->name('government.realm');
-            #$router->post('government/royal-guard/join')->uses('Dominion\GovernmentController@postJoinRoyalGuard')->name('government.royal-guard.join');
-            #$router->post('government/elite-guard/join')->uses('Dominion\GovernmentController@postJoinEliteGuard')->name('government.elite-guard.join');
-            #$router->post('government/royal-guard/leave')->uses('Dominion\GovernmentController@postLeaveRoyalGuard')->name('government.royal-guard.leave');
-            #$router->post('government/elite-guard/leave')->uses('Dominion\GovernmentController@postLeaveEliteGuard')->name('government.elite-guard.leave');
-            #$router->post('government/war/declare')->uses('Dominion\GovernmentController@postDeclareWar')->name('government.war.declare');
-            #$router->post('government/war/cancel')->uses('Dominion\GovernmentController@postCancelWar')->name('government.war.cancel');
+            $router->post('government/offer-protectorship')->uses('Dominion\GovernmentController@postOfferProtectorship')->name('government.offer-protectorship');
+            $router->post('government/answer-protectorship-offer')->uses('Dominion\GovernmentController@postAnswerProtectorshipOffer')->name('government.answer-protectorship-offer');
+            $router->post('government/rescind-protectorship-offer')->uses('Dominion\GovernmentController@postRescindProtectorshipOffer')->name('government.rescind-protectorship-offer');
+
+            // Deity
+            $router->get('deity')->uses('Dominion\DeityController@getIndex')->name('deity');
+            $router->post('deity/deity')->uses('Dominion\DeityController@postDeity')->name('deity.deity');
+            $router->post('deity/renounce')->uses('Dominion\DeityController@postRenounce')->name('deity.renounce');
 
             // Decrees
             $router->get('decrees')->uses('Dominion\DecreesController@getIndex')->name('decrees');

@@ -6,11 +6,15 @@ use Carbon\Carbon;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Realm;
-use OpenDominion\Services\Dominion\HistoryService;
+use OpenDominion\Models\ProtectorshipOffer;
+use OpenDominion\Calculators\Dominion\GovernmentCalculator;
 
 class GovernmentService
 {
-
+    public function __construct()
+    {
+        $this->governmentCalculator = app(GovernmentCalculator::class);
+    }
     /**
      * Gets votes for Realm monarchy by Dominion.
      *
@@ -121,5 +125,7 @@ class GovernmentService
         $realm->monarch_dominion_id = $monarch_dominion_id;
         $realm->save();
     }
+
+
 
 }

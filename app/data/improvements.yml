@@ -96,6 +96,7 @@ construction_qur:
 defense:
   name: Defense
   excluded_races:
+    - Artillery
     - Barbarian
     - Beastfolk
     - Growth

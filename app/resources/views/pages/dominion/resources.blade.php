@@ -80,7 +80,7 @@
                                 @endforeach
 
                                 <tr>
-                                    <td>Experience points:</td>
+                                    <td>Experience Points:</td>
                                     <td>
                                         @if ($xpGeneration = $productionCalculator->getXpGeneration($selectedDominion))
                                             <span data-toggle="tooltip" data-placement="top" title="Raw: {{ number_format($productionCalculator->getXpGenerationRaw($selectedDominion, $resourceKey)) }}">

@@ -2,10 +2,12 @@
 
 namespace OpenDominion\Services\Dominion\Actions;
 
+use DB;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
-use OpenDominion\Models\Realm;
+use OpenDominion\Models\Protectorship;
+use OpenDominion\Models\ProtectorshipOffer;
 use OpenDominion\Services\Dominion\GovernmentService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Realm\HistoryService;
@@ -187,6 +189,232 @@ class GovernmentActionService
         }
 
         $dominion->realm->save(['event' => HistoryService::EVENT_ACTION_REALM_UPDATED]);
+    }
+
+    public function submitProtectorshipOffer(Dominion $protector, Dominion $protected)
+    {
+        $this->guardLockedDominion($protector);
+        $this->guardActionsDuringTick($protector);
+        $this->guardLockedDominion($protected);
+        $this->guardActionsDuringTick($protected);
+
+        DB::transaction(function () use ($protector, $protected)
+        {
+            if(!$protector or !$protected)
+            {
+                throw new GameException('Invalid protectorship offer.');
+            }
+
+            if($protector->isProtector())
+            {
+                throw new GameException('You are already protecting a dominion.');
+            }
+
+            if($protected->hasProtector())
+            {
+                throw new GameException($protected->name . ' already has a protector.');
+            }
+
+            if($protected->realm->id !== $protector->realm->id)
+            {
+                throw new GameException('You cannot offer protection to a dominion outside of your realm.');
+            }
+
+            if($protected->round->id !== $protector->round->id)
+            {
+                throw new GameException('You cannot offer protection to a dominion outside of the current round.');
+            }
+
+            if(!$this->governmentCalculator->canOfferProtectorship($protector))
+            {
+                throw new GameException('You cannot offer protection.');
+            }
+
+            if(!$this->governmentCalculator->canBeProtected($protected))
+            {
+                throw new GameException($protected->name . ' cannot be protected.');
+            }
+
+            $protectorshipOffer = ProtectorshipOffer::create([
+                'protector_id' => $protector->id,
+                'protected_id' => $protected->id,
+                'status' => 0
+            ]);
+
+            if($protectorshipOffer)
+            {
+                GameEvent::create([
+                    'round_id' => $protector->round_id,
+                    'source_type' => Dominion::class,
+                    'source_id' => $protector->id,
+                    'target_type' => Dominion::class,
+                    'target_id' => $protected->id,
+                    'type' => 'protectorship_offered',
+                    'data' => NULL,
+                    'tick' => $protector->round->ticks
+                ]);
+
+                $this->notificationService
+                ->queueNotification('received_protectorship_offer', [
+                    'protectorDominionId' => $protector->id,
+                ])
+                ->sendNotifications($protected, 'irregular_dominion');
+            }
+        });
+    }
+
+    public function rescindProtectorshipOffer(ProtectorshipOffer $protectorshipOffer, Dominion $responder)
+    {
+        $protector = $protectorshipOffer->protector;
+        $protected = $protectorshipOffer->protected;
+
+        $this->guardLockedDominion($protector);
+        $this->guardActionsDuringTick($protector);
+
+        $this->guardLockedDominion($protected);
+        $this->guardActionsDuringTick($protected);
+
+        $this->guardLockedDominion($responder);
+        $this->guardActionsDuringTick($responder);
+
+        DB::transaction(function () use ($protector, $responder, $protectorshipOffer)
+        {
+            if($protector->id !== $responder->id)
+            {
+                throw new GameException('Invalid protectorship offer.');
+            }
+
+            if(!$this->governmentCalculator->canRescindProtectorshipOffer($protector, $protectorshipOffer))
+            {
+                throw new GameException('You cannot rescind this protectorship offer.');
+            }
+
+            $protectorshipOffer->delete();
+
+        });
+    }
+
+    public function answerProtectorshipOffer(ProtectorshipOffer $protectorshipOffer, string $answer, Dominion $responder)
+    {
+        $protector = $protectorshipOffer->protector;
+        $protected = $protectorshipOffer->protected;
+
+        $this->guardLockedDominion($responder);
+        $this->guardActionsDuringTick($responder);
+
+        $this->guardLockedDominion($protector);
+        $this->guardActionsDuringTick($protector);
+
+        $this->guardLockedDominion($protected);
+        $this->guardActionsDuringTick($protected);
+
+        DB::transaction(function () use ($protectorshipOffer, $protector, $protected, $answer, $responder)
+        {
+            if(!$protector or !$protected)
+            {
+                throw new GameException('Invalid protectorship offer.');
+            }
+
+            if($responder->id !== $protected->id)
+            {
+                throw new GameException('You cannot answer this offer.');
+            }
+
+            if($protector->isProtector())
+            {
+                throw new GameException($protector->name . ' is already protecting someone else.');
+            }
+
+            if($protected->hasProtector())
+            {
+                throw new GameException('You already have a protector.');
+            }
+
+            if($protected->realm->id !== $protector->realm->id)
+            {
+                throw new GameException('You cannot enter into protectorship with a dominion outside of your realm.');
+            }
+
+            if($protected->round->id !== $protector->round->id)
+            {
+                throw new GameException('You cannot enter into protectorship with a dominion outside of the current round.');
+            }
+
+            if(!$this->governmentCalculator->canBeProtector($protector) and $answer == 'accept')
+            {
+                throw new GameException($protector->name . ' cannot be a protector.');
+            }
+
+            if(!$this->governmentCalculator->canBeProtected($protected))
+            {
+                throw new GameException('You cannot be protected.');
+            }
+
+            if($answer == 'accept')
+            {
+                $protectorship = Protectorship::create([
+                    'protector_id' => $protector->id,
+                    'protected_id' => $protected->id,
+                    'tick' => $protected->round->ticks
+                ]);
+    
+                if($protectorship)
+                {
+                    GameEvent::create([
+                        'round_id' => $protector->round_id,
+                        'source_type' => Dominion::class,
+                        'source_id' => $protector->id,
+                        'target_type' => Dominion::class,
+                        'target_id' => $protected->id,
+                        'type' => 'protectorship_accepted',
+                        'data' => NULL,
+                        'tick' => $protector->round->ticks
+                    ]);
+
+                    $this->notificationService
+                    ->queueNotification('received_protectorship_offer_accepted', [
+                        'protectedDominionId' => $protected->id,
+                    ])
+                    ->sendNotifications($protector, 'irregular_dominion');
+
+                    # Delete all other protectorship offers
+                    ProtectorshipOffer::where([
+                        'protected_id' => $protected->id,
+                    ])->delete();
+
+                    ProtectorshipOffer::where([
+                        'protector_id' => $protector->id,
+                    ])->delete();
+                }
+            }
+            elseif($answer == 'decline')
+            {
+                # Delete the protectorship offer
+                $protectorshipOffer->delete();
+
+                GameEvent::create([
+                    'round_id' => $protector->round_id,
+                    'source_type' => Dominion::class,
+                    'source_id' => $protector->id,
+                    'target_type' => Dominion::class,
+                    'target_id' => $protected->id,
+                    'type' => 'protectorship_declined',
+                    'data' => NULL,
+                    'tick' => $protector->round->ticks
+                ]);
+
+                $this->notificationService
+                ->queueNotification('received_protectorship_offer_declined', [
+                    'protectedDominionId' => $protector->id,
+                ])
+                ->sendNotifications($protector, 'irregular_dominion');
+            }
+            else
+            {
+                throw new GameException('Invalid answer.');
+            }
+
+        });
     }
 
 }

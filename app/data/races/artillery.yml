@@ -5,6 +5,7 @@ home_land_type: hill
 playable: 1
 skill_level: 2
 experimental: 1
+minimum_rounds: 2
 
 perks:
   max_population: -20
@@ -14,7 +15,6 @@ perks:
   no_prestige_loss_on_failed_invasions: 1
   no_morale_loss_on_failed_invasions: 1
   max_gunpowder_per_cannon: 3
-  defensive_power: 30
 
 resources:
   - gold
@@ -33,11 +33,11 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 900
+      gold: 400
       ore: 50
     power:
-      offense: 7
-      defense: 9
+      offense: 0
+      defense: 0
     perks:
       gunpowder_production_raw_from_pairing: 2,0.05
 

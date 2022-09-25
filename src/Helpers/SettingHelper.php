@@ -234,6 +234,21 @@ class SettingHelper
                 'defaults' => ['email' => false, 'ingame' => true],
                 'iconClass' => 'ra ra-fairy-wand text-green',
             ],
+            'received_protectorship_offer' => [
+                'label' => 'Protectorship offer received',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fas fa-user-shield text-green',
+            ],
+            'received_protectorship_offer_accepted' => [
+                'label' => 'Protectorship offer accepted',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fas fa-user-shield text-green',
+            ],
+            'received_protectorship_offer_declined' => [
+                'label' => 'Protectorship offer declined',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fas fa-user-shield',
+            ],
 
             # Cult
             'enthralling_occurred' => [
@@ -490,6 +505,58 @@ class SettingHelper
                     $attackerDominion->realm->number,
                     number_format(array_sum($data['units_lost']))
                 );
+
+            # PROTECTORSHIP
+
+            case 'irregular_dominion.protector_received_invasion':
+                $attackerDominion = Dominion::with('realm')->findOrFail($data['attackerDominionId']);
+                $protectorDominion = Dominion::with('realm')->findOrFail($data['protectorDominionId']);
+                return sprintf(
+                    'An army from %s (#%s) invaded our lands after breaking through the defenses of %s (#%s), conquering %s acres of land.',
+                    $attackerDominion->name,
+                    $attackerDominion->realm->number,
+                    $protectorDominion->name,
+                    $protectorDominion->realm->number,
+                    number_format($data['land_lost'])
+                );
+
+            case 'irregular_dominion.protector_repelled_invasion':
+                $attackerDominion = Dominion::with('realm')->findOrFail($data['attackerDominionId']);
+                $protectorDominion = Dominion::with('realm')->findOrFail($data['protectorDominionId']);
+                return sprintf(
+                    'Forces from %s (#%s) tried to invade our lands, but our protector %s (#%s) drove them back!',
+                    $attackerDominion->name,
+                    $attackerDominion->realm->number,
+                    $protectorDominion->name,
+                    $protectorDominion->realm->number
+                );
+
+            case 'irregular_dominion.received_invasion_as_protector':
+                $attackerDominion = Dominion::with('realm')->findOrFail($data['attackerDominionId']);
+                $protectedDominion = Dominion::with('realm')->findOrFail($data['protectedDominionId']);
+                return sprintf(
+                    'An army from %s (#%s) invaded our protectorate of %s (#%s), and we were unable to fight them back. We lost %s units and our protectorate lost %s land.',
+                    $attackerDominion->name,
+                    $attackerDominion->realm->number,
+                    $protectedDominion->name,
+                    $protectedDominion->realm->number,
+                    number_format($data['units_lost']),
+                    number_format($data['land_lost'])
+                );
+
+            case 'irregular_dominion.repelled_invasion_as_protector':
+                $attackerDominion = Dominion::with('realm')->findOrFail($data['attackerDominionId']);
+                $protectedDominion = Dominion::with('realm')->findOrFail($data['protectedDominionId']);
+                return sprintf(
+                    'An army from %s (#%s) tried to invade our protectorate of %s (#%s), but we were unable to fight them back! We lost %s units.',
+                    $attackerDominion->name,
+                    $attackerDominion->realm->number,
+                    $protectedDominion->name,
+                    $protectedDominion->realm->number,
+                    number_format($data['units_lost'])
+                );
+
+            # END PROTECTORSHIP
 
             case 'irregular_dominion.theft':
                 $thief = Dominion::with('realm')->findOrFail($data['thiefDominionId']);
