@@ -219,6 +219,7 @@ class BuildingHelper
             'construction_time' => 'Construction time decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
             
             'destroys_itself_and_land' => '%s collapse per tick and the land is lost.',
+            'destroys_itself' => '%s collapse per tick, leaving barren land.',
 
             # Espionage and Wizardry
             'spy_losses' => 'Spy losses decreased by %2$s%% for every %1$s%%.',
