@@ -182,7 +182,7 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->post('council/post/{post}/delete')->uses('Dominion\CouncilController@postDeletePost');
 
             // Insight
-            $router->get('insight', redirect()->route('dominion.status'));#uses('Dominion\InsightController@getIndex')->name('insight');
+            #$router->get('insight', redirect()->route('dominion.status'));#uses('Dominion\InsightController@getIndex')->name('insight');
             $router->get('insight/watched-dominions')->uses('Dominion\InsightController@getWatchedDominions')->name('insight.watched-dominions');
             $router->get('insight/{dominion}')->uses('Dominion\InsightController@getDominion')->name('insight.show');
             $router->get('insight/{dominion}/archive')->uses('Dominion\InsightController@getDominionInsightArchive')->name('insight.archive');
