@@ -477,25 +477,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ([1,2,3,4,5,6,7,8,9,10,'spies','wizards'] as $slot)
-                        @php
-                            if($slot == 'spies')
-                            {
-                                $unitType = 'spies';
-                            }
-                            elseif($slot == 'wizards')
-                            {
-                                $unitType = 'wizards';
-                            }
-                            elseif($slot == 'archmages')
-                            {
-                                $unitType = 'archmages';
-                            }
-                            else
-                            {
-                                $unitType = 'unit' . $slot;
-                            }
-                        @endphp
+                    @foreach ($unitHelper->getUnitTypes($dominion->race) as $unitType)
                         <tr>
                             <td>
                               <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $dominion->race, [$militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unitHelper->getUnitFromRaceUnitType($dominion->race, $unitType), 'offense'), $militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unitHelper->getUnitFromRaceUnitType($dominion->race, $unitType), 'defense'), ]) }}">
