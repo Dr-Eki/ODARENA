@@ -11,7 +11,7 @@
             </div>
             <div class="box-body">
                 @if(!$selectedDominion->hasDeity())
-                <form action="{{ route('dominion.government.deity') }}" method="post" role="form">
+                <form action="{{ route('dominion.deity.deity') }}" method="post" role="form">
                     @csrf
                     <div class="row">
                         <div class="col-md-12">
@@ -70,11 +70,11 @@
                     </div>
                 </form>
                 @elseif($selectedDominion->deity)
-                <form id="renounce-deity" action="{{ route('dominion.government.renounce') }}" method="post" role="form">
+                <form id="renounce-deity" action="{{ route('dominion.deity.renounce') }}" method="post" role="form">
                     @csrf
                     <div class="row">
                         <div class="col-md-12">
-                            <form action="{{ route('dominion.government.deity') }}" method="post" role="form">
+                            <form action="{{ route('dominion.deity.deity') }}" method="post" role="form">
                             <p>You have been devoted to <strong>{{ $selectedDominion->deity->name }}</strong> for {{ $selectedDominion->devotion->duration }} ticks, granting you the following perks:</p>
                             <ul>
                                 @foreach($deityHelper->getDeityPerksString($selectedDominion->deity, $selectedDominion->getDominionDeity()) as $effect)

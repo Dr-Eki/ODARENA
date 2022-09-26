@@ -1,6 +1,8 @@
 name: Artillery
 alignment: evil
-description:
+description: >-
+  <p>Artillery dominions are not normal dominions but rather protectorates. They have no defensive power of their own. They require another dominion to act as protector over them, establishing a protectorship.</p>
+  <p>See <a href="general#protectorship">Protectorship</a>.</p>
 home_land_type: hill
 playable: 1
 skill_level: 2

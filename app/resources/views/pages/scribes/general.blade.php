@@ -16,6 +16,7 @@
                 <li><a class="btn btn-block" href="#governor">Governor</a></li>
                 <li><a class="btn btn-block" href="#morale">Morale</a></li>
                 <li><a class="btn btn-block" href="#prestige">Prestige</a></li>
+                <li><a class="btn btn-block" href="#protectorship">Protectorship</a></li>
                 <li><a class="btn btn-block" href="#psionics">Psionics</a></li>
                 <li><a class="btn btn-block" href="#psionic_conversion">Psionic Conversion</a></li>
                 <li><a class="btn btn-block" href="#rounds">Rounds</a></li>
@@ -396,6 +397,25 @@
                 <p>Prestige is also increased passively through Prestige Interest:</p>
                 <p><code>[Prestige] * (max(0, [Dominion Net Victories]) / 40000)</code></p>
                 <p>Decimals of prestige are calculated but not used when calculating any perks originating from prestige. If you have 600.99 prestige, you will have 600 prestige for the purposes of perks.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-12 col-md-12">
+        <a id="protectorship"></a>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title">Protectorship</h2>
+            </div>
+
+            <div class="box-body">
+                <p>Artillery dominions no longer have any DP of their own. Instead, a protectorship is established whereby another dominion act as as the protector of the Artillery. The protector is responsible for defending the Artillery dominion over which it has protectorship.</p>
+                <p>Only Black Orc, Dark Elf, Orc, and Reptilians can be protectors.</p>
+                <p>Potential protectors can submit protectorship offers to any unprotected Artillery dominions from the Government page. It is also possible to rescind offers. Artillery dominions can accept or decline offers from the Government page. Accepting an offer automatically deletes any other offers. It is not possible to cancel a protectorship once it has been established. Protectorships are permanent.</p>
+                <p>Each Artillery dominion must have a protector in order to leave magical protection.</p>
+                <p>The defensive power of Artillery dominions is the defensive power of its protector. Artillery does not build any defensive power by itself. The protector is wholly and solely responsible for the defense of the Artillery.</p>
+                <p>An invasion against Artillery goes up against the military of the defender but, if successful, takes land from the Artillery and both the protector and the Artillery suffer prestige and morale losses. If the invasion is fended off, the protector gains the prestige and both the protector and the Artillery gain morale.</p>
+                <p>When the protector is victorious in battle and gets a morale boost, the Artillery gains 25% of that morale boost.</p>
             </div>
         </div>
     </div>
