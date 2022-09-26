@@ -17,6 +17,7 @@ perks:
   no_prestige_loss_on_failed_invasions: 1
   no_morale_loss_on_failed_invasions: 1
   max_gunpowder_per_cannon: 3
+  draftee_dp: 0
 
 resources:
   - gold
