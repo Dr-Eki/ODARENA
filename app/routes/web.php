@@ -193,8 +193,6 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             // Government
             $router->get('government')->uses('Dominion\GovernmentController@getIndex')->name('government');
             $router->post('government/monarch')->uses('Dominion\GovernmentController@postMonarch')->name('government.monarch');
-            #$router->post('government/deity')->uses('Dominion\GovernmentController@postDeity')->name('government.deity');
-            #$router->post('government/renounce')->uses('Dominion\GovernmentController@postRenounce')->name('government.renounce');
             $router->post('government/realm')->uses('Dominion\GovernmentController@postRealm')->name('government.realm');
             $router->post('government/offer-protectorship')->uses('Dominion\GovernmentController@postOfferProtectorship')->name('government.offer-protectorship');
             $router->post('government/answer-protectorship-offer')->uses('Dominion\GovernmentController@postAnswerProtectorshipOffer')->name('government.answer-protectorship-offer');

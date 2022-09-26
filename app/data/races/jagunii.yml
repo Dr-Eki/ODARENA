@@ -56,6 +56,7 @@ units:
       does_not_count_as_population: 1
       food_consumption_raw: 0.25
       casualties: -50
+      faster_return: 6 # This is used for when War Mammoths die into Mammoths
 
   - name: War Mammoth
     training_time: 12
