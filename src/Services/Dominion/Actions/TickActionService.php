@@ -76,9 +76,9 @@ class TickActionService
                     throw new GameException('The round has ended.');
                 }
                 
-                if($dominion->race->name == 'Artillery' and !$dominion->hasProtector() and $dominion->protection_ticks == 1)
+                if($dominion->race->name == 'Artillery' and !$dominion->hasProtector() and $dominion->protection_ticks == 1 and ($dominion->hasProtector() and !$dominion->protector->isUnderProtection()))
                 {
-                    throw new GameException('You cannot leave the magical state of protection until a Protector has guaranteed your protection.');
+                    throw new GameException('You cannot leave the magical state of protection until a Protector has guaranteed your protection. The Protector not be under the magical state of protection.');
                 }
 
                 // Run the tick.
