@@ -12,7 +12,7 @@ draftees_alias: guard
 peasants_production:
   gold: 2.5
   ore: 0.5
-  ash: 0.2
+  ash: 0.1
 
 resources:
   - gold
@@ -32,7 +32,7 @@ perks:
   draftee_dp: 3
   gold_production_raw_from_draftees: 1
   ore_production_raw_from_draftees: 0.2
-  ash_production_raw_from_draftees: 0.1
+  ash_production_raw_from_draftees: 0.05
   ash_per_raw_op_on_expeditions: 1
 
 units:
