@@ -8,7 +8,7 @@
 <div class="row">
     <div class="box box-success">
         <div class="box-header text-center">
-            <h1 class="box-title" style="font-size: 200%;"> {{ $user->display_name }}</h1>
+            <h1 class="box-title" style="font-size: 200%; font-variant: small-caps;"> {{ $user->display_name }}</h1>
         </div>
         <div class="box-body">
             <div class="col-sm-4 text-center">
