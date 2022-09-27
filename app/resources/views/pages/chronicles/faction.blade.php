@@ -8,7 +8,7 @@
 <div class="row">
     <div class="box box-{{ $chroniclesHelper->getAlignmentBoxClass($race->alignment) }}">
         <div class="box-header text-center">
-            <h1 class="box-title" style="font-size: 200%;"> {{ $race->name }}</h1>
+            <h1 class="box-title" style="font-size: 200%; font-variant: small-caps;"> {{ $race->name }}</h1>
         </div>
         <div class="box-body">
             <div class="col-sm-4 text-center">
