@@ -50,9 +50,9 @@ units:
       - machine
       - immobile
     cost:
-      gold: 3900
-      ore: 1200
-      lumber: 300
+      gold: 7800
+      ore: 2400
+      lumber: 600
     power:
       offense: 0
       defense: 0
@@ -69,7 +69,7 @@ units:
     cost:
       ore: 100
     power:
-      offense: 60
+      offense: 30
       defense: 0
     perks:
       spends_resource_on_offense: gunpowder,1
@@ -84,7 +84,7 @@ units:
     cost:
       ore: 100
     power:
-      offense: 60
+      offense: 30
       defense: 0
     perks:
       spends_resource_on_offense: gunpowder,1
@@ -100,7 +100,7 @@ units:
     cost:
       ore: 100
     power:
-      offense: 60
+      offense: 30
       defense: 0
     perks:
       spends_resource_on_offense: gunpowder,1
@@ -115,7 +115,7 @@ units:
     cost:
       ore: 100
     power:
-      offense: 60
+      offense: 30
       defense: 0
     perks:
       spends_resource_on_offense: gunpowder,1
