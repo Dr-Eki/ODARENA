@@ -5,31 +5,36 @@
 
 @include('partials.chronicles.top-row')
 
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h1 class="box-title"><i class="fas fa-flag fa-fw"></i> Chronicles about {{ $race->name }}</h1>
-    </div>
-
-    <div class="box-body">
-        <div class="row">
-
-              <div class="col-sm-4 text-center">
-                  <h4>Land max:</h4>
-                  <h3>{{ number_format($raceHelper->getMaxLandForRace($race)) }}</h3>
-              </div>
-
-              <div class="col-sm-4 text-center">
-                  <h4>Land average:</h4>
-                  <h3>{{ number_format($raceHelper->getTotalLandForRace($race) / max(1, $raceHelper->getDominionCountForRace($race))) }}</h3>
-              </div>
-
-              <div class="col-sm-4 text-center">
-                  <h4>Unique rulers:</h4>
-                  <h3>{{ number_format($raceHelper->getUniqueRulersCountForRace($race)) }}</h3>
-              </div>
-
+<div class="row">
+    <div class="box box-{{ $chroniclesHelper->getAlignmentBoxClass($race->alignment) }}">
+        <div class="box-header text-center">
+            <h1 class="box-title" style="font-size: 200%;"> {{ $race->name }}</h1>
         </div>
-        <div class="row">
+        <div class="box-body">
+            <div class="col-sm-4 text-center">
+                <h4>Land max</h4>
+                <h3>{{ number_format($raceHelper->getMaxLandForRace($race)) }}</h3>
+            </div>
+
+            <div class="col-sm-4 text-center">
+                <h4>Land average</h4>
+                <h3>{{ number_format($raceHelper->getTotalLandForRace($race) / max(1, $raceHelper->getDominionCountForRace($race, false, $chroniclesHelper->getMaxRoundNumber()))) }}</h3>
+            </div>
+
+            <div class="col-sm-4 text-center">
+                <h4>Unique rulers</h4>
+                <h3>{{ number_format($raceHelper->getUniqueRulersCountForRace($race)) }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">Overview of the 20 Most Recent Rounds</h1>
+        </div>
+        <div class="box-body">
             <div class="col-sm-4">
                 <div class="box-header with-border">
                     <h4 class="box-title"><i class="ra ra-sword ra-fw"></i> Military Accomplishments</h4>
@@ -104,56 +109,60 @@
                     @endfor
                 </table>
             </div>
-
-        </div>
-
-        <div class="row">
-
-            <div class="col-sm-12">
-                <table class="table table-striped table-hover" id="dominions-table">
-                    <colgroup>
-                        <col width="60">
-                        <col>
-                        <col width="180">
-                        <col width="150">
-                        <col width="120">
-                        <col width="120">
-                        <col width="120">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th class="text-center">Round</th>
-                            <th>Dominion</th>
-                            <th>Ruler</th>
-                            <th>Land</th>
-                            <th>Networth</th>
-                            <th>Chapter</th>
-                            <th>Era</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($dominions as $dominion)
-                        <tr>
-                            <td class="text-center"><a href="{{ route('chronicles.round', $dominion->round) }}">{{ $dominion->round->number }}</a></td>
-                            <td><a href="{{ route('chronicles.dominion', $dominion) }}">{{ $dominion->name }}</a></td>
-                            <td>
-                                @if($dominion->isAbandoned())
-                                    {{ $dominion->ruler_name }}
-                                @else
-                                    <a href="{{ route('chronicles.ruler', $dominion->user->display_name) }}">{{ $dominion->user->display_name }}</a>
-                                @endif
-                            </td>
-                            <td>{{ number_format($landCalculator->getTotalLand($dominion)) }}</td>
-                            <td>{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}</td>
-                            <td><a href="{{ route('chronicles.round', $dominion->round) }}">{{ $dominion->round->name }}</a></td>
-                            <td>{{ $dominion->round->league->description }}</td>
-                        </tr>
-                    @endforeach
-                </table>
-            </div>
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="box">
+        <div class="box-header with-border">
+            <h1 class="box-title">All Dominions</h1>
+        </div>
+        <div class="box-body">
+            <table class="table table-striped table-hover" id="dominions-table">
+                <colgroup>
+                    <col width="60">
+                    <col>
+                    <col width="180">
+                    <col width="150">
+                    <col width="120">
+                    <col width="120">
+                    <col width="120">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="text-center">Round</th>
+                        <th>Dominion</th>
+                        <th>Ruler</th>
+                        <th>Land</th>
+                        <th>Networth</th>
+                        <th>Chapter</th>
+                        <th>Era</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach ($dominions as $dominion)
+                    <tr>
+                        <td class="text-center"><a href="{{ route('chronicles.round', $dominion->round) }}">{{ $dominion->round->number }}</a></td>
+                        <td><a href="{{ route('chronicles.dominion', $dominion) }}">{{ $dominion->name }}</a></td>
+                        <td>
+                            @if($dominion->isAbandoned())
+                                {{ $dominion->ruler_name }}
+                            @else
+                                <a href="{{ route('chronicles.ruler', $dominion->user->display_name) }}">{{ $dominion->user->display_name }}</a>
+                            @endif
+                        </td>
+                        <td>{{ number_format($landCalculator->getTotalLand($dominion)) }}</td>
+                        <td>{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}</td>
+                        <td><a href="{{ route('chronicles.round', $dominion->round) }}">{{ $dominion->round->name }}</a></td>
+                        <td>{{ $dominion->round->league->description }}</td>
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('page-styles')

@@ -18,6 +18,7 @@ class RaceHelper
 
     public function __construct()
     {
+        $this->chroniclesHelper = app(ChroniclesHelper::class);
         $this->landCalculator = app(LandCalculator::class);
         $this->unitHelper = app(UnitHelper::class);
         $this->statsService = app(StatsService::class);
@@ -894,6 +895,7 @@ class RaceHelper
           $dominions = Dominion::where('race_id', $race->id)
                         ->where('is_locked','=',0)
                         ->where('protection_ticks','=',0)
+                        ->whereRaw(' round_id >= (SELECT max(number) FROM rounds) - ?', [$maxRoundsAgo])
                         ->get();
 
           if(!$inclueActiveRounds)
@@ -910,11 +912,17 @@ class RaceHelper
           return $dominions;
     }
 
-    public function getTotalLandForRace(Race $race): int
+    public function getTotalLandForRace(Race $race, bool $lifetime = true): int
     {
         $totalLand = 0;
 
-        foreach($this->getRaceDominions($race) as $dominion)
+        $maxRoundsAgo = $this->chroniclesHelper->getDefaultRoundsAgo();
+        if($lifetime)
+        {
+            $maxRoundsAgo = $this->chroniclesHelper->getMaxRoundNumber();
+        }
+
+        foreach($this->getRaceDominions($race, false, $maxRoundsAgo) as $dominion)
         {
             $totalLand += $this->landCalculator->getTotalLand($dominion);
         }
@@ -922,11 +930,17 @@ class RaceHelper
         return $totalLand;
     }
 
-    public function getMaxLandForRace(Race $race): int
+    public function getMaxLandForRace(Race $race, bool $lifetime = true): int
     {
         $land = 0;
 
-        foreach($this->getRaceDominions($race) as $dominion)
+        $maxRoundsAgo = $this->chroniclesHelper->getDefaultRoundsAgo();
+        if($lifetime)
+        {
+            $maxRoundsAgo = $this->chroniclesHelper->getMaxRoundNumber();
+        }
+
+        foreach($this->getRaceDominions($race, false, $maxRoundsAgo) as $dominion)
         {
             $land = max($land, $this->landCalculator->getTotalLand($dominion));
         }
@@ -958,11 +972,17 @@ class RaceHelper
         return $value;
     }
 
-    public function getUniqueRulersCountForRace(Race $race): int
+    public function getUniqueRulersCountForRace(Race $race, bool $lifetime = true): int
     {
         $rulers = [];
 
-        foreach($this->getRaceDominions($race) as $dominion)
+        $maxRoundsAgo = $this->chroniclesHelper->getDefaultRoundsAgo();
+        if($lifetime)
+        {
+            $maxRoundsAgo = $this->chroniclesHelper->getMaxRoundNumber();
+        }
+
+        foreach($this->getRaceDominions($race, false, $maxRoundsAgo) as $dominion)
         {
             if(!$dominion->isAbandoned())
             {

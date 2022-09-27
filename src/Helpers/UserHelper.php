@@ -15,6 +15,7 @@ class UserHelper
 
     public function __construct()
     {
+        $this->chroniclesHelper = app(ChroniclesHelper::class);
         $this->roundHelper = app(RoundHelper::class);
 
         $this->landCalculator = app(LandCalculator::class);
@@ -23,16 +24,23 @@ class UserHelper
     }
 
 
-    public function getRoundsPlayed(User $user)
+    public function getRoundsPlayed(User $user, bool $lifetime = true)
     {
-        return $this->getUserDominions($user)->count();
+        $maxRoundsAgo = $this->chroniclesHelper->getDefaultRoundsAgo();
+        if($lifetime)
+        {
+            $maxRoundsAgo = $this->chroniclesHelper->getMaxRoundNumber();
+        }
+
+        return $this->getUserDominions($user, false, $maxRoundsAgo)->count();
     }
 
-    public function getUserDominions(User $user, bool $inclueActiveRounds = false)
+    public function getUserDominions(User $user, bool $inclueActiveRounds = false, int $maxRoundsAgo = 20)
     {
         $dominions = Dominion::where('user_id', $user->id)
                       ->where('is_locked','=',0)
                       ->where('protection_ticks','=',0)
+                      ->whereRaw(' round_id >= (SELECT max(number) FROM rounds) - ?', [$maxRoundsAgo])
                       ->get();
 
         if(!$inclueActiveRounds)
@@ -49,11 +57,17 @@ class UserHelper
         return $dominions;
     }
 
-    public function getTotalLandForUser(User $user): int
+    public function getTotalLandForUser(User $user, bool $lifetime = true): int
     {
         $totalLand = 0;
 
-        foreach($this->getUserDominions($user) as $dominion)
+        $maxRoundsAgo = $this->chroniclesHelper->getDefaultRoundsAgo();
+        if($lifetime)
+        {
+            $maxRoundsAgo = $this->chroniclesHelper->getMaxRoundNumber();
+        }
+
+        foreach($this->getUserDominions($user, false, $maxRoundsAgo) as $dominion)
         {
             $totalLand += $this->landCalculator->getTotalLand($dominion);
         }
@@ -61,11 +75,17 @@ class UserHelper
         return $totalLand;
     }
 
-    public function getMaxLandForUser(User $user): int
+    public function getMaxLandForUser(User $user, bool $lifetime = true): int
     {
         $land = 0;
 
-        foreach($this->getUserDominions($user) as $dominion)
+        $maxRoundsAgo = $this->chroniclesHelper->getDefaultRoundsAgo();
+        if($lifetime)
+        {
+            $maxRoundsAgo = $this->chroniclesHelper->getMaxRoundNumber();
+        }
+
+        foreach($this->getUserDominions($user, false, $maxRoundsAgo) as $dominion)
         {
             $land = max($land, $this->landCalculator->getTotalLand($dominion));
         }
@@ -136,11 +156,17 @@ class UserHelper
         return $races;
     }
 
-    public function getUniqueRacesCountForUser(User $user): int
+    public function getUniqueRacesCountForUser(User $user, bool $lifetime = true): int
     {
         $races = [];
 
-        foreach($this->getUserDominions($user) as $dominion)
+        $maxRoundsAgo = $this->chroniclesHelper->getDefaultRoundsAgo();
+        if($lifetime)
+        {
+            $maxRoundsAgo = $this->chroniclesHelper->getMaxRoundNumber();
+        }
+
+        foreach($this->getUserDominions($user, false, $maxRoundsAgo) as $dominion)
         {
             if(!$dominion->isAbandoned())
             {

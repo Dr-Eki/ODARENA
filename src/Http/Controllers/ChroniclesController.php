@@ -20,6 +20,7 @@ use OpenDominion\Models\Round;
 use OpenDominion\Models\User;
 
 use OpenDominion\Helpers\BuildingHelper;
+use OpenDominion\Helpers\ChroniclesHelper;
 use OpenDominion\Helpers\DeityHelper;
 use OpenDominion\Helpers\DominionHelper;
 use OpenDominion\Helpers\ImprovementHelper;
@@ -99,8 +100,6 @@ class ChroniclesController extends AbstractController
 
         $allDominionStatKeysForRound = $statsHelper->getAllDominionStatKeysForRound($round);
 
-        #dd($allDominionStatKeysForRound);
-
         $races = $round->dominions
             ->sortBy('race.name')
             ->pluck('race.name', 'race.id')
@@ -114,6 +113,7 @@ class ChroniclesController extends AbstractController
 
             'landCalculator' => $landCalculator,
 
+            'chroniclesHelper' => app(ChroniclesHelper::class),
             'roundHelper' => $roundHelper,
             'statsHelper' => $statsHelper,
         ]);
@@ -134,6 +134,8 @@ class ChroniclesController extends AbstractController
             'statKey' => $statKey,
 
             'dominionStats' => $dominionStats,
+
+            'chroniclesHelper' => app(ChroniclesHelper::class),
             'statsHelper' => app(StatsHelper::class),
         ]);
     }
@@ -171,8 +173,9 @@ class ChroniclesController extends AbstractController
                 ->withErrors(['No such ruler found (' . $userDisplayName .').']);
         }
 
+        $chroniclesHelper = app(ChroniclesHelper::class);
         $userHelper = app(UserHelper::class);
-        $dominions = $userHelper->getUserDominions($user);
+        $dominions = $userHelper->getUserDominions($user, false, $chroniclesHelper->getMaxRoundNumber());
 
         $militarySuccessStats = ['invasion_victories', 'invasion_bottomfeeds', 'op_sent_total', 'land_conquered', 'land_discovered', 'units_killed', 'units_converted'];
         $militaryFailureStats = ['defense_failures', 'land_lost', 'invasion_razes', 'invasion_failures'];
@@ -184,6 +187,7 @@ class ChroniclesController extends AbstractController
             'landCalculator' => app(LandCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),
 
+            'chroniclesHelper' => $chroniclesHelper,
             'roundHelper' => app(RoundHelper::class),
             'statsHelper' => app(StatsHelper::class),
             'userHelper' => $userHelper,
@@ -266,6 +270,7 @@ class ChroniclesController extends AbstractController
             'landHelper' => app(LandHelper::class),
             'landImprovementHelper' => app(LandImprovementHelper::class),
             'raceHelper' => $raceHelper,
+            'chroniclesHelper' => app(ChroniclesHelper::class),
             'spellHelper' => app(SpellHelper::class),
             'statsHelper' => app(StatsHelper::class),
             'techHelper' => app(TechHelper::class),
@@ -281,6 +286,7 @@ class ChroniclesController extends AbstractController
     {
         $race = Race::where('name', $raceName)->firstOrFail();
         $raceHelper = app(RaceHelper::class);
+        $chroniclesHelper = app(ChroniclesHelper::class);
 
         $militarySuccessStats = ['invasion_victories', 'invasion_bottomfeeds', 'op_sent_total', 'land_conquered', 'land_discovered', 'units_killed', 'units_converted'];
         $militaryFailureStats = ['defense_failures', 'land_lost', 'invasion_razes', 'invasion_failures'];
@@ -290,11 +296,13 @@ class ChroniclesController extends AbstractController
 
             'landCalculator' => app(LandCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),
+
+            'chroniclesHelper' => $chroniclesHelper,
             'raceHelper' => $raceHelper,
             'statsHelper' => app(StatsHelper::class),
             'unitHelper' => app(UnitHelper::class),
 
-            'dominions' => $raceHelper->getRaceDominions($race),
+            'dominions' => $raceHelper->getRaceDominions($race, false, $chroniclesHelper->getMaxRoundNumber()),
             'militarySuccessStats' => $militarySuccessStats,
             'militaryFailureStats' => $militaryFailureStats,
         ]);
