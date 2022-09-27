@@ -26,7 +26,7 @@
                     @foreach ($races as $race)
                         <tr>
                             <td><a href="{{ route('chronicles.faction', $race->name) }}">{{ $race->name }}</a></td>
-                            <td>{{ number_format($raceHelper->getDominionCountForRace($race)) }}</td>
+                            <td>{{ number_format($raceHelper->getRaceDominions($race, false, $chroniclesHelper->getMaxRoundNumber())->count()) }}</td>
                         </tr>
                     @endforeach
                 </tbody>

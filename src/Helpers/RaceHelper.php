@@ -885,9 +885,9 @@ class RaceHelper
     #   *   *   *   *    *    *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   #
     #   BEGIN CHRONICLES
 
-    public function getDominionCountForRace(Race $race): int
+    public function getDominionCountForRace(Race $race, bool $inclueActiveRounds = false, int $maxRoundsAgo = 999): int
     {
-        return $this->getRaceDominions($race)->count();
+        return $this->getRaceDominions($race, $maxRoundsAgo)->count();
     }
 
     public function getRaceDominions(Race $race, bool $inclueActiveRounds = false, int $maxRoundsAgo = 20)
