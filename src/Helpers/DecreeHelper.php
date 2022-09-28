@@ -25,26 +25,26 @@ class DecreeHelper
             'military_housing' => '%g%% military housing.',
 
             # Production
-            'gold_production_mod' => '%+d%% gold production.',
-            'food_production_mod' => '%+d%% food production.',
-            'lumber_production_mod' => '%+d%% lumber production.',
-            'ore_production_mod' => '%+d%% ore production.',
-            'gems_production_mod' => '%+d%% gem production.',
-            'mana_production_mod' => '%+d%% mana production.',
-            'pearls_production_mod' => '%+d%% pearl production.',
-            'blood_production_mod' => '%+d%% blood production.',
-            'horse_production_mod' => '%+d%% horse production.',
-            'mud_production_mod' => '%+d%% mud production.',
-            'swamp gas_production_mod' => '%+d%% swamp gas production.',
-            'xp_generation_mod' => '%+d%% XP generation.',
+            'gold_production_mod' => '%+g%% gold production.',
+            'food_production_mod' => '%+g%% food production.',
+            'lumber_production_mod' => '%+g%% lumber production.',
+            'ore_production_mod' => '%+g%% ore production.',
+            'gems_production_mod' => '%+g%% gem production.',
+            'mana_production_mod' => '%+g%% mana production.',
+            'pearls_production_mod' => '%+g%% pearl production.',
+            'blood_production_mod' => '%+g%% blood production.',
+            'horse_production_mod' => '%+g%% horse production.',
+            'mud_production_mod' => '%+g%% mud production.',
+            'swamp gas_production_mod' => '%+g%% swamp gas production.',
+            'xp_generation_mod' => '%+g%% XP generation.',
             'xp_gains' => '%g%% XP gains.',
 
-            'building_gold_mine_production_mod' => '%+d%% production from Gold Mines.',
-            'building_gold_quarry_production_mod' => '%+d%% production from Gold Quarries.',
+            'building_gold_mine_production_mod' => '%+g%% production from Gold Mines.',
+            'building_gold_quarry_production_mod' => '%+g%% production from Gold Quarries.',
 
             'exchange_rate' => '%g%% exchange rates.',
 
-            'food_consumption_mod' => '%+d%% food consumption.',
+            'food_consumption_mod' => '%+g%% food consumption.',
 
             # Deity
             'deity_power' => '%g%% deity perks.',
@@ -55,7 +55,7 @@ class DecreeHelper
             'offensive_casualties' => '%g%% casualties on offense.',
             'defensive_casualties' => '%g%% casualties on defense.',
 
-            'target_defensive_power_mod' => '%+d%% defensive modifier for target.',
+            'target_defensive_power_mod' => '%+g%% defensive modifier for target.',
 
             'increases_enemy_casualties' => '%g%% enemy casualties.',
             'increases_enemy_casualties_on_defense' => '%g%% enemy casualties on defense.',
@@ -84,7 +84,7 @@ class DecreeHelper
 
             'reduces_conversions' => '%g%% conversions for enemies.',
 
-            'training_time_mod' => '%+d%% training time.',
+            'training_time_mod' => '%+g%% training time.',
 
             'unit_pairing' => '%g%% unit pairing capacity.',
 
@@ -94,7 +94,7 @@ class DecreeHelper
             'undead_unit4_production_raw' => 'Each %3$s raises %2$s %1$s per tick.',
             'undead_unit3_production_raw_from_crypt' => 'Each %3$s raises %2$s %1$s per tick from the crypt.',
             
-            'attrition_mod' => '%+d%% attrition.',
+            'attrition_mod' => '%+g%% attrition.',
 
             # OP/DP
             'offensive_power' => '%g%% offensive power.',
