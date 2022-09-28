@@ -18,14 +18,14 @@ class DeityHelper
         $deityEffects = [
 
             // Production / Resources
-            'ore_production_mod' => '%+d%% ore production',
-            'mana_production_mod' => '%+d%% mana production',
-            'lumber_production_mod' => '%+d%% lumber production',
-            'food_production_mod' => '%+d%% food production',
-            'gems_production_mod' => '%+d%% gem production',
-            'gold_production_mod' => '%+d%% gold production',
-            'boat_production_mod' => '%+d%% boat production',
-            'xp_generation_mod' => '%+d%% XP generation',
+            'ore_production_mod' => '%+g%% ore production',
+            'mana_production_mod' => '%+g%% mana production',
+            'lumber_production_mod' => '%+g%% lumber production',
+            'food_production_mod' => '%+g%% food production',
+            'gems_production_mod' => '%+g%% gem production',
+            'gold_production_mod' => '%+g%% gold production',
+            'boat_production_mod' => '%+g%% boat production',
+            'xp_generation_mod' => '%+g%% XP generation',
 
             'no_gold_production' => 'No gold production or revenue',
             'no_ore_production' => 'No ore production',
@@ -35,96 +35,96 @@ class DeityHelper
             'no_boat_production' => 'No boat production',
             'no_gems_production' => 'No gem production',
 
-            'food_consumption_mod' => '%+d%% food consumption',
+            'food_consumption_mod' => '%+g%% food consumption',
 
-            'exchange_rate' => '%+d%% exchange rates',
+            'exchange_rate' => '%+g%% exchange rates',
 
-            'xp_gains' => '%+d%% XP per acre gained',
+            'xp_gains' => '%+g%% XP per acre gained',
 
             // Military
-            'drafting' => '%+d%% drafting',
+            'drafting' => '%+g%% drafting',
             'training_time_raw' => '%s ticks training time for military units (does not include Spies, Wizards, or Archmages)',
-            'training_costs' => '%+d%% military unit training costs',
-            'unit_gold_costs' => '%+d%% military unit gold costs',
-            'unit_ore_costs' => '%+d%% military unit ore costs',
-            'unit_lumber_costs' => '%+d%% military unit lumber costs',
+            'training_costs' => '%+g%% military unit training costs',
+            'unit_gold_costs' => '%+g%% military unit gold costs',
+            'unit_ore_costs' => '%+g%% military unit ore costs',
+            'unit_lumber_costs' => '%+g%% military unit lumber costs',
 
             'faster_return' => 'Units return %s ticks faster from invasions',
 
             'can_kill_immortal' => 'Can kill some immortal units.',
 
-            'unit_gold_costs' => '%+d%% unit gold costs.',
-            'unit_ore_costs' => '%+d%% unit ore costs.',
-            'unit_lumber_costs' => '%+d%% unit lumber costs.',
-            'unit_mana_costs' => '%+d%% unit mana costs.',
-            'unit_blood_costs' => '%+d%% unit blood costs.',
-            'unit_food_costs' => '%+d%% unit food costs.',
+            'unit_gold_costs' => '%+g%% unit gold costs.',
+            'unit_ore_costs' => '%+g%% unit ore costs.',
+            'unit_lumber_costs' => '%+g%% unit lumber costs.',
+            'unit_mana_costs' => '%+g%% unit mana costs.',
+            'unit_blood_costs' => '%+g%% unit blood costs.',
+            'unit_food_costs' => '%+g%% unit food costs.',
 
-            'prestige_gains' => '%+d%% prestige gains.',
+            'prestige_gains' => '%+g%% prestige gains.',
 
             'cannot_send_expeditions' => 'Cannot send expeditions',
 
             // Population
-            'population_growth' => '%+d%% population growth rate',
-            'max_population' => '%+d%% population',
-            'unit_specific_housing' => '%+d%% unit specific housing',
+            'population_growth' => '%+g%% population growth rate',
+            'max_population' => '%+g%% population',
+            'unit_specific_housing' => '%+g%% unit specific housing',
 
             // Magic
-            'damage_from_spells' => '%+d%% damage from spells',
-            'chance_to_reflect_spells' => '%+d%% chance to reflect spells',
+            'damage_from_spells' => '%+g%% damage from spells',
+            'chance_to_reflect_spells' => '%+g%% chance to reflect spells',
             'reveal_ops' => 'Reveals the dominion casting deitys or spying on you',
 
-            'wizard_strength' => '%+d%% wizard strength',
-            'wizard_cost' => '%+d%% wizard cost',
+            'wizard_strength' => '%+g%% wizard strength',
+            'wizard_cost' => '%+g%% wizard cost',
 
             // Espionage
-            'spy_strength' => '%+d%% spy strength',
+            'spy_strength' => '%+g%% spy strength',
             'immortal_spies' => 'Spies become immortal',
-            'spy_strength_recovery' => '%+d%% spy strength recovery per tick',
+            'spy_strength_recovery' => '%+g%% spy strength recovery per tick',
 
-            'gold_theft' => '%+d%% gold lost to theft.',
-            'mana_theft' => '%+d%% mana lost to theft.',
-            'lumber_theft' => '%+d%% lumber lost to theft.',
-            'ore_theft' => '%+d%% ore lost to theft.',
-            'gems_theft' => '%+d%% gems lost to theft.',
-            'all_theft' => '%+d%% resources lost to theft',
+            'gold_theft' => '%+g%% gold lost to theft.',
+            'mana_theft' => '%+g%% mana lost to theft.',
+            'lumber_theft' => '%+g%% lumber lost to theft.',
+            'ore_theft' => '%+g%% ore lost to theft.',
+            'gems_theft' => '%+g%% gems lost to theft.',
+            'all_theft' => '%+g%% resources lost to theft',
 
-            'gold_stolen' => '%+d%% gold theft.',
-            'mana_stolen' => '%+d%% mana theft.',
-            'lumber_stolen' => '%+d%% lumber theft.',
-            'ore_stolen' => '%+d%% ore  theft.',
-            'gems_stolen' => '%+d%% gem theft.',
-            'amount_stolen' => '%+d%% resource theft',
+            'gold_stolen' => '%+g%% gold theft.',
+            'mana_stolen' => '%+g%% mana theft.',
+            'lumber_stolen' => '%+g%% lumber theft.',
+            'ore_stolen' => '%+g%% ore  theft.',
+            'gems_stolen' => '%+g%% gem theft.',
+            'amount_stolen' => '%+g%% resource theft',
 
             // Casualties
-            'casualties' => '%+d%% casualties',
-            'offensive_casualties' => '%+d%% casualties suffered when invading',
-            'defensive_casualties' => '%+d%% casualties suffered when defending',
+            'casualties' => '%+g%% casualties',
+            'offensive_casualties' => '%+g%% casualties suffered when invading',
+            'defensive_casualties' => '%+g%% casualties suffered when defending',
 
-            'increases_enemy_casualties' => '%+d%% enemy casualties',
-            'increases_enemy_casualties_on_defense' => '%+d%% enemy casualties when defending',
-            'increases_enemy_casualties_on_offense' => '%+d%% enemy casualties when invading',
+            'increases_enemy_casualties' => '%+g%% enemy casualties',
+            'increases_enemy_casualties_on_defense' => '%+g%% enemy casualties when defending',
+            'increases_enemy_casualties_on_offense' => '%+g%% enemy casualties when invading',
 
             // OP/DP
-            'offensive_power' => '%+d%% offensive power',
-            'defensive_power' => '%+d%% defensive power',
+            'offensive_power' => '%+g%% offensive power',
+            'defensive_power' => '%+g%% defensive power',
 
-            'offensive_power_on_retaliation' => '%+d%% offensive power if target recently invaded your realm',
+            'offensive_power_on_retaliation' => '%+g%% offensive power if target recently invaded your realm',
 
-            'offensive_power_vs_no_deity' => '%+d%% offensive power vs dominions without a deity',
-            'defensive_power_vs_no_deity' => '%+d%% defensive power vs dominions without a deity',
+            'offensive_power_vs_no_deity' => '%+g%% offensive power vs dominions without a deity',
+            'defensive_power_vs_no_deity' => '%+g%% defensive power vs dominions without a deity',
 
-            'target_defensive_power_mod' => '%+d%% defensive modifier for target',
+            'target_defensive_power_mod' => '%+g%% defensive modifier for target',
 
             // Improvements
-            'improvements' => '%+d%% improvements',
-            'improvement_points' => '%+d%% improvement points',
-            'improvements_interest' => '%+d%% improvements interest',
+            'improvements' => '%+g%% improvements',
+            'improvement_points' => '%+g%% improvement points',
+            'improvements_interest' => '%+g%% improvements interest',
 
             // Land and Construction
-            'land_discovered' => '%+d%% land discovered on successful invasions',
-            'construction_cost' => '%+d%% construction costs',
-            'rezone_cost' => '%+d%% rezoning costs',
+            'land_discovered' => '%+g%% land discovered on successful invasions',
+            'construction_cost' => '%+g%% construction costs',
+            'rezone_cost' => '%+g%% rezoning costs',
             'cannot_explore' => 'Cannot explore',
         ];
 

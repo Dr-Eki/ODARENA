@@ -24,42 +24,42 @@ class BuildingHelper
 
         $perkTypeStrings = [
             # Housing
-            'housing' => 'Houses %s people.',
+            'housing' => 'Houses %g people.',
             'housing_increasing' => 'Houses %1$s people, increased by %2$s per tick.',
 
-            'military_housing' => 'Houses %s military units.',
+            'military_housing' => 'Houses %g military units.',
             'military_housing_increasing' => 'Houses %1$s military units, increased by %2$s per tick.',
 
-            'draftee_housing' => 'Houses %s draftees.',
+            'draftee_housing' => 'Houses %g draftees.',
 
             'wizard_housing' => 'Houses %1$s wizards and units that count as wizards.',
             'spy_housing' => 'Houses %1$s spies and units that count as spies.',
-            'draftee_housing' => 'Houses %s draftees.',
-            'peasant_housing' => 'Houses %s peasants.',
+            'draftee_housing' => 'Houses %g draftees.',
+            'peasant_housing' => 'Houses %g peasants.',
 
-            'artillery_unit1_housing' => 'Houses %s Sappers.',
-            'afflicted_unit1_housing' => 'Houses %s Abominations.',
-            'aurei_unit1_housing' => 'Houses %s Alchemists.',
-            'dwarg_unit1_housing' => 'Houses %s Miners.',
-            'cires_unit1_housing' => 'Houses %s Standard Bearers.',
-            'cires_unit2_housing' => 'Houses %s Archers.',
-            'sacred_order_unit2_housing' => 'Houses %s Clerics.',
-            'sacred_order_unit3_housing' => 'Houses %s Fanatics.',
-            'sacred_order_unit4_housing' => 'Houses %s Paladins.',
-            'snow_elf_unit1_housing' => 'Houses %s Arbalists.',
-            'troll_unit2_housing' => 'Houses %s Forest Trolls.',
-            'troll_unit4_housing' => 'Houses %s Mountain Trolls.',
-            'vampires_unit1_housing' => 'Houses %s Servants.',
-            'revenants_unit1_housing' => 'Houses %s Lesser Zombies.',
-            'revenants_unit2_housing' => 'Houses %s Zombies.',
-            'revenants_unit3_housing' => 'Houses %s Greater Zombies.',
+            'artillery_unit1_housing' => 'Houses %g Sappers.',
+            'afflicted_unit1_housing' => 'Houses %g Abominations.',
+            'aurei_unit1_housing' => 'Houses %g Alchemists.',
+            'dwarg_unit1_housing' => 'Houses %g Miners.',
+            'cires_unit1_housing' => 'Houses %g Standard Bearers.',
+            'cires_unit2_housing' => 'Houses %g Archers.',
+            'sacred_order_unit2_housing' => 'Houses %g Clerics.',
+            'sacred_order_unit3_housing' => 'Houses %g Fanatics.',
+            'sacred_order_unit4_housing' => 'Houses %g Paladins.',
+            'snow_elf_unit1_housing' => 'Houses %g Arbalists.',
+            'troll_unit2_housing' => 'Houses %g Forest Trolls.',
+            'troll_unit4_housing' => 'Houses %g Mountain Trolls.',
+            'vampires_unit1_housing' => 'Houses %g Servants.',
+            'revenants_unit1_housing' => 'Houses %g Lesser Zombies.',
+            'revenants_unit2_housing' => 'Houses %g Zombies.',
+            'revenants_unit3_housing' => 'Houses %g Greater Zombies.',
 
-            'ammunition_units_housing' => 'Houses %s ammunition units.',
+            'ammunition_units_housing' => 'Houses %g ammunition units.',
 
-            'dimensionalists_unit1_production_raw' => 'Summons %s Tl\'Tl per tick.',
-            'dimensionalists_unit2_production_raw' => 'Summons %s Sft\'Rm per tick.',
-            'dimensionalists_unit3_production_raw' => 'Summons %s Ze\'Tk per tick.',
-            'dimensionalists_unit4_production_raw' => 'Summons %s Frs\'Kl per tick.',
+            'dimensionalists_unit1_production_raw' => 'Summons %g Tl\'Tl per tick.',
+            'dimensionalists_unit2_production_raw' => 'Summons %g Sft\'Rm per tick.',
+            'dimensionalists_unit3_production_raw' => 'Summons %g Ze\'Tk per tick.',
+            'dimensionalists_unit4_production_raw' => 'Summons %g Frs\'Kl per tick.',
 
             'dimensionalists_unit1_production_raw_capped' => 'Summons %1$s Tl\'Tl per tick (with to %2$s%% of your land).',
             'dimensionalists_unit2_production_raw_capped' => 'Summons %1$s Sft\'Rm per tick (up to %2$s%% of your land).',
@@ -71,46 +71,46 @@ class BuildingHelper
             'dimensionalists_unit3_production_mod' => '%2$s%% Ze\'Tk summoning rate for every %1$s%% (max %3$s%%).',
             'dimensionalists_unit4_production_mod' => '%2$s%% Frs\'Kl summoning rate for every %1$s%% (max %3$s%%).',
 
-            'unit_production_from_wizard_ratio' => 'Summoning increased by (Wizard Ratio / %s)%%.',
+            'unit_production_from_wizard_ratio' => 'Summoning increased by (Wizard Ratio / %g)%%.',
 
-            'snow_elf_unit4_production_raw' => 'Attracts %s Gryphons per tick.',
+            'snow_elf_unit4_production_raw' => 'Attracts %g Gryphons per tick.',
             'snow_elf_unit4_production_raw_capped' => 'Summons %1$s Gryphons per tick (up to %2$s%% of your land).',
             'snow_elf_unit4_production_mod' => '%2$s%% Gryphon arrival rate for every %1$s%% (max %3$s%%).',
 
-            'jobs' => 'Provides %s jobs.',
+            'jobs' => 'Provides %g jobs.',
 
             'population_growth' => '%2$s%% population growth rate for every %1$s%%.',
 
             'drafting' => 'Drafting increased by %2$s%% for every %1$s%% (max +%3$s%%).',
 
-            'crypt_bodies_decay_protection' => 'Protects %s crypt bodies from decay.',
+            'crypt_bodies_decay_protection' => 'Protects %g crypt bodies from decay.',
 
             # Production
-            'gold_production_raw' => 'Produces %s gold per tick.',
-            'food_production_raw' => 'Produces %s food per tick.',
-            'lumber_production_raw' => 'Produces %s lumber per tick.',
-            'ore_production_raw' => 'Produces %s ore per tick.',
-            'gems_production_raw' => 'Produces %s gems per tick.',
-            'mana_production_raw' => 'Produces %s mana per tick.',
-            'pearls_production_raw' => 'Produces %s pearls per tick.',
-            'horse_production_raw' => 'Produces %s horses per tick.',
-            'mud_production_raw' => 'Produces %s mud per tick.',
-            'swamp_gas_production_raw' => 'Produces %s swamp gas per tick.',
-            'marshling_production_raw' => 'Produces %s marshlings per tick.',
-            'yak_production_raw' => 'Breeds %s yak per tick.',
-            'kelp_production_raw' => 'Grows %s kelp per tick.',
-            'gunpowder_production_raw' => 'Produces %s gunpowder per tick.',
+            'gold_production_raw' => 'Produces %g gold per tick.',
+            'food_production_raw' => 'Produces %g food per tick.',
+            'lumber_production_raw' => 'Produces %g lumber per tick.',
+            'ore_production_raw' => 'Produces %g ore per tick.',
+            'gems_production_raw' => 'Produces %g gems per tick.',
+            'mana_production_raw' => 'Produces %g mana per tick.',
+            'pearls_production_raw' => 'Produces %g pearls per tick.',
+            'horse_production_raw' => 'Produces %g horses per tick.',
+            'mud_production_raw' => 'Produces %g mud per tick.',
+            'swamp_gas_production_raw' => 'Produces %g swamp gas per tick.',
+            'marshling_production_raw' => 'Produces %g marshlings per tick.',
+            'yak_production_raw' => 'Breeds %g yak per tick.',
+            'kelp_production_raw' => 'Grows %g kelp per tick.',
+            'gunpowder_production_raw' => 'Produces %g gunpowder per tick.',
 
-            'xp_generation_raw' => 'Generates %s XP per tick.',
+            'xp_generation_raw' => 'Generates %g XP per tick.',
 
-            'gold_upkeep_raw' => 'Costs %s gold per tick.',
-            'food_upkeep_raw' => 'Uses %s food per tick.',
-            'lumber_upkeep_raw' => 'Costs %s lumber per tick.',
-            'ore_upkeep_raw' => 'Costs %s ore per tick.',
-            'gems_upkeep_raw' => 'Costs %s gems per tick.',
-            'mana_upkeep_raw' => 'Drains %s mana per tick.',
-            'pearls_upkeep_raw' => 'Costs %s pearls per tick.',
-            'prisoner_upkeep_raw' => 'Works %s prisoners per tick to death.',
+            'gold_upkeep_raw' => 'Costs %g gold per tick.',
+            'food_upkeep_raw' => 'Uses %g food per tick.',
+            'lumber_upkeep_raw' => 'Costs %g lumber per tick.',
+            'ore_upkeep_raw' => 'Costs %g ore per tick.',
+            'gems_upkeep_raw' => 'Costs %g gems per tick.',
+            'mana_upkeep_raw' => 'Drains %g mana per tick.',
+            'pearls_upkeep_raw' => 'Costs %g pearls per tick.',
+            'prisoner_upkeep_raw' => 'Works %g prisoners per tick to death.',
 
             'gold_production_mod' => 'Gold production increased by %2$s%% for every %1$s%% (max +%3$s%%).',
             'food_production_mod' => 'Food production increased by %2$s%% for every %1$s%% (max +%3$s%%).',
@@ -146,13 +146,13 @@ class BuildingHelper
 
             'thunderstone_production_raw_random' => '%1$s%% chance to discover a thunderstone.',
 
-            'gunpowder_storage_raw' => '%s gunpowder storage.',
+            'gunpowder_storage_raw' => '%g gunpowder storage.',
 
             'ore_production_raw_from_prisoner' => 'Produces %1$s ore per tick per prisoner up to a maximum of %2$s prisoners.',
             'gold_production_raw_from_prisoner' => 'Produces %1$s gold per tick per prisoner up to a maximum of %2$s prisoners.',
             'gems_production_raw_from_prisoner' => 'Produces %1$s gems per tick per prisoner up to a maximum of %2$s prisoners.',
 
-            'draftee_generation' => 'Generates %s draftees per tick (limited by population).',
+            'draftee_generation' => 'Generates %g draftees per tick (limited by population).',
 
             'exchange_rate' => 'Resource exchange rates improved by %2$s%% for every %1$s%% (max +%3$s%%).',
 
@@ -192,7 +192,7 @@ class BuildingHelper
             'unit_pairing' => '%2$s%% unit pairing for every %1$s%%.',
 
             # OP/DP
-            'raw_defense' => 'Provides %s raw defensive power.',
+            'raw_defense' => 'Provides %g raw defensive power.',
             'offensive_power' => 'Offensive power increased by %2$s%% for every %1$s%% (max +%3$s%% OP)',
             'defensive_power' => 'Defensive power increased by %2$s%% for every %1$s%% (max +%3$s%% DP).',
             'target_defensive_power_mod' => '%2$s%% target defensive modifiers for every %1$s%% (max -%3$s%% or 0%% defensive modifiers).',
@@ -218,8 +218,8 @@ class BuildingHelper
             'rezone_cost' => 'Rezoning costs decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
             'construction_time' => 'Construction time decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
             
-            'destroys_itself_and_land' => '%s collapse per tick and the land is lost.',
-            'destroys_itself' => '%s collapse per tick, leaving barren land.',
+            'destroys_itself_and_land' => '%g collapse per tick and the land is lost.',
+            'destroys_itself' => '%g collapse per tick, leaving barren land.',
 
             # Espionage and Wizardry
             'spy_losses' => 'Spy losses decreased by %2$s%% for every %1$s%%.',
@@ -236,14 +236,14 @@ class BuildingHelper
             'mana_theft_reduction' => 'Mana stolen from you reduced by %2$s%% for every %1$s%%.',
             'horse_theft_reduction' => 'Horses stolen from you reduced by %2$s%% for every %1$s%%.',
 
-            'gold_theft_protection' => 'Protects %s gold from theft.',
-            'gems_theft_protection' => 'Protects %s gems from theft.',
-            'ore_theft_protection' => 'Protects %s ore from theft.',
-            'lumber_theft_protection' => 'Protects %s lumber from theft.',
-            'food_theft_protection' => 'Protects %s food from theft.',
-            'mana_theft_protection' => 'Protects %s mana from theft.',
-            'horse_theft_protection' => 'Protects %s horses from theft.',
-            'blood_theft_protection' => 'Protects %s blood from theft.',
+            'gold_theft_protection' => 'Protects %g gold from theft.',
+            'gems_theft_protection' => 'Protects %g gems from theft.',
+            'ore_theft_protection' => 'Protects %g ore from theft.',
+            'lumber_theft_protection' => 'Protects %g lumber from theft.',
+            'food_theft_protection' => 'Protects %g food from theft.',
+            'mana_theft_protection' => 'Protects %g mana from theft.',
+            'horse_theft_protection' => 'Protects %g horses from theft.',
+            'blood_theft_protection' => 'Protects %g blood from theft.',
 
             'wizard_strength_recovery' => 'Wizard strength recovery increased by %2$s%% for every %1$s%% (max +%3$s%%).',
             'spy_strength' => 'Spy strength increased by %2$s%% for every %1$s%% (max +%3$s%%).',
