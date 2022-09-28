@@ -3,7 +3,7 @@ alignment: good
 description: >-
   <p>Another off-shoot from Humans, the Templars are a small, pious community taking up residence in the hills.</p>
 home_land_type: hill
-playable: 0
+playable: 0 # Not needed, effectively overtaken by Sacred Order
 skill_level: 2
 
 perks:

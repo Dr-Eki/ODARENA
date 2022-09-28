@@ -43,7 +43,7 @@ units:
       offense_from_time: 18,06,4 # Between the hours 18:00 and 06:00, gains +6 OP
       strength_conversion: 4,1,2 # threshold,under,over
       displaced_peasants_conversion: 1
-      some_win_into: 2.5,3 # ratio, slot
+      some_win_into: 3,3 # ratio, slot
 
   - name: Ravager
     type:

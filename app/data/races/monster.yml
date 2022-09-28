@@ -13,7 +13,7 @@ description: >-
   </ul>
   <p>Starts with 2 Heads, 100 Limbs, 200 Claws, and 10 Carapaces, and 25,000 strength. No protection.</p>
 home_land_type: plain
-playable: 0
+playable: 0 # ugh
 experimental: 1
 skill_level: 3
 max_per_round: 1

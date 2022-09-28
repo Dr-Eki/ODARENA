@@ -2,7 +2,7 @@ name: Lycanthrope
 alignment: evil
 description:
 home_land_type: forest
-playable: 0
+playable: 0 # Replaced with Weres
 skill_level: 2
 
 perks:
