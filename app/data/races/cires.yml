@@ -39,13 +39,15 @@ units:
       lumber: 10
     power:
       offense: 0
-      defense: 2
+      defense: 0
     perks:
       net_victories_limit: 1,1
       sendable_with_zero_op: 1
       increases_morale_gains_fixed: 1
       increases_prestige_interest: 1
       immortal_on_victory: 1
+      attrition: 100
+      attrition_protection_from_net_victories: 1 # 1 unit spared from attrition per net victory
 
   - name: Archer
     training_time: 8

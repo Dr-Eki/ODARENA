@@ -1018,6 +1018,13 @@ class TickService
                     }
                 }
 
+                if($unitAttritionProtectionPerNetVictoriesPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'attrition_protection_from_net_victories'))
+                {
+                    $amountProtected = min($this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot), $this->militaryCalculator->getNetVictories($dominion)) * $unitAttritionProtectionPerNetVictoriesPerk;
+
+                    $unitAttritionAmount -= $amountProtected;
+                }
+
                 $unitAttritionAmount = max(0, min($unitAttritionAmount, $dominion->{'military_unit'.$slot})); # Sanity caps.
 
                 # Look for static attrition protection.

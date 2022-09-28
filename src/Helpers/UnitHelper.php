@@ -412,6 +412,8 @@ class UnitHelper
 
             'advancements_required_to_train' => 'Must have %1$s level %2$s to train this unit.',
 
+            'attrition_protection_from_net_victories' => '%s unit protected from attrition per net victory.',
+
             // Limits
             'pairing_limit' => 'You can at most have %2$s of this unit per %1$s. Training is limited to number of %1$s at home.',
             'pairing_limit_including_away' => 'You can at most have %2$s of this unit per %1$s.',
