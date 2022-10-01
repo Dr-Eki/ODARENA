@@ -170,7 +170,7 @@
                                   <p><strong><em>You cannot attack until the round has started.</em></strong></p>
     
                               @elseif ($selectedDominion->morale < 50)
-                                  <p><strong><em>Your military needs at least 50% morale to attack. You currently have {{ $selectedDominion->morale }}% morale.</em></strong></p>
+                                  <p><strong><em>Your military needs at least 50 morale to attack. You currently have {{ $selectedDominion->morale }} morale.</em></strong></p>
     
                               @else
                                   @if($selectedDominion->race->name == 'Dimensionalists')

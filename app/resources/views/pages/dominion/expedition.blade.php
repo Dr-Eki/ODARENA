@@ -220,7 +220,7 @@
                                   <p><strong><em>You cannot send out an expedition until the round has started.</em></strong></p>
 
                                   @elseif ($selectedDominion->morale < 50)
-                                  <p><strong><em>Your military needs at least 50% morale to send out an expedition others. You currently have {{ $selectedDominion->morale }}% morale.</em></strong></p>
+                                  <p><strong><em>Your military needs at least 50 morale to send out an expedition others. You currently have {{ $selectedDominion->morale }} morale.</em></strong></p>
 
                                   @else
                                       <button type="submit"
