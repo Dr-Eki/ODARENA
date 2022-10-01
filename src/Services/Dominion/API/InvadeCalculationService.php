@@ -191,7 +191,7 @@ class InvadeCalculationService
                 $this->calculationResult['away_offense'] = number_format($this->militaryCalculator->getOffensivePower($dominion, $target, $landRatio, $units, $calc));
                 $this->calculationResult['away_offense'] .= ' (may be inaccurate due to Sazal\'s Fog)';
             }
-            elseif($target->protector->getSpellPerkValue('fog_of_war'))
+            elseif($target->hasProtector() and $target->protector->getSpellPerkValue('fog_of_war'))
             {
                 $this->calculationResult['target_dp'] = 'Unknown due to Sazal\'s Fog';
                 $this->calculationResult['target_fog'] = 1;
