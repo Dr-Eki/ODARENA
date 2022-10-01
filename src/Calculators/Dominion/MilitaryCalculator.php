@@ -1857,15 +1857,6 @@ class MilitaryCalculator
 
         $spies += $this->getWizardPoints($dominion) * $dominion->getDecreePerkValue('wizards_count_as_spies');
 
-        $multiplier = 1;
-        $multiplier += $dominion->getSpellPerkMultiplier('spy_strength');
-        $multiplier += $dominion->getSpellPerkMultiplier('spy_strength_on_' . $type);
-        $multiplier += $dominion->getBuildingPerkMultiplier('spy_strength');
-        $multiplier += $dominion->getBuildingPerkMultiplier('spy_strength_on_' . $type);
-
-        // Shroud
-        $spies *= $multiplier;
-
         return ($spies / $this->landCalculator->getTotalLand($dominion));
     }
 
@@ -1877,7 +1868,7 @@ class MilitaryCalculator
      */
     public function getSpyRatioMultiplier(Dominion $dominion, string $type = 'offense'): float
     {
-        $multiplier = 0;
+        $multiplier = 1;
 
         // Deity
         $multiplier += $dominion->getDeityPerkMultiplier('spy_strength');
@@ -1910,7 +1901,7 @@ class MilitaryCalculator
             $multiplier += $dominion->title->getPerkMultiplier('spy_strength') * $dominion->getTitlePerkMultiplier();
         }
 
-        return (1 + $multiplier);
+        return $multiplier;
     }
 
     /**
@@ -2117,7 +2108,7 @@ class MilitaryCalculator
                     (($hourFrom > $hourTo) and (now()->hour >= $hourFrom or now()->hour < $hourTo))
                 )
                 {
-                    $spyPoints += floor($dominion->{"military_unit{$unit->slot}"} * $powerFromTime);
+                    $wizardPoints += floor($dominion->{"military_unit{$unit->slot}"} * $powerFromTime);
                 }
             }
         }
