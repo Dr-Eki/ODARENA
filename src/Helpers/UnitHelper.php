@@ -246,6 +246,8 @@ class UnitHelper
             'counts_as_wizard_offense' => 'Counts as %s of a wizard on offense.',
 
             'counts_as_wizard_from_land' => 'Counts as %1$s wizard for every %2$s%% %3$s.',
+            'counts_as_wizard_on_defense_from_land' => 'Counts as %1$s wizard on defense for every %2$s%% %3$s.',
+            'counts_as_wizard_on_offense_from_land' => 'Counts as %1$s wizard on offense for every %2$s%% %3$s.',
 
             'immortal_wizard' => 'Immortal wizard (cannot be killed when casting spells).',
             'minimum_wpa_to_train' => 'Must have at least %s Wizard Ratio (on offense) to train.',
