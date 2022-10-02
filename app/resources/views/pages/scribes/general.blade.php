@@ -518,7 +518,8 @@
                 <p>Spell damage is calculated as <code>[Spell Base Damage] * [Sorcery Spell Damage Multiplier]</code>:</p>
                 <ul>
                     <li>Each spell is assigned Base Damage.</li>
-                    <li>Sorcery Spell Damage Multiplier is calculated as <code>1 * [Wizard Strength Multiplier] * [Wizard Ratio Multiplier]</code></li>
+                    <li>Sorcery Spell Damage Multiplier is calculated as <code>((1 + [Sorcery Damage Dealt Multiplier]) * [Wizard Strength Multiplier] * [Wizard Ratio Multiplier])</code></li>
+                    <li>Sorcery Damage Dealt multiplier is a sum of various perks a dominion can amass.</li>
                     <li>Wizard strength multiplier is <code>max([Wizard Strength], ([Wizard Strength] * (exp([Wizard Strength]/120)-1))</code></li>
                     <li>Wizard Ratio multiplier is <code>1 + (([Caster WPA] - [Target WPA]) / [Caster WPA])</code>, min 0, max 1.5.</li>
                     <li>For auras (passive spells, with a lingering effect), the base damage is the duration of the spell, meaning you can make for example Plague last longer by having stronger wizards or spending extra WS. The multiplier is divided by 20 and spell max duration is capped at 96 ticks.</li>
