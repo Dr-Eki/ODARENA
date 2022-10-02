@@ -25,6 +25,7 @@ use OpenDominion\Services\Dominion\ProtectionService;
 # ODA
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\NetworthCalculator;
+use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
 use OpenDominion\Models\Spell;
 
@@ -52,6 +53,7 @@ class SorceryController extends AbstractDominionController
             'protectionService' => app(ProtectionService::class),
             'rangeCalculator' => app(RangeCalculator::class),
             'resourceCalculator' => app(ResourceCalculator::class),
+            'sorceryCalculator' => app(SorceryCalculator::class),
             'spellCalculator' => app(SpellCalculator::class),
             'spellDamageCalculator' => app(SpellDamageCalculator::class),
         ]);
