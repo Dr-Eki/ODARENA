@@ -29,7 +29,7 @@ strategy:
 
 fortifications:
   name: Fortifications
-  excluded_factions:
+  excluded_races:
     - Artillery
   perks:
     defensive_power: 2.5
