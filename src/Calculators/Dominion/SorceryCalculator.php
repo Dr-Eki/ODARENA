@@ -70,6 +70,8 @@ class SorceryCalculator
     {
         $multiplier = 1;
 
+        $multiplier += $this->getSorceryDamageDealtMultiplier($caster, $target);
+
         $multiplier *= $this->getSorceryWizardStrengthMultiplier($wizardStrength);
         $multiplier *= $this->getSorceryWizardRatioMultiplier($caster, $target);
 
@@ -97,6 +99,14 @@ class SorceryCalculator
         }
         $multiplier += clamp((($casterWpa - $targetWpa) / $casterWpa), 0, 1.5);
         $multiplier *= 2;
+
+        return $multiplier;
+    }
+
+    public function getSorceryDamageDealtMultiplier(Dominion $caster, Dominion $target): float
+    {
+        $multiplier = 1;
+        $multiplier += $caster->getDecreePerkMultiplier('spell_damage_dealt_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($caster, 'offense');
 
         return $multiplier;
     }
@@ -136,5 +146,6 @@ class SorceryCalculator
 
         return max(0.1, $multiplier);
     }
+    
 
 }

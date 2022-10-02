@@ -193,6 +193,16 @@
                                 <td>Morale:</td>
                                 <td>{{ number_format($dominion->morale) }} / {{ number_format($moraleCalculator->getBaseMorale($dominion)) }}</td>
                             </tr>
+                            @if(($peasantDp = $dominion->race->getPerkValue('peasant_dp')) > 0)
+                                <tr>
+                                    <td>
+                                    <span data-toggle="tooltip" data-placement="top" title="DP: {{ $peasantDp }}">
+                                        {{ $raceHelper->getPeasantsTerm($dominion->race) }}:
+                                    </span>
+                                    </td>
+                                    <td>{{ number_format($dominion->peasants) }}</td>
+                                </tr>
+                            @endif
                             <tr>
                                 <td>
                                     <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString( $dominion->race) }}">
