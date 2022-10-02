@@ -110,11 +110,24 @@ class RealmHelper
         }
         else
         {
-            $string = sprintf(
-                '<small class="text-muted">Ruler:</small> <em>%s</em> %s',
-                $dominion->title->name,
-                $dominion->ruler_name
-              );
+            if($dominion->hasProtector())
+            {
+                $string = sprintf(
+                    '<small class="text-muted">Ruler:</small> <em>%s</em> %s<br>
+                    <small class="text-muted">Protector:</small> %s',
+                    $dominion->title->name,
+                    $dominion->ruler_name,
+                    $dominion->protector->name
+                  );
+            }
+            else
+            {
+                $string = sprintf(
+                    '<small class="text-muted">Ruler:</small> <em>%s</em> %s',
+                    $dominion->title->name,
+                    $dominion->ruler_name
+                  );
+            }
         }
 
         return $string;

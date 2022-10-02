@@ -281,6 +281,18 @@
         @endif
 
         <div class="box">
+
+            @if($dominion->hasProtector())
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fas fa-user-shield"></i> Protectorate</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>This dominion is a protectorate of <a href="{{ route('dominion.insight.show', $dominion->protector) }}">{{ $dominion->protector->name }}</a>.</p>
+                    </div>
+                </div>
+            @endif
+            
             <div class="box-header with-border">
                 <h3 class="box-title"><i class="ra ra-axe"></i> Military</h3>
             </div>
@@ -403,17 +415,6 @@
                 </div>
                 <div class="box-body">
                     <p>This dominion is currently annexed, providing the Legion with <b>{{ number_format($militaryCalculator->getRawMilitaryPowerFromAnnexedDominion($dominion)) }}</b> additional raw military power.</p>
-                </div>
-            </div>
-        @endif
-
-        @if($dominion->hasProtector())
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fas fa-user-shield"></i> Protectorate</h3>
-                </div>
-                <div class="box-body">
-                    <p>{{ $dominion->name }} is a protectorate of <a href="{{ route('dominion.insight.show', $dominion->protector) }}">{{ $dominion->protector->name }}</a>.</p>
                 </div>
             </div>
         @endif
