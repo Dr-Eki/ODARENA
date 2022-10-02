@@ -837,7 +837,7 @@ class WorldNewsHelper
             'invasion_support' => 'Invasion support',
             'new_dominion' => 'New dominion',
             'protectorship_offered' => 'Protectorship offer',
-            'protectorship_accepted' => 'Protectorship established',
+            'protectorship_accepted' => 'Protectorate established',
             'protectorship_declined' => 'Protectorship declined',
             'round_countdown_duration' => 'Round countdown (fixed length rounds)',
             'round_countdown' => 'Round countdown (land target rounds)',

@@ -406,6 +406,17 @@
                 </div>
             </div>
         @endif
+
+        @if($dominion->hasProtector())
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fas fa-user-shield"></i> Protectorate</h3>
+                </div>
+                <div class="box-body">
+                    <p>{{ $dominion->name }} is a protectorate of <a href="{{ route('dominion.insight.show', $dominion->protector) }}">{{ $dominion->protector->name }}</a>.</p>
+                </div>
+            </div>
+        @endif
     </div>
 
 </div>
