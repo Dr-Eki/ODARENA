@@ -591,7 +591,7 @@ class CasualtiesCalculator
                     if($defendingUnitDp >= $minPowerToKill)
                     {
                         # How much of the raw DP came from this unit?
-                        $multiplier += ($amount * $this->militaryCalculator->getUnitPowerWithPerks($enemy, $dominion, $invasionData['land_ratio'], $unit, 'defense')) / $rawDp;
+                        $multiplier += ($amount * $defendingUnitDp /*$this->militaryCalculator->getUnitPowerWithPerks($enemy, $dominion, $invasionData['land_ratio'], $unit, 'defense')*/) / $rawDp;
                     }
                 }
 

@@ -279,7 +279,7 @@ class UnitHelper
 
             #'kills_immortal' => 'Kills immortal units.',
 
-            'reduces_spell_damage' => 'Reduces spell damage.',
+            'reduces_spell_damage' => 'Reduces spell damage by (([Units] / [Land]) * %s)%%.',
 
             'reduces_casualties' => 'Reduces casualties.',
             'reduces_enemy_casualties' => 'Reduces casualties.',
