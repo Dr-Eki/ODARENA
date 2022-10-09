@@ -2042,10 +2042,13 @@ class InvadeActionService
                         {
                             $ratio = (float)$someWinIntoPerk[0] / 100;
                             $newSlot = (int)$someWinIntoPerk[1];
+                            
+                            $someWinIntoMultiplier = 1;
+                            $someWinIntoMultiplier += $attacker->getSpellPerkMultiplier('some_win_into_mod');
 
                             if(isset($units[$slot]))
                             {
-                                $newUnits = (int)floor($units[$slot] * $ratio);
+                                $newUnits = (int)floor($units[$slot] * $ratio * $someWinIntoMultiplier);
                                 $someWinIntoUnits[$newSlot] += $newUnits;
                                 $amountReturning -= $newUnits;
                             }
