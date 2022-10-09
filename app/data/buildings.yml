@@ -85,7 +85,6 @@ ore_mine:
     - Reptilians
     - Revenants
     - Simian
-    - Spirit
     - Sylvan
     - Swarm
     - Undead
@@ -343,7 +342,6 @@ lumberyard:
     - Glimjir
     - Monster
     - Myconid
-    - Spirit
     - Swarm
     - Sylvan
     - Void
@@ -1447,6 +1445,17 @@ beacon:
     housing: 36
     jobs: 0
 
+sanctuary:
+  name: Sanctuary
+  enabled: 0
+  exclusive_races:
+    - Spirit
+  land_type: water
+  perks:
+    housing: 30
+    mana_production_raw: 5
+    jobs: 0
+
 cave:
   name: Cave
   exclusive_races:
@@ -1710,17 +1719,6 @@ residence:
   land_type: plain
   perks:
     housing: 30
-    jobs: 0
-
-sanctuary:
-  name: Sanctuary
-  enabled: 0
-  exclusive_races:
-    - Spirit
-  land_type: water
-  perks:
-    housing: 30
-    mana_production_raw: 5
     jobs: 0
 
 tomb:

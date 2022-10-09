@@ -22,7 +22,7 @@ construction_materials:
   - gold
 
 perks:
-  extra_barren_max_population: 26
+  extra_barren_housing: 26
   no_construction_costs: 1
   no_rezone_costs: 1
   food_consumption_mod: -50

@@ -56,7 +56,6 @@ units:
       no_draftee: 1
       does_not_count_as_population: 1
       mana_upkeep_raw: 0.005
-      instant_training: 1
       pairing_limit: 1,4 # Unit slot, amount (max 2 of this unit per each Unit 4)
 
   - name: Chariot
@@ -77,7 +76,7 @@ units:
       sendable_with_zero_op: 1
       does_not_count_as_population: 1
       no_draftee: 1
-      pairing_limit: 1,1 # Unit slot, amount (max 2 of this unit per each Unit 4)
+      pairing_limit: 1,1 # Unit slot, amount (max 1 of this unit per each Unit 1)
 
   - name: Zealot
     training_time: 12
@@ -96,3 +95,23 @@ units:
       destroy_resource_on_victory: soul,1
       faster_return_if_paired: 3,6 # slot, ticks
       plunders: mana;2,gems;1
+
+  - name: Crystalline Zealot
+    training_time: 12
+    training_time: 1
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+    cost:
+      unit2: 4
+      unit4: 1
+      mana: 20
+    power:
+      offense: 10
+      defense: 11
+    perks:
+      destroy_resource_on_victory: soul,2
+      faster_return_if_paired: 3,6 # slot, ticks
+      plunders: mana;4,gems;2

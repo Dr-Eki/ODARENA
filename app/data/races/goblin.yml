@@ -14,7 +14,7 @@ improvement_resources:
 perks:
   max_population: 100
   population_growth: 100
-  extra_barren_max_population: 5
+  extra_barren_housing: 5
   gems_production_mod: 20
   explore_cost: 50
   drafting: 2

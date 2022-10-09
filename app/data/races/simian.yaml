@@ -25,7 +25,7 @@ perks:
   wizard_strength: -10
   construction_cost: -20
   forest_construction_cost: -100
-  extra_barren_max_population: 10
+  extra_barren_housing: 10
   increased_construction_speed: 3
   max_population: 30
 

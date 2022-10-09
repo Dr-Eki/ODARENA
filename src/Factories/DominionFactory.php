@@ -227,7 +227,7 @@ class DominionFactory
 
         # Peasants
         $housingPerBarren = 5;
-        $housingPerBarren += $race->getPerkValue('extra_barren_max_population');
+        $housingPerBarren += $race->getPerkValue('extra_barren_housing');
         foreach($startingLand as $landType => $amount)
         {
             $housingPerBarren += $race->getPerkValue('extra_barren_' . $landType . '_max_population');

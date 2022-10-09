@@ -56,7 +56,7 @@ class RaceHelper
                 $description = 'No housing from land other than water';
                 $booleanValue = true;
                 break;
-            case 'extra_barren_max_population':
+            case 'extra_barren_housing':
                 $negativeBenefit = false;
                 $description = 'Extra housing from barren land';
                 $valueType = '';

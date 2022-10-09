@@ -1198,6 +1198,7 @@ class Dominion extends AbstractModel
             if($perkKey == 'gold_production_raw')
             {
                 $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_production_mod');
+                $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_production_mod');
             }
 
             $perk *= $buildingSpecificMultiplier;

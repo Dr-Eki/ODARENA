@@ -158,7 +158,7 @@ class PopulationCalculator
 
         // Barren land
         $housingPerBarrenAcre = 5;
-        $housingPerBarrenAcre += $dominion->race->getPerkValue('extra_barren_max_population');
+        $housingPerBarrenAcre += $dominion->race->getPerkValue('extra_barren_housing');
         $housingPerBarrenAcre += $dominion->race->getPerkValue('extra_barren_housing_per_victory') * $this->statsService->getStat($dominion, 'invasion_victories');
         $housingPerBarrenAcre += $dominion->race->getPerkValue('extra_barren_housing_per_net_victory') * max(($this->statsService->getStat($dominion, 'invasion_victories') - $this->statsService->getStat($dominion, 'defense_failures')), 0);
 

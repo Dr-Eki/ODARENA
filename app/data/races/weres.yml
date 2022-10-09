@@ -14,7 +14,7 @@ resources:
 
 perks:
   population_growth: 25
-  extra_barren_max_population: 5
+  extra_barren_housing: 5
   converts_executed_spies: 4
   construction_cost: -10
   increased_construction_speed: 2

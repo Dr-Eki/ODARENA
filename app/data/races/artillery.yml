@@ -42,7 +42,7 @@ units:
       offense: 0
       defense: 0
     perks:
-      gunpowder_production_raw_from_pairing: 2,0.05
+      gunpowder_production_raw: 0.02
 
   - name: Cannon
     training_time: 12

@@ -14,7 +14,7 @@ resources:
 
 perks:
   max_population: 60
-  extra_barren_max_population: 10
+  extra_barren_housing: 10
   food_consumption_mod: -30
   salvaging: 25
   spies_training_time: 6

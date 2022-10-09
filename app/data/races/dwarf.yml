@@ -22,7 +22,7 @@ improvement_resources:
   gems: 12
 
 perks:
-  extra_barren_max_population: 10
+  extra_barren_housing: 10
   salvaging: 25
 
 units:
