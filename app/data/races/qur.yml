@@ -25,7 +25,7 @@ improvement_resources:
 perks:
   salvaging: 65
   gems_production_mod: 20
-  food_production_raw_from_draftees: 1
+  food_production_raw_from_draftees: 2
 
 units:
   - name: Artificer
