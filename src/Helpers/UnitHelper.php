@@ -822,6 +822,17 @@ class UnitHelper
                     $nestedArrays = false;
                 }
 
+
+                if(in_array($perk->key, ['building_limit', 'building_limit_fixed', 'building_limit_prestige']))
+                {
+                    $unitsPerBuilding = (float)$perkValue[1];
+                    $buildingKey = (string)$perkValue[0];
+
+                    $building = Building::where('key', $buildingKey)->first();
+
+                    $perkValue = [$unitsPerBuilding, $building->name];
+                }
+
                 if($perk->key === 'offense_from_devotion' or $perk->key === 'defense_from_devotion')
                 {
                     $deityKey = (string)$perkValue[0];
