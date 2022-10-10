@@ -332,6 +332,7 @@ class MilitaryCalculator
         // Peasants
         $dp += $defender->peasants * $defender->getSpellPerkValue('defensive_power_from_peasants');
         $dp += $defender->peasants * $defender->race->getPerkValue('peasant_dp');
+        $dp += $defender->peasants * $defender->getDecreePerkValue('defensive_power_from_peasants');
 
         // Military
         foreach ($defender->race->units as $unit)
@@ -2985,6 +2986,20 @@ class MilitaryCalculator
     
         return $dpFromUnitsWithoutSufficientResources;
 
+    }
+
+    public function getMaxSendableUnits(Dominion $dominion): int
+    {
+        $maxUnits = 0;
+        $maxUnits += $dominion->getBuildingPerkValue('unit_send_capacity');
+
+        $multiplier = 1;
+        $multiplier += $dominion->getAdvancementPerkMultiplier('unit_send_capacity_mod');
+        $multiplier += $dominion->getImprovementPerkMultiplier('unit_send_capacity_mod');
+        $multiplier += $dominion->getDecreePerkMultiplier('unit_send_capacity_mod');
+        $multiplier += $dominion->getSpellPerkMultiplier('unit_send_capacity_mod');
+
+        return $maxUnits * $multiplier;
     }
 
 }

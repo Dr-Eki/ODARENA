@@ -191,6 +191,8 @@ class BuildingHelper
 
             'unit_pairing' => '%2$s%% unit pairing for every %1$s%%.',
 
+            'unit_send_capacity' => '%+g units sendable.',
+
             # OP/DP
             'raw_defense' => 'Provides %g raw defensive power.',
             'offensive_power' => 'Offensive power increased by %2$s%% for every %1$s%% (max +%3$s%% OP)',

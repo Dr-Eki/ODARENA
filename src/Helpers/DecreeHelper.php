@@ -54,6 +54,8 @@ class DecreeHelper
             # Military
             'offensive_casualties' => '%+g%% casualties on offense.',
             'defensive_casualties' => '%+g%% casualties on defense.',
+            
+            'defensive_power_from_peasants' => '%g raw defensive power per peasant',
 
             'target_defensive_power_mod' => '%+g%% defensive modifier for target.',
 

@@ -747,6 +747,8 @@ class Dominion extends AbstractModel
                         or $perkKey == 'yak_production_raw'
                         or $perkKey == 'kelp_production_raw'
                         or $perkKey == 'gunpowder_production_raw'
+                        or $perkKey == 'magma_production_raw'
+                        or $perkKey == 'obsidian_production_raw'
 
                         or $perkKey == 'gunpowder_storage_raw'
 
@@ -806,6 +808,8 @@ class Dominion extends AbstractModel
                         or $perkKey == 'dimensionalists_unit4_production_raw'
 
                         or $perkKey == 'snow_elf_unit4_production_raw'
+
+                        or $perkKey == 'unit_send_capacity'
 
                         # Uncategorised
                         or $perkKey == 'crypt_bodies_decay_protection'
@@ -894,6 +898,8 @@ class Dominion extends AbstractModel
                         or $perkKey == 'ore_theft_reduction'
                         or $perkKey == 'food_theft_reduction'
                         or $perkKey == 'horse_theft_reduction'
+                        or $perkKey == 'magma_theft_reduction'
+                        or $perkKey == 'obsidian_theft_reduction'
 
                         # Improvements
                         or $perkKey == 'improvements_capped'
@@ -906,6 +912,7 @@ class Dominion extends AbstractModel
                         or $perkKey == 'mana_invest_bonus'
                         or $perkKey == 'blood_invest_bonus'
                         or $perkKey == 'soul_invest_bonus'
+                        or $perkKey == 'obsidian_invest_bonus'
 
                         # Other/special
                         or $perkKey == 'deity_power'

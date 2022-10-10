@@ -24,7 +24,7 @@ class LandImprovementHelper
             'swamp_gas_production_raw' => ['%s swamp gas/tick', ' per acre.'],
             'marshling_production_raw' => ['%s marshlings/tick', ' per acre.'],
             'yak_production_raw' => ['%s yaks/tick', ' per acre.'],
-
+            'magma_production_raw' => ['%s magma/tick', ' per acre.'],
 
             'gold_production_mod' => ['%+d%% gold production', ' for every 1%% of this land type.'],
             'food_production_mod' => ['%+d%% food production', ' for every 1%% of this land type.'],

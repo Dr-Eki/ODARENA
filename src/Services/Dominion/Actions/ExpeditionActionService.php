@@ -117,6 +117,11 @@ class ExpeditionActionService
                 throw new GameException('You are sending out too much OP, based on your new home DP (4:3 rule).');
             }
 
+            if (!$this->passesUnitSendableCapacityCheck($dominion, $units))
+            {
+                throw new GameException('You do not have enough caverns to send out this many units.');
+            }
+
             foreach($units as $slot => $amount)
             {
                  if($amount < 0)
@@ -669,6 +674,18 @@ class ExpeditionActionService
         $attackingForceMaxOP = (int)ceil($newHomeForcesDP * (4/3));
 
         return ($attackingForceOP <= $attackingForceMaxOP);
+    }
+
+    protected function passesUnitSendableCapacityCheck(Dominion $attacker, array $units): bool
+    {
+        if(!$attacker->race->getPerkValue('caverns_required_to_send_units'))
+        {
+            return true;
+        }
+
+        $maxSendableUnits = $this->militaryCalculator->getMaxSendableUnits($attacker);
+
+        return (array_sum($units) <= $maxSendableUnits);
     }
 
     protected function getUnitReturnTicksForSlot(Dominion $dominion, int $slot): int

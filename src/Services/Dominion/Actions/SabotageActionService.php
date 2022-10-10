@@ -101,6 +101,11 @@ class SabotageActionService
                 throw new GameException('You are sending out too much OP, based on your new home DP (4:3 rule).');
             }
 
+            if (!$this->passesUnitSendableCapacityCheck($dominion, $units))
+            {
+                throw new GameException('You do not have enough caverns to send out this many units.');
+            }
+
             if (!$this->hasEnoughUnitsAtHome($saboteur, $units))
             {
                 throw new GameException('You don\'t have enough units at home to send this many units.');
@@ -664,6 +669,16 @@ class SabotageActionService
         $attackingForceMaxOP = (int)ceil($newHomeForcesDP * (4/3));
 
         return ($attackingForceOP <= $attackingForceMaxOP);
+    }
+
+    protected function passesUnitSendableCapacityCheck(Dominion $dominion, array $units): bool
+    {
+        if(!$dominion->race->getPerkValue('caverns_required_to_send_units'))
+        {
+            return true;
+        }
+
+        return (array_sum($units) <= $dominion->getBuildingPerkValue('unit_send_capacity'));
     }
 
 }

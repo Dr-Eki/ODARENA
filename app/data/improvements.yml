@@ -136,6 +136,7 @@ irrigation:
     - Barbarian
     - Armada
     - Beastfolk
+    - Firewalker
     - Growth
     - Kerranad
     - Marshling
@@ -174,6 +175,7 @@ logging:
     - Barbarian
     - Beastfolk
     - Dwarg
+    - Firewalker
     - Growth
     - Kerranad
     - Marshling
@@ -270,6 +272,7 @@ mining:
     - Aurei
     - Barbarian
     - Beastfolk
+    - Firewalker
     - Glimjir
     - Growth
     - Halfling

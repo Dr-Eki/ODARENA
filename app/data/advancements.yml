@@ -184,3 +184,9 @@ budget:
 
 # FACTION SPECIFIC
 
+obsidian_liners:
+  name: Obsidian Liners
+  exclusive_races:
+    - Firewalker
+  perks:
+    unit_send_capacity_mod: 6.25

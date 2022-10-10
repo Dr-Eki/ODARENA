@@ -95,6 +95,12 @@ lumber:
   buy: 1
   sell: 0.5
 
+magma:
+  name: Magma
+  description: Molten rocks flowing in a thick viscuous liquid deep under ground.
+  buy: null
+  sell: null
+
 mana:
   name: Mana
   description: Cosmic energy used to weave spells and — by some — conjure magical warriors.
@@ -124,6 +130,12 @@ mud:
   sell: 0.5
   exclusive_races:
     - Marshling
+
+obsidian:
+  name: Obsidian
+  description: An extremely hard form type of glass formed by rapidly cooling down magma.
+  buy: null
+  sell: null
 
 ore:
   name: Ore

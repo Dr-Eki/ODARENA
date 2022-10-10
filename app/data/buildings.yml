@@ -37,9 +37,10 @@ farm:
   name: Farm
   excluded_races:
     - Dragon
+    - Firewalker
     - Growth
-    - Icekin
     - Glimjir
+    - Icekin
     - Lux
     - Monster
     - Myconid
@@ -163,6 +164,7 @@ vault:
 granary:
   name: Granary
   excluded_races:
+    - Firewalker
     - Growth
     - Glimjir
     - Monster
@@ -354,8 +356,9 @@ dock:
   name: Dock
   excluded_races:
     - Dragon
-    - Growth
+    - Firewalker
     - Glimjir
+    - Growth
     - Monster
     - Myconid
     - Reptilians
@@ -397,9 +400,10 @@ aqueduct:
   excluded_races:
     - Demon
     - Dragon
+    - Firewalker
+    - Glimjir
     - Growth
     - Icekin
-    - Glimjir
     - Myconid
     - Monster
     - Reptilians
@@ -600,9 +604,10 @@ shrine:
   excluded_races:
     - Artillery
     - Dragon
+    - Firewalker
+    - Glimjir
     - Growth
     - Icekin
-    - Glimjir
     - Monster
     - Myconid
     - Sacred Order
@@ -700,6 +705,7 @@ wizard_academy:
   name: Wizard Academy
   excluded_races:
     - Dimensionalists
+    - Firewalker
     - Growth
     - Glimjir
     - Monster
@@ -707,7 +713,7 @@ wizard_academy:
     - Void
     - Sylvan
     - Wood Elf
-  land_type: hill
+  land_type: forest
   perks:
     wizard_strength_on_defense: 1,20 # +20% defensive WPA per 1%, no max
     wizard_housing: 40
@@ -1212,17 +1218,6 @@ burrow:
     food_production_raw: 40
     jobs: 0
 
-cavern:
-  name: Cavern
-  enabled: 0
-  exclusive_races:
-    - Swarm
-  land_type: mountain
-  perks:
-    gems_production_raw: 12
-    mana_production_raw: 8
-    jobs: 0
-
 den:
   name: Den
   exclusive_races:
@@ -1310,6 +1305,43 @@ blast_furnace:
   perks:
     extra_units_trained: 1,2,20 # Every 1% gives 1% extra units, max +20%
 
+cavern:
+  name: Cavern
+  exclusive_races:
+    - Firewalker
+  land_type: hill
+  perks:
+    unit_send_capacity: 100
+    xp_generation_mod: 1,2.5,250 #Every 1% gives +2.5% XP production, max +250%
+
+magma_chamber:
+  name: Magma Chamber
+  exclusive_races:
+    - Firewalker
+  land_type: mountain
+  perks:
+    housing: 30
+    population_growth: 1,4 # Every 1%, gives 4%, no max
+    jobs: 0
+
+incinerator:
+  name: Incinerator
+  exclusive_races:
+    - Firewalker
+  land_type: hill
+  perks:
+    casualties_on_defense: 1,-5,50 # 1% gives -5% max -50%
+    casualties_on_offense: 1,-5,50 # 1% gives -5%, max -50%
+    prestige_gains: 1,2.5,25 # 1% gives +2.5%, max +25%
+
+wellspring:
+  name: Wellspring
+  exclusive_races:
+    - Firewalker
+  land_type: water
+  perks:
+    resource_conversion: 40,magma,30,obsidian # amountFrom, resourceFrom, amountTo, resourceTo
+
 # END FIREWALKER
 
 # BEGIN MARSHLING
@@ -1394,6 +1426,7 @@ barracks:
     - Black Orc
     - Cult
     - Dragon
+    - Firewalker
     - Growth
     - Icekin
     - Jagunii
@@ -1579,16 +1612,6 @@ hall:
   land_type: mountain
   perks:
     housing: 30
-    jobs: 0
-
-incinerator:
-  name: Incinerator
-  exclusive_races:
-    - Firewalker
-  land_type: mountain
-  perks:
-    housing: 34
-    population_growth: 1,3 # Every 1%, gives 3%
     jobs: 0
 
 orcish_longhouse:

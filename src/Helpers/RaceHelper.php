@@ -682,6 +682,11 @@ class RaceHelper
                 $valueType = '%';
                 $booleanValue = 'static';
                 break;
+            case 'caverns_required_to_send_units':
+                $negativeBenefit = true;
+                $description = 'Caverns required to send units';
+                $booleanValue = true;
+                break;
             default:
                 $negativeBenefit = false;
                 $description = 'No description for perk: ' . $perkType->key;

@@ -81,6 +81,7 @@ class AdvancementHelper
             'prestige_gains' => 'prestige gains',
 
             'unit_pairing' => 'unit limit pairing',
+            'unit_send_capacity_mod' => 'unit sending capacity',
 
             // Land and Construction
             'land_discovered' => 'land discovered on successful invasions',

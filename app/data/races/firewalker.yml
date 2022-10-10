@@ -1,22 +1,42 @@
 name: Firewalker
 alignment: good
-description:
+description: Dwelling underground, you must build caverns for units to be able to 
 home_land_type: mountain
 playable: 1
 skill_level: 1
 
+peasants_alias: worker
+
+peasants_production:
+  gold: 2.35
+  magma: 0.35
+
 resources:
   - gold
-  - food
   - mana
   - gems
+  - magma
+  - obsidian
 
 construction_materials:
-  - gold
+  - obsidian
+
+improvement_resources:
+  gems: 12
+  obsidian: 4
+  caverns_required_to_send_units: 1
+
+land_improvements:
+  mountain:
+    magma_production_raw: 1
+  hill:
+    magma_production_raw: 0.1
+  plain:
+    magma_production_raw: 0.01
 
 perks:
   damage_from_fireball: -100
-  max_population: 15
+  no_food_consumption: 1
 
 units:
   - name: Magma Fragment
@@ -30,19 +50,22 @@ units:
       does_not_count_as_population: 1
       burns_peasants_on_attack: 0.10
       fixed_casualties: 100
-      attrition: 1 # 2% lost each tick.
+      attrition: 0.25
 
-  - name: Fire Sprite
-    training_time: 9
+  - name: Obsidian Guard
+    training_time: 12
     type:
       - living
       - sentient
     cost:
-      gold: 680
+      gold: 1000
+      obsidian: 22
     power:
-      defense: 6
+      defense: 16
+    perks:
+      dies_into_resource: 11,obsidian
 
-  - name: Phoenix
+  - name: Fire Knight
     training_time: 12
     type:
       - living
@@ -50,19 +73,25 @@ units:
       - intelligent
     cost:
       gold: 1000
+      magma: 24
     power:
+      offense: 8
       defense: 8
     perks:
       dies_into: 3
+      burns_peasants_on_attack: 0.333
+      burns_draftees_on_attack: 0.333
+      destroy_resources: lumber;12,food;4
 
-  - name: Magma Giant
+  - name: Magma Brute
     training_time: 12
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 1300
+      gold: 800
+      magma: 20
     power:
       offense: 10
       defense: 6

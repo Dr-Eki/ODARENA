@@ -397,7 +397,7 @@
                                     @else
                                         <span class="label label-danger">You need at least {{ number_format($selectedDominion->race->getPerkValue('cosmic_alignment_to_invade')) }} Cosmic Alignments to plot a chart to teleport units. Currently: {{ number_format($resourceCalculator->getAmount($selectedDominion, 'cosmic_alignment')) }}.</span>
                                     @endif
-
+                                        
                                 @else
                                   <button type="submit"
                                           class="btn btn-danger"
@@ -406,6 +406,10 @@
                                       <i class="ra ra-crossed-swords"></i>
                                       Send Units
                                   </button>
+
+                                    @if($selectedDominion->race->name == 'Firewalker')
+                                    <br><span class="label label-info">You have enough caverns to send {{ number_format($militaryCalculator->getMaxSendableUnits($selectedDominion)) }} units.</span>
+                                    @endif
                                 @endif
                               @endif
                             </div>

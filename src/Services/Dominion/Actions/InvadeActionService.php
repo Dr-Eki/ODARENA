@@ -251,6 +251,11 @@ class InvadeActionService
                 {
                     throw new GameException('You are sending less than the lowest possible DP of the target. Minimum DPA (Defense Per Acre) is ' . static::MINIMUM_DPA . '. Double check your calculations and units sent.');
                 }
+
+                if (!$this->passesUnitSendableCapacityCheck($dominion, $units))
+                {
+                    throw new GameException('You do not have enough caverns to send out this many units.');
+                }
             }
 
             foreach($units as $slot => $amount)
@@ -3043,6 +3048,16 @@ class InvadeActionService
         $attackingForceMaxOP = (int)ceil($newHomeForcesDP * (4/3));
 
         return ($attackingForceOP <= $attackingForceMaxOP);
+    }
+
+    protected function passesUnitSendableCapacityCheck(Dominion $dominion, array $units): bool
+    {
+        if(!$dominion->race->getPerkValue('caverns_required_to_send_units'))
+        {
+            return true;
+        }
+
+        return (array_sum($units) <= $dominion->getBuildingPerkValue('unit_send_capacity'));
     }
 
     /**

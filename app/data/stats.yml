@@ -522,51 +522,51 @@ ash_salvaged:
 ash_plundered:
   name: Ash plundered
 
-gunpowder_production:
-  name: Gunpowder production
-gunpowder_sold:
-  name: Gunpowder sold
-gunpowder_bought:
-  name: Gunpowder bought
-gunpowder_building:
-  name: Gunpowder building
-gunpowder_rezoning:
-  name: Gunpowder rezoning
-gunpowder_training:
-  name: Gunpowder training
-gunpowder_improvements:
-  name: Gunpowder improvements
-gunpowder_exploring:
-  name: Gunpowder exploring
-gunpowder_lost:
-  name: Gunpowder lost
-gunpowder_salvaged:
-  name: Gunpowder salvaged
-gunpowder_plundered:
-  name: Gunpowder plundered
+magma_production:
+  name: Magma production
+magma_sold:
+  name: Magma sold
+magma_bought:
+  name: Magma bought
+magma_building:
+  name: Magma building
+magma_rezoning:
+  name: Magma rezoning
+magma_training:
+  name: Magma training
+magma_improvements:
+  name: Magma improvements
+magma_exploring:
+  name: Magma exploring
+magma_lost:
+  name: Magma lost
+magma_salvaged:
+  name: Magma salvaged
+magma_plundered:
+  name: Magma plundered
 
-prayer_production:
-  name: Prayer production
-prayer_sold:
-  name: Prayer sold
-prayer_bought:
-  name: Prayer bought
-prayer_building:
-  name: Prayer building
-prayer_rezoning:
-  name: Prayer rezoning
-prayer_training:
-  name: Prayer training
-prayer_improvements:
-  name: Prayer improvements
-prayer_exploring:
-  name: Prayer exploring
-prayer_lost:
-  name: Prayer lost
-prayer_salvaged:
-  name: Prayer salvaged
-prayer_plundered:
-  name: Prayer plundered
+obsidian_production:
+  name: Obsidian production
+obsidian_sold:
+  name: Obsidian sold
+obsidian_bought:
+  name: Obsidian bought
+obsidian_building:
+  name: Obsidian building
+obsidian_rezoning:
+  name: Obsidian rezoning
+obsidian_training:
+  name: Obsidian training
+obsidian_improvements:
+  name: Obsidian improvements
+obsidian_exploring:
+  name: Obsidian exploring
+obsidian_lost:
+  name: Obsidian lost
+obsidian_salvaged:
+  name: Obsidian salvaged
+obsidian_plundered:
+  name: Obsidian plundered
 
 crypt_body_training:
   name: Crypt bodies training

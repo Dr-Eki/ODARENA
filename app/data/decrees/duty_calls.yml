@@ -1,0 +1,13 @@
+name: Duty Calls
+cooldown: 12
+description: Standard drafting is 1% of your current peasants. You can issue a decree to slow down drafting.
+exclusive_races:
+  - Cires
+  - Jagunii
+  - Kerranad
+  - Nomad
+  - Wood Elf
+states:
+  - name: Enabled
+    perks:
+      defensive_power_from_peasants: 1

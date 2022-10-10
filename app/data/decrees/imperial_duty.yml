@@ -1,15 +1,11 @@
 name: Drafting
-cooldown: 0
+cooldown: 12
 description: Standard drafting is 1% of your current peasants. You can issue a decree to slow down drafting.
 excluded_races:
   - Black Orc
   - Growth
   - Orc
 states:
-  - name: Reserved
+  - name: Enabled
     perks:
-      drafting: -50
-
-  - name: At Ease
-    perks:
-      drafting: -80
+      drafting: 100

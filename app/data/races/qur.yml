@@ -97,7 +97,6 @@ units:
       plunders: mana;2,gems;1
 
   - name: Crystalline Zealot
-    training_time: 12
     training_time: 1
     type:
       - living
