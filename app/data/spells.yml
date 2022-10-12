@@ -870,6 +870,105 @@ swamp_trance:
     cannot_invade: 1
     cannot_send_expeditions: 1
 
+defensive_warts:
+  name: Defensive Warts
+  scope: self
+  class: passive
+  cost: 7
+  duration: 36
+  cooldown: 0
+  exclusive_races:
+    - Myconid
+  perks:
+    defensive_power: 10
+    stop_land_generation: 1
+    no_attrition: 1
+
+accelerated_germination:
+  name: Accelerated Germination
+  scope: self
+  class: passive
+  cost: 7
+  duration: 12
+  cooldown: 288
+  exclusive_races:
+    - Myconid
+  perks:
+    land_generation_mod: 100
+    food_production_mod: -50
+
+mycelial_visions:
+  name: Mycelial Visions
+  scope: self
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    mana_production_mod: 20
+
+mycelial_visions_friendly:
+  name: Mycelial Visions
+  scope: friendly
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    mana_production_mod: 5
+
+protective_spores:
+  name: Protective Spores
+  scope: self
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    damage_from_spells: -20
+
+protective_spores_friendly:
+  name: Protective Spores
+  scope: friendly
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    damage_from_spells: -20
+
+verdant_fields:
+  name: Verdant Fields
+  scope: self
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    food_production_mod: 20
+
+verdant_fields_friendly:
+  name: Verdant Fields
+  scope: friendly
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    food_production_mod: 5
+
 lay_of_the_land:
   name: Lay of The Land
   scope: self
