@@ -1,6 +1,6 @@
 name: Firewalker
 alignment: good
-description: Dwelling underground, you must build caverns for units to be able to 
+description: Dwelling underground, you must build caverns for units to be able to reach the surface and attack.
 home_land_type: mountain
 playable: 1
 skill_level: 1
