@@ -159,6 +159,12 @@ class SpellCalculator
     public function isSpellActive(Dominion $dominion, string $spellKey): bool
     {
         $spell = Spell::where('key', $spellKey)->first();
+
+        if(!$spell)
+        {
+            return false;
+        }
+
         return DominionSpell::where('spell_id',$spell->id)->where('dominion_id',$dominion->id)->where('duration','>',0)->first() ? true : false;
     }
 
