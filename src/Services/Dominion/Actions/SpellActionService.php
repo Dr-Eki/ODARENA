@@ -264,7 +264,7 @@ class SpellActionService
                 )
             ];
         }
-        # Friendly spells, friendly auras
+        # Friendly spells
         elseif($spell->scope == 'friendly')
         {
             $this->statsService->updateStat($caster, 'magic_friendly_success', 1);

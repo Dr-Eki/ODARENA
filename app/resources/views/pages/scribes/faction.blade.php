@@ -448,7 +448,7 @@
                 <h3 class="box-title">Spells</h3>
             </div>
             <div class="box-body">
-                <h4 class="box-title">Friendly Auras</h4>
+                <h4 class="box-title">Friendly Passive Spells</h4>
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
@@ -494,7 +494,7 @@
                     </tbody>
                 </table>
 
-                <h4 class="box-title">Hostile Auras</h4>
+                <h4 class="box-title">Hostile Passive Spells</h4>
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
@@ -540,7 +540,7 @@
                     </tbody>
                 </table>
 
-                <h4 class="box-title">Self Auras</h4>
+                <h4 class="box-title">Passive Self Spells</h4>
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
@@ -587,7 +587,7 @@
                 </table>
 
 
-                <h4 class="box-title">Friendly Impact Spells</h4>
+                <h4 class="box-title">Friendly Active Spells</h4>
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
@@ -630,7 +630,7 @@
                     </tbody>
                 </table>
 
-                <h4 class="box-title">Hostile Impact Spells</h4>
+                <h4 class="box-title">Hostile Active Spells</h4>
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
@@ -673,7 +673,7 @@
                     </tbody>
                 </table>
 
-                <h4 class="box-title">Self Impact Spells</h4>
+                <h4 class="box-title">Active Self Spells</h4>
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">

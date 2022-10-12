@@ -11,8 +11,8 @@
             <div class="col-md-4">
                 <h4>Class</h4>
                 <ul>
-                    <li><b>Aura</b>: the spell lingers for a specific duration.</li>
-                    <li><b>Impact</b>: the effect of the spell is immediate and then dissipates. No lingering effect.</li>
+                    <li><b>Active</b>: the effect of the spell is immediate and then dissipates. No lingering effect.</li>
+                    <li><b>Passive</b>: the spell lingers for a specific duration.</li>
                     <li><b>Invasion</b>: the spell is triggered automatically during an invasion.</li>
                 </ul>
             </div>
@@ -38,11 +38,11 @@
     <!-- BEGIN AURA -->
     <div class="box">
         <div class="box-header with-border">
-            <h3 class="box-title">Auras</h3>
+            <h3 class="box-title">Passive Spells</h3>
         </div>
 
         <div class="box-header">
-            <h4 class="box-title">Friendly Auras</h4>
+            <h4 class="box-title">Friendly Passive Spells</h4>
         </div>
         <div class="box-body table-responsive">
             <div class="row">
@@ -102,7 +102,7 @@
         </div>
 
         <div class="box-header">
-            <h4 class="box-title">Hostile Auras</h4>
+            <h4 class="box-title">Hostile Passive Spells</h4>
         </div>
         <div class="box-body table-responsive">
             <div class="row">
@@ -162,7 +162,7 @@
         </div>
 
         <div class="box-header">
-            <h4 class="box-title">Self Auras</h4>
+            <h4 class="box-title">Passive Self Spells</h4>
         </div>
         <div class="box-body table-responsive">
             <div class="row">
@@ -229,11 +229,11 @@
         <!-- BEGIN IMPACT -->
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">Impact Spells</h3>
+                <h3 class="box-title">Active Spells</h3>
             </div>
 
             <div class="box-header">
-                <h4 class="box-title">Friendly Impact Spells</h4>
+                <h4 class="box-title">Friendly Active Spells</h4>
             </div>
             <div class="box-body table-responsive">
                 <div class="row">
@@ -290,7 +290,7 @@
             </div>
 
             <div class="box-header">
-                <h4 class="box-title">Hostile Impact Spells</h4>
+                <h4 class="box-title">Hostile Active Spells</h4>
             </div>
             <div class="box-body table-responsive">
                 <div class="row">
@@ -348,7 +348,7 @@
 
 
             <div class="box-header">
-                <h4 class="box-title">Self Impact Spells</h4>
+                <h4 class="box-title">Active Self Spells</h4>
             </div>
             <div class="box-body table-responsive">
                 <div class="row">
