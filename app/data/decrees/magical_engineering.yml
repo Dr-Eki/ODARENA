@@ -17,7 +17,7 @@ states:
   - name: Spellcasting
     perks:
       sorcery_cost_from_wizard_ratio: -15
-      spell_damage_dealt_from_wizard_ratio: 15
+      sorcery_damage_dealt_from_wizard_ratio: 15
       mana_production_mod: -20
   - name: Mind's Eye
     perks:

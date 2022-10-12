@@ -1208,6 +1208,12 @@ class Dominion extends AbstractModel
                 $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_production_mod');
             }
 
+            if($perkKey == 'extra_units_trained')
+            {
+                $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_perk_mod');
+                $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_perk_mod');
+            }
+
             $perk *= $buildingSpecificMultiplier;
         }
 

@@ -452,6 +452,7 @@
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
+                        <col width="100">
                         <col width="50">
                         <col width="50">
                         <col width="50">
@@ -459,6 +460,7 @@
                     <thead>
                         <tr>
                             <th>Spell</th>
+                            <th>Deity</th>
                             <th>Cost</th>
                             <th>Duration</th>
                             <th>Cooldown</th>
@@ -469,6 +471,7 @@
                         @if($spell->class == 'passive' and $spell->scope == 'friendly' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td>{{ $spell->name }}</td>
+                            <td>{{ $spell->deity ? $spell->deity->name : 'Any' }}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>{{ $spell->duration }} ticks</td>
                             <td>
@@ -495,6 +498,7 @@
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
+                        <col width="100">
                         <col width="50">
                         <col width="50">
                         <col width="50">
@@ -502,6 +506,7 @@
                     <thead>
                         <tr>
                             <th>Spell</th>
+                            <th>Deity</th>
                             <th>Cost</th>
                             <th>Duration</th>
                             <th>Cooldown</th>
@@ -512,6 +517,7 @@
                         @if($spell->class == 'passive' and $spell->scope == 'hostile' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td>{{ $spell->name }}</td>
+                            <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>{{ $spell->duration }} ticks</td>
                             <td>
@@ -538,6 +544,7 @@
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
+                        <col width="100">
                         <col width="50">
                         <col width="50">
                         <col width="50">
@@ -545,6 +552,7 @@
                     <thead>
                         <tr>
                             <th>Spell</th>
+                            <th>Deity</th>
                             <th>Cost</th>
                             <th>Duration</th>
                             <th>Cooldown</th>
@@ -555,6 +563,7 @@
                         @if($spell->class == 'passive' and $spell->scope == 'self' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td>{{ $spell->name }}</td>
+                            <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>{{ $spell->duration }} ticks</td>
                             <td>
@@ -582,12 +591,14 @@
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
+                        <col width="100">
                         <col width="50">
                         <col width="50">
                     </colgroup>
                     <thead>
                         <tr>
                             <th>Spell</th>
+                            <th>Deity</th>
                             <th>Cost</th>
                             <th>Cooldown</th>
                             <th>Effect</th>
@@ -597,6 +608,7 @@
                         @if($spell->class == 'active' and $spell->scope == 'friendly' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td>{{ $spell->name }}</td>
+                            <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>
                                 @if($spell->cooldown > 0)
@@ -622,12 +634,14 @@
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
+                        <col width="100">
                         <col width="50">
                         <col width="50">
                     </colgroup>
                     <thead>
                         <tr>
                             <th>Spell</th>
+                            <th>Deity</th>
                             <th>Cost</th>
                             <th>Cooldown</th>
                             <th>Effect</th>
@@ -637,6 +651,7 @@
                         @if($spell->class == 'active' and $spell->scope == 'hostile' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td>{{ $spell->name }}</td>
+                            <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>
                                 @if($spell->cooldown > 0)
@@ -662,12 +677,14 @@
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
+                        <col width="100">
                         <col width="50">
                         <col width="50">
                     </colgroup>
                     <thead>
                         <tr>
                             <th>Spell</th>
+                            <th>Deity</th>
                             <th>Cost</th>
                             <th>Cooldown</th>
                             <th>Effect</th>
@@ -677,6 +694,7 @@
                         @if($spell->class == 'active' and $spell->scope == 'self' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td>{{ $spell->name }}</td>
+                            <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>
                                 @if($spell->cooldown > 0)
@@ -702,10 +720,13 @@
                 <table class="table table-striped">
                     <colgroup>
                         <col width="200">
+                        <col width="100">
+                        <col>
                     </colgroup>
                     <thead>
                         <tr>
                             <th>Spell</th>
+                            <th>Deity</th>
                             <th>Effect</th>
                         </tr>
                     <tbody>
@@ -713,6 +734,7 @@
                         @if($spell->class == 'hostile' and $spell->scope == 'invasion' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td>{{ $spell->name }}</td>
+                            <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>
                                 <ul>
                                     @foreach($spellHelper->getSpellEffectsString($spell) as $effect)

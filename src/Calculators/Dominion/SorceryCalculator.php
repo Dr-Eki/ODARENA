@@ -106,7 +106,7 @@ class SorceryCalculator
     public function getSorceryDamageDealtMultiplier(Dominion $caster): float
     {
         $multiplier = 1;
-        $multiplier += $caster->getDecreePerkMultiplier('spell_damage_dealt_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($caster, 'offense');
+        $multiplier += $caster->getDecreePerkMultiplier('sorcery_damage_dealt_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($caster, 'offense');
 
         return $multiplier;
     }

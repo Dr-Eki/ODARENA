@@ -49,10 +49,6 @@ class SpellHelper
         $spellEffects = [
 
             // Info
-            'clear_sight' => 'Reveal status screen',
-            'vision' => 'Reveal advancements',
-            'revelation' => 'Reveal active spells',
-
             'fog_of_war' => 'Hidden from Insight',
 
             // Production
@@ -69,13 +65,19 @@ class SpellHelper
             'mana_production_mod' => '%+g%% mana production',
             'lumber_production_mod' => '%+g%% lumber production',
             'food_production_mod' => '%+g%% food production',
-            'gems_production_mod' => '%+g%% gem production',
+            'gems_production_mod' => '%+g%% gem collection',
             'gold_production_mod' => '%+g%% gold production',
             'swamp_gas_production_mod' => '%+g%% swamp gas production',
             'miasma_production_mod' => '%+g%% miasma extraction',
             'pearls_production_mod_production' => '%+g%% pearl production',
             'cosmic_alignment_production_mod' => '%+g%% Cosmic Alignment discovery',
+            'magma_production_mod' => '%+g%% magma collection',
+            'obsidian_production_mod' => '%+g%% obsidian generation',
             'strength_gain_mod' => '%+g%% strength gains',
+            'xp_generation_mod' => '%+g%% experience points generation',
+
+            'building_gold_mine_production_mod' => '%+g%% Gold Mine production',
+            'building_gold_quarry_production_mod' => '%+g%% Gold Quarry production',
 
             'food_consumption_mod' => '%+g%% food consumption',
 
@@ -175,6 +177,9 @@ class SpellHelper
 
             'spreads_spell' => 'Spreads %s to any dominion which invades or is invaded by this dominion.',
 
+            'sorcery_damage_suffered' => '%+g%% sorcery damage suffered',
+            'sorcery_damage_dealt' => '%+g%% sorcery damage dealt',
+
             // Espionage
             'disband_spies' => 'Disbands %+g%% of enemy spies.',
             'spy_strength' => '%+g%% spy strength',
@@ -187,10 +192,13 @@ class SpellHelper
             'food_theft' => '%+g%% food lost to theft.',
             'ore_theft' => '%+g%% ore lost to theft.',
             'gems_theft' => '%+g%% gems lost to theft.',
+            'kelp_theft' => '%+g%% gems lost to theft.',
+            'pearls_theft' => '%+g%% gems lost to theft.',
             'all_theft' => '%+g%% resources lost to theft',
 
             'blind_to_reptilian_spies_on_info' => 'Spies blind to Reptilian spies on information gathering ops.',
             'blind_to_reptilian_spies_on_theft' => 'Spies blind to Reptilian spies on theft.',
+            'blind_to_reptilian_spies_on_sabotage' => 'Spies blind to Reptilian spies on sabotage.',
 
             // Conversions
             'conversions' => '%+g%% conversions',
@@ -252,6 +260,9 @@ class SpellHelper
             'opens_portal' => 'Opens a portal required to teleport otherwordly units to enemy lands',
 
             'stasis' => 'Freezes time. No production, cannot take actions, and cannot have actions taken against it. Units returning from battle continue to return but do not finish and arrive home until Stasis is over.',
+
+            'cannot_take_hostile_actions' => 'Cannot take hostile actions against other dominions.',
+            'cannot_receive_hostile_actions' => 'Cannot receive hostile actions against from dominions.',
 
             // Cult
             'cogency' => 'Wizards and wizard units that fail hostile spells against the Cult have a chance of joining the Cult instead of dying.',

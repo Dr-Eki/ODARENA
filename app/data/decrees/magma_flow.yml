@@ -1,0 +1,26 @@
+name: Magma Flow
+cooldown: 24
+description: Instruct your workers how to control the flow of magma throughout your lands.
+exclusive_races:
+  - Firewalker
+states:
+  - name: Cool It
+    perks:
+      obsidian_production_mod: 15
+      unit_send_capacity_mod: -5
+
+  - name: Light 'Em Up
+    perks:
+      building_blast_furnace_perk_mod: 20
+      obsidian_production_mod: -10
+      unit_send_capacity_mod: -5
+
+  - name: Natural
+    perks:
+      magma_production_mod: 10
+      unit_send_capacity_mod: -10
+
+  - name: Restricted
+    perks:
+      magma_production_mod: -10
+      gems_production_mod: 10

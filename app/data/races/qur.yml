@@ -109,8 +109,9 @@ units:
       mana: 20
     power:
       offense: 10
-      defense: 11
+      defense: 13
     perks:
       destroy_resource_on_victory: soul,2
       faster_return_if_paired: 3,6 # slot, ticks
       plunders: mana;4,gems;2
+      offense_from_pairing: 3,7,1 # slot, amount, num required

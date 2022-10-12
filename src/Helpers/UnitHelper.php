@@ -830,7 +830,7 @@ class UnitHelper
 
                     $building = Building::where('key', $buildingKey)->first();
 
-                    $perkValue = [$unitsPerBuilding, $building->name];
+                    $perkValue = [$building->name, $unitsPerBuilding];
                 }
 
                 if($perk->key === 'offense_from_devotion' or $perk->key === 'defense_from_devotion')

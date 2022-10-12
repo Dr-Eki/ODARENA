@@ -50,6 +50,7 @@
                   <table class="table table-striped">
                       <colgroup>
                           <col width="200">
+                          <col width="100">
                           <col width="50">
                           <col width="50">
                           <col width="50">
@@ -59,6 +60,7 @@
                       <thead>
                           <tr>
                               <th>Spell</th>
+                              <th>Deity</th>
                               <th>Cost</th>
                               <th>Wizard Strength</th>
                               <th>Duration</th>
@@ -73,6 +75,7 @@
                                   {{ $spell->name }}
                                   {!! $spellHelper->getExclusivityString($spell) !!}
                               </td>
+                              <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                               <td>{{ $spell->cost }}x</td>
                               <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
                               <td>{{ $spell->duration }} ticks</td>
@@ -107,6 +110,7 @@
                   <table class="table table-striped">
                       <colgroup>
                           <col width="200">
+                          <col width="100">
                           <col width="50">
                           <col width="50">
                           <col width="50">
@@ -116,6 +120,7 @@
                       <thead>
                           <tr>
                               <th>Spell</th>
+                              <th>Deity</th>
                               <th>Cost</th>
                               <th>Wizard Strength</th>
                               <th>Duration</th>
@@ -130,6 +135,7 @@
                                   {{ $spell->name }}
                                   {!! $spellHelper->getExclusivityString($spell) !!}
                               </td>
+                              <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                               <td>{{ $spell->cost }}x</td>
                               <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
                               <td>{{ $spell->duration }} ticks</td>
@@ -164,6 +170,7 @@
                   <table class="table table-striped">
                       <colgroup>
                           <col width="200">
+                          <col width="100">
                           <col width="50">
                           <col width="50">
                           <col width="50">
@@ -173,6 +180,7 @@
                       <thead>
                           <tr>
                               <th>Spell</th>
+                              <th>Deity</th>
                               <th>Cost</th>
                               <th>Wizard Strength</th>
                               <th>Duration</th>
@@ -191,6 +199,7 @@
                                   {{ $spell->name }}
                                   {!! $spellHelper->getExclusivityString($spell) !!}
                               </td>
+                              <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                               <td>{{ $spell->cost }}x</td>
                               <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
                               <td>{{ $spell->duration }} ticks</td>
@@ -232,6 +241,7 @@
                       <table class="table table-striped">
                           <colgroup>
                               <col width="200">
+                              <col width="100">
                               <col width="50">
                               <col width="50">
                               <col width="50">
@@ -240,6 +250,7 @@
                           <thead>
                               <tr>
                                   <th>Spell</th>
+                                  <th>Deity</th>
                                   <th>Cost</th>
                                   <th>Wizard Strength</th>
                                   <th>Cooldown</th>
@@ -253,6 +264,7 @@
                                       {{ $spell->name }}
                                       {!! $spellHelper->getExclusivityString($spell) !!}
                                   </td>
+                                  <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                                   <td>{{ $spell->cost }}x</td>
                                   <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
                                   <td>
@@ -286,6 +298,7 @@
                       <table class="table table-striped">
                           <colgroup>
                               <col width="200">
+                              <col width="100">
                               <col width="50">
                               <col width="50">
                               <col width="50">
@@ -294,6 +307,7 @@
                           <thead>
                               <tr>
                                   <th>Spell</th>
+                                  <th>Deity</th>
                                   <th>Cost</th>
                                   <th>Wizard Strength</th>
                                   <th>Cooldown</th>
@@ -307,6 +321,7 @@
                                       {{ $spell->name }}
                                       {!! $spellHelper->getExclusivityString($spell) !!}
                                   </td>
+                                  <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                                   <td>{{ $spell->cost }}x</td>
                                   <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
                                   <td>
@@ -341,6 +356,7 @@
                       <table class="table table-striped">
                           <colgroup>
                               <col width="200">
+                              <col width="100">
                               <col width="50">
                               <col width="50">
                               <col width="50">
@@ -349,6 +365,7 @@
                           <thead>
                               <tr>
                                   <th>Spell</th>
+                                  <th>Deity</th>
                                   <th>Cost</th>
                                   <th>Wizard Strength</th>
                                   <th>Cooldown</th>
@@ -362,6 +379,7 @@
                                       {{ $spell->name }}
                                       {!! $spellHelper->getExclusivityString($spell) !!}
                                   </td>
+                                  <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                                   <td>{{ $spell->cost }}x</td>
                                   <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
                                   <td>
@@ -398,10 +416,14 @@
                       <table class="table table-striped">
                           <colgroup>
                               <col width="200">
+                              <col width="100">
+                              <col width="50">
+                              <col>
                           </colgroup>
                           <thead>
                               <tr>
                                   <th>Spell</th>
+                                  <th>Deity</th>
                                   <th>Duration</th>
                                   <th>Effect</th>
                               </tr>
@@ -413,6 +435,7 @@
                                       {{ $spell->name }}
                                       {!! $spellHelper->getExclusivityString($spell) !!}
                                   </td>
+                                  <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                                   <td>{{ $spell->duration }} ticks</td>
                                   <td>
                                       <ul>

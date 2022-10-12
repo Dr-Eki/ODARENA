@@ -163,6 +163,9 @@
                               @elseif ($spellCalculator->isSpellActive($selectedDominion, 'stasis'))
                                   <p><strong><em>You cannot attack while you are in stasis.</em></strong></p>
     
+                              @elseif ($spellCalculator->isSpellActive($selectedDominion, 'flood_the_caverns'))
+                                  <p><strong><em>You cannot attack while the caverns are flooded.</em></strong></p>
+    
                               @elseif ($protectionService->isUnderProtection($selectedDominion))
                                   <p><strong><em>You are currently under protection for <b>{{ $selectedDominion->protection_ticks }}</b> {{ str_plural('tick', $selectedDominion->protection_ticks) }} and may not attack during that time.</em></strong></p>
     

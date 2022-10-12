@@ -35,7 +35,10 @@ class DecreeHelper
             'blood_production_mod' => '%+g%% blood production.',
             'horse_production_mod' => '%+g%% horse production.',
             'mud_production_mod' => '%+g%% mud production.',
-            'swamp gas_production_mod' => '%+g%% swamp gas production.',
+            'swamp_gas_production_mod' => '%+g%% swamp gas production.',
+            'magma_production_mod' => '%+g%% magma production.',
+            'obsidian_production_mod' => '%+g%% obsidian production.',
+
             'xp_generation_mod' => '%+g%% XP generation.',
             'xp_gains' => '%+g%% XP gains.',
 
@@ -90,6 +93,8 @@ class DecreeHelper
 
             'unit_pairing' => '%+g%% unit pairing capacity.',
 
+            'unit_send_capacity_mod' => '%+g%% unit send capacity.',
+
             'undead_unit1_production_raw' => 'Each %3$s raises %2$s %1$s per tick.',
             'undead_unit2_production_raw' => 'Each %3$s raises %2$s %1$s per tick.',
             'undead_unit3_production_raw' => 'Each %3$s raises %2$s %1$s per tick.',
@@ -120,7 +125,7 @@ class DecreeHelper
             'spy_losses' => '%+g%% spy losses.',
             'spell_damage' => '%+g%% spell damage.',
             'spell_damage_dealt' => '%+g%% spell damage per 1 WPA.',
-            'spell_damage_dealt_from_wizard_ratio' => '%+g%% spell damage per 1 WPA.',
+            'sorcery_damage_dealt_from_wizard_ratio' => '%+g%% spell damage per 1 WPA.',
             'spy_cost' => '%+g%% spy costs.',
             'wizard_cost' => '%+g%% wizard costs.',
             'spell_cost' => '%+g%% spell costs.',

@@ -1,0 +1,1774 @@
+# PRODUCTION SPELLS
+
+# END PRODUCTION SPELLS
+
+# BEGIN DEITY SPELLS
+
+# END DEITY SPELLS
+
+# BEGIN PRODUCTION
+
+gaias_watch:
+  name: Druva's Watch
+  scope: self
+  class: passive
+  cost: 2
+  duration: 48
+  cooldown: 0
+  excluded_races:
+    - Afflicted
+    - Demon
+    - Monster
+    - Sylvan
+    - Undead
+    - Void
+  perks:
+    food_production_mod: 10
+
+harmony:
+  name: Druva's Chant
+  scope: self
+  class: passive
+  cost: 2.5
+  duration: 48
+  cooldown: 0
+  excluded_races:
+    - Afflicted
+    - Demon
+    - Monster
+    - Undead
+    - Void
+  perks:
+    population_growth: 50
+
+druvas_granaries:
+  name: Druva's Granaries
+  scope: self
+  class: passive
+  cost: 5
+  duration: 36
+  cooldown: 72
+  excluded_races:
+    - Afflicted
+    - Demon
+    - Dragon
+    - Dwarg
+    - Elementals
+    - Gnome
+    - Icekin
+    - Glimjir
+    - Monster
+    - Nox
+    - Spirit
+    - Void
+  perks:
+    lumber_theft: -100
+    food_theft: -100
+
+mining_strength:
+  name: Mirnon's Strength
+  scope: self
+  class: passive
+  cost: 2
+  duration: 48
+  cooldown: 0
+  excluded_races:
+    - Afflicted
+    - Ants
+    - Artillery
+    - Aurei
+    - Firewalker
+    - Demon
+    - Dimensionalists
+    - Dwarg
+    - Elementals
+    - Icekin
+    - Growth
+    - Gnome
+    - Halfling
+    - Lux
+    - Marshling
+    - Glimjir
+    - Monster
+    - Myconid
+    - Nox
+    - Qur
+    - Reptilians
+    - Revenants
+    - Simian
+    - Spirit
+    - Sylvan
+    - Swarm
+    - Undead
+    - Vampires
+    - Void
+    - Weres
+    - Wood Elf
+  perks:
+    ore_production_mod: 10
+
+fools_gold:
+  name: Mirnon's Vault
+  scope: self
+  class: passive
+  cost: 5
+  duration: 36
+  cooldown: 72
+  excluded_races:
+    - Afflicted
+    - Elementals
+    - Growth
+    - Monster
+    - Myconid
+    - Sylvan
+    - Void
+  perks:
+    gold_theft: -100
+    gems_theft: -100
+    ore_theft: -100
+
+# BEGIN MAGIC/SAZAL
+
+sazals_charge:
+  name: Sazal's Charge
+  scope: self
+  class: active
+  cost: 8
+  cooldown: 480
+  excluded_races:
+    - Void
+    - Monster
+  perks:
+    reset_spell_cooldowns: 1
+
+sazals_fog:
+  name: Sazal's Fog
+  scope: self
+  class: passive
+  cost: 0.5
+  duration: 12
+  cooldown: 96
+  perks:
+    fog_of_war: 1
+  excluded_races:
+    - Monster
+
+energy_mirror:
+  name: Sazal's Mirror
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 3
+  duration: 24
+  cooldown: 0
+  excluded_races:
+    - Monster
+    - Void
+  perks:
+    chance_to_reflect_spells: 25
+
+surreal_perception:
+  name: Sazal's Perception
+  scope: self
+  class: passive
+  cost: 4
+  duration: 24
+  cooldown: 0
+  excluded_races:
+    - Monster
+    - Void
+  perks:
+    reveal_ops: 1
+
+aura:
+  name: Sazal's Shield
+  scope: self
+  class: passive
+  cost: 3
+  duration: 24
+  cooldown: 0
+  excluded_races:
+    - Monster
+    - Void
+  perks:
+    damage_from_spells: -20
+
+# END MAGIC/SAZAL
+
+transmogrify:
+  name: Transmogrify
+  scope: self
+  class: active
+  cost: 10
+  duration: 0
+  cooldown: 24
+  excluded_races:
+    - Afflicted
+    - Ants
+    - Aurei
+    - Artillery
+    - Beastfolk
+    - Dwarg
+    - Firewalker
+    - Demon
+    - Dimensionalists
+    - Elementals
+    - Icekin
+    - Growth
+    - Gnome
+    - Halfling
+    - Lux
+    - Marshling
+    - Glimjir
+    - Monster
+    - Myconid
+    - Nox
+    - Qur
+    - Reptilians
+    - Revenants
+    - Simian
+    - Spirit
+    - Sylvan
+    - Swarm
+    - Undead
+    - Vampires
+    - Void
+    - Weres
+    - Wood Elf
+  perks:
+    resource_conversion: ore,gems,25,4 # from, to, percentage, ratio:1
+
+rapid_compression:
+  name: Rapid Compression
+  scope: self
+  class: active
+  cost: 10
+  duration: 0
+  cooldown: 384
+  exclusive_races:
+    - Imperial Gnome
+  perks:
+    resource_conversion_capped: ore,brimmer,100,20,1000000 # from, to, percentage, ratio:1, max_from
+
+# BEGIN ONE/TWO-OFF FACTION SPELLS
+
+astral_revelations:
+  name: Astral Revelations
+  scope: self
+  class: active
+  cost: 10
+  duration: 0
+  cooldown: 96
+  exclusive_races:
+    - Dimensionalists
+  perks:
+    resource_conversion: mana,cosmic_alignment,100,6000 # from, to, percentage, ratio:1
+
+celestial_pathfinder:
+  name: Celestial Pathfinder
+  scope: self
+  class: passive
+  cost: 10
+  duration: 6
+  cooldown: 192
+  exclusive_races:
+    - Dimensionalists
+  perks:
+    no_mana_production: 1
+    cosmic_alignment_production_mod: 100
+
+waterwall:
+  name: Glimjir's Favour
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 8
+  duration: 4
+  cooldown: 24
+  perks:
+    boats_sunk: -80
+    food_production_docks: -100
+
+load_the_cannons:
+  name: Load The Cannons
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 4
+  duration: 12
+  cooldown: 12
+  exclusive_races:
+    - Artillery
+  perks:
+    defensive_power: -30
+    can_send_ammunition_units: 1
+
+iceshield:
+  name: Iceshield
+  scope: friendly
+  class: passive
+  cost: 8
+  duration: 24
+  cooldown: 24
+  exclusive_races:
+    - Icekin
+  perks:
+    damage_from_fireball: -10
+    damage_from_lightning_bolt: -10
+
+birdsong:
+  name: Birdsong
+  scope: friendly
+  class: active
+  cost: 4
+  duration: 0
+  exclusive_races:
+    - Sylvan
+  perks:
+    increase_morale: 1
+
+swarming:
+  name: Swarming
+  scope: self
+  class: passive
+  cost: 6
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Ants
+  perks:
+    drafting: 100
+
+divine_intervention:
+  name: Tiranthael's Blessing
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 10
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Sacred Order
+  perks:
+    offensive_power: 10
+    #can_kill_immortal: 1
+
+killing_rage:
+  name: Killing Rage
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Goblin
+  perks:
+    offensive_power: 10
+
+blizzard:
+  name: Blizzard
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 72
+  exclusive_races:
+    - Icekin
+    - Yeti
+    - Snow Elf
+  perks:
+    all_theft: -75
+    defensive_power: 5
+
+blood_rage:
+  name: Bloodrage
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Orc
+    - Black Orc
+  perks:
+    offensive_power: 10
+    casualties: 10
+
+crusade_of_urugdakh:
+  name: Crusade of Urugdakh
+  scope: self
+  class: passive
+  cost: 8
+  duration: 18
+  cooldown: 192
+  exclusive_races:
+    - Orc
+    - Black Orc
+  perks:
+    offensive_power_from_devotion: urugdakh,0.02,40
+    increases_enemy_casualties_on_offense: 25
+    no_land_discovered: 1
+
+sacrifice_to_urugdakh:
+  name: Sacrifice to Urugdakh
+  scope: self
+  class: active
+  cost: 6
+  duration: 48
+  cooldown: 96
+  exclusive_races:
+    - Black Orc
+  perks:
+    convert_peasants_to_prestige: 5000,50 # 1,000 peasants become 50 prestige
+
+enchanted_blades:
+  name: Enchanted Blades
+  scope: self
+  class: passive
+  cost: 10
+  duration: 1
+  cooldown: 0
+  exclusive_races:
+    - Dark Elf
+  perks:
+    increases_enemy_casualties_on_offense_from_wizard_ratio: 5
+
+defensive_frenzy:
+  name: Defensive Frenzy
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Halfling
+  perks:
+    defensive_power: 10
+
+lightfoots:
+  name: Lightfoots
+  scope: friendly
+  class: passive
+  cost: 12
+  duration: 24
+  cooldown: 192
+  exclusive_races:
+    - Halfling
+  perks:
+    spy_strength: 10
+
+howling:
+  name: Howling
+  scope: self
+  class: active
+  cost: 8
+  duration: 0
+  cooldown: 144
+  exclusive_races:
+    - Kobold
+  perks:
+    increase_morale_from_net_victories: 1
+
+retribution:
+  name: Retribution
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Jagunii
+    - Kerranad
+  perks:
+    offensive_power_on_retaliation: 20
+
+warsong:
+  name: Warsong
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Wood Elf
+  perks:
+    offensive_power: 10
+
+regeneration:
+  name: Regeneration
+  scope: self
+  class: passive
+  cost: 10
+  duration: 24
+  cooldown: 72
+  exclusive_races:
+    - Reptilians
+  perks:
+    casualties: -25
+
+elskas_vision:
+  name: Elskas' Vision
+  scope: self
+  class: passive
+  cost: 2
+  duration: 12
+  cooldown: 24
+  exclusive_races:
+    - Reptilians
+  perks:
+    spy_strength_recovery: 2
+
+gaias_blessing:
+  name: Druva's Blessing
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Sylvan
+  perks:
+    food_production_mod: 30
+    lumber_production_mod: 10
+
+nightfall:
+  name: Nightfall
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 6
+  duration: 24
+  cooldown: 0
+  exclusive_races:
+    - Nox
+  perks:
+    offensive_power: 5
+
+campaign:
+  name: Bregon's Campaign
+  scope: self
+  class: passive
+  cost: 8
+  duration: 1
+  cooldown: 0
+  exclusive_races:
+    - Nomad
+  perks:
+    land_discovered: 50
+
+feral_hunger:
+  name: Feral Hunger
+  scope: self
+  class: passive
+  cost: 4
+  duration: 4
+  cooldown: 0
+  exclusive_races:
+    - Weres
+  perks:
+    no_conversions: 1
+    offensive_power: 20
+
+druvas_call:
+  name: Druva's Call
+  scope: self
+  class: active
+  cost: 8
+  duration: 0
+  cooldown: 96
+  exclusive_races:
+    - Weres
+  perks:
+    summon_units_from_land_by_time: 1;2,2,0.08,forest # slots, base, extra percent per hour, land type
+
+miners_sight:
+  name: Mirnon's Fortitude
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Dwarg
+    - Artillery
+    - Gnome
+    - Troll
+  perks:
+    ore_production_mod: 20
+    gems_production_mod: 5
+
+alchemist_flame:
+  name: Alchemist Flame
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 10
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Firewalker
+  perks:
+    alchemy_production_mod: 30
+
+charring_flames:
+  name: Charring Flames
+  scope: self
+  class: passive
+  cost: 4
+  duration: 24
+  cooldown: 0
+  exclusive_races:
+    - Firewalker
+  perks:
+    casualties: 10
+    construction_cost: -10
+
+pyromancy:
+  name: Pyromancy
+  scope: self
+  class: passive
+  cost: 4
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Firewalker
+  perks:
+    no_attrition: 1
+    unit_gold_costs: 2.5
+
+voidspell:
+  name: ⫷⋗⫸◬
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 96
+  exclusive_races:
+    - Void
+  perks:
+    immune_to_temples: 1
+
+voidspellmana:
+  name: ◭⫸⋖⋗
+  scope: self
+  class: passive
+  cost: 8
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Void
+  perks:
+    mana_theft: -80
+
+voidspellperception:
+  name: ◬◬◬⋗
+  scope: self
+  class: passive
+  cost: 8
+  duration: 24
+  cooldown: 0
+  exclusive_races:
+    - Void
+  perks:
+    reveal_ops: 1
+    population_growth: 50
+
+voidspellmagicprotection:
+  name: ⫸⋗⫸◬
+  scope: self
+  class: passive
+  cost: 8
+  duration: 24
+  cooldown: 0
+  exclusive_races:
+    - Void
+  perks:
+    damage_from_spells: -50
+
+metabolism:
+  name: Metabolism
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 144
+  exclusive_races:
+    - Growth
+  perks:
+    food_production_raw_mod: 100
+
+ambush:
+  name: Ambush
+  scope: self
+  class: passive
+  cost: 2
+  duration: 1
+  cooldown: 24
+  exclusive_races:
+    - Beastfolk
+  perks:
+    reduces_target_raw_defense_from_land: 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
+
+winds_of_fortune:
+  name: Winds of Fortune
+  scope: self
+  class: passive
+  cost: 10
+  duration: 1
+  cooldown: 96
+  exclusive_races:
+    - Armada
+  perks:
+    faster_return: 2
+
+spiral_architecture:
+  name: Spiral Architecture
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Imperial Gnome
+  perks:
+    invest_bonus: 25
+
+fimbulwinter:
+  name: Fimbulwinter
+  scope: self
+  class: passive
+  cost: 8
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Norse
+  perks:
+    defensive_power: 10
+    food_production_mod: -10
+    lumber_production_mod: -10
+
+ragnarok:
+  name: Ragnarök
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 8
+  duration: 24
+  cooldown: 192
+  exclusive_races:
+    - Norse
+  perks:
+    cannot_build: 1
+    no_drafting: 1
+    casualties_on_offense: 200
+    increases_enemy_casualties_on_defense: 100
+
+desecration:
+  name: Desecration
+  scope: self
+  class: passive
+  cost: 8
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Afflicted
+  perks:
+    increases_enemy_draftee_casualties: 200
+
+# DEMON SPELLS
+
+infernal_fury:
+  name: Infernal Fury
+  scope: self
+  class: passive
+  cost: 7
+  duration: 12
+  cooldown: 96
+  exclusive_races:
+    - Demon
+  perks:
+    increases_enemy_casualties_on_offense: 25
+    increases_enemy_casualties_on_defense: 25
+    food_consumption_mod: 20
+
+sacrifice_to_azk_hurum:
+  name: Sacrifice to Azk'Hurum
+  scope: self
+  class: active
+  cost: 9
+  exclusive_races:
+    - Demon
+  perks:
+    peasant_to_resources_conversion: 50,1;soul,6;blood
+
+feast_of_azk_hurum:
+  name: Feast of Azk'Hurum
+  scope: self
+  class: passive
+  cost: 9
+  duration: 48
+  exclusive_races:
+    - Demon
+  perks:
+    population_growth: 100
+    food_consumption_mod: 20
+
+blessing_of_azk_hurum:
+  name: Blessing of Azk'Hurum
+  scope: friendly
+  class: passive
+  cost: 7
+  duration: 48
+  exclusive_races:
+    - Demon
+  perks:
+    offensive_power_on_retaliation: 2.5
+
+aurora:
+  name: Aurora
+  scope: self
+  class: passive
+  cost: 6
+  duration: 24
+  cooldown: 0
+  exclusive_races:
+    - Lux
+  perks:
+    training_time_raw: -4
+
+maelstrom:
+  name: Maelstrom
+  scope: self
+  class: passive
+  cost: 6
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Glimjir
+  perks:
+    increases_enemy_casualties_on_defense: 50
+
+portal:
+  name: Portal
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 12
+  duration: 1
+  cooldown: 24
+  exclusive_races:
+    - Dimensionalists
+  perks:
+    opens_portal: 1
+
+# BEGIN MYCONID SPELLS
+
+defensive_warts:
+  name: Defensive Warts
+  scope: self
+  class: passive
+  cost: 7
+  duration: 36
+  cooldown: 0
+  exclusive_races:
+    - Myconid
+  perks:
+    defensive_power: 10
+    stop_land_generation: 1
+    no_attrition: 1
+
+accelerated_germination:
+  name: Accelerated Germination
+  scope: self
+  class: passive
+  cost: 7
+  duration: 12
+  cooldown: 288
+  exclusive_races:
+    - Myconid
+  perks:
+    land_generation_mod: 100
+    food_production_mod: -50
+
+mycelial_visions:
+  name: Mycelial Visions
+  scope: self
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    mana_production_mod: 20
+
+mycelial_visions_friendly:
+  name: Mycelial Visions
+  scope: friendly
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    mana_production_mod: 5
+
+protective_spores:
+  name: Protective Spores
+  scope: self
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    damage_from_spells: -20
+
+protective_spores_friendly:
+  name: Protective Spores
+  scope: friendly
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    damage_from_spells: -20
+
+verdant_fields:
+  name: Verdant Fields
+  scope: self
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    food_production_mod: 20
+
+verdant_fields_friendly:
+  name: Verdant Fields
+  scope: friendly
+  class: passive
+  cost: 9
+  duration: 24
+  cooldown: 96
+  exclusive_races:
+    - Myconid
+  perks:
+    food_production_mod: 5
+
+# END MYCONID SPELLS
+
+chitin:
+  name: Chitin
+  scope: self
+  class: passive
+  cost: 10
+  duration: 48
+  exclusive_races:
+    - Swarm
+  perks:
+    defensive_power: 5
+    offensive_power: -5
+
+aggression:
+  name: Aggression
+  scope: self
+  class: passive
+  cost: 6
+  duration: 12
+  cooldown: 24
+  exclusive_races:
+    - Swarm
+  perks:
+    offensive_power: 5
+    offensive_power_on_retaliation: 5
+
+rainy_season:
+  name: Rainy Season
+  scope: self
+  class: passive
+  cost: 12
+  duration: 96
+  cooldown: 672
+  exclusive_races:
+    - Simian
+  perks:
+    defensive_power: 100
+    population_growth: 100
+    food_production_mod: 50
+    lumber_production_mod: 50
+    cannot_invade: 1
+    cannot_send_expeditions: 1
+
+elementals_hill:
+  name: Druva's Rising
+  scope: self
+  class: active
+  cost: 6
+  duration: 0
+  cooldown: 96
+  exclusive_races:
+    - Elementals
+  perks:
+    rezone_all_land: 10,hill # rezone 10% of your land to hills
+
+elementals_mountain:
+  name: Druva's Crest
+  scope: self
+  class: active
+  cost: 6
+  duration: 0
+  cooldown: 96
+  exclusive_races:
+    - Elementals
+  perks:
+    rezone_all_land: 10,mountain # rezone 10% of your land to mountains
+
+elementals_water:
+  name: Druva's Flow
+  scope: self
+  class: active
+  cost: 6
+  duration: 0
+  cooldown: 96
+  exclusive_races:
+    - Elementals
+  perks:
+    rezone_all_land: 10,water # rezone 10% of your land to mountains
+
+spawning_pool:
+  name: Spawning Pool
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 10
+  duration: 24
+  cooldown: 0
+  exclusive_races:
+    - Marshling
+  perks:
+    additional_units_trained_from_land: 1,swamp,1 # slot,land_type,ratio = 1% more unit1 for every 1% swamp
+
+# BEGIN MONSTER
+
+primordial_wrath:
+  name: Claws of Fury
+  scope: self
+  class: passive
+  cost: 10
+  duration: 12
+  cooldown: 240
+  exclusive_races:
+    - Monster
+  perks:
+    offensive_power: 40
+    defensive_power: -20
+
+concentrated_effort:
+  name: Concentrated Effort
+  scope: self
+  class: passive
+  cost: 10
+  duration: 12
+  cooldown: 96
+  exclusive_races:
+    - Monster
+  perks:
+    increases_enemy_casualties_on_offense: 25
+    strength_gain_mod: 50
+    no_land_discovered: 1
+
+defensive_position:
+  name: Defensive Position
+  scope: self
+  class: passive
+  cost: 10
+  duration: 24
+  cooldown: 48
+  exclusive_races:
+    - Monster
+  perks:
+    defensive_power: 40
+    offensive_power: -60
+
+# END MONSTER
+
+call_to_arms:
+  name: Bregon's Arsenal
+  scope: self
+  class: passive
+  cost: 12
+  duration: 12
+  cooldown: 96
+  exclusive_races:
+    - Cires
+  perks:
+    unit_gold_costs: -15
+    unit_ore_costs: -15
+    training_time_raw: -6
+
+bregons_call:
+  name: Bregon's Call
+  scope: self
+  class: passive
+  cost: 10
+  duration: 12
+  cooldown: 0
+  exclusive_races:
+    - Cires
+    - Nomad
+  perks:
+    defensive_power_from_peasants: 1
+    no_drafting: 1
+
+imperial_duty:
+  name: Imperial Duty
+  scope: self
+  class: passive
+  cost: 4
+  duration: 12
+  cooldown: 72
+  exclusive_races:
+    - Black Orc
+    - Orc
+  perks:
+    drafting: 100
+
+fine_arts:
+  name: Fine Arts
+  scope: self
+  class: passive
+  cost: 10
+  duration: 24
+  cooldown: 0
+  exclusive_races:
+    - Vampires
+  perks:
+    invest_bonus: 10
+    unit_gold_costs: 5
+
+# BEGIN UNDEAD SPELLS
+
+dark_rites:
+  name: Dark Rites
+  scope: self
+  class: passive
+  cost: 10
+  duration: 24
+  cooldown: 0
+  exclusive_races:
+    - Undead
+  perks:
+    converts_crypt_bodies: 50,4,1 # every 50 unit4 creates one unit1
+
+rites_of_zidur:
+  name: Rites of Zidur
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 10
+  duration: 24
+  cooldown: 0
+  exclusive_races:
+    - Undead
+  perks:
+    converts_crypt_bodies: 13,4,1 # every 13 unit4 creates 1 unit1
+
+rites_of_kinthys:
+  name: Rites of Kinthys
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 10
+  duration: 24
+  cooldown: 0
+  exclusive_races:
+    - Undead
+  perks:
+    converts_crypt_bodies: 13,4,2 # every 10 unit4 creates 1 unit2
+
+# END UNDEAD SPELLS
+
+furnace_maws:
+  name: Furnace Maws
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 6
+  duration: 18
+  cooldown: 72
+  exclusive_races:
+    - Dragon
+  perks:
+    offensive_power: 5
+    gem_production: -10
+
+stasis:
+  name: Stasis
+  scope: self
+  class: passive
+  cost: 1.5
+  duration: 2
+  cooldown: 0
+  exclusive_races:
+    - Qur
+  perks:
+    stasis: 1
+
+shroud:
+  name: Shroud
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 2
+  duration: 4
+  cooldown: 192
+  exclusive_races:
+    - Spirit
+  perks:
+    spy_strength: 100
+    immortal_spies: 1
+
+# BEGIN NOX
+
+nocten_acrimony:
+  name: Nocten Acrimony
+  scope: self
+  class: passive
+  cost: 4000
+  duration: 48
+  exclusive_races:
+    - Nox
+  perks:
+    offensive_power: 40
+
+nocten_shield:
+  name: Nocten Fervour
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 4000
+  duration: 48
+  exclusive_races:
+    - Nox
+  perks:
+    target_defensive_power_mod: -40
+
+nocten_veil:
+  name: Nocten Veil
+  scope: self
+  class: passive
+  cost: 4000
+  duration: 48
+  exclusive_races:
+    - Nox
+  perks:
+    defensive_power: 40
+
+# END NOX
+
+# BEGIN AUREI
+
+halcyon_phase:
+  name: Halcyon Phase
+  scope: self
+  class: active
+  cost: 3
+  exclusive_races:
+    - Aurei
+  perks:
+    aurei_unit_conversion: 4,3,1000 # from, to, amount
+
+chryson_phase:
+  name: Chryson Phase
+  scope: self
+  class: active
+  cost: 3
+  exclusive_races:
+    - Aurei
+  perks:
+    aurei_unit_conversion: 3,4,1000 # from, to, amount
+
+# END AUREI
+
+# BEGIN AFFLICTED
+
+forced_suicides:
+  name: Forced Suicides
+  scope: self
+  class: passive
+  cost: 6
+  duration: 24
+  cooldown: 192
+  exclusive_races:
+    - Afflicted
+  perks:
+    miasma_production_mod: 100
+    peasants_converted: 100
+    prestige_gains: -50
+
+miasmic_charges:
+  name: Miasmic Charges
+  scope: self
+  class: passive
+  cost: 6
+  duration: 24
+  exclusive_races:
+    - Afflicted
+  perks:
+    defense_from_resource: 0.20,miasma # DP per resource, resource
+    resource_lost_on_invasion: 100,miasma # percentage, resource
+    miasma_production_mod: -50
+    population_growth: -90
+
+# END AFFLICTED
+
+# BEGIN MARSHLING
+
+marsh_attacks:
+  name: Marsh Attacks
+  scope: self
+  class: active
+  cost: 12
+  wizard_strength: 20
+  exclusive_races:
+    - Marshling
+  perks:
+    marshling_random_resource_to_units_conversion: 10,50,marshling,1;2;3;4 #
+
+swamp_trance:
+  name: Swamp Trance
+  scope: self
+  class: passive
+  cost: 6
+  duration: 36
+  exclusive_races:
+    - Marshling
+  perks:
+    swamp_gas_production_mod: 100
+    cannot_invade: 1
+    cannot_send_expeditions: 1
+
+# END MARSHLING
+
+# BEGIN INVASION SPELLS
+
+pestilence:
+  name: Pestilence
+  scope: hostile
+  class: invasion
+  cost: 0
+  duration: 192
+  cooldown: 0
+  exclusive_races:
+    - Afflicted
+  perks:
+    kill_peasants_and_converts_for_caster_unit: 0.25,1 # 0.25% die and become unit1
+    spreads_spell: lesser_pestilence
+
+lesser_pestilence:
+  name: Lesser Pestilence
+  scope: hostile
+  class: invasion
+  cost: 0
+  duration: 96
+  cooldown: 0
+  exclusive_races:
+    - Afflicted
+  perks:
+    kill_peasants_and_converts_for_caster_unit: 0.05,1 # 0.25% die and become unit1
+
+great_fever:
+  name: Great Fever
+  scope: hostile
+  class: invasion
+  cost: 0
+  duration: 12
+  cooldown: 0
+  exclusive_races:
+    - Afflicted
+  perks:
+    population_growth: -80
+    gold_production_mod: -10
+    food_production_mod: -20
+
+festering_wounds:
+  name: Festering Wounds
+  scope: hostile
+  class: invasion
+  cost: 0
+  duration: 12
+  cooldown: 0
+  exclusive_races:
+    - Afflicted
+  perks:
+    casualties: 25
+    food_consumption_mod: 25
+
+annexation:
+  name: Annexation
+  scope: hostile
+  class: invasion
+  cost: 0
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Legion
+  perks:
+    annexes_target: 1
+
+# END INVASION SPELLS
+
+# BEGIN SORCERY
+
+  # Passive
+
+insect_swarm:
+  name: Blight
+  scope: hostile
+  class: passive
+  cost: 1
+  duration: 1
+  cooldown: 0
+  excluded_races:
+    - Cult
+    - Dwarg
+    - Monster
+  perks:
+    food_production_mod: -10
+
+curse_of_zidur:
+  name: Curse of Zidur
+  scope: hostile
+  class: passive
+  cost: 1.25
+  duration: 0.5
+  cooldown: 12
+  exclusive_races:
+    - Revenants
+    - Undead
+  perks:
+    casualties: 5
+
+earthquake:
+  name: Earthquake
+  scope: hostile
+  class: passive
+  cost: 1
+  duration: 1
+  cooldown: 0
+  excluded_races:
+    - Dwarg
+    - Monster
+  perks:
+    ore_production_mod: -5
+    gems_production_mod: -5
+
+elskas_blur:
+  name: Elskas' Blur
+  scope: hostile
+  class: passive
+  cost: 0.5
+  duration: 0.5
+  cooldown: 36
+  exclusive_races:
+    - Reptilians
+  perks:
+    blind_to_reptilian_spies_on_info: 1
+    blind_to_reptilian_spies_on_theft: 1
+
+frozen_shores:
+  name: Frozen Shores
+  enabled: 0
+  scope: hostile
+  class: passive
+  cost: 2
+  duration: 0.5
+  cooldown: 24
+  exclusive_races:
+    - Icekin
+    - Yeti
+    - Snow Elf
+  perks:
+    exchange_rate: 20
+
+great_flood:
+  name: Great Flood
+  enabled: 0
+  scope: hostile
+  class: passive
+  cost: 1
+  duration: 1
+  cooldown: 0
+  excluded_races:
+    - Dwarg
+    - Monster
+  perks:
+    boat_production_mod: -25
+
+mark_of_azk_hurum:
+  name: Mark of Azk'Hurum
+  scope: hostile
+  class: passive
+  cost: 2
+  cooldown: 24
+  duration: 0.25
+  exclusive_races:
+    - Demon
+  perks:
+    defensive_power: -5
+
+plague:
+  name: Plague
+  scope: hostile
+  class: passive
+  cost: 1
+  duration: 1
+  cooldown: 0
+  excluded_races:
+    - Dwarg
+    - Monster
+  perks:
+    population_growth: -25
+
+windchill:
+  name: Windchill
+  scope: hostile
+  class: passive
+  cost: 1.25
+  duration: 0.25
+  cooldown: 6
+  exclusive_races:
+    - Icekin
+  perks:
+    wizard_strength: -50
+
+    # /Passive
+    # Active
+
+curse_of_kinthys:
+  name: Curse of Kinthys
+  scope: hostile
+  class: active
+  cost: 2.5
+  duration: 0
+  cooldown: 24
+  exclusive_races:
+    - Revenants
+    - Undead
+  perks:
+    decrease_morale: 1.00
+
+disband_spies:
+  name: Disband Spies
+  enabled: 0
+  scope: hostile
+  class: active
+  cost: 0.5 # 2/4
+  duration: 0
+  cooldown: 0
+  excluded_races:
+    - Cult
+    - Dwarg
+    - Monster
+  perks:
+    disband_spies: 0.25 # 1/4
+
+fireball:
+  name: Fireball
+  scope: hostile
+  class: active
+  cost: 1 # 4/4
+  duration: 0
+  cooldown: 0
+  excluded_races:
+    - Cult
+    - Dwarg
+    - Firewalker
+    - Monster
+  perks:
+    kill_peasants: 0.25 # 1/4
+    destroy_resource: food,0.25 # 1/4
+
+lightning_bolt:
+  name: Lightning Bolt
+  scope: hostile
+  class: active
+  cost: 1 # 4/4
+  duration: 0
+  cooldown: 0
+  excluded_races:
+    - Cult
+    - Dwarg
+    - Monster
+  perks:
+    improvements_damage: 0.05 # 0.20/4
+
+pyroclast:
+  name: Pyroclast
+  scope: hostile
+  class: active
+  cost: 0.5 # 2/4
+  duration: 0
+  cooldown: 0
+  exclusive_races:
+    - Firewalker
+  perks:
+    kill_peasants: 0.5 # 2/4
+    destroy_resource: food,0.5 # 2/4
+
+solar_rays:
+  name: Solar Flares
+  scope: hostile
+  class: active
+  cost: 0.75 # 3/4
+  duration: 0
+  cooldown: 0
+  exclusive_races:
+    - Lux
+  perks:
+    kill_faction_units_percentage: Nox,1,0.5 # faction, slot, percentage # 2/4
+
+purification:
+  name: Tiranthael's Justice
+  scope: hostile
+  class: active
+  cost: 1.25 #
+  duration: 0
+  cooldown: 0
+  exclusive_races:
+    - Sacred Order
+  perks:
+    kill_faction_units_percentage: Afflicted,1,0.1875 # faction, slot, percentage # 0.75/4
+
+voidspellmanatheft:
+  name: ◣◹
+  scope: hostile
+  class: active
+  cost: 0.25 # 1/4
+  cooldown: 0
+  duration: 0
+  exclusive_races:
+    - Void
+  perks:
+    resource_theft: mana,0.25 # resource, rate # 1/4
+
+manastorm:
+  name: Mana Storm
+  scope: artefact
+  class: active
+  cost: 0.33
+  cooldown: 0
+  duration: 0
+  perks:
+    artefact_damage: 10,2 # per acre, WPAx
+
+
+# END SORCERY
+
+# BEGIN DEITY SPELLS
+
+druvas_guard:
+  name: Druva's Guard
+  deity: druva
+  scope: self
+  class: passive
+  cost: 12
+  cooldown: 0
+  duration: 48
+  exclusive_races:
+    - Wood Elf
+  perks:
+    elk_production_raw_from_land: 0.01,forest # 1 elks per 1,000 forest
+
+# END DEITY SPELLS
+
+# BEGIN CULT
+
+cogency:
+  name: Cogency
+  scope: hostile
+  class: passive
+  cost: 1.25
+  duration: 0.5
+  cooldown: 0
+  exclusive_races:
+    - Cult
+  perks:
+    cogency: 1
+
+enthralling:
+  name: Enthralling
+  scope: hostile
+  class: passive
+  cost: 1.2
+  duration: 0.25
+  cooldown: 0
+  exclusive_races:
+    - Cult
+  perks:
+    enthralling: 1
+
+mind_control:
+  name: Mind Control
+  scope: self
+  class: passive
+  cost: 10
+  duration: 4
+  cooldown: 0
+  exclusive_races:
+    - Cult
+  perks:
+    kill_peasants_and_converts_for_caster_unit: 0.10,1
+
+menticide:
+  name: Menticide
+  enabled: 0
+  scope: self
+  class: passive
+  cost: 10
+  wizard_strength: 20
+  duration: 4
+  cooldown: 0
+  exclusive_races:
+    - Cult
+  perks:
+    kill_and_convert_units_by_strength: # Max strength
+
+persuasion:
+  name: Persuasion
+  scope: hostile
+  class: passive
+  cost: 1.5
+  duration: 0.25
+  cooldown: 0
+  exclusive_races:
+    - Cult
+  perks:
+    persuasion: 1
+
+treachery:
+  name: Treachery
+  scope: hostile
+  class: passive
+  cost: 1.25
+  duration: 0.25
+  cooldown: 0
+  exclusive_races:
+    - Cult
+  perks:
+    treachery: 1
+
+# END CULT

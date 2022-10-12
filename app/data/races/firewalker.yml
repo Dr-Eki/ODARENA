@@ -19,12 +19,12 @@ resources:
   - obsidian
 
 construction_materials:
+  - gold
   - obsidian
 
 improvement_resources:
   gems: 12
   obsidian: 4
-  caverns_required_to_send_units: 1
 
 land_improvements:
   mountain:
@@ -37,6 +37,7 @@ land_improvements:
 perks:
   damage_from_fireball: -100
   no_food_consumption: 1
+  caverns_required_to_send_units: 1
 
 units:
   - name: Magma Fragment
