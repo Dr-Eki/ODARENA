@@ -872,7 +872,7 @@ class SettingHelper
                         $resultString = 'A plague has befallen our people, slowing population growth.';
                         break;
 
-                    case 'insect_swarm':
+                    case 'blight':
                         $resultString = 'A swarm of insects are eating our crops, slowing food production.';
                         break;
 

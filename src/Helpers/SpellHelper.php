@@ -111,6 +111,7 @@ class SpellHelper
             'unit_gold_costs' => '%+g%% military unit gold costs',
             'unit_ore_costs' => '%+g%% military unit ore costs',
             'unit_lumber_costs' => '%+g%% military unit lumber costs',
+            'unit_magma_costs' => '%+g%% military unit magma costs',
 
             'cannot_invade' => 'Cannot invade',
             'cannot_send_expeditions' => 'Cannot send expeditions',
@@ -227,8 +228,8 @@ class SpellHelper
 
             'offensive_power_on_retaliation' => '%+g%% offensive power if target recently invaded your realm',
 
-            'defensive_power_vs_insect_swarm' => '%+g%% defensive power if attacker has Insect Swarm',
-            'offensive_power_vs_insect_swarm' => '%+g%% offensive power if target has Insect Swarm',
+            'defensive_power_vs_blight' => '%+g%% defensive power if attacker has Insect Swarm',
+            'offensive_power_vs_blight' => '%+g%% offensive power if target has Insect Swarm',
 
             'reduces_target_raw_defense_from_land' => 'Targets raw defensive power lowered by %1$s%% for every %2$s%% of your own %3$s, max %4$s%% reduction.',# 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
 

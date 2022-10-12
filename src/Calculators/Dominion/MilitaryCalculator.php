@@ -2504,9 +2504,9 @@ class MilitaryCalculator
             // Spell: Chitin
             if(isset($target))
             {
-                if ($dominion->getSpellPerkValue('defensive_power_vs_insect_swarm') and $this->spellCalculator->isSpellActive($target, 'insect_swarm'))
+                if ($dominion->getSpellPerkValue('defensive_power_vs_blight') and $this->spellCalculator->isSpellActive($target, 'blight'))
                 {
-                    $multiplier += $dominion->getSpellPerkValue('defensive_power_vs_insect_swarm');
+                    $multiplier += $dominion->getSpellPerkValue('defensive_power_vs_blight');
                 }
             }
 

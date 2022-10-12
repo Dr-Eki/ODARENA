@@ -29,7 +29,7 @@ perks:
   immortal_spies: 1
   immortal_wizards: 1
   damage_from_lightning_bolt: -75
-  damage_from_insect_swarm: -100
+  damage_from_blight: -100
   indestructible_buildings: 1
   population_growth: 25
   unemployed_peasants_produce: 1

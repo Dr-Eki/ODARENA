@@ -484,7 +484,7 @@ class RaceHelper
                 $description = 'Damage from Fireballs';
                 $booleanValue = false;
                 break;
-            case 'damage_from_insect_swarm':
+            case 'damage_from_blight':
                 $negativeBenefit = true;
                 $description = 'Effect from Insect Swarm';
                 $booleanValue = false;

@@ -702,13 +702,14 @@ pyromancy:
   scope: self
   class: passive
   cost: 4
-  duration: 48
+  duration: 36
   cooldown: 0
   exclusive_races:
     - Firewalker
   perks:
     no_attrition: 1
-    unit_gold_costs: 2.5
+    unit_gold_costs: 2
+    unit_magma_costs: 2
 
 maelstrom:
   name: Maelstrom
