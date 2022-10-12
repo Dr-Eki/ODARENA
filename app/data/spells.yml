@@ -339,7 +339,7 @@ glimjs_treasures:
 
 kinthys_bane:
   name: Kinthys' Bane
-  scope: self
+  scope: hostile
   class: active
   cost: 6
   duration: 0
@@ -413,7 +413,7 @@ tiranthaels_purification:
   scope: hostile
   class: active
   cost: 1.25
-  cooldown: 0
+  deity: tiranthael
   exclusive_races:
     - Sacred Order
   perks:
@@ -1091,7 +1091,7 @@ birdsong:
 
 arterial_rush:
   name: Arterial Rush
-  scope: friendly
+  scope: self
   class: active
   cost: 5
   duration: 1
