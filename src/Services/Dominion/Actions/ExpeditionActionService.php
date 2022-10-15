@@ -31,16 +31,12 @@ use OpenDominion\Services\Dominion\ArtefactService;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Services\Dominion\QueueService;
-use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\StatsService;
 
 class ExpeditionActionService
 {
     use DominionGuardsTrait;
 
-    /**
-     * @var int The minimum morale required to initiate an invasion
-     */
     protected const MIN_MORALE = 50;
 
     /** @var array Invasion result array. todo: Should probably be refactored later to its own class */
@@ -85,7 +81,8 @@ class ExpeditionActionService
         DB::transaction(function () use ($dominion, $units)
         {
 
-            if ($this->protectionService->isUnderProtection($dominion)) {
+            if ($this->protectionService->isUnderProtection($dominion))
+            {
                 throw new GameException('You cannot send out an expedition while under protection');
             }
 
@@ -124,40 +121,40 @@ class ExpeditionActionService
 
             foreach($units as $slot => $amount)
             {
-                 if($amount < 0)
-                 {
-                     throw new GameException('Expedition was canceled due to bad input.');
-                 }
+                if($amount < 0)
+                {
+                    throw new GameException('Expedition was canceled due to bad input.');
+                }
 
-                 $unit = $dominion->race->units->filter(function ($unit) use ($slot) {
-                     return ($unit->slot === $slot);
-                 })->first();
+                $unit = $dominion->race->units->filter(function ($unit) use ($slot) {
+                return ($unit->slot === $slot);
+                })->first();
 
-                 if(!$this->unitHelper->isUnitSendableByDominion($unit, $dominion))
-                 {
-                     throw new GameException('You cannot send ' . $unit->name . ' on expeditions.');
-                 }
-             }
+                if(!$this->unitHelper->isUnitSendableByDominion($unit, $dominion))
+                {
+                 throw new GameException('You cannot send ' . $unit->name . ' on expeditions.');
+                }
+            }
 
             if ($dominion->race->getPerkValue('cannot_send_expeditions'))
             {
                 throw new GameException($dominion->race->name . ' cannot send out expeditions.');
             }
 
-           if ($dominion->getDeityPerkValue('cannot_send_expeditions'))
-           {
-               throw new GameException('Your deity prohibits sending expeditions.');
-           }
+            if ($dominion->getDeityPerkValue('cannot_send_expeditions'))
+            {
+                throw new GameException('Your deity prohibits sending expeditions.');
+            }
 
-          if ($dominion->getSpellPerkValue('cannot_send_expeditions'))
-          {
-              throw new GameException('A spell is preventing you from sending expeditions.');
-          }
+            if ($dominion->getSpellPerkValue('cannot_send_expeditions'))
+            {
+                throw new GameException('A spell is preventing you from sending expeditions.');
+            }
 
-          if ($dominion->getDecreePerkValue('cannot_send_expeditions'))
-          {
-              throw new GameException('A decree has been issued which forbids expeditions.');
-          }
+            if ($dominion->getDecreePerkValue('cannot_send_expeditions'))
+            {
+                throw new GameException('A decree has been issued which forbids expeditions.');
+            }
 
             // Spell: Rainy Season (cannot invade)
             if ($this->spellCalculator->isSpellActive($dominion, 'rainy_season'))
@@ -169,7 +166,6 @@ class ExpeditionActionService
             {
                 throw new GameException('A spell is preventing from you sending out expeditions.');
             }
-
 
             $disallowedUnitAttributes = [
                 'ammunition',
@@ -222,12 +218,6 @@ class ExpeditionActionService
                 throw new GameException('You cannot send out expeditions until the round has started.');
             }
 
-            // Dimensionalists: must have Portals open.
-            if($dominion->race->name == 'Dimensionalists' and !$dominion->getSpellPerkValue('opens_portal'))
-            {
-                throw new GameException('You cannot send out expeditions unless a portal is open.');
-            }
-
             // Qur: Statis cannot invade.
             if($dominion->getSpellPerkValue('stasis'))
             {
@@ -256,7 +246,6 @@ class ExpeditionActionService
 
             $this->handlePrestigeChanges($dominion, $this->expeditionResult['land_discovered_amount'], $this->expeditionResult['land_size'], $units);
             $this->handleXp($dominion, $this->expeditionResult['land_discovered_amount']);
-            #$this->handleDuringExpeditionUnitPerks($dominion, $units);
             $this->handleAshFindings($dominion);
             if($dominion->round->mode == 'artefacts')
             {
@@ -344,7 +333,7 @@ class ExpeditionActionService
         $xpPerAcreMultiplier += $dominion->getSpellPerkMultiplier('xp_gains');
         $xpPerAcreMultiplier += $dominion->getDeityPerkMultiplier('xp_gains');
 
-        $xpGained = intval(25 * $xpPerAcreMultiplier * $landDiscovered);
+        $xpGained = intval(33 * $xpPerAcreMultiplier * $landDiscovered);
 
         $this->queueService->queueResources(
             'expedition',

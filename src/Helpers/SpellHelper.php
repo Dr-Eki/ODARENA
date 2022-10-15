@@ -115,6 +115,7 @@ class SpellHelper
 
             'cannot_invade' => 'Cannot invade',
             'cannot_send_expeditions' => 'Cannot send expeditions',
+            'cannot_be_invaded' => 'Cannot be invaded',
 
             'additional_units_trained_from_land' => '1%% extra %1$s%% for every %3$s%% %2$s.',
 
@@ -200,6 +201,9 @@ class SpellHelper
             'blind_to_reptilian_spies_on_info' => 'Spies blind to Reptilian spies on information gathering ops.',
             'blind_to_reptilian_spies_on_theft' => 'Spies blind to Reptilian spies on theft.',
             'blind_to_reptilian_spies_on_sabotage' => 'Spies blind to Reptilian spies on sabotage.',
+
+            'cannot_steal' => 'Cannot steal.',
+            'cannot_be_stolen_from' => 'Cannot be stolen from.',
 
             // Conversions
             'conversions' => '%+g%% conversions',

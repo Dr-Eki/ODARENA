@@ -667,8 +667,11 @@ flood_the_caverns:
   exclusive_races:
     - Firewalker
   perks:
-    cannot_take_hostile_actions: 1
-    cannot_receive_hostile_actions: 1
+    cannot_invade: 1
+    cannot_be_invaded: 1
+    cannot_steal: 1
+    cannot_be_stolen_from: 1
+    cannot_send_expeditions: 1
     xp_generation_mod: -80
     obsidian_production_mod: -50
     gems_production_mod: -25

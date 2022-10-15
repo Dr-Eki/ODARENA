@@ -199,6 +199,32 @@ class TheftActionService
                 throw new GameException('You cannot steal while you are in stasis.');
             }
 
+            // Firewalker: Flood The Gates.
+            if($target->getSpellPerkValue('cannot_be_invaded'))
+            {
+                if($target->race->name == 'Firewalker')
+                {
+                    throw new GameException('The Firewalkers have flooded the caverns, making it impossible for your units to invade.');
+                }
+                else
+                {
+                    throw new GameException('A magical state surrounds the lands, making it impossible for your units to invade.');
+                }
+            }
+
+            // Firewalker: Flood The Gates.
+            if($thief->getSpellPerkValue('cannot_invade'))
+            {
+                if($thief->race->name == 'Firewalker')
+                {
+                    throw new GameException('Your caverns are flooded, making it impossible for your units to attack.');
+                }
+                else
+                {
+                    throw new GameException('A magical state surrounds the lands, making it impossible for you to invade.');
+                }
+            }
+
             // Check that thief has enough SS
             if($thief->spy_strength <= 0)
             {

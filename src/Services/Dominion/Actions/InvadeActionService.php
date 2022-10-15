@@ -337,6 +337,49 @@ class InvadeActionService
                 throw new GameException('You cannot invade while you are in stasis.');
             }
 
+            // Firewalker: Flood The Gates.
+            if($target->getSpellPerkValue('cannot_be_invaded'))
+            {
+                if($target->race->name == 'Firewalker')
+                {
+                    throw new GameException('The Firewalkers have flooded the caverns, making it impossible for your units to invade.');
+                }
+                else
+                {
+                    throw new GameException('A magical state surrounds the lands, making it impossible for your units to invade.');
+                }
+            }
+
+            // Firewalker: Flood The Gates.
+            if($dominion->getSpellPerkValue('cannot_invade'))
+            {
+                if($dominion->race->name == 'Firewalker')
+                {
+                    throw new GameException('Your caverns are flooded, making it impossible for your units to attack.');
+                }
+                else
+                {
+                    throw new GameException('A magical state surrounds the lands, making it impossible for you to invade.');
+                }
+            }
+
+            # Artillery: land gained plus current total land cannot exceed 133% of protector's land.
+            if($dominion->race->name == 'Artillery' and $dominion->hasProtector())
+            {
+                $protector = $dominion->protector;
+                $landGained = $this->landCalculator->getTotalLand($dominion) - $this->landCalculator->getTotalLand($protector);
+                $landTotal = $this->landCalculator->getTotalLand($dominion) + $landGained;
+
+                if($landTotal > ($protector->land * 1.33))
+                {
+                    throw new GameException('You cannot invade because your land gained plus current total land exceeds 133% of your protector\'s land.');
+                }
+            }
+
+            $this->invasionResult['data']['land_conquered'] = $this->militaryCalculator->getLandConquered($dominion, $target, $landRatio);
+            $this->invasionResult['data']['land_discovered'] = $this->militaryCalculator->checkDiscoverLand($dominion, $target, $this->invasionResult['data']['land_conquered']);
+            $this->invasionResult['data']['extra_land_discovered'] = $this->militaryCalculator->getExtraLandDiscovered($dominion, $target, $this->invasionResult['data']['land_discovered'], $this->invasionResult['data']['land_conquered']);
+        
             $this->invasionResult['defender']['recently_invaded_count'] = $this->militaryCalculator->getRecentlyInvadedCount($defender);
             $this->invasionResult['attacker']['units_sent'] = $units;
             $this->invasionResult['attacker']['land_size'] = $this->landCalculator->getTotalLand($dominion);

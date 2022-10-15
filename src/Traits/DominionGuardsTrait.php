@@ -35,7 +35,7 @@ trait DominionGuardsTrait
         if ($dominion->protection_ticks == 0 and !$dominion->race->name == 'Barbarian')
         {
             $requestTimestamp = request()->server('REQUEST_TIME');
-            if ($requestTimestamp !== null)
+            if ($requestTimestamp)
             {
                 $requestTime = Carbon::createFromTimestamp($requestTimestamp);
                 if (in_array($requestTime->minute,[0,15,30,45]) && $requestTime->second < $seconds)
