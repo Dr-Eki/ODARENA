@@ -60,10 +60,6 @@ class TitleHelper
                 $negativeBenefit = false;
                 $description = 'Spy strength:';
                 break;
-            case 'explore_cost':
-                $negativeBenefit = true;
-                $description = 'Exploration gold costs:';
-                break;
             case 'explore_time':
                 $negativeBenefit = true;
                 $description = 'Exploration time:';

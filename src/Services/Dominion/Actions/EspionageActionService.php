@@ -606,6 +606,7 @@ class EspionageActionService
         $targetModifier = 0;
         $targetModifier += $target->getSpellPerkMultiplier($resource . '_theft');
         $targetModifier += $target->getSpellPerkMultiplier('all_theft');
+        $targetModifier += $target->title->getPerkValue('all_theft') * $dominion->getTitlePerkMultiplier();
         $targetModifier += $target->getBuildingPerkMultiplier($resource . '_theft_reduction');
 
         $theftAmount *= (1 + $targetModifier);

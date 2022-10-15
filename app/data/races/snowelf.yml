@@ -12,9 +12,6 @@ improvement_resources:
   gems: 15.6
   mana: 0.08
 
-perks:
-  explore_cost: 50
-
 units:
   - name: Arbalist
     training_time: 9

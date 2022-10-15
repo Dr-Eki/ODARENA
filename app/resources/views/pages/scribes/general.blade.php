@@ -227,7 +227,7 @@
                 <p>Offensive Power per 1 land required: <code>[Land Size] ** 1.25 / 5</code></p>
                 <p>If you are devoted to or in the process of submitting to a deity, the amount of land gained is multiplied by <code>1 - [Deity Multiplier]</code>.
                 <p>You also gain 25 XP per land discovered.</p>
-                <p>Prestige gain: <code>([Land Discovered] / [Land Size]) * 200)</code></p>
+                <p>Prestige gain: <code>([Land Discovered] / [Land Size]) * 400)</code></p>
             </div>
         </div>
     </div>

@@ -1900,6 +1900,7 @@ class MilitaryCalculator
         if(isset($dominion->title))
         {
             $multiplier += $dominion->title->getPerkMultiplier('spy_strength') * $dominion->getTitlePerkMultiplier();
+            $multiplier += $dominion->title->getPerkMultiplier('spy_strength_on_' . $type) * $dominion->getTitlePerkMultiplier();
         }
 
         return $multiplier;
@@ -2589,7 +2590,7 @@ class MilitaryCalculator
         return round(max(10, $landConquered));
     }
 
-    public function checkDiscoverLand(Dominion $attacker, Dominion $defender): int
+    public function checkDiscoverLand(Dominion $attacker, Dominion $defender): bool
     {
         if($this->getRecentlyInvadedCountByAttacker($defender, $attacker, 8) == 0 and !$defender->isAbandoned() and !$attacker->getSpellPerkValue('no_land_discovered'))
         {
@@ -2998,6 +2999,8 @@ class MilitaryCalculator
         $multiplier += $dominion->getImprovementPerkMultiplier('unit_send_capacity_mod');
         $multiplier += $dominion->getDecreePerkMultiplier('unit_send_capacity_mod');
         $multiplier += $dominion->getSpellPerkMultiplier('unit_send_capacity_mod');
+
+        #dd($maxUnits, $multiplier, $maxUnits * $multiplier);
 
         return $maxUnits * $multiplier;
     }

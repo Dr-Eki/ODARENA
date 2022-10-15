@@ -16,9 +16,6 @@ construction_materials:
 improvement_resources:
   gold: 1
 
-perks:
-  explore_cost: 100
-
 units:
   - name: Alchemist
     training_time: 6

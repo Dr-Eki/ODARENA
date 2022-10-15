@@ -110,6 +110,7 @@ class TheftCalculator
             $unitMultiplier = 1;
             $unitMultiplier += $thief->race->getUnitPerkValueForUnitSlot($unitSlot, ($resource->key . '_theft_carry_capacity')) / 100;
             $unitMultiplier += $thief->race->getUnitPerkValueForUnitSlot($unitSlot, 'theft_carry_capacity') / 100;
+            $unitMultiplier += $thief->title->getPerkMultiplier('theft_carry_capacity') * $thief->getTitlePerkMultiplier();
 
             $max *= $unitMultiplier;
         }

@@ -103,6 +103,8 @@ class DecreeHelper
             
             'attrition_mod' => '%+g%% attrition.',
 
+            'building_blast_furnace_perk_mod' => '%+g%% power from Blast Furnaces.',
+
             # OP/DP
             'offensive_power' => '%+g%% offensive power.',
             'defensive_power' => '%+g%% defensive power.',

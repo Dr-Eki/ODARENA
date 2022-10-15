@@ -208,7 +208,7 @@
                                     <p><strong><em>You cannot send out an expedition while you are in stasis.</em></strong></p>
     
                                     @elseif ($spellCalculator->isSpellActive($selectedDominion, 'flood_the_caverns'))
-                                        <p><strong><em>You cannot attack while the caverns are flooded.</em></strong></p>
+                                        <p><strong><em>You cannot send expeditions while the caverns are flooded.</em></strong></p>
 
                                   @elseif ($selectedDominion->getSpellPerkValue('cannot_send_expeditions'))
                                     <p><strong><em>A spell is preventing you from sending expeditions.</em></strong></p>

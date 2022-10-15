@@ -113,8 +113,10 @@ class SpellHelper
             'unit_lumber_costs' => '%+g%% military unit lumber costs',
             'unit_magma_costs' => '%+g%% military unit magma costs',
 
-            'cannot_invade' => 'Cannot invade',
+
             'cannot_send_expeditions' => 'Cannot send expeditions',
+
+            'cannot_invade' => 'Cannot invade',
             'cannot_be_invaded' => 'Cannot be invaded',
 
             'additional_units_trained_from_land' => '1%% extra %1$s%% for every %3$s%% %2$s.',
@@ -204,6 +206,9 @@ class SpellHelper
 
             'cannot_steal' => 'Cannot steal.',
             'cannot_be_stolen_from' => 'Cannot be stolen from.',
+
+            'cannot_sabotage' => 'Cannot sabotage.',
+            'cannot_be_sabotages' => 'Cannot be sabotaged.',
 
             // Conversions
             'conversions' => '%+g%% conversions',

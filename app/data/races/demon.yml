@@ -32,7 +32,6 @@ improvement_resources:
 perks:
   starts_devoted_to_azk_hurum: 1
   cannot_renounce_deity: 1
-  explore_cost: 100
   improvements_from_souls: 1
 
 units:

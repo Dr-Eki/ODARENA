@@ -291,7 +291,7 @@ class ExpeditionActionService
 
     protected function handlePrestigeChanges(Dominion $dominion, int $landDiscovered, int $landSize, array $units): void
     {
-        $prestigeChange = intval($landDiscovered / $this->landCalculator->getTotalLand($dominion) * 200);
+        $prestigeChange = intval($landDiscovered / $this->landCalculator->getTotalLand($dominion) * 400);
 
         $prestigeChangeMultiplier = 1;
         $prestigeChangeMultiplier += $dominion->race->getPerkMultiplier('prestige_gains');

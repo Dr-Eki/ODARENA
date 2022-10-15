@@ -11,7 +11,6 @@ draftees_alias: cadet
 perks:
   exchange_rate: 25
   salvaging: 50
-  explore_cost: 100
   expedition_land_gains: 100
 
 units:

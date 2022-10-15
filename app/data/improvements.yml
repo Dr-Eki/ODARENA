@@ -14,8 +14,8 @@ cartography:
     - Void
     - Wood Elf
   perks:
-    explore_gold_cost: -35,4000
     land_discovered: 35,4000
+    expedition_land_gains: 35,4000
 
 commerce:
   name: Commerce
@@ -688,8 +688,8 @@ cartography_kerranad:
   exclusive_races:
     - Kerranad
   perks:
-    explore_gold_cost: -50,6000
     land_discovered: 50,6000
+    expedition_land_gains: 50,6000
 
 city_guard:
   name: City Guard
@@ -847,7 +847,7 @@ cartography_wood_elf:
     - Wood Elf
   perks:
     land_discovered: 70,7000
-    explore_gold_cost: -35,7000
+    expedition_land_gains: 35,7000
 
 espionage_wood_elf:
   name: Espionage
@@ -1101,7 +1101,7 @@ underground_navigation:
     - Swarm
   perks:
     land_discovered: 70,7000
-    explore_gold_cost: -30,6000
+    expedition_land_gains: 30,6000
 
 undulation:
   name: Undulation

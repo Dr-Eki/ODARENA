@@ -172,15 +172,20 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="box-footer">
-                            <button type="submit"
-                                    class="btn btn-danger"
-                                    {{ $selectedDominion->isLocked() ? 'disabled' : null }}
-                                    id="invade-button">
-                                <i class="fa fa-hand-lizard"></i>
-                                Send Spies
-                            </button>
-                        </div>
+
+                        @if ($selectedDominion->getSpellPerkValue('cannot_sabotage'))
+                            <p><strong><em>A magical state is preventing you from performing sabotage.</em></strong></p>
+                        @else
+                            <div class="box-footer">
+                                <button type="submit"
+                                        class="btn btn-danger"
+                                        {{ $selectedDominion->isLocked() ? 'disabled' : null }}
+                                        id="invade-button">
+                                    <i class="fa fa-hand-lizard"></i>
+                                    Send Spies
+                                </button>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

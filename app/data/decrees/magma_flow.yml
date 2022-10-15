@@ -11,7 +11,7 @@ states:
 
   - name: Light 'Em Up
     perks:
-      building_blast_furnace_perk_mod: 20
+      building_blast_furnace_perk_mod: 50
       obsidian_production_mod: -10
       unit_send_capacity_mod: -5
 

@@ -327,10 +327,6 @@ class RaceHelper
                 $description = 'Cannot train Archmages';
                 $booleanValue = true;
                 break;
-            case 'explore_cost':
-                $negativeBenefit = true;
-                $description = 'Cost of exploration';
-                break;
             case 'spell_cost':
                 $negativeBenefit = true;
                 $description = 'Spell costs';
