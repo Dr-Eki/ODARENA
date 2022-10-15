@@ -56,14 +56,29 @@ class TitleHelper
                 $negativeBenefit = false;
                 $description = 'Improvement points:';
                 break;
+            case 'all_theft':
+                $negativeBenefit = false;
+                $description = 'Theft losses:';
+                break;
+            case 'sabotage_damage_suffered':
+                $negativeBenefit = false;
+                $description = 'Sabotage damage suffered:';
+                break;
             case 'spy_strength':
                 $negativeBenefit = false;
                 $description = 'Spy strength:';
                 break;
-            case 'explore_time':
-                $negativeBenefit = true;
-                $description = 'Exploration time:';
-                $valueType = ' ticks';
+            case 'spy_strength_on_defense':
+                $negativeBenefit = false;
+                $description = 'Spy strength on defense:';
+                break;
+            case 'spy_strength_on_offense':
+                $negativeBenefit = false;
+                $description = 'Spy strength on offense:';
+                break;
+            case 'theft_carry_capacity':
+                $negativeBenefit = false;
+                $description = 'Theft carry capacity:';
                 break;
             case 'expedition_land_gains':
                 $negativeBenefit = false;
@@ -155,7 +170,9 @@ class TitleHelper
                 $description = 'Deity power:';
                 break;
             default:
-                return null;
+                $negativeBenefit = false;
+                $description = 'Missing description for perk type: ' . $perkType->key;
+                break;
         }
 
         $result = ['description' => $description, 'value' => ''];
