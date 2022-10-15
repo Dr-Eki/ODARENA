@@ -14,11 +14,32 @@ anvils:
 
 lean_mass:
   name: Lean Mass
+  exclusive_races:
+    - Afflicted
+    - Aurei
+    - Growth
+    - Icekin
+    - Myconid
+    - Weres
+    - Yeti
   perks:
     unit_food_costs: -1.75
 
 magical_weapons:
   name: Magical Weapons
+  exclusive_races:
+    - Aurei
+    - Dark Elf
+    - Demon
+    - Icekin
+    - Lux
+    - Nox
+    - Qur
+    - Reptilians
+    - Revenants
+    - Sylvan
+    - Undead
+    - Void
   perks:
     unit_mana_costs: -2.5
 
