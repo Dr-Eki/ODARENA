@@ -227,6 +227,10 @@ conscription:
 
 lodging:
   name: Lodging
+  excluded_races:
+    - Growth
+    - Myconid
+    - Void
   perks:
     military_housing: 1.25
 
