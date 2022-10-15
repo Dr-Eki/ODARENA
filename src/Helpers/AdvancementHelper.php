@@ -71,12 +71,12 @@ class AdvancementHelper
             'drafting' => 'drafting',
             'training_time_raw' => 'ticks training time for military units (does not include Spies, Wizards, or Archmages)',
             'training_costs' => 'military unit training costs',
-            'unit_gold_costs' => 'unit gold costs.',
-            'unit_ore_costs' => 'unit ore costs.',
-            'unit_lumber_costs' => 'unit lumber costs.',
-            'unit_mana_costs' => 'unit mana costs.',
-            'unit_blood_costs' => 'unit blood costs.',
-            'unit_food_costs' => 'unit food costs.',
+            'unit_gold_costs' => 'unit gold costs',
+            'unit_ore_costs' => 'unit ore costs',
+            'unit_lumber_costs' => 'unit lumber costs',
+            'unit_mana_costs' => 'unit mana costs',
+            'unit_blood_costs' => 'unit blood costs',
+            'unit_food_costs' => 'unit food costs',
 
             'prestige_gains' => 'prestige gains',
 
