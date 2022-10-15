@@ -194,6 +194,10 @@ mining_equipment:
 
 minting:
   name: Minting
+  excluded_races:
+    - Growth
+    - Myconid
+    - Void
   perks:
     gold_production_mod: 2.5
 
@@ -240,6 +244,10 @@ infrastructure:
 
 budget:
   name: Budget
+  excluded_races:
+    - Growth
+    - Myconid
+    - Void
   perks:
     gold_improvement_points: 12.5
 
