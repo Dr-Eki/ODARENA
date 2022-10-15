@@ -1,9 +1,8 @@
-name: Drafting
+name: Imperial Duty
 cooldown: 12
-description: Standard drafting is 1% of your current peasants. You can issue a decree to slow down drafting.
-excluded_races:
+description: Standard drafting is 1% of your current peasants. Issue a decree for Imperial Duty to double this number.
+exclusive_races:
   - Black Orc
-  - Growth
   - Orc
 states:
   - name: Enabled

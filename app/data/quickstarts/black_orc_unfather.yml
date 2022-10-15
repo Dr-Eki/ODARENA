@@ -73,7 +73,6 @@ spells:
     sazals_charge: 0,96
     sazals_fog: 0,96
     mining_strength: 36,0
-    imperial_duty: 3,63
 
 advancements:
     anvils: 4
