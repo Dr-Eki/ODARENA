@@ -7,6 +7,10 @@ tactics:
 
 anvils:
   name: Anvils
+  excluded_races:
+    - Growth
+    - Myconid
+    - Void
   perks:
     unit_gold_costs: -2.5
     unit_ore_costs: -2.5
