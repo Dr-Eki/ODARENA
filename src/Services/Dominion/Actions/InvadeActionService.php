@@ -364,7 +364,11 @@ class InvadeActionService
             }
 
             $this->invasion['data']['land_conquered'] = $this->militaryCalculator->getLandConquered($attacker, $target, $landRatio);
-            $this->invasion['data']['land_discovered'] = $this->militaryCalculator->checkDiscoverLand($attacker, $target, $this->invasion['data']['land_conquered']);
+            $this->invasion['data']['land_discovered'] = 0;
+            if($this->militaryCalculator->checkDiscoverLand($attacker, $target, $this->invasion['data']['land_conquered']))
+            {
+                $this->invasion['data']['land_discovered'] = $this->invasion['data']['land_conquered'] / ($target->race->name == 'Barbarian' ? 3 : 1);
+            }
             $this->invasion['data']['extra_land_discovered'] = $this->militaryCalculator->getExtraLandDiscovered($attacker, $target, $this->invasion['data']['land_discovered'], $this->invasion['data']['land_conquered']);
 
             # Artillery: land gained plus current total land cannot exceed 133% of protector's land.
