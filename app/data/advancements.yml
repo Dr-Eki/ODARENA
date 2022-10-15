@@ -50,7 +50,7 @@ architecture:
 foundations:
   name: Foundations
   perks:
-    construction_time: -2.5
+    construction_time: -3.75
 
 # ESPIONAGE
 
@@ -99,6 +99,20 @@ drills:
 
 mills:
   name: Mills
+  excluded_races:
+    - Aurei
+    - Barbarian
+    - Beastfolk
+    - Dwarg
+    - Firewalker
+    - Growth
+    - Marshling
+    - Monster
+    - Glimjir
+    - Myconid
+    - Sylvan
+    - Swarm
+    - Void
   perks:
     lumber_production_mod: 2.5
 
@@ -109,6 +123,30 @@ invocations:
 
 mining_equipment:
   name: Mining Equipment
+  excluded_races:
+    - Afflicted
+    - Aurei
+    - Barbarian
+    - Beastfolk
+    - Firewalker
+    - Glimjir
+    - Growth
+    - Halfling
+    - Icekin
+    - Kerranad
+    - Marshling
+    - Monster
+    - Myconid
+    - Qur
+    - Reptilians
+    - Simian
+    - Sylvan
+    - Swarm
+    - Troll
+    - Undead
+    - Void
+    - Wood Elf
+    - Weres
   perks:
     ore_production_mod: 2.5
 
@@ -158,6 +196,11 @@ infrastructure:
   perks:
     improvements: 5
 
+budget:
+  name: Budget
+  perks:
+    gold_improvement_points: 12.5
+
 gemcutting:
   name: Gemcutting
   perks:
@@ -166,21 +209,52 @@ gemcutting:
 stoneworks:
   name: Stoneworks
   excluded_races:
-    - Dwarg
+    - Afflicted
+    - Aurei
+    - Barbarian
+    - Beastfolk
+    - Dwarg # for balance reasons
+    - Firewalker
+    - Glimjir
+    - Growth
+    - Halfling
+    - Icekin
+    - Kerranad
+    - Marshling
+    - Monster
+    - Myconid
+    - Qur
+    - Reptilians
+    - Simian
+    - Sylvan
+    - Swarm
+    - Troll
+    - Undead
+    - Void
+    - Wood Elf
+    - Weres
   perks:
     ore_improvement_points: 5
 
 woodworks:
   name: Woodworks
   excluded_races:
-    - Wood Elf
+    - Aurei
+    - Barbarian
+    - Beastfolk
+    - Dwarg
+    - Firewalker
+    - Growth
+    - Marshling
+    - Monster
+    - Glimjir
+    - Myconid
+    - Sylvan
+    - Swarm
+    - Void
+    - Wood Elf # for balance reasons
   perks:
     lumber_improvement_points: 5
-
-budget:
-  name: Budget
-  perks:
-    gold_improvement_points: 12.5
 
 # FACTION SPECIFIC
 

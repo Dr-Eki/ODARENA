@@ -31,15 +31,15 @@
                         <select name="title" id="title" class="form-control select2" data-placeholder="Select a title" required>
                           <option></option>
                             @foreach ($titles as $title)
+                            <option value="{{ $title->id }}" data-current="{{ $countTitles[$title->key] ?? 0 }}">
+                                {{ $title->name }}
+                                (@foreach ($title->perks as $perk)
+                                    @php
+                                        $perkDescription = $titleHelper->getPerkDescriptionHtmlWithValue($perk);
+                                    @endphp
 
-                            <option value="{{ $title->id }}">
-                                  {{ $title->name }}
-                                  (@foreach ($title->perks as $perk)
-                                      @php
-                                          $perkDescription = $titleHelper->getPerkDescriptionHtmlWithValue($perk);
-                                      @endphp
-                                          {!! $perkDescription['description'] !!} {!! $perkDescription['value']  !!}
-                                  @endforeach)
+                                    {!! $perkDescription['description'] !!} {!! $perkDescription['value']  !!}
+                                @endforeach)
                             </option>
                         @endforeach
                       </select>

@@ -77,6 +77,15 @@ class RoundController extends AbstractController
                             ->groupBy('races.name')
                             ->pluck('dominions', 'race')->all();
 
+
+        $countTitles = DB::table('dominions')
+                            ->join('titles', 'dominions.title_id', '=', 'titles.id')
+                            #->join('realms', 'realms.id', '=', 'dominions.realm_id')
+                            ->select('titles.key as title', DB::raw('count(distinct dominions.id) as dominions'))
+                            ->where('dominions.round_id', '=', $round->id)
+                            ->groupBy('titles.key')
+                            ->pluck('dominions', 'title')->all();
+
         $roundsPlayed = DB::table('dominions')
                             ->where('dominions.user_id', '=', Auth::user()->id)
                             ->where('dominions.protection_ticks', '=', 0)
@@ -100,6 +109,7 @@ class RoundController extends AbstractController
             'races' => $races,
             'countAlignment' => $countAlignment,
             'countRaces' => $countRaces,
+            'countTitles' => $countTitles,
             'titles' => $titles,
             'roundsPlayed' => $roundsPlayed,
             #'countEmpire' => $countEmpire,

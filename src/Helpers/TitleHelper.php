@@ -57,11 +57,11 @@ class TitleHelper
                 $description = 'Improvement points:';
                 break;
             case 'all_theft':
-                $negativeBenefit = false;
+                $negativeBenefit = true;
                 $description = 'Theft losses:';
                 break;
             case 'sabotage_damage_suffered':
-                $negativeBenefit = false;
+                $negativeBenefit = true;
                 $description = 'Sabotage damage suffered:';
                 break;
             case 'spy_strength':
