@@ -89,11 +89,32 @@ concentration:
 
 agriculture:
   name: Agriculture
+  excluded_races:
+    - Firewalker
+    - Lux
+    - Monster
+    - Void
   perks:
     food_production_mod: 2.5
 
 drills:
   name: Drills
+  excluded_races:
+    - Afflicted
+    - Ants
+    - Aurei
+    - Beastfolk
+    - Demon
+    - Glimjir
+    - Growth
+    - Marshling
+    - Monster
+    - Myconid
+    - Simian
+    - Sylvan
+    - Void
+    - Weres
+    - Wood Elf
   perks:
     gems_production_mod: 2.5
 
