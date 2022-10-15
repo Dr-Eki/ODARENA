@@ -102,7 +102,9 @@ class ImprovementHelper
 
             'improvement_points' => 'improvement points value from investments',
 
-            'title_bonus' => 'ruler title bonus'
+            'title_bonus' => 'ruler title bonus',
+
+            'expedition_land_gains' => 'expedition land gains',
 
         ];
 
