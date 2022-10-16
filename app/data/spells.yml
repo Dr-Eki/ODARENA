@@ -357,7 +357,7 @@ mirnons_fortitude:
   class: passive
   cost: 4
   duration: 48
-  deity: druva
+  deity: mirnon
   perks:
     ore_production_mod: 20
     gems_production_mod: 10
