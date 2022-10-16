@@ -18,10 +18,11 @@ gold_mine:
   excluded_races:
     - Aurei
     - Dragon
+    - Glimjir
     - Growth
     - Icekin
     - Marshling
-    - Glimjir
+    - Lux
     - Monster
     - Myconid
     - Void
@@ -167,6 +168,7 @@ granary:
     - Firewalker
     - Growth
     - Glimjir
+    - Lux
     - Monster
     - Void
     - Wood Elf
@@ -337,11 +339,12 @@ lumberyard:
     - Dwarg
     - Dragon
     - Firewalker
+    - Glimjir
     - Gnome
     - Growth
     - Icekin
+    - Lux
     - Marshling
-    - Glimjir
     - Monster
     - Myconid
     - Swarm
@@ -359,6 +362,7 @@ dock:
     - Firewalker
     - Glimjir
     - Growth
+    - Lux
     - Monster
     - Myconid
     - Reptilians
@@ -404,6 +408,7 @@ aqueduct:
     - Glimjir
     - Growth
     - Icekin
+    - Lux
     - Myconid
     - Monster
     - Reptilians
@@ -628,12 +633,13 @@ smithy:
     - Cult
     - Dimensionalists
     - Dragon
+    - Glimjir
     - Gnome
     - Growth
     - Imperial Gnome
     - Icekin
+    - Lux
     - Marshling
-    - Glimjir
     - Monster
     - Myconid
     - Nox
@@ -663,6 +669,7 @@ factory:
     - Growth
     - Icekin
     - Glimjir
+    - Lux
     - Monster
     - Myconid
     - Void
@@ -728,6 +735,7 @@ wizard_guild:
     - Growth
     - Icekin
     - Glimjir
+    - Lux
     - Monster
     - Myconid
     - Void
@@ -1427,12 +1435,13 @@ barracks:
     - Cult
     - Dragon
     - Firewalker
+    - Glimjir
     - Growth
     - Icekin
     - Jagunii
     - Legion
+    - Lux
     - Marshling
-    - Glimjir
     - Monster
     - Myconid
     - Nomad
@@ -1469,25 +1478,27 @@ abode:
     housing: 30
     jobs: 0
 
+# BEGIN LUX
+
 beacon:
   name: Beacon
   exclusive_races:
     - Lux
   land_type: water
   perks:
-    housing: 36
-    jobs: 0
+    light_production_raw_from_time: 06,18,1 # Between the hours 18:00 and 06:00, gains +6 OP
+    xp_generation_mod: 1,1,50 #Every 1% gives +5% XP production, max +25%
 
 sanctuary:
   name: Sanctuary
-  enabled: 0
   exclusive_races:
-    - Spirit
+    - Lux
   land_type: water
   perks:
     housing: 30
-    mana_production_raw: 5
     jobs: 0
+
+# END LUX
 
 cave:
   name: Cave

@@ -568,6 +568,29 @@ obsidian_salvaged:
 obsidian_plundered:
   name: Obsidian plundered
 
+light_production:
+  name: Light production
+light_sold:
+  name: Light sold
+light_bought:
+  name: Light bought
+light_building:
+  name: Light building
+light_rezoning:
+  name: Light rezoning
+light_training:
+  name: Light training
+light_improvements:
+  name: Light improvements
+light_exploring:
+  name: Light exploring
+light_lost:
+  name: Light lost
+light_salvaged:
+  name: Light salvaged
+light_plundered:
+  name: Light plundered
+
 crypt_body_training:
   name: Crypt bodies training
 

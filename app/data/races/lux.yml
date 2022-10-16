@@ -4,42 +4,54 @@ description:
 home_land_type: water
 playable: 1
 skill_level: 3
+experimental: 1
 
 resources:
-  - gold
   - mana
-  - lumber
   - gems
+  - light
 
 peasants_production:
-  gold: 2
-  mana: 0.1
+  mana: 0.08
+
+construction_materials:
+  - gems
+  - mana
+
+improvement_resources:
+  gems: 12
+  mana: 2
 
 peasants_alias: shimmerling
-draftees_alias: ray
+draftees_alias: shimmer
 
 perks:
   no_food_consumption: 1
   does_not_kill: 1
   immortal_spies: 1
   immortal_wizards: 1
-  max_population: 15
+  light_drains_mana: 0.10 # -0.10 mana per light per tick
+  cannot_train_spies: 1
+  cannot_train_wizards: 1
+  cannot_train_archmages: 1
+  cannot_release_units: 1
 
 units:
-  - name: Essence
-    training_time: 1
+  - name: Nix
+    training_time: 6
     type:
       - living
       - sentient
       - ethereal
       - intelligent
-    static_networth: 2
     cost:
-      gems: 10
-      mana: 10
+      light: 1
+      mana: 16
     power:
       offense: 0
-      defense: 0
+      defense: 8
+    perks:
+      casualties: -50
 
   - name: Hex
     training_time: 6
@@ -49,17 +61,15 @@ units:
       - ethereal
       - intelligent
     cost:
-      unit1: 1
-      gems: 10
-      mana: 20
+      light: 1
+      mana: 24
     power:
-      offense: 0
-      defense: 5
+      offense: 8
+      defense: 4
     perks:
-      no_draftee: 1
       casualties: -50
-      counts_as_wizard_offense: 0.10
-      counts_as_wizard_defense: 0.06
+      counts_as_wizard_offense: 0.1000
+      counts_as_wizard_defense: 0.0625
 
   - name: Vex
     training_time: 6
@@ -69,17 +79,15 @@ units:
       - ethereal
       - intelligent
     cost:
-      unit1: 1
-      gems: 10
-      mana: 20
+      light: 1
+      mana: 24
     power:
-      offense: 5
-      defense: 0
+      offense: 8
+      defense: 4
     perks:
-      no_draftee: 1
       casualties: -50
-      counts_as_spy_offense: 0.10
-      counts_as_spy_defense: 0.06
+      counts_as_spy_offense: 0.1000
+      counts_as_spy_defense: 0.0625
 
   - name: Pax
     training_time: 6
@@ -92,18 +100,17 @@ units:
     cost:
       unit2: 1
       unit3: 1
-      gems: 50
-      mana: 50
+      light: 2
+      mana: 56
     power:
-      offense: 10
-      defense: 10
+      offense: 14
+      defense: 14
     perks:
       no_draftee: 1
       immortal: 1
-      counts_as_wizard_offense: 0.24
-      counts_as_wizard_defense: 0.16
-      counts_as_spy_offense: 0.24
-      counts_as_spy_defense: 0.16
-      plunders: mana;1,gems;0.2
+      counts_as_wizard_offense: 0.250
+      counts_as_wizard_defense: 0.125
+      counts_as_spy_offense: 0.250
+      counts_as_spy_defense: 0.125
       immortal_wizard: 1
       immortal_spy: 1

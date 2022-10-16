@@ -9,6 +9,7 @@ anvils:
   name: Anvils
   excluded_races:
     - Growth
+    - Lux
     - Myconid
     - Void
   perks:
@@ -152,6 +153,7 @@ mills:
     - Dwarg
     - Firewalker
     - Growth
+    - Lux
     - Marshling
     - Monster
     - Glimjir
@@ -180,6 +182,7 @@ mining_equipment:
     - Halfling
     - Icekin
     - Kerranad
+    - Lux
     - Marshling
     - Monster
     - Myconid
@@ -200,6 +203,7 @@ minting:
   name: Minting
   excluded_races:
     - Growth
+    - Lux
     - Myconid
     - Void
   perks:
@@ -233,6 +237,7 @@ lodging:
   name: Lodging
   excluded_races:
     - Growth
+    - Lux
     - Myconid
     - Void
   perks:
@@ -254,6 +259,7 @@ budget:
   name: Budget
   excluded_races:
     - Growth
+    - Lux
     - Myconid
     - Void
   perks:
@@ -294,6 +300,7 @@ stoneworks:
     - Halfling
     - Icekin
     - Kerranad
+    - Lux
     - Marshling
     - Monster
     - Myconid
@@ -319,6 +326,7 @@ woodworks:
     - Dwarg
     - Firewalker
     - Growth
+    - Lux
     - Marshling
     - Monster
     - Glimjir

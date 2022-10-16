@@ -89,6 +89,12 @@ kelp:
   exclusive_races:
     - Glimjir
 
+light:
+  name: Light
+  description: Bright energy of from the suns' rays, captured by Lucene Beacons.
+  buy: null
+  sell: null
+
 lumber:
   name: Lumber
   description: Some obtain it by cutting down trees, whereas gentler creatures collect fallen branches or trees and bushes that have expired.
@@ -149,12 +155,6 @@ prayer:
   buy: null
   sell: null
 
-soul:
-  name: Souls
-  description: Each living being has one. Azk'Hurum collects as many as he can.
-  buy: null
-  sell: null
-
 pearls:
   name: Pearls
   description: Gems of the sea, pearls are collected by dwellers of the depths.
@@ -176,6 +176,12 @@ sapling:
   sell: null
   exclusive_races:
     - Sylvan
+
+soul:
+  name: Souls
+  description: Each living being has one. Azk'Hurum collects as many as he can.
+  buy: null
+  sell: null
 
 strength:
   name: Strength

@@ -152,6 +152,8 @@ class BuildingHelper
             'gold_production_raw_from_prisoner' => 'Produces %1$s gold per tick per prisoner up to a maximum of %2$s prisoners.',
             'gems_production_raw_from_prisoner' => 'Produces %1$s gems per tick per prisoner up to a maximum of %2$s prisoners.',
 
+            'light_production_raw_from_time' => 'Gathers %3$s light between %1$s:00 and %2$s:00.',
+
             'draftee_generation' => 'Generates %g draftees per tick (limited by population).',
 
             'exchange_rate' => 'Resource exchange rates improved by %2$s%% for every %1$s%% (max +%3$s%%).',

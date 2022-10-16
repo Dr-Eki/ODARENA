@@ -140,6 +140,8 @@
                           Grow
                       @elseif ($selectedDominion->race->name == 'Swarm')
                           Hatch
+                      @elseif ($selectedDominion->race->name == 'Lux')
+                          Ascend
                       @else
                           Train
                       @endif

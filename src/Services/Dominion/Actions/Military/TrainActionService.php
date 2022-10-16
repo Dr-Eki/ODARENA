@@ -496,6 +496,7 @@ class TrainActionService
                     'einherjar' => 'einherjar',
                     'huskarl' => 'huskarlar',
                     'jötunn' => 'jötnar',
+                    'nix' => 'hex',
                     'hex' => 'hex',
                     'vex' => 'vex',
                     'pax' => 'pax',
@@ -550,6 +551,16 @@ class TrainActionService
             if (!in_array($costType, ['gold', 'ore', 'food', 'mana', 'gems', 'lumber', 'prestige', 'champion', 'soul', 'blood', 'morale', 'peasant', 'swamp_gas', 'lumber'], true))
             {
                 $costWord = str_plural($costWord, $cost);
+            }
+
+            if($costType == 'peasant' or $costType == 'peasants')
+            {
+                $costWord = $this->raceHelper->getPeasantsTerm($dominion->race);
+            }
+
+            if($costType == 'draftee' or $costType == 'draftees')
+            {
+                $costWord = $this->raceHelper->getDrafteesTerm($dominion->race);
             }
 
             $trainingCostsStringParts[] = (number_format($cost) . ' ' . $costWord);

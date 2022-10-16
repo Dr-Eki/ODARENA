@@ -364,7 +364,7 @@ class RaceHelper
                 break;
             case 'does_not_kill':
                 $negativeBenefit = false;
-                $description = 'Does not kill units.';
+                $description = 'Does not kill units';
                 $booleanValue = true;
                 break;
             case 'prestige_gains':

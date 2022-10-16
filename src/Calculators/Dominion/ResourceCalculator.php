@@ -140,6 +140,7 @@ class ResourceCalculator
         $production += $dominion->getBuildingPerkValue($resourceKey . '_production_raw');
         $production += $dominion->getBuildingPerkValue($resourceKey . '_production_depleting_raw');
         $production += $dominion->getBuildingPerkValue($resourceKey . '_production_increasing_raw');
+        $production += $dominion->getBuildingPerkValue($resourceKey . '_production_raw_from_time');
         $production += $dominion->getSpellPerkValue($resourceKey . '_production_raw');
         $production += $dominion->getImprovementPerkValue($resourceKey . '_production_raw');
         $production += $dominion->getAdvancementPerkValue($resourceKey . '_production_raw');
@@ -405,6 +406,11 @@ class ResourceCalculator
                     $consumption += $resourceConversionData['from'][$consumedResourceKey];
                 }
             }
+        }
+
+        if(($lightManaDrain = $dominion->race->getPerkValue('light_drains_' . $consumedResourceKey)) > 0)
+        {
+            $consumption += $lightManaDrain * $this->getAmount($dominion, 'light');
         }
 
         # Food consumption

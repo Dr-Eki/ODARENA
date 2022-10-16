@@ -24,6 +24,7 @@ commerce:
     - Beastfolk
     - Growth
     - Kerranad
+    - Lux
     - Marshling
     - Monster
     - Myconid
@@ -139,6 +140,7 @@ irrigation:
     - Firewalker
     - Growth
     - Kerranad
+    - Lux
     - Marshling
     - Monster
     - Sylvan
@@ -178,6 +180,7 @@ logging:
     - Firewalker
     - Growth
     - Kerranad
+    - Lux
     - Marshling
     - Monster
     - Glimjir
@@ -219,6 +222,7 @@ mobilisation:
     - Marshling
     - Monster
     - Myconid
+    - Lux
     - Sylvan
     - Swarm
     - Troll
@@ -278,6 +282,7 @@ mining:
     - Halfling
     - Icekin
     - Kerranad
+    - Lux
     - Marshling
     - Monster
     - Myconid

@@ -4,6 +4,7 @@ description: Dwelling underground, you must build caverns for units to be able t
 home_land_type: mountain
 playable: 1
 skill_level: 1
+experimental: 1
 
 peasants_alias: worker
 

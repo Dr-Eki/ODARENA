@@ -1124,7 +1124,6 @@ class Dominion extends AbstractModel
                           $perkKey == 'dimensionalists_unit2_production_raw_capped' or
                           $perkKey == 'dimensionalists_unit3_production_raw_capped' or
                           $perkKey == 'dimensionalists_unit4_production_raw_capped' or
-
                           $perkKey == 'snow_elf_unit4_production_raw_capped'
                       )
                 {
@@ -1191,6 +1190,32 @@ class Dominion extends AbstractModel
                     $result = ['building_key' => $building->key, 'amount' => $amountToDestroy];
 
                     return $result;
+                }
+
+                # Time-based production (which is always on during protection but at half speed)
+                elseif($perkKey == 'light_production_raw_from_time')
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+                    $amountProduced = (float)$perkValues[2];
+                    $hourFrom = $perkValues[0];
+                    $hourTo = $perkValues[1];
+    
+                    if($this->isUnderProtection())
+                    {
+                        $perk += ($amountProduced * $building->pivot->owned) / 2;
+                    }
+                    elseif (
+                        (($hourFrom < $hourTo) and (now()->hour >= $hourFrom and now()->hour < $hourTo)) or
+                        (($hourFrom > $hourTo) and (now()->hour >= $hourFrom or now()->hour < $hourTo))
+                    )
+                    {
+                        $perk += $amountProduced * $building->pivot->owned;
+                    }
+
+                    $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
+
+                    #dd($perk);
+
                 }
 
                 elseif($perkKey !== 'jobs' and $perkKey !== 'housing')

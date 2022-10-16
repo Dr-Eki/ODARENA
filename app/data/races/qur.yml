@@ -86,7 +86,7 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1000
+      gold: 950
       mana: 10
     power:
       offense: 7
