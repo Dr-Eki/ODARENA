@@ -17,7 +17,6 @@ peasants_production:
 
 construction_materials:
   - gems
-  - mana
 
 improvement_resources:
   gems: 12
