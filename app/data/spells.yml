@@ -11,6 +11,7 @@ enhanced_yields:
     - Afflicted
     - Demon
     - Firewalker
+    - Lux
     - Monster
     - Sylvan
     - Undead
@@ -45,6 +46,7 @@ magic_disguise:
   excluded_races:
     - Elementals
     - Growth
+    - Lux
     - Monster
     - Myconid
     - Sylvan
@@ -831,7 +833,7 @@ annexation:
 
 silence:
   name: Silence
-  scope: self
+  scope: hostile
   class: passive
   cost: 3
   duration: 0.25

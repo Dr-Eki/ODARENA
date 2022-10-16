@@ -411,11 +411,13 @@
                     <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>Change</button>
                     </form>
 
-                    <form action="{{ route('dominion.military.release-draftees') }}" method="post" role="form" class="pull-right">
-                        @csrf
-                        <input type="hidden" style="display:none;" name="release[draftees]" value={{ intval($selectedDominion->military_draftees) }}>
-                        <button type="submit" class="btn btn-warning btn-small" {{ ($selectedDominion->isLocked() or $selectedDominion->military_draftees == 0) ? 'disabled' : null }}>Release {{ str_plural($raceHelper->getDrafteesTerm($selectedDominion->race)) }}</button>
-                    </form>
+                    @if(!$selectedDominion->race->getPerkValue('cannot_release_units'))
+                        <form action="{{ route('dominion.military.release-draftees') }}" method="post" role="form" class="pull-right">
+                            @csrf
+                            <input type="hidden" style="display:none;" name="release[draftees]" value={{ intval($selectedDominion->military_draftees) }}>
+                            <button type="submit" class="btn btn-warning btn-small" {{ ($selectedDominion->isLocked() or $selectedDominion->military_draftees == 0) ? 'disabled' : null }}>Release {{ str_plural($raceHelper->getDrafteesTerm($selectedDominion->race)) }}</button>
+                        </form>
+                    @endif
                 </div>
                 @endif
         </div>

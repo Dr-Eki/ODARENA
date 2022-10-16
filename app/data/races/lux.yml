@@ -13,6 +13,7 @@ resources:
 
 peasants_production:
   mana: 0.08
+  light: 0.02
 
 construction_materials:
   - gems

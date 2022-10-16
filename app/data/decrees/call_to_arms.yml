@@ -3,6 +3,7 @@ cooldown: 48
 description: Quickly raise an army, at extra cost.
 excluded_races:
   - Growth
+  - Lux
   - Myconid
   - Void
 states:
