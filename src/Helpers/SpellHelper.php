@@ -113,7 +113,6 @@ class SpellHelper
             'unit_lumber_costs' => '%+g%% military unit lumber costs',
             'unit_magma_costs' => '%+g%% military unit magma costs',
 
-
             'cannot_send_expeditions' => 'Cannot send expeditions',
 
             'cannot_invade' => 'Cannot invade',
@@ -219,6 +218,8 @@ class SpellHelper
             'cannot_be_converted' => 'Units cannot be converted by the enemy.',
 
             'convert_peasants_to_prestige' => 'Sacrifice %1$s peasants for %2$ss prestige.',
+
+            'some_win_into_mod' => 'Increases ratio of units turning into another unit on victory.',
 
             // Casualties
             'increases_enemy_draftee_casualties' => '%+g%% enemy draftee casualties',
