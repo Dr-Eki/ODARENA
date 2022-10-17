@@ -1047,6 +1047,48 @@ stasis:
   perks:
     stasis: 1
 
+rainy_season:
+  name: Rainy Season
+  scope: self
+  class: passive
+  cost: 12
+  duration: 96
+  cooldown: 672
+  exclusive_races:
+    - Simian
+  perks:
+    defensive_power: 100
+    population_growth: 100
+    food_production_mod: 50
+    lumber_production_mod: 50
+    cannot_invade: 1
+    cannot_send_expeditions: 1
+
+chitin:
+  name: Chitin
+  scope: self
+  class: passive
+  cost: 10
+  duration: 48
+  exclusive_races:
+    - Swarm
+  perks:
+    defensive_power: 5
+    offensive_power: -5
+
+aggression:
+  name: Aggression
+  scope: self
+  class: passive
+  cost: 6
+  duration: 12
+  cooldown: 24
+  exclusive_races:
+    - Swarm
+  perks:
+    offensive_power: 5
+    offensive_power_on_retaliation: 5
+
 curse_of_kinthys:
   name: Curse of Kinthys
   scope: hostile
