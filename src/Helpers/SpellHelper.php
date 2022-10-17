@@ -11,13 +11,17 @@ use OpenDominion\Models\Spell;
 
 class SpellHelper
 {
-    # ROUND 37
+
+    public function __construct()
+    {
+        $this->deityHelper = app(DeityHelper::class);
+    }
 
     public function getSpellClass(Spell $spell)
     {
         $classes = [
-            'active'  => 'Impact',
-            'passive' => 'Aura',
+            'active'  => 'Active',
+            'passive' => 'Passive',
             'invasion'=> 'Invasion',
             'info'    => 'Information'
         ];
@@ -41,10 +45,10 @@ class SpellHelper
 
         $effectStrings = [];
 
-        if(isset($spell->deity))
-        {
-            $effectStrings[] = 'Can only be cast if devoted to ' . $spell->deity->name . '.';
-        }
+        #if(isset($spell->deity))
+        #{
+        #    $effectStrings[] = 'Can only be cast if devoted to ' . $spell->deity->name . '.';
+       # }
 
         $spellEffects = [
 
@@ -219,7 +223,7 @@ class SpellHelper
 
             'convert_peasants_to_prestige' => 'Sacrifice %1$s peasants for %2$ss prestige.',
 
-            'some_win_into_mod' => '%+g%% conversion of units becoming another unit upon vicotyr.',
+            'some_win_into_mod' => '%+g%% conversion of units becoming another unit upon victory.',
 
             // Casualties
             'increases_enemy_draftee_casualties' => '%+g%% enemy draftee casualties',
@@ -759,6 +763,11 @@ class SpellHelper
         }
 
         if(count($spell->excluded_races) > 0 and in_array($race->name, $spell->excluded_races))
+        {
+            $isAvailable = false;
+        }
+
+        if($spell->deity and !$this->deityHelper->getDeitiesByRace($race)->contains($spell->deity))
         {
             $isAvailable = false;
         }

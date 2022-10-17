@@ -206,5 +206,4 @@ class DeityHelper
         return $exclusivityString;
 
     }
-
 }
