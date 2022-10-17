@@ -219,7 +219,7 @@ class SpellHelper
 
             'convert_peasants_to_prestige' => 'Sacrifice %1$s peasants for %2$ss prestige.',
 
-            'some_win_into_mod' => 'Increases ratio of units turning into another unit on victory.',
+            'some_win_into_mod' => '%+g%% conversion of units becoming another unit upon vicotyr.',
 
             // Casualties
             'increases_enemy_draftee_casualties' => '%+g%% enemy draftee casualties',
