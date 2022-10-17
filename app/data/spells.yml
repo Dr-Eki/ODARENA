@@ -1099,7 +1099,7 @@ birdsong:
 arterial_rush:
   name: Arterial Rush
   scope: self
-  class: active
+  class: passive
   cost: 5
   duration: 1
   cooldown: 96
