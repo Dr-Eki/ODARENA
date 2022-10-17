@@ -793,19 +793,6 @@ class SpellHelper
         return true;
     }
 
-    public function spellHasDefensivePerk(Spell $spell): bool
-    {
-        $defensivePerks = [
-            'defensive_power',
-            'defense_from_resource',
-            'defensive_power_from_peasants'
-        ];
-
-        #if($spell->)
-
-        return false;
-    }
-
     public function getExclusivityString(Spell $spell): string
     {
 
