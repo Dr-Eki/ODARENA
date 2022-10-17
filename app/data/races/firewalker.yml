@@ -50,7 +50,7 @@ units:
     perks:
       cannot_be_trained: 1
       does_not_count_as_population: 1
-      burns_peasants_on_attack: 0.10
+      burns_peasants_on_attack: 10
       fixed_casualties: 100
       attrition: 0.25
 
@@ -81,8 +81,8 @@ units:
       defense: 8
     perks:
       dies_into: 3
-      burns_peasants_on_attack: 0.333
-      burns_draftees_on_attack: 0.333
+      burns_peasants_on_attack: 10
+      burns_draftees_on_attack: 10
       destroy_resources: lumber;12,food;4
 
   - name: Magma Brute
@@ -98,5 +98,5 @@ units:
       offense: 10
       defense: 6
     perks:
-      burns_peasants_on_attack: 0.333
+      burns_peasants_on_attack: 20
       dies_into_multiple: 1,3

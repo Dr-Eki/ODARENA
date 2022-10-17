@@ -489,7 +489,7 @@ class MilitaryCalculator
     public function getUnitPowerWithPerks(
         Dominion $dominion,
         ?Dominion $target,
-        ?float $landRatio,
+        ?float $landRatio = null,
         Unit $unit = null,
         string $powerType,
         ?array $calc = [],

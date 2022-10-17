@@ -1541,25 +1541,40 @@ class InvadeActionService
             for ($unitSlot = 1; $unitSlot <= $attacker->race->units->count(); $unitSlot++)
             {
                 // burns_peasants
-                if ($attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'burns_peasants_on_attack') and isset($units[$unitSlot]))
+                if (($burnsPeasantsOnAttackPerk = $attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'burns_peasants_on_attack')) and isset($units[$unitSlot]))
                 {
-                    $burningUnits = $units[$unitSlot];
-                    $peasantsBurnedPerUnit = (float)$attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'burns_peasants_on_attack');
 
-                    # If target has less than 1000 peasants, we don't burn any.
-                    if($defender->peasants < 1000)
-                    {
-                        $burnedPeasants = 0;
-                    }
-                    else
-                    {
-                        $burnedPeasants = $burningUnits * $peasantsBurnedPerUnit * min($this->invasion['result']['op_dp_ratio'], 1);
-                        $burnedPeasants = min(($defender->peasants-1000), $burnedPeasants);
-                    }
+                    $burningUnit = $attacker->race->units->filter(function ($unit) use ($slot) {
+                        return ($unit->slot == $slot);
+                    })->first();
+
+                    $burningUnits = $units[$unitSlot];
+                    $rawOpFromBurningUnits = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, null, [$unitSlot => $burningUnits]);
+
+                    $burnedPeasantsRatio = ($burnsPeasantsOnAttackPerk / 100) * ($rawOpFromBurningUnits / $this->invasion['attacker']['op_raw']) * min($this->invasion['result']['op_dp_ratio'], 2);
+                    $burnedPeasants = (int)min(floor($defender->peasants * $burnedPeasantsRatio), $defender->peasants);
 
                     $defender->peasants -= $burnedPeasants;
                     $this->invasion['attacker']['peasants_burned']['peasants'] = $burnedPeasants;
                     $this->invasion['defender']['peasants_burned']['peasants'] = $burnedPeasants;
+                }
+                // burns_draftees
+                if (($burnsDrafteesOnAttackPerk = $attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'burns_peasants_on_attack')) and isset($units[$unitSlot]))
+                {
+
+                    $burningUnit = $attacker->race->units->filter(function ($unit) use ($slot) {
+                        return ($unit->slot == $slot);
+                    })->first();
+
+                    $burningUnits = $units[$unitSlot];
+                    $rawOpFromBurningUnits = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, null, [$unitSlot => $burningUnits]);
+
+                    $burnedDrafteesRatio = ($burnsDrafteesOnAttackPerk / 100) * ($rawOpFromBurningUnits / $this->invasion['attacker']['op_raw']) * min($this->invasion['result']['op_dp_ratio'], 2);
+                    $burnedDraftees = (int)min(floor($defender->military_draftees * $burnedDrafteesRatio), $defender->military_draftees);
+
+                    $defender->military_draftees -= $burnedDraftees;
+                    $this->invasion['attacker']['draftees_burned']['draftees'] = $burnedPeasants;
+                    $this->invasion['defender']['draftees_burned']['draftees'] = $burnedPeasants;
                 }
 
                 // damages_improvements_on_attack
@@ -1627,7 +1642,6 @@ class InvadeActionService
                     $this->invasion['attacker']['draftees_eaten']['draftees'] = $eatenDraftees;
                     $this->invasion['defender']['draftees_eaten']['draftees'] = $eatenDraftees;
                 }
-
 
                 # destroy_resource
                 if ($destroysResourcePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'destroy_resource') and isset($units[$unitSlot]))

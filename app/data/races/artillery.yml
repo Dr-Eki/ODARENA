@@ -90,7 +90,7 @@ units:
       spends_resource_on_offense: gunpowder,1
       fixed_casualties: 100
       no_draftee: 1
-      burns_peasants_on_attack: 1
+      burns_peasants_on_attack: 40
       destroy_resource: food,20
 
   - name: Cluster Cannonball

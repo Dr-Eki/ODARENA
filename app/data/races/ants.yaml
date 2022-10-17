@@ -80,4 +80,4 @@ units:
       offense: 4
       defense: 1
     perks:
-      burns_peasants_on_attack: 0.10
+      burns_peasants_on_attack: 10
