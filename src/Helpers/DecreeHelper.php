@@ -104,6 +104,8 @@ class DecreeHelper
             'attrition_mod' => '%+g%% attrition.',
 
             'building_blast_furnace_perk_mod' => '%+g%% power from Blast Furnaces.',
+            
+            'no_drafting' => 'No drafting.',
 
             # OP/DP
             'offensive_power' => '%+g%% offensive power.',
