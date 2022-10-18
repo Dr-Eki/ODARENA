@@ -149,6 +149,8 @@ class SpellHelper
 
             'aurei_unit_conversion' => 'Converts %3$s %1$s into %3$s %2$s',
 
+            'firewalker_unit_conversion_BLAGADABAGADABAD' => 'Converts %3$s %1$s into %3$s %2$s',
+
             'no_attrition' => 'No unit attrition',
 
             'prestige_gains' => '%+g%% prestige gains',

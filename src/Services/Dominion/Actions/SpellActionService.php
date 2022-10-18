@@ -341,34 +341,57 @@ class SpellActionService
             {
                 $spellPerkValues = $spell->getActiveSpellPerkValues($spell->key, $perk->key);
 
-                # Resource conversion
-                if($perk->key === 'aurei_unit_conversion')
+                # Unit conversion
+                if($perk->key === 'aurei_unit_conversion' and $caster->race->name == 'Aurei')
                 {
-                    if($caster->race->name == 'Aurei')
-                    {
-                        $fromSlot = (int)$spellPerkValues[0];
-                        $toSlot = (int)$spellPerkValues[1];
-                        $amount = (float)$spellPerkValues[2];
+                    $fromSlot = (int)$spellPerkValues[0];
+                    $toSlot = (int)$spellPerkValues[1];
+                    $amount = (float)$spellPerkValues[2];
 
-                        $availableFrom = $caster->{'military_unit' . $fromSlot};
+                    $availableFrom = $caster->{'military_unit' . $fromSlot};
 
-                        $newToSlotUnits = (int)min($amount, $availableFrom);
+                    $newToSlotUnits = (int)min($amount, $availableFrom);
 
-                        $caster->{'military_unit' . $fromSlot} -= $newToSlotUnits;
-                        $caster->{'military_unit' . $toSlot} += $newToSlotUnits;
+                    $caster->{'military_unit' . $fromSlot} -= $newToSlotUnits;
+                    $caster->{'military_unit' . $toSlot} += $newToSlotUnits;
 
-                        $fromUnit = $caster->race->units->filter(static function ($unit) use ($fromSlot)
-                            {
-                                return ($unit->slot === $fromSlot);
-                            })->first();
+                    $fromUnit = $caster->race->units->filter(static function ($unit) use ($fromSlot)
+                        {
+                            return ($unit->slot === $fromSlot);
+                        })->first();
 
-                        $toUnit = $caster->race->units->filter(static function ($unit) use ($toSlot)
-                            {
-                                return ($unit->slot === $toSlot);
-                            })->first();
+                    $toUnit = $caster->race->units->filter(static function ($unit) use ($toSlot)
+                        {
+                            return ($unit->slot === $toSlot);
+                        })->first();
 
-                        $extraLine = ', phasing ' . number_format($newToSlotUnits) . ' ' . str_plural($fromUnit->name, $newToSlotUnits) . ' into ' . str_plural($toUnit->name, $newToSlotUnits);
-                    }
+                    $extraLine = ', phasing ' . number_format($newToSlotUnits) . ' ' . str_plural($fromUnit->name, $newToSlotUnits) . ' into ' . str_plural($toUnit->name, $newToSlotUnits);
+                }
+                if($perk->key === 'firewalker_unit_conversion_BLAGADABAGADABAD' and $caster->race->name == 'Firewalker')
+                {
+                    $fromSlot = (int)$spellPerkValues[0];
+                    $toSlot = (int)$spellPerkValues[1];
+                    $fromAmount = (float)$spellPerkValues[2];
+                    $toAmount = (float)$spellPerkValues[2];
+
+                    $availableFrom = min($fromAmount, $caster->{'military_unit' . $fromSlot});
+
+                    $newToSlotUnits = (int)min($amount, $availableFrom);
+
+                    $caster->{'military_unit' . $fromSlot} -= $newToSlotUnits;
+                    $caster->{'military_unit' . $toSlot} += $newToSlotUnits;
+
+                    $fromUnit = $caster->race->units->filter(static function ($unit) use ($fromSlot)
+                        {
+                            return ($unit->slot === $fromSlot);
+                        })->first();
+
+                    $toUnit = $caster->race->units->filter(static function ($unit) use ($toSlot)
+                        {
+                            return ($unit->slot === $toSlot);
+                        })->first();
+
+                    $extraLine = ', phasing ' . number_format($newToSlotUnits) . ' ' . str_plural($fromUnit->name, $newToSlotUnits) . ' into ' . str_plural($toUnit->name, $newToSlotUnits);
                 }
 
                 # Resource conversion

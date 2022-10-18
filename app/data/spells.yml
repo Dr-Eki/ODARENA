@@ -659,6 +659,18 @@ charring_flames:
     casualties: 10
     construction_cost: -10
 
+flaming_drills:
+  name: Flaming Drills
+  scope: self
+  class: passive
+  cost: 2
+  duration: 12
+  cooldown: 96
+  exclusive_races:
+    - Firewalker
+  perks:
+    gems_production_mod: 5
+
 flood_the_caverns:
   name: Flood The Caverns
   scope: self

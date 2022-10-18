@@ -11,3 +11,4 @@ states:
   - name: Enabled
     perks:
       defensive_power_from_peasants: 1
+      no_drafting: 1

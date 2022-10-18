@@ -376,9 +376,15 @@ class TrainActionService
                         return ($unit->slot === $slot);
                     })->first();
 
+                    $instantTraining = false;
+
                     if(isset($unit))
                     {
                         $ticks = $unit->training_time;
+                        if($unit->training_time === 0)
+                        {
+                            $instantTraining = true;
+                        }
                     }
                     else
                     {
@@ -428,7 +434,7 @@ class TrainActionService
                     $this->statsService->updateStat($dominion, ($unitStatsName . '_trained'), $amountToTrain);
 
                     // Look for instant training.
-                    if(($ticks === 0 and $dominion->race->getUnitPerkValueForUnitSlot($slot, 'instant_training')) and $amountToTrain > 0)
+                    if(($ticks === 0 and $instantTraining) and $amountToTrain > 0)
                     {
                         $dominion->{"$unitType"} += $amountToTrain;
                         $dominion->save(['event' => HistoryService::EVENT_ACTION_TRAIN]);

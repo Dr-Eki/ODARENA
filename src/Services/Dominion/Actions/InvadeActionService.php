@@ -1543,11 +1543,6 @@ class InvadeActionService
                 // burns_peasants
                 if (($burnsPeasantsOnAttackPerk = $attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'burns_peasants_on_attack')) and isset($units[$unitSlot]))
                 {
-
-                    $burningUnit = $attacker->race->units->filter(function ($unit) use ($slot) {
-                        return ($unit->slot == $slot);
-                    })->first();
-
                     $burningUnits = $units[$unitSlot];
                     $rawOpFromBurningUnits = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, null, [$unitSlot => $burningUnits]);
 
@@ -1558,14 +1553,10 @@ class InvadeActionService
                     $this->invasion['attacker']['peasants_burned']['peasants'] = $burnedPeasants;
                     $this->invasion['defender']['peasants_burned']['peasants'] = $burnedPeasants;
                 }
+
                 // burns_draftees
-                if (($burnsDrafteesOnAttackPerk = $attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'burns_peasants_on_attack')) and isset($units[$unitSlot]))
+                if (($burnsDrafteesOnAttackPerk = $attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'burns_draftees_on_attack')) and isset($units[$unitSlot]))
                 {
-
-                    $burningUnit = $attacker->race->units->filter(function ($unit) use ($slot) {
-                        return ($unit->slot == $slot);
-                    })->first();
-
                     $burningUnits = $units[$unitSlot];
                     $rawOpFromBurningUnits = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, null, [$unitSlot => $burningUnits]);
 
