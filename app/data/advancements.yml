@@ -8,6 +8,7 @@ tactics:
 anvils:
   name: Anvils
   excluded_races:
+    - Dimensionalists
     - Growth
     - Lux
     - Myconid
@@ -36,6 +37,7 @@ magical_weapons:
     - Aurei
     - Dark Elf
     - Demon
+    - Dimensionalists
     - Icekin
     - Lux
     - Nox
