@@ -149,7 +149,7 @@ class SpellHelper
 
             'aurei_unit_conversion' => 'Converts %3$s %1$s into %3$s %2$s',
 
-            'firewalker_unit_conversion_BLAGADABAGADABAD' => 'Converts %3$s %1$s into %3$s %2$s',
+            'firewalker_unit_conversion_ratio' => 'Converts %3$s %1$s into %4$s %2$s',
 
             'no_attrition' => 'No unit attrition',
 
@@ -543,9 +543,33 @@ class SpellHelper
 
                 $amount = number_format($amount);
 
-                $perkValue = [$fromUnit->name, $toUnit->name, $amount];
+                $perkValue = [$fromUnit->name, $toUnit->name, number_format($amount)];
                 $nestedArrays = false;
 
+            }
+
+            if($perk->key === 'firewalker_unit_conversion_ratio')
+            {
+                $fromSlot = (int)$perkValue[0];
+                $toSlot = (int)$perkValue[1];
+                $fromAmount = (float)$perkValue[2];
+                $toAmount = (float)$perkValue[3];
+
+                $race = Race::where('name', 'Firewalker')->firstOrFail();
+
+                $fromUnit = $race->units->filter(static function ($unit) use ($fromSlot)
+                    {
+                        return ($unit->slot === $fromSlot);
+                    })->first();
+
+
+                $toUnit = $race->units->filter(static function ($unit) use ($toSlot)
+                    {
+                        return ($unit->slot === $toSlot);
+                    })->first();
+
+                $perkValue = [$fromUnit->name, $toUnit->name, number_format($fromAmount), number_format($toAmount)];
+                $nestedArrays = false;
             }
 
             if($perk->key === 'summon_units_from_land')

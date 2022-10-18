@@ -342,7 +342,7 @@ class SpellActionService
                 $spellPerkValues = $spell->getActiveSpellPerkValues($spell->key, $perk->key);
 
                 # Unit conversion
-                if($perk->key === 'aurei_unit_conversion' and $caster->race->name == 'Aurei')
+                if($perk->key === ($caster->race->key . '_unit_conversion'))
                 {
                     $fromSlot = (int)$spellPerkValues[0];
                     $toSlot = (int)$spellPerkValues[1];
@@ -367,19 +367,21 @@ class SpellActionService
 
                     $extraLine = ', phasing ' . number_format($newToSlotUnits) . ' ' . str_plural($fromUnit->name, $newToSlotUnits) . ' into ' . str_plural($toUnit->name, $newToSlotUnits);
                 }
-                if($perk->key === 'firewalker_unit_conversion_BLAGADABAGADABAD' and $caster->race->name == 'Firewalker')
+                if($perk->key === ($caster->race->key . '_unit_conversion_ratio'))
                 {
                     $fromSlot = (int)$spellPerkValues[0];
                     $toSlot = (int)$spellPerkValues[1];
                     $fromAmount = (float)$spellPerkValues[2];
-                    $toAmount = (float)$spellPerkValues[2];
+                    $toAmount = (float)$spellPerkValues[3];
 
-                    $availableFrom = min($fromAmount, $caster->{'military_unit' . $fromSlot});
+                    $ratio = $toAmount/$fromAmount;
 
-                    $newToSlotUnits = (int)min($amount, $availableFrom);
+                    $unitsConvertedFrom = min($fromAmount, $caster->{'military_unit' . $fromSlot});
 
-                    $caster->{'military_unit' . $fromSlot} -= $newToSlotUnits;
-                    $caster->{'military_unit' . $toSlot} += $newToSlotUnits;
+                    $unitsConvertedTo = floor($unitsConvertedFrom * $ratio);
+
+                    $caster->{'military_unit' . $fromSlot} -= $unitsConvertedFrom;
+                    $caster->{'military_unit' . $toSlot} += $unitsConvertedTo;
 
                     $fromUnit = $caster->race->units->filter(static function ($unit) use ($fromSlot)
                         {
@@ -391,7 +393,7 @@ class SpellActionService
                             return ($unit->slot === $toSlot);
                         })->first();
 
-                    $extraLine = ', phasing ' . number_format($newToSlotUnits) . ' ' . str_plural($fromUnit->name, $newToSlotUnits) . ' into ' . str_plural($toUnit->name, $newToSlotUnits);
+                    $extraLine = ', mending ' . number_format($unitsConvertedFrom) . ' ' . str_plural($fromUnit->name, $unitsConvertedFrom) . ' into ' . number_format($unitsConvertedTo) . ' '. str_plural($toUnit->name, $unitsConvertedTo);
                 }
 
                 # Resource conversion
