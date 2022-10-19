@@ -543,7 +543,7 @@ class SpellHelper
 
                 $amount = number_format($amount);
 
-                $perkValue = [$fromUnit->name, $toUnit->name, number_format($amount)];
+                $perkValue = [$fromUnit->name, $toUnit->name, $amount];
                 $nestedArrays = false;
 
             }
