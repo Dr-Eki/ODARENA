@@ -3112,7 +3112,9 @@ class InvadeActionService
             return true;
         }
 
-        return (array_sum($units) <= $attacker->getBuildingPerkValue('unit_send_capacity'));
+        $maxSendableUnits = $this->militaryCalculator->getMaxSendableUnits($attacker);
+
+        return (array_sum($units) <= $maxSendableUnits);
     }
 
     /**

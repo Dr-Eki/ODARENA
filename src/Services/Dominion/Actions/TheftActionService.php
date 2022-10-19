@@ -423,14 +423,16 @@ class TheftActionService
         return ($attackingForceOP <= $attackingForceMaxOP);
     }
 
-    protected function passesUnitSendableCapacityCheck(Dominion $dominion, array $units): bool
+    protected function passesUnitSendableCapacityCheck(Dominion $attacker, array $units): bool
     {
-        if(!$dominion->race->getPerkValue('caverns_required_to_send_units'))
+        if(!$attacker->race->getPerkValue('caverns_required_to_send_units'))
         {
             return true;
         }
 
-        return (array_sum($units) <= $dominion->getBuildingPerkValue('unit_send_capacity'));
+        $maxSendableUnits = $this->militaryCalculator->getMaxSendableUnits($attacker);
+
+        return (array_sum($units) <= $maxSendableUnits);
     }
 
     /**
