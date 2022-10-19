@@ -2479,7 +2479,7 @@ class MilitaryCalculator
 
         if($power == 'offense')
         {
-            $multiplier += $dominion->getSpellPerkMultiplier('offensive_power');
+            #$multiplier += $dominion->getSpellPerkMultiplier('offensive_power');
             
             # Retaliation spells (only vs. self in deathmatches)
             if($dominion->round->mode == 'standard' or $dominion->round->mode == 'standard-duration' or $dominion->round->mode == 'artefacts')
@@ -2500,7 +2500,7 @@ class MilitaryCalculator
         }
         elseif($power == 'defense')
         {
-            $multiplier += $dominion->getSpellPerkMultiplier('defensive_power');# $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'defensive_power');
+            #$multiplier += $dominion->getSpellPerkMultiplier('defensive_power');# $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'defensive_power');
 
             // Spell: Chitin
             if(isset($target))
