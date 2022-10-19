@@ -34,6 +34,7 @@ perks:
   unemployed_peasants_produce: 1
   starts_devoted_to_druva: 1
   cannot_renounce_deity: 1
+  cannot_steal: 1
 
 units:
   - name: Fruitbody

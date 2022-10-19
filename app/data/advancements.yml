@@ -64,6 +64,8 @@ fortifications:
 
 honour:
   name: Honour
+  excluded_races:
+    - Myconid
   perks:
     prestige_gains: 5
 
@@ -96,6 +98,8 @@ intelligence:
 
 deep_pockets:
   name: Deep Pockets
+  excluded_races:
+    - Myconid
   perks:
     amount_stolen: 5
 
@@ -247,6 +251,13 @@ lodging:
 
 craftsmanship:
   name: Craftsmanship
+  excluded_races:
+    - Growth
+    - Myconid
+    - Swarm
+    - Sylvan
+    - Void
+    - Yeti
   perks:
     jobs_per_building: 2.5
 
