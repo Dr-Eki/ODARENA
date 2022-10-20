@@ -213,7 +213,7 @@ class MilitaryCalculator
         // Prestige
         $multiplier += $this->prestigeCalculator->getPrestigeMultiplier($attacker);
 
-        // Spell
+        // Decree
         $multiplier += $attacker->getDecreePerkMultiplier('offensive_power');
 
         // Land improvements
@@ -447,6 +447,7 @@ class MilitaryCalculator
         $multiplier += $dominion->getAdvancementPerkMultiplier('defensive_power');
 
         // Spell
+        $multiplier += $dominion->getSpellPerkMultiplier('defensive_power');
         $multiplier += $this->getSpellMultiplier($dominion, $attacker, 'defense');
 
         // Deity
