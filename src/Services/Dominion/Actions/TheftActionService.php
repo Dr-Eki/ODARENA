@@ -113,7 +113,7 @@ class TheftActionService
                 throw new GameException('You are sending out too much OP, based on your new home DP (4:3 rule).');
             }
 
-            if (!$this->passesUnitSendableCapacityCheck($dominion, $units))
+            if (!$this->passesUnitSendableCapacityCheck($thief, $units))
             {
                 throw new GameException('You do not have enough caverns to send out this many units.');
             }
