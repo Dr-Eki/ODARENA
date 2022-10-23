@@ -189,6 +189,8 @@ class SpellHelper
             'sorcery_damage_suffered' => '%+g%% sorcery damage suffered',
             'sorcery_damage_dealt' => '%+g%% sorcery damage dealt',
 
+            'cannot_perform_sorcery' => 'Cannot perform sorcery.',
+
             // Espionage
             'disband_spies' => 'Disbands %+g%% of enemy spies.',
             'spy_strength' => '%+g%% spy strength',
