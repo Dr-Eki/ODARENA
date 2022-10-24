@@ -78,7 +78,7 @@ class SorceryActionService
                 throw new GameException($caster->race->name . ' cannot perform sorcery.');
             }
 
-            if ($caster->race->getSpellPerkValue('cannot_perform_sorcery'))
+            if ($caster->getSpellPerkValue('cannot_perform_sorcery'))
             {
                 throw new GameException('A spell of silence is preventing you from performing sorcery.');
             }

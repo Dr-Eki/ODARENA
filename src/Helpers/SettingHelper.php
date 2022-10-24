@@ -969,7 +969,9 @@ class SettingHelper
                         $resultString = "{$data['damageString']} has vanished into the void.";
                         break;
 
-
+                    case 'silence':
+                        $resultString = 'A magical state of silence is preventing us from performing sorcery.';
+                        break;
 
                     default:
                         throw new LogicException("Received hostile spell notification for operation key {$data['spellKey']} not yet implemented");

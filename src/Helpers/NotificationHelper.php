@@ -1130,6 +1130,10 @@ class NotificationHelper
                         $resultString = "{$data['damageString']} disappears into the void.";
                         break;
 
+                    case 'silence':
+                        $resultString = 'A magical silence is preventing us from performing sorcery.';
+                        break;
+
                     default:
                         throw new LogicException("Received hostile spell notification for operation key {$data['spellKey']} not yet implemented");
                 }
@@ -1252,6 +1256,10 @@ class NotificationHelper
 
                     case 'voidspellmanatheft':
                         $resultString = "{$data['damageString']} disappears into the void.";
+                        break;
+
+                    case 'silence':
+                        $resultString = 'A magical silence is preventing us from performing sorcery.';
                         break;
 
                     default:
