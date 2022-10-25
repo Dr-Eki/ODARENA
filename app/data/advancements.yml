@@ -1,6 +1,8 @@
 # MILITARY
 tactics:
   name: Tactics
+  excluded_races:
+    - Lux
   perks:
     casualties_on_offense: -3.75
     casualties_on_defense: -2.50

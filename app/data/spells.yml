@@ -369,6 +369,8 @@ mirnons_greed:
   cost: 4
   duration: 48
   deity: mirnon
+  excluded_races:
+    - Lux
   perks:
     building_gold_mine_production_mod: 10
     building_gold_quarry_production_mod: 10
@@ -611,7 +613,7 @@ enchanted_blades:
 
 enchanted_blades_friendly:
   name: Enchanted Blades
-  scope: self
+  scope: friendly
   class: passive
   cost: 10
   duration: 1
