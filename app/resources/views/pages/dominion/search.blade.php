@@ -216,9 +216,6 @@
                 </div>
                 <div class="box-body">
                     <p>Use the search to find dominions matching certain criteria.</p>
-                    <p>The grey button labelled 40% pre-fills the land min and land max with dominions 40%-250% your range.</p>
-                    <p>The green button labelled 60% pre-fills the land min and land max with dominions 60%-166% your range: Barbarian range.</p>
-                    <p>The orange button labelled 75% pre-fills the land min and land max with dominions 75%-133% your range: Warriors League range</p>
                     @if (!$selectedDominion->round->hasStarted())
                         <p>The current round has not started. No dominions will be listed.</p>
                     @endif

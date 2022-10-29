@@ -70,11 +70,16 @@ pathfinder:
     expedition_land_gains: 20
     expedition_prestige_gains: 20
 
-researcher:
-  name: Researcher
+professor:
+  name: Professor
   perks:
     xp_generation_mod: 5
     xp_gains: 50
+
+researcher:
+  name: Researcher
+  perks:
+    research_time: -10
 
 rogue:
   name: Rogue

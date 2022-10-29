@@ -488,7 +488,7 @@ class SpellActionService
                 }
 
                 # Summon units (increased hourly)
-                if($perk->key === 'summon_units_from_land_by_time')
+                if($perk->key === 'summon_weres_units_from_land_increasing')
                 {
                     $unitSlots = (array)$spellPerkValues[0];
                     $basePerAcre = (float)$spellPerkValues[1];

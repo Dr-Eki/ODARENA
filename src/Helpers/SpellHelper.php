@@ -139,7 +139,7 @@ class SpellHelper
             'kills_faction_units_amount' => 'Kills %3$s%s of %1$s %2$s.',
 
             'summon_units_from_land' => 'Summon up to %2$s %1$s per acre of %3$s.',
-            'summon_units_from_land_by_time' => 'Summon %2$s %1$s per acre of %4$s. Amount summoned increased by %3$s%% per tick into the round.',
+            'summon_weres_units_from_land_increasing' => 'Summon %2$s %1$s per acre of %4$s. Amount summoned increased by %3$s%% per tick into the round.',
 
             'marshling_random_resource_to_units_conversion' => 'Turns %1$s%% x Wizard Ratio (max %2$s%%) of your %3$s into random amounts of %4$s.',
 
@@ -601,14 +601,13 @@ class SpellHelper
                 $nestedArrays = false;
             }
 
-            if($perk->key === 'summon_units_from_land_by_time')
+            if($perk->key === 'summon_weres_units_from_land_increasing')
             {
                 $unitSlots = (array)$perkValue[0];
                 $basePerAcre = (float)$perkValue[1];
                 $hourlyPercentIncrease = (float)$perkValue[2];
                 $landType = (string)$perkValue[3];
 
-                // Rue the day this perk is used for other factions.
                 $race = Race::where('name', 'Weres')->firstOrFail();
 
                 foreach ($unitSlots as $index => $slot)

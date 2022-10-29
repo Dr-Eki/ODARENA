@@ -1213,6 +1213,18 @@ voidspellmagicprotection:
   perks:
     damage_from_spells: -50
 
+weren_wandering:
+  name: Weren Wandering
+  scope: self
+  class: active
+  cost: 1
+  duration: 0
+  cooldown: 96
+  exclusive_races:
+    - Weres
+  perks:
+    summon_weres_units_from_land_increasing: 1;2,2,0.08,forest # slots, base, extra percent per hour, land type
+
 # END FACTION SPECIFIC
 
 # BEGIN SORCERY (NON-DEITY SPECIFIC)

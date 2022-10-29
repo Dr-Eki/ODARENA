@@ -80,6 +80,7 @@ class DataSyncCommand extends Command implements CommandInterface
     {
         $start = now();
         DB::transaction(function () {
+            $this->syncTechs();
             $this->syncDeities();
             $this->syncRaces();
             $this->syncAdvancements();
@@ -344,6 +345,8 @@ class DataSyncCommand extends Command implements CommandInterface
                 ->fill([
                     'name' => $techData->name,
                     'prerequisites' => object_get($techData, 'requires', []),
+                    'excluded_races' => object_get($techData, 'excluded_races', []),
+                    'exclusive_races' => object_get($techData, 'exclusive_races', []),
                     'level' => $techData->level,
                     'enabled' => (int)object_get($techData, 'enabled', 1),
                 ]);
