@@ -49,6 +49,9 @@ class HistoryService
     public const EVENT_WATCH_DOMINION = 'watched dominion';
     public const EVENT_UNWATCH_DOMINION = 'unwatched dominion';
 
+    public const EVENT_RESEARCH_BEGIN = 'began research';
+    public const EVENT_RESEARCH_COMPLETE = 'completed research';
+
 
     /**
      * Returns a cloned dominion instance with state at a certain time.

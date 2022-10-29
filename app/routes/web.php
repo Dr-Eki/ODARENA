@@ -121,6 +121,10 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('advancements')->uses('Dominion\AdvancementController@getAdvancements')->name('advancements');
             $router->post('advancements')->uses('Dominion\AdvancementController@postAdvancements');
 
+            // Research 
+            $router->get('research')->uses('Dominion\ResearchController@getResearch')->name('research');
+            $router->post('research')->uses('Dominion\ResearchController@postResearch');
+
             // Military
             $router->get('military')->uses('Dominion\MilitaryController@getMilitary')->name('military');
             $router->post('military/change-draft-rate')->uses('Dominion\MilitaryController@postChangeDraftRate')->name('military.change-draft-rate');

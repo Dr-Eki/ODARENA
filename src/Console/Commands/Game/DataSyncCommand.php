@@ -80,7 +80,6 @@ class DataSyncCommand extends Command implements CommandInterface
     {
         $start = now();
         DB::transaction(function () {
-            $this->syncTechs();
             $this->syncDeities();
             $this->syncRaces();
             $this->syncAdvancements();

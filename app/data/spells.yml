@@ -37,7 +37,7 @@ harmony:
     offensive_power: -5
 
 magic_disguise:
-  name: Magic Disguise
+  name: Magical Disguise
   scope: self
   class: passive
   cost: 2
@@ -283,8 +283,8 @@ druvas_guard:
   scope: self
   class: passive
   cost: 12
-  cooldown: 0
   duration: 48
+  cooldown: 0
   exclusive_races:
     - Wood Elf
   perks:
@@ -357,6 +357,7 @@ mirnons_fortitude:
   class: passive
   cost: 4
   duration: 48
+  cooldown: 0
   deity: mirnon
   perks:
     ore_production_mod: 20
@@ -368,6 +369,7 @@ mirnons_greed:
   class: passive
   cost: 4
   duration: 48
+  cooldown: 0
   deity: mirnon
   excluded_races:
     - Lux

@@ -64,6 +64,19 @@
                     </li>
                 @endif
 
+                <!-- TECHS -->
+                @if (!$selectedDominion->race->getPerkValue('cannot_research'))
+                    <li class="{{ Route::is('dominion.research') ? 'active' : null }}">
+                        <a href="{{ route('dominion.research') }}"><i class="fa fa-flask fa-fw"></i> <span>Research</span>
+
+                        @if($techCalculator->maxLevelAfforded($selectedDominion) !== 0)
+                            <span class="pull-right-container"><small class="label pull-right bg-green">{{ $techCalculator->maxLevelAfforded($selectedDominion) }}</small></span></a>
+                        @else
+                            </a>
+                        @endif
+                    </li>
+                @endif
+
                 <li class="{{ Route::is('dominion.military') ? 'active' : null }}"><a href="{{ route('dominion.military') }}"><i class="ra ra-sword ra-fw"></i> <span>Military</span></a></li>
 
                 <!-- Hide Invade from cannot_invade races -->

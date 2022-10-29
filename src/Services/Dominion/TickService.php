@@ -40,6 +40,7 @@ use OpenDominion\Models\Realm;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\Spell;
+use OpenDominion\Models\Tech;
 use OpenDominion\Models\Dominion\Tick;
 
 use OpenDominion\Services\NotificationService;
@@ -90,6 +91,7 @@ class TickService
         $this->deityService = app(DeityService::class);
         $this->insightService = app(InsightService::class);
         $this->protectionService = app(ProtectionService::class);
+        $this->researchService = app(ResearchService::class);
         $this->resourceService = app(ResourceService::class);
 
         $this->barbarianService = app(BarbarianService::class);
@@ -161,6 +163,9 @@ class TickService
 
                     if(static::EXTENDED_LOGGING){ Log::debug('** Updating artefacts for ' . $dominion->name); }
                     $this->handleArtefacts($dominion);
+
+                    if(static::EXTENDED_LOGGING){ Log::debug('** Updating research for ' . $dominion->name); }
+                    $this->handleResearch($dominion);
 
                     if(static::EXTENDED_LOGGING) { Log::debug('** Handle Barbarians:'); }
                     # NPC Barbarian: invasion, training, construction
@@ -1242,6 +1247,7 @@ class TickService
         $this->handleBuildings($dominion);
         $this->handleImprovements($dominion);
         $this->handleDeities($dominion);
+        $this->handleResearch($dominion);
 
         $this->updateDominion($dominion);
         $this->updateDominionSpells($dominion);
@@ -1606,17 +1612,44 @@ class TickService
         foreach($finishedDeitiesInQueue as $finishedDeityInQueue)
         {
             $deityKey = $finishedDeityInQueue->resource;
-            $amount = 1;
             $deity = Deity::where('key', $deityKey)->first();
             $this->deityService->completeSubmissionToDeity($dominion, $deity);
 
-            $deityEvent = GameEvent::create([
+           GameEvent::create([
                 'round_id' => $dominion->round_id,
                 'source_type' => Deity::class,
                 'source_id' => $deity->id,
                 'target_type' => Dominion::class,
                 'target_id' => $dominion->id,
                 'type' => 'deity_completed',
+                'data' => NULL,
+                'tick' => $dominion->round->ticks
+            ]);
+        }
+
+    }
+
+    # Take research that is one tick away from finished and create DominionTech.
+    private function handleResearch(Dominion $dominion): void
+    {
+        $finishedReseearchesInQueue = DB::table('dominion_queue')
+                                        ->where('dominion_id',$dominion->id)
+                                        ->where('source', 'research')
+                                        ->where('hours',1)
+                                        ->get();
+        foreach($finishedReseearchesInQueue as $finishedDeityInQueue)
+        {
+            $techKey = $finishedDeityInQueue->resource;
+            $tech = Tech::where('key', $techKey)->first();
+            $this->researchService->completeResearch($dominion, $tech);
+
+            GameEvent::create([
+                'round_id' => $dominion->round_id,
+                'source_type' => Tech::class,
+                'source_id' => $tech->id,
+                'target_type' => Dominion::class,
+                'target_id' => $dominion->id,
+                'type' => 'research_completed',
                 'data' => NULL,
                 'tick' => $dominion->round->ticks
             ]);

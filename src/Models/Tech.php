@@ -21,6 +21,8 @@ class Tech extends AbstractModel
 
     protected $casts = [
         'prerequisites' => 'array',
+        'excluded_races' => 'array',
+        'exclusive_races' => 'array',
         'level' => 'int',
     ];
 
