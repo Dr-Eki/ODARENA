@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-flask"></i> Advancements</h3>
+                        <h3 class="box-title"><i class="fas fa-layer-group"></i> Advancements</h3>
                     </div>
                     <div class="box-body">
                     {{-- //Columns must be a factor of 12 (1,2,3,4,6,12) --}}

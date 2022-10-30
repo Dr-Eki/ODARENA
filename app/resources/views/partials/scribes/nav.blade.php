@@ -12,6 +12,7 @@
                         <li class="{{ Route::is('scribes.general') ? 'active' : null }}"><a href="{{ route('scribes.general') }}">General</a></li>
                         <li class="{{ Route::is('scribes.improvements') ? 'active' : null }}"><a href="{{ route('scribes.improvements') }}">Improvements</a></li>
                         <li class="{{ Route::is('scribes.quickstarts') ? 'active' : null }}"><a href="{{ route('scribes.quickstarts') }}">Quickstarts</a></li>
+                        <li class="{{ Route::is('scribes.research') ? 'active' : null }}"><a href="{{ route('scribes.research') }}">Research</a></li>
                         <li class="{{ Route::is('scribes.resources') ? 'active' : null }}"><a href="{{ route('scribes.resources') }}">Resources</a></li>
                         <li class="{{ Route::is('scribes.sabotage') ? 'active' : null }}"><a href="{{ route('scribes.sabotage') }}">Sabotage</a></li>
                         <li class="{{ Route::is('scribes.spells') ? 'active' : null }}"><a href="{{ route('scribes.spells') }}">Spells</a></li>

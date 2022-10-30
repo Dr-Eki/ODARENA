@@ -44,7 +44,7 @@ units:
     cost:
       food: 1000
     perks:
-      land_per_tick: 0.006
+      land_per_tick: 0.0045
       attrition: 5
 
   - name: Psilocybe

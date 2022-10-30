@@ -4,6 +4,7 @@ namespace OpenDominion\Http\Controllers;
 
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
+use OpenDominion\Calculators\Dominion\ResearchCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 
@@ -17,11 +18,11 @@ use OpenDominion\Helpers\EspionageHelper;
 use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Helpers\ResourceHelper;
 use OpenDominion\Helpers\TitleHelper;
-#use OpenDominion\Helpers\TechHelper;
+use OpenDominion\Helpers\ResearchHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\LandImprovementHelper;
 use OpenDominion\Helpers\RaceHelper;
-use OpenDominion\Helpers\RoundHelper;
+#use OpenDominion\Helpers\RoundHelper;
 use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Helpers\UnitHelper;
 
@@ -186,39 +187,33 @@ class ScribesController extends AbstractController
         ]);
     }
 
-    /*
-    public function getAdvancements()
-    {
-
-        $techs = Tech::all()->where('enabled',1)->keyBy('key');
-
-
-        $techs = $techs->sortBy(function ($tech, $key)
-        {
-            return $tech['name'] . str_pad($tech['level'], 2, '0', STR_PAD_LEFT);
-        });
-
-
-        foreach($techs as $tech)
-        {
-            $techNames[] = $tech['name'];
-        }
-
-        $techNames = array_unique($techNames);
-
-        return view('pages.scribes.advancements', [
-            'techs' => $techs,
-            'techNames' => $techNames,
-            'techHelper' => app(TechHelper::class),
-        ]);
-    }
-    */
-
     public function getAdvancements()
     {
         return view('pages.scribes.advancements', [
             'advancements' => Advancement::all()->where('enabled',1)->keyBy('key')->sortBy('name'),
             'advancementHelper' => app(AdvancementHelper::class),
+        ]);
+    }
+
+    public function getResearch()
+    {
+
+        $techs = Tech::all()->where('enabled',1)->keyBy('key')->sortBy('name');
+
+        $techsWithLevel = [];
+
+        for ($level = 1; $level <= 6; $level++)
+        {
+            $techsWithLevel[$level] = $techs->filter(function ($tech) use ($level) {
+                return $tech->level === $level;
+            });
+        }
+
+        return view('pages.scribes.research', [
+            'techs' => $techs,
+            'techsWithLevel' => $techsWithLevel,
+            'researchHelper' => app(ResearchHelper::class),
+            'researchCalculator' => app(ResearchCalculator::class),
         ]);
     }
 

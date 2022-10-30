@@ -34,8 +34,27 @@ class ResearchService
             throw new GameException('You cannot submit to a deity for a dominion that is locked or abandoned, or after a round has ended.');
         }
 
+        if($this->researchCalculator->hasTech($dominion, $tech))
+        {
+            throw new GameException('You have already researched this technology.');
+        }
 
-        $ticks = 48;
+        if(!$this->researchCalculator->hasPrerequisites($dominion, $tech))
+        {
+            throw new GameException('You do not meed the necessary prerequisites to research this technology.');
+        }
+
+        if(!$this->researchCalculator->getFreeResearchSlots($dominion))
+        {
+            throw new GameException('You do not have any free research slots.');
+        }
+
+        if(!$this->researchCalculator->canResearchTech($dominion, $tech))
+        {
+            throw new GameException('You cannot research this technology.');
+        }
+
+        $ticks = $this->researchCalculator->getResearchTime($dominion);
 
         $this->queueService->queueResources('research', $dominion, [$tech->key => 1], $ticks);
 
@@ -46,23 +65,20 @@ class ResearchService
 
     }
 
-  public function completeResearch(Dominion $dominion, Tech $tech): void
-  {
-      if(!$dominion->hasDeity())
-      {
-          DB::transaction(function () use ($dominion, $tech)
-          {
-              DominionTech::create([
-                  'dominion_id' => $dominion->id,
-                  'tech_id' => $tech->id
-              ]);
+    public function completeResearch(Dominion $dominion, Tech $tech): void
+    {
+        DB::transaction(function () use ($dominion, $tech)
+        {
+            DominionTech::create([
+                'dominion_id' => $dominion->id,
+                'tech_id' => $tech->id
+            ]);
 
-              $dominion->save([
-                  'event' => HistoryService::EVENT_RESEARCH_COMPLETE,
-                  'action' => $tech->name
-              ]);
-          });
-      }
-  }
+            $dominion->save([
+                'event' => HistoryService::EVENT_RESEARCH_COMPLETE,
+                'action' => $tech->name
+            ]);
+        });
+    }
 
 }

@@ -48,13 +48,17 @@
 
                 <!-- Hide Improvements from cannot_build races -->
                 @if (!$selectedDominion->race->getPerkValue('cannot_improve'))
-                    <li class="{{ Route::is('dominion.improvements') ? 'active' : null }}"><a href="{{ route('dominion.improvements') }}"><i class="fa fa-arrow-up fa-fw"></i><span>Improvements</span></a></li>
+                    <li class="{{ Route::is('dominion.improvements') ? 'active' : null }}">
+                            <a href="{{ route('dominion.improvements') }}">
+                                <i class="fas fa-arrow-up fa-fw"></i><span>Improvements</span>
+                            </a>
+                        </li>
                 @endif
 
                 <!-- TECHS -->
                 @if (!$selectedDominion->race->getPerkValue('cannot_tech'))
                     <li class="{{ Route::is('dominion.advancements') ? 'active' : null }}">
-                        <a href="{{ route('dominion.advancements') }}"><i class="fa fa-flask fa-fw"></i> <span>Advancements</span>
+                        <a href="{{ route('dominion.advancements') }}"><i class="fas fa-layer-group fa-fw"></i> <span>Advancements</span>
 
                         @if($techCalculator->maxLevelAfforded($selectedDominion) !== 0)
                             <span class="pull-right-container"><small class="label pull-right bg-green">{{ $techCalculator->maxLevelAfforded($selectedDominion) }}</small></span></a>
@@ -67,13 +71,14 @@
                 <!-- TECHS -->
                 @if (!$selectedDominion->race->getPerkValue('cannot_research'))
                     <li class="{{ Route::is('dominion.research') ? 'active' : null }}">
-                        <a href="{{ route('dominion.research') }}"><i class="fa fa-flask fa-fw"></i> <span>Research</span>
+                        <a href="{{ route('dominion.research') }}"><i class="fas fa-flask fa-fw"></i> <span>Research</span>
 
-                        @if($techCalculator->maxLevelAfforded($selectedDominion) !== 0)
-                            <span class="pull-right-container"><small class="label pull-right bg-green">{{ $techCalculator->maxLevelAfforded($selectedDominion) }}</small></span></a>
-                        @else
-                            </a>
-                        @endif
+                            @if($researchCalculator->getOngoingResearchCount($selectedDominion) !== 0)
+                                <span class="pull-right-container"><small class="label pull-right bg-yellow">{{ $researchCalculator->getTicksUntilNextResearchCompleted($selectedDominion) }}</small></span>
+                            @elseif(($freeResearchSlots = $researchCalculator->getFreeResearchSlots($selectedDominion) > 0))
+                                <span class="pull-right-container"><small class="label pull-right bg-red">{{ $freeResearchSlots }}</small></span>
+                            @endif
+                        </a>
                     </li>
                 @endif
 

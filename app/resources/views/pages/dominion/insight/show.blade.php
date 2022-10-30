@@ -892,13 +892,13 @@
                 <div class="box-body">
                     @foreach ($landImprovementPerks as $perkKey)
                         <ul>
-                              @if($landImprovementHelper->getPerkType($perkKey) == 'mod')
-                                  <li>{{ $landImprovementHelper->getPerkDescription($perkKey, $dominion->getLandImprovementPerkMultiplier($perkKey) * 100, false) }}</li>
-                              @elseif($landImprovementHelper->getPerkType($perkKey) == 'raw')
-                                  <li>{{ $landImprovementHelper->getPerkDescription($perkKey, $dominion->getLandImprovementPerkValue($perkKey), false) }}</li>
-                              @else
-                                  <li><pre>Error! Unknown perk type (getPerkType()) for $perkKey {{ $perkKey }}</pre></li>
-                              @endif
+                            @if($landImprovementHelper->getPerkType($perkKey) == 'mod')
+                                <li>{{ $landImprovementHelper->getPerkDescription($perkKey, $dominion->getLandImprovementPerkMultiplier($perkKey) * 100, false) }}</li>
+                            @elseif($landImprovementHelper->getPerkType($perkKey) == 'raw')
+                                <li>{{ $landImprovementHelper->getPerkDescription($perkKey, $dominion->getLandImprovementPerkValue($perkKey), false) }}</li>
+                            @else
+                                <li><pre>Error! Unknown perk type (getPerkType()) for $perkKey {{ $perkKey }}</pre></li>
+                            @endif
                         </ul>
                     @endforeach
                 </div>
@@ -913,7 +913,7 @@
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Advancements')
-            @slot('titleIconClass', 'fa fa-flask')
+            @slot('titleIconClass', 'fas fa-layer-group')
             @slot('noPadding', true)
 
             @if($dominion->advancements->count() > 0)
@@ -1021,10 +1021,50 @@
             @endif
         @endcomponent
     </div>
-
 </div>
+
 <div class="row">
     <div class="col-sm-12 col-md-6">
+        @component('partials.dominion.insight.box')
+            @slot('title', 'Research')
+            @slot('titleIconClass', 'fa fa-flask')
+            @slot('noPadding', true)
+
+            <table class="table">
+                <colgroup>
+                    <col width="50%">
+                    <col width="50%">
+                </colgroup>
+                <thead class="hidden-xs">
+                    <tr>
+                        <th>Research</th>
+                        <th>Perks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($dominionTechs as $dominionTech)
+                        @php
+                            $tech = OpenDominion\Models\Tech::findOrFail($dominionTech->id);
+                        @endphp
+                        <tr>
+                            <td>{{ $tech->name }}</td>
+                            <td>
+                                <ul style="list-style-type: none">
+                                    @foreach($researchHelper->getTechPerkDescription($tech, $selectedDominion->race) as $effect)
+                                        <li>{{ $effect }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endcomponent
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
         @component('partials.dominion.insight.box')
             @slot('title', 'Statistics')
             @slot('titleIconClass', 'fa fa-chart-bar')
@@ -1145,8 +1185,10 @@
             </table>
         @endcomponent
     </div>
+</div>
+<div class="row">
 
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-12">
         @component('partials.dominion.insight.box')
             @slot('title', 'Data')
             @slot('titleIconClass', 'fas fa-database')

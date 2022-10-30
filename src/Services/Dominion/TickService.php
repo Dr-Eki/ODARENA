@@ -707,7 +707,11 @@ class TickService
 
         foreach ($incomingQueue as $row)
         {
-            if($row->source !== 'deity' and $row->source !== 'artefact' and substr($row->resource, 0, strlen('resource_')) !== 'resource_')
+            if(
+                    $row->source !== 'deity'
+                    and $row->source !== 'artefact'
+                    and $row->source !== 'research'
+                    and substr($row->resource, 0, strlen('resource_')) !== 'resource_')
             {
                 $tick->{$row->resource} += $row->amount;
                 // Temporarily add next hour's resources for accurate calculations
@@ -1217,7 +1221,11 @@ class TickService
 
         foreach ($incomingQueue as $row)
         {
-            if($row->source !== 'deity' and $row->source !== 'artefact' and substr($row->resource, 0, strlen('resource_')) !== 'resource_')
+            if(
+                $row->source !== 'deity'
+                and $row->source !== 'research'
+                and $row->source !== 'artefact'
+                and substr($row->resource, 0, strlen('resource_')) !== 'resource_')
             {
                 // Reset current resources in case object is saved later
                 $dominion->{$row->resource} -= $row->amount;
@@ -1632,12 +1640,12 @@ class TickService
     # Take research that is one tick away from finished and create DominionTech.
     private function handleResearch(Dominion $dominion): void
     {
-        $finishedReseearchesInQueue = DB::table('dominion_queue')
+        $finishedResearchesInQueue = DB::table('dominion_queue')
                                         ->where('dominion_id',$dominion->id)
                                         ->where('source', 'research')
                                         ->where('hours',1)
                                         ->get();
-        foreach($finishedReseearchesInQueue as $finishedDeityInQueue)
+        foreach($finishedResearchesInQueue as $finishedDeityInQueue)
         {
             $techKey = $finishedDeityInQueue->resource;
             $tech = Tech::where('key', $techKey)->first();

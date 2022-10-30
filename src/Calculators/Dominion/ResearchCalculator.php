@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Calculators\Dominion;
 
+use Illuminate\Support\Collection;
 use OpenDominion\Helpers\ResearchHelper;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Tech;
@@ -23,22 +24,23 @@ class ResearchCalculator
      * @param Dominion $dominion
      * @return int
      */
-    public function getResearchDuration(Dominion $dominion, Tech $tech): int
+    public function getResearchTime(Dominion $dominion): int
     {
         $ticks = 96;
-        $ticks *= $this->getResearchDurationMultiplier($dominion);
+        $ticks *= $this->getResearchTimeMultiplier($dominion);
 
-        return $ticks;
+        return ceil($ticks);
     }
 
 
-    public function getResearchDurationMultiplier(Dominion $dominion)
+    public function getResearchTimeMultiplier(Dominion $dominion)
     {
-        $multiplier = 0;
+        $multiplier = 1;
 
-        $multiplier += $dominion->race->getPerkMultiplier('research_time');
-        $multiplier += $dominion->getImprovementPerkMultiplier('research_time');
-        $multiplier += $dominion->getSpellPerkMultiplier('research_time');
+        $multiplier -= $dominion->race->getPerkMultiplier('research_time');
+        $multiplier -= $dominion->getImprovementPerkMultiplier('research_time');
+        $multiplier -= $dominion->getSpellPerkMultiplier('research_time');
+        $multiplier += $dominion->title->getPerkMultiplier('research_time') * $dominion->getTitlePerkMultiplier();
 
         return $multiplier;
     }
@@ -68,7 +70,6 @@ class ResearchCalculator
 
     public function canBeginNewResearch(Dominion $dominion): bool
     {
-        # Check if has free research slots
         return ($this->getFreeResearchSlots($dominion) > 0);
     }
 
@@ -81,14 +82,14 @@ class ResearchCalculator
 
     public function getResearchSlots(Dominion $dominion): int
     {
-        if($dominion->race->getPerkValue('cannot_reseearch'))
+        if($dominion->race->getPerkValue('cannot_research'))
         {
             return 0;
         }
 
         $slots = 1;
 
-        $slots *= $dominion->getAdvancementPerkMultiplier('research_slots');
+        $slots *= 1 + $dominion->getAdvancementPerkMultiplier('research_slots');
 
         $slots += $dominion->race->getPerkValue('extra_research_slots');
         $slots += $dominion->getTechPerkValue('research_slots');
@@ -111,14 +112,44 @@ class ResearchCalculator
         return max($this->getResearchSlots($dominion) - $this->getOngoingResearchCount($dominion), 0);
     }
 
-    public function getTechsLeadTo(Tech $tech)
+    public function getTechsLeadTo(Tech $tech): Collection
     {
-        return Tech::all()->where('enabled',1)->where('prerequisites','like','%'.$tech->key.'%')->keyBy('key')->sortBy('name');
+        # Get techs where this tech is a prerequisite
+        return Tech::whereRaw("JSON_CONTAINS(prerequisites, '[\"$tech->key\"]')")->get();
     }
 
-    public function getTechsRequired(Tech $tech)
+    public function getTechsRequired(Tech $tech): Collection
     {
         return Tech::all()->where('enabled',1)->whereIn('key',$tech->prerequisites)->keyBy('key')->sortBy('name');
+    }
+
+    public function isBeingResearched(Dominion $dominion, Tech $tech): bool
+    {
+        return $this->queueService->getResearchQueue($dominion)->where('resource',$tech->key)->count() > 0;
+    }
+
+    public function getTicksRemainingOfResearch(Dominion $dominion, Tech $tech): int
+    {
+        $researchQueue = $this->queueService->getResearchQueue($dominion)->where('resource',$tech->key)->first();
+
+        if($researchQueue)
+        {
+            return $researchQueue->hours;
+        }
+
+        return 0;
+    }
+
+    public function getTicksUntilNextResearchCompleted(Dominion $dominion): int
+    {
+        $researchQueue = $this->queueService->getResearchQueue($dominion)->sortBy('hours')->first();
+
+        if($researchQueue)
+        {
+            return $researchQueue->hours;
+        }
+
+        return 0;
     }
 
 }

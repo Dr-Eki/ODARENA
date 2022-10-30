@@ -270,6 +270,7 @@ $router->group(['prefix' => 'scribes', 'as' => 'scribes.'], static function (Rou
     $router->get('factions')->uses('ScribesController@getRaces')->name('factions');
     $router->get('general')->uses('ScribesController@getGeneral')->name('general');
     $router->get('improvements')->uses('ScribesController@getImprovements')->name('improvements');
+    $router->get('research')->uses('ScribesController@getResearch')->name('research');
     $router->get('resources')->uses('ScribesController@getResources')->name('resources');
     $router->get('sabotage')->uses('ScribesController@getSabotage')->name('sabotage');
     $router->get('spells')->uses('ScribesController@getSpells')->name('spells');

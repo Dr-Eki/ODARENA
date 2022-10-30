@@ -14,6 +14,7 @@ use OpenDominion\Models\Realm;
 use OpenDominion\Models\RealmArtefact;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Spyop;
+use OpenDominion\Models\Tech;
 
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
@@ -90,6 +91,9 @@ class WorldNewsHelper
             case 'round_countdown_duration':
             case 'round_countdown':
                 return $this->generateCountdownString($event, $viewer);
+
+            case 'research_completed':
+                return $this->generateResearchCompletedString($event->target, $event->source, $viewer);
 
             case 'sabotage':
                 return $this->generateSabotageString($event->source, $event->target, $event, $viewer);
@@ -556,6 +560,33 @@ class WorldNewsHelper
         return $string;
     }
 
+    public function generateResearchCompletedString(Dominion $researcher, Tech $tech, Dominion $viewer): string
+    {
+        /*
+            Dark Elf (#3) has completed research of Reinforced Tools
+        */
+
+        $viewerInvolved = ($researcher->realm->id == $viewer->realm->id or $researcher->realm->id == $viewer->realm->id);
+
+        if(!$viewerInvolved)
+        {
+            $string = sprintf(
+                'Research has been completed in the %s realm.',
+                $this->generateRealmOnlyString($researcher->realm)
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                '%s has completed research of %s.',
+                $this->generateDominionString($researcher, 'neutral', $viewer),
+                $tech->name
+              );
+        }
+
+        return $string;
+    }
+
     public function generateSabotageString(Dominion $caster, Dominion $target, GameEvent $sorcery, Dominion $viewer): string
     {
 
@@ -839,6 +870,7 @@ class WorldNewsHelper
             'protectorship_offered' => 'Protectorship offer',
             'protectorship_accepted' => 'Protectorate established',
             'protectorship_declined' => 'Protectorship declined',
+            'research_completed' => 'Research completed',
             'round_countdown_duration' => 'Round countdown (fixed length rounds)',
             'round_countdown' => 'Round countdown (land target rounds)',
             'sabotage' => 'Sabotage',

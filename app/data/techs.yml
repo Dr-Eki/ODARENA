@@ -55,7 +55,7 @@ casting:
   name: Casting
   level: 3
   perks:
-    unit_ore_costs: -2.5
+    unit_ore_costs: -5
   requires:
     - weighted_pickaxes
 
@@ -82,7 +82,7 @@ metallurgy:
   name: Metallurgy
   level: 4
   perks:
-    unit_ore_costs: -10
+    unit_ore_costs: -12.5
   requires:
     - casting
 
@@ -108,13 +108,13 @@ mining_carts:
   name: Mining Carts
   level: 5
   perks:
-    building_deep_mine_production: 10
-    building_dwargen_mine_production: 10
-    building_gem_mine_production: 10
-    building_gold_mine_production: 10
-    building_ore_mine_production: 10
-    building_slave_mine_production: 10
-    building_strip_mine_production: 10
+    building_deep_mine_production_mod: 10
+    building_dwargen_mine_production_mod: 10
+    building_gem_mine_production_mod: 10
+    building_gold_mine_production_mod: 10
+    building_ore_mine_production_mod: 10
+    building_slave_mine_production_mod: 10
+    building_strip_mine_production_mod: 10
   requires:
     - funiculars
 
@@ -146,6 +146,7 @@ banking:
   level: 2
   perks:
     gold_production_mod: 4
+    gold_interest: 0.85
   requires:
     - currency
 
@@ -168,14 +169,15 @@ economics:
   level: 3
   perks:
     exchange_rate: 10
+    gold_interest: 1.1
   requires:
-    - import_duties
+    - banking
 
 free_market:
   name: Free Market
   level: 4
   perks:
-    peasants_production_mod: 25
+    production_from_peasants_mod: 25
   requires:
     - economics
     - legal_system
@@ -265,7 +267,7 @@ civil_engineering:
   perks:
     construction_cost: -20
     rezone_cost: -20
-    construction_time: -2
+    construction_time_raw: -2
     improvements: 25
   requires:
     - mechanical_engineering
@@ -407,19 +409,18 @@ yak_taming:
   requires:
     - animal_husbandry
 
-
 divination:
   name: Divination
   level: 1
   perks:
-    mana_production: 2
+    mana_production_mod: 5
     deity_power: 5
 
 astrology:
   name: Astrology
   level: 2
   perks:
-    mana_production: 10
+    mana_production_mod: 10
   requires:
     - divination
 
@@ -427,7 +428,7 @@ clergy:
   name: Clergy
   level: 2
   perks:
-    deity_power: 5
+    deity_power: 10
   requires:
     - divination
 
@@ -453,6 +454,7 @@ arcana:
   level: 4
   perks:
     wizard_strength: 25
+    sorcery_costs: -20
   requires:
     - cosmology
 
@@ -501,7 +503,7 @@ battlefield_analysis:
   name: Battlefield Analysis
   level: 2
   perks:
-    defensive_power: 5
+    offensive_power: 5
   requires:
     - art_of_war
 

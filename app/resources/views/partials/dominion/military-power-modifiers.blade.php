@@ -33,16 +33,21 @@
                         <td>{{ number_format($selectedDominion->getImprovementPerkValue('defensive_power'), 2) }}%</td>
                     </tr>
                     @if(isset($selectedDominion->race->land_improvements))
-                    <tr>
-                        <td>Land:</td>
-                        <td>{{ number_format($selectedDominion->getLandImprovementPerkMultiplier('offensive_power_mod') * 100, 2) }}%</td>
-                        <td>{{ number_format($selectedDominion->getLandImprovementPerkMultiplier('defensive_power_mod') * 100, 2) }}%</td>
-                    </tr>
+                        <tr>
+                            <td>Land:</td>
+                            <td>{{ number_format($selectedDominion->getLandImprovementPerkMultiplier('offensive_power_mod') * 100, 2) }}%</td>
+                            <td>{{ number_format($selectedDominion->getLandImprovementPerkMultiplier('defensive_power_mod') * 100, 2) }}%</td>
+                        </tr>
                     @endif
                     <tr>
                         <td>Advancements:</td>
                         <td>{{ number_format($selectedDominion->getAdvancementPerkMultiplier('offensive_power') * 100, 2) }}%</td>
                         <td>{{ number_format($selectedDominion->getAdvancementPerkMultiplier('defensive_power') * 100, 2) }}%</td>
+                    </tr>
+                    <tr>
+                        <td>Technologies:</td>
+                        <td>{{ number_format($selectedDominion->getTechPerkMultiplier('offensive_power') * 100, 2) }}%</td>
+                        <td>{{ number_format($selectedDominion->getTechPerkMultiplier('defensive_power') * 100, 2) }}%</td>
                     </tr>
                     <tr>
                         <td>Spell:</td>

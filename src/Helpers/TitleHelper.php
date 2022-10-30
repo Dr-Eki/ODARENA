@@ -122,6 +122,10 @@ class TitleHelper
                 $negativeBenefit = true;
                 $description = 'Mana production:';
                 break;
+            case 'research_time':
+                $negativeBenefit = true;
+                $description = 'Research time:';
+                break;
             case 'xp_generation_mod':
                 $negativeBenefit = false;
                 $description = 'XP generation:';

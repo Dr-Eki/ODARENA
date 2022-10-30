@@ -14,6 +14,7 @@ use OpenDominion\Models\Decree;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionDecreeState;
 use OpenDominion\Models\DominionInsight;
+use OpenDominion\Models\Tech;
 
 use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\ImprovementHelper;
@@ -353,28 +354,13 @@ class InsightService
             }
         }
 
-        /*
-        $advancements = [];
-        $techs = $target->techs->sortBy('key');
-        $techs = $techs->sortBy(function ($tech, $key)
-        {
-            return $tech['name'] . str_pad($tech['level'], 2, '0', STR_PAD_LEFT);
-        });
+        # Research
+        $data['research'] = [];
 
-        foreach($techs as $tech)
+        foreach($target->techs as $dominionTech)
         {
-            $advancement = $tech['name'];
-            $key = $tech['key'];
-            $level = (int)$tech['level'];
-            $advancements[$advancement] = [
-                'key' => $key,
-                'name' => $advancement,
-                'level' => (int)$level,
-                ];
+            $data['research'][] = $dominionTech->key;
         }
-
-        $data['advancements'] = $advancements;
-        */
 
         # Land
         $data['land'] = [];

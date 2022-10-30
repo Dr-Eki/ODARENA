@@ -76,6 +76,11 @@ class RaceHelper
                 $description = 'Jobs from barren forest';
                 $valueType = '';
                 break;
+            case 'extra_research_slots':
+                $negativeBenefit = false;
+                $description = 'Extra research slot';
+                $valueType = '';
+                break;
             case 'food_consumption_mod':
                 $negativeBenefit = true;
                 $description = 'Food consumption';
@@ -545,6 +550,11 @@ class RaceHelper
             case 'cannot_rezone':
                 $negativeBenefit = true;
                 $description = 'Cannot rezone';
+                $booleanValue = true;
+                break;
+            case 'cannot_research':
+                $negativeBenefit = true;
+                $description = 'Cannot research';
                 $booleanValue = true;
                 break;
             case 'cannot_release_units':

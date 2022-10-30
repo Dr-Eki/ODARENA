@@ -38,6 +38,7 @@ use OpenDominion\Helpers\InsightHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\LandImprovementHelper;
 use OpenDominion\Helpers\RaceHelper;
+use OpenDominion\Helpers\ResearchHelper;
 use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Helpers\TechHelper;
 use OpenDominion\Helpers\TitleHelper;
@@ -167,10 +168,12 @@ class InsightController extends AbstractDominionController
         }
 
         $dominionAdvancements = $dominion->advancements()->get()->sortBy('name');
+        $dominionTechs = $dominion->techs()->get()->sortBy('name');
 
         return view('pages.dominion.insight.show', [
             'dominion' => $dominion,
             'dominionAdvancements' => $dominionAdvancements,
+            'dominionTechs' => $dominionTechs,
             'landImprovementPerks' => $landImprovementPerks,
             'dominionDecreeStates' => DominionDecreeState::where('dominion_id', $dominion->id)->get(),
 
@@ -184,6 +187,7 @@ class InsightController extends AbstractDominionController
             'landHelper' => app(LandHelper::class),
             'landImprovementHelper' => app(LandImprovementHelper::class),
             'raceHelper' => app(RaceHelper::class),
+            'researchHelper' => app(ResearchHelper::class),
             'spellHelper' => app(SpellHelper::class),
             'techHelper' => app(TechHelper::class),
             'titleHelper' => app(TitleHelper::class),
@@ -266,6 +270,7 @@ class InsightController extends AbstractDominionController
             'insightHelper' => app(InsightHelper::class),
             'landHelper' => app(LandHelper::class),
             'raceHelper' => app(RaceHelper::class),
+            'researchHelper' => app(ResearchHelper::class),
             'spellHelper' => app(SpellHelper::class),
             'techHelper' => app(TechHelper::class),
             'titleHelper' => app(TitleHelper::class),

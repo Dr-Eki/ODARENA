@@ -50,7 +50,7 @@ class DecreeHelper
             'food_consumption_mod' => '%+g%% food consumption.',
 
             # Deity
-            'deity_power' => '%+g%% deity perks.',
+            'deity_power' => '%+g%% deity power.',
 
             'range_multiplier' => '%+gx range multiplier.',
 

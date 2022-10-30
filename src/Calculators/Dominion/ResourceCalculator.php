@@ -119,7 +119,17 @@ class ResourceCalculator
 
     public function getProduction(Dominion $dominion, string $resourceKey): int
     {
-        return max(0, $this->getProductionRaw($dominion, $resourceKey) * $this->getProductionMultiplier($dominion, $resourceKey));
+        // Get raw production
+        $production = $this->getProductionRaw($dominion, $resourceKey);
+
+        // Add interest
+        $production += min($production, $this->getInterest($dominion, $resourceKey));
+
+        // Apply multiplier
+        $production *= $this->getProductionMultiplier($dominion, $resourceKey);
+
+        // Return
+        return max($production, 0);
     }
 
     public function getProductionRaw(Dominion $dominion, string $resourceKey): float
@@ -518,6 +528,21 @@ class ResourceCalculator
         $decayRate += $dominion->getUnitPerkProductionBonus($consumedResourceKey . '_decay');
 
         return $decayRate;
+    }
+
+    public function getInterest(Dominion $dominion, string $interestBearingResourceKey): int
+    {
+        $interest = 0;
+
+        $interestRate = 0;
+        $interestRate += $dominion->getTechPerkMultiplier($interestBearingResourceKey . '_interest');
+
+        if($interestRate > 0)
+        {
+            $interest += $this->getAmount($dominion, $interestBearingResourceKey) * $interestRate;
+        }
+
+        return $interest;
     }
 
     public function canStarve(Race $race): bool

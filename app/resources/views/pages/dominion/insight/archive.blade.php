@@ -210,9 +210,7 @@
         </div>
     </div>
 
-
     <div class="col-sm-12 col-md-3">
-
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title"><i class="ra ra-axe"></i> Military</h3>
@@ -851,7 +849,7 @@
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Decrees')
-            @slot('titleIconClass', 'fa fa-flask')
+            @slot('titleIconClass', 'fas fa-layer-group')
             @slot('noPadding', true)
 
             @if(count($data['decrees']) > 0)
@@ -896,8 +894,46 @@
 
 </div>
 <div class="row">
-
     <div class="col-sm-12 col-md-6">
+        @component('partials.dominion.insight.box')
+            @slot('title', 'Research')
+            @slot('titleIconClass', 'fa fa-flask')
+            @slot('noPadding', true)
+
+            <table class="table">
+                <colgroup>
+                    <col width="50%">
+                    <col width="50%">
+                </colgroup>
+                <thead class="hidden-xs">
+                    <tr>
+                        <th>Research</th>
+                        <th>Perks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($data['research'] as $techKey)
+                        @php
+                            $tech = OpenDominion\Models\Tech::where('key', $techKey)->first();
+                        @endphp
+                        <tr>
+                            <td>{{ $tech->name }}</td>
+                            <td>
+                                <ul style="list-style-type: none">
+                                    @foreach($researchHelper->getTechPerkDescription($tech, $selectedDominion->race) as $effect)
+                                        <li>{{ $effect }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endcomponent
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-12">
         @component('partials.dominion.insight.box')
             @slot('title', 'Data')
             @slot('titleIconClass', 'fas fa-database')

@@ -253,7 +253,7 @@ offense:
     offensive_power: 25,7500
 
 research:
-  name: Experience
+  name: Advancements
   excluded_races:
     - Barbarian
     - Beastfolk

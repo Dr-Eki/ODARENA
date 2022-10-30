@@ -17,6 +17,7 @@ use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Services\Dominion\WorldNewsService;
 #use OpenDominion\Models\GameEvent;
+use OpenDominion\Calculators\Dominion\ResearchCalculator;
 use OpenDominion\Calculators\Dominion\Actions\TechCalculator;
 use Carbon\Carbon;
 use OpenDominion\Helpers\RaceHelper;
@@ -41,6 +42,7 @@ class ComposerServiceProvider extends AbstractServiceProvider
             $selectorService = app(SelectorService::class);
             $realmHelper = app(RealmHelper::class);
             $techCalculator = app(TechCalculator::class);
+            $researchCalculator = app(ResearchCalculator::class);
             $resourceCalculator = app(ResourceCalculator::class);
             #$productionCalculator = app(ProductionCalculator::class);
             $worldNewsService = app(WorldNewsService::class);
@@ -77,6 +79,7 @@ class ComposerServiceProvider extends AbstractServiceProvider
             $view->with('councilUnreadCount', $councilUnreadCount);
             $view->with('newsUnreadCount', $newsUnreadCount);
             $view->with('realmHelper', $realmHelper);
+            $view->with('researchCalculator', $researchCalculator);
             $view->with('resourceCalculator', $resourceCalculator);
             $view->with('techCalculator', $techCalculator);
             #$view->with('productionCalculator', $productionCalculator);

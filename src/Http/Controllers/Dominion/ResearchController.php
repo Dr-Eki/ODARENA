@@ -3,7 +3,7 @@
 namespace OpenDominion\Http\Controllers\Dominion;
 
 use OpenDominion\Exceptions\GameException;
-use OpenDominion\Http\Requests\Dominion\Actions\AdvancementActionRequest;
+use OpenDominion\Http\Requests\Dominion\Actions\ResearchActionRequest;
 
 use OpenDominion\Calculators\Dominion\ResearchCalculator;
 
@@ -28,7 +28,7 @@ class ResearchController extends AbstractDominionController
         ]);
     }
 
-    public function postResearch(AdvancementActionRequest $request)
+    public function postResearch(ResearchActionRequest $request)
     {
         $dominion = $this->getSelectedDominion();
         $researchService = app(ResearchService::class);
@@ -42,7 +42,8 @@ class ResearchController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', $result['message']);
+        $request->session()->flash('alert-success', "You have started researching {$tech->name}.");
+
         return redirect()->route('dominion.research');
     }
 }

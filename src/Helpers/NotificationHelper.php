@@ -10,6 +10,7 @@ use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Spyop;
 use OpenDominion\Models\Deity;
+use OpenDominion\Models\Tech;
 
 class NotificationHelper
 {
@@ -151,6 +152,12 @@ class NotificationHelper
                 'defaults' => ['email' => false, 'ingame' => true],
                 'route' => route('dominion.government'),
                 'iconClass' => 'fas fa-pray text-green',
+            ],
+            'research_completed' => [
+                'label' => 'Research complete',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.research'),
+                'iconClass' => 'fa fa-flask text-green',
             ],
             'repelled_invasion' => [
                 'label' => 'Your dominion repelled an invasion',
@@ -447,6 +454,13 @@ class NotificationHelper
                 return sprintf(
                     'Devotion to %s is now in effect',
                     $deity->name
+                );
+
+            case 'hourly_dominion.research_completed':
+                $tech = Tech::where('key', key($data))->first();
+                return sprintf(
+                    'Research of %s completed',
+                    $tech->name
                 );
 
             case 'hourly_dominion.returning_completed':
