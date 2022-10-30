@@ -379,6 +379,7 @@ class TrainingCalculator
         foreach($unit->type as $attribute)
         {
             $multiplier += $dominion->realm->getArtefactPerkMultiplier($attribute . '_unit_costs');
+            $multiplier += $dominion->getTechPerkMultiplier($attribute . '_unit_costs');
         }
 
         return $multiplier;

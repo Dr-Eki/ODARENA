@@ -9,7 +9,7 @@ geology:
   name: Geology
   level: 1
   perks:
-    earthquake_spell_damage: -50
+    earthquake_spell_damage_suffered: -50
 
 advanced_drills:
   name: Advanced Drills
@@ -194,13 +194,13 @@ curriculum:
   name: Curriculum
   level: 1
   perks:
-    xp_production_mod: 2.5
+    xp_generation_mod: 10
 
 higher_education:
   name: Higher Education
   level: 2
   perks:
-    xp_production_mod: 5
+    xp_generation_mod: 25
   requires:
     - curriculum
 
@@ -240,7 +240,7 @@ astronomy:
   name: Astronomy
   level: 4
   perks:
-    # TBD
+    spell_damage_suffered: -20
   requires:
     - literature
     - science
@@ -249,7 +249,8 @@ compass:
   name: Compass
   level: 5
   perks:
-    # TBD
+    expedition_land_gains: 50
+    xp_gains: 100
   requires:
     - astronomy
 
@@ -257,7 +258,7 @@ optics:
   name: Optics
   level: 5
   perks:
-    # TBD
+    xp_generation_mod: 50
   requires:
     - astronomy
 
@@ -305,7 +306,8 @@ natural_studies:
   name: Natural Studies
   level: 1
   perks:
-    # TBD
+    lumber_production_mod: 2.5
+    food_production_mod: 2.5
 
 herbal_remedies:
   name: Herbal Remedies
@@ -378,6 +380,16 @@ sanitation:
     population_loss: -50
   requires:
     - medicine
+
+aquaculture:
+  name: Aquaculture
+  level: 4
+  perks:
+    kelp_production_mod: 10
+    pearls_production_mod: 10
+  requires:
+    - cultivation
+    - fertilisers
 
 horticulture:
   name: Horticulture

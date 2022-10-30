@@ -377,6 +377,7 @@ class ResourceCalculator
         {
             $multiplier += $dominion->title->getPerkMultiplier($resourceKey . '_production_mod') * $dominion->getTitlePerkMultiplier();
         }
+
         $multiplier += $dominion->race->getPerkMultiplier($resourceKey . '_production_mod');
 
         # Production from Land Improvements

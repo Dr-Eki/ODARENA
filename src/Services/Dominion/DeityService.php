@@ -82,46 +82,51 @@ class DeityService
       }
   }
 
-  public function renounceDeity(Dominion $dominion, Deity $deity): void
-  {
-      if(!$dominion->hasDeity())
-      {
-          throw new GameException('No deity to renounce.');
-      }
+    public function renounceDeity(Dominion $dominion, Deity $deity): void
+    {
+        if(!$dominion->hasDeity())
+        {
+            throw new GameException('No deity to renounce.');
+        }
 
-      if($dominion->isAbandoned() or $dominion->round->hasEnded() or $dominion->isLocked())
-      {
-          throw new GameException('You cannot renounce a deity for a dominion that is locked or abandoned, or after a round has ended.');
-      }
+        if($dominion->isAbandoned() or $dominion->round->hasEnded() or $dominion->isLocked())
+        {
+            throw new GameException('You cannot renounce a deity for a dominion that is locked or abandoned, or after a round has ended.');
+        }
 
-      if($dominion->race->getPerkValue('cannot_renounce_deity'))
-      {
-          throw new GameException($dominion->race->name . ' cannot renounce.');
-      }
+        if($dominion->getTechPerkValue('cannot_renounce_deity'))
+        {
+            throw new GameException('You cannot renounce your deity.');
+        }
 
-      DB::transaction(function () use ($dominion, $deity)
-      {
+        if($dominion->race->getPerkValue('cannot_renounce_deity'))
+        {
+            throw new GameException($dominion->race->name . ' cannot renounce.');
+        }
 
-          DB::table('dominion_deity')
-              ->where('dominion_id', $dominion->id)
-              ->where('deity_id', $deity->id)
-              ->delete();
+        DB::transaction(function () use ($dominion, $deity)
+        {
+            DB::table('dominion_deity')
+                ->where('dominion_id', $dominion->id)
+                ->where('deity_id', $deity->id)
+                ->delete();
 
-          $dominion->save([
-              'event' => HistoryService::EVENT_RENOUNCE_DEITY,
-              'action' => $deity->name
-          ]);
-      });
-      $deityEvent = GameEvent::create([
-          'round_id' => $dominion->round_id,
-          'source_type' => Deity::class,
-          'source_id' => $deity->id,
-          'target_type' => Dominion::class,
-          'target_id' => $dominion->id,
-          'type' => 'deity_renounced',
-          'data' => [],
-          'tick' => $dominion->round->ticks
-      ]);
+            $dominion->save([
+                'event' => HistoryService::EVENT_RENOUNCE_DEITY,
+                'action' => $deity->name
+            ]);
+        });
+
+        $deityEvent = GameEvent::create([
+            'round_id' => $dominion->round_id,
+            'source_type' => Deity::class,
+            'source_id' => $deity->id,
+            'target_type' => Dominion::class,
+            'target_id' => $dominion->id,
+            'type' => 'deity_renounced',
+            'data' => [],
+            'tick' => $dominion->round->ticks
+        ]);
 
     }
 

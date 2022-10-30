@@ -89,13 +89,13 @@
                                 @endforeach
                                     <li>Range multiplier: {{ $selectedDominion->deity->range_multiplier }}x</li>
                             </ul>
-                            @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity'))
+                            @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity') and !$selectedDominion->getTechPerkValue('cannot_renounce_deity'))
                                 <p>If you wish to devote your dominion to another deity, you may renounce your devotion to {{ $selectedDominion->deity->name }} below.</p>
                             @endif
                         </div>
                     </div>
 
-                    @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity'))
+                    @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity') and !$selectedDominion->getTechPerkValue('cannot_renounce_deity'))
                         <div class="col-sm-6 col-lg-6">
                             <div class="form-group">
                                 <select id="renounce-deity"  class="form-control">

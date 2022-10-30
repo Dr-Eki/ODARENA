@@ -158,12 +158,14 @@
                                                     <div class="box-header with-border text-center">
                                                         <b>Perks</b>
                                                     </div>
-                                                    <div class="box-body">
-                                                        <ul style="list-style-type: none">
+                                                    <div class="box-body text-center">
                                                         @foreach($researchHelper->getTechPerkDescription($tech, $selectedDominion->race) as $effect)
-                                                            <li>{{ $effect }}</li>
+                                                            @if($effect == 'None')
+                                                                <em class="text-muted">None</em>
+                                                            @else
+                                                                {{ $effect }}<br>
+                                                            @endif
                                                         @endforeach
-                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>

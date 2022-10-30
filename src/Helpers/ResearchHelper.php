@@ -17,7 +17,7 @@ class ResearchHelper
 
         $effectStrings = [];
 
-        $spellEffects = [
+        $techEffects = [
 
             // Production
             'ore_production_raw_mod' => '%+g%% raw ore production',
@@ -170,7 +170,7 @@ class ResearchHelper
             'wizard_strength' => '%+g%% wizard strength',
             'reset_spell_cooldowns' => 'Resets spell cooldowns.',
 
-            'earthquake_spell_damage' => '%+g%% damage from Earthquake spells',
+            'earthquake_spell_damage_suffered' => '%+g%% damage from Earthquake spell',
 
             'spreads_spell' => 'Spreads %s to any dominion which invades or is invaded by this dominion.',
 
@@ -306,9 +306,14 @@ class ResearchHelper
 
         ];
 
+        if($tech->perks->count() == 0)
+        {
+            return ['None'];
+        }
+
         foreach ($tech->perks as $perk)
         {
-            if (!array_key_exists($perk->key, $spellEffects))
+            if (!array_key_exists($perk->key, $techEffects))
             {
                 //\Debugbar::warning("Missing perk help text for unit perk '{$perk->key}'' on unit '{$unit->name}''.");
                 continue;
@@ -761,7 +766,7 @@ class ResearchHelper
                             #$perkValue[$key] = (is_numeric($value) and $value > 0) ? '+' . $value : $value;
                         }
 
-                        $effectStrings[] = vsprintf($spellEffects[$perk->key], $nestedValue);
+                        $effectStrings[] = vsprintf($techEffects[$perk->key], $nestedValue);
                     }
                 }
                 else
@@ -773,7 +778,7 @@ class ResearchHelper
                         #$perkValue[$key] = (is_numeric($value) and $value > 0) ? '+' . $value : $value;
                     }
 
-                    $effectStrings[] = vsprintf($spellEffects[$perk->key], $perkValue);
+                    $effectStrings[] = vsprintf($techEffects[$perk->key], $perkValue);
                 }
             }
             else
@@ -781,7 +786,7 @@ class ResearchHelper
                 $perkValue = str_replace('_', ' ',ucwords($perkValue));
 
                 #$perkValue = $perkValue > 0 ? '+' . $perkValue : $perkValue;
-                $effectStrings[] = sprintf($spellEffects[$perk->key], $perkValue);
+                $effectStrings[] = sprintf($techEffects[$perk->key], $perkValue);
             }
         }
 

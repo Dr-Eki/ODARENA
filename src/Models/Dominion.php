@@ -1381,6 +1381,11 @@ class Dominion extends AbstractModel
                     $perk = 0;
                 }
             }
+
+            if(($spellDamageSufferedPerk = $this->getTechPerkMultiplier($spell->key . '_spell_damage_suffered')))
+            {
+                $perk *= (1 + $spellDamageSufferedPerk);
+            }
         }
 
         return $perk;
