@@ -133,7 +133,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString($dominion->race) }}">
+                                    <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString($dominion->race, $dominion) }}">
                                         {{ $raceHelper->getDrafteesTerm($dominion->race) }}:
                                     </span>
                                 </td>

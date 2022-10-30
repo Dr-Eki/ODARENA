@@ -1023,21 +1023,31 @@ class UnitHelper
         */
     }
 
-    public function getPeasantHelpString(Race $race): string
+    public function getPeasantHelpString(Race $race, Dominion $dominion = null): string
     {
         $helpString = '';
-        if($drafteeDp = $race->getPerkValue('peasant_dp'))
+        if($peasantDp = $race->getPerkValue('peasant_dp'))
         {
-            $helpString .= '<ul><li>DP: ' . $drafteeDp . '</li></ul>';
+            if($dominion)
+            {
+                $peasantDp += $dominion->getTechPerkValue('peasant_dp');
+            }
+
+            $helpString .= '<ul><li>DP: ' . $peasantDp . '</li></ul>';
         }
 
         return $helpString;
 
     }
 
-    public function getDrafteeHelpString(Race $race): string
+    public function getDrafteeHelpString(Race $race, Dominion $dominion = null): string
     {
         $drafteeDp = $race->getPerkValue('draftee_dp') ?: 1;
+
+        if($dominion)
+        {
+            $drafteeDp += $dominion->getTechPerkValue('draftee_dp');
+        }
 
         return '<ul><li>DP: ' . $drafteeDp . '</li></ul>';
 

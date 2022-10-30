@@ -28,7 +28,7 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString( $selectedDominion->race) }}">
+                                        <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString($selectedDominion->race, $selectedDominion) }}">
                                             {{ $raceHelper->getDrafteesTerm($selectedDominion->race) }}:
                                         </span>
                                     </td>

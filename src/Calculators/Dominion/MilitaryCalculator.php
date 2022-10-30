@@ -326,7 +326,7 @@ class MilitaryCalculator
 
         // Values
         $minDPPerAcre = 10; # LandDP
-        $dpPerDraftee = $defender->race->getPerkValue('draftee_dp') ?: 1;
+        $dpPerDraftee = ($defender->race->getPerkValue('draftee_dp') + $defender->getTechPerkValue('draftee_dp')) ?: 1;
 
         # If DP per draftee is 0, ignore them (no casualties).
         $ignoreDraftees = false;
@@ -337,7 +337,7 @@ class MilitaryCalculator
 
         // Peasants
         $dp += $defender->peasants * $defender->getSpellPerkValue('defensive_power_from_peasants');
-        $dp += $defender->peasants * $defender->race->getPerkValue('peasant_dp');
+        $dp += $defender->peasants * ($defender->race->getPerkValue('peasant_dp') + $defender->getTechPerkValue('peasant_dp'));
         $dp += $defender->peasants * $defender->getDecreePerkValue('defensive_power_from_peasants');
 
         // Military

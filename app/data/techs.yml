@@ -507,6 +507,21 @@ battlefield_analysis:
   requires:
     - art_of_war
 
+partisans:
+  name: Partisans
+  level: 2
+  perks:
+    peasant_dp: 0.5
+  excluded_races:
+    - Ants
+    - Demon
+    - Goblin
+    - Growth
+    - Marshling
+    - Myconid
+  requires:
+    - art_of_war
+
 surveillance:
   name: Surveillance
   level: 3
@@ -525,11 +540,26 @@ weaponry:
   requires:
     - battlefield_analysis
 
+irregular_warfare:
+  name: Irregular Warfare
+  level: 3
+  perks:
+    draftee_dp: 1
+  excluded_races:
+    - Ants
+    - Demon
+    - Goblin
+    - Growth
+    - Marshling
+    - Myconid
+  requires:
+    - partisans
+
 professional_army:
   name: Professional Army
   level: 4
   perks:
-    prestige_gains: 25
+    prestige_gains: 100
   requires:
     - surveillance
     - weaponry
@@ -543,3 +573,24 @@ campaigns:
   requires:
     - surveillance
     - weaponry
+
+elite_army:
+  name: Elite Army
+  level: 5
+  perks:
+    offensive_power: 20
+    defensive_power: 20
+    unit_gold_costs: 5
+    unit_ore_costs: 5
+    unit_lumber_costs: 5
+    unit_mana_costs: 5
+  excluded_races:
+    - Ants
+    - Demon
+    - Goblin
+    - Growth
+    - Marshling
+    - Myconid
+  requires:
+    - professional_army
+    - irregular_warfare

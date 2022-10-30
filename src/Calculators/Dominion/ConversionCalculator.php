@@ -623,14 +623,14 @@ class ConversionCalculator
                 {
                     $availableCasualties[$slot]['amount'] = $amount;
 
-                    $availableCasualties[$slot]['dp'] = $defender->race->getPerkValue('draftee_dp') ?: 1;
+                    $availableCasualties[$slot]['dp'] = ($defender->race->getPerkValue('draftee_dp') + $defender->getTechPerkValue('draftee_dp') )?: 1;
 
                 }
                 elseif($slot === 'peasants')
                 {
                     $availableCasualties[$slot]['amount'] = $amount;
 
-                    $availableCasualties[$slot]['dp'] = $defender->race->getPerkValue('peasant_dp') ?: 0;
+                    $availableCasualties[$slot]['dp'] = ($defender->race->getPerkValue('peasant_dp') + $defender->getTechPerkValue('peasant_dp')) ?: 0;
 
                 }
                 else

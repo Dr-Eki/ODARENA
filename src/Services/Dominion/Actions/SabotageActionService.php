@@ -232,7 +232,7 @@ class SabotageActionService
                     $damage = array_sum($units) * $baseDamage * $ratioMultiplier * $saboteurDamageMultiplier * $targetDamageMultiplier;
 
                     # Factor in peasant DP to increase/decrease peasant killed
-                    $damage /= ($target->race->getPerkValue('peasant_dp') ?: 1);
+                    $damage /= (($target->race->getPerkValue('peasant_dp') + $target->getTechPerkValue('peasant_dp')) ?: 1);
 
                     $damage = floor($damage);
 
@@ -276,7 +276,7 @@ class SabotageActionService
                     $damage = array_sum($units) * $baseDamage * $ratioMultiplier * $saboteurDamageMultiplier * $targetDamageMultiplier;
 
                     # Factor in draftee DP to increase/decrease draftees killed
-                    $damage /= ($target->race->getPerkValue('draftee_dp') ?: 1);
+                    $damage /= (($target->race->getPerkValue('draftee_dp') + $target->getTechPerkValue('draftee_dp')) ?: 1);
 
                     $damage = floor($damage);
 

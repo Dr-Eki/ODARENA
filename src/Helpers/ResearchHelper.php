@@ -127,18 +127,6 @@ class ResearchHelper
 
             'morale_recovery' => '%+g%% morale recovery',
 
-            'kill_draftees' => 'Kills %1$s%% of the target\'s draftees.',
-
-            'kill_faction_units_percentage' => 'Kills %3$s%% of %1$s %2$s.',
-            'kills_faction_units_amount' => 'Kills %3$s%s of %1$s %2$s.',
-
-            'summon_units_from_land' => 'Summon up to %2$s %1$s per acre of %3$s.',
-            'summon_weres_units_from_land_increasing' => 'Summon %2$s %1$s per acre of %4$s. Amount summoned increased by %3$s%% per tick into the round.',
-
-            'marshling_random_resource_to_units_conversion' => 'Turns %1$s%% x Wizard Ratio (max %2$s%%) of your %3$s into random amounts of %4$s.',
-
-            'can_kill_immortal' => 'Can kill some immortal units.',
-
             'no_drafting' => 'No draftees are drafted.',
 
             'aurei_unit_conversion' => 'Converts %3$s %1$s into %3$s %2$s',
@@ -151,6 +139,9 @@ class ResearchHelper
 
             'defense_from_resource' => '%1$s raw defensive power per %2$s.',
             'offense_from_resource' => '%1$s raw offensive power per %2$s.',
+
+            'defensive_power_per_peasant_raw' => '%+g%% raw defensive power per peasant',
+            'defensive_power_per_draftee_raw' => '%+g%% raw defensive power per draftee',
 
             // Population
             'population_growth' => '%+g%% population growth rate',

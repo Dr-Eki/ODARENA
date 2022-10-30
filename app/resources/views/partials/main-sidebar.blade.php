@@ -75,7 +75,7 @@
 
                             @if($researchCalculator->getOngoingResearchCount($selectedDominion) !== 0)
                                 <span class="pull-right-container"><small class="label pull-right bg-yellow">{{ $researchCalculator->getTicksUntilNextResearchCompleted($selectedDominion) }}</small></span>
-                            @elseif(($freeResearchSlots = $researchCalculator->getFreeResearchSlots($selectedDominion) > 0))
+                            @elseif(($freeResearchSlots = $researchCalculator->getFreeResearchSlots($selectedDominion)) > 0)
                                 <span class="pull-right-container"><small class="label pull-right bg-red">{{ $freeResearchSlots }}</small></span>
                             @endif
                         </a>

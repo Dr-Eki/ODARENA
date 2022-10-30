@@ -155,7 +155,7 @@ class DominionFactory
 
             if($race->name == 'Kerranad')
             {
-                $startingResources['gems'] += 400000;
+                $startingResources['gems'] = 400000;
             }
 
             if($race->name == 'Legion')
