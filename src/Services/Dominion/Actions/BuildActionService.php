@@ -105,6 +105,11 @@ class BuildActionService
                 throw new GameException('Cannot build ' . $building->name . ' because it is not enabled.');
             }
 
+            if (!$this->constructionCalculator->canBuildBuilding($dominion, $building))
+            {
+                throw new GameException('You do not have the necessary technological research to build ' . $building->name . '.');
+            }
+
             $landType = $building->land_type;
 
             if(!isset($buildingsByLandType[$landType]))

@@ -6,7 +6,7 @@ use OpenDominion\Models\Building;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Resource;
-use OpenDominion\Models\Spell;
+use OpenDominion\Models\Tech;
 
 
 class BuildingHelper
@@ -259,6 +259,7 @@ class BuildingHelper
 
             # Other/special
             'deity_power' => 'Increases deity perks %2$s%% for every %1$s%% (max +%3$s%%)',
+            'research_required_to_build' => 'Requires %s research to build.',
 
         ];
 
@@ -293,6 +294,17 @@ class BuildingHelper
             }
 
             # SPECIAL DESCRIPTION PERKS
+
+
+            if($perk->key === 'research_required_to_build')
+            {
+                $techKey = $perkValue;
+                $tech = Tech::where('key', $techKey)->first();
+
+                $perkValue = $tech->name;
+                $nestedArrays = false;
+
+            }
 
             if($perk->key === 'peasants_conversions')
             {

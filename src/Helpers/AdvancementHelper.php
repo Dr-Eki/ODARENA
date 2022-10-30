@@ -130,6 +130,9 @@ class AdvancementHelper
             'spell_damage' => 'spell_damage',
             'spell_costs' => 'spell costs',
 
+            // Other, Special, One-Off
+            'research_slots' => 'research slots',
+
         ];
 
         return isset($advancementPerkDescriptions[$advancementPerk]) ? $advancementPerkDescriptions[$advancementPerk] : 'Missing description';

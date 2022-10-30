@@ -35,6 +35,7 @@ perks:
   improvements_interest: 0.06
   max_population: 20
   unemployed_peasants_produce: 1
+  cannot_research: 1
 
 units:
   - name: Figure

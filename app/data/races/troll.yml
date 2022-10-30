@@ -16,6 +16,8 @@ perks:
   gems_production_mod: 50
   cannot_tech: 1
   salvaging: 20
+  cannot_research: 1
+  
 units:
   - name: Magical Boots
     training_time: 9

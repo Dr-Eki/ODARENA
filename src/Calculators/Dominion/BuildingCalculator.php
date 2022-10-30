@@ -5,8 +5,8 @@ namespace OpenDominion\Calculators\Dominion;
 use DB;
 use Illuminate\Support\Collection;
 use OpenDominion\Helpers\BuildingHelper;
-use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Building;
+use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionBuilding;
 use OpenDominion\Services\Dominion\QueueService;
 

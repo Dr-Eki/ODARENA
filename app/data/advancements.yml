@@ -353,6 +353,17 @@ woodworks:
   perks:
     lumber_improvement_points: 5
 
+# OTHER, SPECIAL, ONE OFF
+
+research:
+  name: Research
+  excluded_races:
+    - Growth
+    - Troll
+    - Void
+  perks:
+    research_slots: 12.50
+
 # FACTION SPECIFIC
 
 obsidian_liners:

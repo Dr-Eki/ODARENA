@@ -36,6 +36,7 @@ perks:
   cannot_release_units: 1
   unemployed_peasants_produce: 1
   no_morale_changes: 1
+  cannot_research: 1
 
 units:
   - name: Abscess

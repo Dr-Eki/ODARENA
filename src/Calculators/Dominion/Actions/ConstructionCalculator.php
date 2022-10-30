@@ -6,7 +6,9 @@ use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\ResearchCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
+use OpenDominion\Models\Building;
 use OpenDominion\Models\Dominion;
 
 # ODA
@@ -43,6 +45,7 @@ class ConstructionCalculator
         MilitaryCalculator $militaryCalculator,
         LandHelper $landHelper,
         RaceHelper $raceHelper,
+        ResearchCalculator $researchCalculator,
         ResourceCalculator $resourceCalculator
         )
     {
@@ -52,6 +55,7 @@ class ConstructionCalculator
         $this->landHelper = $landHelper;
         $this->militaryCalculator = $militaryCalculator;
         $this->raceHelper = $raceHelper;
+        $this->researchCalculator = $researchCalculator;
         $this->resourceCalculator = $resourceCalculator;
     }
 
@@ -249,5 +253,17 @@ class ConstructionCalculator
         $ticks *= $multiplier;
 
         return max(1, ceil($ticks));
+    }
+
+    public function canBuildBuilding(Dominion $dominion, Building $building): bool
+    {
+        if($building->perks()->get()->contains('key', 'research_required_to_build'))
+        {
+            $techRequiredKey = $building->perks()->get()->where('key', 'research_required_to_build')->first()->pivot->value;
+
+            return $dominion->techs->contains('key', $techRequiredKey);
+        }
+
+        return true;
     }
 }
