@@ -346,6 +346,7 @@ class ResourceCalculator
         $rawModPerks += $dominion->getSpellPerkMultiplier($resourceKey . '_production_raw_mod');
         $rawModPerks += $dominion->getImprovementPerkMultiplier($resourceKey . '_production_raw_mod');
         $rawModPerks += $dominion->getAdvancementPerkMultiplier($resourceKey . '_production_raw_mod');
+        $rawModPerks += $dominion->getTechPerkMultiplier($resourceKey . '_production_raw_mod');
 
         $production *= $rawModPerks;
 
@@ -367,6 +368,7 @@ class ResourceCalculator
         $multiplier += $dominion->getSpellPerkMultiplier($resourceKey . '_production_mod');
         $multiplier += $dominion->getImprovementPerkMultiplier($resourceKey . '_production_mod');
         $multiplier += $dominion->getAdvancementPerkMultiplier($resourceKey . '_production_mod');
+        $multiplier += $dominion->getTechPerkMultiplier($resourceKey . '_production_mod');
         $multiplier += $dominion->getDeityPerkMultiplier($resourceKey . '_production_mod');
         $multiplier += $dominion->realm->getArtefactPerkMultiplier($resourceKey . '_production_mod');
         $multiplier += $dominion->getDecreePerkMultiplier($resourceKey . '_production_mod');
@@ -492,6 +494,7 @@ class ResourceCalculator
         $multiplier += $dominion->getSpellPerkMultiplier($consumedResourceKey . '_consumption_mod');
         $multiplier += $dominion->getImprovementPerkMultiplier($consumedResourceKey . '_consumption_mod');
         $multiplier += $dominion->getAdvancementPerkMultiplier($consumedResourceKey . '_consumption_mod');
+        $multiplier += $dominion->getTechPerkMultiplier($consumedResourceKey . '_consumption_mod');
         $multiplier += $dominion->getDeityPerkMultiplier($consumedResourceKey . '_consumption_mod');
         $multiplier += $dominion->race->getPerkMultiplier($consumedResourceKey . '_consumption_mod');
         $multiplier += $dominion->getDecreePerkMultiplier($consumedResourceKey . '_consumption_mod');
@@ -602,6 +605,7 @@ class ResourceCalculator
 
         $multiplier = 1;
         $multiplier += $dominion->getAdvancementPerkMultiplier('jobs_per_building');
+        $multiplier += $dominion->getTechPerkMultiplier('jobs_per_building');
         $multiplier += $dominion->getImprovementPerkMultiplier('jobs_per_building');
 
         $jobs *= $multiplier;
@@ -629,8 +633,11 @@ class ResourceCalculator
         // Faction perk
         $perk += $dominion->race->getPerkMultiplier('exchange_rate');
 
-        // Techs
+        // Advancement
         $perk += $dominion->getAdvancementPerkMultiplier('exchange_rate');
+
+        // Techs
+        $perk += $dominion->getTechPerkMultiplier('exchange_rate');
 
         // Spells
         $perk += $dominion->getSpellPerkMultiplier('exchange_rate');
@@ -681,6 +688,10 @@ class ResourceCalculator
         // Advancements
         $multiplier += $dominion->getAdvancementPerkMultiplier('max_storage');
         $multiplier += $dominion->getAdvancementPerkMultiplier($resourceKey . '_max_storage');
+
+        // Techs
+        $multiplier += $dominion->getTechPerkMultiplier('max_storage');
+        $multiplier += $dominion->getTechPerkMultiplier($resourceKey . '_max_storage');
 
         $maxStorage *= $multiplier;
 

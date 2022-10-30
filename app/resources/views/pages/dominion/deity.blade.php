@@ -19,15 +19,15 @@
                                 <colgroup>
                                     <col width="50">
                                     <col width="200">
-                                    <col width="100">
+                                    <col>
                                     <col>
                                 </colgroup>
                                 <thead>
                                     <tr>
                                         <th></th>
                                         <th>Deity</th>
-                                        <th>Range Multiplier</th>
                                         <th>Perks</th>
+                                        <th>Spells</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -46,11 +46,18 @@
                                             <br><span class="small text-muted"><strong>{{ $selectedDominion->getPendingDeitySubmissionTicksLeft() }}</strong> {{ str_plural('tick', $selectedDominion->getPendingDeitySubmissionTicksLeft()) }} left until devotion is in effect</span>
                                             @endif
                                         </td>
-                                        <td>{{ $deity->range_multiplier }}x</td>
                                         <td>
                                             <ul>
+                                                <li>Range multiplier: {{ $deity->range_multiplier }}x</li>
                                                 @foreach($deityHelper->getDeityPerksString($deity) as $effect)
                                                     <li>{{ ucfirst($effect) }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <ul>
+                                                @foreach($deityHelper->getDeitySpells($deity) as $spell)
+                                                    <li><a href="{{ route('scribes.spells') }}#{{ $spell->name }}" target="_new">{{ $spell->name }}</a></li>
                                                 @endforeach
                                             </ul>
                                         </td>

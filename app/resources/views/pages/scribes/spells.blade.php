@@ -130,6 +130,7 @@
                       </thead>
                       @foreach ($spells as $spell)
                           @if($spell->class == 'passive' and $spell->scope == 'hostile')
+                          <a id="{{ $spell->name }}"></a>
                           <tr>
                               <td>
                                   {{ $spell->name }}
@@ -194,6 +195,7 @@
                               $excludes = count($spell->excluded_races);
                           @endphp
                           @if($spell->class == 'passive' and $spell->scope == 'self')
+                          <a id="{{ $spell->name }}"></a>
                           <tr>
                               <td>
                                   {{ $spell->name }}
@@ -259,6 +261,7 @@
                           </thead>
                           @foreach ($spells as $spell)
                               @if($spell->class == 'active' and $spell->scope == 'friendly')
+                              <a id="{{ $spell->name }}"></a>
                               <tr>
                                   <td>
                                       {{ $spell->name }}
@@ -316,6 +319,7 @@
                           </thead>
                           @foreach ($spells as $spell)
                               @if($spell->class == 'active' and $spell->scope == 'hostile')
+                              <a id="{{ $spell->name }}"></a>
                               <tr>
                                   <td>
                                       {{ $spell->name }}
@@ -374,6 +378,7 @@
                           </thead>
                           @foreach ($spells as $spell)
                               @if($spell->class == 'active' and $spell->scope == 'self')
+                              <a id="{{ $spell->name }}"></a>
                               <tr>
                                   <td>
                                       {{ $spell->name }}
@@ -430,6 +435,7 @@
                           </thead>
                           @foreach ($spells as $spell)
                               @if($spell->class == 'invasion' and $spell->scope == 'hostile')
+                              <a id="{{ $spell->name }}"></a>
                               <tr>
                                   <td>
                                       {{ $spell->name }}

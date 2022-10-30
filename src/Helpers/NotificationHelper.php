@@ -457,10 +457,17 @@ class NotificationHelper
                 );
 
             case 'hourly_dominion.research_completed':
-                $tech = Tech::where('key', key($data))->first();
+                #$tech = Tech::where('key', key($data))->first();
+                
+                foreach($data as $techKey => $amount)
+                {
+                    $tech = Tech::where('key', $techKey)->first();
+                    $techs[] = $tech->name;
+                }
+
                 return sprintf(
                     'Research of %s completed',
-                    $tech->name
+                    generate_sentence_from_array($techs)
                 );
 
             case 'hourly_dominion.returning_completed':

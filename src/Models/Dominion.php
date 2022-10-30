@@ -646,17 +646,36 @@ class Dominion extends AbstractModel
      * @param string $key
      * @return float
      */
-    public function getTechPerkValue(string $key): float
+    public function getTechPerkValue(string $perkKey): float
     {
+        
         $perks = $this->getTechPerks()->groupBy('key');
-        if (isset($perks[$key])) {
-            $max = (float)$perks[$key]->max('pivot.value');
+        if (isset($perks[$perkKey])) {
+            $max = (float)$perks[$perkKey]->max('pivot.value');
             if ($max < 0) {
-                return (float)$perks[$key]->min('pivot.value');
+                return (float)$perks[$perkKey]->min('pivot.value');
             }
             return $max;
         }
         return 0;
+
+        /*
+        $perk = 0;
+
+        foreach ($this->techs as $tech)
+        {
+            if($perkValueString = $tech->getPerkValue($perkKey))
+            {
+                #$level = $this->techs()->where('tech_id', $tech->id)->first()->pivot->level;
+                #$levelMultiplier = $this->getAdvancementLevelMultiplier($level);
+
+                $perk += $perkValueString;# * $levelMultiplier;
+             }
+        }
+
+        return $perk;
+        */
+
     }
 
     /**

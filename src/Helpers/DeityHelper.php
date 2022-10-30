@@ -7,6 +7,7 @@ use OpenDominion\Models\Race;
 use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionDeity;
+use OpenDominion\Models\Spell;
 
 class DeityHelper
 {
@@ -204,6 +205,10 @@ class DeityHelper
         $exclusivityString .= '</small>';
 
         return $exclusivityString;
+    }
 
+    public function getDeitySpells(Deity $deity)
+    {
+        return Spell::all()->where('enabled',1)->where('deity_id', $deity->id);
     }
 }
