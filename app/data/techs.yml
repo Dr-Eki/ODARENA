@@ -485,7 +485,7 @@ religion:
   name: Religion
   level: 3
   perks:
-    deity_power: 10
+    deity_power: 15
     offensive_power_vs_no_deity: 2.5
   requires:
     - clergy
