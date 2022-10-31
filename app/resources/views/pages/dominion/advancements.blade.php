@@ -190,26 +190,7 @@
 
 </div>
 
-@push('page-styles')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/datatables/css/dataTables.bootstrap.css') }}">
-@endpush
-
-@push('page-scripts')
-    <script type="text/javascript" src="{{ asset('assets/vendor/datatables/js/jquery.dataTables.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/vendor/datatables/js/dataTables.bootstrap.js') }}"></script>
-@endpush
-
 @endsection
-
-@push('page-styles')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/select2/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/vendor/admin-lte/plugins/bootstrap-slider/slider.css') }}">
-@endpush
-
-@push('page-scripts')
-    <script type="text/javascript" src="{{ asset('assets/vendor/select2/js/select2.full.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('assets/vendor/admin-lte/plugins/bootstrap-slider/bootstrap-slider.js') }}"></script>
-@endpush
 
 @push('page-scripts')
     <script type="text/javascript">
