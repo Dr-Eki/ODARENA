@@ -73,6 +73,12 @@ class AdvancementCalculator
         {
             return 0;
         }
+
+        if(($raceMaxLevel = $dominion->race->getPerkValue('max_advancements_level')) != 0)
+        {
+            return $raceMaxLevel;
+        }
+
         return 10;
     }
 

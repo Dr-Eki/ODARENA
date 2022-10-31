@@ -2640,10 +2640,10 @@ class MilitaryCalculator
         // Deity
         $multiplier += $attacker->getDeityPerkMultiplier('land_discovered');
 
-        // Resource: XP (max +100% from 2,000,000 XP) – only for factions which cannot take advancements (Troll)
-        if($attacker->race->getPerkValue('cannot_tech'))
+        // Troll XP: (max +100% from 2,250,000 XP) – only for factions which cannot take advancements (Troll)
+        if($attacker->race->getPerkValue('cannot_research') and $attacker->race->name == 'Troll')
         {
-            $multiplier += min($attacker->xp, 1500000) / 1500000;
+            $multiplier += min($attacker->xp, 2250000) / 2250000;
         }
 
         return round($landConquered * $multiplier);
