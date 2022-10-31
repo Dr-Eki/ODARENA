@@ -453,6 +453,12 @@ class RaceHelper
                 $valueType = '% per tick';
                 $booleanValue = 'static';
                 break;
+            case 'max_advancements_level':
+                $negativeBenefit = false;
+                $description = 'Max advancements level';
+                $valueType = '';
+                $booleanValue = 'static';
+                break;
             case 'cannot_tech':
                 $negativeBenefit = true;
                 $description = 'Cannot level up advancements';

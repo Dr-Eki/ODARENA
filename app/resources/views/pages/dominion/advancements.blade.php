@@ -183,7 +183,7 @@
                 <p>You have <b>{{ number_format($selectedDominion->xp) }} XP</b>, which is increasing your ruler title bonus by {{ number_format(($selectedDominion->getTitlePerkMultiplier()-1)*100,2) }}%.</p>
             </div>
             <div class="box-footer">
-                <p><small class="text-muted"><em>The XP cost shown is the amount of XP required for levelling to the next level when an advancement is that level. For example, the cost shown for level 4 is the cost of levelling up from 4 to 5.</em></small><p>
+                <p><small class="text-muted"><em>The XP cost shown is the amount of XP required for levelling to the next level when an advancement is that level. For example, the cost shown for level 2 is the cost of levelling up from 2 to 3.</em></small><p>
             </div>
         </div>
     </div>
