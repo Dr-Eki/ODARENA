@@ -822,11 +822,11 @@ class DominionFactory
 
         foreach($quickstart->techs as $techKey)
         {
-            DB::transaction(function () use ($dominion, $advancementKey)
+            DB::transaction(function () use ($dominion, $techKey)
             {
                 DominionTech::create([
                     'dominion_id' => $dominion->id,
-                    'tech_id' => Tech::where('key',$advancementKey)->first()->id
+                    'tech_id' => Tech::where('key',$techKey)->first()->id
                 ]);
             });
         }

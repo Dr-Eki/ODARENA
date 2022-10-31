@@ -413,6 +413,8 @@ sanitation:
 aquaculture:
   name: Aquaculture
   level: 4
+  exclusive_races:
+    - Glimjir
   perks:
     kelp_production_mod: 10
     pearls_production_mod: 10
