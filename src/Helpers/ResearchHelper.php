@@ -140,8 +140,8 @@ class ResearchHelper
             'defense_from_resource' => '%1$s raw defensive power per %2$s.',
             'offense_from_resource' => '%1$s raw offensive power per %2$s.',
 
-            'defensive_power_per_peasant_raw' => '%+g%% raw defensive power per peasant',
-            'defensive_power_per_draftee_raw' => '%+g%% raw defensive power per draftee',
+            'peasant_dp' => '%+g raw defensive power per peasant',
+            'draftee_dp' => '%+g raw defensive power per draftee',
 
             // Population
             'population_growth' => '%+g%% population growth rate',
