@@ -1358,7 +1358,7 @@ wellspring:
     - Firewalker
   land_type: water
   perks:
-    resource_conversion: 40,magma,30,obsidian # amountFrom, resourceFrom, amountTo, resourceTo
+    resource_conversion: 40,magma,20,obsidian # amountFrom, resourceFrom, amountTo, resourceTo
 
 # END FIREWALKER
 

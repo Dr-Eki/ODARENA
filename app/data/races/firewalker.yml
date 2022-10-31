@@ -9,8 +9,8 @@ experimental: 1
 peasants_alias: worker
 
 peasants_production:
-  gold: 2.35
-  magma: 0.35
+  gold: 2.30
+  magma: 0.20
 
 resources:
   - gold
