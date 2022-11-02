@@ -1137,6 +1137,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'spells' => object_get($data, 'spells', []),
                     'advancements' => object_get($data, 'advancements', []),
                     'decree_states' => object_get($data, 'decree_states', []),
+                    'techs' => object_get($data, 'techs', []),
                     'units' => object_get($data, 'units', []),
                     'queues' => object_get($data, 'queues', []),
                 ]);
