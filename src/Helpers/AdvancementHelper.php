@@ -131,7 +131,7 @@ class AdvancementHelper
             'spell_costs' => 'spell costs',
 
             // Other, Special, One-Off
-            'research_slots' => 'progress towards +1 research slot',
+            'research_slots' => 'progress towards one extra research slot',
 
         ];
 

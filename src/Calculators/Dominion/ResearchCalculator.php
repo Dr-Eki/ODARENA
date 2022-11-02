@@ -122,6 +122,21 @@ class ResearchCalculator
         return Tech::all()->where('enabled',1)->whereIn('key',$tech->prerequisites)->keyBy('key')->sortBy('name');
     }
 
+    public function getAllTechsForWhichDominionHasPrerequisitesButHasNotReseearched(Dominion $dominion): Collection
+    {
+        $techs = Tech::all()->where('enabled',1)->keyBy('key')->sortBy('name');
+
+        foreach($techs as $tech)
+        {
+            if(!$this->hasPrerequisites($dominion,$tech) or $this->hasTech($dominion,$tech))
+            {
+                $techs->forget($tech->key);
+            }
+        }
+
+        return $techs;
+    }
+
     public function isBeingResearched(Dominion $dominion, Tech $tech): bool
     {
         return $this->queueService->getResearchQueue($dominion)->where('resource',$tech->key)->count() > 0;
