@@ -316,7 +316,7 @@ philosophy_of_science:
   name: Philosophy of Science
   level: 6
   perks:
-    research_slot: 1
+    research_slots: 1
   requires:
     - advanced_mathematics
     - compass

@@ -88,12 +88,12 @@ class ResearchCalculator
         }
 
         $slots = 1;
-        $slots *= 1 + $dominion->getAdvancementPerkMultiplier('research_slots');
 
         $slots += $dominion->race->getPerkValue('extra_research_slots');
         $slots += $dominion->getTechPerkValue('research_slots');
+        $slots += $dominion->getAdvancementPerkValue('research_slots') / 100;
 
-        return $slots;
+        return floor($slots);
     }
 
     public function getOngoingResearchCount(Dominion $dominion): int

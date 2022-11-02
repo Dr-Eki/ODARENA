@@ -11,7 +11,7 @@ use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
-use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
+#use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
 
 class SorceryCalculator
 {
@@ -27,7 +27,7 @@ class SorceryCalculator
         $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->spellCalculator = app(SpellCalculator::class);
-        $this->spellDamageCalculator = app(SpellDamageCalculator::class);
+        #$this->spellDamageCalculator = app(SpellDamageCalculator::class);
     }
 
     public function canPerformSorcery(Dominion $caster): bool

@@ -163,6 +163,7 @@ class ResearchHelper
 
             // Magic
             'damage_from_spells' => '%+g%% damage from spells',
+            'spell_damage_suffered' => '%+g%% spell damage suffered',
             'chance_to_reflect_spells' => '%+g%% chance to reflect spells',
             'reveal_ops' => 'Reveals the dominion casting spells or spying on you',
             'damage_from_fireball' => '%+g%% damage from fireballs',
@@ -289,7 +290,7 @@ class ResearchHelper
 
             'advancement_costs' => '%+g%% advancement costs',
 
-            'research_slot' => '%+g research slot',
+            'research_slots' => '%+g research slot',
 
             // Cult
             'cogency' => 'Wizards and wizard units that fail hostile spells against the Cult have a chance of joining the Cult instead of dying.',
