@@ -4,8 +4,6 @@
 @section('content')
 <div class="row">
     <div class="col-sm-12 col-md-9">
-
-        <!-- RESOURCE -->
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
@@ -142,7 +140,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="col-sm-12 col-md-3">
@@ -151,7 +148,7 @@
                 <h3 class="box-title">Information</h3>
             </div>
             <div class="box-body">
-                <p>Advancements are levelled up by spending XP.</p>
+                <p>Advancements are levelled up by spending XP. You can reach up to level {{ $advancementCalculator->getDominionMaxLevel($selectedDominion) }}.</p>
                 <p>The higher the level, the higher the perk becomes.</p>
                 <ul>
                     <li>Levels up to and including 6:<br><code>[Base Perk]*[Level]</code></li>
@@ -187,7 +184,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 @endsection
