@@ -96,8 +96,8 @@ decree_states:
     - duty_calls,duty_calls_enabled,0
 
 techs:
-    curriculum
-    reinforced_tools
+    - curriculum
+    - reinforced_tools
 
 units:
     draftees: 3454
