@@ -25,6 +25,7 @@ use OpenDominion\Models\DecreeStatePerkType;
 use OpenDominion\Models\Deity;
 use OpenDominion\Models\DeityPerk;
 use OpenDominion\Models\DeityPerkType;
+use OpenDominion\Models\DominionDecreeState;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\ImprovementPerk;
 use OpenDominion\Models\ImprovementPerkType;
@@ -80,6 +81,7 @@ class DataSyncCommand extends Command implements CommandInterface
     {
         $start = now();
         DB::transaction(function () {
+            $this->syncDecrees();
             $this->syncDeities();
             $this->syncRaces();
             $this->syncAdvancements();
@@ -1190,9 +1192,13 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncDecrees()
     {
         $files = $this->filesystem->files(base_path('app/data/decrees'));
+        $decreesToSync = [];
 
-        foreach ($files as $file) {
+        foreach ($files as $file)
+        {
             $data = Yaml::parse($file->getContents(), Yaml::PARSE_OBJECT_FOR_MAP);
+
+            $decreesToSync[] = $data->name;
 
             $deityId = null;
             if($deityKey = object_get($data, 'deity'))
@@ -1322,6 +1328,34 @@ class DataSyncCommand extends Command implements CommandInterface
                 }
 
                 $decreeState->perks()->sync($decreeStatePerksToSync);
+            }
+        }
+
+        foreach(Decree::all() as $decree)
+        {
+            if(!in_array($decree->name, $decreesToSync))
+            {
+                $this->info("Deleting decree {$decree->name}");
+
+                # Get decree states for $decree
+                $decreeStates = DecreeState::all()->where('decree_id', '=', $decree->id);
+                                
+                foreach($decreeStates as $decreeState)
+                {
+                    DecreeStatePerk::where('decree_state_id', '=', $decreeState->id)->delete();
+                    $this->info("> Deleting decree state {$decreeState->name}");
+                }
+
+                DominionDecreeState::where('decree_id', '=', $decree->id)->delete();
+                DecreeState::where('decree_id', '=', $decree->id)->delete();
+
+                #DB::table('decree_states')->where('id', '=', $decreeState->id)->delete();
+
+                #$decreeStates->delete();
+
+                #DB::table('dominion_decree_states')->where('decree_id', '=', $decree->id)->delete();
+                #DB::table('decrees')->where('id', '=', $decree->id)->delete();
+                $decree->delete();
             }
         }
 
