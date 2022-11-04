@@ -1,6 +1,6 @@
-name: Advanced Research
+name: Enhanced Advancements
 cooldown: 96
-description: You are one of few factions able to dedicate your dominion to highly focused research of technologies.
+description: You are one of few factions able to dedicate some of the brightest minds of your dominion to enhanced advancements.
 exclusive_races:
   - Black Orc
   - Cires

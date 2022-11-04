@@ -214,6 +214,35 @@ slave_mine:
 
 automated_mine:
   name: Automated Mine
+  excluded_races:
+    - Afflicted
+    - Ants
+    - Aurei
+    - Demon
+    - Dimensionalists
+    - Dwarg
+    - Elementals
+    - Firewalker
+    - Growth
+    - Halfling
+    - Icekin
+    - Lux
+    - Marshling
+    - Glimjir
+    - Monster
+    - Myconid
+    - Nox
+    - Qur
+    - Reptilians
+    - Revenants
+    - Simian
+    - Sylvan
+    - Swarm
+    - Undead
+    - Vampires
+    - Void
+    - Weres
+    - Wood Elf
   land_type: mountain
   perks:
     ore_production_raw: 100

@@ -1,6 +1,6 @@
-name: Research
+name: Advancements
 cooldown: 48
-description: Prioritise research into technological advancements over improvements.
+description: Prioritise advancements over improvements.
 excluded_races:
   - Growth
   - Myconid
