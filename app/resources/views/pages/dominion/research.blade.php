@@ -266,7 +266,7 @@
 
                             <li>
                                 <span data-toggle="tooltip" data-placement="top" title="{{ $perksString }}">
-                                    <a href="#{{ $tech->name }}">{{ $tech->name }}</a>: {{ number_format($currentResearchTech->hours) . ' ' . str_plural('tick', $currentResearchTech->hours) }} left
+                                    <a href="#{{ $tech->name }}">{{ $tech->name }}</a>: {{ number_format($currentResearchTech->hours) . ' ' . str_plural('tick', $currentResearchTech->hours) }} remaining
                                 </span>
                             </li>
 
