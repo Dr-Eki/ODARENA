@@ -106,6 +106,11 @@ class ResearchCalculator
         return collect($this->queueService->getResearchQueue($dominion)->all());
     }
 
+    public function getDominionTechs(Dominion $dominion): Collection
+    {
+        return $dominion->techs;
+    }
+
     public function getFreeResearchSlots(Dominion $dominion): int
     {
         return max($this->getResearchSlots($dominion) - $this->getOngoingResearchCount($dominion), 0);

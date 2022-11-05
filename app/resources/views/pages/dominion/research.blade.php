@@ -255,16 +255,56 @@
                         @foreach($currentResearchTechs as $currentResearchTech)
                             @php
                                 $tech = OpenDominion\Models\Tech::where('key', $currentResearchTech->resource)->first();
+
+                                $perksString = '<ul>';
+                                foreach($researchHelper->getTechPerkDescription($tech, $selectedDominion->race) as $effect)
+                                {
+                                    $perksString .= '<li>' . $effect . '</li>';
+                                }
+                                $perksString .= '</ul>';
                             @endphp
 
-                            <li><a href="#{{ $tech->name }}">{{ $tech->name }}</a>: {{ number_format($currentResearchTech->hours) . ' ' . str_plural('tick', $currentResearchTech->hours) }} left</li>
+                            <li>
+                                <span data-toggle="tooltip" data-placement="top" title="{{ $perksString }}">
+                                    <a href="#{{ $tech->name }}">{{ $tech->name }}</a>: {{ number_format($currentResearchTech->hours) . ' ' . str_plural('tick', $currentResearchTech->hours) }} left
+                                </span>
+                            </li>
 
                         @endforeach
                     </ul>
                 </div>
             </div>
         </div>
+    @endif
 
+    @if($selectedDominion->techs->count())
+        <div class="col-sm-12 col-md-3">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Researched Technologies</h3>
+                </div>
+                <div class="box-body">
+                    <ul>
+                        @foreach($selectedDominion->techs as $dominionTech)
+                            @php
+                                $perksString = '<ul>';
+                                foreach($researchHelper->getTechPerkDescription($dominionTech, $selectedDominion->race) as $effect)
+                                {
+                                    $perksString .= '<li>' . $effect . '</li>';
+                                }
+                                $perksString .= '</ul>';
+
+                            @endphp
+                            <li>
+                                <span data-toggle="tooltip" data-placement="top" title="{{ $perksString }}">
+                                    <a href="#{{ $dominionTech->name }}">{{ $dominionTech->name }}</a>
+                                </span>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
     @endif
 
 </div>
