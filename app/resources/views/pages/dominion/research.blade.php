@@ -240,6 +240,33 @@
         </div>
     </div>
 
+    @php
+        $currentResearchTechs = $researchCalculator->getCurrentResearchTechs($selectedDominion);
+    @endphp
+    @if($currentResearchTechs->count())
+
+        <div class="col-sm-12 col-md-3">
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Current Research</h3>
+                </div>
+                <div class="box-body">
+                    <ul>
+                        @foreach($currentResearchTechs as $currentResearchTech)
+                            @php
+                                $tech = OpenDominion\Models\Tech::where('key', $currentResearchTech->resource)->first();
+                            @endphp
+
+                            <li><a href="#{{ $tech->name }}">{{ $tech->name }}</a>: {{ number_format($currentResearchTech->hours) . ' ' . str_plural('tick', $currentResearchTech->hours) }} left</li>
+
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    @endif
+
 </div>
 
 @push('page-styles')
