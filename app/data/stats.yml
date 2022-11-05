@@ -522,6 +522,52 @@ ash_salvaged:
 ash_plundered:
   name: Ash plundered
 
+prayer_production:
+  name: Prayer production
+prayer_sold:
+  name: Prayer sold
+prayer_bought:
+  name: Prayer bought
+prayer_building:
+  name: Prayer building
+prayer_rezoning:
+  name: Prayer rezoning
+prayer_training:
+  name: Prayer training
+prayer_improvements:
+  name: Prayer improvements
+prayer_exploring:
+  name: Prayer exploring
+prayer_lost:
+  name: Prayer lost
+prayer_salvaged:
+  name: Prayer salvaged
+prayer_plundered:
+  name: Prayer plundered
+
+gunpowder_production:
+  name: Gunpowder production
+gunpowder_sold:
+  name: Gunpowder sold
+gunpowder_bought:
+  name: Gunpowder bought
+gunpowder_building:
+  name: Gunpowder building
+gunpowder_rezoning:
+  name: Gunpowder rezoning
+gunpowder_training:
+  name: Gunpowder training
+gunpowder_improvements:
+  name: Gunpowder improvements
+gunpowder_exploring:
+  name: Gunpowder exploring
+gunpowder_lost:
+  name: Gunpowder lost
+gunpowder_salvaged:
+  name: Gunpowder salvaged
+gunpowder_plundered:
+  name: Gunpowder plundered
+
 magma_production:
   name: Magma production
 magma_sold:
