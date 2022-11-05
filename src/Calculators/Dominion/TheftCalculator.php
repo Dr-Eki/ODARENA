@@ -194,6 +194,12 @@ class TheftCalculator
             }
         }
 
+        if($dominion->getDecreePerkValue('wizards_count_as_spies'))
+        {
+            $spyUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'wizards');
+            $spyUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'archmages') * 2;
+        }
+
         $cost = (int)ceil(array_sum($units) / $spyUnits * 100);
 
         return $cost;
