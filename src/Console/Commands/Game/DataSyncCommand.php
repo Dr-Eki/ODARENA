@@ -25,7 +25,15 @@ use OpenDominion\Models\DecreeStatePerkType;
 use OpenDominion\Models\Deity;
 use OpenDominion\Models\DeityPerk;
 use OpenDominion\Models\DeityPerkType;
+use OpenDominion\Models\DominionAdvancement;
+use OpenDominion\Models\DominionBuilding;
 use OpenDominion\Models\DominionDecreeState;
+use OpenDominion\Models\DominionDeity;
+use OpenDominion\Models\DominionImprovement;
+use OpenDominion\Models\DominionResource;
+use OpenDominion\Models\DominionStat;
+use OpenDominion\Models\DominionSpell;
+use OpenDominion\Models\DominionTech;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\ImprovementPerk;
 use OpenDominion\Models\ImprovementPerkType;
@@ -33,6 +41,7 @@ use OpenDominion\Models\Quickstart;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\RacePerk;
 use OpenDominion\Models\RacePerkType;
+use OpenDominion\Models\RealmArtefact;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\SpellPerk;
@@ -81,7 +90,6 @@ class DataSyncCommand extends Command implements CommandInterface
     {
         $start = now();
         DB::transaction(function () {
-            $this->syncDecrees();
             $this->syncDeities();
             $this->syncRaces();
             $this->syncAdvancements();
@@ -337,10 +345,15 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncTechs()
     {
         $fileContents = $this->filesystem->get(base_path('app/data/techs.yml'));
+        $techsToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
-        foreach ($data as $techKey => $techData) {
+        foreach ($data as $techKey => $techData)
+        {
+
+            $techsToSync[] = $techData->name;
+
             // Tech
             $tech = Tech::firstOrNew(['key' => $techKey])
                 ->fill([
@@ -404,6 +417,21 @@ class DataSyncCommand extends Command implements CommandInterface
             $tech->perks()->sync($techPerksToSync);
         }
 
+        foreach(Tech::all() as $tech)
+        {
+            if(!in_array($tech->name, $techsToSync))
+            {
+                $this->info(">> Deleting tech {$tech->name}");
+
+                TechPerk::where('tech_id', $tech->id)->delete();
+                #$tech->perks()->detach();
+
+                DominionTech::where('tech_id', '=', $tech->id)->delete();
+
+                $tech->delete();
+            }
+        }
+
         $this->info('Techs synced.');
     }
 
@@ -413,10 +441,15 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncBuildings()
     {
         $fileContents = $this->filesystem->get(base_path('app/data/buildings.yml'));
+        $buildingsToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
-        foreach ($data as $buildingKey => $buildingData) {
+        foreach ($data as $buildingKey => $buildingData)
+        {
+
+            $buildingsToSync[] = $buildingData->name;
+
             // Building
             $building = Building::firstOrNew(['key' => $buildingKey])
                 ->fill([
@@ -484,6 +517,22 @@ class DataSyncCommand extends Command implements CommandInterface
             $building->perks()->sync($buildingPerksToSync);
         }
 
+        foreach(Building::all() as $building)
+        {
+            if(!in_array($building->name, $buildingsToSync))
+            {
+                $this->info(">> Deleting building {$building->name}");
+
+                #$building->perks->detach();
+
+                BuildingPerk::where('building_id', $building->id)->delete();
+                
+                DominionBuilding::where('building_id', '=', $building->id)->delete();
+                
+                $building->delete();
+            }
+        }
+
         $this->info('Buildings synced.');
     }
 
@@ -493,10 +542,15 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncTitles()
     {
         $fileContents = $this->filesystem->get(base_path('app/data/titles.yml'));
+        $titlesToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
-        foreach ($data as $titleKey => $titleData) {
+        foreach ($data as $titleKey => $titleData)
+        {
+
+            $titlesToSync[] = $titleData->name;
+
             // Title
             $title = Title::firstOrNew(['key' => $titleKey])
                 ->fill([
@@ -560,6 +614,21 @@ class DataSyncCommand extends Command implements CommandInterface
             $title->perks()->sync($titlePerksToSync);
         }
 
+        foreach(Title::all() as $title)
+        {
+            if(!in_array($title->name, $titlesToSync))
+            {
+                $this->info(">> Deleting title {$title->name}");
+
+                #TechPerk::where('tech_id', $title->id)->delete();
+                #DominionTech::where('tech_id', '=', $title->id)->delete();
+
+                # Add unset from dominion
+
+                #$title->delete();
+            }
+        }
+
         $this->info('Titles synced.');
     }
 
@@ -569,10 +638,14 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncSpells()
     {
         $fileContents = $this->filesystem->get(base_path('app/data/spells.yml'));
+        $spellsToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
-        foreach ($data as $spellKey => $spellData) {
+        foreach ($data as $spellKey => $spellData)
+        {
+
+            $spellsToSync[] = $spellData->name;
 
             $deityId = null;
             if($deityKey = object_get($spellData, 'deity'))
@@ -652,6 +725,22 @@ class DataSyncCommand extends Command implements CommandInterface
             $spell->perks()->sync($spellPerksToSync);
         }
 
+        foreach(Spell::all() as $spell)
+        {
+            if(!in_array($spell->name, $spellsToSync))
+            {
+                $this->info(">> Deleting spell {$spell->name}");
+
+                SpellPerk::where('spell_id', $spell->id)->delete();
+
+                #$spell->perks->detach();
+
+                DominionSpell::where('spell_id', '=', $spell->id)->delete();
+
+                $spell->delete();
+            }
+        }
+
         $this->info('Spells synced.');
     }
 
@@ -661,10 +750,15 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncSpyops()
     {
         $fileContents = $this->filesystem->get(base_path('app/data/spyops.yml'));
+        $spyopsToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
-        foreach ($data as $spyopKey => $spyopData) {
+        foreach ($data as $spyopKey => $spyopData)
+        {
+
+            $spyopsToSync[] = $spyopData->name;
+            
             // Spell
             $spyop = Spyop::firstOrNew(['key' => $spyopKey])
                 ->fill([
@@ -732,6 +826,17 @@ class DataSyncCommand extends Command implements CommandInterface
             $spyop->perks()->sync($spyopPerksToSync);
         }
 
+        foreach(Spyop::all() as $spyop)
+        {
+            if(!in_array($spyop->name, $spyopsToSync))
+            {
+                $this->info(">> Deleting spyop {$spyop->name}");
+
+                SpyopPerk::where('spyop_id', $spyop->id)->delete();
+                $spyop->delete();
+            }
+        }
+
         $this->info('Spy-ops synced.');
     }
 
@@ -741,10 +846,15 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncImprovements()
     {
         $fileContents = $this->filesystem->get(base_path('app/data/improvements.yml'));
+        $improvementsToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
-        foreach ($data as $improvementKey => $improvementData) {
+        foreach ($data as $improvementKey => $improvementData)
+        {
+
+            $improvementsToSync[] = $improvementData->name;
+
             // Spell
             $improvement = Improvement::firstOrNew(['key' => $improvementKey])
                 ->fill([
@@ -810,6 +920,21 @@ class DataSyncCommand extends Command implements CommandInterface
             $improvement->perks()->sync($improvementPerksToSync);
         }
 
+        foreach(Improvement::all() as $improvement)
+        {
+            if(!in_array($improvement->name, $improvementsToSync))
+            {
+                $this->info(">> Deleting spell {$improvement->name}");
+
+                #$improvement->perks()->detach();
+                ImprovementPerk::where('spell_id', $improvement->id)->delete();
+
+                DominionImprovement::where('spell_id', '=', $improvement->id)->delete();
+
+                $improvement->delete();
+            }
+        }
+
         $this->info('Improvements synced.');
     }
 
@@ -819,10 +944,15 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncStats()
     {
         $fileContents = $this->filesystem->get(base_path('app/data/stats.yml'));
+        $statsToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
-        foreach ($data as $statKey => $statData) {
+        foreach ($data as $statKey => $statData)
+        {
+
+            $statsToSync[] = $statData->name;
+
             // Spell
             $stat = Stat::firstOrNew(['key' => $statKey])
                 ->fill([
@@ -857,6 +987,20 @@ class DataSyncCommand extends Command implements CommandInterface
             $stat->save();
             $stat->refresh();
         }
+
+        foreach(Stat::all() as $stat)
+        {
+
+            if(!in_array($stat->name, $statsToSync))
+            {
+                $this->info(">> Deleting stat {$stat->name}");
+
+                DominionStat::where('stat_id', '=', $stat->id)->delete();
+                $stat->delete();
+            }
+        }
+
+        $this->info('Stats synced.');
     }
 
     /**
@@ -865,10 +1009,15 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncResources()
     {
         $fileContents = $this->filesystem->get(base_path('app/data/resources.yml'));
+        $resourcesToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
-        foreach ($data as $resourceKey => $resourceData) {
+        foreach ($data as $resourceKey => $resourceData)
+        {
+
+            $resourcesToSync[] = $resourceData->name;
+
             // Resource
             $resource = Resource::firstOrNew(['key' => $resourceKey])
                 ->fill([
@@ -909,6 +1058,18 @@ class DataSyncCommand extends Command implements CommandInterface
             $resource->refresh();
         }
 
+        foreach(Resource::all() as $resource)
+        {
+            if(!in_array($resource->name, $resourcesToSync))
+            {
+                $this->info(">> Deleting resource {$resource->name}");
+
+                DominionResource::where('resource_id', '=', $resource->id)->delete();
+
+                $resource->delete();
+            }
+        }
+
         $this->info('Resources synced.');
     }
 
@@ -918,11 +1079,15 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncDeities()
     {
         $fileContents = $this->filesystem->get(base_path('app/data/deities.yml'));
+        $deitiesToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
         foreach ($data as $deityKey => $deityData)
         {
+
+            $deitiesToSync[] = $deityData->name;
+
             // Deity
             $deity = Deity::firstOrNew(['key' => $deityKey])
                 ->fill([
@@ -989,6 +1154,20 @@ class DataSyncCommand extends Command implements CommandInterface
             $deity->perks()->sync($deityPerksToSync);
         }
 
+
+        foreach(Deity::all() as $deity)
+        {
+            if(!in_array($deity->name, $deitiesToSync))
+            {
+                $this->info(">> Deleting deity {$deity->name}");
+
+                DeityPerk::where('deity_id', '=', $deity->id)->delete();
+                #$deity->perks()->detach();
+
+                $deity->delete();
+            }
+        }
+
         $this->info('Deities synced.');
     }
 
@@ -998,10 +1177,14 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncArtefacts()
     {
         $fileContents = $this->filesystem->get(base_path('app/data/artefacts.yml'));
+        $artefactsToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
-        foreach ($data as $artefactKey => $artefactData) {
+        foreach ($data as $artefactKey => $artefactData)
+        {
+
+            $artefactsToSync[] = $artefactData->name;
 
             $deityId = null;
             if($deityKey = object_get($artefactData, 'deity'))
@@ -1075,6 +1258,21 @@ class DataSyncCommand extends Command implements CommandInterface
             }
 
             $artefact->perks()->sync($artefactPerksToSync);
+        }
+
+        foreach(Artefact::all() as $artefact)
+        {
+            if(!in_array($artefact->name, $artefactsToSync))
+            {
+                $this->info(">> Deleting artefact {$artefact->name}");
+
+                #$artefact->perks()->detach();
+                ArtefactPerk::where('artefact_id', '=', $artefact->id)->delete();
+
+                RealmArtefact::where('artefact_id', '=', $artefact->id)->delete();
+
+                $artefact->delete();
+            }
         }
 
         $this->info('Artefacts synced.');
@@ -1176,7 +1374,7 @@ class DataSyncCommand extends Command implements CommandInterface
         {
             if(!in_array($quickstart->name, $quickstartsToSync))
             {
-                $this->info("Deleting quickstart {$quickstart->name}");
+                $this->info(">> Deleting quickstart {$quickstart->name}");
                 $quickstart->delete();
             }
         }
@@ -1335,26 +1533,18 @@ class DataSyncCommand extends Command implements CommandInterface
         {
             if(!in_array($decree->name, $decreesToSync))
             {
-                $this->info("Deleting decree {$decree->name}");
+                $this->info(">> Deleting decree {$decree->name}");
 
-                # Get decree states for $decree
                 $decreeStates = DecreeState::all()->where('decree_id', '=', $decree->id);
                                 
                 foreach($decreeStates as $decreeState)
                 {
                     DecreeStatePerk::where('decree_state_id', '=', $decreeState->id)->delete();
-                    $this->info("> Deleting decree state {$decreeState->name}");
+                    $this->info(">>>> Deleting decree state {$decreeState->name}");
                 }
 
                 DominionDecreeState::where('decree_id', '=', $decree->id)->delete();
                 DecreeState::where('decree_id', '=', $decree->id)->delete();
-
-                #DB::table('decree_states')->where('id', '=', $decreeState->id)->delete();
-
-                #$decreeStates->delete();
-
-                #DB::table('dominion_decree_states')->where('decree_id', '=', $decree->id)->delete();
-                #DB::table('decrees')->where('id', '=', $decree->id)->delete();
                 $decree->delete();
             }
         }
@@ -1368,11 +1558,15 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncAdvancements()
     {
         $fileContents = $this->filesystem->get(base_path('app/data/advancements.yml'));
+        $advancementsToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
-        foreach ($data as $advancementKey => $advancementData) {
-            #dd($advancementData);
+        foreach ($data as $advancementKey => $advancementData)
+        {
+
+            $advancementsToSync[] = $advancementData->name;
+            
             // Advancement
             $advancement = Advancement::firstOrNew(['key' => $advancementKey])
                 ->fill([
@@ -1433,6 +1627,21 @@ class DataSyncCommand extends Command implements CommandInterface
             }
 
             $advancement->perks()->sync($advancementPerksToSync);
+        }
+
+        foreach(Advancement::all() as $advancement)
+        {
+            if(!in_array($advancement->name, $advancementsToSync))
+            {
+                $this->info(">> Deleting advancement {$advancement->name}");
+
+                #$advancement->perks()->detach();
+                AdvancementPerk::where('advancement_id', '=', $advancement->id)->delete();
+
+                DominionAdvancement::where('advancement_id', '=', $advancement->id)->delete();
+
+                $advancement->delete();
+            }
         }
 
         $this->info('Advancements synced.');

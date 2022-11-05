@@ -108,21 +108,6 @@ dwarven_ore_mine:
     ore_production_raw: 60
     housing: 24
 
-diamond_mine:
-  name: Diamond Mine
-  enabled: 0
-  excluded_races:
-    - Growth
-    - Monster
-    - Myconid
-    - Void
-    - Swarm
-    - Sylvan
-    - Wood Elf
-  land_type: mountain
-  perks:
-    gems_production_raw: 15
-
 gem_mine:
   name: Gem Mine
   excluded_races:

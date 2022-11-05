@@ -66,6 +66,9 @@ class ProductionCalculator
         // Decree
         $multiplier += $dominion->getDecreePerkMultiplier('xp_generation_mod');
 
+        // Techs
+        $multiplier += $dominion->getTechPerkMultiplier('xp_generation_mod');
+
         // Title
         if(isset($dominion->title))
         {

@@ -150,7 +150,7 @@ xp: %s\n",
         $techs = "\ntechs:\n";
         foreach($dominion->techs->sortBy('key') as $dominionTech)
         {
-            $techs .= "    {$dominionTech->key}\n";
+            $techs .= "    - {$dominionTech->key}\n";
         }
 
         $units = "\nunits:\n";
