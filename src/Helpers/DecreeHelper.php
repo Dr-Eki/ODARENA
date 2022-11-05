@@ -155,7 +155,7 @@ class DecreeHelper
             'wizard_strength_on_defense' => '%+g%% wizard strength on defense.',
             'wizard_strength_on_offense' => '%+g%% wizard strength on offense.',
 
-            'wizards_count_as_spies' => 'Wizards also count as %+g %+g.',
+            'wizards_count_as_spies' => 'Wizards also count as %+g spy.',
 
             # Growth specific
             'generate_building' => 'Generate %+g.',
