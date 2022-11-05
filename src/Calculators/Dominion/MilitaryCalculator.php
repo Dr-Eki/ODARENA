@@ -165,7 +165,7 @@ class MilitaryCalculator
         }
         
         // vs. Other Deity
-        if(isset($defender) and $defender->hasDeity() and $defender->deity->id !== $attacker->deity->id)
+        if(isset($defender) and $defender->hasDeity() and $attacker->hasDeity() and $defender->deity->id !== $attacker->deity->id)
         {
             $multiplier += $attacker->getDeityPerkMultiplier('offensive_power_vs_other_deity');
             $multiplier += $attacker->getTechPerkMultiplier('offensive_power_vs_other_deity');
