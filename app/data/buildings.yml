@@ -459,7 +459,7 @@ shipyard:
 
 ## Mod Buildings
 
-masonry:
+school:
   name: School
   excluded_races:
     - Armada

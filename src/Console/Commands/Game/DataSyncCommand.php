@@ -448,7 +448,7 @@ class DataSyncCommand extends Command implements CommandInterface
         foreach ($data as $buildingKey => $buildingData)
         {
 
-            $buildingsToSync[] = $buildingData->name;
+            $buildingsToSync[] = $buildingKey;
 
             // Building
             $building = Building::firstOrNew(['key' => $buildingKey])
@@ -519,7 +519,7 @@ class DataSyncCommand extends Command implements CommandInterface
 
         foreach(Building::all() as $building)
         {
-            if(!in_array($building->name, $buildingsToSync))
+            if(!in_array($building->key, $buildingsToSync))
             {
                 $this->info(">> Deleting building {$building->name}");
 
@@ -529,7 +529,7 @@ class DataSyncCommand extends Command implements CommandInterface
                 
                 DominionBuilding::where('building_id', '=', $building->id)->delete();
                 
-                $building->delete();
+                #$building->delete();
             }
         }
 

@@ -245,7 +245,7 @@ literature:
   name: Literature
   level: 3
   perks:
-    building_school_perk: 20
+    building_school_perk_mod: 20
   requires:
     - higher_education
 

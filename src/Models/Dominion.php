@@ -1252,10 +1252,11 @@ class Dominion extends AbstractModel
                 $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_production_mod');
             }
 
-            if($perkKey == 'extra_units_trained')
+            if($perkKey == 'extra_units_trained' or $perkKey == 'improvements')
             {
                 $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_perk_mod');
                 $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_perk_mod');
+                $buildingSpecificMultiplier += $this->getTechPerkMultiplier('building_' . $building->key . '_perk_mod');
             }
 
             $perk *= $buildingSpecificMultiplier;
@@ -1465,6 +1466,7 @@ class Dominion extends AbstractModel
         $multiplier += $this->getBuildingPerkMultiplier('improvements_capped');
         $multiplier += $this->getSpellPerkMultiplier('improvements');
         $multiplier += $this->getAdvancementPerkMultiplier('improvements');
+        $multiplier += $this->getTechPerkMultiplier('improvements');
         #$multiplier += $this->getDeityPerkMultiplier('improvements'); # Breaks
         $multiplier += $this->race->getPerkMultiplier('improvements_max');
         $multiplier += $this->realm->getArtefactPerkMultiplier('improvements');
