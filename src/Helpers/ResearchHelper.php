@@ -278,7 +278,7 @@ class ResearchHelper
 
             'can_build_automated_mine' => 'Can build Automated Mines',
 
-            'building_school_perk' => '%+g%% power from Schools',
+            'building_school_perk_mod' => '%+g%% power from Schools',
             
             // Special or one-off
             'opens_portal' => 'Opens a portal required to teleport otherwordly units to enemy lands',
