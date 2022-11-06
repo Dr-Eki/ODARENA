@@ -523,13 +523,11 @@ class DataSyncCommand extends Command implements CommandInterface
             {
                 $this->info(">> Deleting building {$building->name}");
 
-                #$building->perks->detach();
-
                 BuildingPerk::where('building_id', $building->id)->delete();
                 
                 DominionBuilding::where('building_id', '=', $building->id)->delete();
                 
-                #$building->delete();
+                $building->delete();
             }
         }
 
