@@ -122,11 +122,11 @@ class ResourceCalculator
         // Get raw production
         $production = $this->getProductionRaw($dominion, $resourceKey);
 
-        // Add interest
-        $production += min($production, $this->getInterest($dominion, $resourceKey));
-
         // Apply multiplier
         $production *= $this->getProductionMultiplier($dominion, $resourceKey);
+
+        // Add interest
+        $production += min($production, $this->getInterest($dominion, $resourceKey));
 
         // Return
         return max($production, 0);
