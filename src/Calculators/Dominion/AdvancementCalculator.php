@@ -50,6 +50,7 @@ class AdvancementCalculator
         $multiplier += $dominion->race->getPerkMultiplier('advancement_costs');
         $multiplier += $dominion->getImprovementPerkMultiplier('advancement_costs');
         $multiplier += $dominion->getSpellPerkMultiplier('advancement_costs');
+        $multiplier += $dominion->getTechPerkMultiplier('advancement_costs');
 
         return $multiplier;
     }
