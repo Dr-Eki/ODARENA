@@ -31,7 +31,7 @@ buildings:
     military_academy: 0
     ore_mine: 100
     residence: 0
-    masonry: 200
+    school: 200
     shrine: 0
     smithy: 60
     tavern: 50

@@ -44,6 +44,8 @@ class ResearchHelper
             'thunderstone_production_mod' => '%+g%% thunderstone discovery',
             'horse_production_mod' => '%+g%% horse taming',
             'yak_production_mod' => '%+g%% yak taming',
+            'kelp_production_mod' => '%+g%% kelp harvest',
+            'pearls_production_mod' => '%+g%% pearls production',
 
             'strength_gain_mod' => '%+g%% strength gains',
             'xp_generation_mod' => '%+g%% experience points generation',

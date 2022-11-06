@@ -29,7 +29,7 @@ buildings:
     hall: 0
     lumberyard: 30
     ore_mine: 20
-    masonry: 40
+    school: 40
     shrine: 0
     smithy: 100
     temple: 0
