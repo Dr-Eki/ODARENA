@@ -514,9 +514,9 @@
                             <td>
                                 @foreach($improvement->perks as $perk)
                                     @php
-                                        $improvementPerkMax = $selectedDominion->extractImprovementPerkValues($perk->pivot->value)[0];
-                                        $improvementPerkMax *= $selectedDominion->getImprovementsMod();
-                                        
+                                        $improvementPerkMax = $dominion->extractImprovementPerkValues($perk->pivot->value)[0];
+                                        $improvementPerkMax *= $dominion->getImprovementsMod();
+
                                         $improvementPerkCoefficient = $dominion->extractImprovementPerkValues($perk->pivot->value)[1];
 
                                         $spanClass = 'text-muted';
