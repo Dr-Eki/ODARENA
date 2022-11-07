@@ -65,7 +65,7 @@
                                             @if ($interest = $resourceCalculator->getInterest($selectedDominion, $resourceKey))
                                                 <span class="text-muted">
                                                     <br>
-                                                    Of which interest: <span class="text-green">{{ number_format($interest) }}</span>
+                                                    Interest: <span class="text-green">{{ number_format($interest) }}</span>
                                                 </span>
                                             @endif
 
