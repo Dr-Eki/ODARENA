@@ -737,7 +737,7 @@ class Dominion extends AbstractModel
                 $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
             }
 
-            if($perkValueString)
+            if(!in_array($perkKey,['jobs','housing']) and $perkValueString)
             {
                 # Basic production and other single-value perks
                 if(
