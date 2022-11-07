@@ -1241,7 +1241,6 @@ class Dominion extends AbstractModel
                 {
                     dd("[Error] Undefined building perk key (\$perkKey): $perkKey");
                 }
-            }
 
             # Build-specific perks
             $buildingSpecificMultiplier = 1;
@@ -1257,6 +1256,7 @@ class Dominion extends AbstractModel
                 $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_perk_mod');
                 $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_perk_mod');
                 $buildingSpecificMultiplier += $this->getTechPerkMultiplier('building_' . $building->key . '_perk_mod');
+            }
             }
 
             $perk *= $buildingSpecificMultiplier;
