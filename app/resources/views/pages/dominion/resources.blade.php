@@ -62,6 +62,14 @@
                                             @endif
 
 
+                                            @if ($interest = $resourceCalculator->getInterest($selectedDominion, $resourceKey))
+                                                <span class="text-muted">
+                                                    <br>
+                                                    Interest: <span class="text-green">+{{ number_format($interest) }}</span>
+                                                </span>
+                                            @endif
+
+
 
 
                                             @if ($resourceCalculator->hasMaxStorage($selectedDominion, $resourceKey))
