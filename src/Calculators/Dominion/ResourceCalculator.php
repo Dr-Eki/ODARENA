@@ -540,8 +540,7 @@ class ResourceCalculator
     {
         $interest = 0;
 
-        $interestRate = 0;
-        $interestRate += $dominion->getTechPerkMultiplier($interestBearingResourceKey . '_interest');
+        $interestRate = $this->getInterestRate($dominion, $interestBearingResourceKey);
 
         if($interestRate > 0)
         {
@@ -549,6 +548,14 @@ class ResourceCalculator
         }
 
         return $interest;
+    }
+
+    public function getInterestRate(Dominion $dominion, string $interestBearingResourceKey): float
+    {
+        $interestRate = 0;
+        $interestRate += $dominion->getTechPerkMultiplier($interestBearingResourceKey . '_interest');
+
+        return $interestRate;
     }
 
     public function canStarve(Race $race): bool

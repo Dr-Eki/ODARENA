@@ -65,7 +65,9 @@
                                             @if ($interest = $resourceCalculator->getInterest($selectedDominion, $resourceKey))
                                                 <span class="text-muted">
                                                     <br>
-                                                    Interest: <span class="text-green">{{ number_format($interest) }}</span>
+                                                    <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Interest rate:</small> {{ $resourceCalculator->getInterestRate($selectedDominion, $resourceKey)*100 }}%'>
+                                                        Interest: <span class="text-green">{{ number_format($interest) }}</span>
+                                                    </span>
                                                 </span>
                                             @endif
 
