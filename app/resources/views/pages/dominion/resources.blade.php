@@ -29,7 +29,7 @@
                                         </td>
                                         <td>
                                             @if ($production = $resourceCalculator->getProduction($selectedDominion, $resourceKey))
-                                                <span data-toggle="tooltip" data-placement="top" title="Raw: {{ number_format($resourceCalculator->getProductionRaw($selectedDominion, $resourceKey)) }}">
+                                                <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Raw:</small> {{ number_format($resourceCalculator->getProductionRaw($selectedDominion, $resourceKey)) }}'>
                                                     <span class="text-green">{{ number_format($production) }}</span>
                                                 </span>
                                             @else
@@ -93,7 +93,7 @@
                                     <td>Experience Points:</td>
                                     <td>
                                         @if ($xpGeneration = $productionCalculator->getXpGeneration($selectedDominion))
-                                            <span data-toggle="tooltip" data-placement="top" title="Raw: {{ number_format($productionCalculator->getXpGenerationRaw($selectedDominion, $resourceKey)) }}">
+                                            <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Raw:</small> {{ number_format($productionCalculator->getXpGenerationRaw($selectedDominion, $resourceKey)) }}'>
                                                 <span class="text-green">{{ number_format($xpGeneration) }}</span>
                                             </span>
                                         @else
