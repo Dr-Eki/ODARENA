@@ -245,8 +245,8 @@ class ConstructionCalculator
         $ticks -= $dominion->title->getPerkValue('increased_construction_speed') * $dominion->getTitlePerkMultiplier();
 
         $multiplier = 1;
-        $multiplier -= $dominion->getImprovementPerkMultiplier('construction_time');
-        $multiplier -= $dominion->getBuildingPerkMultiplier('construction_time');
+        $multiplier += $dominion->getImprovementPerkMultiplier('construction_time');
+        $multiplier += $dominion->getBuildingPerkMultiplier('construction_time');
         $multiplier += $dominion->getAdvancementPerkMultiplier('construction_time');
         $multiplier += $dominion->getDecreePerkMultiplier('construction_time_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($dominion);
 

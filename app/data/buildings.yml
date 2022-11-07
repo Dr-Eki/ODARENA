@@ -704,7 +704,7 @@ factory:
   perks:
     construction_cost: 1,5,50 # 1% gives -5% construction cost, max -50%
     rezone_cost: 1,5,50 # 1% gives -5% rezone cost, max -50%
-    construction_time: 1,2.5,25
+    construction_time: 1,-2.5,25
 
 refiner:
   name: Refinery
