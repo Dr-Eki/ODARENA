@@ -1242,24 +1242,25 @@ class Dominion extends AbstractModel
                     dd("[Error] Undefined building perk key (\$perkKey): $perkKey");
                 }
 
-            # Build-specific perks
-            $buildingSpecificMultiplier = 1;
+                # Build-specific perks
+                $buildingSpecificMultiplier = 1;
 
-            if($perkKey == 'gold_production_raw')
-            {
-                $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_production_mod');
-                $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_production_mod');
+                if($perkKey == 'gold_production_raw')
+                {
+                    $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_production_mod');
+                    $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_production_mod');
+                }
+
+                if($perkKey == 'extra_units_trained' or $perkKey == 'improvements')
+                {
+                    $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_perk_mod');
+                    $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_perk_mod');
+                    $buildingSpecificMultiplier += $this->getTechPerkMultiplier('building_' . $building->key . '_perk_mod');
+                }
+                
             }
 
-            if($perkKey == 'extra_units_trained' or $perkKey == 'improvements')
-            {
-                $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_perk_mod');
-                $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_perk_mod');
-                $buildingSpecificMultiplier += $this->getTechPerkMultiplier('building_' . $building->key . '_perk_mod');
-            }
-            }
-
-            $perk *= $buildingSpecificMultiplier;
+            $perk *= $buildingSpecificMultiplier ?? 1;
         }
 
         return $perk;
