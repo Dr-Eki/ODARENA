@@ -67,6 +67,7 @@ masonry:
     gems_improvement_points: 20
   requires:
     - weighted_pickaxes
+    - geology
 
 precision_mining:
   name: Precison Mining
