@@ -372,6 +372,7 @@ mirnons_greed:
   cooldown: 0
   deity: mirnon
   excluded_races:
+    - Dragon
     - Lux
   perks:
     building_gold_mine_production_mod: 10
