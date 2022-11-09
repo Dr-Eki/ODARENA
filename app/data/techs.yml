@@ -99,6 +99,8 @@ funiculars:
 thunderstone_distribution:
   name: Thunderstone Distribution
   level: 4
+  exclusive_races:
+    - Dwarg
   perks:
     thunderstone_production_mod: 25
   requires:
