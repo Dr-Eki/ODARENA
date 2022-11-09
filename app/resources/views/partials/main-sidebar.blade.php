@@ -73,10 +73,10 @@
                     <li class="{{ Route::is('dominion.research') ? 'active' : null }}">
                         <a href="{{ route('dominion.research') }}"><i class="fas fa-flask fa-fw"></i> <span>Research</span>
 
-                            @if($researchCalculator->getOngoingResearchCount($selectedDominion) !== 0)
-                                <span class="pull-right-container"><small class="label pull-right bg-yellow">{{ $researchCalculator->getTicksUntilNextResearchCompleted($selectedDominion) }}</small></span>
-                            @elseif(($freeResearchSlots = $researchCalculator->getFreeResearchSlots($selectedDominion)) > 0)
+                            @if(($freeResearchSlots = $researchCalculator->getFreeResearchSlots($selectedDominion)) > 0)
                                 <span class="pull-right-container"><small class="label pull-right bg-red">{{ $freeResearchSlots }}</small></span>
+                            @elseif($researchCalculator->getOngoingResearchCount($selectedDominion) !== 0)
+                                <span class="pull-right-container"><small class="label pull-right bg-yellow">{{ $researchCalculator->getTicksUntilNextResearchCompleted($selectedDominion) }}</small></span>
                             @endif
                         </a>
                     </li>
