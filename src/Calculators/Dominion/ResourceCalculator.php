@@ -119,19 +119,15 @@ class ResourceCalculator
 
     public function getProduction(Dominion $dominion, string $resourceKey): int
     {
-        $production = 0;
 
         // Get raw production
-        $rawProduction = $this->getProductionRaw($dominion, $resourceKey);
-
-        // Add raw to production
-        $production += $rawProduction;
+        $production = $this->getProductionRaw($dominion, $resourceKey);
 
         // Apply multiplier
         $production *= $this->getProductionMultiplier($dominion, $resourceKey);
 
         // Add interest
-        $production += min($rawProduction, $this->getInterest($dominion, $resourceKey));
+        $production += $this->getInterest($dominion, $resourceKey);
 
         // Return
         return max($production, 0);
@@ -541,7 +537,7 @@ class ResourceCalculator
         return $decayRate;
     }
 
-    public function getInterest(Dominion $dominion, string $interestBearingResourceKey): int
+    public function getInterest(Dominion $dominion, string $interestBearingResourceKey, int $currentRawProduction): int
     {
         $interest = 0;
 
@@ -551,6 +547,8 @@ class ResourceCalculator
         {
             $interest += $this->getAmount($dominion, $interestBearingResourceKey) * $interestRate;
         }
+
+        $interest = min($interest, $this->getProductionRaw($dominion, $interestBearingResourceKey));
 
         return $interest;
     }
