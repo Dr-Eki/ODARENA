@@ -243,6 +243,7 @@ advanced_mathematics:
     improvements: 10
   requires:
     - higher_education
+    - banking
 
 literature:
   name: Literature
