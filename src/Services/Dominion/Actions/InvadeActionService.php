@@ -814,6 +814,7 @@ class InvadeActionService
         $attackerPrestigeChangeMultiplier += $attacker->race->getPerkMultiplier('prestige_gains');
         $attackerPrestigeChangeMultiplier += $this->militaryCalculator->getPrestigeGainsPerk($attacker, $units);
         $attackerPrestigeChangeMultiplier += $attacker->getAdvancementPerkMultiplier('prestige_gains');
+        $attackerPrestigeChangeMultiplier += $attacker->getTechPerkMultiplier('prestige_gains');
         $attackerPrestigeChangeMultiplier += $attacker->getBuildingPerkMultiplier('prestige_gains');
         $attackerPrestigeChangeMultiplier += $attacker->getImprovementPerkMultiplier('prestige_gains');
         $attackerPrestigeChangeMultiplier += $attacker->getSpellPerkMultiplier('prestige_gains');
