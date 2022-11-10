@@ -537,7 +537,7 @@ class ResourceCalculator
         return $decayRate;
     }
 
-    public function getInterest(Dominion $dominion, string $interestBearingResourceKey, int $currentRawProduction): int
+    public function getInterest(Dominion $dominion, string $interestBearingResourceKey): int
     {
         $interest = 0;
 
