@@ -341,10 +341,16 @@ class TrainingCalculator
 
         // Advancements
         $multiplier += $dominion->getAdvancementPerkMultiplier('unit_' . $resourceType . '_costs');
+
+        // Techs
+        $multiplier += $dominion->getTechPerkMultiplier('unit_' . $resourceType . '_costs');
+
         // Buildings
         $multiplier += $dominion->getBuildingPerkMultiplier('unit_' . $resourceType . '_costs');
+
         // Improvements
         $multiplier += $dominion->getImprovementPerkMultiplier('unit_' . $resourceType . '_costs');
+
         // Title
         if(isset($dominion->title))
         {
