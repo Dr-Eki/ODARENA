@@ -2637,6 +2637,9 @@ class MilitaryCalculator
         // Improvements
         $multiplier += $attacker->getImprovementPerkMultiplier('land_discovered');
 
+        // Techs
+        $multiplier += $attacker->getTechPerkMultiplier('land_discovered');
+
         // Deity
         $multiplier += $attacker->getDeityPerkMultiplier('land_discovered');
 
