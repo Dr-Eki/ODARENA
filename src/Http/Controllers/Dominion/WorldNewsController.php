@@ -42,11 +42,6 @@ class WorldNewsController extends AbstractDominionController
 
         $realmCount = Realm::where('round_id', $dominion->round_id)->count();
 
-        #$landCalculator = app(LandCalculator::class);
-        #$raceHelper = app(RaceHelper::class);
-        #$roundHelper = app(RoundHelper::class);
-
-
         return view('pages.dominion.world-news', [
             'worldNewsHelper' => app(WorldNewsHelper::class),
             'gameEvents' => $gameEvents,
@@ -55,9 +50,6 @@ class WorldNewsController extends AbstractDominionController
             'landCalculator' => app(LandCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),
-            #'raceHelper',
-            #'roundHelper',
-            #'landCalculator'
             ]
         );
     }

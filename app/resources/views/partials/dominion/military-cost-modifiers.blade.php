@@ -25,6 +25,10 @@
                             <td>{{ number_format($trainingCalculator->getSpecialistEliteCostMultiplier($selectedDominion, $resourceKey) * 100, 2) }}%</td>
                         </tr>
                     @endforeach
+                    <tr>
+                        <td colspan="2"><p class="text-muted"><small><em>Modifiers are capped at -50%, except for modifiers from spells or deity, which can bring the modifier lower than -50%.</em></small></p></td>
+                    </tr>
+
                 </tbody>
             </table>
         </div>
