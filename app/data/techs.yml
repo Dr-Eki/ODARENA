@@ -309,6 +309,9 @@ civil_engineering:
 
 shipbuilding:
   name: Shipbuilding
+  exclusive_races:
+    - Armada
+    - Norse
   level: 6
   perks:
     ship_unit_costs: -15
@@ -384,7 +387,7 @@ cultivation:
   requires:
     - biology
 
-fertiliers:
+fertilisers:
   name: Fertilisers
   level: 3
   perks:
@@ -641,3 +644,46 @@ elite_army:
   requires:
     - professional_army
     - irregular_warfare
+
+# BEGIN GROWTH
+
+tissue:
+  name: Tissue
+  level: 1
+  perks:
+    population: 10
+    food_production_mod: 10
+  exclusive_races:
+    - Growth
+
+endoskeleton:
+  name: Endoskeleton
+  level: 1
+  perks:
+    # TBD
+  exclusive_races:
+    - Growth
+  requires:
+    - tissue
+
+glands:
+  name: Glands
+  level: 1
+  perks:
+    # TBD
+  exclusive_races:
+    - Growth
+  requires:
+    - tissue
+
+exoskeleton:
+  name: Exoskeleton
+  level: 1
+  perks:
+    # TBD
+  exclusive_races:
+    - Growth
+  requires:
+    - tissue
+
+# END GROWTH

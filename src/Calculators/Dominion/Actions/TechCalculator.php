@@ -107,7 +107,6 @@ class TechCalculator
         return count(array_diff($tech->prerequisites, $unlockedTechs)) == 0;
     }
 
-
     /**
      * Determine if the Dominion has a tech.
      *
