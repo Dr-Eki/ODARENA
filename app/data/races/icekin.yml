@@ -29,8 +29,8 @@ units:
       - living
       - sentient
     cost:
-      mana: 65
-      food: 195
+      mana: 60
+      food: 200
     power:
       offense: 4
       defense: 0
@@ -38,7 +38,6 @@ units:
       offense_from_title: commander,1 # title, op
       casualties_from_title: conjurer,-50 # title, reduction
       no_draftee: 1
-      food_consumption_raw: 0.10
 
   - name: Snow Witch
     training_time: 6
@@ -58,7 +57,7 @@ units:
       immortal_wizard: 1
       production_from_title: conjurer,mana,0.5 # title, resource, amount
       casualties_from_title: conjurer,-75 # title, reduction
-      defense_from_title: commander,1 # title, dp
+      defense_from_title: commander,1.5 # title, dp
       no_draftee: 1
 
   - name: Frost Mage
@@ -80,7 +79,7 @@ units:
       immortal_wizard: 1
       wizard_from_title: conjurer,0.125 # wizard power, title
       casualties_from_title: conjurer,-75 # title, reduction
-      defense_from_title: commander,1 # title, dp
+      defense_from_title: commander,1.5 # title, dp
       no_draftee: 1
 
   - name: Ice Drake
@@ -100,7 +99,7 @@ units:
     perks:
       offense_from_title: commander,2 # title, op
       offense_from_wizard_ratio: 2
-      defense_from_wizard_ratio: 0.5
+      defense_from_wizard_ratio: 0.85
       plunder: mana,20
       casualties_from_title: conjurer,-50 # title, reduction
       no_draftee: 1

@@ -38,7 +38,7 @@ units:
       - mounted
       - divine
     cost:
-      gold: 5000
+      gold: 6000
       elk: 1
     power:
       offense: 24

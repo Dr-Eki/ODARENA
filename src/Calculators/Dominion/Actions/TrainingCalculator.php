@@ -342,9 +342,6 @@ class TrainingCalculator
         // Advancements
         $multiplier += $dominion->getAdvancementPerkMultiplier('unit_' . $resourceType . '_costs');
 
-        // Techs
-        $multiplier += $dominion->getTechPerkMultiplier('unit_' . $resourceType . '_costs');
-
         // Buildings
         $multiplier += $dominion->getBuildingPerkMultiplier('unit_' . $resourceType . '_costs');
 
@@ -372,6 +369,9 @@ class TrainingCalculator
 
         // Deity: can take reduction below 50%!
         $multiplier += $dominion->getDeityPerkMultiplier('unit_' . $resourceType . '_costs');
+
+        // Techs: can take reduction below 50%!
+        $multiplier += $dominion->getTechPerkMultiplier('unit_' . $resourceType . '_costs');
 
         # Sanity cap, so it doesn't go under -1.
         $multiplier = max(-1, $multiplier);

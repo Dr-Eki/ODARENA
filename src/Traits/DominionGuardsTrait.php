@@ -43,6 +43,10 @@ trait DominionGuardsTrait
                     throw new GameException('The World Spinner is spinning the world. Your request was discarded. Try again soon, little one.');
                 }
             }
+            else
+            {
+                dd('Request timestamp not found');
+            }
         }
     }
 

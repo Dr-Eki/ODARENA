@@ -22,6 +22,7 @@ perks:
     starts_devoted_to_elskas: 1
     cannot_renounce_deity: 1
     prayer_production_raw_from_population: 0.10
+
 units:
   - name: Horned One
     training_time: 3
@@ -30,13 +31,12 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 600
+      gold: 1120
     power:
-      offense: 6
-      defense: 3
+      offense: 9
+      defense: 7
     perks:
-      counts_as_spy_offense: 0.25
-      counts_as_spy_defense: 0.25
+      counts_as_spy: 0.50
 
   - name: Scaled One
     training_time: 6
@@ -49,7 +49,7 @@ units:
       gold: 750
     power:
       offense: 0
-      defense: 7
+      defense: 9
     perks:
       reduces_casualties: 1
 
@@ -64,10 +64,9 @@ units:
       gold: 1200
     power:
       offense: 10
-      defense: 6
+      defense: 7
     perks:
-      counts_as_wizard_offense: 0.25
-      counts_as_wizard_defense: 0.25
+      counts_as_wizard: 0.50
 
   - name: Ancient One
     training_time: 12
@@ -82,10 +81,9 @@ units:
       offense: 600
       defense: 800
     perks:
-      building_limit: temple,2 # building, buildings per unit, imp to increased
+      building_limit: shrine,3 # building, buildings per unit, imp to increased
       casualties: -90
       no_draftee: 1
-      housing_count: 1
 
   - name: Eternal One
     training_time: 12

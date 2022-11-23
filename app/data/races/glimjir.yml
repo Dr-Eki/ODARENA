@@ -45,25 +45,10 @@ units:
       gold: 2000
     power:
       offense: 0
-      defense: 12
+      defense: 14
     perks:
       counts_as_wizard_on_defense_from_land: 0.004,1,water # Counts as 0.004 wizard on defense per 1% water
       counts_as_wizard_on_offense_from_land: 0.001,1,water # Counts as 0.001 wizard on offense per 1% water
-
-  - name: Follower
-    training_time: 12
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      gold: 2000
-    power:
-      offense: 10
-      defense: 10
-    perks:
-      offense_if_recently_victorious: 2,24
-      defense_if_recently_invaded: 2,24
 
   - name: Reaver
     training_time: 12
@@ -74,8 +59,8 @@ units:
     cost:
       gold: 2000
     power:
-      offense: 12
-      defense: 8
+      offense: 14
+      defense: 10
 
   - name: Kraken
     training_time: 12

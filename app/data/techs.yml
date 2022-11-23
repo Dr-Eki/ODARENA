@@ -10,6 +10,14 @@ geology:
   level: 1
   perks:
     earthquake_spell_damage_suffered: -50
+    building_deep_mine_jobs: 5
+    building_dwargen_mine_jobs: 5
+    building_gem_mine_jobs: 5
+    building_gold_mine_jobs: 5
+    building_gold_quarry_jobs: 5
+    building_ore_mine_jobs: 5
+    building_slave_mine_jobs: 5
+    building_strip_mine_jobs: 5
 
 advanced_drills:
   name: Advanced Drills
@@ -45,7 +53,13 @@ drilling_machines:
   name: Drilling Machines
   level: 3
   exclusive_races:
+    - Cires
+    - Dark Elf
+    - Goblin
+    - Gnome
     - Kerranad
+    - Qur
+    - Reptilians
   perks:
     gems_production_mod: 15
   requires:
@@ -163,7 +177,7 @@ currency:
   name: Currency
   level: 1
   perks:
-    gold_production_mod: 2
+    gold_production_mod: 2.5
 
 import_duties:
   name: Import Duties
@@ -177,7 +191,7 @@ banking:
   name: Banking
   level: 2
   perks:
-    gold_production_mod: 4
+    gold_production_mod: 5
     gold_interest: 0.85
   requires:
     - currency
@@ -200,7 +214,7 @@ economics:
   name: Economics
   level: 3
   perks:
-    exchange_rate: 10
+    exchange_rate: 20
     gold_interest: 1.1
   requires:
     - banking
@@ -209,7 +223,7 @@ free_market:
   name: Free Market
   level: 4
   perks:
-    production_from_peasants_mod: 25
+    production_from_peasants_mod: 20
   requires:
     - economics
     - legal_system
@@ -412,6 +426,7 @@ sanitation:
   name: Sanitation
   level: 4
   perks:
+    population: 7.5
     population_growth: 100
     population_loss: -50
   requires:
@@ -486,6 +501,7 @@ cosmology:
   name: Cosmology
   level: 3
   perks:
+    mana_production_mod: 12.5
     spell_costs: -20
   requires:
     - astrology
@@ -561,7 +577,7 @@ partisans:
   name: Partisans
   level: 2
   perks:
-    peasant_dp: 0.5
+    peasant_dp: 1
   excluded_races:
     - Ants
     - Demon
