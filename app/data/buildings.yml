@@ -816,7 +816,6 @@ yak_breeder:
 
 # CIRES BUILDINGS
 
-
 powder_mill:
   name: Powder Mill
   exclusive_races:
