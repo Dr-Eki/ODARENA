@@ -1198,7 +1198,7 @@ class Dominion extends AbstractModel
                 # Building self-destruction
                 elseif($perkKey == 'destroys_itself')
                 {
-                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+                    $perkValues = (float)$perkValueString;#$this->extractBuildingPerkValues($perkValueString);
 
                     $amountToDestroyPerBuilding = (float)$perkValues[0];
                     $buildingOwned = $building->pivot->owned;
