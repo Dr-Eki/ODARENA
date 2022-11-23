@@ -78,15 +78,6 @@ class HomeController extends AbstractController
 
 
         $currentRankings = null;
-        if($rankingsRound !== null)
-        {
-            $currentRankings = DB::table('daily_rankings')
-                ->where('round_id', $rankingsRound->id)
-                ->where('race_name', '!=', 'Barbarian')
-                ->orderBy('land_rank')
-                ->take(10)
-                ->get();
-        }
 
         return view('pages.home', [
             'currentRound' => $currentRound,
