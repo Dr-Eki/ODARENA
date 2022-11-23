@@ -32,20 +32,14 @@ trait DominionGuardsTrait
      */
     public function guardActionsDuringTick(Dominion $dominion, int $seconds = 30): void
     {
-        if ($dominion->protection_ticks == 0 and !$dominion->race->name == 'Barbarian')
+        $requestTimestamp = request()->server('REQUEST_TIME');
+        $requestTime = Carbon::createFromTimestamp($requestTimestamp);
+
+        if ($dominion->protection_ticks === 0 and $dominion->race->name !== 'Barbarian')
         {
-            $requestTimestamp = request()->server('REQUEST_TIME');
-            if ($requestTimestamp)
+            if (in_array($requestTime->minute,[0,15,30,45]) && $requestTime->second < $seconds)
             {
-                $requestTime = Carbon::createFromTimestamp($requestTimestamp);
-                if (in_array($requestTime->minute,[0,15,30,45]) && $requestTime->second < $seconds)
-                {
-                    throw new GameException('The World Spinner is spinning the world. Your request was discarded. Try again soon, little one.');
-                }
-            }
-            else
-            {
-                dd('Request timestamp not found');
+                throw new GameException('The World Spinner is spinning the world. Your request was discarded. Try again soon, little one.');
             }
         }
     }

@@ -1200,7 +1200,7 @@ class Dominion extends AbstractModel
                 {
                     $perkValues = (float)$perkValueString;#$this->extractBuildingPerkValues($perkValueString);
 
-                    $amountToDestroyPerBuilding = (float)$perkValues[0];
+                    $amountToDestroyPerBuilding = $perkValues;
                     $buildingOwned = $building->pivot->owned;
 
                     $amountToDestroy = $buildingOwned * $amountToDestroyPerBuilding;
