@@ -1288,6 +1288,10 @@ class Dominion extends AbstractModel
                 $perkValues[$key] = explode(';', $value);
             }
         }
+        else
+        {
+            $perkValues = $perkValue;
+        }
 
         return $perkValues;
     }
