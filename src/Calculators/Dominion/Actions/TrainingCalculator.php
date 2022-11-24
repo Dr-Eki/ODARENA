@@ -127,6 +127,8 @@ class TrainingCalculator
 
                         $multiplier += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot) * ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'cost_increase_to_train_per_unit') / 100);
 
+                        $multiplier = max(0.10, $multiplier); # Max possible reduction is -90%.
+
                         $cost[$costResourceKey] = ceil($amount * $multiplier);
                     }
 

@@ -4,6 +4,7 @@ namespace OpenDominion\Http\Controllers;
 
 use Auth;
 use DB;
+use OpenDominion\Models\Advancement;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Round;
@@ -71,7 +72,8 @@ class HomeController extends AbstractController
         $buildings = Building::all()->where('enabled',1)->count();
         $spells = Spell::all()->where('enabled',1)->count();
         $sabotage = Spyop::all()->where('enabled',1)->count();
-        $techs = Tech::all()->where('enabled',1)->count() / 10;
+        $advancements = Advancement::all()->where('enabled',1)->count();
+        $techs = Tech::all()->where('enabled',1)->count();
         $improvements = Improvement::all()->where('enabled',1)->count();
         $resources = Resource::all()->where('enabled',1)->count();
 
@@ -84,6 +86,7 @@ class HomeController extends AbstractController
             'currentRankings' => $currentRankings,
             'largestDominion' => $largestDominion,
             'factions' => $factions,
+            'advancements' => $advancements,
             'buildings' => $buildings,
             'spells' => $spells,
             'sabotage' => $sabotage,

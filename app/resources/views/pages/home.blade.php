@@ -166,9 +166,10 @@
                             <li>{{ $buildings }} <a href="{{ route('scribes.buildings') }}">buildings</a></li>
                             <li>{{ $spells }} <a href="{{ route('scribes.spells') }}">spells</a></li>
                             <li>{{ $sabotage }} <a href="{{ route('scribes.sabotage') }}">sabotage operations</a></li>
-                            <li>{{ $techs }} <a href="{{ route('scribes.advancements') }}">advancements</a></li>
+                            <li>{{ $advancements }} <a href="{{ route('scribes.advancements') }}">advancements</a></li>
+                            <li>{{ $techs }} <a href="{{ route('scribes.research') }}">technologies</a></li>
                             <li>{{ $improvements }} <a href="{{ route('scribes.improvements') }}">improvements</a></li>
-                            <li>{{ $resources }} resources</li>
+                            <li>{{ $resources }} <a href="{{ route('scribes.resources') }}">resources</a></li>
                         </ul>
                         <p>The strategy possibilities are almost infinite.</p>
                         <hr>
