@@ -345,6 +345,7 @@ class UnitHelper
             'blood_production_raw' => 'Gathers %s blood/tick.',
             'swamp_gas_production_raw' => 'Produces %s swamp gas/tick.',
             'miasma_production_raw' => 'Generates %s miasma/tick.',
+            'gunpowder_production_raw' => 'Produces %s gunpowder/tick.',
 
             'gold_production_raw_from_pairing' => 'Produces %2$s gold/tick if paired with %1$s at home.',
             'food_production_raw_from_pairing' => 'Produces %2$s food/tick if paired with %1$s at home.',

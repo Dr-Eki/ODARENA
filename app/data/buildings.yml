@@ -230,8 +230,8 @@ automated_mine:
     - Wood Elf
   land_type: mountain
   perks:
-    ore_production_raw: 100
-    gems_production_raw: 20
+    ore_production_raw: 120
+    gems_production_raw: 30
     jobs: 0
     housing: 0
     research_required_to_build: automated_mining
