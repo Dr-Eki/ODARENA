@@ -26,7 +26,7 @@
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan="2"><p class="text-muted"><small><em>Modifiers are capped at -50%, except for modifiers from spells or deity, which can bring the modifier lower than -50%.</em></small></p></td>
+                        <td colspan="2"><p class="text-muted"><small><em>Resoure cost reductions can only exceed 50% with spells, deity, or research perks.</em></small></p></td>
                     </tr>
 
                 </tbody>
