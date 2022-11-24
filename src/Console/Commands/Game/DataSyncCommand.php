@@ -352,7 +352,7 @@ class DataSyncCommand extends Command implements CommandInterface
         foreach ($data as $techKey => $techData)
         {
 
-            $techsToSync[] = $techData->name;
+            $techsToSync[] = $techKey;
 
             // Tech
             $tech = Tech::firstOrNew(['key' => $techKey])
@@ -419,7 +419,7 @@ class DataSyncCommand extends Command implements CommandInterface
 
         foreach(Tech::all() as $tech)
         {
-            if(!in_array($tech->name, $techsToSync))
+            if(!in_array($tech->key, $techsToSync))
             {
                 $this->info(">> Deleting tech {$tech->name}");
 

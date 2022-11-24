@@ -938,17 +938,6 @@ ziggurat:
 
 # BEGIN GROWTH
 
-tissue:
-  name: Tissue
-  enabled: 0
-  exclusive_races:
-    - Growth
-  land_type: swamp
-  perks:
-    food_production_raw: 4
-    housing: 176
-    jobs: 0
-
 tissue_plain:
   name: Tissue
   exclusive_races:
@@ -965,8 +954,8 @@ sinew:
     - Growth
   land_type: plain
   perks:
-    casualties_on_defense: 1,-5,90 # 1% gives -2% max -100%
-    casualties_on_offense: 1,-5,90 # 1% gives -2%, max -100%
+    casualties_on_defense: 1,-7.5,75 # 1% gives -2% max -100%
+    casualties_on_offense: 1,-7.5,75 # 1% gives -2%, max -100%
     housing: 88
     jobs: 0
 
