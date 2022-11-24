@@ -637,8 +637,7 @@ campaigns:
     land_discovered: 50
     expedition_land_gains: 25
   requires:
-    - surveillance
-    - weaponry
+    - professional_army
 
 elite_army:
   name: Elite Army
