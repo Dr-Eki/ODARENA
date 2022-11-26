@@ -243,7 +243,7 @@ class TickTest extends AbstractBrowserKitTestCase
         $this->assertEquals(-940, $productionCalculator->getFoodNetChange($dominion));
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $spellActionService->castSpell($dominion, 'gaias_watch');
+        $spellActionService->castSpell($dominion, 'enhanced_yields');
 
         // Refresh active spells
         $spellCalculator->getActiveSpells($dominion, true);

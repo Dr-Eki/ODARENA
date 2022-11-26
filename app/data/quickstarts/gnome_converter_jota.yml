@@ -72,7 +72,7 @@ resources:
 spells:
     sazals_charge: 0,96
     sazals_fog: 0,96
-    gaias_watch: 10,0
+    enhanced_yields: 10,0
     miners_sight: 17,0
     harmony: 36,0
 

@@ -49,7 +49,7 @@ resources:
 spells:
     sazals_charge: 0,108
     sazals_fog: 0,108
-    gaias_watch: 14,0
+    enhanced_yields: 14,0
     metabolism: 38,134
 
 advancements:

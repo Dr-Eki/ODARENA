@@ -76,7 +76,7 @@ spells:
     sazals_charge: 0,105
     sazals_fog: 0,105
     mining_strength: 27,0
-    gaias_watch: 27,0
+    enhanced_yields: 27,0
 
 advancements:
     anvils: 6
