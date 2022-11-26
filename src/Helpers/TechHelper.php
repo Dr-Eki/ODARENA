@@ -30,7 +30,7 @@ class TechHelper
             'construction_cost' => '%+d%% construction costs',
             'explore_draftee_cost' => '%s draftee per acre explore cost (min 3)',
             'explore_gold_cost' => '%+d%% exploring gold cost',
-            'max_population' => '%+d%% maximum population (multiplicative bonus)',
+            'population' => '%+d%% population',
             'rezone_cost' => '%+d%% rezoning costs',
 
             // Spy related

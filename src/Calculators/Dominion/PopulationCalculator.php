@@ -208,6 +208,9 @@ class PopulationCalculator
         // Decree
         $multiplier += $dominion->getDecreePerkMultiplier('max_population');
 
+        // Tech
+        $multiplier += $dominion->getTechPerkMultiplier('max_population');
+
         // Prestige Bonus
         $prestigeMultiplier = $this->prestigeCalculator->getPrestigeMultiplier($dominion);
 
