@@ -65,7 +65,7 @@
                                             @if ($interest = $resourceCalculator->getInterest($selectedDominion, $resourceKey))
                                                 <span class="text-muted">
                                                     <br>
-                                                    <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Interest rate:</small> {{ $resourceCalculator->getInterestRate($selectedDominion, $resourceKey)*100 }}%'>
+                                                    <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Interest rate:</small> {{ $resourceCalculator->getInterestRate($selectedDominion, $resourceKey)*100 }}%<br><small class="text-muted">Stockpile to reach max interest:</small> {{ number_format($resourceCalculator->getProductionRaw($selectedDominion, $resourceKey) / $resourceCalculator->getInterestRate($selectedDominion, $resourceKey)) }}'>
                                                         Interest: <span class="text-green">{{ number_format($interest) }}</span>
                                                     </span>
                                                 </span>
@@ -171,16 +171,6 @@
                           <td>{{ number_format(abs($jobsNeeded)) }}</td>
                         </tr>
                         @endif
-                        {{--
-                        <tr>
-                          <td>Lost income:</td>
-                          <td>{{ number_format(2.7 * abs($jobsNeeded) * $productionCalculator->getGoldProductionMultiplier($selectedDominion)) }} gold</td>
-                        </tr>
-                        <tr>
-                          <td>Per {{ $raceHelper->getPeasantsTerm($selectedDominion->race) }}:</td>
-                          <td>{{ number_format((2.7 * abs($jobsNeeded) * $productionCalculator->getGoldProductionMultiplier($selectedDominion)) / max(1, abs($jobsNeeded)), 3) }} gold</td>
-                        </tr>
-                        --}}
                       </tbody>
                   </table>
 
