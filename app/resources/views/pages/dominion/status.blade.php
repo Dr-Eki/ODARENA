@@ -97,7 +97,7 @@
                                 @endforeach
                                 <tr data-toggle="tooltip" data-placement="top" title='<small class="text-muted">XP:</small> {{ number_format($productionCalculator->getXpGeneration($selectedDominion)) }}/tick'>
                                     <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="<p>Used to unlock Advancements.</p><p>Unspent XP increases the perk from your Ruler Title.</p>">
+                                        <span data-toggle="tooltip" data-placement="top" title="<p>Used to level up Advancements.</p><p>Unspent XP increases the perk from your Ruler Title.</p>">
                                             Experience Points:
                                         </span>
                                     </td>
