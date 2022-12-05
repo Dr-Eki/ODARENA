@@ -19,7 +19,6 @@
     <meta name="application-name" content="ODARENA">
     <meta name="theme-color" content="#ffffff">
 
-
     @if(!in_array(request()->getHost(), ['sim.odarena.com', 'odarena.local', 'odarena.virtual']))
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-174957772-1"></script>
@@ -28,7 +27,7 @@
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'UA-174957772-1');
-        </script>
+        </script>   
     @endif
 
     @include('partials.styles')

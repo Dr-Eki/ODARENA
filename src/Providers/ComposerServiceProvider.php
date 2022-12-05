@@ -13,6 +13,7 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\SelectorService;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
+use OpenDominion\Calculators\Dominion\ProductionCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Services\Dominion\WorldNewsService;
@@ -110,6 +111,7 @@ class ComposerServiceProvider extends AbstractServiceProvider
         view()->composer('partials.resources-overview', function (View $view)
         {
             $view->with('networthCalculator', app(NetworthCalculator::class));
+            $view->with('productionCalculator', app(ProductionCalculator::class));
             $view->with('resourceCalculator', app(ResourceCalculator::class));
             $view->with('dominionProtectionService', app(ProtectionService::class));
             $view->with('raceHelper', app(RaceHelper::class));

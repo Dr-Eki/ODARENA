@@ -11,7 +11,7 @@ use OpenDominion\Helpers\TitleHelper;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 
-class TitleCalculator
+class UnitReturnCalculator
 {
     protected $militaryCalculator;
     protected $resourceCalculator;
