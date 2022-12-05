@@ -25,7 +25,7 @@
                     @php
                         $dpFromUnitsWithoutSufficientResources = $militaryCalculator->dpFromUnitWithoutSufficientResources($selectedDominion);
                     @endphp
-                    <div class="row" data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Raw:</small> {{ number_format($militaryCalculator->getDefensivePowerRaw($selectedDominion)) }}<br><small class="text-muted">Mod:</small> {{ number_format(($militaryCalculator->getDefensivePowerMultiplier($selectedDominion)-1)*100,2) }}%<br> @if($dpFromUnitsWithoutSufficientResources)<span class='text-red'><b>{{ number_format($dpFromUnitsWithoutSufficientResources) }} raw DP</b> unavailable due to insufficient resources!</span> @endif'>
+                    <div class="row" data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Raw:</small> {{ number_format($militaryCalculator->getDefensivePowerRaw($selectedDominion)) }}<br><small class="text-muted">Mods:</small> {{ number_format(($militaryCalculator->getDefensivePowerMultiplier($selectedDominion)-1)*100,2) }}%<br> @if($dpFromUnitsWithoutSufficientResources)<span class='text-red'><b>{{ number_format($dpFromUnitsWithoutSufficientResources) }} raw DP</b> unavailable due to insufficient resources!</span> @endif'>
                         <div class="col-lg-6"><b>DP:</b></div>
                         <div class="col-lg-6">
                             @if($dpFromUnitsWithoutSufficientResources)
@@ -38,7 +38,7 @@
                 </div>
 
                 <div class="col-xs-2">
-                    <div class="row" data-toggle="tooltip" data-placement="top" title='<small class="text-muted">XP:</small> {{ number_format($productionCalculator->getXpGeneration($selectedDominion)) }}/tick''>
+                    <div class="row" data-toggle="tooltip" data-placement="top" title='<small class="text-muted">XP:</small> {{ number_format($productionCalculator->getXpGeneration($selectedDominion)) }}/tick'>
                         <div class="col-lg-6"><b>XP:</b></div>
                         <div class="col-lg-6">{{ number_format($selectedDominion->xp) }}</div>
                     </div>

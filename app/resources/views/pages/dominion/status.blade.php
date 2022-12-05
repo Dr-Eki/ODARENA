@@ -90,12 +90,12 @@
                                     @php
                                         $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
                                     @endphp
-                                    <tr>
+                                    <tr data-toggle="tooltip" data-placement="top" title='<small class="text-muted">{{ $resource->name }}:</small> {{ number_format($resourceCalculator->getProduction($selectedDominion, $resourceKey) - $resourceCalculator->getConsumption($selectedDominion, $resourceKey)) }}/tick'>
                                         <td>{{ $resource->name }}:</td>
                                         <td>{{ number_format($resourceCalculator->getAmount($selectedDominion, $resourceKey)) }}</td>
                                     </tr>
                                 @endforeach
-                                <tr>
+                                <tr data-toggle="tooltip" data-placement="top" title='<small class="text-muted">XP:</small> {{ number_format($productionCalculator->getXpGeneration($selectedDominion)) }}/tick'>
                                     <td>
                                         <span data-toggle="tooltip" data-placement="top" title="<p>Used to unlock Advancements.</p><p>Unspent XP increases the perk from your Ruler Title.</p>">
                                             Experience Points:
