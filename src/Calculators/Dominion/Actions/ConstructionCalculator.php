@@ -208,13 +208,16 @@ class ConstructionCalculator
         // Faction Bonus
         $multiplier += $dominion->race->getPerkMultiplier('construction_cost');
 
-        // Techs
+        // Advancement
         $multiplier += $dominion->getAdvancementPerkMultiplier('construction_cost');
+
+        // Techs
+        $multiplier += $dominion->getTechPerkMultiplier('construction_cost');
 
         // Spell
         $multiplier += $dominion->getSpellPerkMultiplier('construction_cost');
 
-        // Techs
+        // Deity
         $multiplier += $dominion->getDeityPerkMultiplier('construction_cost');
 
         // Decree
@@ -242,6 +245,7 @@ class ConstructionCalculator
         $ticks = 12;
 
         $ticks -= $dominion->race->getPerkValue('increased_construction_speed');
+        $ticks += $dominion->getTechPerkValue('construction_time_raw');
         $ticks -= $dominion->title->getPerkValue('increased_construction_speed') * $dominion->getTitlePerkMultiplier();
 
         $multiplier = 1;

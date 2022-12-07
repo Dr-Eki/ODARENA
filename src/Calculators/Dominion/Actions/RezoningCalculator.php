@@ -124,8 +124,11 @@ class RezoningCalculator
         // Improvements
         $multiplier += $dominion->getImprovementPerkMultiplier('rezone_cost');
 
-        // Techs
+        // Advancements
         $multiplier += $dominion->getAdvancementPerkMultiplier('rezone_cost');
+
+        // Techs
+        $multiplier += $dominion->getTechPerkMultiplier('rezone_cost');
 
         // Deity
         $multiplier += $dominion->getDeityPerkMultiplier('rezone_cost');
