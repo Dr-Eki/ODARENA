@@ -11,6 +11,8 @@
         <div class="row">
             <div class="col-md-12">
                 <p>Units are assigned a Sabotage Power, which is calculated as 1 for spies and for other units as <code>[Offensive Power] * ([Counts As Spy] + [Counts As Spy On Offense] + [Counts As Spy On Sabotage])</code>, meaning that a unit 6 offensive power and which counts as 0.5 spy has 3.0 sabotage power.</p>
+                <p>Sabotaged improvements and buildings are automatically restored after six ticks.</p>
+                <p>Sabotaged construction delays construction of the affected buildings by two ticks, but to no greater than 12 ticks.</p>
                 <p>The formula used to calculate sabotage damage is:</p>
                 <code>
                     [Base Damage] * (([Sabotage Point Sent] / [Target Land Size]) / [Target Defensive SPA])) * [Saboteur Damage Boosts] * [Target Damage Reductions]
