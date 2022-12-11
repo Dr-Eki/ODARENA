@@ -45,6 +45,7 @@ units:
       does_not_count_as_population: 1
       archmage_limit: 16 # Unit slot, amount
       instant_return: 1
+      casualties_from_recent_invasions_sent: 10
 
   - name: Sft'Rm
     training_time: 6
@@ -61,6 +62,7 @@ units:
       no_draftee: 1
       does_not_count_as_population: 1
       archmage_limit: 8 # Unit slot, amount
+      casualties_from_recent_invasions_sent: 10
 
   - name: Ze'Tk
     training_time: 9
@@ -78,6 +80,7 @@ units:
       does_not_count_as_population: 1
       archmage_limit: 8 # Unit slot, amount
       instant_return: 1
+      casualties_from_recent_invasions_sent: 10
 
   - name: Frs'Kl
     training_time: 12
@@ -95,3 +98,4 @@ units:
       does_not_count_as_population: 1
       archmage_limit: 8 # Unit slot, amount
       instant_return: 1
+      casualties_from_recent_invasions_sent: 10

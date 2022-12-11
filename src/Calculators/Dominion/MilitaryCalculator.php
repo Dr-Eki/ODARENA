@@ -2403,7 +2403,7 @@ class MilitaryCalculator
         return $invasionEvents->count();
     }
 
-    public function getRecentInvasionsSent(Dominion $dominion, int $ticks = 24): int
+    public function getRecentInvasionsSent(Dominion $dominion, int $ticks = 12): int
     {
         return GameEvent::query()
             ->where('tick', '>=', ($dominion->round->ticks - $ticks))
@@ -3057,8 +3057,21 @@ class MilitaryCalculator
         $unitSpyPower += $unit->getPerkValue('counts_as_spy_on_offense');
         $unitSpyPower += $unit->getPerkValue('counts_as_spy_on_sabotage');
 
-        return $unitOp * $unitSpyPower;
+        if ($timePerkData = $saboteur->race->getUnitPerkValueForUnitSlot($unit->slot, ("counts_as_spy_offense_from_time"), null))
+        {
+            $powerFromTime = (float)$timePerkData[2];
+            $hourFrom = $timePerkData[0];
+            $hourTo = $timePerkData[1];
+            if (
+                (($hourFrom < $hourTo) and (now()->hour >= $hourFrom and now()->hour < $hourTo)) or
+                (($hourFrom > $hourTo) and (now()->hour >= $hourFrom or now()->hour < $hourTo))
+            )
+            {
+                $unitSpyPower += $powerFromTime;
+            }
+        }
 
+        return $unitOp * $unitSpyPower;
     }
 
     public function getUnitsSabotagePower(Dominion $saboteur, array $units): float

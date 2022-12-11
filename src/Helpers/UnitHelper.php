@@ -270,6 +270,8 @@ class UnitHelper
             'fixed_casualties' => 'Always suffers %d%% casualties.',
             'fixed_casualties_if_overwhelmed' => 'Always suffers %+g%% casualties if overwhelmed.',
             'casualties_from_title' => '%2$s%% fewer casualties if ruled by a %1$s.',
+            'casualties_from_deity' => '%2$s%% fewer casualties if devoted to %1$s.', # Made by AI, use later?
+            'casualties_from_recent_invasions_sent' => '%+g%% casualties per invasion sent in the last 12 ticks.',
 
             'immortal' => 'Immortal in combat.',
             'true_immortal' => 'Immortal in combat.',

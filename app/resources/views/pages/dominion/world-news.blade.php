@@ -55,10 +55,10 @@
                                         @if ($gameEvent->type == 'theft' and ($gameEvent->source->realm_id == $selectedDominion->realm->id or $gameEvent->target->realm_id == $selectedDominion->realm->id))
                                             <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="fas fa-hand-lizard fa-fw"></i></a>
                                         @endif
-                                        @if ($gameEvent->type == 'sorcery' and ($gameEvent->source->realm_id == $selectedDominion->realm->id))
+                                        @if ($gameEvent->type == 'sorcery' and ($gameEvent->source->realm_id == $selectedDominion->realm->id or $gameEvent->target->realm_id == $selectedDominion->realm->id))
                                             <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="fas fa-hat-wizard fa-fw"></i></a>
                                         @endif
-                                        @if ($gameEvent->type == 'sabotage' and ($gameEvent->source->realm_id == $selectedDominion->realm->id))
+                                        @if ($gameEvent->type == 'sabotage' and ($gameEvent->source->realm_id == $selectedDominion->realm->id or $gameEvent->target->realm_id == $selectedDominion->realm->id))
                                             <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="fa fa-user-secret fa-fw"></i></a>
                                         @endif
                                     </td>
