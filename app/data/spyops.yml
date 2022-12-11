@@ -169,7 +169,7 @@ capture_servants:
   exclusive_races:
     - Vampires
   perks:
-    peasants: 1
+    peasants: 0.5
     convert_peasants_to_vampires_unit1: 1
 
 propaganda:
