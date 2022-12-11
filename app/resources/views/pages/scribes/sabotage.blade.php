@@ -13,15 +13,14 @@
                 <p>Units are assigned a Sabotage Power, which is calculated as 1 for spies and for other units as <code>[Offensive Power] * ([Counts As Spy] + [Counts As Spy On Offense] + [Counts As Spy On Sabotage])</code>, meaning that a unit 6 offensive power and which counts as 0.5 spy has 3.0 sabotage power.</p>
                 <p>The formula used to calculate sabotage damage is:</p>
                 <code>
-                    ([Base Damage] * [Spy Strength]) * (([Sabotage Point Sent] / [Target Land Size]) / [Target Defensive SPA])) * [Saboteur Damage Boosts] * [Target Damage Reductions]
+                    [Base Damage] * (([Sabotage Point Sent] / [Target Land Size]) / [Target Defensive SPA])) * [Saboteur Damage Boosts] * [Target Damage Reductions]
                 </code>
                 <p>Definitions:</p>
                 <ul>
                     <li><code>[Base Damage]</code> is the base damage stated for that particular sabotage operation/perk.</li>
-                    <li><code>[Spy Strength]</code> is the amount of spy strength the saboteur is spending on this operation.</li>
                     <li><code>[Sabotage Point Sent]</code> is the amount of sabotage points the saboteur is sending on this operation.</li>
                     <li><code>[Target Land Size]</code> is the size of the target's land.</li>
-                    <li><code>[Target Defensive SPA]</code> is the target's defensive SPA.</li>
+                    <li><code>[Target Defensive SPA]</code> is the target's defensive SPA. If target has zero SPA, this step is skipped.</li>
                     <li><code>[Saboteur Damage Boosts]</code> is the sum of all the damage boosts the saboteur has.</li>
                     <li><code>[Target Damage Reductions]</code> is the sum of all the damage reductions the target has.</li>
                 </ul>
