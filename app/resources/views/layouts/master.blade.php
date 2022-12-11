@@ -27,7 +27,20 @@
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'UA-174957772-1');
-        </script>   
+        </script>
+
+        <script>
+            // Initialize the agent at application startup.
+            // Some ad blockers or browsers will block Fingerprint Pro CDN URL.
+            // To fix this, please use the NPM package instead.
+            const fpPromise = import('https://fpjscdn.net/v3/glUlb7iZUsU4AjkO12Ic')
+            .then(FingerprintJS => FingerprintJS.load());
+        
+            // Get the visitor identifier when you need it.
+            fpPromise
+            .then(fp => fp.get())
+            .then(result => console.log(result.visitorId));
+        </script>
     @endif
 
     @include('partials.styles')
