@@ -2403,6 +2403,18 @@ class MilitaryCalculator
         return $invasionEvents->count();
     }
 
+    public function getRecentInvasionsSent(Dominion $dominion, int $ticks = 24): int
+    {
+        return GameEvent::query()
+            ->where('tick', '>=', ($dominion->round->ticks - $ticks))
+            ->where([
+                'source_type' => Dominion::class,
+                'source_id' => $dominion->id,
+                'type' => 'invasion',
+            ])
+            ->count();
+    }
+
     /**
      * Checks if $defender recently invaded $attacker's realm.
      *
@@ -3022,6 +3034,43 @@ class MilitaryCalculator
         #dd($maxUnits, $multiplier, $maxUnits * $multiplier);
 
         return $maxUnits * $multiplier;
+    }
+
+    public function getUnitSabotagePoints(Dominion $saboteur, string $unitType): float
+    {
+        if($unitType == 'spies')
+        {
+            return 1;
+        }
+
+        $unitSlot = (int)str_replace('unit','',$unitType);
+
+        $unit = $saboteur->race->units->filter(function ($unit) use ($unitSlot) {
+            return ($unit->slot === $unitSlot);
+        })->first();
+
+        # Get unit offensive power
+        $unitOp = $this->getUnitPowerWithPerks($saboteur, null, null, $unit, 'offense');
+
+        # Get unit counts_as_spy perk power
+        $unitSpyPower = $unit->getPerkValue('counts_as_spy');
+        $unitSpyPower += $unit->getPerkValue('counts_as_spy_on_offense');
+        $unitSpyPower += $unit->getPerkValue('counts_as_spy_on_sabotage');
+
+        return $unitOp * $unitSpyPower;
+
+    }
+
+    public function getUnitsSabotagePower(Dominion $saboteur, array $units): float
+    {
+        $sabotagePower = 0;
+
+        foreach($units as $unitType => $amount)
+        {
+            $sabotagePower += $this->getUnitSabotagePoints($saboteur, $unitType) * $amount;
+        }
+
+        return $sabotagePower;
     }
 
 }

@@ -452,4 +452,9 @@ class BuildingHelper
 
     }
 
+    public function getBuildingName(string $buildingKey): string
+    {
+        return Building::where('key', $buildingKey)->first()->name;
+    }
+
 }

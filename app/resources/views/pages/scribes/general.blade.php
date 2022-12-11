@@ -20,7 +20,9 @@
                 <li><a class="btn btn-block" href="#psionics">Psionics</a></li>
                 <li><a class="btn btn-block" href="#psionic_conversion">Psionic Conversion</a></li>
                 <li><a class="btn btn-block" href="#rounds">Rounds</a></li>
+                {{--
                 <li><a class="btn btn-block" href="#sabotage">Sabotage</a></li>
+                --}}
                 <li><a class="btn btn-block" href="#sorcery">Sorcery</a></li>
                 <li><a class="btn btn-block" href="#theft">Theft</a></li>
                 <li><a class="btn btn-block" href="#ticks">Ticks</a></li>
@@ -479,6 +481,7 @@
         </div>
     </div>
 
+    {{--
     <div class="col-sm-12 col-md-12">
         <a id="sabotage"></a>
         <div class="box box-primary">
@@ -498,6 +501,7 @@
             </div>
         </div>
     </div>
+    --}}
 
     <div class="col-sm-12 col-md-12">
         <a id="sorcery"></a>

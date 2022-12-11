@@ -58,28 +58,75 @@
                                     <col width="50%">
                                 </colgroup>
                                 <tbody>
-                                @foreach($event->data['damage'] as $perkKey => $perkDamageData)
-                                    <tr>
-                                        <td class="text-right">{{ $sabotageHelper->getPerkKeyHeader($perkKey) }}:</td>
-                                        <td>
-                                            <span class="text-{{ $class }}">
-                                                {{ number_format($perkDamageData['damage_dealt']) }}
 
-                                                @if($perkKey == 'destroy_resource' or $perkKey == 'resource_theft')
-                                                    {{ $perkDamageData['resource_name'] }}
-                                                @endif
-                                            </span>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                    @foreach($event['data']['damage_dealt'] as $damageType => $damageData)
+                                        <tr>
+                                            @if($damageType == 'construction')
+                                                <td class="text-right">Construction delayed:</td>
+                                                <td>
+                                                    @foreach($damageData as $buildingKey => $amount)
+                                                        @php
+                                                            $building = OpenDominion\Models\Building::where('key', $buildingKey)->first();
+                                                        @endphp
+                                                        {{ $building->name }}: {{ number_format($amount) }}<br>
+                                                    @endforeach
+                                                </td>
 
-                                @if($canViewSource)
-                                    <tr>
-                                        <td class="text-right">Spy strength:</td>
-                                        <td>{{ number_format($event['data']['saboteur']['spy_strength_spent']) }}%</td>
-                                    </tr>
-                                @endif
+                                            @elseif($damageType == 'buildings')
+                                                <td class="text-right">Buildings sabotaged:</td>
+                                                <td>
+                                                    @foreach($damageData as $buildingKey => $amount)
+                                                        @php
+                                                            $building = OpenDominion\Models\Building::where('key', $buildingKey)->first();
+                                                        @endphp
+                                                        {{ $building->name }}: {{ number_format($amount) }}<br>
+                                                    @endforeach
+                                                </td>
 
+                                            @elseif($damageType == 'improvements')
+                                                <td class="text-right">Improvements sabotaged:</td>
+                                                <td>
+                                                    @foreach($damageData as $improvementKey => $amount)
+                                                        @php
+                                                            $improvement = OpenDominion\Models\Improvement::where('key', $improvementKey)->first();
+                                                        @endphp
+                                                        {{ $improvement->name }}: {{ number_format($amount) }}<br>
+                                                    @endforeach
+                                                </td>
+                                            @else
+                                                <td class="text-right">{{ $sabotageHelper->getDamageTypeString($damageType, $event->target->race, intval($damageData[$damageType])) }}:</td>
+                                                <td>{{ number_format($damageData[$damageType]) }}</td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+
+                                    @if($canViewSource or $event->data['target']['reveal_ops'])
+                                        <tr>
+                                            <td class="text-right">Sabotage units sent:</td>
+                                            <td>
+                                                @foreach($event['data']['units'] as $slot => $amount)
+                                                    {{ $unitHelper->getUnitName($slot, $event->source->race) }}: {{ number_format($amount) }}<br>
+                                                @endforeach
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    @if(array_sum($event['data']['killed_units']))
+                                        <tr>
+                                            <td class="text-right">Sabotage units killed:</td>
+                                            <td>
+                                                @foreach($event['data']['killed_units'] as $slot => $amount)
+                                                    {{ $unitHelper->getUnitName($slot, $event->source->race) }}: {{ number_format($amount) }}<br>
+                                                @endforeach
+                                            </td>
+                                        </tr>
+                                    @endif
+
+                                    @if($canViewSource)
+                                        <tr>
+                                            <td class="text-right">Spy strength:</td>
+                                            <td>{{ number_format($event['data']['saboteur']['spy_strength_spent']) }}%</td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

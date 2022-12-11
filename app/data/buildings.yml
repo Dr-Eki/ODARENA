@@ -55,14 +55,6 @@ farm:
   perks:
     food_production_raw: 80
 
-bog:
-  name: Bog
-  exclusive_races:
-    - Reptilians
-  land_type: swamp
-  perks:
-    food_production_raw: 100
-
 ore_mine:
   name: Ore Mine
   excluded_races:
@@ -98,16 +90,6 @@ ore_mine:
   perks:
     ore_production_raw: 60
 
-dwarven_ore_mine:
-  enabled: 0
-  name: Dwarven Ore Mine
-  exclusive_races:
-    - Dwarf
-  land_type: mountain
-  perks:
-    ore_production_raw: 60
-    housing: 24
-
 gem_mine:
   name: Gem Mine
   excluded_races:
@@ -121,6 +103,7 @@ gem_mine:
     - Marshling
     - Monster
     - Myconid
+    - Reptilians
     - Simian
     - Swarm
     - Sylvan
@@ -138,6 +121,7 @@ vault:
     - Glimjir
     - Monster
     - Myconid
+    - Reptilians
     - Sylvan
     - Wood Elf
     - Void
@@ -1748,6 +1732,16 @@ mansion:
     jobs: 10
     vampires_unit1_housing: 60
 
+# BEGIN REPTILIANS
+
+bog:
+  name: Bog
+  exclusive_races:
+    - Reptilians
+  land_type: swamp
+  perks:
+    food_production_raw: 100
+
 mire:
   name: Mire
   exclusive_races:
@@ -1756,6 +1750,27 @@ mire:
   perks:
     housing: 30
     jobs: 0
+
+swamp_vault:
+  name: Vault
+  exclusive_races:
+    - Reptilians
+  land_type: water
+  perks:
+  perks:
+    gold_theft_protection: 25000
+    gems_theft_protection: 2500
+
+siftery:
+  name: Siftery
+  exclusive_races:
+    - Reptilians
+  land_type: water
+  perks:
+    gems_production_raw: 14
+    gems_production_mod: 1,0.40,40 # Every 1% gives +0.25% gem production, max +25%
+
+# END REPTILIANS
 
 residence:
   name: Residence

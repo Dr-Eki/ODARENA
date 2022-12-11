@@ -86,9 +86,9 @@ class SabotageActionService
                 throw new GameException('Nice try, but you cannot sabotage cross-round.');
             }
 
-            if ($saboteur->realm->id === $target->realm->id and ($saboteur->round->mode == 'standard' or $saboteur->round->mode == 'standard-duration'))
+            if ($saboteur->realm->id === $target->realm->id and ($saboteur->round->mode == 'standard' or $saboteur->round->mode == 'standard-duration' or $saboteur->round->mode == 'artefacts'))
             {
-                throw new GameException('You cannot sabotage from other dominions in the same realm as you in standard rounds.');
+                throw new GameException('You cannot sabotage from other dominions in the same realm as you in this round.');
             }
 
             if ($saboteur->id == $target->id)
@@ -101,14 +101,14 @@ class SabotageActionService
                 throw new GameException('You are sending out too much OP, based on your new home DP (4:3 rule).');
             }
 
-            if (!$this->passesUnitSendableCapacityCheck($dominion, $units))
+            if (!$this->passesUnitSendableCapacityCheck($saboteur, $units))
             {
                 throw new GameException('You do not have enough caverns to send out this many units.');
             }
 
             if (!$this->hasEnoughUnitsAtHome($saboteur, $units))
             {
-                throw new GameException('You don\'t have enough units at home to send this many units.');
+                throw new GameException('You don not have enough units at home to send this many units.');
             }
 
             foreach($units as $slot => $amount)
@@ -148,12 +148,7 @@ class SabotageActionService
                 throw new GameException($saboteur->race->name . ' cannot sabotage.');
             }
 
-            if ($saboteur->race->getPerkValue('cannot_sabotage'))
-            {
-                throw new GameException($saboteur->race->name . ' cannot sabotage.');
-            }
-
-            // Spell: Rainy Season (cannot invade)
+            // Spell: Rainy Season (cannot sabotage)
             if ($saboteur->getSpellPerkValue('cannot_sabotage'))
             {
                 throw new GameException('A spell is preventing from you sabotage.');
@@ -193,7 +188,7 @@ class SabotageActionService
 
             if($spyStrengthCost > $saboteur->spy_strength)
             {
-                throw new GameException('You do not have enough spy strength to send that many units. You have ' . $saboteur->spy_strength . '% and would need ' . $spyStrengthCost . '% to send that many units.');
+                throw new GameException('You do not have enough spy strength to send that many units. You have ' . $saboteur->spy_strength . ' and would need ' . $spyStrengthCost . ' to send that many units.');
             }
 
             # END VALIDATION
@@ -204,7 +199,9 @@ class SabotageActionService
                         'fog' => $saboteur->getSpellPerkValue('fog_of_war') ? true : false,
                         'spy_strength_current' => $saboteur->spy_strength,
                         'spy_strength_spent' => $spyStrengthCost,
-                        'spy_ratio' => $this->militaryCalculator->getSpyRatio($saboteur, 'offense')
+                        'spy_ratio' => $this->militaryCalculator->getSpyRatio($saboteur, 'offense'),
+                        'sabotage_power_sent' => $this->militaryCalculator->getUnitsSabotagePower($saboteur, $units),
+                        'units_sent' => $units
                     ],
                 'target' => [
                         'crypt_bodies' => 0,
@@ -213,178 +210,39 @@ class SabotageActionService
                         'spy_strength_current' => $target->spy_strength,
                         'spy_ratio' => $this->militaryCalculator->getSpyRatio($target, 'defense')
                     ],
-                'damage' => [],
+                'damage' => $this->sabotageCalculator->getSabotageDamage($saboteur, $target, $spyop, $units, $spyStrengthCost),
             ];
 
-            foreach($spyop->perks as $perk)
+            foreach($this->sabotage['damage'] as $type => $sabotageDamage)
             {
-                $spyopPerkValues = $spyop->getSpyopPerkValues($spyop->key, $perk->key);
 
-                if($perk->key === 'kill_peasants')
+                # Handle buildings damage
+                if($type == 'buildings')
                 {
-                    $baseDamage = (float)$spyopPerkValues;
-                    $attribute = 'peasants';
-
-                    $ratioMultiplier = $this->sabotageCalculator->getRatioMultiplier($saboteur, $target, $spyop, $attribute, $units, false);
-                    $saboteurDamageMultiplier = $this->sabotageCalculator->getSaboteurDamageMultiplier($saboteur, $attribute);
-                    $targetDamageMultiplier = $this->sabotageCalculator->getTargetDamageMultiplier($saboteur, $attribute);
-
-                    $damage = array_sum($units) * $baseDamage * $ratioMultiplier * $saboteurDamageMultiplier * $targetDamageMultiplier;
-
-                    # Factor in peasant DP to increase/decrease peasant killed
-                    $damage /= (($target->race->getPerkValue('peasant_dp') + $target->getTechPerkValue('peasant_dp')) ?: 1);
-
-                    $damage = floor($damage);
-
-                    $damageDealt = min($damage, $target->peasants);
-                    
-
-                    $peasantsBefore = $target->peasants;
-                    $target->peasants -= $damageDealt;
-                    $peasantsAfter = $peasantsBefore - $damageDealt;
-
-                    $this->statsService->updateStat($saboteur, 'sabotage_peasants_killed', $damageDealt);
-                    $this->statsService->updateStat($target, 'sabotage_peasants_lost', $damageDealt);
-
-                    # For Empire, add killed draftees go in the crypt
-                    if($target->realm->alignment === 'evil')
+                    foreach($sabotageDamage['mod'] as $buildingKey => $damageRatio)
                     {
-                        $this->resourceService->updateRealmResources($target->realm, ['body' => $damageDealt]);
-                        $this->sabotage['target']['crypt_bodies'] += $damageDealt;
+                        $building = Building::where('key', $buildingKey)->first();
+
+                        $targetBuildingsOwned = $this->buildingCalculator->getBuildingAmountOwned($target, $building);
+                
+                        $damage = min($targetBuildingsOwned * $damageRatio, $targetBuildingsOwned);
+                        $damage = (int)floor($damage);
+
+                        $this->buildingCalculator->removeBuildings($target, [$buildingKey => ['builtBuildingsToDestroy' => $damage]]);
+                        $this->queueService->queueResources('repair', $target, [('building_' . $buildingKey) => $damage], 6);
+        
+                        $this->statsService->updateStat($saboteur, 'sabotage_buildings_damage_dealt', $damage);
+                        $this->statsService->updateStat($target, 'sabotage_buildings_damage_suffered', $damage);
+
+                        $this->sabotage['damage_dealt'][$type] = [$buildingKey => $damage];
                     }
-
-                    $this->sabotage['damage'][$perk->key] = [
-                        'ratio_multiplier' => $ratioMultiplier,
-                        'saboteur_damage_multiplier' => $saboteurDamageMultiplier,
-                        'target_damage_multiplier' => $targetDamageMultiplier,
-                        'damage' => $damage,
-                        'damage_dealt' => $damageDealt,
-                        'peasants_before' => (int)$peasantsBefore,
-                        'peasants_after' => (int)$peasantsAfter,
-                    ];
                 }
 
-                if($perk->key === 'kill_draftees')
+                # Handle construction (unfinished buildings)
+                if($type == 'construction')
                 {
-                    $baseDamage = (float)$spyopPerkValues;
-                    $attribute = 'draftees';
 
-                    $ratioMultiplier = $this->sabotageCalculator->getRatioMultiplier($saboteur, $target, $spyop, $attribute, $units, false);
-                    $saboteurDamageMultiplier = $this->sabotageCalculator->getSaboteurDamageMultiplier($saboteur, $attribute);
-                    $targetDamageMultiplier = $this->sabotageCalculator->getTargetDamageMultiplier($saboteur, $attribute);
-
-                    $damage = array_sum($units) * $baseDamage * $ratioMultiplier * $saboteurDamageMultiplier * $targetDamageMultiplier;
-
-                    # Factor in draftee DP to increase/decrease draftees killed
-                    $damage /= (($target->race->getPerkValue('draftee_dp') + $target->getTechPerkValue('draftee_dp')) ?: 1);
-
-                    $damage = floor($damage);
-
-                    $damageDealt = min($damage, $target->military_draftees);
-
-                    $drafteesBefore = $target->military_draftees;
-                    $target->military_draftees -= $damageDealt;
-                    $drafteesAfter = $drafteesBefore - $damageDealt;
-
-                    $this->statsService->updateStat($saboteur, 'sabotage_draftees_killed', $damageDealt);
-                    $this->statsService->updateStat($target, 'sabotage_draftees_lost', $damageDealt);
-
-                    # For Empire, add killed draftees go in the crypt
-                    if($target->realm->alignment === 'evil')
-                    {
-                        $this->resourceService->updateRealmResources($target->realm, ['body' => $damageDealt]);
-                        $this->sabotage['target']['crypt_bodies'] += $damageDealt;
-                    }
-
-                    $this->sabotage['damage'][$perk->key] = [
-                        'ratio_multiplier' => $ratioMultiplier,
-                        'saboteur_damage_multiplier' => $saboteurDamageMultiplier,
-                        'target_damage_multiplier' => $targetDamageMultiplier,
-                        'damage' => $damage,
-                        'damage_dealt' => $damageDealt,
-                        'draftees_before' => (int)$drafteesBefore,
-                        'draftees_after' => (int)$drafteesAfter,
-                    ];
-                }
-
-                if($perk->key === 'decrease_morale')
-                {
-                    $baseDamage = (float)$spyopPerkValues;
-                    $attribute = 'morale';
-
-                    $ratioMultiplier = $this->sabotageCalculator->getRatioMultiplier($saboteur, $target, $spyop, $attribute, $units, false);
-                    $saboteurDamageMultiplier = $this->sabotageCalculator->getSaboteurDamageMultiplier($saboteur, $attribute);
-                    $targetDamageMultiplier = $this->sabotageCalculator->getTargetDamageMultiplier($saboteur, $attribute);
-
-                    $damage = array_sum($units) * $baseDamage * $ratioMultiplier * $saboteurDamageMultiplier * $targetDamageMultiplier;
-
-                    $damage = floor($damage);
-
-                    $damageDealt = min($damage, $target->morale);
-
-                    $moraleBefore = $target->morale;
-                    $target->morale -= $damageDealt;
-                    $moraleAfter = $moraleBefore - $damageDealt;
-
-                    $this->statsService->updateStat($saboteur, 'sabotage_morale_damage_dealt', $damageDealt);
-                    $this->statsService->updateStat($target, 'sabotage_morale_damage_suffered', $damageDealt);
-
-                    $this->sabotage['damage'][$perk->key] = [
-                        'ratio_multiplier' => $ratioMultiplier,
-                        'saboteur_damage_multiplier' => $saboteurDamageMultiplier,
-                        'target_damage_multiplier' => $targetDamageMultiplier,
-                        'damage' => $damage,
-                        'damage_dealt' => $damageDealt,
-                        'morale_before' => (int)$moraleBefore,
-                        'morale_after' => (int)$moraleAfter,
-                    ];
-                }
-
-                if($perk->key === 'decrease_wizard_strength')
-                {
-                    $baseDamage = (float)$spyopPerkValues;
-                    $attribute = 'wizard_strength';
-
-                    $ratioMultiplier = $this->sabotageCalculator->getRatioMultiplier($saboteur, $target, $spyop, $attribute, $units, false);
-                    $saboteurDamageMultiplier = $this->sabotageCalculator->getSaboteurDamageMultiplier($saboteur, $attribute);
-                    $targetDamageMultiplier = $this->sabotageCalculator->getTargetDamageMultiplier($saboteur, $attribute);
-
-                    $damage = array_sum($units) * $baseDamage * $ratioMultiplier * $saboteurDamageMultiplier * $targetDamageMultiplier;
-
-                    $damage = floor($damage);
-
-                    $damageDealt = min($damage, $target->wizard_strength);
-
-                    $wizardStrengthBefore = $target->wizard_strength;
-                    $target->wizard_strength -= $damageDealt;
-                    $wizardStrengthAfter = $wizardStrengthBefore - $damageDealt;
-
-                    $this->statsService->updateStat($saboteur, 'sabotage_wizard_strength_damage_dealt', $damageDealt);
-                    $this->statsService->updateStat($target, 'sabotage_wizard_strength_damage_suffered', $damageDealt);
-
-                    $this->sabotage['damage'][$perk->key] = [
-                        'ratio_multiplier' => $ratioMultiplier,
-                        'saboteur_damage_multiplier' => $saboteurDamageMultiplier,
-                        'target_damage_multiplier' => $targetDamageMultiplier,
-                        'damage' => $damage,
-                        'damage_dealt' => $damageDealt,
-                        'wizard_strength_before' => (int)$wizardStrengthBefore,
-                        'wizard_strength_after' => (int)$wizardStrengthAfter,
-                    ];
-                }
-
-                if($perk->key === 'sabotage_construction')
-                {
-                    $constructionBuildings = [];
-                    $sabotagedConstruction = [];
-                    $baseDamage = (float)$spyopPerkValues;
-                    $attribute = 'construction';
-
-                    $ratioMultiplier = $this->sabotageCalculator->getRatioMultiplier($saboteur, $target, $spyop, $attribute, $units, false);
-                    $saboteurDamageMultiplier = $this->sabotageCalculator->getSaboteurDamageMultiplier($saboteur, $attribute);
-                    $targetDamageMultiplier = $this->sabotageCalculator->getTargetDamageMultiplier($saboteur, $attribute);
-
-                    $damage = (int)floor(array_sum($units) * $baseDamage * $ratioMultiplier * $saboteurDamageMultiplier * $targetDamageMultiplier);
+                    $damageRatio = $sabotageDamage['mod']['construction'];
 
                     $this->queueService->setForTick(false); # OFF
 
@@ -398,127 +256,114 @@ class SabotageActionService
 
                     if(!empty($constructionBuildings))
                     {
-                          $damageRemaining = $damage;
-                          foreach($constructionBuildings as $buildingKey => $construction)
-                          {
-                              if($damageRemaining <= 0)
-                              {
-                                  break;
-                              }
+                        foreach($constructionBuildings as $buildingKey => $construction)
+                        {
+                            $hours = key($construction);
+                            $newHours = min(12, $hours + 2);
 
-                              $hours = key($construction);
-                              $newHours = min(12, $hours + 2);
+                            $amount = $construction[$hours];
+                            $amountSabotaged = (int)floor($amount * $damageRatio);
 
-                              $amount = $construction[$hours];
-                              $amountSabotaged = (int)min($amount, $damageRemaining);
+                            $buildingResourceKey = 'building_' . $buildingKey;
 
-                              $buildingResourceKey = 'building_' . $buildingKey;
+                            $this->queueService->dequeueResourceForHour('construction', $target, $buildingResourceKey, $amountSabotaged, $hours);
+                            $this->queueService->queueResources('construction', $target, [$buildingResourceKey => $amountSabotaged], $newHours);
 
-                              $this->queueService->dequeueResourceForHour('construction', $target, $buildingResourceKey, $amountSabotaged, $hours);
-                              $this->queueService->queueResources('construction', $target, [$buildingResourceKey => $amountSabotaged], $newHours);
+                            isset($this->sabotage['damage_dealt'][$type][$buildingKey]) ? $this->sabotage['damage_dealt'][$type][$buildingKey] += $amountSabotaged : $this->sabotage['damage_dealt'][$type][$buildingKey] = $amountSabotaged;
+                        }
 
-                              $building = Building::where('key', $buildingKey)->first();
+                        $this->statsService->updateStat($saboteur, 'sabotage_construction_damage_dealt', array_sum($this->sabotage['damage_dealt'][$type]));
+                        $this->statsService->updateStat($target, 'sabotage_construction_damage_suffered', array_sum($this->sabotage['damage_dealt'][$type]));
+                    }
 
-                              $sabotagedConstruction[$buildingKey] = [
-                                  'name' => $building->name,
-                                  'amount_construction' => $amount,
-                                  'amount_sabotaged' => $amountSabotaged,
-                                  'hours_before' => $hours,
-                                  'hours_after' => $newHours
-                                  ];
+                    $this->queueService->setForTick(true); # ON
 
-                              $damageRemaining -= $amountSabotaged;
-                          }
-                      }
-
-                      $this->queueService->setForTick(true); # ON
-
-                      $this->statsService->updateStat($saboteur, 'sabotage_damage_construction', $damage);
-
-                      $this->sabotage['damage'][$perk->key] = [
-                          'ratio_multiplier' => $ratioMultiplier,
-                          'saboteur_damage_multiplier' => $saboteurDamageMultiplier,
-                          'target_damage_multiplier' => $targetDamageMultiplier,
-                          'damage' => $damage,
-                          'damage_dealt' => $sabotagedConstruction
-                      ];
                 }
-            }
 
-            if($perk->key == 'sabotage_building')
-            {
-                $attribute = 'building';
-                $buildingKey = (string)$spyopPerkValues[0];
-                $ratio = (float)$spyopPerkValues[1] / 100;
-                $this->sabotage['saboteur']['spy_strength_spent'];
+                # Handle improvements damage
+                if($type == 'improvements')
+                {
+                    foreach($sabotageDamage['mod'] as $improvementKey => $damageRatio)
+                    {
+                        $improvement = Improvement::where('key', $improvementKey)->first();
 
-                $building = Building::where('key',$buildingKey)->first();
+                        $targetImprovementPoints = $this->improvementCalculator->getDominionImprovementAmountInvested($target, $improvement);
 
-                $targetBuildingsOwned = $this->buildingCalculator->getBuildingAmountOwned($target, $building);
+                        $damage = min($targetImprovementPoints * $damageRatio, $targetImprovementPoints);
+                        $damage = (int)floor($damage);
+        
+                        $this->improvementCalculator->decreaseImprovements($target, [$improvementKey => $damage]);
+                        $this->queueService->queueResources('restore', $target, ['improvement_' . $improvementKey => $damage], 6);
+        
+                        $this->statsService->updateStat($saboteur, 'sabotage_improvements_damage_dealt', $damage);
+                        $this->statsService->updateStat($target, 'sabotage_improvements_damage_suffered', $damage);
 
-                $baseDamage = (float)$spyopPerkValues;
+                        $this->sabotage['damage_dealt'][$type] = [$improvementKey => $damage];
+                    }
+                }
 
-                $ratioMultiplier = $this->sabotageCalculator->getRatioMultiplier($saboteur, $target, $spyop, $attribute, $units, false);
-                $saboteurDamageMultiplier = $this->sabotageCalculator->getSaboteurDamageMultiplier($saboteur, $attribute);
-                $targetDamageMultiplier = $this->sabotageCalculator->getTargetDamageMultiplier($saboteur, $attribute);
+                # Handle resource damage
+                if($type == 'resources')
+                {
+                    foreach($sabotageDamage['mod'] as $resourceKey => $damageRatio)
+                    {
+                        $resource = Resource::where('key', $resourceKey)->first();
 
-                $damage = array_sum($units) * $baseDamage * $ratioMultiplier * $saboteurDamageMultiplier * $targetDamageMultiplier;
-                $damage = floor($damage);
+                        $targetResourceAmount = $this->resourceCalculator->getAmount($target, $resourceKey);
 
-                $damageDealt = min($damage, $targetBuildingsOwned);
+                        $damage = min($targetResourceAmount * $damageRatio, $targetResourceAmount);
+                        $damage = (int)floor($damage);
+        
+                        $this->resourceService->updateResources($target, [$resourceKey => $damage*-1]);
+                        #$this->queueService->queueResources('restore', $target, [$resourceKey => $damage], 6);
+        
+                        $this->statsService->updateStat($saboteur, 'sabotage_resources_damage_dealt', $damage);
+                        $this->statsService->updateStat($target, 'sabotage_resources_damage_suffered', $damage);
 
-                $this->buildingCalculator->removeBuildings($target, [$buildingKey => ['builtBuildingsToDestroy' => $damageDealt]]);
-                $this->queueService->queueResources('repair', $target, [('building_' . $buildingKey) => $damageDealt], 6);
+                        $this->sabotage['damage_dealt'][$type] = [$resourceKey => $damage];
+                    }
+                }
 
-                $this->statsService->updateStat($saboteur, 'sabotage_buildings_damage_dealt', $damageDealt);
-                $this->statsService->updateStat($target, 'sabotage_buildings_damage_suffered', $damageDealt);
+                # Handle peasants, draftees, morale, spy strength, wizard strength
+                if($type == 'peasants' || $type == 'military_draftees' || $type == 'morale' || $type == 'spy_strength' || $type == 'wizard_strength')
+                {
+                    foreach($sabotageDamage['mod'] as $resourceKey => $damageRatio)
+                    {
+                        $damage = min($target->{$type} * $damageRatio, $target->{$type});
+                        $damage = (int)floor($damage);
 
-                $this->sabotage['damage'][$perk->key] = [
-                    'ratio_multiplier' => $ratioMultiplier,
-                    'saboteur_damage_multiplier' => $saboteurDamageMultiplier,
-                    'target_damage_multiplier' => $targetDamageMultiplier,
-                    'damage' => $damage,
-                    'damage_dealt' => $damageDealt,
-                    'building_key' => $building->key,
-                    'building_name' => $building->name
-                ];
-            }
+                        #dump("Damage ratio of $damageRatio for $type yields $damage damage against " . $target->{$type} . " $type");
+            
+                        $target->{$type} -= $damage;
 
-            if($perk->key == 'sabotage_improvement')
-            {
-                $attribute = 'improvement';
-                $improvementKey = (string)$spyopPerkValues[0];
-                $baseDamage = (float)$spyopPerkValues[1] / 100;
-                $this->sabotage['saboteur']['spy_strength_spent'];
+                        $this->statsService->updateStat($saboteur, 'sabotage_' . $type . '_damage_dealt', $damage);
+                        $this->statsService->updateStat($target, 'sabotage_' . $type . '_damage_suffered', $damage);
 
-                $improvement = Improvement::where('key', $improvementKey)->first();
+                        $this->sabotage['damage_dealt'][$type] = [$type => $damage];
+                    }
+                }
 
-                $targetImprovementPoints = $this->improvementCalculator->getDominionImprovementAmountInvested($target, $improvement);
+                # Handle convert_peasants_to_vampires_unit1
+                if($type == 'convert_peasants_to_vampires_unit1')
+                {
+                    foreach($sabotageDamage['mod'] as $resourceKey => $damageRatio)
+                    {
+                        # Damage here is the multiplier by which to multiply the amount of killed peasants to get the number of new Servants
+                        $assassinatedPeasants = $this->sabotage['damage_dealt']['peasants']['peasants'];
 
-                $ratioMultiplier = $this->sabotageCalculator->getRatioMultiplier($saboteur, $target, $spyop, $attribute, $units, false);
-                $saboteurDamageMultiplier = $this->sabotageCalculator->getSaboteurDamageMultiplier($saboteur, $attribute);
-                $targetDamageMultiplier = $this->sabotageCalculator->getTargetDamageMultiplier($saboteur, $attribute);
+                        $damage = min($assassinatedPeasants * $damageRatio, $assassinatedPeasants);
+                        $damage = (int)floor($damage);
 
-                $damage = array_sum($units) * $baseDamage * $ratioMultiplier * $saboteurDamageMultiplier * $targetDamageMultiplier;
-                $damage = floor($damage);
+                        $this->queueService->queueResources('sabotage', $saboteur, ['military_unit1' => $damage], 12);
 
-                $damageDealt = min($damage, $targetImprovementPoints);
+                        dump($damage . ' Servants created from ' . $assassinatedPeasants . ' peasants killed, with a damage ratio of ' . $damageRatio . '');
+            
+                        $this->statsService->updateStat($saboteur, 'sabotage_units_converted', $damage);
 
-                $this->improvementCalculator->decreaseImprovements($target, [$improvementKey => $damage]);
-                $this->queueService->queueResources('restore', $target, ['improvement_' . $improvementKey => $damage], 6);
+                        $this->sabotage['damage_dealt'][$type] = ['convert_peasants_to_vampires_unit1' => $damage];
+                    }
+                }
 
-                $this->statsService->updateStat($saboteur, 'sabotage_improvements_damage_dealt', $damageDealt);
-                $this->statsService->updateStat($target, 'sabotage_improvements_damage_suffered', $damageDealt);
-
-                $this->sabotage['damage'][$perk->key] = [
-                    'ratio_multiplier' => $ratioMultiplier,
-                    'saboteur_damage_multiplier' => $saboteurDamageMultiplier,
-                    'target_damage_multiplier' => $targetDamageMultiplier,
-                    'damage' => $damage,
-                    'damage_dealt' => $damageDealt,
-                    'improvement_key' => $improvement->key,
-                    'improvements_name' => $improvement->name
-                ];
             }
 
             # Calculate spy units
@@ -590,11 +435,11 @@ class SabotageActionService
                 'saboteur_dominion_id' => $saboteur->id,
                 'data' => $this->sabotage
             ]);
-
+            
             # Debug before saving:
             if(request()->getHost() === 'odarena.local' or request()->getHost() === 'odarena.virtual')
             {
-                dd($this->sabotage);
+                #dd($this->sabotage);
             }
 
             $target->save(['event' => HistoryService::EVENT_ACTION_SABOTAGE]);

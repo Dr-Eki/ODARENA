@@ -1,33 +1,30 @@
-# SABOTAGE
-
 assassinate_draftees:
   name: Assassinate Draftees
   scope: hostile
-  perks:
-    kill_draftees: 0.10
   excluded_races:
-    - Monster
+    - Dimensionalists
+    - Dragon
+    - Lux
+    - Marshling
+    - Void
+  perks:
+    military_draftees: 10
 
 assassinate_peasants:
   name: Assassinate Peasants
   scope: hostile
-  perks:
-    kill_peasants: 0.10
   excluded_races:
-    - Monster
-
-magic_snare:
-  name: Magic Snare
-  scope: hostile
+    - Dimensionalists
+    - Dragon
+    - Lux
+    - Marshling
+    - Void
   perks:
-    decrease_wizard_strength: 0.20
-  excluded_races:
-    - Monster
+    peasants: 10
 
-sabotage_construction:
-  name: Sabotage Construction
+sabotage_food:
+  name: Destroy Food
   scope: hostile
-  spy_strength: 5
   exclusive_races:
     - Ants
     - Goblin
@@ -36,46 +33,162 @@ sabotage_construction:
     - Reptilians
     - Myconid
   perks:
-    sabotage_construction: 0.010
+    resource: food,10
 
-sabotage_building_temples:
-  name: Sabotage Temples
+sabotage_lumber:
+  name: Destroy Lumber
+  scope: hostile
+  exclusive_races:
+    - Ants
+    - Goblin
+    - Halfling
+    - Kerranad
+    - Reptilians
+    - Myconid
+  perks:
+    resource: lumber,10
+
+intimidation:
+  name: Intimidation
+  scope: hostile
+  exclusive_races:
+    - Armada
+    - Beastfolk
+    - Black Orc
+    - Cires
+    - Dark Elf
+    - Jagunii
+    - Legion
+    - Norse
+    - Orc
+    - Reptilians
+  perks:
+    peasants: 4
+    military_draftees: 4
+    morale: 8
+
+magic_snare:
+  name: Magic Snare
+  scope: hostile
+  excluded_races:
+    - Dimensionalists
+    - Dragon
+    - Lux
+    - Marshling
+    - Void
+  perks:
+    wizard_strength: 20
+
+release_prisoners:
+  name: Release Prisoners
+  scope: hostile
+  excluded_races:
+    - Afflicted
+    - Aurei
+    - Dark Elf
+    - Dragon
+    - Growth
+    - Lux
+    - Marshling
+    - Void
+  perks:
+    resource: prisoner,2
+
+release_souls:
+  name: Release Souls
+  scope: hostile
+  exclusive_races:
+    - Sacred Order
+    - Qur
+  perks:
+    resource: soul,1
+
+sabotage_construction:
+  name: Sabotage Construction
+  scope: hostile
+  excluded_races:
+    - Aurei
+    - Dimensionalists
+    - Dragon
+    - Lux
+    - Marshling
+    - Void
+  perks:
+    construction: 5
+
+# BEGIN REPTILIANS
+
+sabotage_defensive_buildings:
+  name: Sabotage Defensive Buildings
   scope: hostile
   spy_strength: 5
   exclusive_races:
     - Reptilians
   perks:
-    sabotage_building: temple,0.04
+    buildings: bulwark;0.5,battlement;1,guard_tower;2,stone_wall;1,turret;1,pillar;2,ringfort;0.5
 
-sabotage_improvement_defense:
-  name: Sabotage Defense
+sabotage_mines:
+  name: Sabotage Mines
   scope: hostile
   exclusive_races:
     - Reptilians
   perks:
-    sabotage_improvement: defense,2000
+    buildings: automated_mine;10,dwargen_mine;10,deep_mine;10,gem_mine;10,gold_mine;5,ore_mine;10,slave_mine;10,strip_mine;10
 
-sabotage_improvement_offense:
-  name: Sabotage Offense
+sabotage_improvements_defense:
+  name: Sabotage Defensive Improvements
   scope: hostile
   exclusive_races:
     - Reptilians
   perks:
-    sabotage_improvement: offense,2000
+    improvements: defense;1,bashing;2,halo;0.25,tranquillity;1,city_guard;1,camouflage;1.5,compassion;0.5
 
-sabotage_improvement_farming:
-  name: Sabotage Farming
+sabotage_improvements_food:
+  name: Sabotage Food Improvements
   scope: hostile
   exclusive_races:
     - Reptilians
   perks:
-    sabotage_improvement: irrigation,5000
+    improvements: irrigation;2,hunting;2,bloom;4,farming_kerranad;2,foraging;4
+
+sabotage_improvements_offense:
+  name: Sabotage Offensive Improvements
+  scope: hostile
+  exclusive_races:
+    - Reptilians
+  perks:
+    improvements: offense;1,smashing;1,coils;0.25,rage;1,warfare;1,fencing;1.5,brutality;0.5,aggression;1,striking;0.8
+
+# END REPTILIANS
+
+# BEGIN ONE-OFF UNIQUES
+
+capture_servants:
+  name: Capture Servants
+  scope: hostile
+  exclusive_races:
+    - Vampires
+  perks:
+    peasants: 1
+    convert_peasants_to_vampires_unit1: 1
 
 propaganda:
   name: Propaganda
   scope: hostile
-  spy_strength: 8
   exclusive_races:
     - Cult
   perks:
-    decrease_morale: 0.008
+    morale: 40
+
+slaughter:
+  name: Slaughter
+  scope: hostile
+  exclusive_races:
+    - Afflicted
+    - Weres
+  perks:
+    peasants: 8
+    military_draftees: 8
+    morale: 12
+
+# END ONE-OFF UNIQUES

@@ -5,6 +5,7 @@ namespace OpenDominion\Http\Controllers\Dominion;
 use Illuminate\Database\Eloquent\Builder;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 
+use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\EventHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RaceHelper;
@@ -49,13 +50,15 @@ class EventController extends AbstractDominionController
         }
 
         return view("pages.dominion.event.{$event->type}", [
-            'event' => $event, // todo: compact()
-            'unitHelper' => app(UnitHelper::class), // todo: only load if event->type == 'invasion'
-            'militaryCalculator' => app(MilitaryCalculator::class), // todo: same thing here
-            'landHelper' => app(LandHelper::class), // todo: same thing here
-            'raceHelper' => app(RaceHelper::class), // todo: same thing here
-            'sabotageHelper' => app(SorceryHelper::class), // todo: same thing here
-            'sorceryHelper' => app(SorceryHelper::class), // todo: same thing here
+            'event' => $event,
+            'unitHelper' => app(UnitHelper::class),
+            'militaryCalculator' => app(MilitaryCalculator::class),
+            'buildingHelper' => app(BuildingHelper::class),
+            'landHelper' => app(LandHelper::class),
+            'raceHelper' => app(RaceHelper::class),
+            'sabotageHelper' => app(SabotageHelper::class),
+            'sorceryHelper' => app(SorceryHelper::class),
+            'unitHelper' => app(UnitHelper::class),
             'canViewSource' => $eventHelper->canViewEventDetails($event, $viewer, 'source'),
             'canViewTarget' => $eventHelper->canViewEventDetails($event, $viewer, 'target'),
         ]);

@@ -99,14 +99,14 @@ class StatsService
 
     public function hasStat(Dominion $dominion, string $statKey): bool
     {
-
-        #dump("statKey: $statKey");
         $stat = Stat::where('key', $statKey)->first();
-        if(!$stat)
+
+        if(!isset($stat->id))
         {
-        #  dd($stat, $statKey);
+            dd('Stat key not found: '.$statKey.'');
         }
-        return DominionStat::where('stat_id',$stat->id)->where('dominion_id',$dominion->id)->first() ? true : false;
+
+        return DominionStat::where('stat_id',$stat->id)->where('dominion_id',$dominion->id)->count() ? true : false;
     }
 
     # Realm stats

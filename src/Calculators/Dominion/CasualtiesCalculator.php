@@ -331,6 +331,9 @@ class CasualtiesCalculator
         $multiplier += $dominion->getDecreePerkMultiplier('casualties');
         $multiplier += $dominion->getDecreePerkMultiplier('casualties_on_' . $mode);
 
+        # Get race perk for extra invasions from recent invasions
+        $multiplier += $dominion->race->getPerkMultiplier('casualties_from_recent_invasions_sent') * $this->militaryCalculator->getRecentInvasionsSent($dominion);
+
         return $multiplier;
     }
 
@@ -339,6 +342,8 @@ class CasualtiesCalculator
         $multiplier = 0;
 
         $multiplier += $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties') / 100;
+
+        $multiplier += ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties_from_recent_invasions_sent') / 100) * $this->militaryCalculator->getRecentInvasionsSent($dominion);
 
         $multiplier += $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ('casualties_on_' . $mode)) / 100;
 

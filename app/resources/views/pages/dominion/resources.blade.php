@@ -65,15 +65,13 @@
                                             @if ($interest = $resourceCalculator->getInterest($selectedDominion, $resourceKey))
                                                 <span class="text-muted">
                                                     <br>
-                                                    <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Interest rate:</small> {{ $resourceCalculator->getInterestRate($selectedDominion, $resourceKey)*100 }}%<br><small class="text-muted">Stockpile to reach max interest:</small> {{ number_format($resourceCalculator->getProductionRaw($selectedDominion, $resourceKey) / $resourceCalculator->getInterestRate($selectedDominion, $resourceKey)) }}'>
+                                                    <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Interest rate:</small> {{ $resourceCalculator->getInterestRate($selectedDominion, $resourceKey)*100 }}%<br><small class="text-muted">Stockpile to reach max interest:</small> {{ number_format($resourceCalculator->getStockpileRequiredToMaxOutInterest($selectedDominion, $resourceKey)) }}'>
                                                         Interest: <span class="text-green">{{ number_format($interest) }}</span>
                                                     </span>
                                                 </span>
                                             @endif
 
-
-
-
+                                            
                                             @if ($resourceCalculator->hasMaxStorage($selectedDominion, $resourceKey))
                                                 @php
                                                     $maxStorage = $resourceCalculator->getMaxStorage($selectedDominion, $resourceKey);

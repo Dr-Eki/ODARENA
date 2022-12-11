@@ -172,7 +172,7 @@ class RangeCalculator
                 return (
 
                     # Not in the same realm (unless deathmatch round); and
-                    (($dominion->round->mode == 'standard' or $dominion->round->mode == 'standard-duration') ? ($dominion->realm->id !== $self->realm->id) : true) and
+                    (($dominion->round->mode == 'standard' or $dominion->round->mode == 'standard-duration' or $dominion->round->mode == 'artefacts') ? ($dominion->realm->id !== $self->realm->id) : true) and
 
                     # Not self
                     ($dominion->id !== $self->id) and

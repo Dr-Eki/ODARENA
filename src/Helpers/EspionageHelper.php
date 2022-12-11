@@ -5,7 +5,7 @@ namespace OpenDominion\Helpers;
 use Illuminate\Support\Collection;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Improvement;
-use OpenDominion\Models\Race;
+use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spyop;
 
 class EspionageHelper
@@ -28,15 +28,23 @@ class EspionageHelper
         $effectStrings = [];
 
         $spyopEffects = [
-            'kill_draftees' => 'Assassinate draftees (base damage %s).',
-            'kill_peasants' => 'Assassinate peasants (base damage %s).',
+            'military_draftees' => 'Assassinate draftees (base damage %g%%)',
+            'peasants' => 'Assassinate peasants (base damage %g%%)',
 
-            'decrease_wizard_strength' => 'Reduce wizard strength (base damage %+d%%).',
-            'decrease_morale' => 'Reduce morale (base damage %+d%%).',
+            'wizard_strength' => 'Reduce wizard strength (base damage %g%%)',
+            'morale' => 'Reduce morale (base damage %g%%)',
 
-            'sabotage_building' => 'Sabotage %1$s buildings (base damage %2$s).',
-            'sabotage_construction' => 'Sabotage buildings under construction (base damage %1$s).',
-            'sabotage_improvement' => 'Sabotage %1$s improvements (base damage %2$s).',
+            'construction' => 'Sabotage buildings under construction (base damage %g%%)',
+
+            'building' => 'Sabotage %1$s (base damage %2$g%%)',
+            'improvement' => 'Sabotage %1$s (base damage %2$g%%)',
+            'resource' => 'Sabotage %1$s (base damage %2$g%%)',
+
+            'buildings' => 'Sabotage %1$s (base damage %2$g%%)',
+            'improvements' => 'Sabotage %1$s (base damage %2$g%%)',
+            'resources' => 'Sabotage %1$s (base damage %2$g%%)',
+
+            'convert_peasants_to_vampires_unit1' => 'Convert the peasants to Servants',
 
         ];
 
@@ -71,8 +79,34 @@ class EspionageHelper
                 }
             }
 
-            // Special case for conversions
-            if ($perk->key === 'sabotage_improvement')
+            // Special case for building
+            if ($perk->key === 'building')
+            {
+                $buildingKey = (string)$perkValue[0];
+                $damage = (float)$perkValue[1];
+
+                $building = Building::where('key', $buildingKey)->first();
+
+                $perkValue = [$building->name, number_format($damage)];
+            }
+
+            // Special case for buildings
+            if($perk->key === 'buildings')
+            {
+                foreach($perkValue as $index => $buildingDamage)
+                {
+                    $buildingKey = (string)$buildingDamage[0];
+                    $damage = (float)$buildingDamage[1];
+
+                    $building = Building::where('key', $buildingKey)->first();
+
+                    $perkValue[] = [$building->name, $damage];
+                    unset($perkValue[$index]);
+                }
+            }
+
+            // Special case for improvement
+            if ($perk->key === 'improvement')
             {
                 $improvementKey = (string)$perkValue[0];
                 $damage = (float)$perkValue[1];
@@ -80,8 +114,49 @@ class EspionageHelper
                 $improvement = Improvement::where('key', $improvementKey)->first();
 
                 $perkValue = [$improvement->name, number_format($damage)];
-
             }
+
+            // Special case for improvements
+            if($perk->key === 'improvements')
+            {
+                foreach($perkValue as $index => $improvementDamage)
+                {
+                    $improvementKey = (string)$improvementDamage[0];
+                    $damage = (float)$improvementDamage[1];
+
+                    $improvement = Improvement::where('key', $improvementKey)->first();
+
+                    $perkValue[] = [$improvement->name, $damage];
+                    unset($perkValue[$index]);
+                }
+            }
+
+            // Special case for resource
+            if ($perk->key === 'resource')
+            {
+                $resourceKey = (string)$perkValue[0];
+                $damage = (float)$perkValue[1];
+
+                $resource = Resource::where('key', $resourceKey)->first();
+
+                $perkValue = [$resource->name, number_format($damage)];
+            }
+
+            // Special case for resources
+            if($perk->key === 'resources')
+            {
+                foreach($perkValue as $index => $resourceDamage)
+                {
+                    $resourceKey = (string)$resourceDamage[0];
+                    $damage = (float)$resourceDamage[1];
+
+                    $resource = Resource::where('key', $resourceKey)->first();
+
+                    $perkValue[] = [$resource->name, $damage];
+                    unset($perkValue[$index]);
+                }
+            }
+
 
 
             if (is_array($perkValue))

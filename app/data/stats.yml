@@ -1045,7 +1045,7 @@ sorcery_units_killed:
 sorcery_units_lost:
   name: Units lost to sorcery
 
-# Sorcery stats
+# Sabotage stats
 
 sabotage_performed:
   name: Sabotage operations
@@ -1056,19 +1056,17 @@ sabotage_damage_morale:
   name: Morale damage by sabotage
 sabotage_damage_buildings:
   name: Buildings damage by sabotage
-sabotage_damage_construction:
-  name: Construction damage by sabotage
-sabotage_damage_improvements:
-  name: Improvements damage by sabotage
 
 sabotage_peasants_killed:
   name: Peasants killed by sabotage
 sabotage_peasants_lost:
   name: Peasants lost to sabotage
-sabotage_draftees_killed:
+sabotage_military_draftees_killed:
   name: Draftees killed by sabotage
-sabotage_draftees_lost:
+sabotage_military_draftees_lost:
   name: Draftees lost to sabotage
+sabotage_units_killed:
+  name: Units killed by sabotage
 sabotage_units_lost:
   name: Units lost to sabotage
 
@@ -1082,6 +1080,16 @@ sabotage_improvements_damage_dealt:
 sabotage_improvements_damage_suffered:
   name: Sabotage damage suffered to improvements
 
+sabotage_construction_damage_dealt:
+  name: Sabotage damage dealt to construction
+sabotage_construction_damage_suffered:
+  name: Sabotage damage suffered to construction
+
+sabotage_resources_damage_dealt:
+  name: Sabotage damage dealt to resources
+sabotage_resources_damage_suffered:
+  name: Sabotage damage suffered to resources
+
 sabotage_wizard_strength_damage_dealt:
   name: Sabotage damage dealt to wizard strength
 sabotage_wizard_strength_damage_suffered:
@@ -1091,6 +1099,14 @@ sabotage_morale_damage_dealt:
   name: Sabotage damage dealt to morale
 sabotage_morale_damage_suffered:
   name: Sabotage damage suffered to morale
+
+sabotage_peasants_damage_dealt:
+  name: Sabotage damage dealt to peasants
+sabotage_peasants_damage_suffered:
+  name: Sabotage damage suffered to peasants
+
+sabotage_units_converted:
+  name: Sabotage - Units Converted
 
 # Round stats
 day01_top_op:

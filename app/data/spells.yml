@@ -23,8 +23,8 @@ harmony:
   name: Harmony
   scope: self
   class: passive
-  cost: 2
-  duration: 48
+  cost: 4
+  duration: 24
   cooldown: 0
   excluded_races:
     - Afflicted
@@ -117,8 +117,6 @@ mining_strength:
     - Norse
     - Nox
     - Orc
-    - Qur
-    - Reptilians
     - Revenants
     - Sacred Order
     - Snow Elf

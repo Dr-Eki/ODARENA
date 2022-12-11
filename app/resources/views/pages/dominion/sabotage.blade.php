@@ -71,7 +71,7 @@
                                         <input type="radio" id="spyop" name="spyop" value="{{ $spyop->id }}" required>&nbsp;<h4 class="box-title">{{ $spyop->name }}</h4>
                                     </div>
 
-                                    <div class="box-body">
+                                    <div class="box-body text-left">
                                         <ul>
                                             @foreach($espionageHelper->getSpyopEffectsString($spyop) as $effect)
                                                 <li>{{ $effect }}</li>
@@ -106,7 +106,7 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-user-secret"></i> Spies</h3>
+                        <h3 class="box-title"><i class="fa fa-user-secret"></i> Units</h3>
                     </div>
                     <div class="box-body table-responsive no-padding">
                         <table class="table">
@@ -115,10 +115,12 @@
                                 <col width="200">
                                 <col width="200">
                                 <col width="200">
+                                <col width="200">
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th>Unit</th>
+                                    <th>Sabotage Power</th>
                                     <th>Total</th>
                                     <th>Available</th>
                                     <th class="text-center">Send</th>
@@ -128,6 +130,7 @@
                                 @if(!$selectedDominion->race->getPerkValue('cannot_train_spies'))
                                     <tr>
                                         <td>Spies</td>
+                                        <td>{{ $militaryCalculator->getUnitSabotagePoints($selectedDominion, 'spies') }}</td>
                                         <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, 'spies')) }}</td>
                                         <td>{{ number_format($selectedDominion->military_spies) }}</td>
                                         <td class="text-center">
@@ -152,6 +155,7 @@
                                         @endphp
                                         <tr>
                                             <td>{{ $unit->name }}</td>
+                                            <td>{{ $militaryCalculator->getUnitSabotagePoints($selectedDominion, ('unit' . $unitSlot)) }}</td>
                                             <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unitSlot)) }}</td>
                                             <td>{{ number_format($selectedDominion->{"military_unit{$unitSlot}"}) }}</td>
                                             <td class="text-center">

@@ -548,9 +548,27 @@ class ResourceCalculator
             $interest += $this->getAmount($dominion, $interestBearingResourceKey) * $interestRate;
         }
 
-        $interest = min($interest, $this->getProductionRaw($dominion, $interestBearingResourceKey));
+        $rawProductionCap = $this->getProductionRaw($dominion, $interestBearingResourceKey) / 5;
+
+        $interest = min($interest, $rawProductionCap);
 
         return $interest;
+    }
+
+    public function getStockpileRequiredToMaxOutInterest(Dominion $dominion, string $interestBearingResourceKey): int
+    {
+        $interestRate = $this->getInterestRate($dominion, $interestBearingResourceKey);
+
+        if($interestRate > 0)
+        {
+            $rawProductionCap = $this->getProductionRaw($dominion, $interestBearingResourceKey) / 5;
+
+            $stockpileRequired = $rawProductionCap / $interestRate;
+
+            return $stockpileRequired;
+        }
+
+        return 0;
     }
 
     public function getInterestRate(Dominion $dominion, string $interestBearingResourceKey): float
