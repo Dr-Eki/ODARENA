@@ -2,8 +2,10 @@ name: Spirit
 alignment: good
 description:
 home_land_type: water
-playable: 0 # Broken, maybe salvageable
 skill_level: 1
+round_modes:
+  - deathmatch
+  - deathmatch-duration
 
 resources:
   - gold
