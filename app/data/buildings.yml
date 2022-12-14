@@ -1572,7 +1572,7 @@ estate:
     housing: 30
     jobs: 10
 
- pylon:
+pylon:
   name: Pylon
   exclusive_races:
     - Spirit

@@ -74,8 +74,8 @@ units:
       mana: 120
       soul: 1
     power:
-      offense: 4
-      defense: 4
+      offense: 0
+      defense: 8
     perks:
       immortal: 1
       does_not_count_as_population: 1
@@ -92,7 +92,7 @@ units:
       mana: 180
       soul: 1
     power:
-      offense: 9
+      offense: 8
       defense: 7
     perks:
       immortal: 1
