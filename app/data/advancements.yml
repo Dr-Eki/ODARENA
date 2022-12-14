@@ -3,6 +3,7 @@ tactics:
   name: Tactics
   excluded_races:
     - Lux
+    - Spirit
   perks:
     casualties_on_offense: -3.75
     casualties_on_defense: -2.50
@@ -14,6 +15,7 @@ anvils:
     - Growth
     - Lux
     - Myconid
+    - Spirit
     - Void
   perks:
     unit_gold_costs: -2.5
@@ -46,6 +48,7 @@ magical_weapons:
     - Qur
     - Reptilians
     - Revenants
+    - Spirit
     - Sylvan
     - Undead
     - Void
@@ -166,6 +169,7 @@ mills:
     - Monster
     - Glimjir
     - Myconid
+    - Spirit
     - Sylvan
     - Swarm
     - Void
@@ -196,6 +200,7 @@ mining_equipment:
     - Myconid
     - Qur
     - Reptilians
+    - Spirit
     - Simian
     - Sylvan
     - Swarm
@@ -213,6 +218,7 @@ minting:
     - Growth
     - Lux
     - Myconid
+    - Spirit
     - Void
   perks:
     gold_production_mod: 2.5
@@ -238,15 +244,19 @@ housing:
 
 conscription:
   name: Conscription
+  excluded_races:
+    - Spirit
   perks:
     drafting: 2.5
 
 lodging:
   name: Lodging
   excluded_races:
+    - Glimjir
     - Growth
     - Lux
     - Myconid
+    - Spirit
     - Void
   perks:
     military_housing: 1.25
@@ -276,6 +286,7 @@ budget:
     - Growth
     - Lux
     - Myconid
+    - Spirit
     - Void
   perks:
     gold_improvement_points: 12.5
@@ -322,6 +333,7 @@ stoneworks:
     - Qur
     - Reptilians
     - Simian
+    - Spirit
     - Sylvan
     - Swarm
     - Troll
@@ -346,6 +358,7 @@ woodworks:
     - Monster
     - Glimjir
     - Myconid
+    - Spirit
     - Sylvan
     - Swarm
     - Void

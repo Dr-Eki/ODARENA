@@ -15,6 +15,9 @@ resources:
   - gems
   - soul
 
+peasants_production:
+  mana: 0.08
+
 construction_materials:
   - mana
   - gems
@@ -30,7 +33,7 @@ perks:
 
 units:
   - name: Wisp
-    training_time: 6
+    training_time: 8
     type:
       - living
       - sentient
@@ -45,9 +48,10 @@ units:
     perks:
       immortal: 1
       kills_into_resource_per_casualty: 1,soul
+      no_draftee: 1
 
   - name: Apparition
-    training_time: 9
+    training_time: 8
     type:
       - living
       - sentient
@@ -62,6 +66,7 @@ units:
     perks:
       immortal: 1
       kills_into_resource_per_casualty: 1,soul
+      no_draftee: 1
 
   - name: Phantom
     training_time: 12
@@ -80,6 +85,7 @@ units:
       immortal: 1
       does_not_count_as_population: 1
       kills_into_resource_per_casualty: 1,soul
+      no_draftee: 1
 
   - name: Spectre
     type:
@@ -99,3 +105,4 @@ units:
       does_not_count_as_population: 1
       kills_into_resource_per_casualty: 1,soul
       plunder: soul,10
+      no_draftee: 1
