@@ -935,6 +935,7 @@ class Dominion extends AbstractModel
 
                         # Other/special
                         or $perkKey == 'deity_power'
+                        or $perkKey == 'population_capped'
 
                     )
                 {
@@ -974,6 +975,9 @@ class Dominion extends AbstractModel
                         or $perkKey == 'spy_strength_on_defense'
                         or $perkKey == 'wizard_strength_on_offense'
                         or $perkKey == 'spy_strength_on_offense'
+
+                        # Other/special
+                        or $perkKey == 'population_uncapped'
                     )
                 {
                     $perkValues = $this->extractBuildingPerkValues($perkValueString);

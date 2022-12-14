@@ -1572,6 +1572,16 @@ estate:
     housing: 30
     jobs: 10
 
+ pylon:
+  name: Pylon
+  exclusive_races:
+    - Spirit
+  land_type: plain
+  perks:
+    housing: 30
+    mana_production_mod: 1,0.5,50
+    jobs: 0
+
 compound:
   name: Compound
   exclusive_races:

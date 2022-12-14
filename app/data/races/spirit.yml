@@ -1,7 +1,7 @@
 name: Spirit
 alignment: good
 description:
-home_land_type: water
+home_land_type: plain
 playable: 1
 skill_level: 2
 round_modes:
@@ -37,7 +37,7 @@ units:
       - ethereal
       - intelligent
     cost:
-      mana: 60
+      mana: 80
       peasant: 1
     power:
       offense: 3
@@ -54,7 +54,7 @@ units:
       - ethereal
       - intelligent
     cost:
-      mana: 80
+      mana: 100
       peasant: 1
     power:
       offense: 5
