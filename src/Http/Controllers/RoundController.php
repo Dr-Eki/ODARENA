@@ -222,6 +222,11 @@ class RoundController extends AbstractController
                                     throw new GameException('There can only be ' . number_format($race->max_per_round) . ' of this faction per round.');
                                 }
                             }
+                
+                            if(!$this->checkRaceRoundModes($race, $round))
+                            {
+                                throw new GameException($race->name . ' is not available in this round.');
+                            }
                         }
         
                         $realm = $realmFinderService->findRealm($round, $race);
@@ -236,11 +241,6 @@ class RoundController extends AbstractController
                         if(!$this->isAllowedDominionName($dominionName))
                         {
                             throw new GameException($dominionName . ' is not a permitted dominion name.');
-                        }
-                
-                        if(!$this->checkRaceRoundModes($race, $round))
-                        {
-                            throw new GameException($race->name . ' is not available in this round.');
                         }
         
                         $dominion = $this->dominionFactory->createFromQuickstart(
@@ -412,6 +412,11 @@ class RoundController extends AbstractController
                             throw new GameException('There can only be ' . number_format($race->max_per_round) . ' of this faction per round.');
                         }
                     }
+                
+                    if(!$this->checkRaceRoundModes($race, $round))
+                    {
+                        throw new GameException($race->name . ' is not available in this round.');
+                    }
                 }
 
                 $realm = $realmFinderService->findRealm($round, $race);
@@ -426,11 +431,6 @@ class RoundController extends AbstractController
                 if(!$this->isAllowedDominionName($dominionName))
                 {
                     throw new GameException($dominionName . ' is not a permitted dominion name.');
-                }
-                
-                if(!$this->checkRaceRoundModes($race, $round))
-                {
-                    throw new GameException($race->name . ' is not available in this round.');
                 }
 
                 $dominion = $this->dominionFactory->create(

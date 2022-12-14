@@ -15,6 +15,8 @@ use OpenDominion\Models\Unit;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 
+#use OpenDominion\Helpers\RaceHelper;
+
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\StatsService;
 
@@ -25,6 +27,8 @@ class UnitHelper
     {
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
+
+        #$this->raceHelper = app(RaceHelper::class);
 
         $this->queueService = app(QueueService::class);
         $this->statsService = app(StatsService::class);
@@ -1352,6 +1356,10 @@ class UnitHelper
                 {
                     case 'gems':
                         $costs[] = number_format($value) . ' ' . str_plural('gems', $value);
+                        break;
+
+                    case 'peasant':
+                        $costs[] = number_format($value) . ' ' . str_plural((isset($race->peasants_alias) ? ucwords($race->peasants_alias) : 'Peasant'), $value);
                         break;
 
                     case 'elk':

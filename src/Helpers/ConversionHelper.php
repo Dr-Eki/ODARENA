@@ -87,6 +87,7 @@ class ConversionHelper
             'ammunition',
             'aspect',
             'equipment',
+            'ethereal',
             'fused',
             'immobile',
             'magical',

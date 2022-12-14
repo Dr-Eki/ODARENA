@@ -26,6 +26,7 @@ gold_mine:
     - Monster
     - Myconid
     - Void
+    - Spirit
     - Sylvan
     - Swarm
     - Yeti
@@ -47,6 +48,7 @@ farm:
     - Myconid
     - Qur
     - Reptilians
+    - Spirit
     - Swarm
     - Sylvan
     - Void
@@ -79,6 +81,7 @@ ore_mine:
     - Reptilians
     - Revenants
     - Simian
+    - Spirit
     - Sylvan
     - Swarm
     - Undead
@@ -139,6 +142,7 @@ granary:
     - Glimjir
     - Lux
     - Monster
+    - Spirit
     - Void
     - Wood Elf
   land_type: forest
@@ -355,6 +359,7 @@ lumberyard:
     - Marshling
     - Monster
     - Myconid
+    - Spirit
     - Swarm
     - Sylvan
     - Void
@@ -484,8 +489,6 @@ naval_institute:
     damage_from_lightning_bolt: 1,0.75 # Every 1% reduces damage from LBs by 0.75%
     draftee_housing: 30
     housing: 0
-
-
 
 military_academy:
   name: Military Academy
@@ -651,6 +654,7 @@ smithy:
     - Monster
     - Myconid
     - Nox
+    - Spirit
     - Swarm
     - Sylvan
     - Void
