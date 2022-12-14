@@ -174,6 +174,7 @@
                                     <td><span class="text-red">{{ $race->minimum_rounds }}</a></td>
                                 </tr>
                               @endif
+                              {{--
                               @if($race->psionic_strength !== 1)
                                 <tr>
                                     <td>
@@ -182,6 +183,7 @@
                                     <td><span class="text-info">{{ number_format($race->psionic_strength,6) }}</a></td>
                                 </tr>
                               @endif
+                              --}}
                               @if(!$race->getPerkValue('no_population'))
                               <tr>
                                   <td>
@@ -223,6 +225,17 @@
                                       </td>
                                   </tr>
                               @endforeach
+                              <tr>
+                                <th colspan="2">Round modes</th>
+                              </tr>
+                              <tr>
+                                <td colspan="2">
+                                    @foreach($race->round_modes as $roundMode)
+
+                                        <span data-toggle="tooltip" data-placement="top" title="{{ $roundHelper->getRoundModeDescription(null, $roundMode) }}">{!! $roundHelper->getRoundModeIcon(null, $roundMode) !!}&nbsp;{{ $roundHelper->getRoundModeString(null, $roundMode, true) }}</span><br>
+
+                                    @endforeach
+                                </td>
                           </tbody>
                       </table>
                   </div>

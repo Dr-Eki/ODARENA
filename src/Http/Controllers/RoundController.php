@@ -20,11 +20,11 @@ use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\Title;
 use OpenDominion\Models\User;
+use OpenDominion\Helpers\RoundHelper;
 use OpenDominion\Services\Analytics\AnalyticsEvent;
 use OpenDominion\Services\Analytics\AnalyticsService;
 use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\SelectorService;
-use OpenDominion\Services\PackService;
 use OpenDominion\Services\RealmFinderService;
 
 # ODA
@@ -36,13 +36,11 @@ class RoundController extends AbstractController
      * RoundController constructor.
      *
      * @param DominionFactory $dominionFactory
-     * @param PackService $packService
      */
-    public function __construct(DominionFactory $dominionFactory, PackService $packService)
+    public function __construct()
     {
-        $this->dominionFactory = $dominionFactory;
-        $this->packService = $packService;
-        #$this->newDominionEvent = $newDominionEvent;
+        $this->dominionFactory = app(DominionFactory::class);
+        $this->roundHelper = app(RoundHelper::class);
     }
 
     public function getRegister(Round $round)
@@ -104,6 +102,7 @@ class RoundController extends AbstractController
 
         return view('pages.round.register', [
             'raceHelper' => app(RaceHelper::class),
+            'roundHelper' => app(RoundHelper::class),
             'titleHelper' => app(TitleHelper::class),
             'round' => $round,
             'races' => $races,
@@ -238,6 +237,11 @@ class RoundController extends AbstractController
                         {
                             throw new GameException($dominionName . ' is not a permitted dominion name.');
                         }
+                
+                        if(!$this->checkRaceRoundModes($race, $round))
+                        {
+                            throw new GameException($race->name . ' is not available in this round.');
+                        }
         
                         $dominion = $this->dominionFactory->createFromQuickstart(
                             $user,
@@ -354,6 +358,7 @@ class RoundController extends AbstractController
         {
             $eventData['real_ruler_name'] = true;
         }
+        
 
         $roundsPlayed = DB::table('dominions')
                             ->where('dominions.user_id', '=', Auth::user()->id)
@@ -421,6 +426,11 @@ class RoundController extends AbstractController
                 if(!$this->isAllowedDominionName($dominionName))
                 {
                     throw new GameException($dominionName . ' is not a permitted dominion name.');
+                }
+                
+                if(!$this->checkRaceRoundModes($race, $round))
+                {
+                    throw new GameException($race->name . ' is not available in this round.');
                 }
 
                 $dominion = $this->dominionFactory->create(
@@ -524,6 +534,11 @@ class RoundController extends AbstractController
         }
 
         return true;
+    }
+
+    protected function checkRaceRoundModes(Race $race, Round $round): bool
+    {
+        return in_array($round->mode, $race->round_modes);
     }
 
 }

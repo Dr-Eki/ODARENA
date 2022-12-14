@@ -22,7 +22,7 @@ use OpenDominion\Helpers\ResearchHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\LandImprovementHelper;
 use OpenDominion\Helpers\RaceHelper;
-#use OpenDominion\Helpers\RoundHelper;
+use OpenDominion\Helpers\RoundHelper;
 use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Helpers\UnitHelper;
 
@@ -96,9 +96,10 @@ class ScribesController extends AbstractController
 
         return view('pages.scribes.faction', [
             'landHelper' => app(LandHelper::class),
-            'unitHelper' => app(UnitHelper::class),
             'raceHelper' => app(RaceHelper::class),
+            'roundHelper' => app(RoundHelper::class),
             'spellHelper' => app(SpellHelper::class),
+            'unitHelper' => app(UnitHelper::class),
             'trainingCalculator' => app(TrainingCalculator::class),
             'race' => $race,
             'buildings' => $buildings,

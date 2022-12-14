@@ -15,6 +15,20 @@
 
             <div class="box-body">
 
+                <!-- Round Details -->
+                <div class="row">
+                    <div class="col-sm-3 text-right"><b>Round Mode</b></div>
+                    <div class="col-sm-6">
+                        <p>{{ $roundHelper->getRoundModeString($round) }}: {{ $roundHelper->getRoundModeDescription($round) }}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 text-right"><b>Round Target</b></div>
+                    <div class="col-sm-6">
+                        <p>{{ number_format($round->goal) }} {{ $roundHelper->getRoundModeGoalString($round) }}</p>
+                    </div>
+                </div>
+
                 <!-- Dominion Name -->
                 <div class="form-group">
                     <label for="dominion_name" class="col-sm-3 control-label">Dominion Name</label>

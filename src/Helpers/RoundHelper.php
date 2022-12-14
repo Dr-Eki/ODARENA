@@ -24,30 +24,60 @@ class RoundHelper
         return ['standard', 'standard-duration', 'deathmatch', 'deathmatch-duration', 'artefacts'];
     }
 
-    public function getRoundModeString(Round $round): string
+    public function getRoundModeString(Round $round = null, string $roundModeKey = null, bool $detailed = false): string
     {
-        switch ($round->mode)
+
+        $roundModeKey = $round ? $round->mode : $roundModeKey;
+
+        $roundModeString = '';
+
+        switch ($roundModeKey)
         {
             case 'standard':
-                return 'Standard';
-
             case 'standard-duration':
-                return 'Standard';
+                $roundModeString = 'Standard';
+                break;
 
             case 'deathmatch':
-                return 'Deathmatch';
-
             case 'deathmatch-duration':
-                return 'Deathmatch';
+                $roundModeString = 'Deathmatch';
+                break;
 
             case 'artefacts':
-                return 'Artefacts';
+                $roundModeString = 'Artefacts';
+                break;
         }
+
+        if($detailed)
+        {
+            switch ($roundModeKey)
+            {
+                case 'standard':
+                case 'deathmatch':
+                    $roundModeString .= ' (land target)';
+    
+                    break;
+                case 'standard-duration':
+                case 'deathmatch-duration':
+                    $roundModeString .= ' (fixed duration)';
+                    break;
+        
+                case 'artefacts':
+                    $roundModeString .= '';
+                    break;
+            }
+        }
+
+        return $roundModeString;
+
     }
 
-    public function getRoundModeGoalString(Round $round): string
+    public function getRoundModeGoalString(Round $round = null, string $roundModeKey = null): string
     {
-        switch ($round->mode)
+
+        $roundModeKey = $round ? $round->mode : $roundModeKey;
+
+        switch ($roundModeKey)
         {
             case 'standard':
                 return 'land';
@@ -72,9 +102,12 @@ class RoundHelper
         return 48;
     }
 
-    public function getRoundModeDescription(Round $round): string
+    public function getRoundModeDescription(Round $round = null, string $roundModeKey = null): string
     {
-        switch ($round->mode)
+
+        $roundModeKey = $round ? $round->mode : $roundModeKey;
+
+        switch ($roundModeKey)
         {
             case 'standard':
                 return 'Your dominion is in a realm with friendly dominions fighting against all other realms to become the largest dominion.';
@@ -93,9 +126,12 @@ class RoundHelper
         }
     }
 
-    public function getRoundModeIcon(Round $round): string
+    public function getRoundModeIcon(Round $round = null, string $roundModeKey = null): string
     {
-        switch ($round->mode)
+
+        $roundModeKey = $round ? $round->mode : $roundModeKey;
+
+        switch ($roundModeKey)
         {
             case 'standard':
             case 'standard-duration':
