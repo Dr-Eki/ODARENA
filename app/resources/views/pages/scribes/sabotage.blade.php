@@ -15,7 +15,7 @@
                 <p>Sabotaged construction delays construction of the affected buildings by two ticks, but to no greater than 12 ticks.</p>
                 <p>The formula used to calculate sabotage damage is:</p>
                 <code>
-                    [Base Damage] * (([Sabotage Point Sent] / [Target Land Size]) / [Target Defensive SPA])) * [Saboteur Damage Boosts] * [Target Damage Reductions]
+                    [Base Damage] * (([Sabotage Point Sent] / [Target Land Size]) / ([Target Defensive SPA] * 10))) * [Saboteur Damage Boosts] * [Target Damage Reductions]
                 </code>
                 <p>Definitions:</p>
                 <ul>

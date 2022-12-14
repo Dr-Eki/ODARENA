@@ -33,6 +33,7 @@ class Race extends AbstractModel
           'peasants_alias' => 'text',
           'draftees_alias' => 'text',
           'construction_materials' => 'array',
+          'round_modes' => 'array',
           'spies_cost' => 'text',
           'wizards_cost' => 'text',
           'archmages_cost' => 'text',
@@ -63,6 +64,25 @@ class Race extends AbstractModel
         return $this->hasMany(Unit::class)
             ->orderBy('slot');
     }
+   
+    public function getBuildings()
+    {
+        return Building::where(function ($query) {
+            if (empty($this->exclusive_races) && empty($this->excluded_races)) {
+                $query->where('exclusive_races', '=', null)
+                    ->orWhere('exclusive_races', '=', [])
+                    ->orWhere('exclusive_races', 'like', '%' . $this->name . '%')
+                    ->where('excluded_races', '=', null)
+                    ->orWhere('excluded_races', '=', [])
+                    ->orWhereNotIn('excluded_races', [$this->name]);
+            } else {
+                $query->where('exclusive_races', 'like', '%' . $this->name . '%')
+                    ->whereNotIn('excluded_races', [$this->name]);
+            }
+        })->get();
+    }
+    
+
 
     /**
      * Gets a Race's perk multiplier.
@@ -92,6 +112,8 @@ class Race extends AbstractModel
 
         return (float)$perks->first()->pivot->value;
     }
+
+
 
     /**
      * Try to get a unit perk value with provided key for a specific slot.

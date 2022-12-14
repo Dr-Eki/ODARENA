@@ -17,7 +17,9 @@ use OpenDominion\Models\DominionDecreeState;
 use OpenDominion\Models\DominionDeity;
 use OpenDominion\Models\DominionSpell;
 use OpenDominion\Models\DominionState;
+use OpenDominion\Models\DominionTech;
 use OpenDominion\Models\Spell;
+use OpenDominion\Models\Tech;
 
 use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\ImprovementHelper;
@@ -107,6 +109,7 @@ class DominionStateService
             'resources' => object_get($stateData, 'resources', []),
             'spells' => object_get($stateData, 'spells', []),
             'advancements' => object_get($stateData, 'advancements', []),
+            'techs' => object_get($stateData, 'techs', []),
             'decree_states' => object_get($stateData, 'decree_states', []),
             'units' => object_get($stateData, 'units', []),
             'queues' => object_get($stateData, 'queues', []),
@@ -241,6 +244,17 @@ class DominionStateService
                 [
                     'level' => $level
                 ]);
+            }
+
+            // Delete techs
+            DB::table('dominion_techs')->where('dominion_id', '=', $dominion->id)->delete();
+
+            // Add techs
+            foreach($dominionState->techs as $techKey)
+            {
+                $tech = Tech::where('key', $techKey)->first();
+
+                DominionTech::updateOrCreate(['dominion_id' => $dominion->id, 'tech_id' => $tech->id]);
             }
     
             // Delete queues
@@ -389,6 +403,13 @@ ticks: %s
             $advancements .= "    {$advancement->key}: {$dominionAdvancement->pivot->level}\n";
         }
 
+        $techs = "\ntechs:\n";
+        foreach($dominion->techs->sortBy('key') as $dominionTech)
+        {
+            $techs .= "    - {$dominionTech->key}\n";
+        }
+
+
         $decreeStates = "\ndecree_states:\n";
         foreach(DominionDecreeState::where('dominion_id', $dominion->id)->get() as $dominionDecreeState)
         {
@@ -423,7 +444,7 @@ ticks: %s
             $queues .= "    - {$queue->source},{$queue->resource},{$queue->hours},{$queue->amount}\n";
         }
 
-        $string = $basics . $buildings . $improvements . $land . $resources . $spells . $advancements . $decreeStates . $units . $queues;
+        $string = $basics . $buildings . $improvements . $land . $resources . $spells . $advancements . $techs . $decreeStates . $units . $queues;
         
         return $string;
     }

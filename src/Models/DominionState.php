@@ -50,6 +50,7 @@ class DominionState extends AbstractModel
         'resources' => 'array',
         'spells' => 'array',
         'advancements' => 'array',
+        'techs' => 'array',
         'decree_states' => 'array',
         'units' => 'array',
         'queues' => 'array',

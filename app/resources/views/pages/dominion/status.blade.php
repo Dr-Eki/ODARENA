@@ -6,7 +6,9 @@
     <div class="col-sm-12 col-md-9">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-chart-bar"></i> The Dominion of {{ $selectedDominion->name }}</h3>
+                <span data-toggle="tooltip" data-placement="top" title="{!! $selectedDominion->id !!}">
+                    <h3 class="box-title"><i class="fa fa-chart-bar"></i> The Dominion of {{ $selectedDominion->name }}</h3>
+                </span>
             </div>
             <div class="box-body no-padding">
                 <div class="row">
