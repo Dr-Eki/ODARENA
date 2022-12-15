@@ -16,7 +16,7 @@ resources:
   - soul
 
 peasants_production:
-  mana: 0.08
+  mana: 0.12
 
 construction_materials:
   - mana
