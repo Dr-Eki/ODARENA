@@ -130,6 +130,7 @@ agriculture:
     - Firewalker
     - Lux
     - Monster
+    - Spirit
     - Void
   perks:
     food_production_mod: 2.5
