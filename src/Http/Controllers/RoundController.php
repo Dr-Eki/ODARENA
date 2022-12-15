@@ -53,11 +53,18 @@ class RoundController extends AbstractController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $races = Race::query()
-            ->with(['perks'])
-            ->orderBy('name')
-            ->get();
+        $races =$this->roundHelper->getRoundRaces($round);
 
+        /*
+        $races = Race::query()
+            ->orderBy('name')
+            ->where('playable',1)
+            ->get();
+        */
+
+        # For each race, check if round->mode is in race->round_modes, remove if not.
+        
+        
         $countAlignment = DB::table('dominions')
                             ->join('races', 'dominions.race_id', '=', 'races.id')
                             ->join('realms', 'realms.id', '=', 'dominions.realm_id')
@@ -92,11 +99,6 @@ class RoundController extends AbstractController
         $titles = Title::query()
             ->with(['perks'])
             ->where('enabled',1)
-            ->orderBy('name')
-            ->get();
-
-        $races = Race::query()
-            ->with(['perks'])
             ->orderBy('name')
             ->get();
 
@@ -335,11 +337,12 @@ class RoundController extends AbstractController
             $alignment = str_replace('npc', 'any', $alignment);
             $alignment = str_replace('any', '%', $alignment);
 
-            $races = DB::table('races')
+            
+            $races = $races =$this->roundHelper->getRoundRaces($round)
                       ->where('alignment', 'like', $alignment)
                       ->where('playable', 1)
                       ->pluck('id')->all();
-
+            
             $request['race'] = $races[array_rand($races)];
 
             $eventData['random_faction'] = true;

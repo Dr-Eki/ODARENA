@@ -5,6 +5,7 @@ namespace OpenDominion\Helpers;
 use DB;
 use Illuminate\Support\Collection;
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Race;
 use OpenDominion\Models\Round;
 
 use OpenDominion\Calculators\Dominion\LandCalculator;
@@ -230,6 +231,25 @@ class RoundHelper
             default:
                 return '';
         }
+    }
+
+    public function getRoundRaces(Round $round): Collection
+    {
+        $races = Race::all()->where('playable', true);
+
+        if(!in_array(request()->getHost(), ['sim.odarena.com', 'odarena.local', 'odarena.virtual']))
+        {
+            # For each race, check if round->mode is in race->round_modes, remove if not.
+            foreach($races as $key => $race)
+            {
+                if(!in_array($round->mode, $race->round_modes))
+                {
+                    $races->forget($key);
+                }
+            }
+        }
+
+        return $races;
     }
 
 }

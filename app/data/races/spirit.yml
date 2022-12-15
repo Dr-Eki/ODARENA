@@ -18,6 +18,11 @@ resources:
 peasants_production:
   mana: 0.12
 
+improvement_resources:
+  mana: 1
+  soul: 2
+  gems: 12
+
 construction_materials:
   - mana
   - gems

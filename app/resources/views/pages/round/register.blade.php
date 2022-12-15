@@ -86,7 +86,7 @@
                                           data-alignment="Commonwealth">
                                       Random Commonwealth
                                 </option>
-                                @foreach ($races->filter(function ($race) { return $race->playable && $race->alignment === 'good'; }) as $race)
+                                @foreach ($races->filter(function ($race) { return $race->alignment === 'good'; }) as $race)
                                     <option value="{{ $race->id }}"
                                           data-current="{{ isset($countRaces[$race->name]) ? number_format($countRaces[$race->name]) : 0 }}"
                                           data-maxPerRound="{{ $race->max_per_round }}"
@@ -103,7 +103,7 @@
                                           data-alignment="Imperial">
                                       Random Imperial
                                 </option>
-                                @foreach ($races->filter(function ($race) { return $race->playable && $race->alignment === 'evil'; }) as $race)
+                                @foreach ($races->filter(function ($race) { return $race->alignment === 'evil'; }) as $race)
                                     <option value="{{ $race->id }}"
                                           data-current="{{ isset($countRaces[$race->name]) ? number_format($countRaces[$race->name]) : 0 }}"
                                           data-maxPerRound="{{ $race->max_per_round }}"
@@ -120,7 +120,7 @@
                                           data-alignment="Independent">
                                       Random Independent
                                 </option>
-                                @foreach ($races->filter(function ($race) { return $race->playable && $race->alignment === 'independent'; }) as $race)
+                                @foreach ($races->filter(function ($race) { return $race->alignment === 'independent'; }) as $race)
                                     <option value="{{ $race->id }}"
                                           data-current="{{ isset($countRaces[$race->name]) ? number_format($countRaces[$race->name]) : 0 }}"
                                           data-maxPerRound="{{ $race->max_per_round }}"

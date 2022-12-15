@@ -641,7 +641,7 @@ class InvadeActionService
             # Debug before saving:
             if(request()->getHost() === 'odarena.local' or request()->getHost() === 'odarena.virtual')
             {
-                dd($this->invasion);
+                #dd($this->invasion);
             }
 
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
