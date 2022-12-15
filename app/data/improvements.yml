@@ -143,6 +143,7 @@ irrigation:
     - Lux
     - Marshling
     - Monster
+    - Spirit
     - Sylvan
     - Swarm
     - Troll
@@ -185,6 +186,7 @@ logging:
     - Monster
     - Glimjir
     - Myconid
+    - Spirit
     - Sylvan
     - Swarm
     - Troll
@@ -224,6 +226,7 @@ mobilisation:
     - Monster
     - Myconid
     - Lux
+    - Spirit
     - Sylvan
     - Swarm
     - Troll
@@ -290,6 +293,7 @@ mining:
     - Qur
     - Reptilians
     - Simian
+    - Spirit
     - Sylvan
     - Swarm
     - Troll

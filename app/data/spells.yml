@@ -13,6 +13,7 @@ enhanced_yields:
     - Firewalker
     - Lux
     - Monster
+    - Spirit
     - Sylvan
     - Undead
     - Void
@@ -49,6 +50,7 @@ magic_disguise:
     - Lux
     - Monster
     - Myconid
+    - Spirit
     - Sylvan
     - Void
   perks:
