@@ -105,7 +105,8 @@ class UnitHelper
             'vampiric_conversion' => 'Spreads vampirism.',
             'psionic_conversion' => 'Psionically converts enemy units to %2$s.',
             
-            'displaced_peasants_conversion' => 'Converts enemy displaced enemy peasants into %s.',
+            'displaced_peasants_conversion' => 'Converts displaced enemy peasants into %s.',
+            'converts_displaced_peasants_into_resource' => 'Converts displaced enemy peasants into %1$s %2$s.',
             'displaced_peasants_random_split_conversion' => 'Converts %1$s%% to %2$s%% of displaced enemy peasants into %3$s, the rest to %4$s.',
             'strength_conversion' => 'Converts enemy casualties with %1$s or less raw OP or DP into %2$s and stronger enemies into %3$s.',
             'value_conversion' => 'Fuses %1$sx of killed enemy raw OP or DP into %2$s.',

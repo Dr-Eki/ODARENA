@@ -105,5 +105,5 @@ units:
       does_not_count_as_population: 1
       kills_into_resource_per_casualty: 1,soul
       plunder: soul,10
-      converts_displaced_peasants_into_resource: 0.25,soul
+      converts_displaced_peasants_into_resource: 0.20,soul
       no_draftee: 1
