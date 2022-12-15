@@ -1081,6 +1081,32 @@ rainy_season:
     cannot_invade: 1
     cannot_send_expeditions: 1
 
+guardian_spirit:
+  name: Guardian Spirit
+  enabled: 0
+  scope: friendly
+  class: passive
+  cost: 6
+  duration: 24
+  cooldown: 192
+  exclusive_races:
+    - Spirit
+  perks:
+    defensive_power: 1
+    casualties_resource_conversion_for_caster: 1,soul
+
+transcendence:
+  name: Transcendence
+  enabled: 0
+  scope: hostile
+  class: passive
+  cost: 0.35
+  duration: 0.75
+  exclusive_races:
+    - Spirit
+  perks:
+    casualties_resource_conversion_for_caster: 1,soul
+
 chitin:
   name: Chitin
   scope: self
@@ -1166,6 +1192,7 @@ arterial_rush:
     - Vampires
   perks:
     some_win_into_mod: 50
+
 
 voidspell:
   name: ⫷⋗⫸◬
