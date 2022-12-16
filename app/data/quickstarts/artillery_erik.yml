@@ -29,7 +29,7 @@ buildings:
     lumberyard: 0
     military_academy: 0
     ore_mine: 0
-    masonry: 0
+    school: 0
     smithy: 0
     tower: 20
     vault: 0
@@ -74,7 +74,7 @@ spells:
     sazals_fog: 0,96
     enhanced_yields: 48,0
     fools_gold: 21,57
-    miners_sight: 48,0
+    mining_strength: 48,0
 
 advancements:
     drills: 10

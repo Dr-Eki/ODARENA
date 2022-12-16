@@ -27,7 +27,7 @@ buildings:
     gold_mine: 0
     guard_tower: 0
     military_academy: 0
-    masonry: 0
+    school: 0
     shrine: 0
     smithy: 200
     tavern: 0

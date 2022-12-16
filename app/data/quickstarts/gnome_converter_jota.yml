@@ -29,7 +29,7 @@ buildings:
     guard_tower: 0
     military_academy: 0
     ore_mine: 0
-    masonry: 500
+    school: 500
     shrine: 0
     tavern: 50
     temple: 0
@@ -73,7 +73,7 @@ spells:
     sazals_charge: 0,96
     sazals_fog: 0,96
     enhanced_yields: 10,0
-    miners_sight: 17,0
+    mining_strength: 17,0
     harmony: 36,0
 
 techs:

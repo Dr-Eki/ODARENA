@@ -31,7 +31,7 @@ buildings:
     military_academy: 0
     ore_mine: 0
     refiner: 40
-    masonry: 0
+    school: 0
     shrine: 0
     temple: 0
     tower: 25

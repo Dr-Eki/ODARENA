@@ -32,7 +32,7 @@ buildings:
     ore_mine: 80
     sacred_shrine: 0
     sacred_temple: 100
-    masonry: 0
+    school: 0
     smithy: 200
     tower: 20
     vault: 0
