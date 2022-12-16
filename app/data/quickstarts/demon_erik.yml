@@ -77,9 +77,6 @@ spells:
 
 advancements:
 
-techs:
-    - curriculum
-
 decree_states:
     - culture,culture_artistic,0
     - economic_theory,economic_theory_improvements,0
