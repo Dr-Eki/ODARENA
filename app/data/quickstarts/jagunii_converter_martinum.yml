@@ -74,6 +74,9 @@ spells:
     sazals_fog: 0,108
     mining_strength: 32,0
 
+techs:
+    - reinforced_tools
+
 advancements:
     anvils: 4
     minting: 4

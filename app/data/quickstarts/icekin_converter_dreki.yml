@@ -68,6 +68,9 @@ advancements:
     gemcutting: 1
     wizardry_tradition: 5
 
+techs:
+    - curriculum
+
 units:
     draftees: 0
     unit1: 0

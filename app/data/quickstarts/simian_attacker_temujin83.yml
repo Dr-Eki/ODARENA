@@ -68,6 +68,9 @@ spells:
     sazals_fog: 0,96
     enhanced_yields: 24,0
 
+techs:
+    - currency
+
 advancements:
     anvils: 4
     minting: 6

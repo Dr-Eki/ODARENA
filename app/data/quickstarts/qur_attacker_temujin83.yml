@@ -71,6 +71,9 @@ spells:
     sazals_fog: 0,96
     enhanced_yields: 48,0
 
+techs:
+    - curriculum
+
 advancements:
     anvils: 4
     fortifications: 1

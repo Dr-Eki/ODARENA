@@ -61,8 +61,11 @@ spells:
     sazals_fog: 0,108
     enhanced_yields: 36,0
 
+techs:
+    - curriculum
+
 advancements:
-    anvils: 10
+    research: 10
 
 units:
     draftees: 4763

@@ -77,6 +77,9 @@ advancements:
     minting: 6
     housing: 2
 
+techs:
+    - reinforced_tools
+
 units:
     draftees: 720
     unit1: 2927

@@ -78,6 +78,9 @@ spells:
     mining_strength: 31,0
     enhanced_yields: 35,0
 
+techs:
+    - curriculum
+
 advancements:
     anvils: 4
     gemcutting: 4

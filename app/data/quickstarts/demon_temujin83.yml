@@ -80,6 +80,9 @@ advancements:
     fortifications: 1
     housing: 4
 
+techs:
+    - curriculum
+
 decree_states:
     - culture,culture_religious,0
     - economic_theory,economic_theory_improvements,0

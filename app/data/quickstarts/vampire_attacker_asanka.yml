@@ -71,6 +71,9 @@ spells:
     sazals_charge: 0,108
     sazals_fog: 0,108
 
+techs:
+    - currency
+
 advancements:
     anvils: 4
     minting: 4

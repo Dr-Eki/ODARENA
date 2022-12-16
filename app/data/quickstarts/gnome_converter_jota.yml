@@ -76,6 +76,9 @@ spells:
     miners_sight: 17,0
     harmony: 36,0
 
+techs:
+    - curriculum
+
 advancements:
     anvils: 4
     drills: 2

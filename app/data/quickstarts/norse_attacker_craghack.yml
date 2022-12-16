@@ -80,6 +80,9 @@ spells:
     enhanced_yields: 36,0
     mining_strength: 36,0
 
+techs:
+    - art_of_war
+
 advancements:
     anvils: 4
     minting: 6

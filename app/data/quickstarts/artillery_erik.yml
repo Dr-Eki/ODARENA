@@ -79,6 +79,9 @@ spells:
 advancements:
     drills: 10
 
+techs:
+    - curriculum
+
 decree_states:
     - culture,culture_artistic,0
     - mining_focus,mining_focus_gems,0

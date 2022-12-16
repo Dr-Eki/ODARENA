@@ -62,6 +62,9 @@ spells:
     mining_strength: 6,0
     enhanced_yields: 24,0
 
+techs:
+    - reinforced_tools
+
 advancements:
     drills: 6
 

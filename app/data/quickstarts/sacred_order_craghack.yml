@@ -78,6 +78,9 @@ spells:
     enhanced_yields: 45,0
     mining_strength: 45,0
 
+techs:
+    - divination
+
 advancements:
     anvils: 4
     housing: 4

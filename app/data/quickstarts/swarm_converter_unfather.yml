@@ -52,6 +52,9 @@ spells:
     sazals_fog: 0,96
     chitin: 48,0
 
+techs:
+    - currency
+
 advancements:
     anvils: 4
     minting: 6
