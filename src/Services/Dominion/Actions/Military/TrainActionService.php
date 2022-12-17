@@ -295,7 +295,7 @@ class TrainActionService
                   $dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'no_draftee')
               )
             {
-              $newDraftelessUnitsToHouse += $unitAmountToTrain;
+                $newDraftelessUnitsToHouse += $unitAmountToTrain;
             }
 
         }

@@ -84,8 +84,8 @@ class TrainingCalculator
         $wizardCost = $this->raceHelper->getWizardCost($dominion->race);
         $archmageCost = $this->raceHelper->getArchmageCost($dominion->race);
 
-        $spyCost['trainedFrom'] = 'draftees';
-        $wizardCost['trainedFrom'] = 'draftees';
+        $spyCost['trainedFrom'] = $dominion->race->getPerkValue('no_draftee_for_spies') ? 'peasants' : 'draftees';
+        $wizardCost['trainedFrom'] = $dominion->race->getPerkValue('no_draftee_for_wizards') ? 'peasants' : 'draftees';;
 
         # Generally, do not mess with this one.
         $archmageCost['trainedFrom'] = 'wizards';
@@ -132,7 +132,7 @@ class TrainingCalculator
                         $cost[$costResourceKey] = ceil($amount * $multiplier);
                     }
 
-                    if($dominion->race->getUnitPerkValueForUnitSlot(/*intval(str_replace('unit','',$unitType))*/$slot, 'no_draftee') == 1)
+                    if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'no_draftee') == 1)
                     {
                         $cost['draftees'] = 0;
                     }

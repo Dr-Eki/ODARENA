@@ -34,7 +34,9 @@ archmages_cost: 400,mana
 perks:
   no_food_consumption: 1
   no_drafting: 1
-  construction_costs: -50
+  construction_cost: -50
+  no_draftee_for_spies: 1
+  no_draftee_for_wizards: 1
 
 units:
   - name: Wisp
