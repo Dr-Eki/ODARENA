@@ -131,7 +131,11 @@ class InvadeActionService
         $this->guardLockedDominion($attacker);
         $this->guardActionsDuringTick($attacker);
         $this->guardLockedDominion($target);
-        $this->guardActionsDuringTick($target);
+
+        if($attacker->race->name !== 'Barbarian')
+        {
+            $this->guardActionsDuringTick($target);
+        }
 
         if($target->hasProtector())
         {
@@ -141,7 +145,11 @@ class InvadeActionService
 
             $defender = $target->protector;
             $this->guardLockedDominion($defender);
-            $this->guardActionsDuringTick($defender);
+
+            if($attacker->race->name !== 'Barbarian')
+            {
+                $this->guardActionsDuringTick($defender);
+            }
         }
         else
         {
