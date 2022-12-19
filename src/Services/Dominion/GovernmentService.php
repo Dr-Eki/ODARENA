@@ -42,7 +42,7 @@ class GovernmentService
 
     public function hasMonarch(Realm $realm): bool
     {
-        return $realm->monarch_dominion_id;
+        return isset($realm->monarch_dominion_id);
     }
 
     /**
