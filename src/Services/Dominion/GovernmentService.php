@@ -40,6 +40,11 @@ class GovernmentService
         return $realm->monarch_dominion_id ? Dominion::findOrFail($realm->monarch_dominion_id) : null;
     }
 
+    public function hasMonarch(Realm $realm): bool
+    {
+        return $realm->monarch_dominion_id;
+    }
+
     /**
      * Check if a new monarch has been elected for a Realm.
      *

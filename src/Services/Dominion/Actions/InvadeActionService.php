@@ -1123,12 +1123,12 @@ class InvadeActionService
         }
 
         # If there is no governor, attacker becomes governor if the target is in the same realm (i.e. not a Barbarian)
-        if(!$this->governmentService->getRealmMonarch($attacker->realm) and $attacker->realm->id == $target->realm->id)
+        if(!$this->governmentService->hasMonarch($attacker->realm) and $attacker->realm->id == $target->realm->id)
         {
             $this->governmentService->setRealmMonarch($attacker->realm, $attacker->id);
         }
         # If there is a governor, the attacker becomes governor if the target is (was) governor.
-        elseif($this->governmentService->getRealmMonarch($attacker->realm)->id == $target->id)
+        elseif($this->governmentService->hasMonarch($attacker->realm) and $this->governmentService->getRealmMonarch($attacker->realm)->id == $target->id)
         {
             $this->governmentService->setRealmMonarch($attacker->realm, $attacker->id);
         }
