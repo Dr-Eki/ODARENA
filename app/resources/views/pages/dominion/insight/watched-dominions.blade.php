@@ -38,14 +38,15 @@
                                 $dpMultiplierReduction = $militaryCalculator->getDefensiveMultiplierReduction($selectedDominion);
 
                                 $dominionDP = $militaryCalculator->getDefensivePower(
-                                    $dominion,
-                                    $selectedDominion,
-                                    $landCalculator->getTotalLand($dominion) / $landCalculator->getTotalLand($selectedDominion),
-                                    null,
-                                    $dpMultiplierReduction
-                                    false, # Ignore ambush
-                                    false,
-                                    [], # No $invadingUnits  
+                                   $dominion,
+                                   $selectedDominion,
+                                   $landCalculator->getTotalLand($dominion) / $landCalculator->getTotalLand($selectedDominion),
+                                   null,
+                                   $dpMultiplierReduction,
+                                   false, # Ignore ambush
+                                   false,
+                                   [],
+                                   false, # No $invadingUnits  
                                 );
 
                                 $dominionFogged = ($dominion->getSpellPerkValue('fog_of_war') == 1);
@@ -101,7 +102,7 @@
                                         @endif
                                     </td>
                                     <td>{{ $dominion->race->name }}</td>
-                                    <td><a href="{{ route('dominion.realm', [$watchedDominion->realm->number]) }}"># {{ $watchedDominion->realm->number }}</a></td>
+                                    <td><a href="{{ route('dominion.realm', [$dominion->realm->number]) }}"># {{ $dominion->realm->number }}</a></td>
                                     <td>{{ number_format($landCalculator->getTotalLand($dominion)) }}</td>
                                     <td>{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}</td>
                                     <td>{!! $dominionFogged ? '<span class="label label-default">Fog</span>' : number_format($dominionDP) . ' *' !!}</td>
