@@ -652,7 +652,7 @@ class InvadeActionService
             # Debug before saving:
             if(request()->getHost() === 'odarena.local' or request()->getHost() === 'odarena.virtual')
             {
-                dd($this->invasion);
+                #dd($this->invasion);
             }
 
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
@@ -2858,11 +2858,14 @@ class InvadeActionService
             $resourcesToQueue[$resourceKey] += $this->result['attacker']['salvage'][$resourceKey] ?? 0;
             $resourcesToQueue[$resourceKey] += $this->result['attacker']['plunder'][$resourceKey] ?? 0;
             $resourcesToQueue[$resourceKey] += $this->invasion['attacker']['resource_conversions'][$resourceKey] ?? 0;
+        }
 
+        foreach($resourcesToQueue as $resourceKey => $amount)
+        {
             $this->queueService->queueResources(
                 'invasion',
                 $attacker,
-                [('resource_'.$resourceKey) => max(0, $resourcesToQueue[$resourceKey])],
+                [('resource_'.$resourceKey) => max(0, $amount)],
                 12
             );
         }
