@@ -546,6 +546,9 @@ class InvadeActionService
             # Watched Dominions
             $this->handleWatchedDominions($attacker, $defender);
 
+            # Handle resources to  be queued
+            $this->handleResourceGainsForAttacker($attacker);
+
             // Stat changes
             if ($this->invasion['result']['success'])
             {
@@ -649,7 +652,7 @@ class InvadeActionService
             # Debug before saving:
             if(request()->getHost() === 'odarena.local' or request()->getHost() === 'odarena.virtual')
             {
-                #dd($this->invasion);
+                dd($this->invasion);
             }
 
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
@@ -2492,6 +2495,7 @@ class InvadeActionService
     protected function handleResourceConversions(Dominion $converter, string $mode = 'offense'): void
     {
         # Queue up for attacker
+        /*
         if($mode == 'offense')
         {
             foreach($this->invasion['attacker']['resource_conversions'] as $resourceKey => $resourceAmount)
@@ -2504,6 +2508,7 @@ class InvadeActionService
                 );
             }
         }
+        */
 
         # Instantly add for defender
         if($mode == 'defense')
@@ -2638,7 +2643,10 @@ class InvadeActionService
             }
         }
 
+        # Moved to separate function for attackers to  be able to have salage, plunder, and conversions (Spirit)
+        # See handleResourceGainsForAttacker()
         # Queue plundered and salvaged resources to attacker.
+        /*
         foreach($result['attacker']['plunder'] as $resourceKey => $amount)
         {
             # If the resource is ore, lumber, or gems, also check for salvaged resources.
@@ -2654,6 +2662,7 @@ class InvadeActionService
                 $this->queueService->queueResources('invasion',$attacker,['resource_'.$resourceKey => $amount]);
             }
         }
+        */
 
         $this->invasion['attacker']['salvage'] = $result['attacker']['salvage'];
         $this->invasion['attacker']['plunder'] = $result['attacker']['plunder'];
@@ -2837,6 +2846,26 @@ class InvadeActionService
             }
         }
         */
+    }
+
+    protected function handleResourceGainsForAttacker(Dominion $attacker): void
+    {
+        $resourcesToQueue = [];
+
+        foreach($attacker->race->resources as $resourceKey)
+        {
+            $resourcesToQueue[$resourceKey] = 0;
+            $resourcesToQueue[$resourceKey] += $this->result['attacker']['salvage'][$resourceKey] ?? 0;
+            $resourcesToQueue[$resourceKey] += $this->result['attacker']['plunder'][$resourceKey] ?? 0;
+            $resourcesToQueue[$resourceKey] += $this->invasion['attacker']['resource_conversions'][$resourceKey] ?? 0;
+
+            $this->queueService->queueResources(
+                'invasion',
+                $attacker,
+                [('resource_'.$resourceKey) => max(0, $resourcesToQueue[$resourceKey])],
+                12
+            );
+        }
     }
 
     /**
