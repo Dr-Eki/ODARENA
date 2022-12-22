@@ -194,6 +194,8 @@ blood_improvements:
   name: Blood improvements
 blood_lost:
   name: Blood lost
+pearls_plundered:
+  name: Souls plundered
 
 pearls_production:
   name: Pearls production
