@@ -181,6 +181,18 @@ aura:
   perks:
     damage_from_spells: -20
 
+voidspellmanatheft:
+  name: ◣◹
+  scope: hostile
+  class: active
+  cost: 0.25 # 1/4
+  cooldown: 0
+  duration: 0
+  exclusive_races:
+    - Void
+  perks:
+    resource_theft: mana,0.25 # resource, rate # 1/4
+
 # END GENERIC NON-SORCERY
 
 # BEGIN DIVINE (INCLUDING SORCERY)
