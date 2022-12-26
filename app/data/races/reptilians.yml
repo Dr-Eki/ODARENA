@@ -25,7 +25,7 @@ perks:
 
 units:
   - name: Horned One
-    training_time: 3
+    training_time: 8
     type:
       - living
       - sentient
@@ -54,7 +54,7 @@ units:
       reduces_casualties: 1
 
   - name: Blessed One
-    training_time: 9
+    training_time: 8
     type:
       - living
       - sentient
