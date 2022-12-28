@@ -1077,6 +1077,11 @@ sabotage_buildings_damage_dealt:
 sabotage_buildings_damage_suffered:
   name: Sabotage damage suffered to buildings
 
+sabotage_military_draftees_damage_dealt:
+  name: Sabotage damage dealt to draftees
+sabotage_military_draftees_damage_suffered:
+  name: Sabotage damage suffered to draftees
+
 sabotage_improvements_damage_dealt:
   name: Sabotage damage dealt to improvements
 sabotage_improvements_damage_suffered:
