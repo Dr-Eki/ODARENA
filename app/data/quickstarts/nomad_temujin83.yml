@@ -16,7 +16,7 @@ wizard_strength: 88
 xp: 2080
 
 buildings:
-aqueduct: 50
+    aqueduct: 50
     automated_mine: 0
     constabulary: 0
     dock: 50
@@ -111,6 +111,7 @@ units:
     spies: 0
     wizards: 0
     archmages: 0
+
 queues:
     - research,battlefield_analysis,69,1
     - training,military_unit1,1,14
