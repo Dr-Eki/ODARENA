@@ -26,7 +26,7 @@
                         </tr>
                     @endforeach
                     <tr>
-                        <td colspan="2"><p class="text-muted"><small><em>Resoure cost reductions can only exceed 50% with spells, deity, or research perks. Max total reduction is 90%.</em></small></p></td>
+                        <td colspan="2"><p class="text-muted"><small><em>Cost reductions can only exceed 50% with spells, deity, or research perks. Max total reduction is 90%.</em></small></p></td>
                     </tr>
 
                 </tbody>

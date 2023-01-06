@@ -86,7 +86,6 @@
 
       <p>For more information on the privacy practices of Google, please visit the Google Privacy & Terms web page: <a href="https://policies.google.com/privacy?hl=en" rel="nofollow" target="_new">https://policies.google.com/privacy?hl=en</a></p>
 
-      <p>We also use FingerprintJS to gather information about your device and browser. FingerprintJS is a browser fingerprinting library that collects information about your device and browser. This information is used to identify you and your device. The information collected includes your IP address, browser and operating system information, screen resolution, and other information about your device and browser. The information is used to identify you and your device. The information is stored on our servers and is not shared with any third parties. It does not contain any personal information. For more inforation, see FingerprintJS privacy policy:<a href="https://dev.fingerprint.com/docs/privacy-policy" rel="nofollow" target="_new">https://dev.fingerprint.com/docs/privacy-policy</a></p>
 
       <h3>Online Privacy Policy Only</h3>
 
