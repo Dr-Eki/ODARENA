@@ -1336,47 +1336,32 @@ class MilitaryCalculator
                   }
               }
           }
-          elseif ($target !== null)
+          elseif ($target)
           {
-              # mob_on_offense: Do we ($units) outnumber the defenders ($target)?
-              if($powerType == 'offense')
-              {
-                  $targetUnits = $this->getTotalUnitsAtHome($target, true, true);
-                  /*
-                  $targetUnits += $target->military_draftees;
-                  $targetUnits += $target->military_unit1;
-                  $targetUnits += $target->military_unit2;
-                  $targetUnits += $target->military_unit3;
-                  $targetUnits += $target->military_unit4;
-                  */
+                # mob_on_offense: Do we ($units) outnumber the defenders ($target)?
+                if($powerType == 'offense')
+                {
+                    $targetUnits = $this->getTotalUnitsAtHome($target, true, true);
 
-                  if(isset($units))
-                  {
-                      if(array_sum($units) > $targetUnits)
-                      {
-                          $powerFromPerk = $mobPerk[0];
-                      }
-                  }
-              }
+                    if(isset($units))
+                    {
+                        if(array_sum($units) > $targetUnits)
+                        {
+                            $powerFromPerk = $mobPerk[0];
+                        }
+                    }
+                }
 
-              # mob_on_offense: Do we ($dominion) outnumber the attackers ($units)?
-              if($powerType == 'defense')
-              {
-                    $mobUnits = $this->getTotalUnitsAtHome($target, true, true);
-                    /*
-                  $mobUnits = 0;
-                  $mobUnits += $dominion->military_draftees;
-                  $mobUnits += $dominion->military_unit1;
-                  $mobUnits += $dominion->military_unit2;
-                  $mobUnits += $dominion->military_unit3;
-                  $mobUnits += $dominion->military_unit4;
-                  */
+                # mob_on_defense: Do we ($dominion) outnumber the attackers ($units)?
+                if($powerType == 'defense')
+                {
+                    $mobUnits = $this->getTotalUnitsAtHome($dominion, true, true);
 
-                  if(isset($invadingUnits) and $mobUnits > array_sum($invadingUnits))
-                  {
-                      $powerFromPerk = $mobPerk[0];
-                  }
-              }
+                    if(isset($invadingUnits) and $mobUnits > array_sum($invadingUnits))
+                    {
+                        $powerFromPerk = $mobPerk[0];
+                    }
+                }
           }
 
           return $powerFromPerk;
@@ -1496,17 +1481,7 @@ class MilitaryCalculator
               # mob_on_offense: Do we ($units) outnumber the defenders ($target)?
               if($powerType == 'offense')
               {
-                  $targetUnitsString = '';
-
                   $targetUnits = $this->getTotalUnitsAtHome($target, true, true);
-                  /*
-                  $targetUnits = 0;
-                  $targetUnits += $target->military_draftees;
-                  $targetUnits += $target->military_unit1;
-                  $targetUnits += $target->military_unit2;
-                  $targetUnits += $target->military_unit3;
-                  $targetUnits += $target->military_unit4;
-                  */
 
                   if(isset($units))
                   {
@@ -1517,18 +1492,10 @@ class MilitaryCalculator
                   }
               }
 
-              # mob_on_offense: Do we ($dominion) outnumber the attackers ($units)?
+              # mob_on_defense: Do we ($dominion) outnumber the attackers ($units)?
               if($powerType == 'defense')
               {
                   $mobUnits = $this->getTotalUnitsAtHome($dominion, true, true);
-                  /*
-                  $mobUnits = 0;
-                  $mobUnits += $dominion->military_draftees;
-                  $mobUnits += $dominion->military_unit1;
-                  $mobUnits += $dominion->military_unit2;
-                  $mobUnits += $dominion->military_unit3;
-                  $mobUnits += $dominion->military_unit4;
-                  */
 
                   if(isset($invadingUnits) and $mobUnits < array_sum($invadingUnits))
                   {
@@ -1713,7 +1680,6 @@ class MilitaryCalculator
           {
               $powerFromPerk += min($dominion->devotion->duration * $perTick, $max);
           }
-          #dd($powerFromPerk);
 
           return $powerFromPerk;
       }
@@ -3030,8 +2996,6 @@ class MilitaryCalculator
         $multiplier += $dominion->getImprovementPerkMultiplier('unit_send_capacity_mod');
         $multiplier += $dominion->getDecreePerkMultiplier('unit_send_capacity_mod');
         $multiplier += $dominion->getSpellPerkMultiplier('unit_send_capacity_mod');
-
-        #dd($maxUnits, $multiplier, $maxUnits * $multiplier);
 
         return $maxUnits * $multiplier;
     }
