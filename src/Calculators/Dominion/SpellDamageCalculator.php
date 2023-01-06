@@ -70,6 +70,7 @@ class SpellDamageCalculator
             }
         }
 
+        #dump('Before spell specific checks: ' . $modifier);
         if(isset($spell))
         {
             $modifier += $target->race->getPerkMultiplier('damage_from_' . $spell->key);
