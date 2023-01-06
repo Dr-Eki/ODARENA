@@ -323,7 +323,6 @@ class SabotageCalculator
             }
             else
             {
-
                 if(
                     ($target->getSpellPerkValue('blind_to_reptilian_spies_on_sabotage') and $saboteur->race->name == 'Reptilians') or
                     $saboteur->race->getUnitPerkValueForUnitSlot($slot,'immortal_on_sabotage')

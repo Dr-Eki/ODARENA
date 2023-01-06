@@ -467,7 +467,6 @@ school:
   land_type: plain
   perks:
     improvements: 1,2.75 # Every 1% gives 2.75% higher imps
-    damage_from_lightning_bolt: 1,0.75 # Every 1% reduces damage from LBs by 0.75%
 
 stronghold:
   name: Stronghold

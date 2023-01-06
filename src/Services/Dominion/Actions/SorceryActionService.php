@@ -472,6 +472,20 @@ class SorceryActionService
                         $damageDealt = min($totalImprovementPoints * $damage, $totalImprovementPoints);
                         $damageDealt = floor($damageDealt);
 
+                        #dump('Base damage: ' . $baseDamage);
+                        #dump('Sorcery Spell Damage Multiplier: ' . $sorcerySpellDamageMultiplier);
+                        #dump('Spell Damage Multiplier: ' . $spellDamageMultiplier);
+                        #dump('Damage: ' . $damage);
+                        #dump('Damage dealt: ' . number_format($damageDealt));
+                        #dump('Total Improvement Points: ' . number_format($totalImprovementPoints));
+#
+                        #dump('Target spell damage reduction from spells: ' . $target->getSpellPerkMultiplier('damage_from_spells'));
+                        #dump('Target spell damage reduction from imps: ' . $target->getImprovementPerkMultiplier('spell_damage'));
+#
+                        #dd('Caster sorcery damage dealt spell perk: '. $caster->getSpellPerkMultiplier('sorcery_damage_dealt'));
+#
+                        #dd();
+
                         if($damageDealt > 0)
                         {
                             foreach($targetImprovements as $targetImprovement)

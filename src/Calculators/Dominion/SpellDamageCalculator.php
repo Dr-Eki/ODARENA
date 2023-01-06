@@ -100,7 +100,8 @@ class SpellDamageCalculator
             $modifier = -1;
         }
 
-          return max(0, $modifier);
+
+        return max(0, $modifier);
     }
 
 }
