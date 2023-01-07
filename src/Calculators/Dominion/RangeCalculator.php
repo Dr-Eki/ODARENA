@@ -13,7 +13,7 @@ class RangeCalculator
 {
     public const MINIMUM_RANGE = 0.4;
 
-    public const RECENTLY_INVADED_GRACE_PERIOD_TICKS = 12;
+    public const RECENTLY_INVADED_GRACE_PERIOD_TICKS = 12; # Window of opportunity for out of range retals
 
     /** @var LandCalculator */
     protected $landCalculator;

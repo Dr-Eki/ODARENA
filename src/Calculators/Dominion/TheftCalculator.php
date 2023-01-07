@@ -167,13 +167,33 @@ class TheftCalculator
 
         foreach($units as $slot => $amount)
         {
-            if(in_array($slot, [1,2,3,4,5,6,7,8,9,10]) and $thief->race->getUnitPerkValueForUnitSlot($slot,'immortal_spy'))
+            if($slot == 'spies')
             {
-                $killedUnits[$slot] = 0;
+                if
+                (
+                    $thief->getSpellPerkValue('immortal_spies') or
+                    $thief->race->getPerkValue('immortal_spies') or
+                    $thief->realm->getArtefactPerkMultiplier('immortal_spies') or
+                    $target->race->getPerkValue('does_not_kill') or
+                    ($target->getSpellPerkValue('blind_to_reptilian_spies_on_theft') and $thief->race->name == 'Reptilians')
+                )
+                {
+                    $killedUnits[$slot] = 0;
+                }
             }
             else
             {
-                $killedUnits[$slot] = (int)min(ceil($amount * $casualties), $units[$slot]);
+                if(
+                    ($target->getSpellPerkValue('blind_to_reptilian_spies_on_theft') and $thief->race->name == 'Reptilians') or
+                    $thief->race->getUnitPerkValueForUnitSlot($slot,'immortal_on_sabotage')
+                )
+                {
+                    $killedUnits[$slot] = 0;
+                }
+                else
+                {
+                    $killedUnits[$slot] = (int)min(ceil($amount * $casualties), $units[$slot]);
+                }
             }
 
         }
