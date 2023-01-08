@@ -1118,7 +1118,7 @@ voidtech4_2:
   exclusive_races:
     - Void
   perks:
-    production_from_peasants_mod: 20
+    production_from_peasants_mod: 10
   requires:
     - voidtech3_2
 
