@@ -64,6 +64,7 @@ miners_fortune:
   duration: 24
   cooldown: 96
   exclusive_races:
+    - Armada
     - Black Orc
     - Cires
     - Dark Elf
@@ -102,6 +103,7 @@ mining_strength:
   duration: 48
   cooldown: 0
   exclusive_races:
+    - Armada
     - Black Orc
     - Cires
     - Dark Elf
