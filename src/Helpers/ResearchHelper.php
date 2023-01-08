@@ -153,6 +153,7 @@ class ResearchHelper
             'draftee_dp' => '%+g raw defensive power per draftee',
 
             // Population
+            'population' => '%+g%% population',
             'population_growth' => '%+g%% population growth rate',
             'population_loss' => '%+g%% population loss rate',
             'kill_peasants' => 'Kills %1$s%% of the target\'s peasants.',
