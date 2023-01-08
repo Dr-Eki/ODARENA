@@ -105,6 +105,7 @@ deep_pockets:
   name: Deep Pockets
   excluded_races:
     - Myconid
+    - Void
   perks:
     amount_stolen: 5
 
@@ -233,6 +234,8 @@ molluscs:
 
 commerce:
   name: Commerce
+  excluded_races:
+    - Void
   perks:
     exchange_rate: 2.5
 
@@ -372,7 +375,6 @@ woodworks:
 research:
   name: Research
   excluded_races:
-    - Growth
     - Troll
     - Void
   perks:

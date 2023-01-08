@@ -85,6 +85,8 @@ class MoraleCalculator
             }
         }
 
+        $baseModifier += $dominion->getTechPerkValue('base_morale');
+
         return $baseModifier;
     }
 

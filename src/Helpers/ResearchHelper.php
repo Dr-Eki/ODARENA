@@ -47,6 +47,8 @@ class ResearchHelper
             'kelp_production_mod' => '%+g%% kelp harvest',
             'pearls_production_mod' => '%+g%% pearls production',
 
+            'bile_production_raw_from_tissue' => '%+g bile per tick per Tissue building.',
+
             'strength_gain_mod' => '%+g%% strength gains',
             'xp_generation_mod' => '%+g%% experience points generation',
 
@@ -92,7 +94,6 @@ class ResearchHelper
             'rezone_all_land' => 'Rezones %1s%% of all other land types to %2$s.',
             'land_generation_mod' => '%+g%% land generated.',
 
-
             // Resources
             'exchange_rate' => '%+g%% exchange rate',
 
@@ -107,6 +108,10 @@ class ResearchHelper
             'unit_lumber_costs' => '%+g%% military unit lumber costs',
             'unit_magma_costs' => '%+g%% military unit magma costs',
             'unit_mana_costs' => '%+g%% military unit mana costs',
+            'unit_food_costs' => '%+g%% military unit food costs',
+
+            'units_offensive_power' => '%+g raw offensive power to all units that have raw offensive power',
+            'units_defensive_power' => '%+g raw defensive power to all units that have raw defensive power',
 
             'machine_unit_costs' => '%+g%% machine unit costs',
             'ship_unit_costs' => '%+g%% ship unit costs',
@@ -128,6 +133,8 @@ class ResearchHelper
             'increase_morale_from_net_victories' => 'Increases morale by %+g%% per net victory (minimum +0%%).',
 
             'morale_recovery' => '%+g%% morale recovery',
+
+            'base_morale' => '%+g%% base morale',
 
             'no_drafting' => 'No draftees are drafted.',
 
@@ -185,6 +192,10 @@ class ResearchHelper
             'spell_costs' => '%+g%% spell costs',
             'sorcery_costs' => '%+g%% sorcery costs',
 
+            'wizard_strength' => '%+g%% wizard strength',
+            'wizard_strength_on_defense' => '%+g%% wizard strength on defense',
+            'wizard_strength_on_offense' => '%+g%% wizard strength on offense',
+
             // Espionage
             'disband_spies' => 'Disbands %+g%% of enemy spies.',
             'spy_strength' => '%+g%% spy strength',
@@ -234,6 +245,10 @@ class ResearchHelper
             'offensive_casualties' => '%+g%% casualties suffered when invading',
             'defensive_casualties' => '%+g%% casualties suffered when defending',
 
+            'chance_to_double_enemy_casualties' => '%+g%% chance to double enemy casualties',
+
+            'chance_of_immortality' => '%+g%% chance to be immortal in combat',
+
             // OP/DP
             'offensive_power' => '%+g%% offensive power',
             'defensive_power' => '%+g%% defensive power',
@@ -265,9 +280,13 @@ class ResearchHelper
             // Improvements
             'ore_improvement_points' => '%+g%% ore improvement points',
             'gems_improvement_points' => '%+g%% gem improvement points',
+            'food_improvement_points' => '%+g%% food improvement points',
+            'mana_improvement_points' => '%+g%% mana improvement points',
             'improvement_points' => '%+g%% improvement points',
 
             'improvements' => '%+g%% improvements',
+
+            'improvements_interest_mod' => '%+g%% improvements interest',
 
             // Buildings and Land (including Expeditions)
             'land_discovered' => '%+g%% land discovered on successful invasions',
@@ -282,6 +301,8 @@ class ResearchHelper
 
             'building_school_perk_mod' => '%+g%% power from Schools',
             
+            'land_lost' => '%+g%% land lost on invasions',
+
             // Special or one-off
             'opens_portal' => 'Opens a portal required to teleport otherwordly units to enemy lands',
 

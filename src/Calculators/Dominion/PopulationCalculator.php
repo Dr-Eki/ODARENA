@@ -232,6 +232,7 @@ class PopulationCalculator
         $militaryHousingMultiplier += $dominion->race->getPerkMultiplier('military_housing');
         $militaryHousingMultiplier += $dominion->getAdvancementPerkMultiplier('military_housing');
         $militaryHousingMultiplier += $dominion->getDecreePerkMultiplier('military_housing');
+        $militaryHousingMultiplier += $dominion->getImprovementPerkMultiplier('military_housing');
 
         $militaryHousing = 0;
         $militaryHousing += $dominion->getBuildingPerkValue('military_housing');

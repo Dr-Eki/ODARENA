@@ -538,6 +538,7 @@ class MilitaryCalculator
         $unitPower += $this->getUnitPowerFromBuildingsBasedPerk($dominion, $unit, $powerType); # This perk uses multiple buildings!
         $unitPower += $this->getUnitPowerFromImprovementPointsPerImprovement($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromImprovementPoints($dominion, $unit, $powerType);
+        $unitPower += $this->getUnitPowerFromResearch($dominion, $unit, $powerType);
 
         if ($landRatio !== null)
         {
@@ -1758,6 +1759,20 @@ class MilitaryCalculator
           $powerFromPerk = ($dominionImprovementPoints / $chunkSize) * $pointsPerChunk;
 
           return min($max, $powerFromPerk);
+      }
+
+      protected function getUnitPowerFromResearch(Dominion $dominion, Unit $unit, string $powerType): float
+      {
+          $researchPerk = $dominion->getTechPerkValue("units_raw_{$powerType}");
+
+          $unitPowerType = ($powerType == 'offense' ? 'power_offense' : 'power_defense');
+
+          if (!$researchPerk or $unit->{$unitPowerType} == 0)
+          {
+              return 0;
+          }
+
+          return $researchPerk;
       }
 
     /**

@@ -327,20 +327,25 @@ wizardry:
     - Marshling
     - Monster
     - Nox
-    - Qur
     - Reptilians
     - Revenants
     - Sylvan
     - Swarm
     - Troll
-    - Undead
     - Void
     - Wood Elf
   perks:
     wizard_strength: 45,5000
     mana_production_mod: 45,5000
-    spell_damage: -45,5000
     wizard_housing: 45,5000
+
+warding:
+  name: Warding
+  excluded_races:
+    - Growth
+    - Void
+  perks:
+    sorcery_damage_suffered: -40,5500
 
 # Nox variant
 wizardry_nox:
@@ -350,20 +355,8 @@ wizardry_nox:
   perks:
     wizard_strength: 45,5000
     mana_production_mod: 45,5000
-    spell_damage: -45,5000
     wizard_housing: 45,5000
     unit_pairing: 45,5000
-
-# Qur variant
-wizardry_qur:
-  name: Wizardry
-  exclusive_races:
-    - Qur
-  perks:
-    wizard_strength: 45,5000
-    mana_production_mod: 45,5000
-    spell_damage: -45,5000
-    wizard_housing: 45,5000
 
 # Reptilians variant
 wizardry_reptilians:
@@ -373,7 +366,6 @@ wizardry_reptilians:
   perks:
     wizard_strength: 45,5000
     mana_production_mod: 45,5000
-    spell_damage: -45,5000
     wizard_housing: 45,5000
     unit_pairing: 45,5000
 
@@ -385,7 +377,6 @@ wizardry_revenants:
   perks:
     wizard_strength: 45,5000
     mana_production_mod: 45,5000
-    spell_damage: -45,5000
     wizard_housing: 45,5000
     unit_pairing: 45,5000
 
@@ -492,7 +483,7 @@ muttering:
   perks:
     wizard_strength: 65,5500
     mana_production_mod: 65,5500
-    spell_damage: -65,5500
+    sorcery_damage_suffered: -65,5500
     wizard_housing: 65,5500
 
 nesting:
@@ -549,15 +540,6 @@ uprooting:
 # END TROLL #
 
 # BEGIN UNDEAD #
-
-wizardry_undead:
-  name: Wizardry
-  exclusive_races:
-    - Undead
-  perks:
-      wizard_strength: 45,5000
-      spell_damage: -45,5000
-      wizard_housing: 45,5000
 
 invocation:
   name: Invocations
@@ -631,6 +613,7 @@ tissue:
   perks:
     population: 120,82000
     food_production_mod: 120,82000
+
 # END GROWTH #
 
 # BEGIN SYLVAN #
@@ -807,6 +790,13 @@ warfare:
     offensive_power: 40,10000
     prestige_gains: 50,10000
 
+warding_kerranad:
+  name: Warding
+  exclusive_races:
+    - Kerranad
+  perks:
+    sorcery_damage_suffered: -55,6500
+
 wizardry_kerranad:
   name: Wizardry
   exclusive_races:
@@ -814,7 +804,6 @@ wizardry_kerranad:
   perks:
     wizard_strength: 60,6500
     mana_production_mod: 60,6500
-    spell_damage: -60,6500
     wizard_housing: 60,6500
 
 # END KERRANAD #
@@ -920,6 +909,13 @@ vigilance:
   perks:
     theft_protection: 60,7000
 
+warding_wood_elf:
+  name: Warding
+  exclusive_races:
+    - Wood Elf
+  perks:
+    sorcery_damage_suffered: -80,10000
+
 wizardry_wood_elf:
   name: Wizardry
   exclusive_races:
@@ -927,7 +923,6 @@ wizardry_wood_elf:
   perks:
     wizard_strength: 90,8500
     mana_production_mod: 90,8500
-    spell_damage: -90,8500
 
 # END WOOD ELF #
 
@@ -1033,7 +1028,7 @@ mysticism:
     - Marshling
   perks:
     mana_production_mod: 100,6000
-    spell_damage: -35,4000
+    sorcery_damage_suffered: -35,4000
     casualties: 40,8000
 
 peacefulness:
@@ -1053,6 +1048,25 @@ strength:
     casualties: 20,6000
 
 # END MARSHLING #
+
+# BEGIN BLACK ORC AND ORC #
+
+herding:
+  name: Herding
+  exclusive_races:
+    - Orc
+  perks:
+    yak_production_mod: 25,4000
+
+militarism:
+  name: Militarism
+  exclusive_races:
+    - Black Orc
+    - Orc
+  perks:
+    military_housing: 30,6000
+
+# END BLACK ORC AND ORC
 
 # BEGIN SWARM #
 

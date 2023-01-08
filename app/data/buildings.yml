@@ -726,6 +726,7 @@ wizard_academy:
     - Firewalker
     - Growth
     - Glimjir
+    - Icekin
     - Monster
     - Myconid
     - Void
@@ -1420,6 +1421,7 @@ gold_quarry:
     gold_production_increasing_raw: 50,0.05 # Produces 50 gold, increased  by 0.4 per tick of the round
     housing: 0
     aurei_unit1_housing: 20
+    aurei_unit2_production_raw_capped: 0.02,20
 
 # END AUREI
 

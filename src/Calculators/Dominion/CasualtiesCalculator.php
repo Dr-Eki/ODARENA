@@ -147,6 +147,7 @@ class CasualtiesCalculator
                     $casualties[$slot] += (int)round($amountSent * $this->getInvasionCasualtiesRatioForUnitType($dominion, $unitType, $enemy, $invasionData, $mode));
                 }
             }
+
         }
 
         return $casualties;
@@ -238,6 +239,8 @@ class CasualtiesCalculator
                     return True;
                 }
             }
+
+            return False;
         }
         else
         {
@@ -583,6 +586,12 @@ class CasualtiesCalculator
         $attackingUnits = $invasionData['attacker']['units_sent'];
         $defendingUnits = $invasionData['defender']['units_defending'];
 
+        # Touch of death: 2% chance to double casualties
+        if($enemy->getTechPerkMultiplier('chance_to_double_enemy_casualties') > 0 and random_chance($enemy->getTechPerkMultiplier('chance_to_double_enemy_casualties')))
+        {
+            $multiplier *= 2;
+        }
+
         if($mode == 'offense')
         {
             $rawDp = $invasionData['defender']['dp_raw']; #$this->militaryCalculator->getDefensivePowerRaw($enemy, $dominion, $invasionData['land_ratio'], $defendingUnits, 0, false, false, false, $attackingUnits, true);
@@ -607,7 +616,6 @@ class CasualtiesCalculator
                         $multiplier += ($amount * $defendingUnitDp /*$this->militaryCalculator->getUnitPowerWithPerks($enemy, $dominion, $invasionData['land_ratio'], $unit, 'defense')*/) / $rawDp;
                     }
                 }
-
             }
         }
         elseif($mode == 'defense')
@@ -663,6 +671,12 @@ class CasualtiesCalculator
             {
                 $multiplier /= $invasionData['result']['op_dp_ratio'];
             }
+
+            # Chance of immortality
+            if(isset($invasionData['attacker']['units_immortal']) and $invasionData['attacker']['units_immortal'])
+            {
+                $multiplier *= 0;
+            }
         }
 
         # Base modifiers on defense
@@ -686,6 +700,12 @@ class CasualtiesCalculator
             if($invasionData['result']['success'])
             {
                 $multiplier *= min(1.50, $invasionData['result']['op_dp_ratio']);
+            }
+
+            # Chance of immortality
+            if(isset($invasionData['defender']['units_immortal']) and $invasionData['defender']['units_immortal'])
+            {
+                $multiplier *= 0;
             }
         }
 

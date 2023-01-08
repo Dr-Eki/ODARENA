@@ -29,6 +29,7 @@ class ImprovementHelper
             'miasma_production_mod' => 'miasma extraction',
             'sapling_production_mod' => 'sapling growth',
             'thunderstone_production_mod' => 'thunderstone discovery',
+            'yak_production_mod' => 'yak taming',
 
             'food_consumption_mod' => 'food consumption',
 
@@ -43,6 +44,7 @@ class ImprovementHelper
             'population' => 'population',
             'population_growth' => 'population growth',
             'unit_specific_housing' => 'unit specific housing',
+            'military_housing' => 'military housing',
 
             'jobs_per_building' => 'jobs per building',
 
@@ -82,7 +84,8 @@ class ImprovementHelper
 
             'wizard_strength' => 'wizard strength',
             'wizard_losses' => 'wizard losses',
-            'spell_damage' => 'spell damage',
+            'sorcery_damage_suffered' => 'sorcery damage suffered',
+            'sorcery_damage_dealt' => 'sorcery damage dealt',
             'wizard_housing' => 'wizard units housing',
 
             'gold_theft' => 'gold theft',
@@ -105,7 +108,6 @@ class ImprovementHelper
             'title_bonus' => 'ruler title bonus',
 
             'expedition_land_gains' => 'expedition land gains',
-
         ];
 
         return isset($improvementPerkDescriptions[$improvementPerk]) ? $improvementPerkDescriptions[$improvementPerk] : 'Missing description';

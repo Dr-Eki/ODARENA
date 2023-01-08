@@ -852,7 +852,7 @@ class DataSyncCommand extends Command implements CommandInterface
         foreach ($data as $improvementKey => $improvementData)
         {
 
-            $improvementsToSync[] = $improvementData->name;
+            $improvementsToSync[] = $improvementKey;
 
             // Spell
             $improvement = Improvement::firstOrNew(['key' => $improvementKey])
@@ -921,14 +921,13 @@ class DataSyncCommand extends Command implements CommandInterface
 
         foreach(Improvement::all() as $improvement)
         {
-            if(!in_array($improvement->name, $improvementsToSync))
+            if(!in_array($improvement->key, $improvementsToSync))
             {
-                $this->info(">> Deleting spell {$improvement->name}");
+                $this->info(">> Deleting improvement {$improvement->name}");
 
-                #$improvement->perks()->detach();
-                ImprovementPerk::where('spell_id', $improvement->id)->delete();
+                ImprovementPerk::where('improvement_id', $improvement->id)->delete();
 
-                DominionImprovement::where('spell_id', '=', $improvement->id)->delete();
+                DominionImprovement::where('improvement_id', '=', $improvement->id)->delete();
 
                 $improvement->delete();
             }

@@ -943,6 +943,12 @@ class InvadeActionService
 
         if($mode == 'offense')
         {
+
+            if($attacker->getTechPerkMultiplier('chance_of_immortality') and random_chance($attacker->chance_of_immortality('chance_of_immortality')))
+            {
+                $this->invasion['attacker']['units_immortal'] = true;
+            }
+
             foreach ($this->invasion['attacker']['units_lost'] as $slot => $amount)
             {
                 $attacker->{"military_unit{$slot}"} -= $amount;
@@ -961,6 +967,12 @@ class InvadeActionService
 
         if($mode == 'defense')
         {
+
+            if($defender->getTechPerkMultiplier('chance_of_immortality') and random_chance($defender->chance_of_immortality('chance_of_immortality')))
+            {
+                $this->invasion['defender']['units_immortal'] = true;
+            }
+
             foreach ($this->invasion['defender']['units_lost'] as $slot => $amount)
             {
 

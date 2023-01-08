@@ -61,6 +61,8 @@ class BuildingHelper
             'dimensionalists_unit3_production_raw' => 'Summons %g Ze\'Tk per tick.',
             'dimensionalists_unit4_production_raw' => 'Summons %g Frs\'Kl per tick.',
 
+            'aurei_unit2_production_raw_capped' => 'Summons %1$s Gold Wyrms per tick (up to %2$s%% of your land).',
+
             'dimensionalists_unit1_production_raw_capped' => 'Summons %1$s Tl\'Tl per tick (with to %2$s%% of your land).',
             'dimensionalists_unit2_production_raw_capped' => 'Summons %1$s Sft\'Rm per tick (up to %2$s%% of your land).',
             'dimensionalists_unit3_production_raw_capped' => 'Summons %1$s Ze\'Tk per tick (up to %2$s%% of your land).',
@@ -294,7 +296,6 @@ class BuildingHelper
             }
 
             # SPECIAL DESCRIPTION PERKS
-
 
             if($perk->key === 'research_required_to_build')
             {

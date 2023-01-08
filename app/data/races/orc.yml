@@ -40,14 +40,14 @@ land_improvements:
 
 units:
   - name: Impaler
-    training_time: 9
+    training_time: 6
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 480
-      ore: 60
+      gold: 460
+      ore: 50
       peasant: 1
     power:
       offense: 4
@@ -57,14 +57,14 @@ units:
       no_draftee: 1
 
   - name: Shieldbearer
-    training_time: 9
+    training_time: 6
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 480
-      ore: 60
+      gold: 460
+      ore: 50
       peasant: 1
     power:
       offense: 0
@@ -108,7 +108,7 @@ units:
       gems: 1
       peasant: 1
     power:
-      offense: 8
+      offense: 9
       defense: 8
     perks:
       reduces_casualties: 1
