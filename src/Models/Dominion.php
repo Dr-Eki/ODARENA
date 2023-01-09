@@ -1147,7 +1147,8 @@ class Dominion extends AbstractModel
                           $perkKey == 'dimensionalists_unit2_production_raw_capped' or
                           $perkKey == 'dimensionalists_unit3_production_raw_capped' or
                           $perkKey == 'dimensionalists_unit4_production_raw_capped' or
-                          $perkKey == 'snow_elf_unit4_production_raw_capped'
+                          $perkKey == 'snow_elf_unit4_production_raw_capped' or
+                          $perkKey == 'aurei_unit2_production_raw_capped'
                       )
                 {
                     $perkValues = $this->extractBuildingPerkValues($perkValueString);
