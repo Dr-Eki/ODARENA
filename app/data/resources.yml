@@ -1,8 +1,8 @@
 acid:
   name: Acid
   description: A repulsive smelling dark liquid found percolating in some Growths.
-  buy: 1
-  sell: 0.5
+  buy: null
+  sell: null
 
 ash:
   name: Ash
