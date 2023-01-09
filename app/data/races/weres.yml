@@ -4,7 +4,6 @@ description:
 home_land_type: forest
 playable: 1
 skill_level: 2
-experimental: 1
 
 resources:
   - gold

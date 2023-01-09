@@ -110,8 +110,8 @@ class ResearchHelper
             'unit_mana_costs' => '%+g%% military unit mana costs',
             'unit_food_costs' => '%+g%% military unit food costs',
 
-            'units_offensive_power' => '%+g raw offensive power to all units that have raw offensive power',
-            'units_defensive_power' => '%+g raw defensive power to all units that have raw defensive power',
+            'units_raw_offense' => '%+g raw offensive power to all units that have raw offensive power',
+            'units_raw_defense' => '%+g raw defensive power to all units that have raw defensive power',
 
             'machine_unit_costs' => '%+g%% machine unit costs',
             'ship_unit_costs' => '%+g%% ship unit costs',
