@@ -235,7 +235,11 @@ class ResourceCalculator
         foreach($dominion->race->resources as $sourceResourceKey)
         {
             $production += $dominion->getBuildingPerkValue($resourceKey . '_production_raw_from_' . $sourceResourceKey);
+
         }
+
+        # Check for RESOURCE_production_raw_from_land tech perk
+        $production += $dominion->getTechPerkValue($resourceKey . '_production_raw_from_land') * $this->landCalculator->getTotalLand($dominion);   
 
         # Unit specific perks
         for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)

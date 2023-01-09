@@ -31,7 +31,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1120
+      gold: 1200
     power:
       offense: 9
       defense: 7
@@ -46,7 +46,7 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 950
+      gold: 900
     power:
       offense: 0
       defense: 9
@@ -61,7 +61,7 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1200
+      gold: 1300
     power:
       offense: 10
       defense: 7

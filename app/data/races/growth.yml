@@ -12,6 +12,7 @@ resources:
   - food
   - lumber
   - mana
+  - acid
 
 construction_materials:
   - food

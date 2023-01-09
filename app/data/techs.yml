@@ -907,7 +907,7 @@ bile:
   name: Bile
   level: 3
   perks:
-    bile_production_raw_from_tissue: 1
+    acid_production_raw_from_land: 1
   exclusive_races:
     - Growth
   requires:

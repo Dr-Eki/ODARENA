@@ -1,8 +1,15 @@
+acid:
+  name: Acid
+  description: A repulsive smelling dark liquid found percolating in some Growths.
+  buy: 1
+  sell: 0.5
+
 ash:
   name: Ash
   description: Called moon soot by some Orcs, this special type of ash which comes from the volcanoes on the Cloven Moon and reaches the world 
   buy: null
   sell: null
+
 
 blood:
   name: Blood
@@ -24,20 +31,6 @@ brimmer:
   exclusive_races:
     - Imperial Gnome
 
-cosmic_alignment:
-  name: Cosmic Alignments
-  description: Starcharts used by Dimensionalist Archmages to plot paths across the cosmos.
-  buy: null
-  sell: null
-  exclusive_races:
-    - Dimensionalists
-
-food:
-  name: Food
-  description: While mostly functioning as a sustenance, some use food for especially exhausting training or even as organic building blocks.
-  buy: 0.5
-  sell: 0.10
-
 champion:
   name: Champions
   description: The living, legendary souls of Norse warriors fallen in glory.
@@ -46,6 +39,14 @@ champion:
   exclusive_races:
     - Norse
 
+cosmic_alignment:
+  name: Cosmic Alignments
+  description: Starcharts used by Dimensionalist Archmages to plot paths across the cosmos.
+  buy: null
+  sell: null
+  exclusive_races:
+    - Dimensionalists
+
 elk:
   name: Elk
   description: Majestic wanderers of the forest, Druva's personal guards and messengers.
@@ -53,6 +54,12 @@ elk:
   sell: null
   exclusive_races:
     - Wood Elf
+
+food:
+  name: Food
+  description: While mostly functioning as a sustenance, some use food for especially exhausting training or even as organic building blocks.
+  buy: 0.5
+  sell: 0.10
 
 gems:
   name: Gems

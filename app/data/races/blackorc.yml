@@ -42,8 +42,8 @@ units:
       - living
       - sentient
     cost:
-      gold: 700
-      ore: 60
+      gold: 750
+      ore: 65
       ash: 1
     power:
       offense: 8
@@ -56,8 +56,8 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 700
-      ore: 250
+      gold: 750
+      ore: 300
       ash: 10
     power:
       offense: 10
@@ -70,8 +70,8 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 950
-      ore: 400
+      gold: 1050
+      ore: 450
       ash: 75
     power:
       offense: 11
