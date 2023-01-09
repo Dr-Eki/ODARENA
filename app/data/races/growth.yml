@@ -4,6 +4,7 @@ description:
 home_land_type: swamp
 playable: 1
 skill_level: 2
+experimental: 1
 
 peasants_alias: cell
 draftees_alias: amoeba
