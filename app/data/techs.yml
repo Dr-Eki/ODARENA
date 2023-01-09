@@ -937,8 +937,8 @@ shell:
   name: Shell
   level: 4
   perks:
-    casualties_on_offense: -60
-    casualties_on_defense: -30
+    offensive_casualties: -60
+    defensive_casualties: -30
   exclusive_races:
     - Growth
   requires:
