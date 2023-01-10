@@ -344,7 +344,6 @@ warding:
   excluded_races:
     - Growth
     - Kerranad
-    - Norse
     - Void
     - Wood Elf
   perks:
