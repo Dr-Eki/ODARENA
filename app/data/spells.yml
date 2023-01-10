@@ -112,7 +112,6 @@ mining_strength:
     - Gnome
     - Goblin
     - Halfling
-    - Icekin
     - Imperial Gnome
     - Jagunii
     - Kerranad
@@ -783,7 +782,7 @@ iceshield:
   exclusive_races:
     - Icekin
   perks:
-    spell_damage_suffered: -10
+    sorcery_damage_suffered: -10
 
 windchill:
   name: Windchill
