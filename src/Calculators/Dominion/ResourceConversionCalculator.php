@@ -41,6 +41,7 @@ class ResourceConversionCalculator
             'kills_into_resource_per_casualty_on_success',
             'kills_into_resources_per_casualty',
             'kills_into_resource_per_value',
+            'kills_into_resource_per_value_on_success',
             'kills_into_resources_per_value',
             'converts_displaced_peasants_into_resource',
             'converts_displaced_peasants_into_resources',
@@ -104,6 +105,11 @@ class ResourceConversionCalculator
                     ($invasion['result']['success'] and $mode == 'offense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resource_per_casualty_on_success'])) or
                     (!$invasion['result']['success'] and $mode == 'defense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resource_per_casualty_on_success'])) or 
                     $this->unitHelper->checkUnitHasPerks($converter, $unit, ['converts_displaced_peasants_into_resource']) or
+
+
+                    $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resource_per_value']) or 
+                    ($invasion['result']['success'] and $mode == 'offense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resource_per_value_on_success'])) or
+                    (!$invasion['result']['success'] and $mode == 'defense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resource_per_value_on_success'])) or 
 
                     # Multi
                     $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resources_per_casualty']) or

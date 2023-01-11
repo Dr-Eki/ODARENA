@@ -256,7 +256,7 @@ class TrainActionService
 
           if($totalCosts['wizard'] > $dominion->military_wizards or $totalCosts['wizards'] > $dominion->military_wizards)
           {
-            throw new GameException('Training failed due to insufficient wizards.');
+            throw new GameException('Training failed due to insufficient wizards available.');
           }
 
           if($totalCosts['archmage'] > $dominion->military_archmages)
