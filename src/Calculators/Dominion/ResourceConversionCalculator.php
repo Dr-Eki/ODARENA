@@ -293,8 +293,6 @@ class ResourceConversionCalculator
 
         $resourceConversions = array_map('intval', $resourceConversions);
 
-        #dump('--- ' . $converter->name . ':',  $convertingUnits, $resourceConversions);
-
         return $resourceConversions;
 
     }
