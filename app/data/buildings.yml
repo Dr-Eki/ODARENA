@@ -1421,7 +1421,7 @@ gold_quarry:
     gold_production_increasing_raw: 50,0.05 # Produces 50 gold, increased  by 0.4 per tick of the round
     housing: 0
     aurei_unit1_housing: 20
-    aurei_unit2_production_raw_capped: 0.02,20
+    aurei_unit2_production_raw_capped: 0.002,20
 
 # END AUREI
 
