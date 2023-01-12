@@ -294,9 +294,6 @@
                 <div class="box-body">
                     <p>Here you can send out military units on an expedition to discover and claim new land and gain small amounts of XP and prestige.</p>
                     <p>Ammunition and immobile units cannot be sent on expeditions.</p>
-                    {{-- 
-                    <p>Currently, each acre of land discovered requires <b>{{ number_format(ceil($expeditionCalculator->getOpPerLand($selectedDominion))) }} OP</b>.</p>
-                    --}}
                     
                     @if ($militaryCalculator->getRecentlyInvadedCount($selectedDominion) and $selectedDominion->race->name == 'Sylvan')
                         <hr />

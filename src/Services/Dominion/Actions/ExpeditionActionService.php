@@ -230,13 +230,15 @@ class ExpeditionActionService
             $this->expeditionResult['op_sent'] = $this->militaryCalculator->getOffensivePower($dominion, null, null, $units);
             $this->expeditionResult['op_raw'] = $this->militaryCalculator->getOffensivePowerRaw($dominion, null, null, $units, [], true);
 
-            if($this->expeditionResult['op_sent'] < $this->expeditionCalculator->getOpPerLand($dominion))
-            {
-                throw new GameException('Expeditions must discover at least one acre. You sent ' . number_format($this->expeditionResult['op_sent']) . ' while the minimum required per acre is ' . number_format($this->expeditionCalculator->getOpPerLand($dominion)) . '.');
-            }
 
             $this->expeditionResult['land_discovered_amount'] = $this->expeditionCalculator->getLandDiscoveredAmount($dominion, $this->expeditionResult['op_sent']);
             $this->expeditionResult['land_discovered'] = $this->expeditionCalculator->getLandDiscovered($dominion, $this->expeditionResult['land_discovered_amount']);
+
+
+            if($this->expeditionResult['land_discovered'] <= 0)
+            {
+                throw new GameException('Expeditions must discover at least some land.');
+            }
 
             $this->queueService->queueResources(
                 'expedition',
