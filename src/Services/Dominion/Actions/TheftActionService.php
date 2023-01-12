@@ -342,7 +342,7 @@ class TheftActionService
             # Debug before saving:
             if(request()->getHost() === 'odarena.local' or request()->getHost() === 'odarena.virtual')
             {
-                dd($this->theft);
+                #dd($this->theft);
             }
 
             $target->save(['event' => HistoryService::EVENT_ACTION_THEFT]);
