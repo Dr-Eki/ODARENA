@@ -56,33 +56,31 @@
                                     </thead>
                                     <tbody>
                                         @foreach($event->data['units'] as $slot => $amount)
-                                            @if(isset($event->data['units'][$slot]))
-                                                @php
-                                                    if($slot == 'spies')
-                                                    {
-                                                        $unitType = 'spies';
-                                                    }
-                                                    else
-                                                    {
-                                                        $unitType = 'unit' . $slot;
-                                                    }
+                                            @php
+                                                if($slot == 'spies')
+                                                {
+                                                    $unitType = 'spies';
+                                                }
+                                                else
+                                                {
+                                                    $unitType = 'unit' . $slot;
+                                                }
 
-                                                @endphp
-                                                <tr>
-                                                    <td>
-                                                        @if($slot !== 'spies')
-                                                            <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $event->source->race, [$militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(0), 'offense'), $militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(0), 'defense'), ]) }}">
-                                                                {{ $event->source->race->units->where('slot', $slot)->first()->name }}
-                                                            </span>
-                                                        @else
-                                                            Spies
-                                                        @endif
-                                                    </td>
-                                                    <td>{{ number_format($event->data['units'][$slot]) }}</td>
-                                                    <td>{{ number_format($event->data['killed_units'][$slot]) }}</td>
-                                                    <td>{{ number_format($event->data['returning_units'][$slot]) }}</td>
-                                                </tr>
-                                            @endif
+                                            @endphp
+                                            <tr>
+                                                <td>
+                                                    @if($slot !== 'spies')
+                                                        <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $event->source->race, [$militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(0), 'offense'), $militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(0), 'defense'), ]) }}">
+                                                            {{ $event->source->race->units->where('slot', $slot)->first()->name }}
+                                                        </span>
+                                                    @else
+                                                        Spies
+                                                    @endif
+                                                </td>
+                                                <td>{{ number_format($event->data['units'][$slot]) }}</td>
+                                                <td>{{ isset($event->data['killed_units'][$slot]) ? number_format($event->data['killed_units'][$slot]) : 0 }}</td>
+                                                <td>{{ number_format($event->data['returning_units'][$slot]) }}</td>
+                                            </tr>
                                         @endforeach
                                 </table>
 
