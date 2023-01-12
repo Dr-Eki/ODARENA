@@ -78,7 +78,7 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ number_format($event->data['units'][$slot]) }}</td>
-                                                <td>{{ isset($event->data['killed_units'][$slot]) ?? number_format($event->data['killed_units'][$slot]) }}</td>
+                                                <td>{{ isset($event->data['killed_units'][$slot]) ? number_format($event->data['killed_units'][$slot]) : 0 }}</td>
                                                 <td>{{ number_format($event->data['returning_units'][$slot]) }}</td>
                                             </tr>
                                         @endforeach
