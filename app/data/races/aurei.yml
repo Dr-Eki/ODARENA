@@ -16,6 +16,9 @@ construction_materials:
 improvement_resources:
   gold: 1
 
+perks:
+  draftee_dp: 3
+
 units:
   - name: Alchemist
     training_time: 6
@@ -43,17 +46,15 @@ units:
       - intelligent
       - massive
     cost:
-      gold: 100000
+      gold: 300000
     power:
-      offense: 180
-      defense: 220
+      offense: 0
+      defense: 1200
     perks:
       does_not_count_as_population: 1
-      immortal_on_victory: 1
       immortal_on_fending_off: 1
       casualties: -50
-      building_limit: gold_quarry,2 # building, buildings per unit
-      plunder: gold,150
+      building_limit: gold_quarry,1 # building, buildings per unit
       food_consumption_raw: 20
 
   - name: Halcyon
