@@ -701,9 +701,10 @@ class RaceHelper
                 break;
             case 'light_drains_mana':
                 $negativeBenefit = false;
-                $description = 'Light drains mana';
-                $valueType = 'per tick';
+                $description = 'Light drains';
+                $valueType = ' mana/tick';
                 $booleanValue = 'static';
+                break;
             default:
                 $negativeBenefit = false;
                 $description = 'No description for perk: ' . $perkType->key;
