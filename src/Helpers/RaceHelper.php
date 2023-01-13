@@ -699,6 +699,11 @@ class RaceHelper
                 $description = 'Caverns required to send units';
                 $booleanValue = true;
                 break;
+            case 'light_drains_mana':
+                $negativeBenefit = false;
+                $description = 'Light drains mana';
+                $valueType = 'per tick';
+                $booleanValue = 'static';
             default:
                 $negativeBenefit = false;
                 $description = 'No description for perk: ' . $perkType->key;
