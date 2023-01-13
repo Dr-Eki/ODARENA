@@ -419,7 +419,7 @@ class InvadeActionService
             $this->handleBeforeInvasionPerks($attacker);
 
             // Handle invasion results
-            $this->checkInvasionSuccess($attacker, $target, $units);
+            $this->checkInvasionSuccess($attacker, $defender, $units);
             $this->checkOverwhelmed();
 
             $attackerCasualties = $this->casualtiesCalculator->getInvasionCasualties($attacker, $this->invasion['attacker']['units_sent'], $target, $this->invasion, 'offense');
@@ -2909,7 +2909,7 @@ class InvadeActionService
      * Check whether the invasion is successful.
      *
      * @param Dominion $attacker
-     * @param Dominion $target
+     * @param Dominion $target ($defender is passed)
      * @param array $units
      * @return void
      */
