@@ -190,7 +190,7 @@ class SpellCalculator
         }
 
         $spell = Spell::where('key', $spellKey)->first();
-        $dominionSpell = DominionSpell::where('spell_id',$spell->id)->where('caster_id',$dominion->id)->first();
+        $dominionSpell = DominionSpell::where('spell_id',$spell->id)/*->where('caster_id',$dominion->id)*/->first();
 
         return $dominionSpell->duration;
     }
