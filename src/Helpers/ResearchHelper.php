@@ -243,8 +243,8 @@ class ResearchHelper
             'enemy_casualties_on_defense' => '%+g%% enemy casualties when defending',
 
             'casualties' => '%+g%% casualties',
-            'offensive_casualties' => '%+g%% casualties suffered when invading',
-            'defensive_casualties' => '%+g%% casualties suffered when defending',
+            'casualties_on_offense' => '%+g%% casualties suffered when invading',
+            'casualties_on_defense' => '%+g%% casualties suffered when defending',
 
             'chance_to_double_enemy_casualties' => '%+g%% chance to double enemy casualties',
 
