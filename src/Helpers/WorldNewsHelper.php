@@ -505,7 +505,7 @@ class WorldNewsHelper
         {
             $string = sprintf(
                 '%s realm no longer has a governor.',
-                $this->generateRealmOnlyString($viewer->realm)
+                $this->generateRealmOnlyString($realm)
               );
         }
         else
