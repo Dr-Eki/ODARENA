@@ -80,7 +80,7 @@ class WorldNewsHelper
                 return $this->generateNewDominionString($event->source, $event->target, $viewer);
 
             case 'no_governor':
-                return $this->generateNoGovernorString($event->source, $event->target, $viewer);
+                return $this->generateNoGovernorString($viewer, $event->source);
 
             case 'protectorship_offered':
                 return $this->generateProtectorshipOfferedString($event->target, $event->source, $viewer);
