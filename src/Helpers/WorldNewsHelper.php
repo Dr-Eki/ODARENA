@@ -79,6 +79,9 @@ class WorldNewsHelper
             case 'new_dominion':
                 return $this->generateNewDominionString($event->source, $event->target, $viewer);
 
+            case 'no_governor':
+                return $this->generateNoGovernorString($event->source, $event->target, $viewer);
+
             case 'protectorship_offered':
                 return $this->generateProtectorshipOfferedString($event->target, $event->source, $viewer);
 
@@ -489,6 +492,33 @@ class WorldNewsHelper
 
         return $string;
     }
+
+    public function generateNoGovernorString(Dominion $viewer, Realm $realm): string
+    {
+        /*
+            Realm (# x) no longer has a governor.
+        */
+
+        $viewerInvolved = ($viewer->realm->id == $realm->id);
+
+        if(!$viewerInvolved)
+        {
+            $string = sprintf(
+                '%s realm no longer has a governor.',
+                $this->generateRealmOnlyString($viewer->realm)
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                'Our realm no longer has a governor.',
+              );
+        }
+
+        return $string;
+        return $string;
+    }
+
 
     public function generateProtectorshipOfferedString(Dominion $protected, Dominion $protector, Dominion $viewer): string
     {
