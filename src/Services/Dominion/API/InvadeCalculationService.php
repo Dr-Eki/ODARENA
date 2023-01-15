@@ -2,6 +2,8 @@
 
 namespace OpenDominion\Services\Dominion\API;
 
+use OpenDominion\Traits\DominionGuardsTrait;
+
 use LogicException;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
@@ -11,6 +13,7 @@ use OpenDominion\Services\Dominion\ProtectionService;
 
 class InvadeCalculationService
 {
+    use DominionGuardsTrait;
     /**
      * @var int How many units can fit in a single boat
      */
@@ -78,6 +81,10 @@ class InvadeCalculationService
      */
     public function calculate(Dominion $dominion, Dominion $target = null, ?array $units, ?array $calc): array
     {
+        #$this->guardActionsDuringTick($dominion);
+
+        #isset($target) ?? $this->guardActionsDuringTick($target);
+
         if ($dominion->isLocked() || $dominion->round->hasEnded())
         {
             return ['result' => 'error', 'message' => 'invalid dominion(s) selected'];
