@@ -51,6 +51,7 @@ class ResearchHelper
 
             'strength_gain_mod' => '%+g%% strength gains',
             'xp_generation_mod' => '%+g%% experience points generation',
+            'xp_gains' => '%+g%% experience points gains',
 
             'building_gold_mine_production_mod' => '%+g%% Gold Mine production',
             'building_gold_quarry_production_mod' => '%+g%% Gold Quarry production',
@@ -97,7 +98,7 @@ class ResearchHelper
             // Resources
             'exchange_rate' => '%+g%% exchange rate',
 
-            'gold_interest' => '%+g%% gold interest (interest cannot exceed raw production)',
+            'gold_interest' => '%+g%% gold interest (interest cannot exceed 1/5 of raw production)',
 
             // Military
             'drafting' => '%+g%% drafting',
