@@ -23,8 +23,8 @@
 
                     @if($selectedDominion->race->name === 'Growth')
                         <p>In the beginning, train only Cysts until you reach a high food production. This can be between 20,000 and 40,000 Cysts.</p>
-                        <p>Afterwards, train enough Abcesses to be able to spy and cast information spells on other dominions. A few thousand will suffice in most cases.</p>
-                        <p>Then start training Ulcers until you have enough to start invading other dominions. Remember, you can also use your Abcesseses for offensive power.</p>
+                        <p>Afterwards, train enough Abscesses to be able to spy and cast information spells on other dominions. A few thousand will suffice in most cases.</p>
+                        <p>Then start training Ulcers until you have enough to start invading other dominions. Remember, you can also use your Abscesses for offensive power.</p>
                         <p>Blisters are mostly useful if you need to defend from hostile spies and wizards. Otherwise refrain from training too many of them and focus on Cysts as defensive units, since they are twice as efficient.</p>
                         <p>Throughout the round, it is often good to overtrain Ulcers, so that you have more of them than you might need for invasions, as this gives you the flexibility of using some for defense while training potentially threatening OP.</p>
 
