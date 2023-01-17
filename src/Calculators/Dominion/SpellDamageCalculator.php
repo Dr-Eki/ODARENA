@@ -54,6 +54,7 @@ class SpellDamageCalculator
 
         // Improvements
         $modifier += $target->getImprovementPerkMultiplier('spell_damage');
+        $modifier += $target->getImprovementPerkMultiplier('sorcery_damage_suffered');
 
         # Spell
         $modifier += $target->getSpellPerkMultiplier('damage_from_spells');
