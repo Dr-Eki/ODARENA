@@ -180,6 +180,10 @@ class TheftCalculator
                 {
                     $killedUnits[$slot] = 0;
                 }
+                else
+                {
+                    $killedUnits[$slot] = (int)min(ceil($amount * $casualties), $units[$slot]);
+                }
             }
             else
             {
