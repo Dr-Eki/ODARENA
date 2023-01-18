@@ -2029,7 +2029,7 @@ class MilitaryCalculator
 
         // Tech
         $multiplier += $dominion->getTechPerkMultiplier('wizard_strength');
-        $multiplier += $dominion->getTechPerkMultiplier('wizard_strength_' . $type);
+        $multiplier += $dominion->getTechPerkMultiplier('wizard_strength_on_' . $type);
 
         // Spells
         $multiplier += $dominion->getSpellPerkMultiplier('wizard_strength');
