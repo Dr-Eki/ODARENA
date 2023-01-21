@@ -47,7 +47,7 @@ class ResearchHelper
             'kelp_production_mod' => '%+g%% kelp harvest',
             'pearls_production_mod' => '%+g%% pearls production',
 
-            'acid_production_raw_from_land' => '%+g acid per tick per acre.',
+            'acid_production_raw_from_land' => '%+g acid per tick per land',
 
             'strength_gain_mod' => '%+g%% strength gains',
             'xp_generation_mod' => '%+g%% experience points generation',
