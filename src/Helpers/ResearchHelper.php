@@ -116,6 +116,8 @@ class ResearchHelper
 
             'machine_unit_costs' => '%+g%% machine unit costs',
             'ship_unit_costs' => '%+g%% ship unit costs',
+            'magical_unit_costs' => '%+g%% magical unit costs',
+            'otherworldly_unit_costs' => '%+g%% otherworldly unit costs',
 
             'cannot_send_expeditions' => 'Cannot send expeditions',
 

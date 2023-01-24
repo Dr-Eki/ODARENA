@@ -52,7 +52,7 @@ use Throwable;
 
 class TickService
 {
-    protected const EXTENDED_LOGGING = false;
+    protected const EXTENDED_LOGGING = true;
 
     /** @var Carbon */
     protected $now;

@@ -685,6 +685,8 @@ visions:
     - Void
   perks:
     unit_mana_costs: -10
+    #magical_unit_costs: -5
+    #otherworldly_unit_costs: -5
   requires:
     - arcana
 
