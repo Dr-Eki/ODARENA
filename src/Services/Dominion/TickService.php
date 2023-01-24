@@ -52,7 +52,7 @@ use Throwable;
 
 class TickService
 {
-    protected const EXTENDED_LOGGING = true;
+    protected const EXTENDED_LOGGING = false;
 
     /** @var Carbon */
     protected $now;
@@ -814,6 +814,8 @@ class TickService
             $foodConsumed = $this->resourceCalculator->getConsumption($dominion, 'food');
             $foodNetChange = $foodProduction - $foodConsumed;
             $foodOwned = $this->resourceCalculator->getAmount($dominion, 'food');
+
+            $foodProduction = capSum($capSum);
 
             if($foodConsumed > 0 and ($foodOwned + $foodNetChange) < 0)
             {
@@ -1714,6 +1716,7 @@ class TickService
             $resourcesConsumed[$resourceKey] += $this->resourceCalculator->getConsumption($dominion, $resourceKey);
             $resourcesNetChange[$resourceKey] += $resourcesProduced[$resourceKey] - $resourcesConsumed[$resourceKey];
         }
+
 
         $this->resourceService->updateResources($dominion, $resourcesNetChange);
     }

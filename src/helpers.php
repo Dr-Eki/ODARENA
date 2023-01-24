@@ -87,6 +87,8 @@ if (!function_exists('display_number_format')) {
     }
 }
 
+# 
+
 if (!function_exists('dominion_attr_display')) {
     /**
      * Returns a string suitable for display with prefix removed.
@@ -166,3 +168,19 @@ if (!function_exists('number_string')) {
         return $string;
     }
 }
+
+if (!function_exists('capSum')) {
+    /**
+     * Generates a string from a number with number_format, and an explicit + sign
+     * prefix.
+     *
+     * @param int|float $number
+     * @param int $numDecimals
+     * @return string
+     */
+    function capSum($current, $new) {
+        $remaining = 4294967295 - $current;
+        return min($new, $remaining);
+    }
+}
+
