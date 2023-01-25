@@ -685,6 +685,8 @@ visions:
     - Void
   perks:
     unit_mana_costs: -10
+    #magical_unit_costs: -5
+    #otherworldly_unit_costs: -5
   requires:
     - arcana
 
@@ -937,8 +939,8 @@ shell:
   name: Shell
   level: 4
   perks:
-    offensive_casualties: -60
-    defensive_casualties: -30
+    casualties_on_offense: -45
+    casualties_on_defense: -15
   exclusive_races:
     - Growth
   requires:

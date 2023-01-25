@@ -946,7 +946,7 @@ class InvadeActionService
         if($mode == 'offense')
         {
 
-            if($attacker->getTechPerkMultiplier('chance_of_immortality') and random_chance($attacker->chance_of_immortality('chance_of_immortality')))
+            if($attacker->getTechPerkMultiplier('chance_of_immortality') and random_chance($attacker->getTechPerkMultiplier('chance_of_immortality')))
             {
                 $this->invasion['attacker']['units_immortal'] = true;
             }
@@ -970,7 +970,7 @@ class InvadeActionService
         if($mode == 'defense')
         {
 
-            if($attacker->getTechPerkMultiplier('chance_of_immortality') and random_chance($attacker->chance_of_immortality('chance_of_immortality')))
+            if($attacker->getTechPerkMultiplier('chance_of_immortality') and random_chance($attacker->getTechPerkMultiplier('chance_of_immortality')))
             {
                 $this->invasion['defender']['units_immortal'] = true;
             }

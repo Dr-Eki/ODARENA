@@ -119,7 +119,6 @@ class ResourceCalculator
 
     public function getProduction(Dominion $dominion, string $resourceKey): int
     {
-
         // Get raw production
         $production = $this->getProductionRaw($dominion, $resourceKey);
 

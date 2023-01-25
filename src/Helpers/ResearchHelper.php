@@ -47,10 +47,11 @@ class ResearchHelper
             'kelp_production_mod' => '%+g%% kelp harvest',
             'pearls_production_mod' => '%+g%% pearls production',
 
-            'acid_production_raw_from_land' => '%+g acid per tick per acre.',
+            'acid_production_raw_from_land' => '%+g acid per tick per land',
 
             'strength_gain_mod' => '%+g%% strength gains',
             'xp_generation_mod' => '%+g%% experience points generation',
+            'xp_gains' => '%+g%% experience points gains',
 
             'building_gold_mine_production_mod' => '%+g%% Gold Mine production',
             'building_gold_quarry_production_mod' => '%+g%% Gold Quarry production',
@@ -97,7 +98,7 @@ class ResearchHelper
             // Resources
             'exchange_rate' => '%+g%% exchange rate',
 
-            'gold_interest' => '%+g%% gold interest (interest cannot exceed raw production)',
+            'gold_interest' => '%+g%% gold interest (interest cannot exceed 1/5 of raw production)',
 
             // Military
             'drafting' => '%+g%% drafting',
@@ -115,6 +116,8 @@ class ResearchHelper
 
             'machine_unit_costs' => '%+g%% machine unit costs',
             'ship_unit_costs' => '%+g%% ship unit costs',
+            'magical_unit_costs' => '%+g%% magical unit costs',
+            'otherworldly_unit_costs' => '%+g%% otherworldly unit costs',
 
             'cannot_send_expeditions' => 'Cannot send expeditions',
 
@@ -243,8 +246,8 @@ class ResearchHelper
             'enemy_casualties_on_defense' => '%+g%% enemy casualties when defending',
 
             'casualties' => '%+g%% casualties',
-            'offensive_casualties' => '%+g%% casualties suffered when invading',
-            'defensive_casualties' => '%+g%% casualties suffered when defending',
+            'casualties_on_offense' => '%+g%% casualties suffered when invading',
+            'casualties_on_defense' => '%+g%% casualties suffered when defending',
 
             'chance_to_double_enemy_casualties' => '%+g%% chance to double enemy casualties',
 

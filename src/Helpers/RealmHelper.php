@@ -93,7 +93,7 @@ class RealmHelper
                 $dominion->title->name,
                 $dominion->ruler_name,
                 $dominion->morale,
-                $dominion->getSpellPerkValue('fog_of_war') ? 'Unknown due to Sazal\'s Fog' : number_format($this->militaryCalculator->getDefensivePower($dominion))
+                ($dominion->getSpellPerkValue('fog_of_war') or ($dominion->hasProtector() and $dominion->protector->getSpellPerkValue('fog_of_war')))? 'Unknown due to Sazal\'s Fog' : number_format($this->militaryCalculator->getDefensivePower($dominion))
               );
         }
         elseif($isBarbarian)

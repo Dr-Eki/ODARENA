@@ -2029,7 +2029,7 @@ class MilitaryCalculator
 
         // Tech
         $multiplier += $dominion->getTechPerkMultiplier('wizard_strength');
-        $multiplier += $dominion->getTechPerkMultiplier('wizard_strength_' . $type);
+        $multiplier += $dominion->getTechPerkMultiplier('wizard_strength_on_' . $type);
 
         // Spells
         $multiplier += $dominion->getSpellPerkMultiplier('wizard_strength');
@@ -3033,7 +3033,7 @@ class MilitaryCalculator
 
         # Get unit counts_as_spy perk power
         $unitSpyPower = $unit->getPerkValue('counts_as_spy');
-        $unitSpyPower += $unit->getPerkValue('counts_as_spy_on_offense');
+        $unitSpyPower += $unit->getPerkValue('counts_as_spy_offense');
         $unitSpyPower += $unit->getPerkValue('counts_as_spy_on_sabotage');
 
         if ($timePerkData = $saboteur->race->getUnitPerkValueForUnitSlot($unit->slot, ("counts_as_spy_offense_from_time"), null))

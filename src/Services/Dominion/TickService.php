@@ -815,6 +815,7 @@ class TickService
             $foodNetChange = $foodProduction - $foodConsumed;
             $foodOwned = $this->resourceCalculator->getAmount($dominion, 'food');
 
+
             if($foodConsumed > 0 and ($foodOwned + $foodNetChange) < 0)
             {
                 $dominion->tick->starvation_casualties = true;
@@ -1714,6 +1715,7 @@ class TickService
             $resourcesConsumed[$resourceKey] += $this->resourceCalculator->getConsumption($dominion, $resourceKey);
             $resourcesNetChange[$resourceKey] += $resourcesProduced[$resourceKey] - $resourcesConsumed[$resourceKey];
         }
+
 
         $this->resourceService->updateResources($dominion, $resourcesNetChange);
     }
