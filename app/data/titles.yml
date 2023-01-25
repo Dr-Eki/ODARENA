@@ -1,4 +1,5 @@
-commander:
+commander:  
+  enabled: 0
   name: Commander
   perks:
     unit_gold_costs: -5
@@ -7,95 +8,109 @@ commander:
     unit_mana_costs: -2
     unit_food_costs: -2
 
-conjurer:
+conjurer:  
+  enabled: 0
   name: Conjurer
   perks:
     spell_cost: -50
     unit_mana_costs: -7.5
 
-engineer:
+engineer:  
+  enabled: 0
   name: Engineer
   perks:
     improvements: 10
 
-embalmer:
-  name: Embalmer
+embalmer:  
   enabled: 0
+  name: Embalmer
   perks:
     conversions: 5
 
-forester:
+forester:  
+  enabled: 0
   name: Forester
   perks:
     lumber_production_mod: 10
 
-excavator:
+excavator:  
+  enabled: 0
   name: Excavator
   perks:
     ore_production_mod: 10
     gems_production_mod: 10
     pearls_production_mod: 10
 
-general:
+general:  
+  enabled: 0
   name: General
   perks:
     prestige_gains: 15
     morale_gains: 30
 
-healer:
+healer:  
+  enabled: 0
   name: Healer
   perks:
     casualties: -12.5
 
-high_priest:
+high_priest:  
+  enabled: 0
   name: High Priest
   perks:
     deity_power: 50
 
-investigator:
+investigator:  
+  enabled: 0
   name: Investigator
   perks:
     spy_strength_on_defense: 50
     sabotage_damage_suffered: -25
     all_theft: -10
 
-merchant:
+merchant:  
+  enabled: 0
   name: Merchant
   perks:
     exchange_rate: 10
 
-pathfinder:
+pathfinder:  
+  enabled: 0
   name: Pathfinder
   perks:
     expedition_land_gains: 20
     expedition_prestige_gains: 20
 
-professor:
+professor:  
+  enabled: 0
   name: Professor
   perks:
     xp_generation_mod: 5
     xp_gains: 50
 
-researcher:
+researcher:  
+  enabled: 0
   name: Researcher
   perks:
     research_time: -10
 
-rogue:
+rogue:  
+  enabled: 0
   name: Rogue
   perks:
     spy_strength_on_offense: 25
     theft_carry_capacity: 10
 
-surveyor:
+surveyor:  
+  enabled: 0
   name: Surveyor
   perks:
     construction_cost: -15
     rezone_cost: -15
     increased_construction_speed: 2
 
-warden:
-  name: Warden
+warden:  
   enabled: 0
+  name: Warden
   perks:
     lumber_production_mod: 10

@@ -1,4 +1,5 @@
 name: Enhanced Advancements
+enabled: 0 # Round 88
 cooldown: 96
 description: You are one of few factions able to dedicate some of the brightest minds of your dominion to enhanced advancements.
 exclusive_races:

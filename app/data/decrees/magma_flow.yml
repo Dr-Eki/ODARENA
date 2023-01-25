@@ -1,4 +1,5 @@
 name: Magma Flow
+enabled: 0 # Round 88
 cooldown: 24
 description: Instruct your workers how to control the flow of magma throughout your lands.
 exclusive_races:

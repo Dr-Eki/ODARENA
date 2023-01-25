@@ -2,10 +2,11 @@ name: Undead
 alignment: evil
 description: See <a href="general#crypt">Crypt</a>.
 home_land_type: swamp
-playable: 1
+playable: 0 # Round 88
 skill_level: 2
 max_per_round: 2
 minimum_rounds_played: 2
+
 
 resources:
   - gold

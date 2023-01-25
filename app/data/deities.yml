@@ -2,6 +2,7 @@
 
 azk_hurum:
   name: Azk'Hurum
+  enabled: 0
   range_multiplier: 0.60
   exclusive_races:
     - Demon
@@ -14,21 +15,23 @@ azk_hurum:
     food_consumption_mod: 20
 
 barathu_bint:
-    name: Barathu Bint
-    excluded_races:
-      - Afflicted
-      - Myconid
-      - Nox
-      - Void
-    range_multiplier: 0.40
-    perks:
-      gold_production_mod: 2.5
-      exchange_rate: 5
-      ore_production_mod: -5
-      gems_production_mod: -5
+  name: Barathu Bint
+  enabled: 0
+  excluded_races:
+    - Afflicted
+    - Myconid
+    - Nox
+    - Void
+  range_multiplier: 0.40
+  perks:
+    gold_production_mod: 2.5
+    exchange_rate: 5
+    ore_production_mod: -5
+    gems_production_mod: -5
 
 bregon:
   name: Bregon
+  enabled: 0
   range_multiplier: 0.75
   excluded_races:
     - Nox
@@ -41,6 +44,7 @@ bregon:
 
 druva:
   name: Druva
+  enabled: 0
   range_multiplier: 0.40
   excluded_races:
     - Afflicted
@@ -55,6 +59,7 @@ druva:
 
 elskas:
   name: Elskas
+  enabled: 0
   range_multiplier: 0.75
   exclusive_races:
     - Reptilians
@@ -65,6 +70,7 @@ elskas:
 
 glimj:
   name: Glimj
+  enabled: 0
   range_multiplier: 0.75
   exclusive_races:
     - Armada
@@ -76,6 +82,7 @@ glimj:
 
 ib_tham:
   name: Ib-Tham
+  enabled: 0
   range_multiplier: 0.60
   exclusive_races:
     - Barbarian
@@ -87,6 +94,7 @@ ib_tham:
 
 ix:
   name: Ix
+  enabled: 0
   excluded_races:
     - Void
   range_multiplier: 0.75
@@ -98,6 +106,7 @@ ix:
 
 kinthys:
   name: Kinthys
+  enabled: 0
   range_multiplier: 0.75
   exclusive_races:
     - Afflicted
@@ -111,6 +120,7 @@ kinthys:
 
 mirnon:
   name: Mirnon
+  enabled: 0
   range_multiplier: 0.75
   excluded_races:
     - Afflicted
@@ -124,6 +134,7 @@ mirnon:
 
 sazal:
   name: Sazal
+  enabled: 0
   range_multiplier: 0.75
   excluded_races:
     - Myconid
@@ -135,6 +146,7 @@ sazal:
 
 tiranthael:
   name: Tiranthael
+  enabled: 0
   range_multiplier: 0.75
   exclusive_races:
     - Sacred Order
@@ -147,6 +159,7 @@ tiranthael:
 
 urugdakh:
   name: Urugdakh
+  enabled: 0
   range_multiplier: 0.75
   exclusive_races:
     - Black Orc
@@ -159,6 +172,7 @@ urugdakh:
 
 zidur:
   name: Zidur
+  enabled: 0
   range_multiplier: 0.60
   exclusive_races:
     - Afflicted
@@ -171,6 +185,7 @@ zidur:
 
 voiddeity1:
   name: ◮◬◭
+  enabled: 0
   range_multiplier: 0.75
   exclusive_races:
     - Void
@@ -182,6 +197,7 @@ voiddeity1:
 
 voiddeity2:
   name: ▽◬◿
+  enabled: 0
   range_multiplier: 0.75
   exclusive_races:
     - Void

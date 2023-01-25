@@ -3,8 +3,9 @@ alignment: good
 description: >-
   <p>Buildings under construction count as barren land for the purpose of Scorpion and Centipede offensive power perk.</p>
 home_land_type: plain
-playable: 1
+playable: 0 # Round 88
 skill_level: 2
+
 
 peasants_alias: larva
 draftees_alias: cocoon

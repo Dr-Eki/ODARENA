@@ -1,4 +1,5 @@
-cartography:
+cartography:  
+  enabled: 0
   name: Cartography
   excluded_races:
     - Barbarian
@@ -17,7 +18,8 @@ cartography:
     land_discovered: 35,4000
     expedition_land_gains: 35,4000
 
-commerce:
+commerce:  
+  enabled: 0
   name: Commerce
   excluded_races:
     - Barbarian
@@ -37,7 +39,8 @@ commerce:
   perks:
     gold_production_mod: 25,4000
 
-construction:
+construction:  
+  enabled: 0
   name: Construction
   excluded_races:
     - Barbarian
@@ -58,7 +61,8 @@ construction:
     construction_cost: -25,4000
     rezone_cost: -25,4000
 
-construction_artillery:
+construction_artillery:  
+  enabled: 0
   name: Construction
   exclusive_races:
     - Artillery
@@ -66,7 +70,8 @@ construction_artillery:
     construction_cost: -25,4000
     rezone_cost: -25,4000
 
-construction_dragon:
+construction_dragon:  
+  enabled: 0
   name: Construction
   exclusive_races:
   - Dragon
@@ -85,7 +90,8 @@ construction_imperial_gnome:
     rezone_cost: -25,4000
     unit_pairing: 25,4000
 
-construction_qur:
+construction_qur:  
+  enabled: 0
   name: Construction
   exclusive_races:
   - Qur
@@ -94,7 +100,8 @@ construction_qur:
     rezone_cost: -25,4000
     unit_pairing: 90,5000
 
-defense:
+defense:  
+  enabled: 0
   name: Defense
   excluded_races:
     - Artillery
@@ -112,7 +119,8 @@ defense:
   perks:
     defensive_power: 25,7500
 
-espionage:
+espionage:  
+  enabled: 0
   name: Espionage
   excluded_races:
     - Barbarian
@@ -131,7 +139,8 @@ espionage:
     spy_losses: -45,5000
     spy_housing: 45,5000
 
-irrigation:
+irrigation:  
+  enabled: 0
   name: Farming
   excluded_races:
     - Barbarian
@@ -152,7 +161,8 @@ irrigation:
   perks:
     food_production_mod: 45,5000
 
-housing:
+housing:  
+  enabled: 0
   name: Housing
   excluded_races:
     - Barbarian
@@ -171,7 +181,8 @@ housing:
   perks:
     population: 20,4000
 
-logging:
+logging:  
+  enabled: 0
   name: Logging
   excluded_races:
     - Aurei
@@ -195,7 +206,8 @@ logging:
   perks:
     lumber_production_mod: 25,4000
 
-medicine:
+medicine:  
+  enabled: 0
   name: Combat
   excluded_races:
     - Barbarian
@@ -214,7 +226,8 @@ medicine:
     casualties_on_defense: -20,5000
     casualties_on_offense: -20,6000
 
-mobilisation:
+mobilisation:  
+  enabled: 0
   name: Mobilisation
   excluded_races:
     - Aurei
@@ -237,7 +250,8 @@ mobilisation:
     unit_gold_costs: -25,4000
     unit_ore_costs: -25,4000
 
-offense:
+offense:  
+  enabled: 0
   name: Offense
   excluded_races:
     - Barbarian
@@ -255,7 +269,8 @@ offense:
   perks:
     offensive_power: 25,7500
 
-research:
+research:  
+  enabled: 0
   name: Advancements
   excluded_races:
     - Barbarian
@@ -273,7 +288,8 @@ research:
     xp_generation_mod: 25,5000
     xp_gains: 25,5000
 
-mining:
+mining:  
+  enabled: 0
   name: Stonecutting
   excluded_races:
     - Afflicted
@@ -304,9 +320,9 @@ mining:
   perks:
     ore_production_mod: 25,4000
 
-storage:
-  name: Storage
+storage:  
   enabled: 0
+  name: Storage
   excluded_races:
     - Barbarian
     - Growth
@@ -317,7 +333,8 @@ storage:
   perks:
     theft_protection: 40,4000
 
-wizardry:
+wizardry:  
+  enabled: 0
   name: Wizardry
   excluded_races:
     - Barbarian
@@ -339,7 +356,8 @@ wizardry:
     mana_production_mod: 45,5000
     wizard_housing: 45,5000
 
-warding:
+warding:  
+  enabled: 0
   name: Warding
   excluded_races:
     - Growth
@@ -350,7 +368,8 @@ warding:
     sorcery_damage_suffered: -40,5500
 
 # Nox variant
-wizardry_nox:
+wizardry_nox:  
+  enabled: 0
   name: Wizardry
   exclusive_races:
     - Nox
@@ -361,7 +380,8 @@ wizardry_nox:
     unit_pairing: 45,5000
 
 # Reptilians variant
-wizardry_reptilians:
+wizardry_reptilians:  
+  enabled: 0
   name: Wizardry
   exclusive_races:
     - Reptilians
@@ -372,7 +392,8 @@ wizardry_reptilians:
     unit_pairing: 45,5000
 
 # Revenants variant
-wizardry_revenants:
+wizardry_revenants:  
+  enabled: 0
   name: Wizardry
   exclusive_races:
     - Revenants
@@ -383,7 +404,8 @@ wizardry_revenants:
     unit_pairing: 45,5000
 
 # Specials
-refining:
+refining:  
+  enabled: 0
   name: Refining
   exclusive_races:
     - Imperial Gnome
@@ -400,7 +422,8 @@ imperial_gnome_construction:
     rezone_cost: -25,4000
     unit_pairing: 25,4000
 
-gryphonry:
+gryphonry:  
+  enabled: 0
   name: Gryphonry
   exclusive_races:
     - Snow Elf
@@ -408,15 +431,16 @@ gryphonry:
     unit_pairing: 100,10000
     attrition_protection: 100,10000
 
-armoury:
-  name: Armoury
+armoury:  
   enabled: 0
+  name: Armoury
   exclusive_races:
     - Artillery
   perks:
     unit_pairing: 50,12000
 
-husbandry:
+husbandry:  
+  enabled: 0
   name: Husbandry
   exclusive_races:
     - Cires
@@ -424,14 +448,16 @@ husbandry:
   perks:
     horse_production_mod: 45,5000
 
-torment:
+torment:  
+  enabled: 0
   name: Torment
   exclusive_races:
     - Afflicted
   perks:
     miasma_production_mod: 50,6000
 
-hollowing:
+hollowing:  
+  enabled: 0
   name: Hollowing
   exclusive_races:
     - Dwarg
@@ -441,14 +467,16 @@ hollowing:
 
 # BEGIN TROLL #
 
-bashing:
+bashing:  
+  enabled: 0
   name: Bashing
   exclusive_races:
     - Troll
   perks:
     defensive_power: 65,8500
 
-building:
+building:  
+  enabled: 0
   name: Building
   exclusive_races:
     - Troll
@@ -456,7 +484,8 @@ building:
     construction_cost: -65,4500
     rezone_cost: -65,4500
 
-fighting:
+fighting:  
+  enabled: 0
   name: Fighting
   exclusive_races:
     - Troll
@@ -464,21 +493,24 @@ fighting:
     casualties_on_offense: -40,5000
     casualties_on_defense: -60,5000
 
-glimmering:
+glimmering:  
+  enabled: 0
   name: Glimmering
   exclusive_races:
     - Troll
   perks:
     gold_production_mod: 65,6500
 
-hunting:
+hunting:  
+  enabled: 0
   name: Hunting
   exclusive_races:
     - Troll
   perks:
     food_production_mod: 115,5500
 
-muttering:
+muttering:  
+  enabled: 0
   name: Muttering
   exclusive_races:
     - Troll
@@ -488,28 +520,32 @@ muttering:
     sorcery_damage_suffered: -65,5500
     wizard_housing: 65,5500
 
-nesting:
+nesting:  
+  enabled: 0
   name: Nesting
   exclusive_races:
     - Troll
   perks:
     population: 60,5000
 
-rock_throwing:
+rock_throwing:  
+  enabled: 0
   name: Rock Throwing
   exclusive_races:
     - Troll
   perks:
     ore_production_mod: 50,4500
 
-smashing:
+smashing:  
+  enabled: 0
   name: Smashing
   exclusive_races:
     - Troll
   perks:
     offensive_power: 50,8500
 
-sneaking:
+sneaking:  
+  enabled: 0
   name: Sneaking
   exclusive_races:
     - Troll
@@ -518,14 +554,16 @@ sneaking:
     spy_losses: -100,5500
     spy_housing: 115,5500
 
-trampling:
+trampling:  
+  enabled: 0
   name: Trampling
   exclusive_races:
     - Troll
   perks:
     land_discovered: 70,4800
 
-training:
+training:  
+  enabled: 0
   name: Training
   exclusive_races:
     - Troll
@@ -533,7 +571,8 @@ training:
     unit_gold_costs: -50,4500
     unit_ore_costs: -50,4500
 
-uprooting:
+uprooting:  
+  enabled: 0
   name: Uprooting
   exclusive_races:
     - Troll
@@ -543,14 +582,16 @@ uprooting:
 
 # BEGIN UNDEAD #
 
-invocation:
+invocation:  
+  enabled: 0
   name: Invocations
   exclusive_races:
     - Undead
   perks:
       mana_production_mod: 45,5000
 
-necromancy:
+necromancy:  
+  enabled: 0
   name: Necromancy
   exclusive_races:
     - Undead
@@ -560,7 +601,8 @@ necromancy:
 # END UNDEAD #
 
 # BEGIN VOID #
-coils:
+coils:  
+  enabled: 0
   name: Coils
   exclusive_races:
     - Void
@@ -568,14 +610,16 @@ coils:
       offensive_power: 40,10000
       casualties_on_offense: -80,12000
 
-cones:
+cones:  
+  enabled: 0
   name: Cones
   exclusive_races:
     - Void
   perks:
     mana_production_mod: 80,6000
 
-halo:
+halo:  
+  enabled: 0
   name: Halo
   exclusive_races:
     - Void
@@ -583,14 +627,16 @@ halo:
     defensive_power: 25,6000
     casualties_on_defense: -50,8000
 
-haze:
+haze:  
+  enabled: 0
   name: Haze
   exclusive_races:
     - Void
   perks:
     unit_mana_costs: -20,6000
 
-prism:
+prism:  
+  enabled: 0
   name: Prism
   exclusive_races:
     - Void
@@ -598,7 +644,8 @@ prism:
     population: 100,22200
     population_growth: 10000,10000
 
-waves:
+waves:  
+  enabled: 0
   name: Waves
   exclusive_races:
     - Void
@@ -608,7 +655,8 @@ waves:
 # END VOID #
 
 # BEGIN GROWTH #
-tissue:
+tissue:  
+  enabled: 0
   name: Tissue
   exclusive_races:
     - Growth
@@ -620,14 +668,16 @@ tissue:
 
 # BEGIN SYLVAN #
 
-affinity:
+affinity:  
+  enabled: 0
   name: Affinity
   exclusive_races:
     - Sylvan
   perks:
     mana_production_mod: 60,6000
 
-awareness:
+awareness:  
+  enabled: 0
   name: Awareness
   exclusive_races:
     - Sylvan
@@ -636,7 +686,8 @@ awareness:
     xp_generation_mod: 40,6000
     xp_gains: 60,4000
 
-bloom:
+bloom:  
+  enabled: 0
   name: Bloom
   exclusive_races:
     - Sylvan
@@ -644,7 +695,8 @@ bloom:
     sapling_production_mod: 75,7000
     food_production_mod: 40,6000
 
-nurture:
+nurture:  
+  enabled: 0
   name: Nurture
   exclusive_races:
     - Sylvan
@@ -652,7 +704,8 @@ nurture:
     rezone_cost: -40,6000
     land_discovered: 20,4000
 
-rage:
+rage:  
+  enabled: 0
   name: Rage
   exclusive_races:
     - Sylvan
@@ -660,14 +713,16 @@ rage:
     target_defensive_power_mod: -15,6000
     offensive_power: 40,8000
 
-roaming:
+roaming:  
+  enabled: 0
   name: Roaming
   exclusive_races:
     - Sylvan
   perks:
     population: 20,4000
 
-tranquillity:
+tranquillity:  
+  enabled: 0
   name: Tranquillity
   exclusive_races:
     - Sylvan
@@ -678,7 +733,8 @@ tranquillity:
 # END SYLVAN #
 
 # BEGIN KERRANAD #
-cartography_kerranad:
+cartography_kerranad:  
+  enabled: 0
   name: Cartography
   exclusive_races:
     - Kerranad
@@ -686,21 +742,24 @@ cartography_kerranad:
     land_discovered: 50,6000
     expedition_land_gains: 50,6000
 
-city_guard:
+city_guard:  
+  enabled: 0
   name: City Guard
   exclusive_races:
     - Kerranad
   perks:
     defensive_power: 50,10000
 
-education:
+education:  
+  enabled: 0
   name: Education
   exclusive_races:
     - Kerranad
   perks:
     improvement_points: 25,3000
 
-espionage_kerranad:
+espionage_kerranad:  
+  enabled: 0
   name: Espionage
   exclusive_races:
     - Kerranad
@@ -710,13 +769,15 @@ espionage_kerranad:
     spy_housing: 60,6500
 
 farming_kerranad:
+  enabled: 0
     name: Farming
     exclusive_races:
       - Kerranad
     perks:
       food_production_mod: 60,6500
 
-foundations:
+foundations:  
+  enabled: 0
   name: Foundations
   exclusive_races:
     - Kerranad
@@ -724,21 +785,24 @@ foundations:
     construction_time: -80,8000
     construction_cost: -35,5500
 
-housing_kerranad:
+housing_kerranad:  
+  enabled: 0
   name: Housing
   exclusive_races:
     - Kerranad
   perks:
     population: 30,6000
 
-logging_kerranad:
+logging_kerranad:  
+  enabled: 0
   name: Logging
   exclusive_races:
     - Kerranad
   perks:
     lumber_production_mod: 35,5500
 
-medicine_kerranad:
+medicine_kerranad:  
+  enabled: 0
   name: Combat
   exclusive_races:
     - Kerranad
@@ -746,14 +810,16 @@ medicine_kerranad:
     casualties_on_defense: -30,5500
     casualties_on_offense: -30,5500
 
-leadership_kerranad:
+leadership_kerranad:  
+  enabled: 0
   name: Leadership
   exclusive_races:
     - Kerranad
   perks:
     title_bonus: 50,500
 
-market:
+market:  
+  enabled: 0
   name: Market
   exclusive_races:
     - Kerranad
@@ -761,7 +827,8 @@ market:
     gold_production_mod: 50,7500
     exchange_rate: 30,6000
 
-readiness:
+readiness:  
+  enabled: 0
   name: Readiness
   exclusive_races:
     - Kerranad
@@ -770,21 +837,24 @@ readiness:
     unit_gold_costs: -35,5500
     unit_ore_costs: -35,5500
 
-science:
+science:  
+  enabled: 0
   name: Science
   exclusive_races:
     - Kerranad
   perks:
     advancement_costs: -35,6000
 
-stonecutting_kerranad:
+stonecutting_kerranad:  
+  enabled: 0
   name: Stonecutting
   exclusive_races:
     - Kerranad
   perks:
     ore_production_mod: 35,5000
 
-warfare:
+warfare:  
+  enabled: 0
   name: Warfare
   exclusive_races:
     - Kerranad
@@ -792,14 +862,16 @@ warfare:
     offensive_power: 40,10000
     prestige_gains: 50,10000
 
-warding_kerranad:
+warding_kerranad:  
+  enabled: 0
   name: Warding
   exclusive_races:
     - Kerranad
   perks:
     sorcery_damage_suffered: -55,6500
 
-wizardry_kerranad:
+wizardry_kerranad:  
+  enabled: 0
   name: Wizardry
   exclusive_races:
     - Kerranad
@@ -811,7 +883,8 @@ wizardry_kerranad:
 # END KERRANAD #
 
 # BEGIN WOOD ELF #
-apprenticeship:
+apprenticeship:  
+  enabled: 0
   name: Apprenticeship
   exclusive_races:
     - Wood Elf
@@ -819,14 +892,16 @@ apprenticeship:
     unit_gold_costs: -50,7500
     unit_lumber_costs: -50,9100
 
-commerce_wood_elf:
+commerce_wood_elf:  
+  enabled: 0
   name: Commerce
   exclusive_races:
     - Wood Elf
   perks:
     gold_production_mod: 40,9000
 
-construction_wood_elf:
+construction_wood_elf:  
+  enabled: 0
   name: Construction
   exclusive_races:
     - Wood Elf
@@ -834,7 +909,8 @@ construction_wood_elf:
     construction_cost: -50,7000
     rezone_cost: -50,7000
 
-camouflage:
+camouflage:  
+  enabled: 0
   name: Camouflage
   exclusive_races:
     - Wood Elf
@@ -842,7 +918,8 @@ camouflage:
     defensive_power: 40,9000
     casualties_on_defense: -30,8000
 
-cartography_wood_elf:
+cartography_wood_elf:  
+  enabled: 0
   name: Cartography
   exclusive_races:
     - Wood Elf
@@ -850,7 +927,8 @@ cartography_wood_elf:
     land_discovered: 70,7000
     expedition_land_gains: 35,7000
 
-espionage_wood_elf:
+espionage_wood_elf:  
+  enabled: 0
   name: Espionage
   exclusive_races:
     - Wood Elf
@@ -859,7 +937,8 @@ espionage_wood_elf:
     spy_losses: -90,8500
     spy_housing: 90,8500
 
-fencing:
+fencing:  
+  enabled: 0
   name: Fencing
   exclusive_races:
     - Wood Elf
@@ -867,14 +946,16 @@ fencing:
     offensive_power: 40,9000
     casualties_on_offense: -40,8000
 
-foraging:
+foraging:  
+  enabled: 0
   name: Foraging
   exclusive_races:
     - Wood Elf
   perks:
     food_production_mod: 90,8000
 
-forestry:
+forestry:  
+  enabled: 0
   name: Forestry
   exclusive_races:
     - Wood Elf
@@ -882,21 +963,24 @@ forestry:
     lumber_production_mod: 50,7000
     population_growth: 35,7500
 
-housing_wood_elf:
+housing_wood_elf:  
+  enabled: 0
   name: Housing
   exclusive_races:
     - Wood Elf
   perks:
     population: 40,8000
 
-leadership_wood_elf:
+leadership_wood_elf:  
+  enabled: 0
   name: Leadership
   exclusive_races:
     - Wood Elf
   perks:
     title_bonus: 80,2000
 
-tutoring:
+tutoring:  
+  enabled: 0
   name: Tutoring
   exclusive_races:
     - Wood Elf
@@ -904,21 +988,24 @@ tutoring:
     xp_generation_mod: 45,8500
     xp_gains: 45,8500
 
-vigilance:
+vigilance:  
+  enabled: 0
   name: Vigilance
   exclusive_races:
     - Wood Elf
   perks:
     theft_protection: 60,7000
 
-warding_wood_elf:
+warding_wood_elf:  
+  enabled: 0
   name: Warding
   exclusive_races:
     - Wood Elf
   perks:
     sorcery_damage_suffered: -80,10000
 
-wizardry_wood_elf:
+wizardry_wood_elf:  
+  enabled: 0
   name: Wizardry
   exclusive_races:
     - Wood Elf
@@ -930,7 +1017,8 @@ wizardry_wood_elf:
 
 # BEGIN ARMADA #
 
-harbour:
+harbour:  
+  enabled: 0
   name: Harbour
   exclusive_races:
     - Armada
@@ -942,7 +1030,8 @@ harbour:
 
 # BEGIN BEASTFOLK #
 
-compassion:
+compassion:  
+  enabled: 0
   name: Compassion
   exclusive_races:
     - Beastfolk
@@ -951,7 +1040,8 @@ compassion:
     casualties: -50,10000
     increases_enemy_casualties: -50,10000
 
-brutality:
+brutality:  
+  enabled: 0
   name: Brutality
   exclusive_races:
     - Beastfolk
@@ -964,7 +1054,8 @@ brutality:
 
 # BEGIN SACRED ORDER #
 
-sacred_duty:
+sacred_duty:  
+  enabled: 0
   name: Sacred Duty
   exclusive_races:
     - Sacred Order
@@ -972,7 +1063,8 @@ sacred_duty:
     unit_specific_housing: 40,6500
     jobs_per_building: 10,6500
 
-sacred_service:
+sacred_service:  
+  enabled: 0
   name: Sacred Service
   exclusive_races:
     - Sacred Order
@@ -984,7 +1076,8 @@ sacred_service:
 
 # BEGIN MARSHLING #
 
-adaptation:
+adaptation:  
+  enabled: 0
   name: Adaptation
   exclusive_races:
     - Marshling
@@ -992,7 +1085,8 @@ adaptation:
     casualties: -50,6000
     land_discovered: -25,4000
 
-aggression:
+aggression:  
+  enabled: 0
   name: Aggression
   exclusive_races:
     - Marshling
@@ -1000,7 +1094,8 @@ aggression:
     offensive_power: 40,6000
     xp_generation_mod: -25,6000
 
-depth:
+depth:  
+  enabled: 0
   name: Depth
   exclusive_races:
     - Marshling
@@ -1008,7 +1103,8 @@ depth:
     population: 80,10000
     rezone_cost: -25,4000
 
-friskiness:
+friskiness:  
+  enabled: 0
   name: Friskiness
   exclusive_races:
     - Marshling
@@ -1016,7 +1112,8 @@ friskiness:
     marshling_production_mod: 40,6000
     food_production_mod: -30,6000
 
-goo_puddles:
+goo_puddles:  
+  enabled: 0
   name: Goo Puddles
   exclusive_races:
     - Marshling
@@ -1024,7 +1121,8 @@ goo_puddles:
     defensive_power: 30,4000
     construction_cost: 30,4000
 
-mysticism:
+mysticism:  
+  enabled: 0
   name: Mysticism
   exclusive_races:
     - Marshling
@@ -1033,7 +1131,8 @@ mysticism:
     sorcery_damage_suffered: -35,4000
     casualties: 40,8000
 
-peacefulness:
+peacefulness:  
+  enabled: 0
   name: Peacefulness
   exclusive_races:
     - Marshling
@@ -1041,7 +1140,8 @@ peacefulness:
     casualties: -40,5000
     increases_enemy_casualties: -50,7500
 
-strength:
+strength:  
+  enabled: 0
   name: Strength
   exclusive_races:
     - Marshling
@@ -1053,14 +1153,16 @@ strength:
 
 # BEGIN BLACK ORC AND ORC #
 
-herding:
+herding:  
+  enabled: 0
   name: Herding
   exclusive_races:
     - Orc
   perks:
     yak_production_mod: 25,4000
 
-militarism:
+militarism:  
+  enabled: 0
   name: Militarism
   exclusive_races:
     - Black Orc
@@ -1072,7 +1174,8 @@ militarism:
 
 # BEGIN SWARM #
 
-digging:
+digging:  
+  enabled: 0
   name: Digging
   exclusive_races:
     - Swarm
@@ -1080,7 +1183,8 @@ digging:
     gems_production_mod: 15,9000
     gold_production_mod: 50,9000
 
-burrowing:
+burrowing:  
+  enabled: 0
   name: Burrowing
   exclusive_races:
     - Swarm
@@ -1088,7 +1192,8 @@ burrowing:
     population: 30,6000
     population_growth: 40,6000
 
-shield_plates:
+shield_plates:  
+  enabled: 0
   name: Shield Plates
   exclusive_races:
     - Swarm
@@ -1096,7 +1201,8 @@ shield_plates:
     casualties_on_defense: -40,6000
     casualties_on_offense: -40,6000
 
-perception:
+perception:  
+  enabled: 0
   name: Perception
   exclusive_races:
     - Swarm
@@ -1105,7 +1211,8 @@ perception:
     xp_generation_mod: 100,9000
     xp_gains: 100,9000
 
-secret_compartments:
+secret_compartments:  
+  enabled: 0
   name: Secret Compartments
   exclusive_races:
     - Swarm
@@ -1114,14 +1221,16 @@ secret_compartments:
     food_theft: -100,8000
     gems_theft: -100,12000
 
-striking:
+striking:  
+  enabled: 0
   name: Striking
   exclusive_races:
     - Swarm
   perks:
     offensive_power: 40,8000
 
-underground_navigation:
+underground_navigation:  
+  enabled: 0
   name: Underground Navigation
   exclusive_races:
     - Swarm
@@ -1129,14 +1238,16 @@ underground_navigation:
     land_discovered: 70,7000
     expedition_land_gains: 30,6000
 
-undulation:
+undulation:  
+  enabled: 0
   name: Undulation
   exclusive_races:
     - Swarm
   perks:
     unit_gold_costs: -35,6000
 
-venom:
+venom:  
+  enabled: 0
   name: Venom
   exclusive_races:
     - Swarm
@@ -1148,7 +1259,8 @@ venom:
 
 # BEGIN YETI #
 
-mustering:
+mustering:  
+  enabled: 0
   name: Mustering
   exclusive_races:
     - Yeti
@@ -1159,7 +1271,8 @@ mustering:
 
 # END YETI #
 
-tribalism:
+tribalism:  
+  enabled: 0
   name: Tribalism
   exclusive_races:
     - Barbarian

@@ -1,4 +1,5 @@
 name: Mining Focus
+enabled: 0 # Round 88
 cooldown: 48
 description: Assign resources to mining, at the cost of quality of improvements and increased food consumption.
 excluded_races:

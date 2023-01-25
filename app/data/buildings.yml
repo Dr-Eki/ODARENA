@@ -2,7 +2,8 @@
 
 ## Production Buildings
 
-alchemy:
+alchemy:  
+  enabled: 0
   name: Alchemy
   exclusive_races:
     - Aurei
@@ -13,7 +14,8 @@ alchemy:
   perks:
     gold_production_mod: 1,4,20 # Every 1% gives +4% gold production, max +20%
 
-gold_mine:
+gold_mine:  
+  enabled: 0
   name: Gold Mine
   excluded_races:
     - Aurei
@@ -35,7 +37,8 @@ gold_mine:
   perks:
     gold_production_raw: 50
 
-farm:
+farm:  
+  enabled: 0
   name: Farm
   excluded_races:
     - Dragon
@@ -57,7 +60,8 @@ farm:
   perks:
     food_production_raw: 80
 
-ore_mine:
+ore_mine:  
+  enabled: 0
   name: Ore Mine
   excluded_races:
     - Afflicted
@@ -93,7 +97,8 @@ ore_mine:
   perks:
     ore_production_raw: 60
 
-gem_mine:
+gem_mine:  
+  enabled: 0
   name: Gem Mine
   excluded_races:
     - Afflicted
@@ -117,7 +122,8 @@ gem_mine:
   perks:
     gems_production_raw: 15
 
-vault:
+vault:  
+  enabled: 0
   name: Vault
   excluded_races:
     - Growth
@@ -134,7 +140,8 @@ vault:
     gems_theft_protection: 2500
     ore_theft_protection: 10000
 
-granary:
+granary:  
+  enabled: 0
   name: Granary
   excluded_races:
     - Firewalker
@@ -150,7 +157,8 @@ granary:
     food_theft_protection: 25000
     lumber_theft_protection: 12500
 
-deep_mine:
+deep_mine:  
+  enabled: 0
   name: Deep Mine
   exclusive_races:
     - Gnome
@@ -162,7 +170,8 @@ deep_mine:
     mana_production_raw: 1
     housing: 0
 
-dwargen_mine:
+dwargen_mine:  
+  enabled: 0
   name: Dwargen Mine
   exclusive_races:
     - Dwarg
@@ -173,7 +182,8 @@ dwargen_mine:
     dwarg_unit1_housing: 20
     housing: 0
 
-slave_mine:
+slave_mine:  
+  enabled: 0
   name: Slave Mine
   exclusive_races:
     - Dark Elf
@@ -185,7 +195,8 @@ slave_mine:
     jobs: 0
     housing: 0
 
-automated_mine:
+automated_mine:  
+  enabled: 0
   name: Automated Mine
   excluded_races:
     - Afflicted
@@ -226,7 +237,8 @@ automated_mine:
 
 # BEGIN GLIMJIR
 
-bulwark:
+bulwark:  
+  enabled: 0
   name: Bulwark
   exclusive_races:
     - Glimjir
@@ -236,7 +248,8 @@ bulwark:
     increases_enemy_casualties_on_defense: 1,1,20
     housing: 0
 
-wharf:
+wharf:  
+  enabled: 0
   name: Wharf
   exclusive_races:
     - Glimjir
@@ -247,7 +260,8 @@ wharf:
     housing: 0
 
 ## GLIMJIR WATER
-abyss:
+abyss:  
+  enabled: 0
   name: Abyss
   exclusive_races:
     - Glimjir
@@ -256,7 +270,8 @@ abyss:
     housing: 26
     jobs: 0
 
-algae_bloom:
+algae_bloom:  
+  enabled: 0
   name: Algae Bloom
   exclusive_races:
     - Glimjir
@@ -264,7 +279,8 @@ algae_bloom:
   perks:
     food_production_raw: 80
 
-coral_reef:
+coral_reef:  
+  enabled: 0
   name: Coral Reef
   exclusive_races:
     - Glimjir
@@ -272,7 +288,8 @@ coral_reef:
   perks:
     kelp_production_raw: 80
 
-giant_shell:
+giant_shell:  
+  enabled: 0
   name: Giant Shell
   exclusive_races:
     - Glimjir
@@ -281,7 +298,8 @@ giant_shell:
     gold_theft_protection: 50000 # protects 50,000 gold from theft
     food_theft_protection: 10000 # protects 50,000 gold from theft
 
-mana_spring:
+mana_spring:  
+  enabled: 0
   name: Mana Spring
   exclusive_races:
     - Glimjir
@@ -289,7 +307,8 @@ mana_spring:
   perks:
     mana_production_raw: 18
 
-pearl_farm:
+pearl_farm:  
+  enabled: 0
   name: Pearl Farm
   exclusive_races:
     - Glimjir
@@ -297,7 +316,8 @@ pearl_farm:
   perks:
     pearls_production_raw: 16
 
-sunken_shrine:
+sunken_shrine:  
+  enabled: 0
   name: Sunken Shrine
   exclusive_races:
     - Glimjir
@@ -307,7 +327,8 @@ sunken_shrine:
     casualties_on_offense: 1,-5,50 # 1% gives -5%, max -50%
     prestige_gains: 1,2.5,25 # 1% gives +2.5%, max +25%
 
-water_temple:
+water_temple:  
+  enabled: 0
   name: Water Temple
   exclusive_races:
     - Glimjir
@@ -318,7 +339,8 @@ water_temple:
 
 # END GLIMJIR
 
-tower:
+tower:  
+  enabled: 0
   name: Tower
   excluded_races:
     - Dragon
@@ -335,7 +357,8 @@ tower:
   perks:
     mana_production_raw: 25
 
-mast:
+mast:  
+  enabled: 0
   name: Mast
   exclusive_races:
     - Dragon
@@ -344,7 +367,8 @@ mast:
   perks:
     mana_production_raw: 15
 
-lumberyard:
+lumberyard:  
+  enabled: 0
   name: Lumberyard
   excluded_races:
     - Aurei
@@ -368,7 +392,8 @@ lumberyard:
   perks:
     lumber_production_raw: 50
 
-dock:
+dock:  
+  enabled: 0
   name: Dock
   excluded_races:
     - Dragon
@@ -388,7 +413,8 @@ dock:
     xp_generation_mod: 1,5,25 #Every 1% gives +5% XP production, max +25%
     exchange_rate: 1,4,20 # Every 1% gives +4% exchange rate, max +20%
 
-watermill:
+watermill:  
+  enabled: 0
   name: Watermill
   excluded_races:
     - Ants
@@ -412,7 +438,8 @@ watermill:
     gems_production_mod: 1,4,20 # Every 1% gives +4% gem production, max +20%
     ore_production_mod: 1,4,20 # Every 1% gives +4% ore production, max +20%
 
-aqueduct:
+aqueduct:  
+  enabled: 0
   name: Aqueduct
   excluded_races:
     - Demon
@@ -437,7 +464,8 @@ aqueduct:
     food_production_mod: 1,8,40 # Every 1% gives +8% food production, max +40%
     population_growth: 1,18 # Every 1%, gives 6%, no max
 
-shipyard:
+shipyard:  
+  enabled: 0
   name: Shipyard
   exclusive_races:
     - Armada
@@ -448,7 +476,8 @@ shipyard:
 
 ## Mod Buildings
 
-school:
+school:  
+  enabled: 0
   name: School
   excluded_races:
     - Armada
@@ -468,7 +497,8 @@ school:
   perks:
     improvements: 1,2.75 # Every 1% gives 2.75% higher imps
 
-stronghold:
+stronghold:  
+  enabled: 0
   name: Stronghold
   exclusive_races:
     - Troll
@@ -478,7 +508,8 @@ stronghold:
     gem_theft_reduction: 1,2,100  # Every 1% reduces plat stolen by 8%, max 100% reduction
     damage_from_lightning_bolt: 1,-0.75 # Every 1% reduces damage from LBs by 0.75%
 
-naval_institute:
+naval_institute:  
+  enabled: 0
   name: Naval Institute
   exclusive_races:
     - Armada
@@ -489,7 +520,8 @@ naval_institute:
     draftee_housing: 30
     housing: 0
 
-military_academy:
+military_academy:  
+  enabled: 0
   name: Military Academy
   excluded_races:
     - Dragon
@@ -509,7 +541,8 @@ military_academy:
   perks:
     offensive_power: 1,1.8,36 # Every 1% gives 11.8% OP, max +40% OP
 
-obelisk:
+obelisk:  
+  enabled: 0
   name: Obelisk
   exclusive_races:
     - Afflicted
@@ -523,7 +556,8 @@ obelisk:
   perks:
     deity_power: 1,10,100
 
-guard_tower:
+guard_tower:  
+  enabled: 0
   name: Guard Tower
   excluded_races:
     - Artillery
@@ -548,7 +582,8 @@ guard_tower:
 
 # BEGIN SNOW ELF
 
-battlement:
+battlement:  
+  enabled: 0
   name: Battlement
   exclusive_races:
     - Snow Elf
@@ -557,7 +592,8 @@ battlement:
     defensive_power: 1,1.8,36 # Every 1% gives 1.5% DP, max +60% DP
     snow_elf_unit1_housing: 20
 
-gryphon_nest:
+gryphon_nest:  
+  enabled: 0
   name: Gryphon Nest
   exclusive_races:
     - Snow Elf
@@ -568,7 +604,8 @@ gryphon_nest:
 
 # END SNOW ELF
 
-temple:
+temple:  
+  enabled: 0
   name: Watch Tower
   excluded_races:
     - Artillery
@@ -588,7 +625,8 @@ temple:
   perks:
     target_defensive_power_mod: 1,-1.8,36 # Every 1% gives -2% DP mods, max -40% DP mods
 
-tavern:
+tavern:  
+  enabled: 0
   name: Tavern
   exclusive_races:
     - Dwarg
@@ -605,7 +643,8 @@ tavern:
   perks:
     base_morale: 1,8,40
 
-stone_wall:
+stone_wall:  
+  enabled: 0
   name: Stone Wall
   exclusive_races:
     - Dragon
@@ -614,7 +653,8 @@ stone_wall:
     defensive_power: 1,1.5,60 # Every 1% gives 1.5% DP, max +60% DP
     raw_defense: 25
 
-shrine:
+shrine:  
+  enabled: 0
   name: Shrine
   excluded_races:
     - Artillery
@@ -634,7 +674,8 @@ shrine:
     casualties_on_offense: 1,-5,50 # 1% gives -5%, max -50%
     prestige_gains: 1,2.5,25 # 1% gives +2.5%, max +25%
 
-smithy:
+smithy:  
+  enabled: 0
   name: Smithy
   excluded_races:
     - Armada
@@ -663,7 +704,8 @@ smithy:
     unit_gold_costs: 1,-2,40 # ratio, perk, max
     unit_ore_costs: 1,-2,40 # ratio, perk, max
 
-ore_mill:
+ore_mill:  
+  enabled: 0
   name: Gnomish Smithy
   exclusive_races:
     - Gnome
@@ -673,7 +715,8 @@ ore_mill:
     unit_gold_costs: 1,-2,50 # ratio, perk, max
     unit_ore_costs: 1,-2,50 # ratio, perk, max
 
-factory:
+factory:  
+  enabled: 0
   name: Factory
   excluded_races:
     - Dragon
@@ -693,7 +736,8 @@ factory:
     rezone_cost: 1,5,50 # 1% gives -5% rezone cost, max -50%
     construction_time: 1,-2.5,25
 
-refiner:
+refiner:  
+  enabled: 0
   name: Refinery
   exclusive_races:
     - Imperial Gnome
@@ -703,7 +747,8 @@ refiner:
 
 ## Other Buildings
 
-constabulary:
+constabulary:  
+  enabled: 0
   name: Constabulary
   excluded_races:
     - Growth
@@ -719,7 +764,8 @@ constabulary:
     spy_housing: 40
     housing: 0
 
-wizard_academy:
+wizard_academy:  
+  enabled: 0
   name: Wizard Academy
   excluded_races:
     - Dimensionalists
@@ -738,7 +784,8 @@ wizard_academy:
     wizard_housing: 40
     housing: 0
 
-wizard_guild:
+wizard_guild:  
+  enabled: 0
   name: Wizard Guild
   excluded_races:
     - Aurei
@@ -766,7 +813,8 @@ wizard_guild:
 
 # BEGIN ONE-OFF/FEW-OFF FACTION BUILDINGS
 
-armoury:
+armoury:  
+  enabled: 0
   name: Armoury
   exclusive_races:
     - Artillery
@@ -774,7 +822,8 @@ armoury:
   perks:
     ammunition_units_housing: 100
 
-hunting_lodge:
+hunting_lodge:  
+  enabled: 0
   name: Hunting Lodge
   exclusive_races:
     - Qur
@@ -783,7 +832,8 @@ hunting_lodge:
     food_production_raw: 80
     draftee_housing: 10
 
-mass_grave:
+mass_grave:  
+  enabled: 0
   name: Mass Grave
   exclusive_races:
     - Afflicted
@@ -791,7 +841,8 @@ mass_grave:
   perks:
     peasants_conversions: 3,6;miasma,18;food # amountFrom, amountTo;resourceTo, amountTo;resourceTo
 
-yak_breeder:
+yak_breeder:  
+  enabled: 0
   name: Yak Breeder
   exclusive_races:
     - Orc
@@ -804,7 +855,8 @@ yak_breeder:
 
 # CIRES BUILDINGS
 
-powder_mill:
+powder_mill:  
+  enabled: 0
   name: Powder Mill
   exclusive_races:
     - Cires
@@ -813,7 +865,8 @@ powder_mill:
     gunpowder_production_raw: 10
     gunpowder_storage_raw: 2000
 
-stable:
+stable:  
+  enabled: 0
   name: Stable
   exclusive_races:
     - Cires
@@ -822,7 +875,8 @@ stable:
     horse_production_raw: 1
     horse_theft_reduction: 1,10,100  # Every 1% reduces plat stolen by 10%, max 100% reduction
 
-strip_mine:
+strip_mine:  
+  enabled: 0
   name: Strip Mine
   exclusive_races:
     - Cires
@@ -834,7 +888,8 @@ strip_mine:
     #destroys_itself_and_land: 0.01,mountain # amount per tick, land type
     destroys_itself: 0.01
 
-turret:
+turret:  
+  enabled: 0
   name: Turret
   exclusive_races:
     - Cires
@@ -848,7 +903,8 @@ turret:
 
 # VOID BUILDINGS
 
-arc:
+arc:  
+  enabled: 0
   name: Arc
   exclusive_races:
     - Void
@@ -858,7 +914,8 @@ arc:
     casualties_on_offense: 1,-5,100 # 1% gives -5%, max -100%
     mana_upkeep_raw: 5
 
-helix:
+helix:  
+  enabled: 0
   name: Helix
   exclusive_races:
     - Void
@@ -867,7 +924,8 @@ helix:
     offensive_power: 1,1,100 # Every 1% gives 2% OP, max +200% OP
     mana_upkeep_raw: 2
 
-lens:
+lens:  
+  enabled: 0
   name: Lens
   exclusive_races:
     - Void
@@ -876,7 +934,8 @@ lens:
     drafting: 1,10,1000
     mana_upkeep_raw: 4
 
-oculus:
+oculus:  
+  enabled: 0
   name: Oculus
   exclusive_races:
     - Void
@@ -886,7 +945,8 @@ oculus:
     spy_strength: 1,5,500 # Every 1% gives 2% SPA, max +200% OP
     mana_upkeep_raw: 1
 
-mosaic:
+mosaic:  
+  enabled: 0
   name: Mosaic
   exclusive_races:
     - Void
@@ -895,7 +955,8 @@ mosaic:
     land_discovered: 1,4,400 # Every 1% gives 2% land discovered, max +200%
     mana_upkeep_raw: 2
 
-pillar:
+pillar:  
+  enabled: 0
   name: Pillar
   exclusive_races:
     - Void
@@ -904,7 +965,8 @@ pillar:
     defensive_power: 1,1.5,150 # Every 1% gives 2% DP, max +200% DP
     mana_upkeep_raw: 2
 
-tesseract:
+tesseract:  
+  enabled: 0
   name: Tesseract
   exclusive_races:
     - Void
@@ -913,7 +975,8 @@ tesseract:
     military_housing: 48
     housing: 0
 
-ziggurat:
+ziggurat:  
+  enabled: 0
   name: Ziggurat
   exclusive_races:
     - Void
@@ -926,7 +989,8 @@ ziggurat:
 
 # BEGIN GROWTH
 
-tissue_plain:
+tissue_plain:  
+  enabled: 0
   name: Tissue
   exclusive_races:
     - Growth
@@ -936,7 +1000,8 @@ tissue_plain:
     housing: 176
     jobs: 0
 
-sinew:
+sinew:  
+  enabled: 0
   name: Sinew
   exclusive_races:
     - Growth
@@ -947,7 +1012,8 @@ sinew:
     housing: 88
     jobs: 0
 
-tissue_forest:
+tissue_forest:  
+  enabled: 0
   name: Tissue
   exclusive_races:
     - Growth
@@ -957,7 +1023,8 @@ tissue_forest:
     housing: 176
     jobs: 0
 
-tendon:
+tendon:  
+  enabled: 0
   name: Tendon
   exclusive_races:
     - Growth
@@ -967,7 +1034,8 @@ tendon:
     housing: 88
     jobs: 0
 
-tissue_mountain:
+tissue_mountain:  
+  enabled: 0
   name: Tissue
   exclusive_races:
     - Growth
@@ -977,7 +1045,8 @@ tissue_mountain:
     housing: 176
     jobs: 0
 
-cartilage:
+cartilage:  
+  enabled: 0
   name: Cartilage
   exclusive_races:
     - Growth
@@ -987,7 +1056,8 @@ cartilage:
     housing: 88
     jobs: 0
 
-tissue_hill:
+tissue_hill:  
+  enabled: 0
   name: Tissue
   exclusive_races:
     - Growth
@@ -997,7 +1067,8 @@ tissue_hill:
     housing: 176
     jobs: 0
 
-incisor:
+incisor:  
+  enabled: 0
   name: Incisor
   exclusive_races:
     - Growth
@@ -1007,7 +1078,8 @@ incisor:
     housing: 88
     jobs: 0
 
-tissue_swamp:
+tissue_swamp:  
+  enabled: 0
   name: Tissue
   exclusive_races:
     - Growth
@@ -1017,7 +1089,8 @@ tissue_swamp:
     housing: 176
     jobs: 0
 
-sac:
+sac:  
+  enabled: 0
   name: Sac
   exclusive_races:
     - Growth
@@ -1028,7 +1101,8 @@ sac:
     housing: 88
     jobs: 0
 
-tissue_water:
+tissue_water:  
+  enabled: 0
   name: Tissue
   exclusive_races:
     - Growth
@@ -1038,7 +1112,8 @@ tissue_water:
     housing: 176
     jobs: 0
 
-gill:
+gill:  
+  enabled: 0
   name: Gill
   exclusive_races:
     - Growth
@@ -1052,7 +1127,8 @@ gill:
 
 # BEGIN WOOD ELF AND SYLVAN #
 
-forest_haven:
+forest_haven:  
+  enabled: 0
   name: Forest Haven
   exclusive_races:
     - Sylvan
@@ -1063,7 +1139,8 @@ forest_haven:
     damage_from_fireball: 1,-8  # Every 1% reduces damage from FBs by 8%
     spy_housing: 40
 
-garden:
+garden:  
+  enabled: 0
   name: Garden
   exclusive_races:
     - Sylvan
@@ -1072,7 +1149,8 @@ garden:
   perks:
     food_production_raw: 60
 
-mana_tree:
+mana_tree:  
+  enabled: 0
   name: Mana Tree
   exclusive_races:
     - Wood Elf
@@ -1080,7 +1158,8 @@ mana_tree:
   perks:
     mana_production_raw: 35
 
-orchard:
+orchard:  
+  enabled: 0
   name: Orchard
   exclusive_races:
     - Wood Elf
@@ -1089,7 +1168,8 @@ orchard:
     food_production_mod: 1,5,25
     lumber_production_mod: 1,5,25
 
-rootforge:
+rootforge:  
+  enabled: 0
   name: Rootforge
   exclusive_races:
     - Wood Elf
@@ -1098,7 +1178,8 @@ rootforge:
     unit_gold_costs: 1,-2,40 # ratio, perk, max
     unit_lumber_costs: 1,-1,20 # ratio, perk, max
 
-institute:
+institute:  
+  enabled: 0
   name: Institute
   exclusive_races:
     - Wood Elf
@@ -1106,25 +1187,26 @@ institute:
   perks:
     improvements: 1,2
 
-plantation:
-  name: Plantation
+plantation:  
   enabled: 0
+  name: Plantation
   exclusive_races:
     - Sylvan
   land_type: forest
   perks:
     lumber_production_raw: 0.24
 
-spring:
-  name: Spring
+spring:  
   enabled: 0
+  name: Spring
   exclusive_races:
     - Sylvan
   land_type: forest
   perks:
     improvements_interest: 1,20,120 # ratio, perk, max
 
-thicket:
+thicket:  
+  enabled: 0
   name: Thicket
   exclusive_races:
     - Sylvan
@@ -1132,7 +1214,8 @@ thicket:
   perks:
     improvements_capped: 1,2.75,110 # Every 1% gives 2.75% higher imps
 
-hollow_trunk:
+hollow_trunk:  
+  enabled: 0
   name: Hollow Trunk
   exclusive_races:
     - Wood Elf
@@ -1141,7 +1224,8 @@ hollow_trunk:
     gold_theft_protection: 25000
     food_theft_protection: 25000
 
-wood_elf_lumberyard:
+wood_elf_lumberyard:  
+  enabled: 0
   name: Lumberyard
   exclusive_races:
     - Wood Elf
@@ -1153,7 +1237,8 @@ wood_elf_lumberyard:
 # END WOOD ELF AND SYLVAN
 
 # ICEKIN
-glacier:
+glacier:  
+  enabled: 0
   name: Glacier
   exclusive_races:
     - Icekin
@@ -1163,7 +1248,8 @@ glacier:
     jobs: 0
     attacker_offensive_power_mod: 1,1.5,15
 
-gold_vein:
+gold_vein:  
+  enabled: 0
   name: Gold Vein
   exclusive_races:
     - Icekin
@@ -1171,7 +1257,8 @@ gold_vein:
   perks:
     gold_production_depleting_raw: 100,0.1 # Produces 100 gold, reduced by 0.4 per tick of the round (min 0)
 
-terrace:
+terrace:  
+  enabled: 0
   name: Terrace
   exclusive_races:
     - Icekin
@@ -1183,7 +1270,8 @@ terrace:
 # END ICEKIN
 
 # DIMENSIONALISTS
-portal:
+portal:  
+  enabled: 0
   name: Portal
   exclusive_races:
     - Dimensionalists
@@ -1195,7 +1283,8 @@ portal:
     dimensionalists_unit4_production_raw_capped: 0.022,20
     unit_production_from_wizard_ratio: 5
 
-observatory:
+observatory:  
+  enabled: 0
   name: Observatory
   exclusive_races:
     - Dimensionalists
@@ -1204,7 +1293,8 @@ observatory:
     unit_mana_costs: 1,-2,30
     training_time_mod: 1,-2,30
 
-gateway:
+gateway:  
+  enabled: 0
   name: Gateway
   exclusive_races:
     - Dimensionalists
@@ -1216,9 +1306,9 @@ gateway:
 
 # BEGIN SWARM
 
-burrow:
-  name: Burrow
+burrow:  
   enabled: 0
+  name: Burrow
   exclusive_races:
     - Swarm
   land_type: swamp
@@ -1226,7 +1316,8 @@ burrow:
     food_production_raw: 40
     jobs: 0
 
-den:
+den:  
+  enabled: 0
   name: Den
   exclusive_races:
     - Swarm
@@ -1236,9 +1327,9 @@ den:
     housing: 0
     jobs: 0
 
-nest:
-  name: Nest
+nest:  
   enabled: 0
+  name: Nest
   exclusive_races:
     - Swarm
   land_type: forest
@@ -1246,7 +1337,8 @@ nest:
     military_housing: 42
     jobs: 0
 
-tunnel:
+tunnel:  
+  enabled: 0
   name: Tunnel
   exclusive_races:
     - Swarm
@@ -1255,7 +1347,8 @@ tunnel:
     faster_returning_units_increasing: 120,0.06 # faster returning units, increaser per tick
     jobs: 0
 
-well:
+well:  
+  enabled: 0
   name: Aquifer
   exclusive_races:
     - Swarm
@@ -1269,7 +1362,8 @@ well:
 
 # BEGIN MYCONID
 
-mycelia:
+mycelia:  
+  enabled: 0
   name: Mycelia
   exclusive_races:
     - Myconid
@@ -1283,7 +1377,8 @@ mycelia:
 
 # BEGIN BEASTFOLK
 
-camp:
+camp:  
+  enabled: 0
   name: Camp
   exclusive_races:
     - Beastfolk
@@ -1293,7 +1388,8 @@ camp:
     unit_ore_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
     military_housing: 8
 
-bloodstone:
+bloodstone:  
+  enabled: 0
   name: Bloodstone
   exclusive_races:
     - Beastfolk
@@ -1305,7 +1401,8 @@ bloodstone:
 
 # BEGIN FIREWALKER
 
-blast_furnace:
+blast_furnace:  
+  enabled: 0
   name: Blast Furnace
   exclusive_races:
     - Firewalker
@@ -1313,7 +1410,8 @@ blast_furnace:
   perks:
     extra_units_trained: 1,2,20 # Every 1% gives 1% extra units, max +20%
 
-cavern:
+cavern:  
+  enabled: 0
   name: Cavern
   exclusive_races:
     - Firewalker
@@ -1322,7 +1420,8 @@ cavern:
     unit_send_capacity: 100
     xp_generation_mod: 1,2.5,250 #Every 1% gives +2.5% XP production, max +250%
 
-magma_chamber:
+magma_chamber:  
+  enabled: 0
   name: Magma Chamber
   exclusive_races:
     - Firewalker
@@ -1332,7 +1431,8 @@ magma_chamber:
     population_growth: 1,4 # Every 1%, gives 4%, no max
     jobs: 0
 
-incinerator:
+incinerator:  
+  enabled: 0
   name: Incinerator
   exclusive_races:
     - Firewalker
@@ -1342,7 +1442,8 @@ incinerator:
     casualties_on_offense: 1,-5,50 # 1% gives -5%, max -50%
     prestige_gains: 1,2.5,25 # 1% gives +2.5%, max +25%
 
-wellspring:
+wellspring:  
+  enabled: 0
   name: Wellspring
   exclusive_races:
     - Firewalker
@@ -1354,7 +1455,8 @@ wellspring:
 
 # BEGIN MARSHLING
 
-marsh:
+marsh:  
+  enabled: 0
   name: Marsh
   exclusive_races:
     - Marshling
@@ -1362,7 +1464,8 @@ marsh:
   perks:
     housing: 30
 
-gas_spout:
+gas_spout:  
+  enabled: 0
   name: Gas Spout
   exclusive_races:
     - Marshling
@@ -1370,7 +1473,8 @@ gas_spout:
   perks:
     swamp_gas_production_raw: 60
 
-mudhole:
+mudhole:  
+  enabled: 0
   name: Mudhole
   exclusive_races:
     - Marshling
@@ -1378,7 +1482,8 @@ mudhole:
   perks:
     mud_production_raw: 50
 
-spawning_pool:
+spawning_pool:  
+  enabled: 0
   name: Spawning Pool
   exclusive_races:
     - Marshling
@@ -1390,7 +1495,8 @@ spawning_pool:
 
 # BEGIN DEMON
 
-altar:
+altar:  
+  enabled: 0
   name: Altar
   exclusive_races:
     - Demon
@@ -1400,7 +1506,8 @@ altar:
     blood_theft_protection: 1000
     food_production_mod: 1,8,40 # Every 1% gives +8% food production, max +40%
 
-dungeon:
+dungeon:  
+  enabled: 0
   name: Dungeon
   exclusive_races:
     - Demon
@@ -1412,7 +1519,8 @@ dungeon:
 
 # BEGIN AUREI
 
-gold_quarry:
+gold_quarry:  
+  enabled: 0
   name: Gold Quarry
   exclusive_races:
     - Aurei
@@ -1427,7 +1535,8 @@ gold_quarry:
 
 # HOME ALTERNATIVES
 
-barracks:
+barracks:  
+  enabled: 0
   name: Barracks
   excluded_races:
     - Ants
@@ -1462,15 +1571,16 @@ barracks:
     housing: 0
     jobs: 0
 
-home:
-  name: Home
+home:  
   enabled: 0
+  name: Home
   land_type: plain
   perks:
     housing: 30
     jobs: 0
 
-abode:
+abode:  
+  enabled: 0
   name: Abode
   exclusive_races:
     - Nox
@@ -1481,7 +1591,8 @@ abode:
 
 # BEGIN LUX
 
-beacon:
+beacon:  
+  enabled: 0
   name: Beacon
   exclusive_races:
     - Lux
@@ -1490,7 +1601,8 @@ beacon:
     light_production_raw_from_time: 06,18,1 # Between the hours 18:00 and 06:00, gains +6 OP
     xp_generation_mod: 1,1,50 #Every 1% gives +5% XP production, max +25%
 
-sanctuary:
+sanctuary:  
+  enabled: 0
   name: Sanctuary
   exclusive_races:
     - Lux
@@ -1501,7 +1613,8 @@ sanctuary:
 
 # END LUX
 
-cave:
+cave:  
+  enabled: 0
   name: Cave
   exclusive_races:
     - Yeti
@@ -1510,7 +1623,8 @@ cave:
     housing: 30
     jobs: 0
 
-hut:
+hut:  
+  enabled: 0
   name: Hut
   exclusive_races:
     - Troll
@@ -1521,7 +1635,8 @@ hut:
     jobs: 0
     housing: 0
 
-plateau:
+plateau:  
+  enabled: 0
   name: Plateau
   exclusive_races:
     - Troll
@@ -1531,7 +1646,8 @@ plateau:
     jobs: 0
     housing: 0
 
-chamber:
+chamber:  
+  enabled: 0
   name: Chamber
   exclusive_races:
     - Dark Elf
@@ -1543,7 +1659,8 @@ chamber:
     housing: 30
     jobs: 0
 
-colony:
+colony:  
+  enabled: 0
   name: Colony
   exclusive_races:
     - Ants
@@ -1552,7 +1669,8 @@ colony:
     housing: 180
     jobs: 0
 
-dwelling:
+dwelling:  
+  enabled: 0
   name: Dwelling
   exclusive_races:
     - Afflicted
@@ -1564,7 +1682,8 @@ dwelling:
     housing: 38
     jobs: 0
 
-estate:
+estate:  
+  enabled: 0
   name: Estate
   exclusive_races:
     - Qur
@@ -1573,7 +1692,8 @@ estate:
     housing: 30
     jobs: 10
 
-pylon:
+pylon:  
+  enabled: 0
   name: Pylon
   exclusive_races:
     - Spirit
@@ -1583,7 +1703,8 @@ pylon:
     mana_production_mod: 1,0.5,50
     jobs: 0
 
-compound:
+compound:  
+  enabled: 0
   name: Compound
   exclusive_races:
     - Cult
@@ -1594,7 +1715,8 @@ compound:
     reduces_attrition: 0.5,1 # Every 0.5%, reduces 1%
     food_production_raw: 5
 
-farmstead:
+farmstead:  
+  enabled: 0
   name: Farmstead
   exclusive_races:
     - Dragon
@@ -1604,7 +1726,8 @@ farmstead:
     jobs: 30
     food_production_raw: 80
 
-grove:
+grove:  
+  enabled: 0
   name: Grove
   exclusive_races:
     - Beastfolk
@@ -1616,7 +1739,8 @@ grove:
     housing: 30
     jobs: 0
 
-meadow:
+meadow:  
+  enabled: 0
   name: Meadow
   exclusive_races:
     - Sylvan
@@ -1625,7 +1749,8 @@ meadow:
     housing: 30
     jobs: 0
 
-hall:
+hall:  
+  enabled: 0
   name: Hall
   exclusive_races:
     - Aurei
@@ -1636,7 +1761,8 @@ hall:
     housing: 30
     jobs: 0
 
-orcish_longhouse:
+orcish_longhouse:  
+  enabled: 0
   name: Longhouse
   exclusive_races:
     - Orc
@@ -1647,7 +1773,8 @@ orcish_longhouse:
     military_housing: 10
     jobs: 0
 
-garrison:
+garrison:  
+  enabled: 0
   name: Garrison
   exclusive_races:
     - Black Orc
@@ -1658,7 +1785,8 @@ garrison:
     military_housing: 60
     jobs: 0
 
-legion_garrison:
+legion_garrison:  
+  enabled: 0
   name: Garrison
   exclusive_races:
     - Legion
@@ -1670,7 +1798,8 @@ legion_garrison:
 
 # BEGIN NORSE
 
-norse_longhouse:
+norse_longhouse:  
+  enabled: 0
   name: Longhouse
   exclusive_races:
     - Norse
@@ -1680,9 +1809,9 @@ norse_longhouse:
     military_housing: 30
     jobs: 0
 
-valhall:
-  name: Valhall
+valhall:  
   enabled: 0
+  name: Valhall
   exclusive_races:
     - Norse
   land_type: plain
@@ -1691,7 +1820,8 @@ valhall:
     housing: 0
     jobs: 0
 
-ringfort:
+ringfort:  
+  enabled: 0
   name: Ringfort
   exclusive_races:
     - Norse
@@ -1704,7 +1834,8 @@ ringfort:
 
 # BEGIN SACRED ORDER
 
-monastery:
+monastery:  
+  enabled: 0
   name: Monastery
   exclusive_races:
     - Sacred Order
@@ -1714,7 +1845,8 @@ monastery:
     draftee_housing: 20
     jobs: 10
 
-sacred_shrine:
+sacred_shrine:  
+  enabled: 0
   name: Sacred Shrine
   exclusive_races:
     - Sacred Order
@@ -1725,7 +1857,8 @@ sacred_shrine:
     prestige_gains: 1,1,35 # 1% gives +1%, max +35%
     sacred_order_unit4_housing: 40
 
-sacred_temple:
+sacred_temple:  
+  enabled: 0
   name: Sacred Temple
   exclusive_races:
     - Sacred Order
@@ -1737,7 +1870,8 @@ sacred_temple:
 
 # END SACRED ORDER
 
-mansion:
+mansion:  
+  enabled: 0
   name: Mansion
   exclusive_races:
     - Vampires
@@ -1749,7 +1883,8 @@ mansion:
 
 # BEGIN REPTILIANS
 
-bog:
+bog:  
+  enabled: 0
   name: Bog
   exclusive_races:
     - Reptilians
@@ -1757,7 +1892,8 @@ bog:
   perks:
     food_production_raw: 100
 
-mire:
+mire:  
+  enabled: 0
   name: Mire
   exclusive_races:
     - Reptilians
@@ -1766,7 +1902,8 @@ mire:
     housing: 30
     jobs: 0
 
-swamp_vault:
+swamp_vault:  
+  enabled: 0
   name: Vault
   exclusive_races:
     - Reptilians
@@ -1776,7 +1913,8 @@ swamp_vault:
     gold_theft_protection: 25000
     gems_theft_protection: 2500
 
-siftery:
+siftery:  
+  enabled: 0
   name: Siftery
   exclusive_races:
     - Reptilians
@@ -1787,7 +1925,8 @@ siftery:
 
 # END REPTILIANS
 
-residence:
+residence:  
+  enabled: 0
   name: Residence
   exclusive_races:
     - Cires
@@ -1797,7 +1936,8 @@ residence:
     housing: 30
     jobs: 0
 
-tomb:
+tomb:  
+  enabled: 0
   name: Tomb
   exclusive_races:
     - Revenants
@@ -1808,7 +1948,8 @@ tomb:
     jobs: 0
     #crypt_bodies_decay_protection: 30
 
-pit:
+pit:  
+  enabled: 0
   name: Pit
   exclusive_races:
     - Afflicted
@@ -1817,7 +1958,8 @@ pit:
     afflicted_unit1_housing: 680
     housing: 0
 
-wizard_dome:
+wizard_dome:  
+  enabled: 0
   name: Wizard Dome
   exclusive_races:
     - Aurei
@@ -1827,7 +1969,8 @@ wizard_dome:
     wizard_housing: 50
     housing: 0
 
-enclosure:
+enclosure:  
+  enabled: 0
   name: Enclosure
   exclusive_races:
     - Revenants
@@ -1841,7 +1984,8 @@ enclosure:
 
 # BARBARIAN
 
-shed:
+shed:  
+  enabled: 0
   name: Shed
   exclusive_races:
     - Barbarian
@@ -1850,7 +1994,8 @@ shed:
     housing: 48
     jobs: 0
 
-shack:
+shack:  
+  enabled: 0
   name: Shack
   exclusive_races:
     - Barbarian
@@ -1859,7 +2004,8 @@ shack:
     housing: 48
     jobs: 0
 
-shelter:
+shelter:  
+  enabled: 0
   name: Shelter
   exclusive_races:
     - Barbarian
@@ -1868,7 +2014,8 @@ shelter:
     housing: 48
     jobs: 0
 
-cabin:
+cabin:  
+  enabled: 0
   name: Cabin
   exclusive_races:
     - Barbarian
@@ -1877,7 +2024,8 @@ cabin:
     housing: 48
     jobs: 0
 
-hovel:
+hovel:  
+  enabled: 0
   name: Hovel
   exclusive_races:
     - Barbarian
@@ -1886,7 +2034,8 @@ hovel:
     housing: 48
     jobs: 0
 
-shanty:
+shanty:  
+  enabled: 0
   name: Shanty
   exclusive_races:
     - Barbarian

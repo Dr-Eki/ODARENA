@@ -19,10 +19,11 @@ description: >-
     <p>Annexed Barbarians do not invade independently.</p>
     <p>Annexation is broken when the spell expires or when another dominion hits the Barbarian and liberates them (must send at least 120% of the Barbarian's DP). Freeing a Barbarian from annexation yields 3x prestige gains.</p>
 home_land_type: hill
-playable: 1
+playable: 0 # Round 88
 skill_level: 2
 max_per_round: 1
 minimum_rounds: 10
+
 
 perks:
   salvaging: 80

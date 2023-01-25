@@ -2,9 +2,9 @@ name: Elementals
 alignment: good
 description:
 home_land_type: water
-playable: 0 # Can be returned
 experimental: 1
 skill_level: 1
+
 
 peasants_alias: form
 draftees_alias: entity

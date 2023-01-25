@@ -1,4 +1,5 @@
 name: Necromantic Fascinations
+enabled: 0 # Round 88
 cooldown: 0
 description: Select the focus of your Necromancers.
 exclusive_races:

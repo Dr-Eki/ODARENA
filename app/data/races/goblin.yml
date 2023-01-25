@@ -2,8 +2,9 @@ name: Goblin
 alignment: evil
 description:
 home_land_type: hill
-playable: 1
+playable: 0 # Round 88
 skill_level: 2
+
 
 improvement_resources:
   gold: 1.2

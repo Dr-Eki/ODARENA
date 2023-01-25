@@ -2,9 +2,10 @@ name: Black Orc
 alignment: evil
 description:
 home_land_type: forest
-playable: 1
+playable: 0 # Round 88
 skill_level: 3
 experimental: 1
+
 
 peasants_alias: peon
 draftees_alias: guard

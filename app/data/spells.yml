@@ -1,6 +1,7 @@
 # BEGIN GENERIC NON-SORCERY
 
-enhanced_yields:
+enhanced_yields:  
+  enabled: 0
   name: Enhanced Yields
   scope: self
   class: passive
@@ -20,7 +21,8 @@ enhanced_yields:
   perks:
     food_production_mod: 10
 
-harmony:
+harmony:  
+  enabled: 0
   name: Harmony
   scope: self
   class: passive
@@ -37,7 +39,8 @@ harmony:
     population_growth: 50
     offensive_power: -5
 
-magic_disguise:
+magic_disguise:  
+  enabled: 0
   name: Magical Disguise
   scope: self
   class: passive
@@ -56,7 +59,8 @@ magic_disguise:
   perks:
     gold_theft: -100
 
-miners_fortune:
+miners_fortune:  
+  enabled: 0
   name: Miner's Fortune
   scope: self
   class: passive
@@ -95,7 +99,8 @@ miners_fortune:
   perks:
     gems_production_mod: 5
 
-mining_strength:
+mining_strength:  
+  enabled: 0
   name: Mining Strength
   scope: self
   class: passive
@@ -131,7 +136,8 @@ mining_strength:
   perks:
     ore_production_mod: 5
 
-sazals_charge:
+sazals_charge:  
+  enabled: 0
   name: Sazal's Charge
   scope: self
   class: active
@@ -143,7 +149,8 @@ sazals_charge:
   perks:
     reset_spell_cooldowns: 1
 
-sazals_fog:
+sazals_fog:  
+  enabled: 0
   name: Sazal's Fog
   scope: self
   class: passive
@@ -156,7 +163,8 @@ sazals_fog:
   perks:
     fog_of_war: 1
 
-surreal_perception:
+surreal_perception:  
+  enabled: 0
   name: Sazal's Perception
   scope: self
   class: passive
@@ -169,7 +177,8 @@ surreal_perception:
   perks:
     reveal_ops: 1
 
-aura:
+aura:  
+  enabled: 0
   name: Sazal's Shield
   scope: self
   class: passive
@@ -182,7 +191,8 @@ aura:
   perks:
     damage_from_spells: -20
 
-voidspellmanatheft:
+voidspellmanatheft:  
+  enabled: 0
   name: ◣◹
   scope: hostile
   class: active
@@ -198,7 +208,8 @@ voidspellmanatheft:
 
 # BEGIN DIVINE (INCLUDING SORCERY)
 
-blessing_of_azk_hurum:
+blessing_of_azk_hurum:  
+  enabled: 0
   name: Blessing of Azk'Hurum
   scope: friendly
   class: passive
@@ -208,7 +219,8 @@ blessing_of_azk_hurum:
   perks:
     offensive_power_on_retaliation: 2.5
 
-feast_of_azk_hurum:
+feast_of_azk_hurum:  
+  enabled: 0
   name: Feast of Azk'Hurum
   scope: self
   class: passive
@@ -219,7 +231,8 @@ feast_of_azk_hurum:
     population_growth: 100
     food_consumption_mod: 20
 
-fury_of_azk_hurum:
+fury_of_azk_hurum:  
+  enabled: 0
   name: Fury of Azk'Hurum
   scope: self
   class: passive
@@ -232,7 +245,8 @@ fury_of_azk_hurum:
     increases_enemy_casualties_on_defense: 25
     food_consumption_mod: 20
 
-mark_of_azk_hurum:
+mark_of_azk_hurum:  
+  enabled: 0
   name: Mark of Azk'Hurum
   scope: hostile
   class: passive
@@ -243,7 +257,8 @@ mark_of_azk_hurum:
   perks:
     defensive_power: -5
 
-sacrifice_to_azk_hurum:
+sacrifice_to_azk_hurum:  
+  enabled: 0
   name: Sacrifice to Azk'Hurum
   scope: self
   class: active
@@ -252,7 +267,8 @@ sacrifice_to_azk_hurum:
   perks:
     peasant_to_resources_conversion: 50,1;soul,6;blood
 
-bregons_muster:
+bregons_muster:  
+  enabled: 0
   name: Bregon's Muster
   scope: self
   class: passive
@@ -266,7 +282,8 @@ bregons_muster:
     unit_lumber_costs: -5
     training_time_raw: -6
 
-druvas_blessing:
+druvas_blessing:  
+  enabled: 0
   name: Druva's Blessing
   scope: self
   class: passive
@@ -278,7 +295,8 @@ druvas_blessing:
     food_production_mod: 30
     lumber_production_mod: 10
 
-druvas_granaries:
+druvas_granaries:  
+  enabled: 0
   name: Druva's Granaries
   scope: self
   class: passive
@@ -290,7 +308,8 @@ druvas_granaries:
     lumber_theft: -100
     food_theft: -100
 
-druvas_guard:
+druvas_guard:  
+  enabled: 0
   name: Druva's Guard
   deity: druva
   scope: self
@@ -303,7 +322,8 @@ druvas_guard:
   perks:
     elk_production_raw_from_land: 0.01,forest
 
-elskas_anointment:
+elskas_anointment:  
+  enabled: 0
   name: Elskas' Anointment
   scope: self
   class: passive
@@ -314,7 +334,8 @@ elskas_anointment:
   perks:
     casualties: -25
 
-elskas_blur:
+elskas_blur:  
+  enabled: 0
   name: Elskas' Blur
   scope: hostile
   class: passive
@@ -326,7 +347,8 @@ elskas_blur:
     blind_to_reptilian_spies_on_theft: 1
     blind_to_reptilian_spies_on_sabotage: 1
 
-elskas_vision:
+elskas_vision:  
+  enabled: 0
   name: Elskas' Vision
   scope: self
   class: passive
@@ -337,7 +359,8 @@ elskas_vision:
   perks:
     spy_strength_recovery: 3
 
-glimjs_treasures:
+glimjs_treasures:  
+  enabled: 0
   name: Glimj's Treasures
   scope: self
   class: passive
@@ -352,7 +375,8 @@ glimjs_treasures:
     kelp_theft: -100
     pearls_theft: -100
 
-kinthys_bane:
+kinthys_bane:  
+  enabled: 0
   name: Kinthys' Bane
   scope: hostile
   class: active
@@ -364,7 +388,8 @@ kinthys_bane:
     decrease_morale: 1.00
     kill_peasants: 0.10
 
-mirnons_fortitude:
+mirnons_fortitude:  
+  enabled: 0
   name: Mirnon's Fortitude
   scope: self
   class: passive
@@ -376,7 +401,8 @@ mirnons_fortitude:
     ore_production_mod: 20
     gems_production_mod: 10
 
-mirnons_greed:
+mirnons_greed:  
+  enabled: 0
   name: Mirnon's Greed
   scope: self
   class: passive
@@ -392,7 +418,8 @@ mirnons_greed:
     building_gold_quarry_production_mod: 10
     food_consumption_mod: 20
 
-mirnons_secrets:
+mirnons_secrets:  
+  enabled: 0
   name: Mirnon's Secrets
   scope: self
   class: passive
@@ -404,7 +431,8 @@ mirnons_secrets:
     ore_theft: -100
     gems_theft: -100
 
-sazals_ward:
+sazals_ward:  
+  enabled: 0
   name: Sazal's Ward
   scope: self
   class: passive
@@ -416,7 +444,8 @@ sazals_ward:
     sorcery_damage_suffered: -50
     sorcery_damage_dealt: -75
 
-sazals_wrath:
+sazals_wrath:  
+  enabled: 0
   name: Sazal's Wrath
   scope: self
   class: passive
@@ -428,7 +457,8 @@ sazals_wrath:
     sorcery_damage_suffered: 50
     sorcery_damage_dealt: 25
 
-tiranthaels_purification:
+tiranthaels_purification:  
+  enabled: 0
   name: Tiranthael's Purification
   scope: hostile
   class: active
@@ -439,7 +469,8 @@ tiranthaels_purification:
   perks:
     kill_faction_units_percentage: Afflicted,1,0.1875
 
-urugdakhs_benediction:
+urugdakhs_benediction:  
+  enabled: 0
   name: Urugdakh's Benediction
   scope: self
   class: active
@@ -450,7 +481,8 @@ urugdakhs_benediction:
   perks:
     convert_peasants_to_prestige: 5000,50 # 5,000 peasants become 50 prestige
 
-urugdakhs_crusade:
+urugdakhs_crusade:  
+  enabled: 0
   name: Urugdakh's Crusade
   scope: self
   class: passive
@@ -463,7 +495,8 @@ urugdakhs_crusade:
     increases_enemy_casualties_on_offense: 25
     no_land_discovered: 1
 
-zidurs_bane:
+zidurs_bane:  
+  enabled: 0
   name: Zidur's Bane
   scope: self
   class: passive
@@ -479,7 +512,8 @@ zidurs_bane:
 
 # BEGIN FACTION SPECIFIC (SINGLE OR MULTI, NON-SORCERY)
 
-pestilence:
+pestilence:  
+  enabled: 0
   name: Pestilence
   scope: hostile
   class: invasion
@@ -492,7 +526,8 @@ pestilence:
     kill_peasants_and_converts_for_caster_unit: 0.25,1 # 0.25% die and become unit1
     spreads_spell: lesser_pestilence
 
-lesser_pestilence:
+lesser_pestilence:  
+  enabled: 0
   name: Lesser Pestilence
   scope: hostile
   class: invasion
@@ -504,7 +539,8 @@ lesser_pestilence:
   perks:
     kill_peasants_and_converts_for_caster_unit: 0.05,1
 
-great_fever:
+great_fever:  
+  enabled: 0
   name: Great Fever
   scope: hostile
   class: invasion
@@ -518,7 +554,8 @@ great_fever:
     gold_production_mod: -10
     food_production_mod: -20
 
-festering_wounds:
+festering_wounds:  
+  enabled: 0
   name: Festering Wounds
   scope: hostile
   class: invasion
@@ -531,7 +568,8 @@ festering_wounds:
     casualties: 25
     food_consumption_mod: 25
 
-forced_suicides:
+forced_suicides:  
+  enabled: 0
   name: Forced Suicides
   scope: self
   class: passive
@@ -545,7 +583,8 @@ forced_suicides:
     peasants_converted: 100
     prestige_gains: -50
 
-miasmic_charges:
+miasmic_charges:  
+  enabled: 0
   name: Miasmic Charges
   scope: self
   class: passive
@@ -559,7 +598,8 @@ miasmic_charges:
     miasma_production_mod: -50
     population_growth: -90
 
-swarming:
+swarming:  
+  enabled: 0
   name: Swarming
   scope: self
   class: passive
@@ -571,7 +611,8 @@ swarming:
   perks:
     drafting: 100
 
-winds_of_fortune:
+winds_of_fortune:  
+  enabled: 0
   name: Winds of Fortune
   scope: self
   class: passive
@@ -583,7 +624,8 @@ winds_of_fortune:
   perks:
     faster_return: 2
 
-chryson_phase:
+chryson_phase:  
+  enabled: 0
   name: Chryson Phase
   scope: self
   class: active
@@ -593,7 +635,8 @@ chryson_phase:
   perks:
     aurei_unit_conversion: 3,4,1000 # from, to, amount
 
-halcyon_phase:
+halcyon_phase:  
+  enabled: 0
   name: Halcyon Phase
   scope: self
   class: active
@@ -603,7 +646,8 @@ halcyon_phase:
   perks:
     aurei_unit_conversion: 4,3,1000 # from, to, amount
 
-ambush:
+ambush:  
+  enabled: 0
   name: Ambush
   scope: self
   class: passive
@@ -615,7 +659,8 @@ ambush:
   perks:
     reduces_target_raw_defense_from_land: 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
 
-enchanted_blades:
+enchanted_blades:  
+  enabled: 0
   name: Enchanted Blades
   scope: self
   class: passive
@@ -627,7 +672,8 @@ enchanted_blades:
   perks:
     increases_enemy_casualties_on_offense_from_wizard_ratio: 5
 
-enchanted_blades_friendly:
+enchanted_blades_friendly:  
+  enabled: 0
   name: Enchanted Blades
   scope: friendly
   class: passive
@@ -639,7 +685,8 @@ enchanted_blades_friendly:
   perks:
     increases_enemy_casualties_on_offense_from_wizard_ratio: 5
 
-astral_revelations:
+astral_revelations:  
+  enabled: 0
   name: Astral Revelations
   scope: self
   class: active
@@ -651,7 +698,8 @@ astral_revelations:
   perks:
     resource_conversion: mana,cosmic_alignment,100,6000 # from, to, percentage, ratio:1
 
-celestial_pathfinder:
+celestial_pathfinder:  
+  enabled: 0
   name: Celestial Pathfinder
   scope: self
   class: passive
@@ -664,7 +712,8 @@ celestial_pathfinder:
     no_mana_production: 1
     cosmic_alignment_production_mod: 100
 
-charring_flames:
+charring_flames:  
+  enabled: 0
   name: Charring Flames
   scope: self
   class: passive
@@ -677,7 +726,8 @@ charring_flames:
     casualties: 10
     construction_cost: -10
 
-flaming_drills:
+flaming_drills:  
+  enabled: 0
   name: Flaming Drills
   scope: self
   class: passive
@@ -689,7 +739,8 @@ flaming_drills:
   perks:
     gems_production_mod: 5
 
-flood_the_caverns:
+flood_the_caverns:  
+  enabled: 0
   name: Flood The Caverns
   scope: self
   class: passive
@@ -710,7 +761,8 @@ flood_the_caverns:
     obsidian_production_mod: -50
     gems_production_mod: -25
 
-mending_flames:
+mending_flames:  
+  enabled: 0
   name: Mending Flames
   scope: self
   class: active
@@ -721,7 +773,8 @@ mending_flames:
   perks:
     firewalker_unit_conversion_ratio: 1,4,1000,500 # from, to, amount
 
-pyroclast:
+pyroclast:  
+  enabled: 0
   name: Pyroclast
   scope: hostile
   class: active
@@ -734,7 +787,8 @@ pyroclast:
     kill_peasants: 0.5
     destroy_resource: food,0.5
 
-pyromancy:
+pyromancy:  
+  enabled: 0
   name: Pyromancy
   scope: self
   class: passive
@@ -748,7 +802,8 @@ pyromancy:
     unit_gold_costs: 2
     unit_magma_costs: 2
 
-maelstrom:
+maelstrom:  
+  enabled: 0
   name: Maelstrom
   scope: self
   class: passive
@@ -760,7 +815,8 @@ maelstrom:
   perks:
     increases_enemy_casualties_on_defense: 50
 
-metabolism:
+metabolism:  
+  enabled: 0
   name: Metabolism
   scope: self
   class: passive
@@ -772,7 +828,8 @@ metabolism:
   perks:
     food_production_raw_mod: 100
 
-iceshield:
+iceshield:  
+  enabled: 0
   name: Iceshield
   scope: friendly
   class: passive
@@ -784,7 +841,8 @@ iceshield:
   perks:
     sorcery_damage_suffered: -10
 
-windchill:
+windchill:  
+  enabled: 0
   name: Windchill
   scope: hostile
   class: passive
@@ -796,7 +854,8 @@ windchill:
   perks:
     wizard_strength: -50
 
-blizzard:
+blizzard:  
+  enabled: 0
   name: Blizzard
   scope: self
   class: passive
@@ -812,7 +871,8 @@ blizzard:
     defensive_power: 5
     enemy_casualties_on_defense: 10
 
-rapid_compression:
+rapid_compression:  
+  enabled: 0
   name: Rapid Compression
   scope: self
   class: active
@@ -824,7 +884,8 @@ rapid_compression:
   perks:
     resource_conversion_capped: ore,brimmer,100,20,1000000 # from, to, percentage, ratio:1, max_from
 
-retribution:
+retribution:  
+  enabled: 0
   name: Retribution
   scope: self
   class: passive
@@ -837,7 +898,8 @@ retribution:
   perks:
     offensive_power_on_retaliation: 20
 
-howling:
+howling:  
+  enabled: 0
   name: Howling
   scope: self
   class: active
@@ -849,7 +911,8 @@ howling:
   perks:
     increase_morale_from_net_victories: 1
 
-annexation:
+annexation:  
+  enabled: 0
   name: Annexation
   scope: hostile
   class: invasion
@@ -861,7 +924,8 @@ annexation:
   perks:
     annexes_target: 1
 
-silence:
+silence:  
+  enabled: 0
   name: Silence
   scope: hostile
   class: passive
@@ -873,7 +937,8 @@ silence:
   perks:
     cannot_perform_sorcery: 1
 
-solar_rays:
+solar_rays:  
+  enabled: 0
   name: Solar Flares
   scope: hostile
   class: active
@@ -883,7 +948,8 @@ solar_rays:
   perks:
     kill_faction_units_percentage: Nox,1,0.5
 
-marsh_attacks:
+marsh_attacks:  
+  enabled: 0
   name: Marsh Attacks
   scope: self
   class: active
@@ -894,7 +960,8 @@ marsh_attacks:
   perks:
     marshling_random_resource_to_units_conversion: 10,50,marshling,1;2;3;4 #
 
-swamp_trance:
+swamp_trance:  
+  enabled: 0
   name: Swamp Trance
   scope: self
   class: passive
@@ -907,7 +974,8 @@ swamp_trance:
     cannot_invade: 1
     cannot_send_expeditions: 1
 
-defensive_warts:
+defensive_warts:  
+  enabled: 0
   name: Defensive Warts
   scope: self
   class: passive
@@ -921,7 +989,8 @@ defensive_warts:
     stop_land_generation: 1
     no_attrition: 1
 
-accelerated_germination:
+accelerated_germination:  
+  enabled: 0
   name: Accelerated Germination
   scope: self
   class: passive
@@ -934,7 +1003,8 @@ accelerated_germination:
     land_generation_mod: 100
     food_production_mod: -50
 
-mycelial_visions:
+mycelial_visions:  
+  enabled: 0
   name: Mycelial Visions
   scope: self
   class: passive
@@ -946,7 +1016,8 @@ mycelial_visions:
   perks:
     mana_production_mod: 20
 
-mycelial_visions_friendly:
+mycelial_visions_friendly:  
+  enabled: 0
   name: Mycelial Visions
   scope: friendly
   class: passive
@@ -958,7 +1029,8 @@ mycelial_visions_friendly:
   perks:
     mana_production_mod: 5
 
-protective_spores:
+protective_spores:  
+  enabled: 0
   name: Protective Spores
   scope: self
   class: passive
@@ -970,7 +1042,8 @@ protective_spores:
   perks:
     damage_from_spells: -20
 
-protective_spores_friendly:
+protective_spores_friendly:  
+  enabled: 0
   name: Protective Spores
   scope: friendly
   class: passive
@@ -982,7 +1055,8 @@ protective_spores_friendly:
   perks:
     damage_from_spells: -20
 
-verdant_fields:
+verdant_fields:  
+  enabled: 0
   name: Verdant Fields
   scope: self
   class: passive
@@ -994,7 +1068,8 @@ verdant_fields:
   perks:
     food_production_mod: 20
 
-verdant_fields_friendly:
+verdant_fields_friendly:  
+  enabled: 0
   name: Verdant Fields
   scope: friendly
   class: passive
@@ -1006,7 +1081,8 @@ verdant_fields_friendly:
   perks:
     food_production_mod: 5
 
-lay_of_the_land:
+lay_of_the_land:  
+  enabled: 0
   name: Lay of The Land
   scope: self
   class: passive
@@ -1018,7 +1094,8 @@ lay_of_the_land:
   perks:
     land_discovered: 50
 
-fimbulwinter:
+fimbulwinter:  
+  enabled: 0
   name: Fimbulwinter
   scope: self
   class: passive
@@ -1032,7 +1109,8 @@ fimbulwinter:
     food_production_mod: -10
     lumber_production_mod: -10
 
-nocten_acrimony:
+nocten_acrimony:  
+  enabled: 0
   name: Nocten Acrimony
   scope: self
   class: passive
@@ -1043,7 +1121,8 @@ nocten_acrimony:
   perks:
     offensive_power: 40
 
-nocten_shield:
+nocten_shield:  
+  enabled: 0
   name: Nocten Fervour
   scope: self
   class: passive
@@ -1054,7 +1133,8 @@ nocten_shield:
   perks:
     target_defensive_power_mod: -20
 
-nocten_veil:
+nocten_veil:  
+  enabled: 0
   name: Nocten Veil
   scope: self
   class: passive
@@ -1065,7 +1145,8 @@ nocten_veil:
   perks:
     defensive_power: 40
 
-stasis:
+stasis:  
+  enabled: 0
   name: Stasis
   scope: self
   class: passive
@@ -1077,7 +1158,8 @@ stasis:
   perks:
     stasis: 1
 
-rainy_season:
+rainy_season:  
+  enabled: 0
   name: Rainy Season
   scope: self
   class: passive
@@ -1094,9 +1176,9 @@ rainy_season:
     cannot_invade: 1
     cannot_send_expeditions: 1
 
-guardian_spirit:
-  name: Guardian Spirit
+guardian_spirit:  
   enabled: 0
+  name: Guardian Spirit
   scope: friendly
   class: passive
   cost: 6
@@ -1108,9 +1190,9 @@ guardian_spirit:
     defensive_power: 1
     casualties_resource_conversion_for_caster: 1,soul
 
-transcendence:
-  name: Transcendence
+transcendence:  
   enabled: 0
+  name: Transcendence
   scope: hostile
   class: passive
   cost: 0.35
@@ -1120,7 +1202,8 @@ transcendence:
   perks:
     casualties_resource_conversion_for_caster: 1,soul
 
-chitin:
+chitin:  
+  enabled: 0
   name: Chitin
   scope: self
   class: passive
@@ -1132,7 +1215,8 @@ chitin:
     defensive_power: 5
     offensive_power: -5
 
-aggression:
+aggression:  
+  enabled: 0
   name: Aggression
   scope: self
   class: passive
@@ -1145,7 +1229,8 @@ aggression:
     offensive_power: 5
     offensive_power_on_retaliation: 5
 
-curse_of_kinthys:
+curse_of_kinthys:  
+  enabled: 0
   name: Curse of Kinthys
   scope: hostile
   class: active
@@ -1158,7 +1243,8 @@ curse_of_kinthys:
   perks:
     decrease_morale: 1.00
 
-curse_of_zidur:
+curse_of_zidur:  
+  enabled: 0
   name: Curse of Zidur
   scope: hostile
   class: passive
@@ -1171,7 +1257,8 @@ curse_of_zidur:
   perks:
     casualties: 5
 
-dark_rites:
+dark_rites:  
+  enabled: 0
   name: Dark Rites
   scope: self
   class: passive
@@ -1183,7 +1270,8 @@ dark_rites:
   perks:
     converts_crypt_bodies: 50,4,1 # every 50 unit4 creates one unit1
 
-birdsong:
+birdsong:  
+  enabled: 0
   name: Birdsong
   scope: friendly
   class: active
@@ -1194,7 +1282,8 @@ birdsong:
   perks:
     increase_morale: 1
 
-arterial_rush:
+arterial_rush:  
+  enabled: 0
   name: Arterial Rush
   scope: self
   class: passive
@@ -1206,7 +1295,8 @@ arterial_rush:
   perks:
     some_win_into_mod: 50
 
-voidspell:
+voidspell:  
+  enabled: 0
   name: ⫷⋗⫸◬
   scope: self
   class: passive
@@ -1218,7 +1308,8 @@ voidspell:
   perks:
     immune_to_temples: 1
 
-voidspellmana:
+voidspellmana:  
+  enabled: 0
   name: ◭⫸⋖⋗
   scope: self
   class: passive
@@ -1230,7 +1321,8 @@ voidspellmana:
   perks:
     mana_theft: -80
 
-voidspellperception:
+voidspellperception:  
+  enabled: 0
   name: ◬◬◬⋗
   scope: self
   class: passive
@@ -1243,7 +1335,8 @@ voidspellperception:
     reveal_ops: 1
     population_growth: 50
 
-voidspellmagicprotection:
+voidspellmagicprotection:  
+  enabled: 0
   name: ⫸⋗⫸◬
   scope: self
   class: passive
@@ -1255,7 +1348,8 @@ voidspellmagicprotection:
   perks:
     damage_from_spells: -50
 
-weren_wandering:
+weren_wandering:  
+  enabled: 0
   name: Weren Wandering
   scope: self
   class: active
@@ -1271,7 +1365,8 @@ weren_wandering:
 
 # BEGIN SORCERY (NON-DEITY SPECIFIC)
 
-blight:
+blight:  
+  enabled: 0
   name: Blight
   scope: hostile
   class: passive
@@ -1284,7 +1379,8 @@ blight:
   perks:
     food_production_mod: -10
 
-earthquake:
+earthquake:  
+  enabled: 0
   name: Earthquake
   scope: hostile
   class: passive
@@ -1297,7 +1393,8 @@ earthquake:
     ore_production_mod: -5
     gems_production_mod: -5
 
-fireball:
+fireball:  
+  enabled: 0
   name: Fireball
   scope: hostile
   class: active
@@ -1311,7 +1408,8 @@ fireball:
     kill_peasants: 0.25
     destroy_resource: food,0.25
 
-lightning_bolt:
+lightning_bolt:  
+  enabled: 0
   name: Lightning Bolt
   scope: hostile
   class: active
@@ -1323,7 +1421,8 @@ lightning_bolt:
   perks:
     improvements_damage: 0.05
 
-plague:
+plague:  
+  enabled: 0
   name: Plague
   scope: hostile
   class: passive

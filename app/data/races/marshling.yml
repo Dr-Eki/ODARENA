@@ -2,9 +2,10 @@ name: Marshling
 alignment: independent
 description:
 home_land_type: swamp
-playable: 1
+playable: 0 # Round 88
 experimental: 1
 skill_level: 3
+
 
 resources:
   - gold

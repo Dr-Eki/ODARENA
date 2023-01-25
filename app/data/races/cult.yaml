@@ -2,11 +2,11 @@ name: Cult
 alignment: independent
 description: See <a href="general#psionics">Psionics</a> and <a href="general#psionic_conversion">Psionic Conversion</a>.
 home_land_type: forest
-playable: 0 # Fix psionics
 skill_level: 3
 max_per_round: 1
 minimum_rounds: 10
 psionic_strength: 1.5
+
 
 perks:
   cannot_renounce_deity: 1

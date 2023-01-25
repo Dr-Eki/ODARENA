@@ -1,4 +1,5 @@
 name: Channeling
+enabled: 0 # Round 88
 cooldown: 48
 description: Focus magical powers on an aspect of the physical world.
 exclusive_races:

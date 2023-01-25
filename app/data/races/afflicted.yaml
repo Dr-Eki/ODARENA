@@ -11,8 +11,8 @@ description: >-
   <li><strong>Festering Wounds</strong>: +25% casualties, +25% food consumption.</li>
   </ul>
 home_land_type: hill
-playable: 1
 skill_level: 3
+
 
 resources:
   - gold

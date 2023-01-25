@@ -2,9 +2,10 @@ name: Myconid
 alignment: independent
 description: >-
 home_land_type: forest
-playable: 1
+playable: 0 # Round 88
 skill_level: 3
 minimum_rounds_played: 2
+
 
 peasants_alias: spore
 draftees_alias: sporeling

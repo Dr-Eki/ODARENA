@@ -2,11 +2,12 @@ name: Spirit
 alignment: good
 description:
 home_land_type: plain
-playable: 1
+playable: 0 # Round 88
 skill_level: 2
 round_modes:
   - deathmatch
   - deathmatch-duration
+
 
 peasants_alias: essence
 

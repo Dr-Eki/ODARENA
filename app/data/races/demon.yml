@@ -3,8 +3,9 @@ alignment: evil
 description: >-
   <p>Demon starts with 1 Archdemon.</p>
 home_land_type: mountain
-playable: 1
+playable: 0 # Round 88
 skill_level: 3
+
 
 peasants_alias: sinner
 draftees_alias: minion

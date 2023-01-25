@@ -2,9 +2,10 @@ name: Orc
 alignment: evil
 description:
 home_land_type: forest
-playable: 1
+playable: 0 # Round 88
 experimental: 1
 skill_level: 2
+
 
 draftees_alias: Guard
 

@@ -1,4 +1,5 @@
 name: Advancements
+enabled: 0 # Round 88
 cooldown: 48
 description: Prioritise advancements over improvements.
 excluded_races:
