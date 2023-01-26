@@ -58,8 +58,8 @@ elk:
 food:
   name: Food
   description: While mostly functioning as a sustenance, some use food for especially exhausting training or even as organic building blocks.
-  buy: 0.5
-  sell: 0.10
+  buy: null #0.5
+  sell: null #0.10
 
 gems:
   name: Gems
@@ -105,8 +105,8 @@ light:
 lumber:
   name: Lumber
   description: Some obtain it by cutting down trees, whereas gentler creatures collect fallen branches or trees and bushes that have expired.
-  buy: 1
-  sell: 0.5
+  buy: null #1
+  sell: null #0.5
 
 magma:
   name: Magma
@@ -153,8 +153,8 @@ obsidian:
 ore:
   name: Ore
   description: An encompassing term for various stones and metals.
-  buy: 1
-  sell: 0.5
+  buy: null #1
+  sell: null #0.5
 
 prayer:
   name: Prayer

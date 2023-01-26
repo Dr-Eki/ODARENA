@@ -1,4 +1,8 @@
-commander:  
+chieftain:
+  enabled: 1
+  name: Chieftain
+
+commander:
   enabled: 0
   name: Commander
   perks:

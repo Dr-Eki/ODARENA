@@ -3,6 +3,7 @@ alignment: good
 description: >-
 home_land_type: plain
 skill_level: 1
+playable: 1
 
 peasants_alias: farmer
 
@@ -19,6 +20,9 @@ construction_materials:
 
 perks:
   unemployed_peasants_produce: 1
+  cannot_train_spies: 1
+  cannot_train_wizards: 1
+  cannot_train_archmages: 1
 
 units:
 - name: Forester
@@ -30,7 +34,7 @@ units:
     ore: 40
   power:
     offense: 0
-    defense: 0
+    defense: 1
   perks:
     lumber_production_raw: 1
 
@@ -44,7 +48,7 @@ units:
     lumber: 4
   power:
     offense: 0
-    defense: 3
+    defense: 1
   perks:
     ore_production_raw: 1
 

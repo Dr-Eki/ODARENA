@@ -770,11 +770,11 @@ espionage_kerranad:
 
 farming_kerranad:
   enabled: 0
-    name: Farming
-    exclusive_races:
-      - Kerranad
-    perks:
-      food_production_mod: 60,6500
+  name: Farming
+  exclusive_races:
+    - Kerranad
+  perks:
+    food_production_mod: 60,6500
 
 foundations:  
   enabled: 0

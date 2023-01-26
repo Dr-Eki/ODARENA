@@ -325,7 +325,7 @@ class MilitaryCalculator
         $dp = 0;
 
         // Values
-        $minDPPerAcre = 10; # LandDP
+        $minDPPerAcre = 1; # LandDP
         $dpPerDraftee = ($defender->race->getPerkValue('draftee_dp') + $defender->getTechPerkValue('draftee_dp')) ?: 1;
 
         # If DP per draftee is 0, ignore them (no casualties).

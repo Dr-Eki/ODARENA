@@ -1931,17 +1931,6 @@ siftery:
 
 # END REPTILIANS
 
-residence:  
-  enabled: 0
-  name: Residence
-  exclusive_races:
-    - Cires
-    - Kerranad
-  land_type: plain
-  perks:
-    housing: 30
-    jobs: 0
-
 tomb:  
   enabled: 0
   name: Tomb

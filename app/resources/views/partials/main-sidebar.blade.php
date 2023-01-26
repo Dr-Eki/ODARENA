@@ -46,6 +46,8 @@
                     <li class="{{ Route::is('dominion.buildings') ? 'active' : null }}"><a href="{{ route('dominion.buildings') }}"><i class="fa fa-home fa-fw"></i><span>Buildings</span></a></li>
                 @endif
 
+                {{-- 
+
                 <!-- Hide Improvements from cannot_build races -->
                 @if (!$selectedDominion->race->getPerkValue('cannot_improve'))
                     <li class="{{ Route::is('dominion.improvements') ? 'active' : null }}">
@@ -55,7 +57,7 @@
                         </li>
                 @endif
 
-                <!-- TECHS -->
+                <!-- ADVANCEMENTS -->
                 @if (!$selectedDominion->race->getPerkValue('cannot_tech'))
                     <li class="{{ Route::is('dominion.advancements') ? 'active' : null }}">
                         <a href="{{ route('dominion.advancements') }}"><i class="fas fa-layer-group fa-fw"></i> <span>Advancements</span>
@@ -81,6 +83,7 @@
                         </a>
                     </li>
                 @endif
+                --}}
 
                 <li class="{{ Route::is('dominion.military') ? 'active' : null }}"><a href="{{ route('dominion.military') }}"><i class="ra ra-sword ra-fw"></i> <span>Military</span></a></li>
 
@@ -89,6 +92,7 @@
                     <li class="{{ Route::is('dominion.invade') ? 'active' : null }}"><a href="{{ route('dominion.invade') }}"><i class="ra ra-crossed-swords ra-fw"></i> <span>Invade</span></a></li>
                 @endif
 
+                {{--
                 @if ($selectedDominion->round->mode == 'artefacts')
                     <li class="{{ Route::is('dominion.artefacts') ? 'active' : null }}"><a href="{{ route('dominion.artefacts') }}"><i class="ra ra-alien-fire"></i> <span>Artefacts</span></a></li>
                 @endif
@@ -110,12 +114,16 @@
                 @endif
 
                 <li class="{{ Route::is('dominion.magic') ? 'active' : null }}"><a href="{{ route('dominion.magic') }}"><i class="ra ra-fairy-wand ra-fw"></i> <span>Magic</span></a></li>
+                --}}
                 <li class="{{ Route::is('dominion.search') ? 'active' : null }}"><a href="{{ route('dominion.search') }}"><i class="fa fa-search fa-fw"></i> <span>Search</span></a></li>
+                {{--
 
                 @if (!$selectedDominion->race->getPerkValue('cannot_issue_decrees'))
                     <li class="{{ Route::is('dominion.decrees') ? 'active' : null }}"><a href="{{ route('dominion.decrees') }}"><i class="fas fa-gavel fw-fw"></i> <span>Decrees</span></a></li>
                 @endif
+                --}}
 
+                {{--
                 @if(!$selectedDominion->race->getPerkValue('cannot_submit_to_deity'))
                     <li class="{{ Route::is('dominion.deity') ? 'active' : null }}"><a href="{{ route('dominion.deity') }}"><i class="fas fa-pray fa-fw"></i> <span>Deity</span></a></li>
                 @endif
@@ -123,6 +131,7 @@
                 @if(!$selectedDominion->race->getPerkValue('cannot_vote'))
                     <li class="{{ Route::is('dominion.government') ? 'active' : null }}"><a href="{{ route('dominion.government') }}"><i class="fa fa-university fa-fw"></i> <span>Government</span></a></li>
                 @endif
+                --}}
 
 
                 <li class="{{ Route::is('dominion.realm') ? 'active' : null }}">
