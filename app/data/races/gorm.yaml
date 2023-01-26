@@ -37,7 +37,7 @@ units:
     offense: 0
     defense: 1
   perks:
-    lumber_production_raw: 1
+    lumber_production_raw: 3
 
 - name: Crusher
   training_time: 6
@@ -51,7 +51,7 @@ units:
     offense: 0
     defense: 1
   perks:
-    ore_production_raw: 1
+    ore_production_raw: 4
 
 - name: Ogre
   training_time: 12

@@ -36,7 +36,7 @@ units:
     offense: 2
     defense: 2
   perks:
-    food_production_raw: 1
+    food_production_raw: 3
 
 - name: Silverclaw
   training_time: 9
@@ -50,7 +50,7 @@ units:
     offense: 1
     defense: 2
   perks:
-    lumber_production_raw: 0.5
+    lumber_production_raw: 2
 
 - name: Cor
   training_time: 9
@@ -65,7 +65,7 @@ units:
     offense: 3
     defense: 3
   perks:
-    ore_production_raw: 0.8
+    ore_production_raw: 2.2
 
 - name: Turugu
   training_time: 12

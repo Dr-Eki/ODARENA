@@ -36,7 +36,7 @@ units:
     offense: 0
     defense: 1
   perks:
-    lumber_production_raw: 1
+    lumber_production_raw: 4
 
 - name: Miner
   training_time: 6
@@ -50,7 +50,7 @@ units:
     offense: 0
     defense: 1
   perks:
-    ore_production_raw: 1
+    ore_production_raw: 3
 
 - name: Swordsman
   training_time: 12
