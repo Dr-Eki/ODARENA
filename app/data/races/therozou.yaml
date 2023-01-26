@@ -1,0 +1,78 @@
+name: Therozou
+alignment: good
+description: >-
+home_land_type: forest
+skill_level: 1
+
+peasants_alias: wildlife
+
+resources:
+  - food
+  - ore
+  - lumber
+
+peasants_production:
+  food: 0
+
+construction_materials:
+  - lumber
+
+units:
+- name: Hunter
+  training_time: 6
+  type:
+    - living
+    - intelligent
+  cost:
+    ore: 30
+    food: 8
+  power:
+    offense: 2
+    defense: 2
+  perks:
+    food_production_raw: 1
+
+- name: Silverclaw
+  training_time: 9
+  type:
+    - living
+    - sentient
+  cost:
+    ore: 35
+    food: 8
+  power:
+    offense: 1
+    defense: 2
+  perks:
+    lumber_production_raw: 0.5
+
+- name: Cor
+  training_time: 9
+  type:
+    - living
+    - sentient
+  cost:
+    ore: 30
+    lumber: 20
+    food: 12
+  power:
+    offense: 3
+    defense: 3
+  perks:
+    ore_production_raw: 0.8
+
+- name: Turugu
+  training_time: 12
+  type:
+    - living
+    - sentient
+    - intelligent
+  cost:
+    lumber: 80
+    ore: 10
+  power:
+    offense: 5
+    defense: 1
+  perks:
+    plunders: ore;4,lumber;2,food;2
+    

@@ -191,6 +191,15 @@ class DominionFactory
                 $startingParameters['unit1'] = 4000;
                 $startingResources['food'] += 40000;
             }
+
+            # If race name is Arwe, Gorm, or Therozou, start with 1000 food, lumber, ore
+            if($race->name == 'Arwe' or $race->name == 'Gorm' or $race->name == 'Therozou')
+            {
+                $startingResources['food'] += 1000;
+                $startingResources['lumber'] += 1000;
+                $startingResources['ore'] += 1000;
+            }
+
         }
         else
         {
