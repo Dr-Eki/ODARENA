@@ -23,7 +23,6 @@ perks:
   cannot_train_spies: 1
   cannot_train_wizards: 1
   cannot_train_archmages: 1
-  draftee_dp: 0.10
 
 units:
 - name: Forester
