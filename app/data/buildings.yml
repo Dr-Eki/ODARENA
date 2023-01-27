@@ -13,7 +13,7 @@ wall:
   land_type: hill
   perks:
     defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
-    raw_defense: 6
+    raw_defense: 1
     jobs: 0
     housing: 0
 

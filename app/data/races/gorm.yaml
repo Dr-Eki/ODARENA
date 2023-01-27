@@ -73,11 +73,12 @@ units:
     - sentient
     - intelligent
   cost:
-    lumber: 80
-    ore: 10
+    ore: 60
+    lumber: 30
+    food: 18
   power:
-    offense: 2
-    defense: 4
+    offense: 6
+    defense: 6
   perks:
     plunders: ore;4,lumber;2,food;2
     food_consumption_raw: 0.25
