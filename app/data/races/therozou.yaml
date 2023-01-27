@@ -30,7 +30,7 @@ units:
     - living
     - intelligent
   cost:
-    food: 20
+    food: 30
     ore: 4
     lumber: 4
   power:
@@ -45,7 +45,7 @@ units:
     - living
     - sentient
   cost:
-    food: 20
+    food: 30
     ore: 6
   power:
     offense: 0
@@ -59,7 +59,7 @@ units:
     - living
     - sentient
   cost:
-    food: 30
+    food: 40
     lumber: 8
   power:
     offense: 3
@@ -74,7 +74,7 @@ units:
     - sentient
     - intelligent
   cost:
-    food: 50
+    food: 65
     ore: 20
   power:
     offense: 5
