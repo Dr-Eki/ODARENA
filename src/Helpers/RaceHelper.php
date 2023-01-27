@@ -801,7 +801,7 @@ class RaceHelper
             'Wood Elf' => 'Wood Elven',
 
             'Gorm' => 'Gormish',
-            'Arwe' => 'Arwene',
+            'Arwe' => 'Arwae',
         ];
 
         return isset($adjectives[$race->name]) ? $adjectives[$race->name] : $race->name;
