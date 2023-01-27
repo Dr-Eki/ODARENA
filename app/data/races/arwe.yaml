@@ -44,8 +44,8 @@ units:
     - living
     - sentient
   cost:
-    ore: 40
-    lumber: 4
+    ore: 20
+    lumber: 6
   power:
     offense: 0
     defense: 1
@@ -58,7 +58,7 @@ units:
     - living
     - sentient
   cost:
-    ore: 100
+    ore: 65
     lumber: 10
   power:
     offense: 4
