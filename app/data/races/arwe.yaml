@@ -25,7 +25,7 @@ perks:
   cannot_train_archmages: 1
 
 units:
-- name: Forester
+- name: Lumberer
   training_time: 6
   type:
     - living
@@ -34,7 +34,7 @@ units:
     ore: 40
   power:
     offense: 0
-    defense: 1
+    defense: 2
   perks:
     lumber_production_raw: 4
 
@@ -77,4 +77,4 @@ units:
     ore: 10
   power:
     offense: 2
-    defense: 4
+    defense: 5

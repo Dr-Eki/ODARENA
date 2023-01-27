@@ -799,6 +799,9 @@ class RaceHelper
             'Vampires' => 'Vampiric',
             'Weres' => 'Weren',
             'Wood Elf' => 'Wood Elven',
+
+            'Gorm' => 'Gormish',
+            'Arwe' => 'Arwene',
         ];
 
         return isset($adjectives[$race->name]) ? $adjectives[$race->name] : $race->name;
