@@ -89,7 +89,7 @@ class RoundOpenCommand extends Command implements CommandInterface
         $this->info('Available leagues:');
         foreach(RoundLeague::all() as $league)
         {
-            $this->info("\t" . $league->id . ': ' . $league->name);
+            $this->info("\t" . $league->id . ': ' . $league->description);
         }
         $leagueId = $this->ask('Specify league ID: ');
 
