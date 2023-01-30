@@ -136,7 +136,7 @@ class BarbarianCalculator
         return $value;
     }
 
-    public function getDpaTarget(?Dominion $dominion = null, ?Round $round = null, ?float $npcModifier = 1000): int
+    public function getDpaTarget(Dominion $dominion = null, Round $round = null, ?float $npcModifier = 1000): int
     {
         # Get DPA target for a specific dominion/barbarian
         if($dominion)
@@ -153,27 +153,17 @@ class BarbarianCalculator
             $dpa *= ($npcModifier / 1000);
         }
 
+        $round = $round ?? Round::find($dominion->round_id);
+
+        # Special for round league ID 7
+        if($round->league->id == 7)
+        {
+            $dpa /= 4;
+        }
+
         return $dpa;
     }
 
-    /*
-    public function getDpaTarget(?Dominion $dominion = null, ?Round $round = null, ?float $npcModifier = 1000): int
-    {
-        # Get DPA target for a specific dominion/barbarian
-        if($dominion)
-        {
-            $dpa = static::DPA_CONSTANT + ($dominion->round->ticks * (static::DPA_PER_TICK + ($this->statsService->getStat($dominion, 'defense_failures') * static::DPA_PER_TIMES_INVADED)));
-            return $dpa *= ($dominion->npc_modifier / 1000);
-        }
-        # Get DPA target in general
-        elseif($round)
-        {
-            $dpa = static::DPA_CONSTANT + ($round->ticks * static::DPA_PER_TICK);
-            return $dpa *= ($npcModifier / 1000);
-        }
-
-    }
-    */
 
     public function getOpaTarget(?Dominion $dominion = null, ?Round $round = null, ?float $npcModifier = 1000): int
     {

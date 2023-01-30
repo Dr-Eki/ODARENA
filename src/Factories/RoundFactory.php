@@ -24,7 +24,8 @@ class RoundFactory
         Carbon $startDate,
         string $gameMode,
         int $goal,
-        RoundLeague $roundLeague
+        RoundLeague $roundLeague,
+        string $roundName
     ): Round {
         $number = $this->getLastRoundNumber() + 1;
 
@@ -47,7 +48,7 @@ class RoundFactory
         return Round::create([
             'round_league_id' => $roundLeague->id,
             'number' => $number,
-            'name' => 'Round ' . $number,
+            'name' => $roundName,
             'goal' => $goal,
             'ticks' => 0,
             'mode' => $gameMode,

@@ -95,7 +95,15 @@ class RoundOpenCommand extends Command implements CommandInterface
 
         if(empty($leagueId) or !RoundLeague::where('id', $leagueId)->first())
         {
-            $this->error('No or invalid leageu ID provided');
+            $this->error('No or invalid league ID provided');
+            return;
+        }
+
+        $roundName = $this->ask('Specify round name: ');
+
+        if(empty($roundName))
+        {
+            $this->error('No round name provided');
             return;
         }
 
@@ -111,7 +119,8 @@ class RoundOpenCommand extends Command implements CommandInterface
             $startDate,
             $gameMode,
             $goal,
-            $roundLeague
+            $roundLeague,
+            $roundName
         );
 
         $this->info("Round {$round->number} created in Era {$roundLeague->key}. The round starts at {$round->start_date}.");
