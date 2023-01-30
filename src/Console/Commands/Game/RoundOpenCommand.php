@@ -99,16 +99,12 @@ class RoundOpenCommand extends Command implements CommandInterface
             return;
         }
 
-
         $startDate = new Carbon('+2 days midnight');
 
         /** @var RoundLeague $roundLeague */
         $roundLeague = RoundLeague::where('id', $leagueId)->firstOrFail();
 
         $this->info('Creating a new ' . $gameMode . ' round with goal of ' . number_format($goal) . '.');
-
-
-        dd();
 
         $round = $this->roundFactory->create(
             $startDate,
