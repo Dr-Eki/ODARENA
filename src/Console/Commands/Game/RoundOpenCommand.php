@@ -105,6 +105,7 @@ class RoundOpenCommand extends Command implements CommandInterface
         $roundLeague = RoundLeague::where('id', $leagueId)->firstOrFail();
 
         $this->info('Creating a new ' . $gameMode . ' round with goal of ' . number_format($goal) . '.');
+        $this->info('The round will start at ' . $startDate->toDateTimeString() . ' in league ' . $roundLeague->description . '.');
 
         $round = $this->roundFactory->create(
             $startDate,
