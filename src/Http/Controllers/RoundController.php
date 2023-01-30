@@ -229,6 +229,12 @@ class RoundController extends AbstractController
                             {
                                 throw new GameException($race->name . ' is not available in this round.');
                             }
+
+                            # Check if that race is playable
+                            if(!$race->playable)
+                            {
+                                throw new GameException($race->name . ' is not playable.');
+                            }
                         }
         
                         $realm = $realmFinderService->findRealm($round, $race);

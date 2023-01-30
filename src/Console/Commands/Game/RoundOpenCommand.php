@@ -65,15 +65,40 @@ class RoundOpenCommand extends Command implements CommandInterface
         $goal = $this->option('goal');
         $leagueId = $this->option('leagueId') ?: 1;
 
-        if(!$gameMode or !in_array($gameMode, $this->roundHelper->getRoundModes()))
+        $this->info('Available game modes:');
+        foreach($this->roundHelper->getRoundModes() as $mode)
+        {
+            $this->info("\t" . $mode.': '.$this->roundHelper->getRoundModeDescription(null, $mode, true));
+        }
+
+        $gameMode = $this->ask('Specify game mode:');
+
+        if(empty($gameMode) or !in_array($gameMode, $this->roundHelper->getRoundModes()))
         {
             throw new RuntimeException('Invalid or missing game mode');
         }
 
-        if(!$goal or $goal <= 0)
+        $goal = $this->ask('Specify goal: ');
+
+        if(empty($goal) or $goal <= 0)
         {
-            throw new RuntimeException('Invalid or missing goal');
+            $this->error('No goal provided');
+            return;
         }
+
+        $this->info('Available leagues:');
+        foreach(RoundLeague::all() as $league)
+        {
+            $this->info("\t" . $league->id . ': ' . $league->name);
+        }
+        $leagueId = $this->ask('Specify league ID: ');
+
+        if(empty($leagueId) or !RoundLeague::where('id', $leagueId)->first())
+        {
+            $this->error('No or invalid leageu ID provided');
+            return;
+        }
+
 
         $startDate = new Carbon('+2 days midnight');
 
@@ -81,6 +106,9 @@ class RoundOpenCommand extends Command implements CommandInterface
         $roundLeague = RoundLeague::where('id', $leagueId)->firstOrFail();
 
         $this->info('Creating a new ' . $gameMode . ' round with goal of ' . number_format($goal) . '.');
+
+
+        dd();
 
         $round = $this->roundFactory->create(
             $startDate,
@@ -107,8 +135,8 @@ class RoundOpenCommand extends Command implements CommandInterface
             $this->realmFactory->create($round, 'players');
         }
 
-        // Create 18 Barbarians.
-        for ($slot = 1; $slot <= 18; $slot++)
+        // Create 20 Barbarians.
+        for ($slot = 1; $slot <= 20; $slot++)
         {
             $this->info("Creating a Barbarian...");
             $this->barbarianService->createBarbarian($round);
