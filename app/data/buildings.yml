@@ -2,9 +2,21 @@
 
 farm:  
   name: Farm
+  excluded_races:
+    - Therozou
   land_type: plain
   perks:
     food_production_raw: 50
+    jobs: 0
+    housing: 0
+
+smallholding:  
+  name: Smallholding
+  exclusive_races:
+    - Therozou
+  land_type: plain
+  perks:
+    food_production_raw: 15
     jobs: 0
     housing: 0
 
