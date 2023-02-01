@@ -68,7 +68,7 @@ class InvadeActionService
     /**
      * @var float Lowest possible DPA.
      */
-    protected const MINIMUM_DPA = 10;
+    protected const MINIMUM_DPA = 1;
 
     /** @var array Invasion result array. todo: Should probably be refactored later to its own class */
     protected $invasionResult = [
