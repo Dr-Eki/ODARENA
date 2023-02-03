@@ -25,7 +25,8 @@ class RoundFactory
         string $gameMode,
         int $goal,
         RoundLeague $roundLeague,
-        string $roundName
+        string $roundName,
+        array $settings
     ): Round {
         $number = $this->getLastRoundNumber() + 1;
 
@@ -55,7 +56,8 @@ class RoundFactory
             'start_date' => $startDate,
             'end_date' => NULL,
             'end_tick' => $endTick,
-            'offensive_actions_prohibited_at' => NULL
+            'offensive_actions_prohibited_at' => NULL,
+            'settings' => $settings,
         ]);
     }
 

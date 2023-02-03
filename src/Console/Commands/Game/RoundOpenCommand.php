@@ -107,6 +107,20 @@ class RoundOpenCommand extends Command implements CommandInterface
             return;
         }
 
+        foreach($this->roundHelper->getRoundSettings() as $key => $name)
+        {
+            $setting = $this->ask('Enable ' .$name . ' (y/n) [y]: ');
+            if($setting == 'n')
+            {
+                $settings[$key] = false;
+
+            }
+            else
+            {
+                $settings[$key] = true;
+            }
+        }
+
         $startDate = new Carbon('+2 days midnight');
 
         /** @var RoundLeague $roundLeague */
@@ -120,7 +134,8 @@ class RoundOpenCommand extends Command implements CommandInterface
             $gameMode,
             $goal,
             $roundLeague,
-            $roundName
+            $roundName,
+            $settings
         );
 
         $this->info("Round {$round->number} created in Era {$roundLeague->key}. The round starts at {$round->start_date}.");

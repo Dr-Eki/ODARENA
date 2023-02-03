@@ -39,6 +39,11 @@ class RoundHelper
                 $roundModeString = 'Standard';
                 break;
 
+            case 'factions':
+            case 'factions-duration':
+                $roundModeString = 'Factions';
+                break;
+
             case 'deathmatch':
             case 'deathmatch-duration':
                 $roundModeString = 'Deathmatch';
@@ -55,11 +60,13 @@ class RoundHelper
             {
                 case 'standard':
                 case 'deathmatch':
+                case 'factions':
                     $roundModeString .= ' (land target)';
-    
                     break;
+
                 case 'standard-duration':
                 case 'deathmatch-duration':
+                case 'factions-duration':
                     $roundModeString .= ' (fixed duration)';
                     break;
         
@@ -81,15 +88,13 @@ class RoundHelper
         switch ($roundModeKey)
         {
             case 'standard':
-                return 'land';
-
-            case 'standard-duration':
-                return 'ticks';
-
             case 'deathmatch':
-                return 'land';
+            case 'factions':
+                    return 'land';
 
             case 'deathmatch-duration':
+            case 'standard-duration':
+            case 'factions-duration':
                 return 'ticks';
 
             case 'artefacts':
@@ -111,16 +116,16 @@ class RoundHelper
         switch ($roundModeKey)
         {
             case 'standard':
-                return 'Your dominion is in a realm with friendly dominions fighting against all other realms to become the largest dominion.';
-
             case 'standard-duration':
                 return 'Your dominion is in a realm with friendly dominions fighting against all other realms to become the largest dominion.';
 
             case 'deathmatch':
-                return 'Every dominion for itself!';
-
             case 'deathmatch-duration':
                 return 'Every dominion for itself!';
+
+            case 'factions':
+            case 'factions-duration':
+                return 'Dominions of the same factions fight against all other dominions.';
 
             case 'artefacts':
                 return 'Your dominion is in a realm with friendly dominions and the goal is to be the first realm to capture at least the required number of artefacts.';
@@ -129,7 +134,6 @@ class RoundHelper
 
     public function getRoundModeIcon(Round $round = null, string $roundModeKey = null): string
     {
-
         $roundModeKey = $round ? $round->mode : $roundModeKey;
 
         switch ($roundModeKey)
@@ -141,6 +145,10 @@ class RoundHelper
             case 'deathmatch':
             case 'deathmatch-duration':
                 return '<i class="ra ra-daggers ra-fw text-red"></i>';
+
+            case 'factions':
+            case 'factions-duration':
+                return '<i class="ra ra-crossed-swords ra-fw text-purple"></i>';
 
             case 'artefacts':
                 return '<i class="ra ra-alien-fire text-orange"></i>';
@@ -250,6 +258,41 @@ class RoundHelper
         }
 
         return $races;
+    }
+
+    public function getRoundSettings(): array
+    {
+        return [
+            'expeditions' => 'Expeditions',
+            'invasions' => 'Invasions',
+            'sabotage' => 'Sabotage',
+            'sorcery' => 'Sorcery',
+            'theft' => 'Theft',
+            'deities' => 'Deities',
+            'advancements' => 'Advancements',
+            'research' => 'Research',
+            'spells' => 'Spells'
+            'barbarians' => 'Barbarians',
+        ];
+    }
+
+    public function getRoundDefaultSettings(): array
+    {
+        $settings = [];
+
+        foreach($this->getRoundSettings() as $key => $setting)
+        {
+            $settings[$key] = true;
+        }
+
+        return $settings;
+    }
+
+    public function getRoundDefaultSetting(string $setting): bool
+    {
+        $settings = $this->getRoundDefaultSettings();
+
+        return $settings[$setting];
     }
 
 }

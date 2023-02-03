@@ -43,6 +43,10 @@ class Round extends AbstractModel
         'updated_at'
     ];
 
+    protected $casts = [
+        'settings' => 'array',
+    ];
+
     // Eloquent Relations
 
     public function dominions()
