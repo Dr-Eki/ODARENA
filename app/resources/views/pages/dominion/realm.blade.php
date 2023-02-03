@@ -7,51 +7,66 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <div class="row">
-                      @if($selectedDominion->round->mode == 'standard' or $selectedDominion->round->mode == 'standard-duration' or $selectedDominion->round->mode == 'artefacts')
-                          <div class="col-sm-3 text-center">
-                          @if($realm->number === 1)
-                              <span style="display:block; font-weight: bold;">Barbarians</span>
-                          @else
-                              <a href="/dominion/realm/1"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[1] }}">Barbarians</span></a>
-                          @endif
-                          </div>
-                          <div class="col-sm-3 text-center">
-                              @if($realm->number === 2)
-                                  <span style="display:block; font-weight: bold;">Commonwealth</span>
-                              @else
-                                  <a href="/dominion/realm/2"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[2] }}">Commonwealth</span></a>
-                              @endif
-                          </div>
-                          <div class="col-sm-3 text-center">
-                              @if($realm->number === 3)
-                                  <span style="display:block; font-weight: bold;">The Empire</span>
-                              @else
-                                  <a href="/dominion/realm/3"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[3] }}">The Empire</span></a>
-                              @endif
-                          </div>
-                          <div class="col-sm-3 text-center">
-                              @if($realm->number === 4)
-                                  <span style="display:block; font-weight: bold;">Independent</span>
-                              @else
-                                  <a href="/dominion/realm/4"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[4] }}">Independent</span></a>
-                              @endif
-                          </div>
-                      @elseif($selectedDominion->round->mode == 'deathmatch' or $selectedDominion->round->mode == 'deathmatch-duration')
-                          <div class="col-sm-6 text-center">
-                          @if($realm->number === 1)
-                              <span style="display:block; font-weight: bold;">Barbarians</span>
-                          @else
-                              <a href="/dominion/realm/1"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[1] }}">Barbarians</span></a>
-                          @endif
-                          </div>
-                          <div class="col-sm-6 text-center">
-                              @if($realm->number === 2)
-                                  <span style="display:block; font-weight: bold;">Players</span>
-                              @else
-                                  <a href="/dominion/realm/2"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[2] }}">Players</span></a>
-                              @endif
-                          </div>
-                      @endif
+                    @if($selectedDominion->round->mode == 'standard' or $selectedDominion->round->mode == 'standard-duration' or $selectedDominion->round->mode == 'artefacts')
+                        <div class="col-sm-3 text-center">
+                            @if($realm->number === 1)
+                                <span style="display:block; font-weight: bold;">Barbarians</span>
+                            @else
+                                <a href="/dominion/realm/1"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[1] }}">Barbarians</span></a>
+                            @endif
+                        </div>
+                        <div class="col-sm-3 text-center">
+                            @if($realm->number === 2)
+                                <span style="display:block; font-weight: bold;">Commonwealth</span>
+                            @else
+                                <a href="/dominion/realm/2"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[2] }}">Commonwealth</span></a>
+                            @endif
+                        </div>
+                        <div class="col-sm-3 text-center">
+                            @if($realm->number === 3)
+                                <span style="display:block; font-weight: bold;">The Empire</span>
+                            @else
+                                <a href="/dominion/realm/3"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[3] }}">The Empire</span></a>
+                            @endif
+                        </div>
+                        <div class="col-sm-3 text-center">
+                            @if($realm->number === 4)
+                                <span style="display:block; font-weight: bold;">Independent</span>
+                            @else
+                                <a href="/dominion/realm/4"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[4] }}">Independent</span></a>
+                            @endif
+                        </div>
+                    @elseif($selectedDominion->round->mode == 'deathmatch' or $selectedDominion->round->mode == 'deathmatch-duration')
+                        <div class="col-sm-6 text-center">
+                            @if($realm->number === 1)
+                                <span style="display:block; font-weight: bold;">Barbarians</span>
+                            @else
+                                <a href="/dominion/realm/1"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[1] }}">Barbarians</span></a>
+                            @endif
+                        </div>
+                        <div class="col-sm-6 text-center">
+                            @if($realm->number === 2)
+                                <span style="display:block; font-weight: bold;">Players</span>
+                            @else
+                                <a href="/dominion/realm/2"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[2] }}">Players</span></a>
+                            @endif
+                        </div>
+                    @elseif($selectedDominion->round->mode == 'factions' or $selectedDominion->round->mode == 'factions-duration')
+
+                        @foreach($selectedDominion->round->realms as $roundRealm)
+                            <div class="col-sm-{{ round(12 / count($selectedDominion->round->realms)) }} text-center">
+                                @php
+                                    $realmRace = ($roundRealm->alignment == 'npc' ? OpenDominion\Models\Race::where('alignment', $roundRealm->alignment)->first() : OpenDominion\Models\Race::where('key', $roundRealm->alignment)->first());
+                                @endphp
+
+                                @if($realm->number === $roundRealm->number)
+                                    <span style="font-weight: bold;">{{ $realmRace->name }}</span>
+                                @else
+                                    <a href="/dominion/realm/{{ $roundRealm->number }}"><span data-toggle="tooltip" data-placement="top" title="{{ $realmNames[$roundRealm->number] }}">{{ $realmRace->name }}</span></a>
+                                @endif
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
             <div class="box-header with-border">

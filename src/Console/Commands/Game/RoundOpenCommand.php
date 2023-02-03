@@ -2,12 +2,14 @@
 
 namespace OpenDominion\Console\Commands\Game;
 
+use DB;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use OpenDominion\Console\Commands\CommandInterface;
 use OpenDominion\Factories\RealmFactory;
 use OpenDominion\Factories\RoundFactory;
 use OpenDominion\Models\RoundLeague;
+use OpenDominion\Models\Race;
 use OpenDominion\Helpers\RoundHelper;
 use RuntimeException;
 
@@ -107,9 +109,11 @@ class RoundOpenCommand extends Command implements CommandInterface
             return;
         }
 
+        $counter = count($this->roundHelper->getRoundSettings());
+        $counting = 1;
         foreach($this->roundHelper->getRoundSettings() as $key => $name)
         {
-            $setting = $this->ask('Enable ' .$name . ' (y/n) [y]: ');
+            $setting = $this->ask("[$counting / $counter] Enable $name (y/n) [y]: ");
             if($setting == 'n')
             {
                 $settings[$key] = false;
@@ -119,6 +123,8 @@ class RoundOpenCommand extends Command implements CommandInterface
             {
                 $settings[$key] = true;
             }
+
+            $counting++;
         }
 
         $startDate = new Carbon('+2 days midnight');
@@ -129,39 +135,53 @@ class RoundOpenCommand extends Command implements CommandInterface
         $this->info('Creating a new ' . $gameMode . ' round with goal of ' . number_format($goal) . '.');
         $this->info('The round will start at ' . $startDate->toDateTimeString() . ' in league ' . $roundLeague->description . '.');
 
-        $round = $this->roundFactory->create(
-            $startDate,
-            $gameMode,
-            $goal,
-            $roundLeague,
-            $roundName,
-            $settings
-        );
+        DB::transaction(function () use ($startDate, $gameMode, $goal, $roundLeague, $roundName, $settings) {
 
-        $this->info("Round {$round->number} created in Era {$roundLeague->key}. The round starts at {$round->start_date}.");
+            $round = $this->roundFactory->create(
+                $startDate,
+                $gameMode,
+                $goal,
+                $roundLeague,
+                $roundName,
+                $settings
+            );
 
-        // Prepopulate round with #1 Barbarian, #2 Commonwealth, #3 Empire, #4 Independent
-        if($gameMode == 'standard' or $gameMode == 'standard-duration' or $gameMode == 'artefacts')
-        {
-            $this->info("Creating realms...");
-            $this->realmFactory->create($round, 'npc');
-            $this->realmFactory->create($round, 'good');
-            $this->realmFactory->create($round, 'evil');
-            $this->realmFactory->create($round, 'independent');
-        }
-        elseif($gameMode == 'deathmatch' or $gameMode == 'deathmatch-duration')
-        {
-            $this->info("Creating realms...");
-            $this->realmFactory->create($round, 'npc');
-            $this->realmFactory->create($round, 'players');
-        }
+            $this->info("Round {$round->number} created in Era {$roundLeague->key}. The round starts at {$round->start_date}.");
 
-        // Create 20 Barbarians.
-        for ($slot = 1; $slot <= 20; $slot++)
-        {
-            $this->info("Creating a Barbarian...");
-            $this->barbarianService->createBarbarian($round);
-        }
+            // Prepopulate round with #1 Barbarian, #2 Commonwealth, #3 Empire, #4 Independent
+            if($gameMode == 'standard' or $gameMode == 'standard-duration' or $gameMode == 'artefacts')
+            {
+                $this->info("Creating realms...");
+                $this->realmFactory->create($round, 'npc');
+                $this->realmFactory->create($round, 'good');
+                $this->realmFactory->create($round, 'evil');
+                $this->realmFactory->create($round, 'independent');
+            }
+            elseif($gameMode == 'deathmatch' or $gameMode == 'deathmatch-duration')
+            {
+                $this->info("Creating realms...");
+                $this->realmFactory->create($round, 'npc');
+                $this->realmFactory->create($round, 'players');
+            }
+            elseif($gameMode == 'factions' or $gameMode == 'factions-duration')
+            {
+                $this->info("Creating realms...");
+                $this->realmFactory->create($round, 'npc');
 
+                # Create a realm per playable race
+                foreach(Race::where('playable',1)->get() as $race)
+                {
+                    $this->realmFactory->create($round, $race->key);
+                }
+
+            }
+
+            // Create 20 Barbarians.
+            for ($slot = 1; $slot <= 20; $slot++)
+            {
+                $this->info("Creating a Barbarian...");
+                $this->barbarianService->createBarbarian($round);
+            }
+        });
     }
 }

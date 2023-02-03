@@ -13,9 +13,9 @@
 
 @else
     <p>The round starts on {{ $round->start_date->format('l, jS \o\f F Y \a\t H:i') }}.
-        @if($round->mode == 'standard' or $round->mode == 'deathmatch')
-            The target land size is {{ number_format($round->goal) }} acres. Once a dominion has reached that, a countdown of 12 hours begins, and then the round ends.
-        @elseif($round->mode == 'standard-duration' or $round->mode == 'deathmatch-duration')
+        @if($round->mode == 'standard' or $round->mode == 'deathmatch' or $round->mode == 'factions')
+            The target land size is {{ number_format($round->goal) }}. Once a dominion has reached that, a countdown of 48 ticks begins, and then the round ends.
+        @elseif($round->mode == 'standard-duration' or $round->mode == 'deathmatch-duration' or $round->mode == 'factions-duration')
             The round lasts for {{ number_format($round->goal) }} ticks.
         @elseif($round->mode == 'artefacts')
             The round lasts until one realm controls {{ number_format($round->goal) }} artefacts.

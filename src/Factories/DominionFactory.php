@@ -452,6 +452,11 @@ class DominionFactory
         {
             throw new GameException('Faction and realm alignment do not match');
         }
+
+        if(($round->mode == 'factions' or $round->mode == 'factions-duration') and $race->key !== $realm->alignment)
+        {
+            throw new GameException('Faction and realm alignment do not match');
+        }
     }
 
     /**

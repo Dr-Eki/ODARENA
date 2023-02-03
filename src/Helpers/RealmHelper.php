@@ -3,7 +3,7 @@
 namespace OpenDominion\Helpers;
 
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\Realm;
+use OpenDominion\Models\Race;
 
 use OpenDominion\Services\Dominion\StatsService;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
@@ -18,26 +18,23 @@ class RealmHelper
 
     public function getAlignmentNoun(string $alignment): string
     {
-        if($alignment === 'good')
+        if(($race = Race::where('key', $alignment)->first()))
         {
-            return 'Commonwealth';
+            return $race->name;
         }
-        elseif($alignment === 'evil')
+        switch($alignment)
         {
-            return 'Empire';
-        }
-        elseif($alignment === 'independent')
-        {
-            return 'Independent';
-        }
-        elseif($alignment === 'npc')
-        {
-            return 'Barbarian';
-        }
-        else
-        {
-            return $alignment;
-        }
+            case 'good':
+                return 'Commonwealth';
+            case 'evil':
+                return 'Empire';
+            case 'independent':
+                return 'Independent';
+            case 'npc':
+                return 'Barbarian';
+            default:
+                return $alignment;
+        }            
     }
 
     public function getAlignmentAdjective(string $alignment)

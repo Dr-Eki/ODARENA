@@ -35,6 +35,22 @@ class RealmFinderService
                 ->first();
         }
 
+        if($round->mode == 'factions' or $round->mode == 'factions-duration')
+        {
+            if($race->alignment == 'npc')
+            {
+                return Realm::query()
+                    ->where('round_id', '=', $round->id)
+                    ->where('alignment', '=', 'npc')
+                    ->first();
+            }
+
+            return Realm::query()
+                ->where('round_id', '=', $round->id)
+                ->where('alignment', '=', $race->key)
+                ->first();
+        }
+
     }
 
     /**

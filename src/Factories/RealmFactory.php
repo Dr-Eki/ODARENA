@@ -5,7 +5,7 @@ namespace OpenDominion\Factories;
 #use Atrox\Haikunator;
 use DB;
 use LogicException;
-use OpenDominion\Models\Pack;
+use OpenDominion\Models\Race;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 
@@ -22,8 +22,6 @@ class RealmFactory
      */
     public function create(Round $round, ?string $alignment = null, ?Pack $pack = null): Realm
     {
-        // todo: whitelist $alignment?
-        // todo: repositories?
         $results = DB::table('realms')
             ->select(DB::raw('MAX(realms.number) AS max_realm_number'))
             ->where('round_id', $round->id)
@@ -36,28 +34,6 @@ class RealmFactory
             $number = ((int)$results[0]->max_realm_number + 1);
         }
 
-        if ($round->mixed_alignment)
-        {
-            $alignment = 'neutral';
-        }
-        /*
-        elseif($alignment == 'independent')
-        {
-          if(rand(1,2) == 1)
-          {
-            $alignment = 'good';
-          }
-          else
-          {
-            $alignment = 'evil';
-          }
-        }
-        */
-      elseif (!$round->mixed_alignment && !in_array($alignment, ['good', 'evil', 'npc', 'independent', 'players'], true))
-        {
-            throw new LogicException("Invalid realm alignment.");
-        }
-
         $defaultRealmName = [
             'npc' => 'The Barbarian Horde',
             'good' => 'The Commonwealth',
@@ -65,6 +41,11 @@ class RealmFactory
             'independent' => 'The Independent',
             'players' => 'The Players',
         ];
+
+        foreach(Race::where('playable',1)->get() as $race)
+        {
+            $defaultRealmName[$race->key] = $race->name;
+        }
 
         $realmName = $defaultRealmName[$alignment];
 

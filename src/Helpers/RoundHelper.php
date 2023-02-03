@@ -22,7 +22,7 @@ class RoundHelper
 
     public function getRoundModes(): array
     {
-        return ['standard', 'standard-duration', 'deathmatch', 'deathmatch-duration', 'artefacts'];
+        return ['standard', 'standard-duration', 'deathmatch', 'deathmatch-duration', 'factions', 'factions-duration', 'artefacts'];
     }
 
     public function getRoundModeString(Round $round = null, string $roundModeKey = null, bool $detailed = false): string
@@ -271,7 +271,7 @@ class RoundHelper
             'deities' => 'Deities',
             'advancements' => 'Advancements',
             'research' => 'Research',
-            'spells' => 'Spells'
+            'spells' => 'Spells',
             'barbarians' => 'Barbarians',
         ];
     }

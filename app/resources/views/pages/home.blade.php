@@ -53,9 +53,9 @@
                             </span>
                         </p>
 
-                        @if($currentRound->mode == 'standard' or $currentRound->mode == 'deathmatch')
+                        @if($currentRound->mode == 'standard' or $currentRound->mode == 'deathmatch' or $currentRound->mode == 'factions')
                             <p>Land goal: <strong>{{ number_format($currentRound->goal) }}.</strong></p>
-                        @elseif($currentRound->mode == 'standard-duration' or $currentRound->mode == 'deathmatch-duration')
+                        @elseif($currentRound->mode == 'standard-duration' or $currentRound->mode == 'deathmatch-duration' or $currentRound->mode == 'factions-duration')
                             <p>Round length: <strong>{{ number_format($currentRound->goal) }} ticks.</strong></p>
                         @elseif($currentRound->mode == 'artefacts')
                             <p>Artefacts to control: <strong>{{ number_format($currentRound->goal) }}.</strong></p>
@@ -89,12 +89,12 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    @if($currentRound->mode == 'standard' or $currentRound->mode == 'deathmatch')
+                                    @if($currentRound->mode == 'standard' or $currentRound->mode == 'deathmatch' or $currentRound->mode == 'factions')
                                         <td class="text-center">Land goal:</td>
                                         <td class="text-center">
                                             {{ number_format($currentRound->goal) }}
                                         </td>
-                                    @elseif($currentRound->mode == 'standard-duration' or $currentRound->mode == 'deathmatch-duration')
+                                    @elseif($currentRound->mode == 'standard-duration' or $currentRound->mode == 'deathmatch-duration' or $currentRound->mode == 'factions-duration')
                                         <td class="text-center">Round length:</td>
                                         <td class="text-center">
                                             {{ number_format($currentRound->goal) }} ticks

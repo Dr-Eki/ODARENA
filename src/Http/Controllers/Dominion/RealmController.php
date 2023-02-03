@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Race;
 use OpenDominion\Models\Realm;
 use OpenDominion\Services\Dominion\StatsService;
 use OpenDominion\Services\Dominion\ProtectionService;
@@ -133,7 +134,7 @@ class RealmController extends AbstractDominionController
         }
 
         $barbarianSettings = [];
-        $hoursIntoTheRound = now()->startOfHour()->diffInHours(Carbon::parse($dominion->round->start_date)->startOfHour());
+        #$hoursIntoTheRound = now()->startOfHour()->diffInHours(Carbon::parse($dominion->round->start_date)->startOfHour());
 
         if($realm->alignment == 'good')
         {
@@ -160,6 +161,16 @@ class RealmController extends AbstractDominionController
         {
             $alignmentNoun = 'ODARENA';
             $alignmentAdjective = 'ODARENA';
+        }
+        elseif(($race = Race::where('key', $realm->alignment)->first()) !== null)
+        {
+            $alignmentNoun = $race->name;
+            $alignmentAdjective = $raceHelper->getRaceAdjective($race);
+        }
+        else
+        {
+            $alignmentNoun = 'Unknown';
+            $alignmentAdjective = 'Unknown';
         }
 
         $defaultRealmNames = [
@@ -191,7 +202,7 @@ class RealmController extends AbstractDominionController
             'alignmentNoun',
             'alignmentAdjective',
             'barbarianSettings',
-            'hoursIntoTheRound',
+            #'hoursIntoTheRound',
             'statsService',
             'realmNames',
             'defaultRealmNames',

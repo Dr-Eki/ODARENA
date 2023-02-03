@@ -190,7 +190,7 @@ class TickService
                     if(!$round->hasCountdown())
                     {
                         # For fixed length rounds, show a countdown when there are COUNTDOWN_DURATION_TICKS ticks left.
-                        if(in_array($round->mode, ['standard-duration', 'deathmatch-duration']))
+                        if(in_array($round->mode, ['standard-duration', 'deathmatch-duration', 'factions-duration']))
                         {
                             if($round->ticks >= ($round->end_tick - $this->roundHelper->getRoundCountdownTickLength()))
                             {
@@ -210,7 +210,7 @@ class TickService
                             }
                         }
                         # For indefinite rounds, create a countdown.
-                        if(in_array($round->mode, ['standard', 'deathmatch']))
+                        if(in_array($round->mode, ['standard', 'deathmatch', 'factions']))
                         {
                             if($this->landCalculator->getTotalLand($dominion) >= $round->goal)
                             {

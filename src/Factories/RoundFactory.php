@@ -41,7 +41,7 @@ class RoundFactory
 
         $endTick = NULL;
 
-        if(in_array($gameMode, ['standard-duration', 'deathmatch-duration']))
+        if(in_array($gameMode, ['standard-duration', 'deathmatch-duration', 'factions-duration']))
         {
             $endTick = $goal;
         }
