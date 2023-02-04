@@ -66,6 +66,11 @@ class SabotageActionService
                 throw new GameException('You need to send at least some units.');
             }
 
+            if(!$saboteur->round->getSetting('sabotage'))
+            {
+                throw new GameException('Sabotage is disabled this round.');
+            }
+
             if ($this->protectionService->isUnderProtection($saboteur))
             {
                 throw new GameException('You cannot sabotage while under protection.');

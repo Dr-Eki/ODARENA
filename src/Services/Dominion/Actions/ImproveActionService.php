@@ -73,6 +73,11 @@ class ImproveActionService
         $this->guardLockedDominion($dominion);
         $this->guardActionsDuringTick($dominion);
 
+        if(!$dominion->round->getSetting('improvements'))
+        {
+            throw new GameException('Improvements are disabled this round.');
+        }
+
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))
         {

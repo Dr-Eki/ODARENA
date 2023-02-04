@@ -161,6 +161,11 @@ class InvadeActionService
         DB::transaction(function () use ($attacker, $target, $defender, $units, $now) {
 
             // Checks
+            if(!$attacker->round->getSetting('invasions'))
+            {
+                throw new GameException('Invasions are disabled this round.');
+            }
+
             if ($this->protectionService->isUnderProtection($attacker))
             {
                 throw new GameException('You cannot invade while under protection.');

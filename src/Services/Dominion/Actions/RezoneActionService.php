@@ -58,6 +58,11 @@ class RezoneActionService
         $this->guardLockedDominion($dominion);
         $this->guardActionsDuringTick($dominion);
 
+        if(!$dominion->round->getSetting('rezoning'))
+        {
+            throw new GameException('Rezoning is disabled this round.');
+        }
+
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))
         {

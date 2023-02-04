@@ -53,6 +53,11 @@ class AdvancementActionService
         $this->guardLockedDominion($dominion);
         $this->guardActionsDuringTick($dominion);
 
+        if(!$dominion->round->getSetting('advancements'))
+        {
+            throw new GameException('Advancements are disabled this round.');
+        }
+
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))
         {

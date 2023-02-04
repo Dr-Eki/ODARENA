@@ -63,6 +63,11 @@ class TheftActionService
                 throw new GameException('You need to send at least some units.');
             }
 
+            if(!$thief->round->getSetting('theft'))
+            {
+                throw new GameException('theft is disabled this round.');
+            }
+
             if ($this->protectionService->isUnderProtection($thief))
             {
                 throw new GameException('You cannot steal while under protection.');

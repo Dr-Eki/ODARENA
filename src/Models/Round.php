@@ -45,6 +45,8 @@ class Round extends AbstractModel
 
     protected $casts = [
         'settings' => 'array',
+        'mode' => 'string',
+        'goal' => 'integer',
     ];
 
     // Eloquent Relations
@@ -101,17 +103,7 @@ class Round extends AbstractModel
      */
     public function openForRegistration()
     {
-        return $this->hasEnded() ? false : true;
-    }
-
-    /**
-     * Returns the amount in days until registration opens.
-     *
-     * @return int
-     */
-    public function daysUntilRegistration()
-    {
-        return $this->start_date->diffInDays(new Carbon('+30 days midnight'));
+        return ($this->hasEnded() and !$this->hasCountdown());
     }
 
     public function userAlreadyRegistered(User $user)
@@ -123,11 +115,6 @@ class Round extends AbstractModel
             ->get();
 
         return (\count($results) === 1);
-    }
-
-    public function mode(): string
-    {
-        return $this->mode;
     }
 
     /**
@@ -192,24 +179,6 @@ class Round extends AbstractModel
     }
 
     /**
-     * Returns whether offensive actions (and exploration) are disabled for the
-     * rest of the round.
-     *
-     * Actions like these are disabled near the end of the round to prevent
-     * suicides and whatnot.
-     *
-     * @return bool
-     */
-    public function hasOffensiveActionsDisabled(): bool
-    {
-        if ($this->offensive_actions_prohibited_at === null) {
-            return false;
-        }
-
-        return ($this->offensive_actions_prohibited_at <= now());
-    }
-
-    /**
      * Returns whether a round is active.
      *
      * @return bool
@@ -249,41 +218,8 @@ class Round extends AbstractModel
         return $this->start_date->diffInMinutes(now());
     }
 
-    /**
-     * Returns the amount in days until the round ends.
-     *
-     * @return int
-     */
-    public function daysUntilEnd(): int
+    public function getSetting(string $key, $default = false)
     {
-        if($this->end_date !== Null)
-        {
-            return $this->end_date->diffInDays(today());
-        }
-        return 0;
-    }
-
-    /**
-     * Returns the amount in days until the round ends.
-     *
-     * @return int
-     */
-    public function hoursUntilEnd(): int
-    {
-        if($this->end_date !== Null)
-        {
-            return $this->end_date->diffInHours(now());
-        }
-        return 0;
-    }
-
-    /**
-     * Returns the round duration in days.
-     *
-     * @return int
-     */
-    public function durationInDays()
-    {
-        return $this->start_date->diffInDays($this->end_date);
+        return $this->settings[$key] ?? $default;
     }
 }

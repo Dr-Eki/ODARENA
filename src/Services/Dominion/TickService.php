@@ -383,7 +383,7 @@ class TickService
 
             Log::Debug('[BARBARIAN] spawn chance value: '. $spawnBarbarian . ' (spawn if this value is 1).');
 
-            if($spawnBarbarian === 1)
+            if($round->getSetting('barbarians') and $spawnBarbarian === 1)
             {
                 $this->barbarianService->createBarbarian($round);
             }

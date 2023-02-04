@@ -390,9 +390,6 @@ class SabotageCalculator
           # Cannot cast disabled spells
           or $spyop->enabled !== 1
 
-          # Espionage cannot be performed at all after offensive actions are disabled
-          or $dominion->round->hasOffensiveActionsDisabled()
-
           # Round must have started
           or !$dominion->round->hasStarted()
 

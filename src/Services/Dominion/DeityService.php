@@ -24,6 +24,12 @@ class DeityService
 
     public function submitToDeity(Dominion $dominion, string $deityKey): void
     {
+
+        if(!$dominion->round->getSetting('deities'))
+        {
+            throw new GameException('Deities are disabled this round.');
+        }
+
         $deity = Deity::where('key', $deityKey)->first();
 
         if(!$deity)

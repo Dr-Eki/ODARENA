@@ -7,6 +7,9 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <div class="row">
+
+                    {{ dd($realm->getAllies()) }}
+
                     @if($selectedDominion->round->mode == 'standard' or $selectedDominion->round->mode == 'standard-duration' or $selectedDominion->round->mode == 'artefacts')
                         <div class="col-sm-3 text-center">
                             @if($realm->number === 1)

@@ -90,6 +90,11 @@ class SpellActionService
             $this->guardActionsDuringTick($target);
         }
 
+        if(!$dominion->round->getSetting('spells'))
+        {
+            throw new GameException('Spells are disabled this round.');
+        }
+        
         // Qur: Statis
         if(isset($target) and $this->spellCalculator->getPassiveSpellPerkValue($target, 'stasis'))
         {

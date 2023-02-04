@@ -24,6 +24,11 @@ class ResearchService
     public function beginResearch(Dominion $dominion, Tech $tech): void
     {
 
+        if(!$dominion->round->getSetting('research'))
+        {
+            throw new GameException('Research is disabled this round.');
+        }
+
         if($dominion->race->getPerkValue('cannot_research'))
         {
             throw new GameException($dominion->race->name .  ' dominions cannot research.');

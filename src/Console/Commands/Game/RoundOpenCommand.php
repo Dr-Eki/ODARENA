@@ -176,11 +176,14 @@ class RoundOpenCommand extends Command implements CommandInterface
 
             }
 
-            // Create 20 Barbarians.
-            for ($slot = 1; $slot <= 20; $slot++)
+            if($round->getSetting('barbarians'))
             {
-                $this->info("Creating a Barbarian...");
-                $this->barbarianService->createBarbarian($round);
+                // Create 20 Barbarians.
+                for ($slot = 1; $slot <= 20; $slot++)
+                {
+                    $this->info("Creating a Barbarian...");
+                    $this->barbarianService->createBarbarian($round);
+                }
             }
         });
     }

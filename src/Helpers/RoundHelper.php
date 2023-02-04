@@ -263,6 +263,9 @@ class RoundHelper
     public function getRoundSettings(): array
     {
         return [
+            'improvements' => 'Improvements',
+            'buildings' => 'Buildings',
+            'rezoning' => 'Rezoning',
             'expeditions' => 'Expeditions',
             'invasions' => 'Invasions',
             'sabotage' => 'Sabotage',

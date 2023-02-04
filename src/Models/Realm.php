@@ -1,6 +1,7 @@
 <?php
 
 namespace OpenDominion\Models;
+use Illuminate\Database\Eloquent\Collection;
 
 use OpenDominion\Services\Realm\HistoryService;
 
@@ -86,6 +87,21 @@ class Realm extends AbstractModel
     public function warRealms()
     {
         return $this->hasMany(self::class, 'war_realm_id');
+    }
+
+    # Allies are realms with which this dominion has a RealmAlliance or other realms that have a RealmAlliance with this realm
+    public function getAllies()
+    {
+        $realmIds = [];
+
+        foreach(RealmAlliance::where('realm_id', $this->id)->orWhere('allied_realm_id', $this->id)->pluck('realm_id', 'allied_realm_id')->toArray() as $key => $value)
+        {
+            $key !== $this->id ? $realmIds[] = $key : null;
+            $value !== $this->id ? $realmIds[] = $value : null;
+
+        }
+    
+        return self::whereIn('id', $realmIds)->get();
     }
 
     public function artefacts()

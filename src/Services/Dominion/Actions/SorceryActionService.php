@@ -71,6 +71,12 @@ class SorceryActionService
     {
         DB::transaction(function () use ($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount)
         {
+
+            if(!$caster->round->getSetting('sorcery'))
+            {
+                throw new GameException('Sorcery is disabled this round.');
+            }
+
             # BEGIN VALIDATION
 
             if ($caster->race->getPerkValue('cannot_perform_sorcery'))

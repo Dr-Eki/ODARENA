@@ -80,6 +80,10 @@ class ExpeditionActionService
 
         DB::transaction(function () use ($dominion, $units)
         {
+            if(!$dominion->round->getSetting('expeditions'))
+            {
+                throw new GameException('Expeditions are disabled this round.');
+            }
 
             if ($this->protectionService->isUnderProtection($dominion))
             {

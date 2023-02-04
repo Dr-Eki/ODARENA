@@ -61,6 +61,11 @@ class BuildActionService
 
         $totalBuildingsToConstruct = array_sum($data);
 
+        if(!$dominion->round->getSetting('buildings'))
+        {
+            throw new GameException('Building is disabled this round.');
+        }
+
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))
         {

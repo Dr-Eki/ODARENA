@@ -95,11 +95,6 @@ class ExploreActionService
             throw new GameException('Your deity prohibits exploring.');
         }
 
-        if($dominion->round->hasOffensiveActionsDisabled())
-        {
-            throw new GameException('Exploration has been disabled for the remainder of the round.');
-        }
-
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))
         {
