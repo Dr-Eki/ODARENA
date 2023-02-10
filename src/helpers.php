@@ -169,6 +169,15 @@ if (!function_exists('number_string')) {
     }
 }
 
+if(!function_exists('generateKeyFromNameString')) {
+    function generateKeyFromNameString(string $name): string
+    {
+        return preg_replace("/[^a-zA-Z0-9\_]+/", "",str_replace(' ', '_', strtolower($name)));
+    }
+}
+
+
+
 if (!function_exists('capSum')) {
     /**
      * Generates a string from a number with number_format, and an explicit + sign

@@ -10,15 +10,38 @@
                     <i class="fa fa-newspaper-o"></i> News from the
                     @if ($realm !== null)
 
-                      @if($realm->alignment == 'good')
-                          Commonwealth
-                      @elseif($realm->alignment == 'evil')
-                          Empire
-                      @elseif($realm->alignment == 'independent')
-                          Independent Realm
-                      @elseif($realm->alignment == 'npc')
-                          Barbarian Horde
-                      @endif
+                        @switch($realm->alignment)
+                            @case('good')
+                                Commonwealth
+                                @break
+                            @case('evil')
+                                Empire
+                                @break
+                            @case('independent')
+                                Independent Realm
+                                @break
+                            @case('npc')
+                                Barbarian Horde
+                                @break
+                            @case('players')
+                                Players
+                                @break
+                            @default
+                                {{ ucwords($realm->alignment) }}
+                                @break
+                        @endswitch
+
+                        @if($realm->alignment == 'good')
+                        Commonwealth
+                        @elseif($realm->alignment == 'evil')
+                        Empire
+                        @elseif($realm->alignment == 'independent')
+                        Independent Realm
+                        @elseif($realm->alignment == 'npc')
+                        Barbarian Horde
+                        @elseif($realm->alignment == 'npc')
+                        Barbarian Horde
+                        @endif
 
                     @else
                         whole World

@@ -93,6 +93,11 @@ class TheftActionService
                 throw new GameException('You cannot steal from other dominions in the same realm as you in standard rounds.');
             }
 
+            if ($thief->realm->getAllies()->contains($target->realm))
+            {
+                throw new GameException('You cannot steal from dominions in allied realms.');
+            }
+
             if ($thief->id == $target->id)
             {
                 throw new GameException('Nice try, but you steal from invade yourself.');

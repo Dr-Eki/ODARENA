@@ -802,7 +802,7 @@ class WorldNewsHelper
             number_format($this->landCalculator->getTotalLand($dominion)/$this->landCalculator->getTotalLand($viewer)*100,2),
             number_format($this->landCalculator->getTotalLand($dominion)),
             $dominion->race->name,
-            (($dominion->realm->id !== $viewer->realm->id) or ($viewer->round->mode == 'deathmatch' or $viewer->round->mode == 'deathmatch-duration')) ? "<span class='text-red'>Hostile</span>" : "<span class='text-green'>Friendly</span>",
+            (in_array($dominion->round->mode, ['deathmatch','deathmatch-duration']) or ($dominion->realm->id !== $viewer->realm->id and !$dominion->realm->getAllies()->contains($viewer->realm))  ) ? "<span class='text-red'>Hostile</span>" : ($dominion->realm->getAllies()->contains($viewer->realm) ? "<span class='text-green'>Ally</span>" : "<span class='text-green'>Friendly</span>"),
             $this->militaryCalculator->hasReturningUnits($dominion) ? "<span class='text-green'>Yes</span>" : "<span class='text-red'>No</span>",
             $dominion->title->name,
             $dominion->ruler_name,

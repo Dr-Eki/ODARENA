@@ -104,6 +104,11 @@ class Realm extends AbstractModel
         return self::whereIn('id', $realmIds)->get();
     }
 
+    public function isAlly(Realm $realm)
+    {
+        return $this->getAllies()->contains($realm);
+    }
+
     public function artefacts()
     {
         return $this->hasManyThrough(

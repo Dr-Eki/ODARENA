@@ -25,32 +25,49 @@ perks:
   cannot_train_archmages: 1
 
 units:
-- name: Lumberer
-  training_time: 6
+- name: Farmer
+  training_time: 0
   type:
-    - living
-    - intelligent
+    - food producer
   cost:
-    ore: 40
-  power:
-    offense: 0
-    defense: 2
-  perks:
-    lumber_production_raw: 4
-
-- name: Miner
-  training_time: 6
-  type:
-    - living
-    - sentient
-  cost:
-    ore: 20
-    lumber: 6
+    peasant: 1
+    ore: 10
+    lumber: 8
   power:
     offense: 0
     defense: 1
   perks:
-    ore_production_raw: 3
+    food_production_raw: 2
+    building_limit: farm,20
+
+units:
+- name: Lumberer
+  training_time: 0
+  type:
+    - lumber producer
+  cost:
+    peasant: 1
+    ore: 20
+    lumber: 4
+  power:
+    offense: 0
+    defense: 1
+  perks:
+    lumber_production_raw: 2
+
+- name: Miner
+  training_time: 0
+  type:
+    - ore producer
+  cost:
+    peasant: 1
+    ore: 30
+    lumber: 4
+  power:
+    offense: 0
+    defense: 1
+  perks:
+    ore_production_raw: 2
 
 - name: Swordsman
   training_time: 12

@@ -96,6 +96,11 @@ class SabotageActionService
                 throw new GameException('You cannot sabotage from other dominions in the same realm as you in this round.');
             }
 
+            if ($saboteur->realm->getAllies()->contains($target->realm))
+            {
+                throw new GameException('You cannot sabotage dominions in allied realms.');
+            }
+
             if ($saboteur->id == $target->id)
             {
                 throw new GameException('Nice try, but you sabotage yourself.');

@@ -172,16 +172,19 @@ class RangeCalculator
                 return (
 
                     # Not in the same realm (unless deathmatch round); and
-                    (($dominion->round->mode == 'standard' or $dominion->round->mode == 'standard-duration' or $dominion->round->mode == 'artefacts') ? ($dominion->realm->id !== $self->realm->id) : true) and
+                    (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','factions','factions-duration']) ? ($dominion->realm->id !== $self->realm->id) : true) and
 
                     # Not self
                     ($dominion->id !== $self->id) and
 
                     # Is in range; and
-                    $this->isInRange($self, $dominion) and
+                    #$this->isInRange($self, $dominion) and
 
                     # Is not in protection;
                     !$this->protectionService->isUnderProtection($dominion) and
+
+                    # Is not an ally
+                    !$self->realm->getAllies()->contains($dominion->realm) and
 
                     # Is not locked;
                     $dominion->is_locked !== 1
@@ -209,7 +212,7 @@ class RangeCalculator
                     return (
 
                         # In the same realm (unless deathmatch round); and
-                        (($dominion->round->mode == 'standard' or $dominion->round->mode == 'standard-duration') ? ($dominion->realm->id == $self->realm->id) : false) and
+                        (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','factions','factions-duration']) ? ($dominion->realm->id == $self->realm->id) : false) and
 
                         # Not self
                         ($dominion->id !== $self->id) and
@@ -229,5 +232,4 @@ class RangeCalculator
                 })
                 ->values();
         }
-
 }

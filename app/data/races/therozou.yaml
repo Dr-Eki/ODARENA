@@ -77,8 +77,8 @@ units:
     food: 65
     ore: 20
   power:
-    offense: 5
-    defense: 1
+    offense: 4
+    defense: 2
   perks:
     plunders: ore;4,lumber;2,food;2
     

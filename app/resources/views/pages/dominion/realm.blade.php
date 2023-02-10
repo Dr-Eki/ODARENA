@@ -7,9 +7,6 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <div class="row">
-
-                    {{ dd($realm->getAllies()) }}
-
                     @if($selectedDominion->round->mode == 'standard' or $selectedDominion->round->mode == 'standard-duration' or $selectedDominion->round->mode == 'artefacts')
                         <div class="col-sm-3 text-center">
                             @if($realm->number === 1)
@@ -372,6 +369,21 @@
                                   <td>Networth:</td>
                                   <td>{{ number_format($networthCalculator->getRealmNetworth($realm)) }}</td>
                                 </tr>
+                                @if($realm->getAllies()->count() > 0)
+                                    <tr>
+                                        <td>Allies:</td>
+                                        <td>
+                                            @foreach($realm->getAllies() as $alliedRealm)
+                                                <a href="{{ route('dominion.realm', [$alliedRealm->number]) }}">{{ $alliedRealm->name }} (# {{ $alliedRealm->number }})</a><br>
+                                            @endforeach
+                                        </td>
+                                    </tr>
+                                @elseif(in_array($realm->round->mode, ['factions', 'factions-duration']))
+                                    <tr>
+                                        <td>Allies:</td>
+                                        <td>None</td>
+                                    </tr>
+                                @endif
                                 @if($realm->alignment === 'evil')
                                     <tr>
                                         <td>Imperial Crypt:</td>

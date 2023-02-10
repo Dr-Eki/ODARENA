@@ -177,6 +177,11 @@ class SorceryActionService
                 throw new GameException("You cannot perform sorcery on other dominions in your realm in standard rounds");
             }
 
+            if ($caster->realm->getAllies()->contains($target->realm))
+            {
+                throw new GameException('You cannot perform sorcery on dominions in allied realms.');
+            }
+
             if ($caster->round->id !== $target->round->id)
             {
                 throw new GameException('Nice try, but you cannot cast spells cross-round');

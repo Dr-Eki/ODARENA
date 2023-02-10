@@ -16,14 +16,9 @@ class RealmAlliance extends AbstractModel
 {
     protected $table = 'realm_alliances';
 
-    public function realm()
-    {
-        return $this->belongsTo(Realm::class, 'realm_id');
-    }
-
-    public function allies()
-    {
-        # Also include allies of allies
-        return $this->hasManyThrough(Realm::class, RealmAlliance::class, 'realm_id', 'id', 'realm_id', 'allied_realm_id');
-    }
+    protected $fillable = [
+        'realm_id',
+        'allied_realm_id',
+        'established'
+    ];
 }

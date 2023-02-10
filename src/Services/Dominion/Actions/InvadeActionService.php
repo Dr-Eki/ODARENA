@@ -186,9 +186,14 @@ class InvadeActionService
                 throw new GameException('Nice try, but you cannot invade cross-round.');
             }
 
-            if ($attacker->realm->id === $target->realm->id and ($attacker->round->mode == 'standard' or $attacker->round->mode == 'standard-duration'))
+            if ($attacker->realm->id === $target->realm->id and (in_array($attacker->round->mode, ['standard','standard-duration','factions','factions-duration'])))
             {
                 throw new GameException('You can only invade other dominions in the same realm in deathmatch rounds.');
+            }
+
+            if ($attacker->realm->getAllies()->contains($target->realm))
+            {
+                throw new GameException('You cannot invade dominions in allied realms.');
             }
 
             if ($attacker->id == $target->id)
