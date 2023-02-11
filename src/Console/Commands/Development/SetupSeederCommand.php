@@ -17,7 +17,7 @@ class SetupSeederCommand extends Command implements CommandInterface
     protected $signature = 'dev:seed:setup';
 
     /** @var string The console command description. */
-    protected $description = 'Seeds test users and Barbarian users in a test environment..';
+    protected $description = 'Seeds test users and Barbarian users in a test environment.';
 
     /**
      * {@inheritdoc}

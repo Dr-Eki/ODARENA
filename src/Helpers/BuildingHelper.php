@@ -264,7 +264,7 @@ class BuildingHelper
             'research_required_to_build' => 'Requires %s research to build.',
 
 
-            'arwe_unit_housing' => 'Houses %1$s %1$s.',
+            'arwe_unit_housing' => 'Houses %1$s %2$s.',
 
         ];
 
@@ -304,13 +304,16 @@ class BuildingHelper
             {
                 $race = Race::where('name', 'Arwe')->firstOrFail(); 
 
-                foreach($perkValue as $unitName => $amountHoused)
+                foreach($perkValue as $key => $perkValueData)
                 {
+                    $unitName = $perkValueData[0];
+                    $amountHoused = $perkValueData[1];
+
                     $unit = $race->units->filter(function($unit) use ($unitName) {
                         return $unit->name == $unitName;
                     })->first();
 
-                    $perkValue[] = [$amountHoused, $unit->name];
+                    $perkValue[$key] = [$amountHoused, str_plural($unit->name, $amountHoused)];
                 }
             }
 

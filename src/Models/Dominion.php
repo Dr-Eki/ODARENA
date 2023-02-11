@@ -716,7 +716,7 @@ class Dominion extends AbstractModel
             # Default value for housing.
             if($perkKey == 'housing' and !is_numeric($perkValueString))
             {
-                $perk += 15 * $building->pivot->owned;
+                $perk += 0 * $building->pivot->owned; # was 15
                 $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
             }
             elseif($perkKey == 'housing' and is_numeric($perkValueString))
@@ -728,7 +728,7 @@ class Dominion extends AbstractModel
             # Default value for jobs.
             if($perkKey == 'jobs' and !is_numeric($perkValueString))
             {
-                $perk += 20 * $building->pivot->owned;
+                $perk += 0 * $building->pivot->owned; # was 20
                 $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
             }
             elseif($perkKey == 'jobs' and is_numeric($perkValueString))

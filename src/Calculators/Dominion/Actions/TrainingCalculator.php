@@ -200,7 +200,7 @@ class TrainingCalculator
                     {
                         $trainableByCost[$type] = (int)floor($dominion->peasants / $value);
                     }
-                    elseif($type == 'draftees')
+                    elseif($type == 'draftees' or $type == 'draftee')
                     {
                         $trainableByCost[$type] = (int)floor($dominion->military_draftees / $value);
                     }
