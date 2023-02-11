@@ -28,70 +28,103 @@ units:
 - name: Farmer
   training_time: 0
   type:
-    - food producer
+    - living
+    - intelligent
   cost:
     peasant: 1
     ore: 10
     lumber: 8
   power:
     offense: 0
-    defense: 1
+    defense: 0
   perks:
-    food_production_raw: 2
+    food_production_raw_from_building_pairing: 0.05,gold_quarry,2.5
     building_limit: farm,20
 
-units:
 - name: Lumberer
   training_time: 0
   type:
-    - lumber producer
+    - living
+    - intelligent
   cost:
     peasant: 1
     ore: 20
     lumber: 4
   power:
     offense: 0
-    defense: 1
+    defense: 0
   perks:
-    lumber_production_raw: 2
+    lumber_production_raw_from_building_pairing: 0.05,saw_mill,2.5
+    building_limit: saw_mill,20
 
 - name: Miner
   training_time: 0
   type:
-    - ore producer
+    - living
+    - intelligent
   cost:
     peasant: 1
-    ore: 30
+    ore: 0
     lumber: 4
   power:
     offense: 0
-    defense: 1
+    defense: 0
   perks:
-    ore_production_raw: 2
+    miner_production_raw_from_building_pairing: 0.05,ore_mine,2.5
+    building_limit: ore_mine,20
 
-- name: Swordsman
-  training_time: 12
+- name: Light Archer
+  training_time: 9
   type:
     - living
-    - sentient
+    - intelligent
   cost:
     ore: 65
     lumber: 10
+    peasant: 1
   power:
-    offense: 4
-    defense: 2
-  perks:
-    plunders: ore;2,lumber;1
+    offense: 1
+    defense: 3
 
-- name: Archer
-  training_time: 12
+- name: Turreted Archer
+  training_time: 9
   type:
     - living
-    - sentient
     - intelligent
   cost:
     lumber: 80
     ore: 10
+    peasant: 1
   power:
-    offense: 2
-    defense: 5
+    offense: 0
+    defense: 4.5
+
+- name: Footsoldier
+  training_time: 12
+  type:
+    - living
+    - intelligent
+  cost:
+    ore: 65
+    lumber: 10
+    peasant: 1
+  power:
+    offense: 3
+    defense: 1
+
+- name: Mounted Blade
+  training_time: 12
+  type:
+    - living
+    - intelligent
+  cost:
+    lumber: 80
+    ore: 10
+    draftee: 1
+    horse: 1
+  power:
+    offense: 4
+    defense: 2.5
+  perks:
+    plunders: ore;2,lumber;1
+    faster_return: 3

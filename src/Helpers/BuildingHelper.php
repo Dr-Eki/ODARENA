@@ -263,6 +263,9 @@ class BuildingHelper
             'deity_power' => 'Increases deity perks %2$s%% for every %1$s%% (max +%3$s%%)',
             'research_required_to_build' => 'Requires %s research to build.',
 
+
+            'arwe_unit_housing' => 'Houses %1$s %1$s.',
+
         ];
 
 
@@ -296,6 +299,20 @@ class BuildingHelper
             }
 
             # SPECIAL DESCRIPTION PERKS
+
+            if($perk->key == 'arwe_unit_housing')
+            {
+                $race = Race::where('name', 'Arwe')->firstOrFail(); 
+
+                foreach($perkValue as $unitName => $amountHoused)
+                {
+                    $unit = $race->units->filter(function($unit) use ($unitName) {
+                        return $unit->name == $unitName;
+                    })->first();
+
+                    $perkValue[] = [$amountHoused, $unit->name];
+                }
+            }
 
             if($perk->key === 'research_required_to_build')
             {

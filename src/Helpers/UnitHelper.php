@@ -366,8 +366,12 @@ class UnitHelper
             'mana_production_raw_per_victory' => 'Gathers %s mana/tick per victory.',
             'gems_production_raw_per_victory' => 'Mines %s gems/tick per victory.',         
 
-            'gold_production_raw_from_building_pairing' => 'Produces %3$s gold/tick if paired %2$s (up to %1$s units per %2$s).',
-            'gunpowder_production_raw_from_building_pairing' => 'Produces %3$s gunpowder/tick if paired %2$s (up to %1$s units per %2$s).',
+            'gold_production_raw_from_building_pairing' => '%3$s gold/tick (up to %1$s units per %2$s).',
+            'food_production_raw_from_building_pairing' => '%3$s food/tick (up to %1$s units per %2$s).',
+            'lumber_production_raw_from_building_pairing' => '%3$s lumber/tick (up to %1$s units per %2$s).',
+            'ore_production_raw_from_building_pairing' => '%3$s ore/tick (up to %1$s units per %2$s).',
+            'gems_production_raw_from_building_pairing' => '%3$s gems/tick (up to %1$s units per %2$s).',
+            'gunpowder_production_raw_from_building_pairing' => '%3$s gunpowder/tick (up to %1$s units per %2$s).',
 
             'xp_generation_raw' => 'Each unit generates %s experience points per tick.',
 
@@ -818,7 +822,16 @@ class UnitHelper
                     $perkValue[1] = str_plural($unitToConvertTo->name);
                 }
 
-                if($perk->key === 'gold_production_raw_from_building_pairing' or $perk->key === 'gunpowder_production_raw_from_building_pairing')
+                $productionBuildingPairingPerks = [
+                    'gold_production_raw_from_building_pairing',
+                    'gunpowder_production_raw_from_building_pairing',
+                    'food_production_raw_from_building_pairing',
+                    'lumber_production_raw_from_building_pairing',
+                    'ore_production_raw_from_building_pairing',
+                    'gems_production_raw_from_building_pairing',
+                    'mana_production_raw_from_building_pairing',
+                ];
+                if(in_array($perk->key, $productionBuildingPairingPerks))
                 {
                     $unitsPerBuilding = (float)$perkValue[0];
                     $buildingKey = (string)$perkValue[1];

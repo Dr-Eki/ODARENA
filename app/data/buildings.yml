@@ -6,11 +6,29 @@ farm:
     - Therozou
   land_type: plain
   perks:
-    food_production_raw: 50
-    jobs: 0
+    food_production_mod: 1,2,40
+    housing: 0
+
+ore_mine:  
+  name: Ore Mine
+  excluded_races:
+    - Therozou
+  land_type: mountain
+  perks:
+    ore_production_mod: 1,2,40
+    housing: 0
+
+saw_mill:  
+  name: Saw Mill
+  excluded_races:
+    - Therozou
+  land_type: mountain
+  perks:
+    ore_production_mod: 1,2,40
     housing: 0
 
 smallholding:  
+  enabled: 0
   name: Smallholding
   exclusive_races:
     - Therozou
@@ -28,6 +46,17 @@ wall:
     raw_defense: 6
     jobs: 0
     housing: 0
+
+turret:  
+  name: Turret
+  exclusive_races:
+    - Arwe
+    - Gorm
+  land_type: hill
+  perks:
+    defensive_power: 1,1.8,36 # Every 1% gives 1.5% DP, max +60% DP
+    casualties_on_defense: 1,-1.5,30 # 1% gives -2% max -20%
+    arwe_unit_housing: Light Archer;20,Turreted Archer;20
 
 # HOMES
 
