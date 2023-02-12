@@ -23,14 +23,16 @@ perks:
   cannot_train_spies: 1
   cannot_train_wizards: 1
   cannot_train_archmages: 1
+  draftee_dp: 1.5
 
 units:
 - name: Breaker
-  training_time: 6
+  training_time: 4
   type:
     - living
     - intelligent
   cost:
+    peasant: 1
     ore: 30
     food: 8
   power:
@@ -40,18 +42,34 @@ units:
     lumber_production_raw: 3
 
 - name: Crusher
-  training_time: 6
+  training_time: 4
   type:
     - living
     - sentient
   cost:
-    ore: 35
+    peasant: 1
+    ore: 30
     food: 8
   power:
     offense: 0
     defense: 1
   perks:
-    ore_production_raw: 4
+    ore_production_raw: 3
+
+- name: Zulgruk
+  training_time: 8
+  type:
+    - living
+    - intelligent
+  cost:
+    draftee: 1
+    ore: 40
+    lumber: 10
+    food: 10
+  power:
+    offense: 4
+    defense: 4
+
 
 - name: Ogre
   training_time: 12
@@ -59,12 +77,13 @@ units:
     - living
     - sentient
   cost:
+    peasant: 1
     ore: 30
     lumber: 20
     food: 12
   power:
-    offense: 0
-    defense: 4
+    offense: 3
+    defense: 6
 
 - name: Basher
   training_time: 12
@@ -73,12 +92,13 @@ units:
     - sentient
     - intelligent
   cost:
+    peasant: 1
     ore: 60
     lumber: 30
     food: 18
   power:
     offense: 6
-    defense: 6
+    defense: 3
   perks:
     plunders: ore;4,lumber;2,food;2
     food_consumption_raw: 0.25

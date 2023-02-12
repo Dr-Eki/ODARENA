@@ -6,6 +6,7 @@ skill_level: 1
 playable: 1
 
 peasants_alias: wildlife
+draftees_alias: wildlife
 
 resources:
   - food
@@ -24,7 +25,7 @@ perks:
   cannot_train_archmages: 1
 
 units:
-- name: Hunter
+- name: Bruk
   training_time: 6
   type:
     - living
@@ -39,7 +40,7 @@ units:
   perks:
     food_production_raw: 3
 
-- name: Silverclaw
+- name: Gorn
   training_time: 9
   type:
     - living
@@ -59,6 +60,7 @@ units:
     - living
     - sentient
   cost:
+    draftee: 1
     food: 40
     lumber: 8
   power:
@@ -74,6 +76,7 @@ units:
     - sentient
     - intelligent
   cost:
+    draftee: 1
     food: 65
     ore: 20
   power:
@@ -81,4 +84,3 @@ units:
     defense: 2
   perks:
     plunders: ore;4,lumber;2,food;2
-    

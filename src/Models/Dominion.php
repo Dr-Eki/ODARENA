@@ -1239,7 +1239,33 @@ class Dominion extends AbstractModel
                     $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
 
                     #dd($perk);
+                }
 
+                elseif($perkKey == ($this->race->key . '_unit_housing'))
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+                    $buildingsOwned = $building->pivot->owned;
+
+                    $result = [];
+
+                    if(!is_array($perkValues[0]))
+                    {
+                        $perkValues[0] = [$perkValues[0], $perkValues[1]];
+                        unset($perkValues[1]);
+                    }
+
+                    foreach($perkValues as $key => $perkValue)
+                    {
+                        $unitSlot = (int)$perkValue[0];
+                        $amountHoused = (float)$perkValue[1];
+                            
+                        $amountHousable = $amountHoused * $buildingsOwned * (1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect'));
+                        $amountHousable = intval($amountHousable);
+
+                        $result[$unitSlot] = $amountHousable;
+                    }
+
+                    return $result;
                 }
 
                 elseif($perkKey !== 'jobs' and $perkKey !== 'housing')

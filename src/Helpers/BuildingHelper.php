@@ -300,22 +300,40 @@ class BuildingHelper
 
             # SPECIAL DESCRIPTION PERKS
 
-            if($perk->key == 'arwe_unit_housing')
+            foreach(Race::where('playable', 1)->pluck('key')->toArray() as $raceKey)
             {
-                $race = Race::where('name', 'Arwe')->firstOrFail(); 
-
-                foreach($perkValue as $key => $perkValueData)
+                if($perk->key == ($raceKey . '_unit_housing'))
                 {
-                    $unitName = $perkValueData[0];
-                    $amountHoused = $perkValueData[1];
+                    $race = Race::firstWhere('key', $raceKey); 
+    
+                    if(is_array($perkValue[0]))
+                    {
+                        foreach($perkValue as $key => $perkValueData)
+                        {
+                            $unitSlot = (int)$perkValueData[0];
+                            $amountHoused = (float)$perkValueData[1];
+        
+                            $unit = $race->units->firstWhere('slot', $unitSlot);
+            
+                            $perkValue[$key] = [$amountHoused, str_plural($unit->name, $amountHoused)];
+                        }
+                    }
+                    else
+                    {
+                        $unitSlot = (int)$perkValue[0];
+                        $amountHoused = (float)$perkValue[1];
+        
+                        $unit = $race->units->firstWhere('slot', $unitSlot);
+    
+                        $perkValue = [$amountHoused, str_plural($unit->name, $amountHoused)];
+                        #dump('this one');
+                    }
 
-                    $unit = $race->units->filter(function($unit) use ($unitName) {
-                        return $unit->name == $unitName;
-                    })->first();
-
-                    $perkValue[$key] = [$amountHoused, str_plural($unit->name, $amountHoused)];
+                    #dd($perkValue);
                 }
             }
+
+
 
             if($perk->key === 'research_required_to_build')
             {

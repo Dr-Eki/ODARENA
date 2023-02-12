@@ -1373,7 +1373,12 @@ class UnitHelper
                         break;
 
                     case 'peasant':
-                        $costs[] = number_format($value) . ' ' . str_plural((isset($race->peasants_alias) ? ucwords($race->peasants_alias) : 'Peasant'), $value);
+                        $costs[] = number_format($value) . ' ' . str_plural((isset($race->peasants_alias) ? $race->peasants_alias : 'peasant'), $value);
+                        break;
+
+                    case 'draftee':
+                    case 'draftees':
+                        $costs[] = number_format($value) . ' ' . str_plural((isset($race->draftees_alias) ? $race->draftees_alias : 'draftee'), $value);
                         break;
 
                     case 'elk':
@@ -1435,10 +1440,6 @@ class UnitHelper
 
                     case 'wizard_strength':
                         $costs[] = number_format($value) . '% Wizard Strength';
-                        break;
-
-                    case 'draftee':
-                    case 'draftees':
                         break;
 
                     default:

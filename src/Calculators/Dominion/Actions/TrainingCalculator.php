@@ -119,34 +119,25 @@ class TrainingCalculator
 
 
 
-                    foreach($unit->cost as $costResourceKey => $amount)
-                    {
-                        $multiplier = 1;
-                        $multiplier += $this->getSpecialistEliteCostMultiplier($dominion, $costResourceKey);
-                        $multiplier += $this->getAttributeCostMultiplier($dominion, $unit);
+                foreach($unit->cost as $costResourceKey => $amount)
+                {
+                    $multiplier = 1;
+                    $multiplier += $this->getSpecialistEliteCostMultiplier($dominion, $costResourceKey);
+                    $multiplier += $this->getAttributeCostMultiplier($dominion, $unit);
 
-                        $multiplier += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot) * ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'cost_increase_to_train_per_unit') / 100);
+                    $multiplier += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot) * ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'cost_increase_to_train_per_unit') / 100);
 
-                        $multiplier = max(0.10, $multiplier); # Max possible reduction is -90%.
+                    $multiplier = max(0.10, $multiplier); # Max possible reduction is -90%.
 
-                        $cost[$costResourceKey] = ceil($amount * $multiplier);
-                    }
+                    $cost[$costResourceKey] = ceil($amount * $multiplier);
+                }
 
-                    if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'no_draftee') == 1)
-                    {
-                        $cost['draftees'] = 0;
-                    }
-                    # Check for housing_count
-                    elseif($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot(intval(str_replace('unit','',$unitType)), 'housing_count'))
-                    {
-                        $cost['draftees'] = min($nonStandardHousing, 1);
-                    }
-                    else
-                    {
-                        $cost['draftees'] = 1;
-                    }
+                if($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot(intval(str_replace('unit','',$unitType)), 'housing_count'))
+                {
+                    $cost['draftees'] = min($nonStandardHousing, 1);
+                }
 
-                    break;
+                break;
             }
 
             $costsPerUnit[$unitType] = $cost;
@@ -277,7 +268,6 @@ class TrainingCalculator
                         dd("Undefined cost parameter for \$type $type with \$value $value", $costs);
                     }
                 }
-
             }
 
             if(empty($trainableByCost))

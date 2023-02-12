@@ -1,3 +1,20 @@
+housing:  
+  name: Housing
+  perks:
+    population: 30,6000
+
+defenses:  
+  name: Defenses
+  perks:
+    defensive_power: 40,12000
+
+tactics:  
+  name: Tactics
+  perks:
+    offensive_power: 40,12000
+
+### 
+
 cartography:  
   enabled: 0
   name: Cartography
@@ -161,25 +178,7 @@ irrigation:
   perks:
     food_production_mod: 45,5000
 
-housing:  
-  enabled: 0
-  name: Housing
-  excluded_races:
-    - Barbarian
-    - Beastfolk
-    - Dwarg
-    - Growth
-    - Kerranad
-    - Marshling
-    - Monster
-    - Sacred Order
-    - Sylvan
-    - Swarm
-    - Troll
-    - Void
-    - Wood Elf
-  perks:
-    population: 20,4000
+
 
 logging:  
   enabled: 0

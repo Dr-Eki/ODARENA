@@ -6,26 +6,25 @@ farm:
     - Therozou
   land_type: plain
   perks:
-    food_production_mod: 1,2,40
-    housing: 0
+    food_production_raw: 50
 
 ore_mine:  
   name: Ore Mine
+  enabled: 0
   excluded_races:
     - Therozou
   land_type: mountain
   perks:
-    ore_production_mod: 1,2,40
-    housing: 0
+    food_production_raw: 40
 
 saw_mill:  
   name: Saw Mill
+  enabled: 0
   excluded_races:
     - Therozou
   land_type: mountain
   perks:
-    ore_production_mod: 1,2,40
-    housing: 0
+    ore_production_raw: 40
 
 smallholding:  
   enabled: 0
@@ -35,6 +34,15 @@ smallholding:
   land_type: plain
   perks:
     food_production_raw: 15
+
+stable:  
+  name: Stable
+  exclusive_races:
+    - Arwe
+  land_type: plain
+  perks:
+    horse_production_raw: 1
+    horse_theft_reduction: 1,10,100  # Every 1% reduces plat stolen by 10%, max 100% reduction
 
 wall:
   name: Wall
@@ -47,12 +55,11 @@ turret:
   name: Turret
   exclusive_races:
     - Arwe
-    - Gorm
   land_type: hill
   perks:
-    defensive_power: 1,1.8,36 # Every 1% gives 1.5% DP, max +60% DP
-    casualties_on_defense: 1,-1.5,30 # 1% gives -2% max -20%
-    arwe_unit_housing: Light Archer;20,Turreted Archer;20
+    defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
+    building_capacity_limit: 1,10,wall # amount allowed, per x of, building
+    arwe_unit_housing: 5,4 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 # HOMES
 
@@ -891,16 +898,6 @@ powder_mill:
   perks:
     gunpowder_production_raw: 10
     gunpowder_storage_raw: 2000
-
-stable:  
-  enabled: 0
-  name: Stable
-  exclusive_races:
-    - Cires
-  land_type: plain
-  perks:
-    horse_production_raw: 1
-    horse_theft_reduction: 1,10,100  # Every 1% reduces plat stolen by 10%, max 100% reduction
 
 strip_mine:  
   enabled: 0
