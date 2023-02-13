@@ -1284,6 +1284,13 @@ class DataSyncCommand extends Command implements CommandInterface
         $files = $this->filesystem->files(base_path('app/data/quickstarts'));
         $quickstartsToSync = [];
 
+        # If there are no files
+        if(count($files) == 0)
+        {
+            $this->info('No quickstart files found.');
+            return;
+        }
+
         foreach ($files as $file)
         {
             $data = Yaml::parse($file->getContents(), Yaml::PARSE_OBJECT_FOR_MAP);
