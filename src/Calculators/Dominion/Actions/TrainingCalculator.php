@@ -117,8 +117,6 @@ class TrainingCalculator
                         return ($unit->slot === $slot);
                     })->first();
 
-
-
                 foreach($unit->cost as $costResourceKey => $amount)
                 {
                     $multiplier = 1;
@@ -191,7 +189,7 @@ class TrainingCalculator
                     {
                         $trainableByCost[$type] = (int)floor($dominion->peasants / $value);
                     }
-                    elseif($type == 'draftees' or $type == 'draftee')
+                    elseif($type == 'draftee' or $type == 'draftees')
                     {
                         $trainableByCost[$type] = (int)floor($dominion->military_draftees / $value);
                     }

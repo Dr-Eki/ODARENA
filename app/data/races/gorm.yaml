@@ -62,7 +62,7 @@ units:
     - living
     - intelligent
   cost:
-    draftee: 1
+    draftees: 1
     ore: 40
     lumber: 10
     food: 10
@@ -76,7 +76,7 @@ units:
     - living
     - sentient
   cost:
-    draftee: 1
+    draftees: 1
     ore: 45
     lumber: 20
     food: 18
@@ -91,7 +91,7 @@ units:
     - sentient
     - intelligent
   cost:
-    draftee: 1
+    draftees: 1
     ore: 60
     lumber: 30
     food: 18

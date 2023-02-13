@@ -85,7 +85,7 @@ units:
   cost:
     ore: 12
     lumber: 50
-    draftee: 1
+    draftees: 1
   power:
     offense: 0
     defense: 4.5
@@ -98,7 +98,7 @@ units:
   cost:
     ore: 66
     lumber: 4
-    draftee: 1
+    draftees: 1
     horse: 1
   power:
     offense: 4
