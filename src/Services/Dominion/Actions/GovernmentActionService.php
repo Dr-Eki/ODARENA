@@ -4,10 +4,13 @@ namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
 use OpenDominion\Exceptions\GameException;
+use OpenDominion\Models\AllianceOffer;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Protectorship;
 use OpenDominion\Models\ProtectorshipOffer;
+use OpenDominion\Models\Realm;
+use OpenDominion\Models\RealmAlliance;
 use OpenDominion\Services\Dominion\GovernmentService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Realm\HistoryService;
@@ -408,6 +411,229 @@ class GovernmentActionService
                     'protectedDominionId' => $protector->id,
                 ])
                 ->sendNotifications($protector, 'irregular_dominion');
+            }
+            else
+            {
+                throw new GameException('Invalid answer.');
+            }
+
+        });
+    }
+
+    public function submitAllianceOffer(Dominion $governor, Realm $inviter, Realm $invited)
+    {
+        $this->guardLockedDominion($governor);
+        $this->guardActionsDuringTick($governor);
+
+        DB::transaction(function () use ($governor, $inviter, $invited)
+        {
+
+            if(!in_array($governor->round->mode, ['factions-standard', 'factions-duration']))
+            {
+                throw new GameException('You cannot form alliances in this round.');
+            }
+
+            if(!$this->governmentService->hasMonarch($inviter))
+            {
+                throw new GameException('Realm #' . $inviter->number . ' does not have a governor.');
+            }
+
+            if(!$this->governmentService->hasMonarch($invited))
+            {
+                throw new GameException('Realm #' . $invited->number . ' does not have a governor.');
+            }
+
+            if(!$this->governmentService->hasMonarch($invited))
+            {
+                throw new GameException('Realm #' . $invited->number . ' does not have a governor.');
+            }
+
+            if(!$governor or !$inviter or !$invited)
+            {
+                throw new GameException('Invalid protectorship offer.');
+            }
+
+            if(!$governor->isMonarch())
+            {
+                throw new GameException('You must be realm governor to submit alliance offer.');
+            }
+
+            if($inviter->isAlly($invited))
+            {
+                throw new GameException('Realm #' . $invited->number . ' is already an ally.');
+            }
+
+            if($inviter->realm->id == $invited->realm->id)
+            {
+                throw new GameException('You cannot form an alliance with yourself.');
+            }
+
+            if($invited->realm->alignment == 'npc')
+            {
+                throw new GameException('You cannot form an alliance with the Barbarians.');
+            }
+
+            if($inviter->round->id !== $invited->round->id)
+            {
+                throw new GameException('You cannot offer protection to a dominion outside of the current round.');
+            }
+
+            if(!$this->governmentCalculator->canOfferAlliance($inviter, $invited))
+            {
+                throw new GameException('You cannot offer protection.');
+            }
+
+            $invitedGovernor = $this->governmentService->getRealmMonarch($invited);
+
+            if($invitedGovernor->realm->id !== $invited->id or !$invitedGovernor->isMonarch() or !$invitedGovernor)
+            {
+                throw new GameException('Invalid governor of invited realm. Try again?');
+            }
+
+            $allianceOffer = AllianceOffer::create([
+                'inviter_realm_id' => $inviter->id,
+                'invited_realm_id' => $invited->id,
+                'status' => 0
+            ]);
+
+            if($allianceOffer)
+            {
+                GameEvent::create([
+                    'round_id' => $governor->round_id,
+                    'source_type' => Realm::class,
+                    'source_id' => $inviter->id,
+                    'target_type' => Realm::class,
+                    'target_id' => $invited->id,
+                    'type' => 'alliance_offered',
+                    'data' => NULL,
+                    'tick' => $governor->round->ticks
+                ]);
+
+                $this->notificationService
+                ->queueNotification('received_alliance_offer', [
+                    'allyRealmGovernorId' => $governor->id,
+                    'allyRealmId' => $inviter->id,
+                ])
+                ->sendNotifications($invitedGovernor, 'irregular_dominion');
+            }
+        });
+    }
+
+    public function rescindAllianceOffer(AllianceOffer $allianceOffer, Dominion $responder)
+    {
+        DB::transaction(function () use ($allianceOffer, $responder)
+        {
+            if(!$responder->isMonarch())
+            {
+                throw new GameException('You must be realm governor to rescind an alliance offer.');
+            }
+
+            if(!$this->governmentCalculator->canRescindAllianceOffer($allianceOffer))
+            {
+                throw new GameException('You cannot rescind this alliance offer.');
+            }
+
+            $allianceOffer->delete();
+        });
+    }
+
+    public function answerAllianceOffer(AllianceOffer $allianceOffer, string $answer, Dominion $responder)
+    {
+
+        $this->guardLockedDominion($responder);
+        $this->guardActionsDuringTick($responder);
+
+        DB::transaction(function () use ($allianceOffer, $answer, $responder)
+        {
+
+            $inviter = $allianceOffer->inviter;
+            $invited = $allianceOffer->invited;
+
+            if(!$responder->isMonarch())
+            {
+                throw new GameException('You must be realm governor to answer alliance offer.');
+            }
+
+            if(!$inviter->hasMonarch())
+            {
+                throw new GameException('Realm #' . $inviter->number . ' does not have a governor. You cannot accept or decline this offer at the moment.');
+            }
+
+            if($invited->isAlly($inviter))
+            {
+                throw new GameException('Realm #' . $inviter->number . ' is already an ally.');
+            }
+
+            if($responder->realm->id !== $invited->id)
+            {
+                throw new GameException('You cannot answer this offer.');
+            }
+
+            if($invited->id == $inviter->id)
+            {
+                throw new GameException('You cannot enter into an alliance with your realm.');
+            }
+
+            if($invited->round->id !== $inviter->round->id)
+            {
+                throw new GameException('You cannot enter into an alliance with a realm outside of the current round.');
+            }
+
+            $inviterGovernor = $this->governmentService->getRealmMonarch($inviter);
+
+            if($answer == 'accept')
+            {
+                $alliance = RealmAlliance::create([
+                    'realm_id' => $inviter->id,
+                    'ally_id' => $invited->id,
+                    'established_tick' => $responder->round->ticks
+                ]);
+    
+                if($alliance)
+                {
+                    GameEvent::create([
+                        'round_id' => $responder->round_id,
+                        'source_type' => Realm::class,
+                        'source_id' => $inviter->id,
+                        'target_type' => Realm::class,
+                        'target_id' => $invited->id,
+                        'type' => 'alliance_accepted',
+                        'data' => NULL,
+                        'tick' => $alliance->established_tick
+                    ]);
+
+                    $this->notificationService
+                    ->queueNotification('received_alliance_offer_accepted', [
+                        'invitedRealmId' => $invited->id,
+                    ])
+                    ->sendNotifications($inviterGovernor, 'irregular_dominion');
+
+                    # Delete alliance offer
+                    $allianceOffer->delete();
+                }
+            }
+            elseif($answer == 'decline')
+            {
+                
+                # Delete the protectorship offer
+                $allianceOffer->delete();
+
+                GameEvent::create([
+                    'round_id' => $responder->round_id,
+                    'source_type' => Dominion::class,
+                    'source_id' => $inviter->id,
+                    'target_type' => Dominion::class,
+                    'target_id' => $invited->id,
+                    'type' => 'protectorship_declined',
+                    'data' => NULL,
+                    'tick' => $responder->round->ticks
+                ]);
+
+                $this->notificationService
+                ->queueNotification('received_alliance_offer_declined', [
+                    'invitedRealmId' => $invited->id,
+                ])
+                ->sendNotifications($inviterGovernor, 'irregular_dominion');
             }
             else
             {

@@ -253,7 +253,12 @@ class PopulationCalculator
 
         $unitSpecificBuildingHousingPerks = $dominion->getBuildingPerkValue($dominion->race->key . '_unit_housing');
 
-        if($slot and isset($unitSpecificBuildingHousingPerks[$slot]))
+        if(!isset($unitSpecificBuildingHousingPerks[$slot]))
+        {
+            return $unitSpecificBuildingHousing;
+        }
+
+        if($slot)
         {
             $unitSpecificBuildingHousing = $unitSpecificBuildingHousingPerks[$slot];
         }
