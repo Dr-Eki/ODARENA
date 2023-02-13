@@ -31,9 +31,9 @@ units:
     - living
     - intelligent
   cost:
-    food: 30
     ore: 4
     lumber: 4
+    food: 32
   power:
     offense: 2
     defense: 2
@@ -46,8 +46,8 @@ units:
     - living
     - sentient
   cost:
-    food: 30
     ore: 6
+    food: 32
   power:
     offense: 0
     defense: 2
@@ -61,8 +61,8 @@ units:
     - sentient
   cost:
     draftee: 1
-    food: 40
-    lumber: 8
+    lumber: 6
+    food: 48
   power:
     offense: 3
     defense: 3
@@ -77,8 +77,8 @@ units:
     - intelligent
   cost:
     draftee: 1
-    food: 65
     ore: 20
+    food: 65
   power:
     offense: 4
     defense: 2

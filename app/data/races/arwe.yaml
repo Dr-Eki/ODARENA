@@ -30,7 +30,7 @@ units:
     - intelligent
   cost:
     peasant: 1
-    ore: 40
+    ore: 30
   power:
     offense: 0
     defense: 1
@@ -44,7 +44,7 @@ units:
     - intelligent
   cost:
     peasant: 1
-    ore: 40
+    ore: 30
   power:
     offense: 0
     defense: 1
@@ -58,8 +58,8 @@ units:
     - intelligent
   cost:
     peasant: 1
-    ore: 65
-    lumber: 10
+    ore: 40
+    lumber: 6
   power:
     offense: 0
     defense: 3
@@ -71,8 +71,8 @@ units:
     - intelligent
   cost:
     peasant: 1
-    ore: 75
-    lumber: 10
+    ore: 40
+    lumber: 6
   power:
     offense: 3
     defense: 1
@@ -83,8 +83,8 @@ units:
     - living
     - intelligent
   cost:
-    lumber: 80
-    ore: 10
+    ore: 12
+    lumber: 50
     draftee: 1
   power:
     offense: 0
@@ -96,8 +96,8 @@ units:
     - living
     - intelligent
   cost:
-    lumber: 80
-    ore: 10
+    ore: 66
+    lumber: 4
     draftee: 1
     horse: 1
   power:

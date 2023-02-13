@@ -77,9 +77,9 @@ units:
     - sentient
   cost:
     peasant: 1
-    ore: 30
+    ore: 45
     lumber: 20
-    food: 12
+    food: 18
   power:
     offense: 3
     defense: 5
