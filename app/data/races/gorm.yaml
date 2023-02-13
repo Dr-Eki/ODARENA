@@ -82,7 +82,7 @@ units:
     food: 12
   power:
     offense: 3
-    defense: 6
+    defense: 5
 
 - name: Basher
   training_time: 12
@@ -96,7 +96,7 @@ units:
     lumber: 30
     food: 18
   power:
-    offense: 6
+    offense: 5
     defense: 3
   perks:
     plunders: ore;4,lumber;2,food;2
