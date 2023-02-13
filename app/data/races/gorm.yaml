@@ -76,7 +76,7 @@ units:
     - living
     - sentient
   cost:
-    peasant: 1
+    draftee: 1
     ore: 45
     lumber: 20
     food: 18
@@ -91,7 +91,7 @@ units:
     - sentient
     - intelligent
   cost:
-    peasant: 1
+    draftee: 1
     ore: 60
     lumber: 30
     food: 18
