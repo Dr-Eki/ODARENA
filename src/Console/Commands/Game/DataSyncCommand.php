@@ -1285,7 +1285,7 @@ class DataSyncCommand extends Command implements CommandInterface
         $quickstartsToSync = [];
 
         # If there are no files
-        if(count($files) == 0)
+        if(count($files) <= 1)
         {
             $this->info('No quickstart files found.');
             return;
