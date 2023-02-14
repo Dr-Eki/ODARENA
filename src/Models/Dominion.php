@@ -554,6 +554,9 @@ class Dominion extends AbstractModel
             case 4:
                 return "Experimental faction deemed overpowered or for other reason taken out of play.";
 
+            case 5:
+                return "Unfortunately, a restart required due to pre-round balance changes having taken place.";
+
             default:
                 return 'Round ended.';
         }
