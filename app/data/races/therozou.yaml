@@ -31,6 +31,7 @@ units:
     - living
     - intelligent
   cost:
+    peasant: 1
     ore: 4
     lumber: 4
     food: 32
@@ -46,6 +47,7 @@ units:
     - living
     - sentient
   cost:
+    peasant: 1
     ore: 6
     food: 32
   power:
