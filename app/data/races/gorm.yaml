@@ -13,7 +13,7 @@ resources:
   - lumber
 
 peasants_production:
-  food: 0.10
+  food: 0.08
 
 construction_materials:
   - ore
