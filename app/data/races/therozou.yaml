@@ -6,7 +6,6 @@ skill_level: 1
 playable: 1
 
 peasants_alias: wildlife
-draftees_alias: wildlife
 
 resources:
   - food
