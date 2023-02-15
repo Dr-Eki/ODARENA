@@ -428,7 +428,7 @@ class GovernmentActionService
         DB::transaction(function () use ($governor, $inviter, $invited)
         {
 
-            if(!in_array($governor->round->mode, ['factions-standard', 'factions-duration']))
+            if(!in_array($governor->round->mode, ['factions', 'factions-duration']))
             {
                 throw new GameException('You cannot form alliances in this round.');
             }

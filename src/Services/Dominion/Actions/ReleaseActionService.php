@@ -257,7 +257,7 @@ class ReleaseActionService
     protected function getReturnMessageString(Dominion $dominion, array $troopsReleased): string
     {
 
-        $stringParts = ['You successfully released'];
+        $unitStrings = [];
 
         foreach($troopsReleased as $unitType => $amount)
         {
@@ -266,6 +266,9 @@ class ReleaseActionService
             {
                 $releasedInto = str_plural($this->raceHelper->getPeasantsTerm($dominion->race), $amount);
                 $releasedUnitName = str_plural($this->raceHelper->getDrafteesTerm($dominion->race), $amount);
+
+                $unitStrings[] = sprintf('%s %s into %s', $amount, $releasedUnitName, $releasedInto);
+                
             }
             else
             {
@@ -286,60 +289,26 @@ class ReleaseActionService
                     $releasedInto = null;
                     $releasedUnitName = $unit->name;
                 }
+
+                if($releasedInto)
+                {
+                    $unitStrings[] = sprintf('%s %s into %s',
+                        number_format($amount),
+                        str_plural($unit->name, $amount),
+                        str_plural($releasedInto, $amount));
+                }
+                else
+                {
+                    $unitStrings[] = sprintf('%s %s',
+                        number_format($amount),
+                        str_plural($unit->name, $amount));
+                }
             }
 
-            if($releasedInto)
-            {
-                $stringParts[] = sprintf('%s %s into %s',
-                    number_format($amount),
-                    str_plural($unit->name, $amount),
-                    str_plural($releasedInto, $amount));
-            }
-            else
-            {
-                $stringParts[] = sprintf('%s %s',
-                    number_format($amount),
-                    str_plural($unit->name, $amount));
-            }
+
         }
 
-        return implode(', ', $stringParts) . '.';
-        /*
-        // Draftees into peasants
-        if (isset($troopsReleased['draftees']))
-        {
-            $amount = $troopsReleased['draftees'];
-            if($troopsReleased['draftees'] > 0)
-            {
-                $stringParts[] = sprintf('%s %s into %s',
-                    number_format($amount),
-                    str_plural($this->raceHelper->getDrafteesTerm($dominion->race), $amount),
-                    str_plural($this->raceHelper->getPeasantsTerm($dominion->race), $amount));
-            }
-        }
+        return 'You released ' . generate_sentence_from_array($unitStrings) . '.';
 
-        // Troops into draftees
-        $troopsParts = [];
-        foreach ($troopsReleased as $unitType => $amount)
-        {
-            if ($unitType === 'draftees') {
-                continue;
-            }
-
-            $unitName = str_singular(strtolower($this->unitHelper->getUnitName($unitType, $dominion->race)));
-            $troopsParts[] = (number_format($amount) . ' ' . ucwords(str_plural($unitName, $amount)));
-        }
-
-        if (!empty($troopsParts)) {
-            if (\count($stringParts) === 2) {
-                $stringParts[] = 'and';
-            }
-
-            $stringParts[] = generate_sentence_from_array($troopsParts);
-            $stringParts[] = 'into ' . str_plural($this->raceHelper->getDrafteesTerm($dominion->race), $amount);
-        }
-
-        return (implode(' ', $stringParts) . '.');
-        */
     }
 }

@@ -612,7 +612,6 @@ class PopulationCalculator
         // In case of 0 peasants:
         if($dominion->peasants === 0)
         {
-            #$birth = ($this->getMaxPopulation($dominion) - $this->getPopulation($dominion) - $this->getPopulationDrafteeGrowth($dominion)) * $growthFactor;
             $birth = ($this->getMaxPopulation($dominion) - $this->getPopulation($dominion) - $this->getUnhousedDraftees($dominion)) * $growthFactor;
         }
 

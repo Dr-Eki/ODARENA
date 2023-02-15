@@ -17,7 +17,7 @@
         if ($isProtectorate)
         {
             $target = $event->target;
-            $defender = OpenDominion\Models\Dominion::where('id', $event->data['protectorate']['protector_id'])->first();;
+            $defender = OpenDominion\Models\Dominion::where('id', $event->data['protectorate']['protector_id'])->first();
         }
 
     @endphp
@@ -219,8 +219,8 @@
                             @endif
 
                             @if (
-                                      ((in_array($selectedDominion->round->mode, ['standard', 'standard-duration', 'factions', 'factions-duration', 'artefacts']) and $event->source->realm->id === $selectedDominion->realm->id) or
-                                      (($selectedDominion->round->mode == 'deathmatch' or $selectedDominion->round->mode == 'deathmatch-duration') and $event->source->id === $selectedDominion->id)
+                                      (in_array($selectedDominion->round->mode, ['standard', 'standard-duration', 'factions', 'factions-duration', 'artefacts']) and $event->source->realm->id === $selectedDominion->realm->id) or
+                                      (in_array($selectedDominion->round->mode, ['deathmatch', 'deathmatch-duration']) and $event->source->id === $selectedDominion->id)
                                 )
                             <table class="table">
                                 <colgroup>
@@ -548,10 +548,10 @@
                                     @if(isset($event->data['defender']['units_lost']['peasants']) and $event->data['defender']['units_lost']['peasants'] > 0)
 
                                         @php
-                                        if(!isset($event->data['defender']['units_defending']['peasants']))
-                                            $peasants = 0;
-                                        else
-                                            $peasants = $event->data['defender']['units_defending']['peasants'];
+                                            if(!isset($event->data['defender']['units_defending']['peasants']))
+                                                $peasants = 0;
+                                            else
+                                                $peasants = $event->data['defender']['units_defending']['peasants'];
                                         @endphp
 
                                         <tr>
@@ -696,8 +696,8 @@
                             @endif
 
                             @if (
-                                    ((in_array($selectedDominion->round->mode, ['standard', 'standard-duration', 'factions', 'factions-duration', 'artefacts']) and $event->target->realm->id === $selectedDominion->realm->id) or
-                                    (($selectedDominion->round->mode == 'deathmatch' or $selectedDominion->round->mode == 'deathmatch-duration') and $event->target->id === $selectedDominion->id)
+                                    (in_array($selectedDominion->round->mode, ['standard', 'standard-duration', 'factions', 'factions-duration', 'artefacts']) and $event->target->realm->id === $selectedDominion->realm->id) or
+                                    (in_array($selectedDominion->round->mode, ['deathmatch', 'deathmatch-duration']) and $event->target->id === $selectedDominion->id)
                                 )
 
                             <table class="table">
