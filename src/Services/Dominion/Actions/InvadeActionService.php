@@ -1369,9 +1369,11 @@ class InvadeActionService
             }
         }
 
-        # Round
-        $attackerMoraleChange = round($attackerMoraleChange);
-        $defenderMoraleChange = round($defenderMoraleChange);
+        # Halved morale gain for hitting Barbarians
+        if($attackerMoraleChange > 0 and $defender->race->name == 'Barbarian')
+        {
+            $attackerMoraleChange /= 2;
+        }
 
         # Look for no_morale_changes
         if($attacker->race->getPerkValue('no_morale_changes'))
@@ -1383,7 +1385,6 @@ class InvadeActionService
         {
             $attackerMoraleChange = 0;
         }
-
         
         if($defender->race->getPerkValue('no_morale_changes'))
         {
@@ -1419,6 +1420,10 @@ class InvadeActionService
         {
             $defender->protectedDominion->morale += $defenderMoraleChange;
         }
+        
+        # Round
+        $attackerMoraleChange = round($attackerMoraleChange);
+        $defenderMoraleChange = round($defenderMoraleChange);
 
         $this->invasion['attacker']['morale_change'] = $attackerMoraleChange;
         $this->invasion['defender']['morale_change'] = $defenderMoraleChange;

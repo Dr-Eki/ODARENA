@@ -191,6 +191,11 @@ class ReleaseActionService
                 $dominion->military_draftees += $amount;
             }
 
+            # Return peasant if the unit cost peasant
+            if(isset($unit->cost['peasants']) and $unit->cost['peasants'] > 0)
+            {
+                $dominion->peasants += $amount;
+            }
 
             if ($releasesIntoResourcePerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'releases_into_resource'))
             {
