@@ -192,7 +192,7 @@ class ReleaseActionService
             }
 
             # Return peasant if the unit cost peasant
-            if(isset($unit->cost['peasants']) and $unit->cost['peasants'] > 0)
+            if(isset($unit->cost['peasant']) and $unit->cost['peasant'] > 0)
             {
                 $dominion->peasants += $amount;
             }
@@ -256,8 +256,55 @@ class ReleaseActionService
      */
     protected function getReturnMessageString(Dominion $dominion, array $troopsReleased): string
     {
+
         $stringParts = ['You successfully released'];
 
+        foreach($troopsReleased as $unitType => $amount)
+        {
+
+            if($unitType == 'draftees')
+            {
+                $releasedInto = str_plural($this->raceHelper->getPeasantsTerm($dominion->race), $amount);
+                $releasedUnitName = str_plural($this->raceHelper->getDrafteesTerm($dominion->race), $amount);
+            }
+            else
+            {
+                $unit = $dominion->race->units->firstWhere('slot', intval(str_replace('unit','',$unitType)));
+
+                if(isset($unit->cost['draftees']) and $unit->cost['draftees'] > 0)
+                {
+                    $releasedInto = str_plural($this->raceHelper->getDrafteesTerm($dominion->race), $amount);
+                    $releasedUnitName = $unit->name;
+                }
+                elseif(isset($unit->cost['peasant']) and $unit->cost['peasant'] > 0)
+                {
+                    $releasedInto = str_plural($this->raceHelper->getPeasantsTerm($dominion->race), $amount);
+                    $releasedUnitName = $unit->name;
+                }
+                else
+                {
+                    $releasedInto = null;
+                    $releasedUnitName = $unit->name;
+                }
+            }
+
+            if($releasedInto)
+            {
+                $stringParts[] = sprintf('%s %s into %s',
+                    number_format($amount),
+                    str_plural($unit->name, $amount),
+                    str_plural($releasedInto, $amount));
+            }
+            else
+            {
+                $stringParts[] = sprintf('%s %s',
+                    number_format($amount),
+                    str_plural($unit->name, $amount));
+            }
+        }
+
+        return implode(', ', $stringParts) . '.';
+        /*
         // Draftees into peasants
         if (isset($troopsReleased['draftees']))
         {
@@ -293,5 +340,6 @@ class ReleaseActionService
         }
 
         return (implode(' ', $stringParts) . '.');
+        */
     }
 }
