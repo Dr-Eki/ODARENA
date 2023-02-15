@@ -173,6 +173,8 @@ class ReleaseActionService
                 $amount = floor($amount * $nonStandardHousing);
             }
 
+            $unit = $dominion->race->units->firstWhere('slot', $slot);
+
             if ($unitType === 'draftees')
             {
                 $dominion->peasants += $amount;
@@ -182,7 +184,8 @@ class ReleaseActionService
                         !$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population') and 
                         !$dominion->race->getUnitPerkValueForUnitSlot($slot, 'no_draftee') and 
                         !$dominion->race->getUnitPerkValueForUnitSlot($slot, 'no_draftee_on_release') and 
-                        !$dominion->race->getPerkValue('no_drafting')
+                        !$dominion->race->getPerkValue('no_drafting') and
+                        (isset($unit->cost['draftees']) and $unit->cost['draftees'] > 0)
                     )
             {
                 $dominion->military_draftees += $amount;

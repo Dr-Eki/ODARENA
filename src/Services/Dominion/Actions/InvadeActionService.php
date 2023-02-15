@@ -78,7 +78,7 @@ class InvadeActionService
         ],
         'defender' => [
             'units_lost' => [],
-        ],34c
+        ],
     ];
 
     // todo: refactor to use $invasionResult instead
