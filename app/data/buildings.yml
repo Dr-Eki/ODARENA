@@ -20,7 +20,7 @@ ore_mine:
 
 saw_mill:  
   name: Saw Mill
-  exclusive_races:
+  excluded_races:
     - Gorm
   land_type: mountain
   perks:
