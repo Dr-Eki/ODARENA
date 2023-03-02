@@ -25,7 +25,7 @@ saw_mill:
   land_type: forest
   perks:
     lumber_production_raw: 20
-    arwe_unit_housing: 1,30 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    arwe_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 lumberyard:  
   name: Lumberyard
@@ -34,7 +34,7 @@ lumberyard:
   land_type: forest
   perks:
     lumber_production_raw: 20
-    gorm_unit_housing: 1,30 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    gorm_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 smallholding:
   name: Smallholding
@@ -43,7 +43,7 @@ smallholding:
   land_type: plain
   perks:
     food_production_raw: 15
-    therozou_unit_housing: 1,30 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    therozou_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 stable:  
   name: Stable
