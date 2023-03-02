@@ -56,21 +56,7 @@ units:
   perks:
     ore_production_raw_from_building_pairing: 0.05,ore_mine,3
 
-- name: Zulgruk
-  training_time: 8
-  type:
-    - living
-    - intelligent
-  cost:
-    draftees: 1
-    ore: 40
-    lumber: 10
-    food: 10
-  power:
-    offense: 4
-    defense: 4
-
-- name: Ogre
+- name: Basher
   training_time: 12
   type:
     - living
@@ -81,23 +67,5 @@ units:
     lumber: 20
     food: 18
   power:
-    offense: 3
-    defense: 5
-
-- name: Basher
-  training_time: 12
-  type:
-    - living
-    - sentient
-    - intelligent
-  cost:
-    draftees: 1
-    ore: 60
-    lumber: 30
-    food: 18
-  power:
     offense: 5
-    defense: 3
-  perks:
-    plunders: ore;4,lumber;2,food;2
-    food_consumption_raw: 0.25
+    defense: 5

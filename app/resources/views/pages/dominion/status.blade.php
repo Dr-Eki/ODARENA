@@ -301,7 +301,7 @@
                             <td>{{ number_format($dominionCalculator->getPsionicStrength($selectedDominion),6) }}</td>
                         </tr>
                         @endif
-                        @include('partials.dominion.housing')
+                        @include('partials.dominion.housing') 
                     </tbody>
                     </table>
             </div>

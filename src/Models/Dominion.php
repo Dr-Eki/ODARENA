@@ -1265,7 +1265,7 @@ class Dominion extends AbstractModel
                         $amountHousable = $amountHoused * $buildingsOwned * (1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect'));
                         $amountHousable = intval($amountHousable);
 
-                        $result[$unitSlot] = $amountHousable;
+                        $result[$unitSlot] = (isset($result[$unitSlot]) ? $result[$unitSlot] + $amountHousable : $amountHousable);
                     }
 
                     return $result;

@@ -12,8 +12,8 @@
 </tr>
 @endif
 
-@if($populationCalculator->getAvailableHousingFromUnitSpecificBuildings($selectedDominion) > 0)
-    @foreach($selectedDominion->getBuildingPerkValue($selectedDominion->race->key . '_unit_housing') as $slot => $amount)
+@if($populationCalculator->getAvailableHousingFromUnitSpecificBuildings($selectedDominion))
+    @foreach($populationCalculator->getAvailableHousingFromUnitSpecificBuildings($selectedDominion, null, true) as $slot => $amount)
         @php
             $unit = $selectedDominion->race->units->firstWhere('slot', $slot);
         @endphp
@@ -23,16 +23,8 @@
         </tr>
     @endforeach
 @endif
-{{-- 
-@foreach($selectedDominion->race->units as $unit)
-    @if($populationCalculator->getAvailableHousingFromUnitSpecificBuildings($selectedDominion, $unit->slot) > 0)
-        <tr>
-            <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by buildings for specific unit:<br>Filled / Available">{{ $unit->name }} housing:</span></td>
-            <td>{{ number_format($populationCalculator->getUnitsHousedInUnitSpecificBuildings($selectedDominion, $unit->slot)) }} / {{ number_format($populationCalculator->getAvailableHousingFromUnitSpecificBuildings($selectedDominion, $unit->slot)) }}</td>
-        </tr>
-    @endif
-@endforeach
---}}
+
+
 @if($populationCalculator->getAvailableHousingFromUnitAttributeSpecificBuildings($selectedDominion) > 0)
 <tr>
     <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by buildings for specific types of units (attributes):<br>Filled / Available">Unit type specific housing:</span></td>

@@ -246,45 +246,63 @@ class PopulationCalculator
 
     /*
     *   Calculate how many units can be fit in this Dominion's Barracks.
+    *   If $slot is empty, return total available unit housing.
+    *   If $slot is set, return unit housing for that slot.
     */
-    public function getAvailableHousingFromUnitSpecificBuildings(Dominion $dominion, int $slot = null): int
+    public function getAvailableHousingFromUnitSpecificBuildings(Dominion $dominion, int $slot = null, bool $returnDataArrayOnly = false)
     {
         $unitSpecificBuildingHousing = 0;
+        $availableHousingFromUnitSpecificBuildings = [];
 
-        $unitSpecificBuildingHousingPerks = $dominion->getBuildingPerkValue($dominion->race->key . '_unit_housing');
-
-        if(!isset($unitSpecificBuildingHousingPerks[$slot]))
+        # For each building
+        foreach($dominion->buildings as $building)
         {
-            return $unitSpecificBuildingHousing;
+            if($buildingPerValueString = $building->getPerkValue($dominion->race->key . '_unit_housing'))
+            {
+                $perkValues = $dominion->extractBuildingPerkValues($buildingPerValueString);
+
+                if(!is_array($perkValues[0]))
+                {
+                    $perkValues[0] = [$perkValues[0], $perkValues[1]];
+                    unset($perkValues[1]);
+                }
+
+                foreach($perkValues as $key => $perkValue)
+                {
+                    $unitSlot = (int)$perkValue[0];
+                    $amountHoused = (float)$perkValue[1];
+                        
+                    $amountHousable = $amountHoused * $building->pivot->owned * (1 + $dominion->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect'));
+                    $amountHousable = intval($amountHousable);
+
+                    $availableHousingFromUnitSpecificBuildings[$unitSlot] = (isset($availableHousingFromUnitSpecificBuildings[$unitSlot]) ? $availableHousingFromUnitSpecificBuildings[$unitSlot] + $amountHousable : $amountHousable);
+                }
+            }
+        }
+
+        if($returnDataArrayOnly)
+        {
+            return (array)$availableHousingFromUnitSpecificBuildings;
+        }
+
+        #dd($availableHousingFromUnitSpecificBuildings);
+
+        if(!isset($availableHousingFromUnitSpecificBuildings[$slot]))
+        {
+            return (int)array_sum($availableHousingFromUnitSpecificBuildings);
         }
 
         if($slot)
         {
-            $unitSpecificBuildingHousing = $unitSpecificBuildingHousingPerks[$slot];
+            $unitSpecificBuildingHousing += $availableHousingFromUnitSpecificBuildings[$slot];
         }
         else
         {
-            foreach($unitSpecificBuildingHousingPerks as $slot => $amountHoused)
+            foreach($availableHousingFromUnitSpecificBuildings as $slot => $amountHoused)
             {
                 $unitSpecificBuildingHousing += $amountHoused;
             }
         }
-
-        /*
-
-        if($slot)
-        {
-            $unitSpecificBuildingHousing += $dominion->getBuildingPerkValue($dominion->race->key . '_unit' . $slot . '_housing');
-        }
-        else
-        {
-            for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
-            {
-                $unitSpecificBuildingHousing += $dominion->getBuildingPerkValue($dominion->race->key . '_unit' . $slot . '_housing');
-            }
-        }
-
-        */
 
         $multiplier = 1;
         $multiplier += $dominion->getImprovementPerkMultiplier('unit_specific_housing');
@@ -292,7 +310,7 @@ class PopulationCalculator
 
         $unitSpecificBuildingHousing *= $multiplier;
 
-        return $unitSpecificBuildingHousing;
+        return (int)$unitSpecificBuildingHousing;
     }
 
     /*

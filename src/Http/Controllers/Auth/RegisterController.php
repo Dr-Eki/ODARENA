@@ -50,7 +50,7 @@ class RegisterController extends AbstractController
 
         $user = $this->create($request->all());
 
-        event(new UserRegisteredEvent($user));
+        #event(new UserRegisteredEvent($user));
 
         $request->session()->flash(
             'alert-success',
@@ -102,28 +102,12 @@ class RegisterController extends AbstractController
      */
     protected function create(array $data)
     {
-
-      if(request()->getHost() == 'odarena.local' or request()->getHost() == 'odarena.virtual')
-      {
-          return User::create([
-              'email' => $data['email'],
-              'password' => Hash::make($data['password']),
-              'display_name' => $data['display_name'],
-              'activation_code' => str_random(),
-              'activated' => true,
-          ]);
-
-      }
-      else
-      {
-          return User::create([
-              'email' => $data['email'],
-              'password' => Hash::make($data['password']),
-              'display_name' => $data['display_name'],
-              'activation_code' => str_random(),
-          ]);
-      }
-
-
+        return User::create([
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'display_name' => $data['display_name'],
+            'activation_code' => str_random(),
+            'activated' => in_array(request()->getHost(), ['odarena.local','odarena.virtual']),
+        ]);
     }
 }
