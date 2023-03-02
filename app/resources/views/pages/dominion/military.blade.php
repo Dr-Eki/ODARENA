@@ -422,8 +422,6 @@
                 @endif
         </div>
 
-
-
         @include('partials.dominion.military-cost-modifiers')
         @include('partials.dominion.military-power-modifiers')
         @include('partials.dominion.watched-dominions')
