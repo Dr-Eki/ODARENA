@@ -20,9 +20,8 @@ ore_mine:
 
 saw_mill:  
   name: Saw Mill
-  excluded_races:
+  exclusive_races:
     - Gorm
-    - Therozou
   land_type: mountain
   perks:
     lumber_production_raw: 20
@@ -70,7 +69,7 @@ turret:
   perks:
     defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
     building_capacity_limit: 1,10,wall # amount allowed, per x of, building
-    arwe_unit_housing: 5,4 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    arwe_unit_housing: 5,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 # HOMES
 
