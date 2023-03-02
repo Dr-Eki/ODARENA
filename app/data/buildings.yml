@@ -411,31 +411,6 @@ mast:
   perks:
     mana_production_raw: 15
 
-lumberyard:  
-  enabled: 0
-  name: Lumberyard
-  excluded_races:
-    - Aurei
-    - Dwarg
-    - Dragon
-    - Firewalker
-    - Glimjir
-    - Gnome
-    - Growth
-    - Icekin
-    - Lux
-    - Marshling
-    - Monster
-    - Myconid
-    - Spirit
-    - Swarm
-    - Sylvan
-    - Void
-    - Wood Elf
-  land_type: forest
-  perks:
-    lumber_production_raw: 50
-
 dock:  
   enabled: 0
   name: Dock
