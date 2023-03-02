@@ -77,7 +77,7 @@ units:
     ore: 40
     lumber: 6
   power:
-    offense: 3
+    offense: 2
     defense: 1
     casualties_on_offense: 300
     casualties_on_defense: 300
