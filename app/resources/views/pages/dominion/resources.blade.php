@@ -169,10 +169,10 @@
                         <td>{{ number_format(abs($jobsNeeded)) }}</td>
                     </tr>
                     @endif
+
+                    @include('partials.dominion.housing')
                     </tbody>
                 </table>
-
-                @include('partials.dominion.housing')
 
             </div>
         </div>
