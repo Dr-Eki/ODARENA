@@ -39,7 +39,7 @@ units:
     offense: 0
     defense: 1
   perks:
-    lumber_production_raw: 3
+    lumber_production_raw_from_building_pairing: 0.05,lumberyard,3
 
 - name: Crusher
   training_time: 4
@@ -54,7 +54,7 @@ units:
     offense: 0
     defense: 1
   perks:
-    ore_production_raw: 3
+    ore_production_raw_from_building_pairing: 0.05,ore_mine,3
 
 - name: Zulgruk
   training_time: 8

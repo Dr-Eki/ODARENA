@@ -158,7 +158,7 @@ class BarbarianCalculator
         # Special for round league ID 7
         if($round->league->id == 7)
         {
-            $dpa /= 4;
+            $dpa /= 3;
             $dpa = ceil($dpa);
         }
 

@@ -35,10 +35,11 @@ units:
     lumber: 4
     food: 32
   power:
-    offense: 2
+    offense: 1
     defense: 2
   perks:
-    food_production_raw: 3
+    food_production_raw_from_building_pairing: 0.05,smallholding,3
+    casualties_on_offense: 200
 
 - name: Gorn
   training_time: 9
@@ -54,6 +55,7 @@ units:
     defense: 2
   perks:
     lumber_production_raw: 2
+    casualties_on_defense: 300
 
 - name: Cor
   training_time: 9

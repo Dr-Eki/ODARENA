@@ -265,6 +265,8 @@ class BuildingHelper
 
 
             'arwe_unit_housing' => 'Houses %1$s %2$s.',
+            'gorm_unit_housing' => 'Houses %1$s %2$s.',
+            'therozou_unit_housing' => 'Houses %1$s %2$s.',
 
         ];
 

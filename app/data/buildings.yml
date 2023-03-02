@@ -10,21 +10,32 @@ farm:
 
 ore_mine:  
   name: Ore Mine
-  enabled: 0
   excluded_races:
     - Therozou
   land_type: mountain
   perks:
-    food_production_raw: 40
+    ore_production_raw: 20
+    arwe_unit_housing: 2,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    gorm_unit_housing: 2,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 saw_mill:  
   name: Saw Mill
-  enabled: 0
   excluded_races:
+    - Gorm
     - Therozou
   land_type: mountain
   perks:
-    ore_production_raw: 40
+    lumber_production_raw: 20
+    arwe_unit_housing: 1,30 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+
+lumberyard:  
+  name: Lumberyard
+  exclusive_races:
+    - Gorm
+  land_type: forest
+  perks:
+    lumber_production_raw: 20
+    gorm_unit_housing: 1,30 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 smallholding:
   name: Smallholding
@@ -33,6 +44,7 @@ smallholding:
   land_type: plain
   perks:
     food_production_raw: 15
+    therozou_unit_housing: 1,30 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 stable:  
   name: Stable
@@ -40,7 +52,7 @@ stable:
     - Arwe
   land_type: plain
   perks:
-    horse_production_raw: 1
+    horse_production_raw: 2
     horse_theft_reduction: 1,10,100  # Every 1% reduces plat stolen by 10%, max 100% reduction
 
 wall:

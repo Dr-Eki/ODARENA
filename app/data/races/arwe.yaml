@@ -36,7 +36,7 @@ units:
     offense: 0
     defense: 1
   perks:
-    lumber_production_raw: 4
+    lumber_production_raw_from_building_pairing: 0.05,saw_mill,3
 
 - name: Miner
   training_time: 3
@@ -50,7 +50,7 @@ units:
     offense: 0
     defense: 1
   perks:
-    ore_production_raw: 3
+    ore_production_raw_from_building_pairing: 0.05,ore_mine,3
 
 - name: Guard
   training_time: 6
@@ -64,6 +64,8 @@ units:
   power:
     offense: 0
     defense: 3
+  perks:
+    casualties_on_defense: 300
 
 - name: Foot Soldier
   training_time: 6
@@ -77,6 +79,8 @@ units:
   power:
     offense: 3
     defense: 1
+    casualties_on_offense: 300
+    casualties_on_defense: 300
 
 - name: Archer
   training_time: 12
