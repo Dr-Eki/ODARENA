@@ -36,7 +36,7 @@ units:
     offense: 0
     defense: 1
   perks:
-    lumber_production_raw_from_building_pairing: 0.05,saw_mill,3
+    lumber_production_raw_from_building_pairing: 0.05,saw_mill,4
 
 - name: Miner
   training_time: 3

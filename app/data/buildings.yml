@@ -51,7 +51,7 @@ stable:
     - Arwe
   land_type: plain
   perks:
-    horse_production_raw: 2
+    horse_production_raw: 4
     horse_theft_reduction: 1,10,100  # Every 1% reduces plat stolen by 10%, max 100% reduction
 
 wall:
