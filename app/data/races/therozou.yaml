@@ -38,7 +38,8 @@ units:
     offense: 1
     defense: 2
   perks:
-    food_production_raw_from_building_pairing: 0.05,smallholding,3
+    food_production_raw: 3
+    #food_production_raw_from_building_pairing: 0.05,smallholding,3
     casualties_on_offense: 200
 
 - name: Gorn
