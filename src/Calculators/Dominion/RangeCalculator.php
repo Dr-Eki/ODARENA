@@ -165,8 +165,7 @@ class RangeCalculator
      */
     public function getDominionsInRange(Dominion $self): Collection
     {
-        # Create $dominions
-        $dominions = $self->round->activeDominions()
+        return $self->round->activeDominions()
             ->with(['realm', 'round'])
             ->get()
             ->filter(function ($dominion) use ($self) {
@@ -195,15 +194,6 @@ class RangeCalculator
                 return $this->landCalculator->getTotalLand($dominion);
             })
             ->values();
-
-        foreach($dominions as $key => $dominion)
-        {
-            # Check that each dominion is in range
-            if(!$this->isInRange($self, $dominion))
-            {
-                unset($dominions[$key]);
-            }
-        }
     }
 
 
