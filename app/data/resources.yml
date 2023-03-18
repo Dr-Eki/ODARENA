@@ -28,32 +28,24 @@ brimmer:
   description: A thick liquid extracted from ore.
   buy: null
   sell: null
-  exclusive_races:
-    - Imperial Gnome
 
 champion:
   name: Champions
   description: The living, legendary souls of Norse warriors fallen in glory.
   buy: null
   sell: null
-  exclusive_races:
-    - Norse
 
 cosmic_alignment:
   name: Cosmic Alignments
   description: Starcharts used by Dimensionalist Archmages to plot paths across the cosmos.
   buy: null
   sell: null
-  exclusive_races:
-    - Dimensionalists
 
 elk:
   name: Elk
   description: Majestic wanderers of the forest, Druva's personal guards and messengers.
   buy: null
   sell: null
-  exclusive_races:
-    - Wood Elf
 
 food:
   name: Food
@@ -84,17 +76,12 @@ horse:
   description: A fourlegged animal equally strong and loyal.
   buy: null
   sell: 2
-  exclusive_races:
-    - Cires
-    - Nomad
 
 kelp:
   name: Kelp
   description: A superior form of rugged seaweed, used by Glimjir to build and popular in broth with some land dwellers.
   buy: null
   sell: 0.65
-  exclusive_races:
-    - Glimjir
 
 light:
   name: Light
@@ -105,8 +92,8 @@ light:
 lumber:
   name: Lumber
   description: Some obtain it by cutting down trees, whereas gentler creatures collect fallen branches or trees and bushes that have expired.
-  buy: null #1
-  sell: null #0.5
+  buy: 1
+  sell: 0.5
 
 magma:
   name: Magma
@@ -125,24 +112,18 @@ marshling:
   description: A semiconscious entity born out of the strangest swamps.
   buy: null
   sell: null
-  exclusive_races:
-    - Marshling
 
 miasma:
   name: Miasma
   description: A foetid vapour emanating from Afflicted mass graves.
   buy: null
   sell: null
-  exclusive_races:
-    - Afflicted
 
 mud:
   name: Mud
   description: It's mud.
   buy: 1
   sell: 0.5
-  exclusive_races:
-    - Marshling
 
 obsidian:
   name: Obsidian
@@ -153,8 +134,8 @@ obsidian:
 ore:
   name: Ore
   description: An encompassing term for various stones and metals.
-  buy: null #1
-  sell: null #0.5
+  buy: 1
+  sell: 0.5
 
 prayer:
   name: Prayer
@@ -167,8 +148,6 @@ pearls:
   description: Gems of the sea, pearls are collected by dwellers of the depths.
   buy: null
   sell: 3
-  exclusive_races:
-    - Glimjir
 
 prisoner:
   name: Prisoner
@@ -181,8 +160,6 @@ sapling:
   description: The beginnings of trees, imbued with magic life of Sylvans.
   buy: null
   sell: null
-  exclusive_races:
-    - Sylvan
 
 soul:
   name: Souls
@@ -195,29 +172,21 @@ strength:
   description: The Monster gains strength from fighting.
   buy: null
   sell: null
-  exclusive_races:
-    - Monster
 
 swamp_gas:
   name: Swamp Gas
   description: A pungent, greenish gas floating above certain swamps.
   buy: null
   sell: 1
-  exclusive_races:
-    - Marshling
 
 thunderstone:
   name: Thunderstone
   description: An extremely rare form of gem, about the size of a closed Dwargen fist, with a purple glimmer and slowly pulsating patterns that fade into black in the middle.
   buy: null
   sell: null
-  exclusive_races:
-    - Dwarg
 
 yak:
   name: Yak
   description: Slower than horses but much stronger.
   buy: null
   sell: null
-  exclusive_races:
-    - Orc

@@ -166,12 +166,20 @@ class TitleHelper
                 break;
             case 'increased_construction_speed':
                 $negativeBenefit = false;
-                $description = 'Increased construction speed';
+                $description = 'Increased construction speed:';
                 $valueType = ' ticks';
                 break;
             case 'deity_power':
                 $negativeBenefit = false;
                 $description = 'Deity power:';
+                break;
+            case 'offensive_power':
+                $negativeBenefit = false;
+                $description = 'Offensive power:';
+                break;
+            case 'defensive_power':
+                $negativeBenefit = false;
+                $description = 'Defensive power:';
                 break;
             default:
                 $negativeBenefit = false;

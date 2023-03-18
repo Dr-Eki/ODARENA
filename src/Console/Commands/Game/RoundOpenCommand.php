@@ -18,13 +18,10 @@ use OpenDominion\Services\Dominion\BarbarianService;
 class RoundOpenCommand extends Command implements CommandInterface
 {
     /** @var string The name and signature of the console command. */
-    protected $signature = 'game:round:open
-                             {--gamemode= : Round game mode}
-                             {--goal= : Goal land or ticks (-duration gamemodes)}
-                             {--leagueId= : League ID (optional)}';
+    protected $signature = 'game:round:open';
 
     /** @var string The console command description. */
-    protected $description = 'Creates a new round which starts in 2 days';
+    protected $description = 'Creates a new round and prompts for conditions and settings';
 
     /** @var RealmFactory */
     protected $realmFactory;
@@ -63,10 +60,6 @@ class RoundOpenCommand extends Command implements CommandInterface
      */
     public function handle(): void
     {
-        $gameMode = $this->option('gamemode');
-        $goal = $this->option('goal');
-        $leagueId = $this->option('leagueId') ?: 1;
-
         $this->info('Available game modes:');
         foreach($this->roundHelper->getRoundModes() as $mode)
         {
@@ -114,15 +107,8 @@ class RoundOpenCommand extends Command implements CommandInterface
         foreach($this->roundHelper->getRoundSettings() as $key => $name)
         {
             $setting = $this->ask("[$counting / $counter] Enable $name (y/n) [y]: ");
-            if($setting == 'n')
-            {
-                $settings[$key] = false;
 
-            }
-            else
-            {
-                $settings[$key] = true;
-            }
+            $settings['key'] = ($setting == 'n' ? false : true);
 
             $counting++;
         }
@@ -132,8 +118,27 @@ class RoundOpenCommand extends Command implements CommandInterface
         /** @var RoundLeague $roundLeague */
         $roundLeague = RoundLeague::where('id', $leagueId)->firstOrFail();
 
-        $this->info('Creating a new ' . $gameMode . ' round with goal of ' . number_format($goal) . '.');
-        $this->info('The round will start at ' . $startDate->toDateTimeString() . ' in league ' . $roundLeague->description . '.');
+        # Confirm before proceeding
+        $this->info('Creating a round with the following parameters:');
+        $this->info('Game mode: ' . $gameMode);
+        $this->info('Goal: ' . number_format($goal));
+        $this->info('Start date: ' . $startDate->toDateTimeString());
+        $this->info('League: ' . $roundLeague->description);
+        $this->info('Name: ' . $roundName);
+        $this->info('Settings: ');
+        foreach($settings as $key => $value)
+        {
+            $this->info('* ' . ucfirst($key) . ': ' . ($value ? 'enabled' : 'disabled'));
+        }
+
+        if (!$this->confirm('Are you sure you want to proceed?'))
+        {
+            $this->info('Aborted.');
+            return;
+        }
+
+        $this->info('Creating a new ' . $gameMode . ' round!');
+        #$this->info('The round will start at ' . $startDate->toDateTimeString() . ' in league ' . $roundLeague->description . '.');
 
         DB::transaction(function () use ($startDate, $gameMode, $goal, $roundLeague, $roundName, $settings) {
 
@@ -146,7 +151,7 @@ class RoundOpenCommand extends Command implements CommandInterface
                 $settings
             );
 
-            $this->info("Round {$round->number} created in Era {$roundLeague->key}. The round starts at {$round->start_date}.");
+            $this->info("Round {$round->number} created in Era {$roundLeague->description}. The round starts at {$round->start_date}.");
 
             // Prepopulate round with #1 Barbarian, #2 Commonwealth, #3 Empire, #4 Independent
             if($gameMode == 'standard' or $gameMode == 'standard-duration' or $gameMode == 'artefacts')
@@ -168,7 +173,7 @@ class RoundOpenCommand extends Command implements CommandInterface
                 $this->info("Creating realms...");
                 $this->realmFactory->create($round, 'npc');
 
-                # Create a realm per playable race
+                // Create a realm per playable race
                 foreach(Race::where('playable',1)->get() as $race)
                 {
                     $this->realmFactory->create($round, $race->key);
@@ -178,8 +183,15 @@ class RoundOpenCommand extends Command implements CommandInterface
 
             if($round->getSetting('barbarians'))
             {
-                // Create 20 Barbarians.
-                for ($slot = 1; $slot <= 20; $slot++)
+                // Get starting barbarians (default 20) from user input
+                $startingBarbarians = $this->ask('How many starting barbarians? [20]: ');
+                if(empty($startingBarbarians))
+                {
+                    $startingBarbarians = 20;
+                }
+                
+                // Create Barbarians.
+                for ($slot = 1; $slot <= $startingBarbarians; $slot++)
                 {
                     $this->info("Creating a Barbarian...");
                     $this->barbarianService->createBarbarian($round);

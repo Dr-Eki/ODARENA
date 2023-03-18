@@ -8,53 +8,40 @@ playable: 1
 peasants_alias: farmer
 
 resources:
+  - gold
   - food
   - ore
   - lumber
 
 peasants_production:
-  food: 0.08
+  gold: 3
 
 construction_materials:
+  - gold
   - ore
 
 perks:
-  unemployed_peasants_produce: 1
   cannot_train_spies: 1
   cannot_train_wizards: 1
   cannot_train_archmages: 1
   draftee_dp: 1.5
 
 units:
-- name: Breaker
-  training_time: 4
-  type:
-    - living
-    - intelligent
-  cost:
-    peasant: 1
-    ore: 30
-    food: 8
-  power:
-    offense: 0
-    defense: 1
-  perks:
-    lumber_production_raw_from_building_pairing: 0.05,lumberyard,3
-
-- name: Crusher
-  training_time: 4
+- name: Ogre
+  training_time: 12
   type:
     - living
     - sentient
   cost:
-    peasant: 1
-    ore: 30
-    food: 8
+    gold: 300
+    ore: 60
+    food: 10
+    draftee: 1
   power:
     offense: 0
-    defense: 1
+    defense: 6
   perks:
-    ore_production_raw_from_building_pairing: 0.05,ore_mine,3
+    food_consumption_raw: 0.50
 
 - name: Basher
   training_time: 12
@@ -62,13 +49,13 @@ units:
     - living
     - sentient
   cost:
+    gold: 1000
+    ore: 160
+    food: 30
     draftees: 1
-    ore: 45
-    lumber: 20
-    food: 18
   power:
-    offense: 5
-    defense: 5
+    offense: 6
+    defense: 6
   perks:
     food_consumption_raw: 0.50
     plunders: ore;4,lumber;2

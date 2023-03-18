@@ -1,6 +1,7 @@
 chieftain:
-  enabled: 1
   name: Chieftain
+  perks:
+    offensive_power: 2.5
 
 commander:
   enabled: 0
@@ -19,8 +20,7 @@ conjurer:
     spell_cost: -50
     unit_mana_costs: -7.5
 
-engineer:  
-  enabled: 0
+engineer:
   name: Engineer
   perks:
     improvements: 10
@@ -45,8 +45,7 @@ excavator:
     gems_production_mod: 10
     pearls_production_mod: 10
 
-general:  
-  enabled: 0
+general:
   name: General
   perks:
     prestige_gains: 15
@@ -105,8 +104,7 @@ rogue:
     spy_strength_on_offense: 25
     theft_carry_capacity: 10
 
-surveyor:  
-  enabled: 0
+surveyor:
   name: Surveyor
   perks:
     construction_cost: -15

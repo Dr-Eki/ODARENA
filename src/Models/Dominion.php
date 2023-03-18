@@ -711,15 +711,13 @@ class Dominion extends AbstractModel
         {
             $perkValueString = $building->getPerkValue($perkKey);
 
-            if(is_numeric($perkValueString))
-            {
-                $perkValueString = (float)$perkValueString;
-            }
+            $perkValueString = is_numeric($perkValueString) ? (float)$perkValueString : $perkValueString;
 
+            /*
             # Default value for housing.
             if($perkKey == 'housing' and !is_numeric($perkValueString))
             {
-                $perk += 0 * $building->pivot->owned; # was 15
+                $perk += 15 * $building->pivot->owned;
                 $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
             }
             elseif($perkKey == 'housing' and is_numeric($perkValueString))
@@ -731,7 +729,7 @@ class Dominion extends AbstractModel
             # Default value for jobs.
             if($perkKey == 'jobs' and !is_numeric($perkValueString))
             {
-                $perk += 0 * $building->pivot->owned; # was 20
+                $perk += 20 * $building->pivot->owned;
                 $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
             }
             elseif($perkKey == 'jobs' and is_numeric($perkValueString))
@@ -739,208 +737,217 @@ class Dominion extends AbstractModel
                 $perk += $perkValueString * $building->pivot->owned;
                 $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
             }
+            */
+            
+            if(in_array($perkKey, ['housing','jobs']))
+            {
 
-            if(!in_array($perkKey,['jobs','housing']) and $perkValueString)
+                if(is_numeric($perkValueString))
+                {
+                    $perk += $perkValueString * $building->pivot->owned;
+                }
+                else
+                {
+                    $defaultPerkValueString = ($perkKey == 'housing') ? 15 : 20;
+                    $perk += $defaultPerkValueString * $building->pivot->owned;
+                }
+
+                $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
+            }
+            elseif(!in_array($perkKey,['jobs','housing']) and $perkValueString)
             {
                 # Basic production and other single-value perks
-                if(
-                        $perkKey == 'gold_production'
-                        or $perkKey == 'food_production'
-                        or $perkKey == 'ore_production'
-                        or $perkKey == 'lumber_production'
-                        or $perkKey == 'mana_production'
-                        or $perkKey == 'draftee_generation'
+                $singleValuePerks = [
+                    'gold_production_raw',
+                    'food_production_raw',
+                    'ore_production_raw',
+                    'lumber_production_raw',
+                    'mana_production_raw',
+                    'gems_production_raw',
+                    'blood_production_raw',
+                    'soul_production_raw',
+                    'pearls_production_raw',
+                    'horse_production_raw',
+                    'mud_production_raw',
+                    'swamp_gas_production_raw',
+                    'marshling_production_raw',
+                    'thunderstone_production_raw',
+                    'miasma_production_raw',
+                    'yak_production_raw',
+                    'kelp_production_raw',
+                    'gunpowder_production_raw',
+                    'magma_production_raw',
+                    'obsidian_production_raw',
+                
+                    'gunpowder_storage_raw',
+                
+                    'gold_upkeep_raw',
+                    'food_upkeep_raw',
+                    'ore_upkeep_raw',
+                    'lumber_upkeep_raw',
+                    'mana_upkeep_raw',
+                    'blood_upkeep_raw',
+                    'soul_upkeep_raw',
+                    'pearls_upkeep_raw',
+                    'prisoner_upkeep_raw',
+                
+                    'gold_theft_protection',
+                    'food_theft_protection',
+                    'ore_theft_protection',
+                    'lumber_theft_protection',
+                    'mana_theft_protection',
+                    'gems_theft_protection',
+                    'blood_theft_protection',
+                    'soul_theft_protection',
+                    'pearls_theft_protection',
+                
+                    'xp_generation_raw',
+                
+                    // Building-specific housing
+                    'artillery_unit1_housing',
+                    'afflicted_unit1_housing',
+                    'aurei_unit1_housing',
+                    'dwarg_unit1_housing',
+                    'cires_unit1_housing',
+                    'cires_unit2_housing',
+                    'norse_unit1_housing',
+                    'sacred_order_unit2_housing',
+                    'sacred_order_unit3_housing',
+                    'sacred_order_unit4_housing',
+                    'snow_elf_unit1_housing',
+                    'troll_unit2_housing',
+                    'troll_unit4_housing',
+                    'vampires_unit1_housing',
+                    'revenants_unit1_housing',
+                    'revenants_unit2_housing',
+                    'revenants_unit3_housing',
+                
+                    'spy_housing',
+                    'wizard_housing',
+                    'military_housing',
+                    'draftee_housing',
+                
+                    'ammunition_units_housing',
+                
+                    // Military
+                    'raw_defense',
+                    'dimensionalists_unit1_production_raw',
+                    'dimensionalists_unit2_production_raw',
+                    'dimensionalists_unit3_production_raw',
+                    'dimensionalists_unit4_production_raw',
+                
+                    'snow_elf_unit4_production_raw',
+                
+                    'unit_send_capacity',
+                
+                    // Uncategorised
+                    'crypt_bodies_decay_protection',
+                    'faster_returning_units',
+                ];
 
-                        or $perkKey == 'gold_production_raw'
-                        or $perkKey == 'food_production_raw'
-                        or $perkKey == 'ore_production_raw'
-                        or $perkKey == 'lumber_production_raw'
-                        or $perkKey == 'mana_production_raw'
-                        or $perkKey == 'gems_production_raw'
-                        or $perkKey == 'blood_production_raw'
-                        or $perkKey == 'soul_production_raw'
-                        or $perkKey == 'pearls_production_raw'
-                        or $perkKey == 'horse_production_raw'
-                        or $perkKey == 'mud_production_raw'
-                        or $perkKey == 'swamp_gas_production_raw'
-                        or $perkKey == 'marshling_production_raw'
-                        or $perkKey == 'thunderstone_production_raw'
-                        or $perkKey == 'miasma_production_raw'
-                        or $perkKey == 'yak_production_raw'
-                        or $perkKey == 'kelp_production_raw'
-                        or $perkKey == 'gunpowder_production_raw'
-                        or $perkKey == 'magma_production_raw'
-                        or $perkKey == 'obsidian_production_raw'
+                $ratioMultiplierMaxPerks = [
+                    // OP/DP mods
+                    'defensive_power',
+                    'offensive_power',
+                    'attacker_offensive_power_mod',
+                    'target_defensive_power_mod',
+                    'casualties_on_offense',
+                    'casualties_on_defense',
+                    'increases_enemy_casualties_on_offense',
+                    'increases_enemy_casualties_on_defense',
+                    'casualties',
+                    'morale_gains',
+                    'prestige_gains',
+                    'base_morale',
+                    'faster_return',
+                
+                    // Production and Resources mods
+                    'gold_production_mod',
+                    'food_production_mod',
+                    'lumber_production_mod',
+                    'ore_production_mod',
+                    'gems_production_mod',
+                    'mana_production_mod',
+                    'xp_generation_mod',
+                    'pearls_production_mod',
+                    'blood_production_mod',
+                    'mud_production_mod',
+                    'swamp_gas_production_mod',
+                    'miasma_production_mod',
+                    'exchange_rate',
+                
+                    // Unit costs
+                    'unit_gold_costs',
+                    'unit_ore_costs',
+                    'unit_lumber_costs',
+                    'unit_mana_costs',
+                    'unit_food_costs',
+                    'unit_blood_costs',
+                
+                    // Unit training
+                    'extra_units_trained',
+                    'drafting',
+                    'snow_elf_unit4_production_mod',
+                    'training_time_mod',
+                    'spy_training_time_mod',
+                    'wizards_training_time_mod',
+                
+                    'dimensionalists_unit1_production_mod',
+                    'dimensionalists_unit2_production_mod',
+                    'dimensionalists_unit3_production_mod',
+                    'dimensionalists_unit4_production_mod',
+                
+                    // Spy/wizard
+                    'spell_cost',
+                    'spy_losses',
+                    'spy_strength_recovery',
+                    'wizard_losses',
+                    'wizard_strength',
+                    'wizard_strength_recovery',
+                    'wizard_cost',
+                
+                    // Construction/Rezoning and Land
+                    'construction_cost',
+                    'rezone_cost',
+                    'land_discovered',
+                    'construction_time',
+                
+                    // Espionage
+                    'gold_theft_reduction',
+                    'gems_theft_reduction',
+                    'lumber_theft_reduction',
+                    'ore_theft_reduction',
+                    'food_theft_reduction',
+                    'horse_theft_reduction',
+                    'magma_theft_reduction',
+                    'obsidian_theft_reduction',
+                
+                    // Improvements
+                    'improvements_capped',
+                    'improvements_interest',
+                    'invest_bonus',
+                    'gold_invest_bonus',
+                    'food_invest_bonus',
+                    'ore_invest_bonus',
+                    'lumber_invest_bonus',
+                    'mana_invest_bonus',
+                    'blood_invest_bonus',
+                    'soul_invest_bonus',
+                    'obsidian_invest_bonus',
+                
+                    // Other/special
+                    'deity_power',
+                    'population_capped',
+                ];
 
-                        or $perkKey == 'gunpowder_storage_raw'
-
-                        or $perkKey == 'gold_upkeep_raw'
-                        or $perkKey == 'food_upkeep_raw'
-                        or $perkKey == 'ore_upkeep_raw'
-                        or $perkKey == 'lumber_upkeep_raw'
-                        or $perkKey == 'mana_upkeep_raw'
-                        or $perkKey == 'blood_upkeep_raw'
-                        or $perkKey == 'soul_upkeep_raw'
-                        or $perkKey == 'pearls_upkeep_raw'
-                        or $perkKey == 'prisoner_upkeep_raw'
-
-                        or $perkKey == 'gold_theft_protection'
-                        or $perkKey == 'food_theft_protection'
-                        or $perkKey == 'ore_theft_protection'
-                        or $perkKey == 'lumber_theft_protection'
-                        or $perkKey == 'mana_theft_protection'
-                        or $perkKey == 'gems_theft_protection'
-                        or $perkKey == 'blood_theft_protection'
-                        or $perkKey == 'soul_theft_protection'
-                        or $perkKey == 'pearls_theft_protection'
-
-                        or $perkKey == 'xp_generation_raw'
-
-                        # Building-specific housing
-                        or $perkKey == 'artillery_unit1_housing'
-                        or $perkKey == 'afflicted_unit1_housing'
-                        or $perkKey == 'aurei_unit1_housing'
-                        or $perkKey == 'dwarg_unit1_housing'
-                        or $perkKey == 'cires_unit1_housing'
-                        or $perkKey == 'cires_unit2_housing'
-                        or $perkKey == 'norse_unit1_housing'
-                        or $perkKey == 'sacred_order_unit2_housing'
-                        or $perkKey == 'sacred_order_unit3_housing'
-                        or $perkKey == 'sacred_order_unit4_housing'
-                        or $perkKey == 'snow_elf_unit1_housing'
-                        or $perkKey == 'troll_unit2_housing'
-                        or $perkKey == 'troll_unit4_housing'
-                        or $perkKey == 'vampires_unit1_housing'
-                        or $perkKey == 'revenants_unit1_housing'
-                        or $perkKey == 'revenants_unit2_housing'
-                        or $perkKey == 'revenants_unit3_housing'
-
-                        or $perkKey == 'spy_housing'
-                        or $perkKey == 'wizard_housing'
-                        or $perkKey == 'military_housing'
-                        or $perkKey == 'draftee_housing'
-
-                        or $perkKey == 'ammunition_units_housing'
-
-                        # Military
-                        or $perkKey == 'raw_defense'
-                        or $perkKey == 'dimensionalists_unit1_production_raw'
-                        or $perkKey == 'dimensionalists_unit2_production_raw'
-                        or $perkKey == 'dimensionalists_unit3_production_raw'
-                        or $perkKey == 'dimensionalists_unit4_production_raw'
-
-                        or $perkKey == 'snow_elf_unit4_production_raw'
-
-                        or $perkKey == 'unit_send_capacity'
-
-                        # Uncategorised
-                        or $perkKey == 'crypt_bodies_decay_protection'
-                        or $perkKey == 'faster_returning_units'
-                    )
+                if(in_array($perkKey, $singleValuePerks))
                 {
                     $perk += $perkValueString * $building->pivot->owned;
                     $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
                 }
 
                 # Mods with ratio, multiplier, and max
-                elseif(
-                        # OP/DP mods
-                        $perkKey == 'defensive_power'
-                        or $perkKey == 'offensive_power'
-                        or $perkKey == 'attacker_offensive_power_mod'
-                        or $perkKey == 'target_defensive_power_mod'
-                        or $perkKey == 'casualties_on_offense'
-                        or $perkKey == 'casualties_on_defense'
-                        or $perkKey == 'increases_enemy_casualties_on_offense'
-                        or $perkKey == 'increases_enemy_casualties_on_defense'
-                        or $perkKey == 'casualties'
-
-                        or $perkKey == 'morale_gains'
-                        or $perkKey == 'prestige_gains'
-                        or $perkKey == 'base_morale'
-
-                        or $perkKey == 'faster_return'
-
-                        # Production mods
-                        or $perkKey == 'gold_production_mod'
-                        or $perkKey == 'food_production_mod'
-                        or $perkKey == 'lumber_production_mod'
-                        or $perkKey == 'ore_production_mod'
-                        or $perkKey == 'gems_production_mod'
-                        or $perkKey == 'mana_production_mod'
-                        or $perkKey == 'xp_generation_mod'
-                        or $perkKey == 'pearls_production_mod'
-                        or $perkKey == 'blood_production_mod'
-                        or $perkKey == 'mud_production_mod'
-                        or $perkKey == 'swamp_gas_production_mod'
-                        or $perkKey == 'miasma_production_mod'
-
-                        or $perkKey == 'exchange_rate'
-
-                        # Unit costs
-                        or $perkKey == 'unit_gold_costs'
-                        or $perkKey == 'unit_ore_costs'
-                        or $perkKey == 'unit_lumber_costs'
-                        or $perkKey == 'unit_mana_costs'
-                        or $perkKey == 'unit_food_costs'
-                        or $perkKey == 'unit_blood_costs'
-
-                        # Unit training
-                        or $perkKey == 'extra_units_trained'
-                        or $perkKey == 'drafting'
-                        or $perkKey == 'snow_elf_unit4_production_mod'
-                        or $perkKey == 'training_time_mod'
-                        or $perkKey == 'spy_training_time_mod'
-                        or $perkKey == 'wizards_training_time_mod'
-
-                        or $perkKey == 'dimensionalists_unit1_production_mod'
-                        or $perkKey == 'dimensionalists_unit2_production_mod'
-                        or $perkKey == 'dimensionalists_unit3_production_mod'
-                        or $perkKey == 'dimensionalists_unit4_production_mod'
-
-                        # Spy/wizard
-                        or $perkKey == 'spell_cost'
-                        or $perkKey == 'spy_losses'
-                        or $perkKey == 'spy_strength_recovery'
-                        or $perkKey == 'wizard_losses'
-                        or $perkKey == 'wizard_strength'
-                        or $perkKey == 'wizard_strength_recovery'
-                        or $perkKey == 'wizard_cost'
-
-                        # Construction/Rezoning and Land
-                        or $perkKey == 'construction_cost'
-                        or $perkKey == 'rezone_cost'
-                        or $perkKey == 'land_discovered'
-                        or $perkKey == 'construction_time'
-
-                        # Espionage
-                        or $perkKey == 'gold_theft_reduction'
-                        or $perkKey == 'gems_theft_reduction'
-                        or $perkKey == 'lumber_theft_reduction'
-                        or $perkKey == 'ore_theft_reduction'
-                        or $perkKey == 'food_theft_reduction'
-                        or $perkKey == 'horse_theft_reduction'
-                        or $perkKey == 'magma_theft_reduction'
-                        or $perkKey == 'obsidian_theft_reduction'
-
-                        # Improvements
-                        or $perkKey == 'improvements_capped'
-                        or $perkKey == 'improvements_interest'
-                        or $perkKey == 'invest_bonus'
-                        or $perkKey == 'gold_invest_bonus'
-                        or $perkKey == 'food_invest_bonus'
-                        or $perkKey == 'ore_invest_bonus'
-                        or $perkKey == 'lumber_invest_bonus'
-                        or $perkKey == 'mana_invest_bonus'
-                        or $perkKey == 'blood_invest_bonus'
-                        or $perkKey == 'soul_invest_bonus'
-                        or $perkKey == 'obsidian_invest_bonus'
-
-                        # Other/special
-                        or $perkKey == 'deity_power'
-                        or $perkKey == 'population_capped'
-
-                    )
+                elseif(in_array($perkKey, $ratioMultiplierMaxPerks))
                 {
                     $perkValues = $this->extractBuildingPerkValues($perkValueString);
                     $ratio = (float)$perkValues[0];

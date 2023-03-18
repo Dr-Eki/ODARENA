@@ -6,12 +6,20 @@ housing:
 defenses:  
   name: Defenses
   perks:
-    defensive_power: 25,12000
+    defensive_power: 30,12000
+
+markets:
+  name: Markets
+  perks:
+    gold_production_mod: 20,6000
+    exchange_rate: 20,8000
 
 tactics:  
   name: Tactics
   perks:
-    offensive_power: 25,12000
+    offensive_power: 30,12000
+
+
 
 ### 
 

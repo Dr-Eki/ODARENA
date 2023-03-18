@@ -6,52 +6,25 @@ skill_level: 1
 playable: 1
 
 resources:
+  - gold
   - food
   - ore
   - lumber
   - horse
 
 peasants_production:
-  food: 0.08
+  gold: 3
 
 construction_materials:
+  - gold
   - lumber
 
 perks:
-  unemployed_peasants_produce: 1
   cannot_train_spies: 1
   cannot_train_wizards: 1
   cannot_train_archmages: 1
 
 units:
-- name: Lumberer
-  training_time: 3
-  type:
-    - living
-    - intelligent
-  cost:
-    peasant: 1
-    ore: 30
-  power:
-    offense: 0
-    defense: 1
-  perks:
-    lumber_production_raw_from_building_pairing: 0.05,saw_mill,4
-
-- name: Miner
-  training_time: 3
-  type:
-    - living
-    - intelligent
-  cost:
-    peasant: 1
-    ore: 30
-  power:
-    offense: 0
-    defense: 1
-  perks:
-    ore_production_raw_from_building_pairing: 0.05,ore_mine,3
-
 - name: Guard
   training_time: 6
   type:
@@ -59,8 +32,8 @@ units:
     - intelligent
   cost:
     peasant: 1
-    ore: 40
-    lumber: 6
+    gold: 300
+    ore: 50
   power:
     offense: 0
     defense: 3
@@ -74,11 +47,13 @@ units:
     - intelligent
   cost:
     peasant: 1
-    ore: 40
-    lumber: 6
+    gold: 300
+    ore: 70
+    lumber: 15
   power:
     offense: 2
     defense: 1
+  perks:
     casualties_on_offense: 300
     casualties_on_defense: 300
 
@@ -88,12 +63,13 @@ units:
     - living
     - intelligent
   cost:
-    ore: 12
-    lumber: 50
+    gold: 570
+    ore: 20
+    lumber: 40
     draftees: 1
   power:
     offense: 0
-    defense: 4.5
+    defense: 5
 
 - name: Mounted Blade
   training_time: 12
@@ -101,13 +77,13 @@ units:
     - living
     - intelligent
   cost:
-    ore: 66
-    lumber: 4
+    gold: 1400
+    ore: 200
     draftees: 1
     horse: 1
   power:
-    offense: 4
-    defense: 2.5
+    offense: 5
+    defense: 3
   perks:
     plunders: ore;2,lumber;1
     faster_return: 2

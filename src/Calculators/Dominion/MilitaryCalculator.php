@@ -225,6 +225,9 @@ class MilitaryCalculator
         // Land improvements
         $multiplier += $attacker->getLandImprovementPerkMultiplier('offensive_power_mod');
 
+        // Title
+        $multiplier += $attacker->getTitlePerkMultiplier('offensive_power');
+
         // Units
         foreach($attacker->race->units as $unit)
         {
@@ -462,9 +465,12 @@ class MilitaryCalculator
         // Land improvements
         $multiplier += $dominion->getLandImprovementPerkMultiplier('defensive_power_mod');
 
+        // Title
+        $multiplier += $dominion->getTitlePerkMultiplier('defensive_power');
+
         // Deity
         $multiplier += $dominion->race->getPerkMultiplier('defensive_power');
-
+        
         // Multiplier reduction when we want to factor in temples from another dominion
         $multiplier = max(($multiplier + $multiplierReduction), 0);
 

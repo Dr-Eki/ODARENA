@@ -1,5 +1,15 @@
 # Round 88+
 
+barracks:  
+  name: Barracks
+  excluded_races:
+    - Swarm
+  land_type: hill
+  perks:
+    military_housing: 36
+    housing: 0
+    jobs: 0
+
 farm:  
   name: Farm
   excluded_races:
@@ -38,6 +48,7 @@ lumberyard:
 
 smallholding:
   name: Smallholding
+  enabled: 0
   exclusive_races:
     - Therozou
   land_type: plain
@@ -51,7 +62,7 @@ stable:
     - Arwe
   land_type: plain
   perks:
-    horse_production_raw: 4
+    horse_production_raw: 2
     horse_theft_reduction: 1,10,100  # Every 1% reduces plat stolen by 10%, max 100% reduction
 
 wall:
@@ -1304,38 +1315,7 @@ gateway:
 
 # BEGIN SWARM
 
-burrow:  
-  enabled: 0
-  name: Burrow
-  exclusive_races:
-    - Swarm
-  land_type: swamp
-  perks:
-    food_production_raw: 40
-    jobs: 0
-
-nest:  
-  enabled: 0
-  name: Nest
-  exclusive_races:
-    - Swarm
-  land_type: forest
-  perks:
-    military_housing: 42
-    jobs: 0
-
-tunnel:  
-  enabled: 0
-  name: Tunnel
-  exclusive_races:
-    - Swarm
-  land_type: hill
-  perks:
-    faster_returning_units_increasing: 120,0.06 # faster returning units, increaser per tick
-    jobs: 0
-
-well:  
-  enabled: 0
+aquifer:  
   name: Aquifer
   exclusive_races:
     - Swarm
@@ -1343,7 +1323,40 @@ well:
   perks:
     food_production_raw: 80
     mana_production_raw: 20
+
+burrow:
+  name: Burrow
+  exclusive_races:
+    - Swarm
+  land_type: plain
+  perks:
+    housing: 30
     jobs: 0
+
+humus:
+  name: Humus
+  exclusive_races:
+    - Swarm
+  land_type: swamp
+  perks:
+    food_production_raw: 40
+
+nest:  
+  name: Nest
+  exclusive_races:
+    - Swarm
+  land_type: forest
+  perks:
+    military_housing: 34
+    jobs: 0
+
+tunnel:  
+  name: Tunnel
+  exclusive_races:
+    - Swarm
+  land_type: hill
+  perks:
+    faster_returning_units_increasing: 60,0.04 # faster returning units, increase per tick
 
 # END SWARM
 
@@ -1521,42 +1534,6 @@ gold_quarry:
 # END AUREI
 
 # HOME ALTERNATIVES
-
-barracks:  
-  enabled: 0
-  name: Barracks
-  excluded_races:
-    - Ants
-    - Armada
-    - Black Orc
-    - Cult
-    - Dragon
-    - Firewalker
-    - Glimjir
-    - Growth
-    - Icekin
-    - Jagunii
-    - Legion
-    - Lux
-    - Marshling
-    - Monster
-    - Myconid
-    - Nomad
-    - Orc
-    - Revenants
-    - Sacred Order
-    - Snow Elf
-    - Swarm
-    - Sylvan
-    - Troll
-    - Vampires
-    - Void
-    - Wood Elf
-  land_type: hill
-  perks:
-    military_housing: 36
-    housing: 0
-    jobs: 0
 
 home:  
   enabled: 0

@@ -163,7 +163,7 @@
                             </td>
 
                             <td>
-                                @if($round->number >= 62 or request()->getHost() == 'odarena.local' or request()->getHost() == 'odarena.virtual')
+                                @if($round->number >= 62 or in_array(request()->getHost(), ['sim.odarena.com', 'odarena.local', 'odarena.virtual']))
                                 <span data-toggle="tooltip" data-placement="top" title="{{ $roundHelper->getRoundModeDescription($round) }}">
                                     {!! $roundHelper->getRoundModeIcon($round) !!} {{ $roundHelper->getRoundModeString($round) }}
                                 </span>

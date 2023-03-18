@@ -165,7 +165,6 @@ class RangeCalculator
      */
     public function getDominionsInRange(Dominion $self): Collection
     {
-        # Create $dominions
         return $self->round->activeDominions()
             ->with(['realm', 'round'])
             ->get()
@@ -195,46 +194,42 @@ class RangeCalculator
                 return $this->landCalculator->getTotalLand($dominion);
             })
             ->values();
-
-        #return $dominions;
-
         
     }
 
+    /**
+     * Returns all dominions in range of a dominion.
+     *
+     * @param Dominion $self
+     * @return Collection
+     */
+    public function getFriendlyDominionsInRange(Dominion $self): Collection
+    {
+        return $self->round->activeDominions()
+            ->with(['realm', 'round'])
+            ->get()
+            ->filter(function ($dominion) use ($self) {
+                return (
 
-        /**
-         * Returns all dominions in range of a dominion.
-         *
-         * @param Dominion $self
-         * @return Collection
-         */
-        public function getFriendlyDominionsInRange(Dominion $self): Collection
-        {
-            return $self->round->activeDominions()
-                ->with(['realm', 'round'])
-                ->get()
-                ->filter(function ($dominion) use ($self) {
-                    return (
+                    # In the same realm (unless deathmatch round); and
+                    (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','factions','factions-duration']) ? ($dominion->realm->id == $self->realm->id) : false) and
 
-                        # In the same realm (unless deathmatch round); and
-                        (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','factions','factions-duration']) ? ($dominion->realm->id == $self->realm->id) : false) and
+                    # Not self
+                    ($dominion->id !== $self->id) and
 
-                        # Not self
-                        ($dominion->id !== $self->id) and
+                    # Is in range; and
+                    $this->isInRange($self, $dominion) and
 
-                        # Is in range; and
-                        $this->isInRange($self, $dominion) and
+                    # Is not in protection;
+                    !$this->protectionService->isUnderProtection($dominion) and
 
-                        # Is not in protection;
-                        !$this->protectionService->isUnderProtection($dominion) and
-
-                        # Is not locked;
-                        $dominion->is_locked !== 1
-                    );
-                })
-                ->sortByDesc(function ($dominion) {
-                    return $this->landCalculator->getTotalLand($dominion);
-                })
-                ->values();
-        }
+                    # Is not locked;
+                    $dominion->is_locked !== 1
+                );
+            })
+            ->sortByDesc(function ($dominion) {
+                return $this->landCalculator->getTotalLand($dominion);
+            })
+            ->values();
+    }
 }

@@ -1,11 +1,9 @@
 name: Swarm
 alignment: good
-description: >-
-  <p>Buildings under construction count as barren land for the purpose of Scorpion and Centipede offensive power perk.</p>
+description: Swarm never loses buildings. They may lose control of the surface but the buildings deep below remain safe.
 home_land_type: plain
-playable: 0 # Round 88
+playable: 1
 skill_level: 2
-
 
 peasants_alias: larva
 draftees_alias: cocoon
@@ -14,7 +12,6 @@ resources:
   - gold
   - food
   - gems
-  - mana
 
 peasants_production:
   gold: 2
@@ -23,36 +20,35 @@ construction_materials:
   - gold
 
 perks:
-  extra_barren_housing: 26
-  no_construction_costs: 1
+  #no_construction_costs: 1
   no_rezone_costs: 1
-  food_consumption_mod: -50
-  immortal_spies: 1
-  immortal_wizards: 1
-  damage_from_lightning_bolt: -75
-  damage_from_blight: -100
+  #immortal_spies: 1
+  #immortal_wizards: 1
+  #damage_from_lightning_bolt: -75
+  #damage_from_blight: -100
   indestructible_buildings: 1
-  population_growth: 25
-  unemployed_peasants_produce: 1
+  cannot_train_spies: 1
+  cannot_train_wizards: 1
+  cannot_train_archmages: 1
 
 units:
-  - name: Scorpion
-    training_time: 9
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      gold: 600
-    power:
-      offense: 4
-      defense: 4
-    perks:
-      offense_vs_barren_land: 10,1 # ratio%, max
-      casualties_on_defense: -25
-      casualties_on_victory: -25
-      offense_from_spell: aggression,2
-      defense_from_spell: aggression,-2
+#  - name: Scorpion
+#    training_time: 9
+#    type:
+#      - living
+#      - sentient
+#      - intelligent
+#    cost:
+#      gold: 600
+#    power:
+#      offense: 2
+#      defense: 2
+#    perks:
+#      offense_vs_barren_land: 10,1 # ratio%, max
+#      casualties_on_defense: -25
+#      casualties_on_victory: -25
+#      offense_from_spell: aggression,2
+#      defense_from_spell: aggression,-2
 
   - name: Scarab
     training_time: 9
@@ -61,13 +57,14 @@ units:
       - sentient
     cost:
       gold: 450
+      draftee: 1
     power:
       offense: 0
-      defense: 4
+      defense: 2
     perks:
-      gems_production_raw: 0.5
-      immortal_on_fending_off: 1
-      casualties_on_defense: -25
+      gems_production_raw: 0.2
+      #immortal_on_fending_off: 1
+      #casualties_on_defense: -25
 
   - name: Arachnid
     training_time: 12
@@ -76,13 +73,14 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1100
+      gold: 1000
+      draftee: 1
     power:
       offense: 0
-      defense: 8
+      defense: 6
     perks:
-      casualties_on_defense: -25
-      immortal_on_fending_off: 1
+      #casualties_on_defense: -25
+      #immortal_on_fending_off: 1
       kills_into_resource_per_value: 4,food # each 1 OP killed becomes
 
   - name: Centipede
@@ -92,12 +90,14 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1200
+      gold: 2800
+      draftee: 1
     power:
-      offense: 8
+      offense: 7
       defense: 4
     perks:
-      offense_vs_barren_land: 10,1 # ratio%, max
-      casualties_on_defense: -25
-      immortal_on_fending_off: 1
-      casualties_on_victory: -25
+      #offense_vs_barren_land: 10,1 # ratio%, max
+      #casualties_on_defense: -25
+      #immortal_on_fending_off: 1
+      casualties_on_victory: -20
+      kills_into_resource_per_value: 4,food # each 1 OP killed becomes
