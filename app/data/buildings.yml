@@ -13,7 +13,7 @@ barracks:
 farm:  
   name: Farm
   excluded_races:
-    - Therozou
+    - Swarm
   land_type: plain
   perks:
     food_production_raw: 50
@@ -21,7 +21,7 @@ farm:
 ore_mine:  
   name: Ore Mine
   excluded_races:
-    - Therozou
+    - Swarm
   land_type: mountain
   perks:
     ore_production_raw: 20
@@ -30,8 +30,8 @@ ore_mine:
 
 saw_mill:  
   name: Saw Mill
-  excluded_races:
-    - Gorm
+  exclusive_races:
+    - Arwe
   land_type: forest
   perks:
     lumber_production_raw: 20
@@ -67,6 +67,8 @@ stable:
 
 wall:
   name: Wall
+  excluded_races:
+    - Swarm
   land_type: hill
   perks:
     defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP

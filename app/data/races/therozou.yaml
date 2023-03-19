@@ -3,7 +3,7 @@ alignment: independent
 description: >-
 home_land_type: forest
 skill_level: 1
-playable: 1
+playable: 0 # Extinct as of round 91
 
 peasants_alias: wildlife
 
