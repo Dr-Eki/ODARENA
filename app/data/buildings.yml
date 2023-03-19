@@ -1323,8 +1323,7 @@ aquifer:
     - Swarm
   land_type: water
   perks:
-    food_production_raw: 80
-    mana_production_raw: 20
+    food_production_raw: 40
 
 burrow:
   name: Burrow
@@ -1332,16 +1331,8 @@ burrow:
     - Swarm
   land_type: plain
   perks:
-    housing: 30
+    housing: 28
     jobs: 0
-
-humus:
-  name: Humus
-  exclusive_races:
-    - Swarm
-  land_type: swamp
-  perks:
-    food_production_raw: 40
 
 nest:  
   name: Nest
