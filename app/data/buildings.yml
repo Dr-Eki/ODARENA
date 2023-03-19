@@ -25,8 +25,8 @@ ore_mine:
   land_type: mountain
   perks:
     ore_production_raw: 20
-    arwe_unit_housing: 2,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
-    gorm_unit_housing: 2,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    #arwe_unit_housing: 2,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    #gorm_unit_housing: 2,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 saw_mill:  
   name: Saw Mill
@@ -35,7 +35,7 @@ saw_mill:
   land_type: forest
   perks:
     lumber_production_raw: 20
-    arwe_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    #arwe_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 lumberyard:  
   name: Lumberyard
@@ -44,7 +44,7 @@ lumberyard:
   land_type: forest
   perks:
     lumber_production_raw: 20
-    gorm_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    #gorm_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 smallholding:
   name: Smallholding
@@ -82,7 +82,7 @@ turret:
   perks:
     defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
     building_capacity_limit: 1,10,wall # amount allowed, per x of, building
-    arwe_unit_housing: 5,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    arwe_unit_housing: 3,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 # HOMES
 
