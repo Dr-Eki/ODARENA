@@ -23,6 +23,11 @@
                         <td><strong>{{ number_format(($militaryCalculator->getDefensivePowerMultiplier($selectedDominion) - 1) * 100, 2) }}%</strong></td>
                     </tr>
                     <tr>
+                        <td>Title:</td>
+                        <td>{{ number_format($selectedDominion->title->getPerkMultiplier('offensive_power') * $selectedDominion->getTitlePerkMultiplier() * 100, 2) }}%</td>
+                        <td>{{ number_format($selectedDominion->title->getPerkMultiplier('defensive_power') * $selectedDominion->getTitlePerkMultiplier() * 100, 2) }}%</td>
+                    </tr>
+                    <tr>
                         <td>Prestige:</td>
                         <td>{{ number_format($prestigeCalculator->getPrestigeMultiplier($selectedDominion) * 100, 2) }}%</td>
                         <td>&mdash;</td>

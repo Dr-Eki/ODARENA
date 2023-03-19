@@ -226,7 +226,7 @@ class MilitaryCalculator
         $multiplier += $attacker->getLandImprovementPerkMultiplier('offensive_power_mod');
 
         // Title
-        $multiplier += $attacker->getTitlePerkMultiplier('offensive_power');
+        $multiplier += $attacker->title->getPerkMultiplier('offensive_power') * $attacker->getTitlePerkMultiplier();
 
         // Units
         foreach($attacker->race->units as $unit)
@@ -466,7 +466,7 @@ class MilitaryCalculator
         $multiplier += $dominion->getLandImprovementPerkMultiplier('defensive_power_mod');
 
         // Title
-        $multiplier += $dominion->getTitlePerkMultiplier('defensive_power');
+        $multiplier += $dominion->title->getPerkMultiplier('defensive_power') * $dominion->getTitlePerkMultiplier();
 
         // Deity
         $multiplier += $dominion->race->getPerkMultiplier('defensive_power');

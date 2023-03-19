@@ -36,7 +36,7 @@ units:
     gold: 300
     ore: 60
     food: 10
-    draftee: 1
+    draftees: 1
   power:
     offense: 0
     defense: 6
