@@ -113,8 +113,6 @@ class RoundOpenCommand extends Command implements CommandInterface
             $counting++;
         }
 
-        dd($settings);
-
         $startDate = new Carbon('+2 days midnight');
 
         /** @var RoundLeague $roundLeague */
