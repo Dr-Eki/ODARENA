@@ -108,10 +108,12 @@ class RoundOpenCommand extends Command implements CommandInterface
         {
             $setting = $this->ask("[$counting / $counter] Enable $name (y/n) [y]: ");
 
-            $settings['key'] = ($setting == 'n' ? false : true);
+            $settings['key'] = ($setting == 'y' ? true : false);
 
             $counting++;
         }
+
+        dd($settings);
 
         $startDate = new Carbon('+2 days midnight');
 
@@ -178,7 +180,6 @@ class RoundOpenCommand extends Command implements CommandInterface
                 {
                     $this->realmFactory->create($round, $race->key);
                 }
-
             }
 
             if($round->getSetting('barbarians'))
@@ -197,6 +198,14 @@ class RoundOpenCommand extends Command implements CommandInterface
                     $this->barbarianService->createBarbarian($round);
                 }
             }
+            else
+            {
+                $this->info('Barbarians are disabled for this round.');
+                dd();
+            }
+
+            // Done!
+            $this->info('Done! Round has been created.');
         });
     }
 }
