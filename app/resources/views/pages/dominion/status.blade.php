@@ -395,7 +395,7 @@
                 </div>
                 <div class="box-body">
                     <p>You can delete your dominion and create a new one.</p>
-                    <p><strong>There is instant and cannot be undone.</strong></p>
+                    <p><strong>This is instant and cannot be undone.</strong></p>
                     <form id="delete-dominion" class="form-inline" action="{{ route('dominion.misc.delete') }}" method="post">
                         @csrf
                         <div class="input-group">
