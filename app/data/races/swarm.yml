@@ -14,7 +14,7 @@ resources:
   - gems
 
 peasants_production:
-  gold: 2
+  gold: 3
 
 construction_materials:
   - gold
