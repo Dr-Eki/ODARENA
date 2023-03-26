@@ -812,7 +812,7 @@ class WorldNewsHelper
             $dominion->realm->number
           );
 
-        return $string;
+        return trim($string);
     }
 
     public function generateRealmOnlyString(Realm $realm, $mode = 'other'): string
