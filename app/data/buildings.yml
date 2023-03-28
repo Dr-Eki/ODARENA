@@ -655,7 +655,7 @@ temple:
     - Wood Elf
   land_type: swamp
   perks:
-    target_defensive_power_mod: 1,-1.8,36 # Every 1% gives -2% DP mods, max -40% DP mods
+    #target_defensive_power_mod: 1,-1.8,36 # Every 1% gives -2% DP mods, max -40% DP mods
 
 tavern:  
   enabled: 0
