@@ -83,27 +83,6 @@ commerce:
   perks:
     gold_production_mod: 25,4000
 
-construction:  
-  enabled: 0
-  name: Construction
-  excluded_races:
-    - Barbarian
-    - Artillery
-    - Beastfolk
-    - Dragon
-    - Growth
-    - Kerranad
-    - Marshling
-    - Monster
-    - Sylvan
-    - Swarm
-    - Qur
-    - Troll
-    - Void
-    - Wood Elf
-  perks:
-    construction_cost: -25,4000
-    rezone_cost: -25,4000
 
 construction_artillery:  
   enabled: 0
@@ -205,33 +184,6 @@ irrigation:
   perks:
     food_production_mod: 45,5000
 
-
-
-logging:  
-  enabled: 0
-  name: Logging
-  excluded_races:
-    - Aurei
-    - Barbarian
-    - Beastfolk
-    - Dwarg
-    - Firewalker
-    - Growth
-    - Kerranad
-    - Lux
-    - Marshling
-    - Monster
-    - Glimjir
-    - Myconid
-    - Spirit
-    - Sylvan
-    - Swarm
-    - Troll
-    - Void
-    - Wood Elf
-  perks:
-    lumber_production_mod: 25,4000
-
 medicine:  
   enabled: 0
   name: Combat
@@ -313,38 +265,6 @@ research:
   perks:
     xp_generation_mod: 25,5000
     xp_gains: 25,5000
-
-mining:  
-  enabled: 0
-  name: Stonecutting
-  excluded_races:
-    - Afflicted
-    - Aurei
-    - Barbarian
-    - Beastfolk
-    - Firewalker
-    - Glimjir
-    - Growth
-    - Halfling
-    - Icekin
-    - Kerranad
-    - Lux
-    - Marshling
-    - Monster
-    - Myconid
-    - Qur
-    - Reptilians
-    - Simian
-    - Spirit
-    - Sylvan
-    - Swarm
-    - Troll
-    - Undead
-    - Void
-    - Wood Elf
-    - Weres
-  perks:
-    ore_production_mod: 25,4000
 
 storage:  
   enabled: 0
