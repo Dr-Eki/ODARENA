@@ -17,7 +17,7 @@ defenses:
 logging:
   name: Logging
   perks:
-    lumber_production_mid: 30,8000
+    lumber_production_mod: 30,8000
 
 housing:  
   name: Housing
