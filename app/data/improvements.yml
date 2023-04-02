@@ -32,8 +32,11 @@ markets:
 
 mining:
   name: Mining
+  excluded_races:
+    - Reptilians
+    - Swarm
   perks:
-    ore_production_mid: 30,8000
+    ore_production_mod: 30,8000
 
 tactics:  
   name: Tactics
