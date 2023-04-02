@@ -366,7 +366,7 @@ class BarbarianService
                 if($landType === 'plain')
                 {
                     $buildings['building_shed'] = floor($acres * $housingRatio);
-                    $buildings['building_smithy'] = floor($acres * (1 - $housingRatio) * 0.75);
+                    #$buildings['building_smithy'] = floor($acres * (1 - $housingRatio) * 0.75);
                     $buildings['building_farm'] = floor($acres * (1 - $housingRatio) * 0.25);
                 }
 
@@ -374,15 +374,15 @@ class BarbarianService
                 {
                     $buildings['building_shelter'] = floor($acres * $housingRatio);
                     $buildings['building_ore_mine'] = floor($acres * (1 - $housingRatio) * 0.75);
-                    $buildings['building_gem_mine'] = floor($acres * (1 - $housingRatio) * 0.25);
+                    #$buildings['building_gem_mine'] = floor($acres * (1 - $housingRatio) * 0.25);
                 }
 
                 if($landType === 'swamp')
                 {
                     $buildings['building_hovel'] = floor($acres * $housingRatio);
-                    $buildings['building_tower'] = floor($acres * (1 - $housingRatio) * 0.70);
-                    $buildings['building_temple'] = floor($acres * (1 - $housingRatio) * 0.20);
-                    $buildings['building_wizard_guild'] = floor($acres * (1 - $housingRatio) * 0.10);
+                    #$buildings['building_tower'] = floor($acres * (1 - $housingRatio) * 0.70);
+                    #$buildings['building_temple'] = floor($acres * (1 - $housingRatio) * 0.20);
+                    #$buildings['building_wizard_guild'] = floor($acres * (1 - $housingRatio) * 0.10);
                 }
 
                 if($landType === 'forest')
@@ -400,7 +400,7 @@ class BarbarianService
                 if($landType === 'water')
                 {
                     $buildings['building_shanty'] = floor($acres * $housingRatio);
-                    $buildings['building_dock'] = floor($acres * (1 - $housingRatio));
+                    #$buildings['building_dock'] = floor($acres * (1 - $housingRatio));
                 }
             }
         }

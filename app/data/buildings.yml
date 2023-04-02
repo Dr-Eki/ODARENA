@@ -44,6 +44,7 @@ lumberyard:
   name: Lumberyard
   exclusive_races:
     - Gorm
+    - Reptilians
   land_type: forest
   perks:
     lumber_production_raw: 35
@@ -180,7 +181,7 @@ bog:
     - Reptilians
   land_type: swamp
   perks:
-    food_production_raw: 60
+    food_production_raw: 50
 
 mire:  
   name: Mire
@@ -1911,8 +1912,7 @@ enclosure:
 
 # BARBARIAN
 
-shed:  
-  enabled: 0
+shed:
   name: Shed
   exclusive_races:
     - Barbarian
@@ -1921,8 +1921,7 @@ shed:
     housing: 48
     jobs: 0
 
-shack:  
-  enabled: 0
+shack:
   name: Shack
   exclusive_races:
     - Barbarian
@@ -1931,8 +1930,7 @@ shack:
     housing: 48
     jobs: 0
 
-shelter:  
-  enabled: 0
+shelter:
   name: Shelter
   exclusive_races:
     - Barbarian
@@ -1941,8 +1939,7 @@ shelter:
     housing: 48
     jobs: 0
 
-cabin:  
-  enabled: 0
+cabin:
   name: Cabin
   exclusive_races:
     - Barbarian
@@ -1951,8 +1948,7 @@ cabin:
     housing: 48
     jobs: 0
 
-hovel:  
-  enabled: 0
+hovel:
   name: Hovel
   exclusive_races:
     - Barbarian
@@ -1961,8 +1957,7 @@ hovel:
     housing: 48
     jobs: 0
 
-shanty:  
-  enabled: 0
+shanty:
   name: Shanty
   exclusive_races:
     - Barbarian
