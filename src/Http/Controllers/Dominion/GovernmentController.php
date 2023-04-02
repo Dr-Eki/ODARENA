@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
+use OpenDominion\Calculators\Dominion\AllianceCalculator;
 use OpenDominion\Calculators\Dominion\GovernmentCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
@@ -16,6 +17,8 @@ use OpenDominion\Calculators\RealmCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Realm;
+use OpenDominion\Models\AllianceOffer;
 use OpenDominion\Models\ProtectorshipOffer;
 use OpenDominion\Services\Dominion\ProtectionService;
 
@@ -42,10 +45,17 @@ class GovernmentController extends AbstractDominionController
                 return app(LandCalculator::class)->getTotalLand($dominion);
             });
 
+        $allianceableRealms = Realm::where('round_id','=',$dominion->round->id)
+        ->where('alignment', '!=', 'npc')
+        ->where('id', '!=', $dominion->realm->id)
+        ->get();
+
         return view('pages.dominion.government', [
+            'allianceableRealms' => $allianceableRealms,
             'dominions' => $dominions,
             'realms' => $dominion->round->realms,
             'monarch' => $dominion->realm->monarch,
+            'allianceCalculator' => app(AllianceCalculator::class),
             'governmentCalculator' => app(GovernmentCalculator::class),
             'landCalculator' => app(LandCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),
@@ -158,4 +168,65 @@ class GovernmentController extends AbstractDominionController
         $request->session()->flash('alert-success', 'Your answer has been sent.');
         return redirect()->route('dominion.government');
     }
+    # END PROTECTORSHIP
+
+    # ALLIANCE
+    public function postOfferAlliance(GovernmentActionRequest $request)
+    {
+        $inviter = $this->getSelectedDominion();
+        $invitee = Realm::findOrFail($request->realm);
+        $governmentActionService = app(GovernmentActionService::class);
+
+        try {
+            $governmentActionService->submitAllianceOffer($inviter, $inviter->realm, $invitee);
+        } catch (GameException $e) {
+            return redirect()
+                ->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        $request->session()->flash('alert-success', 'Your offer has been sent.');
+        return redirect()->route('dominion.government');
+    }
+
+    public function postRescindAllianceOffer(GovernmentActionRequest $request)
+    {
+        $inviter = $this->getSelectedDominion();
+        $allianceOffer = AllianceOffer::findOrFail($request->alliance_offer_id);
+        $governmentActionService = app(GovernmentActionService::class);
+
+        try {
+            $governmentActionService->rescindAllianceOffer($allianceOffer, $inviter);
+        } catch (GameException $e) {
+            return redirect()
+                ->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        $request->session()->flash('alert-warning', 'Your offer has been rescinded.');
+        return redirect()->route('dominion.government');
+    }
+
+    public function postAnswerAllianceOffer(GovernmentActionRequest $request)
+    {
+        $invitee = $this->getSelectedDominion();
+        $allianceOffer = AllianceOffer::findOrFail($request->alliance_offer_id);
+        $governmentActionService = app(GovernmentActionService::class);
+        $answer = $request->get('answer');
+
+        try {
+            $governmentActionService->answerProtectorshipOffer($allianceOffer, $answer, $invitee);
+        } catch (GameException $e) {
+            return redirect()
+                ->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        $request->session()->flash('alert-success', 'Your answer has been sent.');
+        return redirect()->route('dominion.government');
+    }
+
 }

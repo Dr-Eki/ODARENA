@@ -4,11 +4,12 @@ namespace OpenDominion\Calculators\Dominion;
 
 use OpenDominion\Helpers\ImprovementHelper;
 
+use OpenDominion\Models\Advancement;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Improvement;
+use OpenDominion\Models\Realm;
 use OpenDominion\Models\Spell;
-use OpenDominion\Models\Advancement;
 use OpenDominion\Models\Unit;
 
 use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
@@ -3069,6 +3070,24 @@ class MilitaryCalculator
         }
 
         return $sabotagePower;
+    }
+
+    public function getRecentAttacksBetweenRealms(Realm $source, Realm $target, int $ticks = 48): int
+    {
+        # Check if there have been invasion Game Events between thet wo realms in the last $ticks ticks (default 48).
+        $recentAttacks = GameEvent::where('source_id', $source->id)
+            ->where('target_id', $target->id)
+            ->where('type', 'invasion')
+            ->where('tick', '>=', ($source->round->ticks - $ticks))
+            ->count();
+        
+        $recentAttacks += GameEvent::where('source_id', $target->id)
+            ->where('target_id', $source->id)
+            ->where('type', 'invasion')
+            ->where('tick', '>=', ($source->round->ticks - $ticks))
+            ->count();
+
+        return $recentAttacks;
     }
 
 }

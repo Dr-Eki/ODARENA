@@ -326,6 +326,24 @@ class NotificationHelper
                 'iconClass' => 'fas fa-user-shield',
                 'route' => route('dominion.government'),
             ],
+            'received_alliance_offer' => [
+                'label' => 'Alliance offer received',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fa fa-handshake text-green',
+                'route' => route('dominion.government'),
+            ],
+            'received_alliance_offer_accepted' => [
+                'label' => 'Alliance offer accepted',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fa fa-handshake text-green',
+                'route' => route('dominion.government'),
+            ],
+            'received_alliance_offer_declined' => [
+                'label' => 'Alliance offer declined',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fa fa-handshake',
+                'route' => route('dominion.government'),
+            ],
 
             # Cult
             'enthralling_occurred' => [
@@ -795,6 +813,30 @@ class NotificationHelper
                     '%s (# %s) has declined our offer of protectorship.',
                     $protected->name,
                     $protected->realm->number
+                );
+
+            case 'irregular_dominion.received_alliance_offer':
+                $inviter = Realm::findOrFail($data['allyRealmId']);
+                return sprintf(
+                    'We have received an alliance offer from %s (# %s).',
+                    $inviter->name,
+                    $inviter->realm->number
+                );
+
+            case 'irregular_dominion.received_alliance_offer_accepted':
+                $invitee = Realm::findOrFail($data['allyRealmId']);
+                return sprintf(
+                    '%s (# %s) has accepted our offer of alliance.',
+                    $invitee->name,
+                    $invitee->realm->number
+                );
+
+            case 'irregular_dominion.received_alliance_offer_declined':
+                $invitee = Realm::findOrFail($data['allyRealmId']);
+                return sprintf(
+                    '%s (# %s) has declined our offer of alliance.',
+                    $invitee->name,
+                    $invitee->realm->number
                 );
     
             case 'irregular_dominion.received_spy_op':

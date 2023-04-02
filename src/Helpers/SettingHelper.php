@@ -249,6 +249,21 @@ class SettingHelper
                 'defaults' => ['email' => false, 'ingame' => true],
                 'iconClass' => 'fas fa-user-shield',
             ],
+            'received_alliance_offer' => [
+                'label' => 'Alliance offer received',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fa fa-handshake text-green',
+            ],
+            'received_alliance_offer_accepted' => [
+                'label' => 'Alliance offer accepted',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fa fa-handshake text-green',
+            ],
+            'received_alliance_offer_declined' => [
+                'label' => 'Alliance offer declined',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fa fa-handshake',
+            ],
 
             # Cult
             'enthralling_occurred' => [

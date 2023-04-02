@@ -18,8 +18,9 @@ use OpenDominion\Traits\DominionGuardsTrait;
 use RuntimeException;
 
 
-use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\AllianceCalculator;
 use OpenDominion\Calculators\Dominion\GovernmentCalculator;
+use OpenDominion\Calculators\Dominion\SpellCalculator;
 
 class GovernmentActionService
 {
@@ -39,6 +40,7 @@ class GovernmentActionService
      * @param GovernmentService $governmentService
      */
     public function __construct(
+        AllianceCalculator $allianceCalculator,
         GovernmentService $governmentService,
         GovernmentCalculator $governmentCalculator,
         NotificationService $notificationService,
@@ -47,6 +49,7 @@ class GovernmentActionService
     {
         $this->governmentService = $governmentService;
         $this->governmentCalculator = $governmentCalculator;
+        $this->allianceCalculator = $allianceCalculator;
         $this->notificationService = $notificationService;
         $this->spellCalculator = $spellCalculator;
     }
@@ -433,24 +436,19 @@ class GovernmentActionService
                 throw new GameException('You cannot form alliances in this round.');
             }
 
-            if(!$this->governmentService->hasMonarch($inviter))
+            if(!$inviter->realm->hasMonarch())
             {
                 throw new GameException('Realm #' . $inviter->number . ' does not have a governor.');
             }
 
-            if(!$this->governmentService->hasMonarch($invited))
-            {
-                throw new GameException('Realm #' . $invited->number . ' does not have a governor.');
-            }
-
-            if(!$this->governmentService->hasMonarch($invited))
+            if(!$invited->realm->hasMonarch())
             {
                 throw new GameException('Realm #' . $invited->number . ' does not have a governor.');
             }
 
             if(!$governor or !$inviter or !$invited)
             {
-                throw new GameException('Invalid protectorship offer.');
+                throw new GameException('Invalid alliance offer.');
             }
 
             if(!$governor->isMonarch())
@@ -480,7 +478,12 @@ class GovernmentActionService
 
             if(!$this->governmentCalculator->canOfferAlliance($inviter, $invited))
             {
-                throw new GameException('You cannot offer protection.');
+                throw new GameException('You cannot offer alliance.');
+            }
+
+            if(!$this->allianceCalculator->canFormAllianceWithRealm($inviter->realm, $invited->realm))
+            {
+                throw new GameException('You cannot form alliance with realm #' . $invited->number . '.');
             }
 
             $invitedGovernor = $this->governmentService->getRealmMonarch($invited);

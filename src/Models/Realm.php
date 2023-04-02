@@ -126,6 +126,11 @@ class Realm extends AbstractModel
         return $this->artefacts()->count();
     }
 
+    public function hasMonarch(): bool
+    {
+        return ($this->monarch !== null);
+    }
+
     protected function getArtefactPerks()
     {
         return $this->artefacts->flatMap(

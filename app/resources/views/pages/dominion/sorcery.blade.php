@@ -94,43 +94,43 @@
 
                     <div class="row">
 
-                    @foreach($spells as $spell)
-                        @php
-                            $canCast = $spellCalculator->canCastSpell($selectedDominion, $spell, $resourceCalculator->getAmount($selectedDominion, 'mana'));
-                        @endphp
-                        <div class="col-md-{{ $bootstrapColWidth }}">
-                            <label class="btn btn-block">
-                                <div class="box {!! $sorceryHelper->getSpellClassBoxClass($spell) !!}">
-                                    <div class="box-header with-border">
-                                        <input type="radio" id="spell" name="spell" value="{{ $spell->id }}" required>&nbsp;<h4 class="box-title">{{ $spell->name }}</h4>
-                                        <span class="pull-right" data-toggle="tooltip" data-placement="top" title="{!! $sorceryHelper->getSpellClassDescription($spell) !!}"><i class="{!! $sorceryHelper->getSpellClassIcon($spell) !!}"></i></span>
-                                    </div>
+                        @foreach($spells as $spell)
+                            @php
+                                $canCast = $spellCalculator->canCastSpell($selectedDominion, $spell, $resourceCalculator->getAmount($selectedDominion, 'mana'));
+                            @endphp
+                            <div class="col-md-{{ $bootstrapColWidth }}">
+                                <label class="btn btn-block">
+                                    <div class="box {!! $sorceryHelper->getSpellClassBoxClass($spell) !!}">
+                                        <div class="box-header with-border">
+                                            <input type="radio" id="spell" name="spell" value="{{ $spell->id }}" required>&nbsp;<h4 class="box-title">{{ $spell->name }}</h4>
+                                            <span class="pull-right" data-toggle="tooltip" data-placement="top" title="{!! $sorceryHelper->getSpellClassDescription($spell) !!}"><i class="{!! $sorceryHelper->getSpellClassIcon($spell) !!}"></i></span>
+                                        </div>
 
-                                    <div class="box-body">
-                                        <ul>
-                                            @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
-                                                <li>{{ $effect }}</li>
-                                            @endforeach
-                                        </ul>
+                                        <div class="box-body">
+                                            <ul>
+                                                @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
+                                                    <li>{{ $effect }}</li>
+                                                @endforeach
+                                            </ul>
 
-                                        <div class="box-footer">
-                                            @include('partials.dominion.sorcery-spell-basics')
+                                            <div class="box-footer">
+                                                @include('partials.dominion.sorcery-spell-basics')
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </label>
+                                </label>
+                            </div>
+
+                            @php
+                                $rowCount++;
+                            @endphp
+
+                            @if($rowCount % $numOfCols == 0)
+                                </div><div class="row">
+                            @endif
+
+                        @endforeach
                         </div>
-
-                        @php
-                            $rowCount++;
-                        @endphp
-
-                        @if($rowCount % $numOfCols == 0)
-                            </div><div class="row">
-                        @endif
-
-                    @endforeach
-                    </div>
                     </div>
                 </div>
             </div>

@@ -16,6 +16,9 @@ resources:
   - gems
   #- prayer
 
+peasants_production:
+  gold: 3
+
 perks:
     population_growth: 20
     extra_barren_housing: 5

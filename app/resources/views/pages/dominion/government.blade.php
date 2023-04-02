@@ -229,6 +229,96 @@
 </div>
 @endif
 
+@if(in_array($selectedDominion->round->mode, ['factions', 'factions-duration']))
+
+<div class="row">
+    <div class="col-sm-12 col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-handshake"></i> Alliance</h3>
+            </div>
+            <div class="box-body">
+                {{-- //Columns must be a factor of 12 (1,2,3,4,6,12) --}}
+                @php
+                    $numOfCols = 3;
+                    $rowCount = 0;
+                    $bootstrapColWidth = 12 / $numOfCols;
+                @endphp
+
+                <div class="row">
+                    <form action="{{ route('dominion.government.offer-alliance') }}" method="post" role="form">
+                        @csrf
+
+                        @foreach($allianceableRealms as $realm)
+                            <div class="col-md-{{ $bootstrapColWidth }}">
+                                <label class="btn btn-block">
+                                    <div class="box">
+                                        <div class="box-header with-border">
+                                            <input type="radio" id="realm" name="realm" value="{{ $realm->id }}" {{ $allianceCalculator->canFormAllianceWithRealm($selectedDominion->realm, $realm) ? 'required' : 'disabled' }}>&nbsp;<h4 class="box-title">{{ $realm->name }} (# {{ $realm->number }})</h4>
+                                            <span class="pull-right" data-toggle="tooltip" data-placement="top" title="{{ $realm->name }}"><i class=""></i></span>
+                                        </div>
+                                        <div class="box-body">
+                                            @if($realm->hasMonarch())
+                                                <p><strong>Governor:</strong> {{ $realm->monarch->name }}</p>
+                                            @else
+                                                <p><strong>Governor:</strong> <em class="text-muted">None, cannot form alliance</em></p>
+                                            @endif
+                                            <p><strong>Alignment:</strong> {{ ucfirst($realm->alignment) }}</p>
+                                            <p><strong>Dominions:</strong> {{ $realm->dominions->count() }}</p>
+
+                                            @foreach($realm->dominions as $dominion)
+
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            @php
+                                $rowCount++;
+                            @endphp
+
+                            @if($rowCount % $numOfCols == 0)
+                                </div><div class="row">
+                            @endif
+
+                        @endforeach
+
+                        <div class="col-sm-offset-9 col-lg-3">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
+                                    Offer Alliance
+                                </button>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-3">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Information</h3>
+            </div>
+            <div class="box-body">
+                <p>In this round, you are able to form alliances with other realms. Allied realms cannot take hostile actions against each other but can cast friendly spells on each other.</p>
+                <p>You can form alliances with realms that have a governor and if there have been no invasions between the two realms in the past 48 ticks.</p>
+                <p>An alliance can be broken after 192 ticks.</p>
+                <p>Breaking an alliance incurs a prestige penalty: <code>25% * 1 - min([Tick Duration of Alliance]/1000, 1)</code></p>
+                <p>After breaking an alliance, there is a prestige penalty if invading former ally: <code>50% * 1 - min([Ticks Since Break of Alliance]/192, 1)</code></p>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+@endif
+
 @if(!$selectedDominion->race->getPerkValue('cannot_vote') and !($selectedDominion->round->mode == 'deathmatch' or $selectedDominion->round->mode =='deathmatch-duration'))
 <div class="row">
     <div class="col-sm-12 col-md-9">
