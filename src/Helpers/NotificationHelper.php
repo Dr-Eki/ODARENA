@@ -344,6 +344,12 @@ class NotificationHelper
                 'iconClass' => 'fa fa-handshake',
                 'route' => route('dominion.government'),
             ],
+            'received_alliance_offer_rescinded' => [
+                'label' => 'Alliance offer rescinded',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'iconClass' => 'fa fa-handshake',
+                'route' => route('dominion.government'),
+            ],
 
             # Cult
             'enthralling_occurred' => [
@@ -816,27 +822,35 @@ class NotificationHelper
                 );
 
             case 'irregular_dominion.received_alliance_offer':
-                $inviter = Realm::findOrFail($data['allyRealmId']);
+                $inviter = Realm::findOrFail($data['inviterRealmId']);
                 return sprintf(
                     'We have received an alliance offer from %s (# %s).',
                     $inviter->name,
-                    $inviter->realm->number
+                    $inviter->number
                 );
 
             case 'irregular_dominion.received_alliance_offer_accepted':
-                $invitee = Realm::findOrFail($data['allyRealmId']);
+                $invitee = Realm::findOrFail($data['invitedRealmId']);
                 return sprintf(
                     '%s (# %s) has accepted our offer of alliance.',
                     $invitee->name,
-                    $invitee->realm->number
+                    $invitee->number
                 );
 
             case 'irregular_dominion.received_alliance_offer_declined':
-                $invitee = Realm::findOrFail($data['allyRealmId']);
+                $invitee = Realm::findOrFail($data['invitedRealmId']);
                 return sprintf(
                     '%s (# %s) has declined our offer of alliance.',
                     $invitee->name,
-                    $invitee->realm->number
+                    $invitee->number
+                );
+
+            case 'irregular_dominion.received_alliance_offer_rescinded':
+                $rescinder = Realm::findOrFail($data['rescinderRealmId']);
+                return sprintf(
+                    '%s (# %s) has rescinded their invitation to an alliance.',
+                    $rescinder->name,
+                    $rescinder->number
                 );
     
             case 'irregular_dominion.received_spy_op':

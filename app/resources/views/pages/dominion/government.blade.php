@@ -230,7 +230,6 @@
 @endif
 
 @if(in_array($selectedDominion->round->mode, ['factions', 'factions-duration']))
-
 <div class="row">
     <div class="col-sm-12 col-md-9">
         <div class="box box-primary">
@@ -254,16 +253,15 @@
                                 <label class="btn btn-block">
                                     <div class="box">
                                         <div class="box-header with-border">
-                                            <input type="radio" id="realm" name="realm" value="{{ $realm->id }}" {{ $allianceCalculator->canFormAllianceWithRealm($selectedDominion->realm, $realm) ? 'required' : 'disabled' }}>&nbsp;<h4 class="box-title">{{ $realm->name }} (# {{ $realm->number }})</h4>
-                                            <span class="pull-right" data-toggle="tooltip" data-placement="top" title="{{ $realm->name }}"><i class=""></i></span>
+                                            @if($selectedDominion->realm->isAlly($realm))
+                                                <span class="label label-success">Ally</span> <h4 class="box-title">{{ $realm->name }} (# {{ $realm->number }})</h4>
+                                            @else
+                                                <input type="radio" id="realm" name="realm" value="{{ $realm->id }}" {{ $allianceCalculator->canFormAllianceWithRealm($selectedDominion->realm, $realm, $selectedDominion) ? 'required' : 'disabled' }}>&nbsp;<h4 class="box-title">{{ $realm->name }} (# {{ $realm->number }})</h4>
+                                            @endif
                                         </div>
                                         <div class="box-body">
-                                            @if($realm->hasMonarch())
-                                                <p><strong>Governor:</strong> {{ $realm->monarch->name }}</p>
-                                            @else
-                                                <p><strong>Governor:</strong> <em class="text-muted">None, cannot form alliance</em></p>
-                                            @endif
-                                            <p><strong>Alignment:</strong> {{ ucfirst($realm->alignment) }}</p>
+                                            <p><strong>Governor:</strong> {!! $realm->hasMonarch() ? $realm->monarch->name : '<em class="text-muted">None, cannot form alliance</em>' !!}</p>
+                                            <p><strong>Faction:</strong> {{ ucfirst($realm->alignment) }}</p>
                                             <p><strong>Dominions:</strong> {{ $realm->dominions->count() }}</p>
 
                                             @foreach($realm->dominions as $dominion)
@@ -291,10 +289,163 @@
                                 </button>
                             </div>
                         </div>
-
-
                     </form>
                 </div>
+
+                @if($allianceCalculator->getPendingReceivedAllianceOffers($selectedDominion->realm)->count())
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Received Alliance Offers</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <table class="table table-condensed">
+                                        <thead>
+                                            <th>Realm</th>
+                                            <th>Faction</th>
+                                            <th>Governor</th>
+                                            <th>Action</th>
+                                        </thead>
+                                
+                                        <tbody>
+
+                                        @foreach($allianceCalculator->getPendingReceivedAllianceOffers($selectedDominion->realm) as $allianceOfferReceived)
+                                            <tr>
+                                                <td>{{ $allianceOfferReceived->inviter->name }} (# {{ $allianceOfferReceived->inviter->number }})</td>
+                                                <td>{{ ucfirst($allianceOfferReceived->inviter->alignment) }}</td>
+                                                <td>{{ $allianceOfferReceived->inviter->monarch->name }}</td>
+                                                <td>
+                                                    <div class="btn-toolbar">
+                                                        <form action="{{ route('dominion.government.answer-alliance-offer') }}" method="post" role="form">
+                                                            @csrf
+                                                            <input type="hidden" name="alliance_offer_id" value="{{ $allianceOfferReceived->id }}">
+                                                            <input type="hidden" name="answer" value="accept">
+                                                            <button type="submit" class="btn btn-success" {{ !$allianceCalculator->canFormAllianceWithRealm($allianceOfferReceived->inviter, $allianceOfferReceived->invited, $selectedDominion) ? 'disabled' : ''}}>
+                                                                Accept
+                                                            </button>
+                                                        </form>
+                                                        <form action="{{ route('dominion.government.answer-alliance-offer') }}" method="post" role="form">
+                                                            @csrf
+                                                            <input type="hidden" name="alliance_offer_id" value="{{ $allianceOfferReceived->id }}">
+                                                            <input type="hidden" name="answer" value="decline">
+                                                            <button type="submit" class="btn btn-danger">
+                                                                Decline
+                                                            </button>
+                                                        </form> 
+                                                    </div> 
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                        <tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if($allianceCalculator->getPendingSentAllianceOffers($selectedDominion->realm)->count())
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Sent Alliance Offers</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <table class="table table-condensed">
+                                        <thead>
+                                            <th>Realm</th>
+                                            <th>Faction</th>
+                                            <th>Governor</th>
+                                            <th>Action</th>
+                                        </thead>
+                                
+                                        <tbody>
+
+                                        @foreach($allianceCalculator->getPendingSentAllianceOffers($selectedDominion->realm) as $allianceOfferReceived)
+                                            <tr>
+                                                <td>{{ $allianceOfferReceived->invited->name }} (# {{ $allianceOfferReceived->invited->number }})</td>
+                                                <td>{{ ucfirst($allianceOfferReceived->invited->alignment) }}</td>
+                                                <td>{{ $allianceOfferReceived->invited->monarch->name }}</td>
+                                                <td>
+                                                    <div class="btn-toolbar">
+                                                        <form action="{{ route('dominion.government.rescind-alliance-offer') }}" method="post" role="form">
+                                                            @csrf
+                                                            <input type="hidden" name="alliance_offer_id" value="{{ $allianceOfferReceived->id }}">
+                                                            <button type="submit" class="btn btn-danger">
+                                                                Rescind
+                                                            </button>
+                                                        </form> 
+                                                    </div> 
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                        <tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if($selectedDominion->realm->getAllies()->count())
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Active Alliances</h3>
+                            </div>
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <table class="table table-condensed">
+                                        <thead>
+                                            <th>Realm</th>
+                                            <th>Faction</th>
+                                            <th>Governor</th>
+                                            <th>Duration</th>
+                                            <th>Break Alliance</th>
+                                        </thead>
+                                
+                                        <tbody>
+                                        @foreach($selectedDominion->realm->getAllies() as $alliedRealm)
+                                            @php
+                                                $realmAlliance = OpenDominion\Models\RealmAlliance::where(['realm_id' => $selectedDominion->realm->id, 'allied_realm_id' => $alliedRealm->id])->orWhere(['realm_id' => $alliedRealm->id, 'allied_realm_id' => $selectedDominion->realm->id])->first();
+                                            @endphp
+
+                                            <tr>
+                                                <td>{{ $alliedRealm->name }} (# {{ $alliedRealm->number }})</td>
+                                                <td>{{ ucfirst($alliedRealm->alignment) }}</td>
+                                                <td>{{ $alliedRealm->monarch->name }}</td>
+                                                <td>{{ number_format($selectedDominion->round->ticks - $realmAlliance->established_tick) . ' ' . str_plural('tick', ($selectedDominion->round->ticks - $realmAlliance->established_tick))}}</td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <form action="{{ route('dominion.government.break-alliance') }}" method="post" role="form">
+                                                            @csrf
+                                                            <input type="hidden" name="realm_alliance_id" value="{{ $realmAlliance->id }}">
+                                                            <label>
+                                                                <input type="checkbox" name="confirm" required> Confirm breaking alliance<br>
+                                                            </label><br>
+                                                            <button type="submit" class="btn btn-danger" {{ !$allianceCalculator->canBreakAlliance($realmAlliance, $selectedDominion) ? 'disabled' : ''}}>
+                                                                Break
+                                                            </button>
+                                                        </form> 
+                                                    </div> 
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                        <tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
             </div>
         </div>
     </div>

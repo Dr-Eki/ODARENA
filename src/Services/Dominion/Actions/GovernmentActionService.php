@@ -436,12 +436,12 @@ class GovernmentActionService
                 throw new GameException('You cannot form alliances in this round.');
             }
 
-            if(!$inviter->realm->hasMonarch())
+            if(!$inviter->hasMonarch())
             {
                 throw new GameException('Realm #' . $inviter->number . ' does not have a governor.');
             }
 
-            if(!$invited->realm->hasMonarch())
+            if(!$invited->hasMonarch())
             {
                 throw new GameException('Realm #' . $invited->number . ' does not have a governor.');
             }
@@ -461,12 +461,12 @@ class GovernmentActionService
                 throw new GameException('Realm #' . $invited->number . ' is already an ally.');
             }
 
-            if($inviter->realm->id == $invited->realm->id)
+            if($inviter->id == $invited->id)
             {
                 throw new GameException('You cannot form an alliance with yourself.');
             }
 
-            if($invited->realm->alignment == 'npc')
+            if($invited->alignment == 'npc')
             {
                 throw new GameException('You cannot form an alliance with the Barbarians.');
             }
@@ -476,12 +476,12 @@ class GovernmentActionService
                 throw new GameException('You cannot offer protection to a dominion outside of the current round.');
             }
 
-            if(!$this->governmentCalculator->canOfferAlliance($inviter, $invited))
+            if($this->allianceCalculator->checkPendingAllianceOfferBetweenRealms($inviter, $invited))
             {
-                throw new GameException('You cannot offer alliance.');
+                throw new GameException('There is already an alliance offer between realm #' . $inviter->number . ' and realm #' . $invited->number . '.');
             }
 
-            if(!$this->allianceCalculator->canFormAllianceWithRealm($inviter->realm, $invited->realm))
+            if(!$this->allianceCalculator->canFormAllianceWithRealm($inviter, $invited, $governor))
             {
                 throw new GameException('You cannot form alliance with realm #' . $invited->number . '.');
             }
@@ -514,26 +514,50 @@ class GovernmentActionService
 
                 $this->notificationService
                 ->queueNotification('received_alliance_offer', [
-                    'allyRealmGovernorId' => $governor->id,
-                    'allyRealmId' => $inviter->id,
+                    'inviterRealmGovernorId' => $governor->id,
+                    'inviterRealmId' => $inviter->id,
                 ])
                 ->sendNotifications($invitedGovernor, 'irregular_dominion');
             }
         });
     }
 
-    public function rescindAllianceOffer(AllianceOffer $allianceOffer, Dominion $responder)
+    public function rescindAllianceOffer(AllianceOffer $allianceOffer, Dominion $rescinder)
     {
-        DB::transaction(function () use ($allianceOffer, $responder)
+        DB::transaction(function () use ($allianceOffer, $rescinder)
         {
-            if(!$responder->isMonarch())
+            if(!$rescinder->isMonarch())
             {
                 throw new GameException('You must be realm governor to rescind an alliance offer.');
             }
 
-            if(!$this->governmentCalculator->canRescindAllianceOffer($allianceOffer))
+            if(!$this->allianceCalculator->canRescindAllianceOffer($rescinder, $allianceOffer))
             {
                 throw new GameException('You cannot rescind this alliance offer.');
+            }
+
+            GameEvent::create([
+                'round_id' => $rescinder->round_id,
+                'source_type' => Realm::class,
+                'source_id' => $allianceOffer->inviter->id,
+                'target_type' => Realm::class,
+                'target_id' => $allianceOffer->invited->id,
+                'type' => 'alliance_rescinded',
+                'data' => NULL,
+                'tick' => $rescinder->round->ticks
+            ]);
+
+            if($allianceOffer->invited->hasMonarch())
+            {
+                $invitedGovernor = $this->governmentService->getRealmMonarch($allianceOffer->invited);
+
+                $this->notificationService
+                ->queueNotification('received_alliance_offer_rescinded', [
+                    'rescinderRealmGovernorId' => $rescinder->id,
+                    'rescinderRealmId' => $allianceOffer->inviter->id,
+                ])
+                ->sendNotifications($invitedGovernor, 'irregular_dominion');
+
             }
 
             $allianceOffer->delete();
@@ -582,13 +606,19 @@ class GovernmentActionService
                 throw new GameException('You cannot enter into an alliance with a realm outside of the current round.');
             }
 
+            if(!$this->allianceCalculator->canFormAllianceWithRealm($inviter, $invited, $responder))
+            {
+                throw new GameException('You cannot form alliance with realm #' . $invited->number . '.');
+            }
+
             $inviterGovernor = $this->governmentService->getRealmMonarch($inviter);
 
             if($answer == 'accept')
             {
+
                 $alliance = RealmAlliance::create([
                     'realm_id' => $inviter->id,
-                    'ally_id' => $invited->id,
+                    'allied_realm_id' => $invited->id,
                     'established_tick' => $responder->round->ticks
                 ]);
     
@@ -618,16 +648,16 @@ class GovernmentActionService
             elseif($answer == 'decline')
             {
                 
-                # Delete the protectorship offer
+                # Delete the alliance offer
                 $allianceOffer->delete();
 
                 GameEvent::create([
                     'round_id' => $responder->round_id,
-                    'source_type' => Dominion::class,
+                    'source_type' => Realm::class,
                     'source_id' => $inviter->id,
-                    'target_type' => Dominion::class,
+                    'target_type' => Realm::class,
                     'target_id' => $invited->id,
-                    'type' => 'protectorship_declined',
+                    'type' => 'alliance_declined',
                     'data' => NULL,
                     'tick' => $responder->round->ticks
                 ]);
@@ -643,6 +673,51 @@ class GovernmentActionService
                 throw new GameException('Invalid answer.');
             }
 
+        });
+    }
+
+    public function submitBreakAlliance(RealmAlliance $realmAlliance, Dominion $breaker)
+    {
+        DB::transaction(function () use ($realmAlliance, $breaker)
+        {
+            $inviter = $realmAlliance->realm;
+            $invited = $realmAlliance->ally;
+
+            if(!$breaker->isMonarch())
+            {
+                throw new GameException('You must be realm governor to break alliance.');
+            }
+
+            if(!$inviter->isAlly($invited))
+            {
+                throw new GameException('Realm #' . $inviter->number . ' is not an ally.');
+            }
+
+            if($breaker->realm->id !== $inviter->id && $breaker->realm->id !== $invited->id)
+            {
+                throw new GameException('You cannot break this alliance.');
+            }
+
+            if(!$this->allianceCalculator->canBreakAlliance($realmAlliance, $breaker))
+            {
+                throw new GameException('You cannot break alliance with realm #' . $invited->number . '.');
+            }
+
+            $inviterGovernor = $this->governmentService->getRealmMonarch($inviter);
+            $invitedGovernor = $this->governmentService->getRealmMonarch($invited);
+
+            $realmAlliance->delete();
+
+            GameEvent::create([
+                'round_id' => $breaker->round_id,
+                'source_type' => Realm::class,
+                'source_id' => $inviter->id,
+                'target_type' => Realm::class,
+                'target_id' => $invited->id,
+                'type' => 'alliance_broken',
+                'data' => NULL,
+                'tick' => $breaker->round->ticks
+            ]);
         });
     }
 

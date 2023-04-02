@@ -19,6 +19,23 @@ class RealmAlliance extends AbstractModel
     protected $fillable = [
         'realm_id',
         'allied_realm_id',
-        'established'
+        'established_tick'
     ];
+
+    public function realm()
+    {
+        return $this->belongsTo(Realm::class, 'realm_id');
+    }
+
+    public function ally()
+    {
+        return $this->belongsTo(Realm::class, 'allied_realm_id');
+    }
+
+    # Return a collection of both realm and ally
+    public function getRealms()
+    {
+        return collect([$this->realm, $this->ally]);
+    }
+
 }

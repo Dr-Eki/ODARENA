@@ -198,12 +198,15 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('government')->uses('Dominion\GovernmentController@getIndex')->name('government');
             $router->post('government/monarch')->uses('Dominion\GovernmentController@postMonarch')->name('government.monarch');
             $router->post('government/realm')->uses('Dominion\GovernmentController@postRealm')->name('government.realm');
-            $router->post('government/offer-protectorship')->uses('Dominion\GovernmentController@postOfferProtectorship')->name('government.offer-protectorship');
-            $router->post('government/answer-protectorship-offer')->uses('Dominion\GovernmentController@postAnswerProtectorshipOffer')->name('government.answer-protectorship-offer');
-            $router->post('government/rescind-protectorship-offer')->uses('Dominion\GovernmentController@postRescindProtectorshipOffer')->name('government.rescind-protectorship-offer');
-            $router->post('government/offer-alliance')->uses('Dominion\GovernmentController@postOfferAlliance')->name('government.offer-alliance');
-            $router->post('government/answer-alliance-offer')->uses('Dominion\GovernmentController@postAnswerAllianceOffer')->name('government.answer-alliance-offer');
-            $router->post('government/rescind-alliance-offer')->uses('Dominion\GovernmentController@postRescindAllianceOffer')->name('government.rescind-alliance-offer');
+            
+                $router->post('government/offer-protectorship')->uses('Dominion\GovernmentController@postOfferProtectorship')->name('government.offer-protectorship');
+                $router->post('government/answer-protectorship-offer')->uses('Dominion\GovernmentController@postAnswerProtectorshipOffer')->name('government.answer-protectorship-offer');
+                $router->post('government/rescind-protectorship-offer')->uses('Dominion\GovernmentController@postRescindProtectorshipOffer')->name('government.rescind-protectorship-offer');
+
+                $router->post('government/offer-alliance')->uses('Dominion\GovernmentController@postOfferAlliance')->name('government.offer-alliance');
+                $router->post('government/answer-alliance-offer')->uses('Dominion\GovernmentController@postAnswerAllianceOffer')->name('government.answer-alliance-offer');
+                $router->post('government/rescind-alliance-offer')->uses('Dominion\GovernmentController@postRescindAllianceOffer')->name('government.rescind-alliance-offer');
+                $router->post('government/break-alliance')->uses('Dominion\GovernmentController@postBreakAlliance')->name('government.break-alliance');
 
             // Deity
             $router->get('deity')->uses('Dominion\DeityController@getIndex')->name('deity');

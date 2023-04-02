@@ -109,6 +109,12 @@ class Realm extends AbstractModel
         return $this->getAllies()->contains($realm);
     }
 
+    public function allianceOffers()
+    {
+        # Check if this realm has sent an alliance offer to another realm or has received an alliance offer from another realm
+        return RealmAlliance::where('realm_id', $this->id)->orWhere('allied_realm_id', $this->id)->get();
+    }
+
     public function artefacts()
     {
         return $this->hasManyThrough(

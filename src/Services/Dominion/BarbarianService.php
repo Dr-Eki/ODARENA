@@ -151,7 +151,6 @@ class BarbarianService
             $chanceOneIn =  $this->barbarianCalculator->getSetting('CHANCE_TO_HIT_CONSTANT') - (14 - $currentDay);
             $chanceToHit = rand(1,$chanceOneIn);
 
-
             $logString .= "\t\t* OP/DP\n";
             $logString .= "\t\t** DPA current: " . $this->barbarianCalculator->getDpaCurrent($dominion) ."\n";
             $logString .= "\t\t** DP current: " . $this->barbarianCalculator->getDpCurrent($dominion) ."\n";

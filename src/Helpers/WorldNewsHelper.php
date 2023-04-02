@@ -46,6 +46,21 @@ class WorldNewsHelper
             case 'abandon_dominion':
                 return $this->generateAbandonString($event->source, $event, $viewer);
 
+            case 'alliance_accepted':
+                return $this->generateAllianceAcceptedString($event->target, $event->source, $viewer);
+
+            case 'alliance_broken':
+                return $this->generateAllianceBrokenString($event->source, $event->target, $viewer);
+
+            case 'alliance_declined':
+                return $this->generateAllianceDeclinedString($event->target, $event->source, $viewer);
+
+            case 'alliance_offered':
+                return $this->generateAllianceOfferedString($event->target, $event->source, $viewer);
+
+            case 'alliance_rescinded':
+                return $this->generateAllianceOfferRescindedString($event->target, $event->source, $viewer);
+
             case 'artefact_completed':
                 return $this->generateArtefactCompletedString($event->target, $event->source, $viewer);
 
@@ -122,6 +137,155 @@ class WorldNewsHelper
             '%s was abandoned.',
             $this->generateDominionString($dominion, 'neutral', $viewer)
           );
+
+        return $string;
+    }
+
+    public function generateAllianceOfferedString(Realm $invited, Realm $inviter, Dominion $viewer): string
+    {
+        $viewerIsInviterRealm = ($inviter->id == $viewer->realm->id);
+        $viewerIsInvitedRealm = ($invited->id == $viewer->realm->id);
+
+        if($viewerIsInviterRealm)
+        {
+            $string = sprintf(
+                'We have invited %s to an alliance.',
+                $this->generateRealmOnlyString($invited, 'neutral', $viewer)
+              );
+        }
+        elseif($viewerIsInvitedRealm)
+        {
+            $string = sprintf(
+                '%s has invited our realm to an alliance.',
+                $this->generateRealmOnlyString($inviter, 'neutral', $viewer)
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                'An alliance offer has been made between two foreign realms.'
+              );
+        }
+
+        return $string;
+    }
+
+    public function generateAllianceAcceptedString(Realm $invited, Realm $inviter, Dominion $viewer): string
+    {
+        $viewerIsInviterRealm = ($inviter->id == $viewer->realm->id);
+        $viewerIsInvitedRealm = ($invited->id == $viewer->realm->id);
+
+        if($viewerIsInviterRealm)
+        {
+            $string = sprintf(
+                'We are now allied with %s.',
+                $this->generateRealmOnlyString($invited, 'neutral', $viewer)
+              );
+        }
+        elseif($viewerIsInvitedRealm)
+        {
+            $string = sprintf(
+                'We are now allied with %s.',
+                $this->generateRealmOnlyString($inviter, 'neutral', $viewer)
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                '%s and %s have formed an alliance.',
+                $this->generateRealmOnlyString($inviter, 'neutral', $viewer),
+                $this->generateRealmOnlyString($invited, 'neutral', $viewer)
+              );
+        }
+        
+        return $string;
+    }
+
+    public function generateAllianceBrokenString(Realm $breaker, Realm $breakee, Dominion $viewer): string
+    {
+        $viewerIsBreakerRealm = ($breaker->id == $viewer->realm->id);
+        $viewerIsBreakeeRealm = ($breakee->id == $viewer->realm->id);
+
+        if($viewerIsBreakerRealm)
+        {
+            $string = sprintf(
+                'We have broken our alliance with %s.',
+                $this->generateRealmOnlyString($breakee, 'neutral', $viewer)
+              );
+        }
+        elseif($viewerIsBreakeeRealm)
+        {
+            $string = sprintf(
+                '%s has broken our alliance.',
+                $this->generateRealmOnlyString($breaker, 'neutral', $viewer)
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                '%s and %s have broken their alliance.',
+                $this->generateRealmOnlyString($breaker, 'neutral', $viewer),
+                $this->generateRealmOnlyString($breakee, 'neutral', $viewer)
+              );
+        }
+        
+        return $string;
+    }
+
+    public function generateAllianceDeclinedString(Realm $invited, Realm $inviter, Dominion $viewer): string
+    {
+        $viewerIsInviterRealm = ($inviter->id == $viewer->realm->id);
+        $viewerIsInvitedRealm = ($invited->id == $viewer->realm->id);
+
+        if($viewerIsInviterRealm)
+        {
+            $string = sprintf(
+                '%s has declined our alliance invitation.',
+                $this->generateRealmOnlyString($invited, 'neutral', $viewer)
+              );
+        }
+        elseif($viewerIsInvitedRealm)
+        {
+            $string = sprintf(
+                'We have declined an alliance invitation from %s.',
+                $this->generateRealmOnlyString($inviter, 'neutral', $viewer)
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                'An alliance between two foreign realms has been declined.'
+              );
+        }
+
+        return $string;
+    }
+
+    public function generateAllianceOfferRescindedString(Realm $invited, Realm $inviter, Dominion $viewer): string
+    {
+        $viewerIsInviterRealm = ($inviter->id == $viewer->realm->id);
+        $viewerIsInvitedRealm = ($invited->id == $viewer->realm->id);
+
+        if($viewerIsInviterRealm)
+        {
+            $string = sprintf(
+                'We have rescinded our alliance invitation from %s.',
+                $this->generateRealmOnlyString($invited, 'neutral', $viewer)
+              );
+        }
+        elseif($viewerIsInvitedRealm)
+        {
+            $string = sprintf(
+                '%s has rescinded their alliance invitation to us.',
+                $this->generateRealmOnlyString($inviter, 'neutral', $viewer)
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                'An alliance invitation between two foreign realms has been rescinded.'
+              );
+        }
 
         return $string;
     }

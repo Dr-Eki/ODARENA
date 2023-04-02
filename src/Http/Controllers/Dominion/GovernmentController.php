@@ -20,9 +20,9 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\AllianceOffer;
 use OpenDominion\Models\ProtectorshipOffer;
-use OpenDominion\Services\Dominion\ProtectionService;
+use OpenDominion\Models\RealmAlliance;
+#use OpenDominion\Services\Dominion\ProtectionService;
 
-#use OpenDominion\Models\DecreeState;
 #use OpenDominion\Models\Deity;
 
 
@@ -217,7 +217,7 @@ class GovernmentController extends AbstractDominionController
         $answer = $request->get('answer');
 
         try {
-            $governmentActionService->answerProtectorshipOffer($allianceOffer, $answer, $invitee);
+            $governmentActionService->answerAllianceOffer($allianceOffer, $answer, $invitee);
         } catch (GameException $e) {
             return redirect()
                 ->back()
@@ -226,6 +226,33 @@ class GovernmentController extends AbstractDominionController
         }
 
         $request->session()->flash('alert-success', 'Your answer has been sent.');
+        return redirect()->route('dominion.government');
+    }
+
+    public function postBreakAlliance(GovernmentActionRequest $request)
+    {
+        $breaker = $this->getSelectedDominion();
+        $realmAlliance = RealmAlliance::findOrFail($request->realm_alliance_id);
+        $governmentActionService = app(GovernmentActionService::class);
+
+        # Check that user confirmed
+        if ($request->get('confirm') !== 'on') {
+            return redirect()
+                ->back()
+                ->withInput($request->all())
+                ->withErrors(['You must confirm that you want to break the alliance.']);
+        }
+
+        try {
+            $governmentActionService->submitBreakAlliance($realmAlliance, $breaker);
+        } catch (GameException $e) {
+            return redirect()
+                ->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        $request->session()->flash('alert-danger', 'Alliance has been broken.');
         return redirect()->route('dominion.government');
     }
 
