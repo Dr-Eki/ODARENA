@@ -3,6 +3,7 @@
 barracks:  
   name: Barracks
   excluded_races:
+    - Reptilians
     - Swarm
   land_type: hill
   perks:
@@ -13,6 +14,7 @@ barracks:
 farm:  
   name: Farm
   excluded_races:
+    - Reptilians
     - Swarm
   land_type: plain
   perks:
@@ -21,6 +23,7 @@ farm:
 ore_mine:  
   name: Ore Mine
   excluded_races:
+    - Reptilians
     - Swarm
   land_type: mountain
   perks:
@@ -46,16 +49,6 @@ lumberyard:
     lumber_production_raw: 35
     #gorm_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
-smallholding:
-  name: Smallholding
-  enabled: 0
-  exclusive_races:
-    - Therozou
-  land_type: plain
-  perks:
-    food_production_raw: 15
-    therozou_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
-
 stable:  
   name: Stable
   exclusive_races:
@@ -68,13 +61,14 @@ stable:
 wall:
   name: Wall
   excluded_races:
+    - Reptilians
     - Swarm
   land_type: hill
   perks:
     defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
     raw_defense: 6
 
-turret:  
+turret:
   name: Turret
   exclusive_races:
     - Arwe
@@ -83,6 +77,23 @@ turret:
     defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
     building_capacity_limit: 1,10,wall # amount allowed, per x of, building
     arwe_unit_housing: 3,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+
+# GENERIC ANTI-THEFT
+
+vault:  
+  name: Vault
+  land_type: mountain
+  perks:
+    gold_theft_protection: 25000
+    gems_theft_protection: 2500
+    ore_theft_protection: 10000
+
+granary:
+  name: Granary
+  land_type: forest
+  perks:
+    food_theft_protection: 25000
+    lumber_theft_protection: 12500
 
 # HOMES
 
@@ -112,6 +123,103 @@ residence:
   perks:
     housing: 30
     jobs: 0
+
+# END HOMES
+
+# BEGIN SWARM
+
+aquifer:  
+  name: Aquifer
+  exclusive_races:
+    - Swarm
+  land_type: water
+  perks:
+    food_production_raw: 40
+
+chrysalis:
+  name: Chrysalis
+  exclusive_races:
+    - Swarm
+  land_type: forest
+  perks:
+    improvements: 1,1 # Every 1% gives 1% higher imps
+
+burrow:
+  name: Burrow
+  exclusive_races:
+    - Swarm
+  land_type: plain
+  perks:
+    housing: 28
+    jobs: 0
+
+nest:
+  name: Nest
+  exclusive_races:
+    - Swarm
+  land_type: forest
+  perks:
+    military_housing: 34
+    jobs: 0
+
+tunnel:  
+  name: Tunnel
+  exclusive_races:
+    - Swarm
+  land_type: hill
+  perks:
+    faster_returning_units_increasing: 60,0.04 # faster returning units, increase per tick
+
+# END SWARM
+
+# BEGIN REPTILIANS
+
+bog:  
+  name: Bog
+  exclusive_races:
+    - Reptilians
+  land_type: swamp
+  perks:
+    food_production_raw: 60
+
+mire:  
+  name: Mire
+  exclusive_races:
+    - Reptilians
+  land_type: swamp
+  perks:
+    housing: 28
+    jobs: 0
+
+swamp_vault:
+  name: Vault
+  exclusive_races:
+    - Reptilians
+  land_type: water
+  perks:
+  perks:
+    gold_theft_protection: 25000
+    gems_theft_protection: 2500
+
+siftery:
+  name: Siftery
+  exclusive_races:
+    - Reptilians
+  land_type: water
+  perks:
+    gems_production_raw: 8
+    gems_production_mod: 1,0.50,50 # Every 1% gives +0.40% gem production, max +40%
+
+trench:
+  name: Trench
+  exclusive_races:
+    - Reptilians
+  land_type: plain
+  perks:
+    defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
+    casualties_on_defense: 1,-0.5,50 # 1% gives -5%, max -50%
+
+# END REPTILIANS
 
 # Pre Round 88
 
@@ -178,41 +286,6 @@ gem_mine:
   land_type: mountain
   perks:
     gems_production_raw: 15
-
-vault:  
-  enabled: 0
-  name: Vault
-  excluded_races:
-    - Growth
-    - Glimjir
-    - Monster
-    - Myconid
-    - Reptilians
-    - Sylvan
-    - Wood Elf
-    - Void
-  land_type: mountain
-  perks:
-    gold_theft_protection: 25000
-    gems_theft_protection: 2500
-    ore_theft_protection: 10000
-
-granary:  
-  enabled: 0
-  name: Granary
-  excluded_races:
-    - Firewalker
-    - Growth
-    - Glimjir
-    - Lux
-    - Monster
-    - Spirit
-    - Void
-    - Wood Elf
-  land_type: forest
-  perks:
-    food_theft_protection: 25000
-    lumber_theft_protection: 12500
 
 deep_mine:  
   enabled: 0
@@ -1315,44 +1388,6 @@ gateway:
 
 # END DIMENSIONALISTS
 
-# BEGIN SWARM
-
-aquifer:  
-  name: Aquifer
-  exclusive_races:
-    - Swarm
-  land_type: water
-  perks:
-    food_production_raw: 40
-
-burrow:
-  name: Burrow
-  exclusive_races:
-    - Swarm
-  land_type: plain
-  perks:
-    housing: 28
-    jobs: 0
-
-nest:  
-  name: Nest
-  exclusive_races:
-    - Swarm
-  land_type: forest
-  perks:
-    military_housing: 34
-    jobs: 0
-
-tunnel:  
-  name: Tunnel
-  exclusive_races:
-    - Swarm
-  land_type: hill
-  perks:
-    faster_returning_units_increasing: 60,0.04 # faster returning units, increase per tick
-
-# END SWARM
-
 # BEGIN MYCONID
 
 mycelia:  
@@ -1826,49 +1861,7 @@ mansion:
     jobs: 10
     vampires_unit1_housing: 60
 
-# BEGIN REPTILIANS
-
-bog:  
-  enabled: 0
-  name: Bog
-  exclusive_races:
-    - Reptilians
-  land_type: swamp
-  perks:
-    food_production_raw: 100
-
-mire:  
-  enabled: 0
-  name: Mire
-  exclusive_races:
-    - Reptilians
-  land_type: swamp
-  perks:
-    housing: 30
-    jobs: 0
-
-swamp_vault:  
-  enabled: 0
-  name: Vault
-  exclusive_races:
-    - Reptilians
-  land_type: water
-  perks:
-  perks:
-    gold_theft_protection: 25000
-    gems_theft_protection: 2500
-
-siftery:  
-  enabled: 0
-  name: Siftery
-  exclusive_races:
-    - Reptilians
-  land_type: water
-  perks:
-    gems_production_raw: 14
-    gems_production_mod: 1,0.40,40 # Every 1% gives +0.25% gem production, max +25%
-
-# END REPTILIANS
+###
 
 tomb:  
   enabled: 0

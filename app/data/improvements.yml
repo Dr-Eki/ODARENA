@@ -1,12 +1,28 @@
-housing:  
-  name: Housing
+agriculture:  
+  name: Agriculture
   perks:
-    population: 20,6000
+    defensive_power: 40,10000
+
+construction:
+  name: Construction
+  perks:
+    construction_cost: -20,6000
+    rezone_cost: -20,6000
 
 defenses:  
   name: Defenses
   perks:
     defensive_power: 30,12000
+
+logging:
+  name: Logging
+  perks:
+    lumber_production_mid: 30,8000
+
+housing:  
+  name: Housing
+  perks:
+    population: 20,6000
 
 markets:
   name: Markets
@@ -14,12 +30,15 @@ markets:
     gold_production_mod: 20,6000
     exchange_rate: 20,8000
 
+mining:
+  name: Mining
+  perks:
+    ore_production_mid: 30,8000
+
 tactics:  
   name: Tactics
   perks:
     offensive_power: 30,12000
-
-
 
 ### 
 

@@ -27,28 +27,27 @@ perks:
   #damage_from_lightning_bolt: -75
   #damage_from_blight: -100
   indestructible_buildings: 1
-  cannot_train_spies: 1
   cannot_train_wizards: 1
   cannot_train_archmages: 1
 
 units:
-#  - name: Scorpion
-#    training_time: 9
-#    type:
-#      - living
-#      - sentient
-#      - intelligent
-#    cost:
-#      gold: 600
-#    power:
-#      offense: 2
-#      defense: 2
-#    perks:
-#      offense_vs_barren_land: 10,1 # ratio%, max
-#      casualties_on_defense: -25
-#      casualties_on_victory: -25
-#      offense_from_spell: aggression,2
-#      defense_from_spell: aggression,-2
+  - name: Scorpion
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 600
+    power:
+      offense: 2
+      defense: 2
+    perks:
+      #offense_vs_barren_land: 10,1 # ratio%, max
+      #casualties_on_defense: -25
+      #casualties_on_victory: -25
+      #offense_from_spell: aggression,2
+      #defense_from_spell: aggression,-2
 
   - name: Scarab
     training_time: 9
@@ -62,7 +61,7 @@ units:
       offense: 0
       defense: 2
     perks:
-      gems_production_raw: 0.2
+      gems_production_raw: 0.25
       #immortal_on_fending_off: 1
       #casualties_on_defense: -25
 
@@ -73,7 +72,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1000
+      gold: 900
       draftees: 1
     power:
       offense: 0
@@ -90,7 +89,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 2800
+      gold: 2500
       draftees: 1
     power:
       offense: 7

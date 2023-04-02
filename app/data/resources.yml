@@ -50,8 +50,8 @@ elk:
 food:
   name: Food
   description: While mostly functioning as a sustenance, some use food for especially exhausting training or even as organic building blocks.
-  buy: null #0.5
-  sell: null #0.10
+  buy: 0.5
+  sell: 0.10
 
 gems:
   name: Gems

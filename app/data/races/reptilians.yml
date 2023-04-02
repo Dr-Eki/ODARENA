@@ -2,9 +2,8 @@ name: Reptilians
 alignment: evil
 description:
 home_land_type: swamp
-playable: 0 # Round 88
 skill_level: 1
-
+playable: 1
 
 peasants_alias: working one
 draftees_alias: drafted one
@@ -13,92 +12,97 @@ resources:
   - gold
   - food
   - lumber
-  - mana
+  # - mana
   - gems
-  - prayer
+  #- prayer
 
 perks:
     population_growth: 20
     extra_barren_housing: 5
-    starts_devoted_to_elskas: 1
-    cannot_renounce_deity: 1
-    prayer_production_raw_from_population: 0.10
+    #starts_devoted_to_elskas: 1
+    #cannot_renounce_deity: 1
+    #prayer_production_raw_from_population: 0.10
+    cannot_train_wizards: 1
+    cannot_train_archmages: 1
 
 units:
   - name: Horned One
-    training_time: 8
+    training_time: 12
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 1200
+      gold: 1100
+      draftee: 1
     power:
-      offense: 9
-      defense: 7
+      offense: 4
+      defense: 2
     perks:
       counts_as_spy: 0.50
 
   - name: Scaled One
-    training_time: 6
+    training_time: 12
     type:
       - living
       - sentient
       - intelligent
       - wise
     cost:
-      gold: 900
+      gold: 1550
+      draftee: 1
     power:
-      offense: 0
-      defense: 9
+      offense: 5
+      defense: 3
     perks:
       reduces_casualties: 1
 
   - name: Blessed One
-    training_time: 8
+    training_time: 12
     type:
       - living
       - sentient
       - intelligent
       - wise
     cost:
-      gold: 1300
-    power:
-      offense: 10
-      defense: 7
-    perks:
-      counts_as_wizard: 0.50
-
-  - name: Ancient One
-    training_time: 12
-    type:
-      - living
-      - sentient
-      - massive
-    cost:
-      gold: 100000
-      mana: 10000
-    power:
-      offense: 600
-      defense: 800
-    perks:
-      building_limit: shrine,3 # building, buildings per unit, imp to increased
-      casualties: -90
-      no_draftee: 1
-
-  - name: Eternal One
-    training_time: 12
-    type:
-      - living
-      - sentient
-      - massive
-    cost:
-      prayer: 30000
+      gold: 1100
+      draftee: 1
     power:
       offense: 0
-      defense: 2200
+      defense: 7
     perks:
-      no_draftee: 1
-      immortal: 1
-      offensive_power_mod: 0.10
-      cost_increase_to_train_per_unit: 2
+  #    counts_as_wizard: 0.50
+
+  # - name: Ancient One
+  #   training_time: 12
+  #   type:
+  #     - living
+  #     - sentient
+  #     - massive
+  #   cost:
+  #     gold: 100000
+  #     mana: 10000
+  #   power:
+  #     offense: 600
+  #     defense: 800
+  #   perks:
+  #     building_limit: shrine,3 # building, buildings per unit, imp to increased
+  #     casualties: -90
+  #     no_draftee: 1
+
+  # - name: Eternal One
+  #   training_time: 12
+  #   type:
+  #     - living
+  #     - sentient
+  #     - massive
+  #   cost:
+  #     prayer: 30000
+  #   power:
+  #     offense: 0
+  #     defense: 2200
+  #   perks:
+  #     no_draftee: 1
+  #     immortal: 1
+  #     offensive_power_mod: 0.10
+  #     cost_increase_to_train_per_unit: 2

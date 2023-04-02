@@ -5,8 +5,6 @@ home_land_type: hill
 skill_level: 1
 playable: 1
 
-peasants_alias: farmer
-
 resources:
   - gold
   - food
@@ -21,7 +19,6 @@ construction_materials:
   - ore
 
 perks:
-  cannot_train_spies: 1
   cannot_train_wizards: 1
   cannot_train_archmages: 1
   draftee_dp: 1.5
@@ -34,8 +31,7 @@ units:
     - sentient
   cost:
     gold: 600
-    ore: 120
-    food: 20
+    ore: 150
     draftees: 1
   power:
     offense: 0
@@ -50,8 +46,7 @@ units:
     - sentient
   cost:
     gold: 2000
-    ore: 320
-    food: 60
+    ore: 340
     draftees: 1
   power:
     offense: 6
