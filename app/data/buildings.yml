@@ -208,7 +208,7 @@ siftery:
     - Reptilians
   land_type: water
   perks:
-    gems_production_raw: 8
+    gems_production_raw: 7
     gems_production_mod: 1,0.50,50 # Every 1% gives +0.40% gem production, max +40%
 
 trench:

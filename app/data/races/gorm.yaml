@@ -36,8 +36,6 @@ units:
   power:
     offense: 0
     defense: 6
-  perks:
-    food_consumption_raw: 0.50
 
 - name: Basher
   training_time: 12
@@ -52,5 +50,5 @@ units:
     offense: 6
     defense: 6
   perks:
-    food_consumption_raw: 0.50
+    food_consumption_raw: 0.25
     plunders: ore;4,lumber;2

@@ -67,7 +67,27 @@ class UnitHelper
             return ucfirst($unitType);
         }
 
-        $unitSlot = (((int)str_replace('unit', '', $unitType)) - 1);
+        if (in_array($unitType, ['military_spies', 'military_wizards', 'military_archmages'], true))
+        {
+            return ucfirst(str_replace('military_', '', $unitType));
+        }
+
+        # If $unitSlot begins with 'unit', remove it
+        if(substr($unitType, 0, 4) === 'unit')
+        {
+            $unitSlot = substr($unitType, 4)-1; # -1 because the unit slots are 0-indexed in cases where we get unit1, unit2, etc.
+        }
+        # If $unitSlot begins with 'military_unit', remove it
+        elseif(substr($unitType, 0, 13) === 'military_unit')
+        {
+            $unitSlot = substr($unitType, 13)-1; # -1 because the unit slots are 0-indexed in cases where we get unit1, unit2, etc. NOT TESTED/USED???
+        }
+        elseif(is_int($unitType))
+        {
+            $unitSlot = $unitType;
+        }
+
+        $unitSlot = (int)$unitSlot;
 
         return $race->units[$unitSlot]->name;
     }

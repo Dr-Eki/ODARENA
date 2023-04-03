@@ -848,7 +848,7 @@ class NotificationHelper
             case 'irregular_dominion.received_alliance_offer_rescinded':
                 $rescinder = Realm::findOrFail($data['rescinderRealmId']);
                 return sprintf(
-                    '%s (# %s) has rescinded their invitation to an alliance.',
+                    '%s (# %s) has rescinded the invitation to an alliance.',
                     $rescinder->name,
                     $rescinder->number
                 );

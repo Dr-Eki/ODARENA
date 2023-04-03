@@ -12,6 +12,8 @@ use OpenDominion\Models\RealmAlliance;
 class AllianceCalculator
 {
 
+    private $militaryCalculator;
+
     public function __construct()
     {
         $this->militaryCalculator = app(MilitaryCalculator::class);

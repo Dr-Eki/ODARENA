@@ -39,6 +39,7 @@ use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\HistoryService;
+use OpenDominion\Services\Dominion\GameEventService;
 use OpenDominion\Services\Dominion\GovernmentService;
 use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Services\Dominion\QueueService;
@@ -88,6 +89,37 @@ class InvadeActionService
     /** @var int The amount of units lost during the invasion */
     protected $unitsLost = 0;
 
+    protected $invasion;
+    protected $invasionEvent;
+    protected $isAmbush = false;
+
+    private $buildingCalculator;
+    private $casualtiesCalculator;
+    private $conversionCalculator;
+    private $conversionHelper;
+    private $dominionCalculator;
+    private $improvementCalculator;
+    private $improvementHelper;
+    private $gameEventService;
+    private $governmentService;
+    private $landCalculator;
+    private $militaryCalculator;
+    private $notificationService;
+    private $populationCalculator;
+    private $protectionService;
+    private $statsService;
+    private $queueService;
+    private $rangeCalculator;
+    private $resourceCalculator;
+    private $resourceConversionCalculator;
+    private $resourceService;
+    private $spellActionService;
+    private $spellCalculator;
+    private $spellHelper;
+    private $trainingCalculator;
+    private $raceHelper;
+    private $unitHelper;
+
     public function __construct()
     {
         $this->buildingCalculator = app(BuildingCalculator::class);
@@ -97,6 +129,7 @@ class InvadeActionService
         $this->dominionCalculator = app(DominionCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
         $this->improvementHelper = app(ImprovementHelper::class);
+        $this->gameEventService = app(GameEventService::class);
         $this->governmentService = app(GovernmentService::class);
         $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
@@ -661,11 +694,16 @@ class InvadeActionService
                 'tick' => $attacker->round->ticks
             ]);
 
+            # Generate event story
+            $this->gameEventService->generateInvasionStory($this->invasionEvent);
+
             # Debug before saving:
-            if(request()->getHost() === 'odarena.local' or request()->getHost() === 'odarena.virtual')
+            if(env('APP_ENV') == 'local')
             {
                 dd($this->invasion);
             }
+
+            dd('panic!');
 
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);

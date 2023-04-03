@@ -18,10 +18,11 @@ class RealmHelper
 
     public function getAlignmentNoun(string $alignment): string
     {
-        if(($race = Race::where('key', $alignment)->first()))
+        if($race = Race::where('key', $alignment)->first())
         {
             return $race->name;
         }
+
         switch($alignment)
         {
             case 'good':

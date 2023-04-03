@@ -141,6 +141,7 @@ class AppServiceProvider extends AbstractServiceProvider
         $this->app->singleton(CouncilService::class);
         $this->app->singleton(NotificationService::class);
         $this->app->singleton(RealmFinderService::class);
+        $this->app->singleton(OpenAIService::class);
 
         // Dominion Services
         $this->app->singleton(BarbarianService::class);

@@ -55,4 +55,24 @@ class EventHelper
 
         return false;
     }
+
+    public function getStoryteller(string $context): string
+    {
+
+        $storyeller = 'You are a chronicler in a medieval fantasy world where dominions fight for power. ';
+
+        switch($context) {
+            case 'invasion':
+                $storyeller .= 'You are documenting a battle between two dominions.';
+            case 'theft':
+                $storyeller .= 'You are documenting a theft of resources.';
+            case 'sabotage':
+                $storyeller .= 'You are documenting a sabotage of a dominion.';
+            case 'sorcery':
+                $storyeller .= 'You are documenting a the effects of an evil spell being cast by one dominion on another.';
+            }
+
+        return $storyeller;
+
+    }
 }
