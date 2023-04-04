@@ -139,8 +139,7 @@ sabotage_mines:
   perks:
     buildings: automated_mine;10,dwargen_mine;10,deep_mine;10,gem_mine;10,gold_mine;5,ore_mine;10,slave_mine;10,strip_mine;10
 
-sabotage_improvements_defense:  
-  enabled: 0
+sabotage_improvements_defense:
   name: Sabotage Defensive Improvements
   scope: hostile
   exclusive_races:
@@ -148,8 +147,7 @@ sabotage_improvements_defense:
   perks:
     improvements: defenses;1,defense;1,bashing;2,halo;0.25,tranquillity;1,city_guard;1,camouflage;1.5,compassion;0.5
 
-sabotage_improvements_food:  
-  enabled: 0
+sabotage_improvements_food:
   name: Sabotage Food Improvements
   scope: hostile
   exclusive_races:
@@ -157,8 +155,7 @@ sabotage_improvements_food:
   perks:
     improvements: agriculture;2,irrigation;2,hunting;2,bloom;4,farming_kerranad;2,foraging;4
 
-sabotage_improvements_offense:  
-  enabled: 0
+sabotage_improvements_offense:
   name: Sabotage Offensive Improvements
   scope: hostile
   exclusive_races:
