@@ -1,5 +1,4 @@
 assassinate_draftees:  
-  enabled: 0
   name: Assassinate Draftees
   scope: hostile
   excluded_races:
@@ -12,7 +11,6 @@ assassinate_draftees:
     military_draftees: 10
 
 assassinate_peasants:  
-  enabled: 0
   name: Assassinate Peasants
   scope: hostile
   excluded_races:
@@ -25,7 +23,6 @@ assassinate_peasants:
     peasants: 10
 
 sabotage_food:  
-  enabled: 0
   name: Destroy Food
   scope: hostile
   exclusive_races:
@@ -39,7 +36,6 @@ sabotage_food:
     resource: food,10
 
 sabotage_lumber:  
-  enabled: 0
   name: Destroy Lumber
   scope: hostile
   exclusive_races:
@@ -53,7 +49,6 @@ sabotage_lumber:
     resource: lumber,10
 
 intimidation:  
-  enabled: 0
   name: Intimidation
   scope: hostile
   exclusive_races:
@@ -111,8 +106,7 @@ release_souls:
   perks:
     resource: soul,1
 
-sabotage_construction:  
-  enabled: 0
+sabotage_construction:
   name: Sabotage Construction
   scope: hostile
   excluded_races:
@@ -127,15 +121,14 @@ sabotage_construction:
 
 # BEGIN REPTILIANS
 
-sabotage_defensive_buildings:  
-  enabled: 0
+sabotage_defensive_buildings:
   name: Sabotage Defensive Buildings
   scope: hostile
   spy_strength: 5
   exclusive_races:
     - Reptilians
   perks:
-    buildings: bulwark;0.5,battlement;1,guard_tower;2,stone_wall;1,turret;1,pillar;2,ringfort;0.5
+    buildings: bulwark;0.5,battlement;1,guard_tower;2,stone_wall;1,turret;1,pillar;2,ringfort;0.5,wall;1
 
 sabotage_mines:  
   enabled: 0
@@ -153,7 +146,7 @@ sabotage_improvements_defense:
   exclusive_races:
     - Reptilians
   perks:
-    improvements: defense;1,bashing;2,halo;0.25,tranquillity;1,city_guard;1,camouflage;1.5,compassion;0.5
+    improvements: defenses;1,defense;1,bashing;2,halo;0.25,tranquillity;1,city_guard;1,camouflage;1.5,compassion;0.5
 
 sabotage_improvements_food:  
   enabled: 0
@@ -162,7 +155,7 @@ sabotage_improvements_food:
   exclusive_races:
     - Reptilians
   perks:
-    improvements: irrigation;2,hunting;2,bloom;4,farming_kerranad;2,foraging;4
+    improvements: agriculture;2,irrigation;2,hunting;2,bloom;4,farming_kerranad;2,foraging;4
 
 sabotage_improvements_offense:  
   enabled: 0
@@ -171,7 +164,7 @@ sabotage_improvements_offense:
   exclusive_races:
     - Reptilians
   perks:
-    improvements: offense;1,smashing;1,coils;0.25,rage;1,warfare;1,fencing;1.5,brutality;0.5,aggression;1,striking;0.8
+    improvements: tactics;1,offense;1,smashing;1,coils;0.25,rage;1,warfare;1,fencing;1.5,brutality;0.5,aggression;1,striking;0.8
 
 # END REPTILIANS
 
