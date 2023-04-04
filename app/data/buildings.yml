@@ -84,6 +84,8 @@ turret:
 vault:  
   name: Vault
   land_type: mountain
+  excluded_races:
+    - Reptilians
   perks:
     gold_theft_protection: 25000
     gems_theft_protection: 2500

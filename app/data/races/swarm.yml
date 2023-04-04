@@ -39,6 +39,7 @@ units:
       - intelligent
     cost:
       gold: 600
+      draftees: 1
     power:
       offense: 2
       defense: 2
