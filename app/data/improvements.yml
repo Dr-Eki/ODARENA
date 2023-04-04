@@ -1,7 +1,7 @@
 agriculture:  
   name: Agriculture
   perks:
-    defensive_power: 40,10000
+    food_production_mod: 40,10000
 
 construction:
   name: Construction
