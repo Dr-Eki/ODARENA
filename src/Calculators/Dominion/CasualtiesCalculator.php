@@ -540,7 +540,7 @@ class CasualtiesCalculator
             {
                 if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'reduces_casualties') or $dominion->race->getUnitPerkValueForUnitSlot($slot, ('reduces_casualties_on_' . $mode)))
                 {
-                    $multiplier -= ($amount / array_sum($units)) / 2;
+                    $multiplier -= ($amount / array_sum($units)) / 4; # was /2 before r92
                 }
 
                 # PERK: increases_own_casualties, increases_own_casualties_on_offense
