@@ -82,7 +82,7 @@ class UnitHelper
         {
             $unitSlot = substr($unitType, 13)-1; # -1 because the unit slots are 0-indexed in cases where we get unit1, unit2, etc. NOT TESTED/USED???
         }
-        elseif(is_int($unitType))
+        else
         {
             $unitSlot = $unitType;
         }

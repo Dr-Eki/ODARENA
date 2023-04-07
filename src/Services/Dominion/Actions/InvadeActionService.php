@@ -695,7 +695,7 @@ class InvadeActionService
             ]);
 
             # Generate event story
-            $this->gameEventService->generateInvasionStory($this->invasionEvent);
+            #$this->gameEventService->generateInvasionStory($this->invasionEvent);
 
             # Debug before saving:
             if(env('APP_ENV') == 'local')
