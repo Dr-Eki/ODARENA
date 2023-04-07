@@ -703,8 +703,6 @@ class InvadeActionService
                 dd($this->invasion);
             }
 
-            dd('panic!');
-
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
 
