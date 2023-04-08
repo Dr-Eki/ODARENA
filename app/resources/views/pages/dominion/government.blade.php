@@ -229,7 +229,7 @@
 </div>
 @endif
 
-@if(in_array($selectedDominion->round->mode, ['factions', 'factions-duration']))
+@if(in_array($selectedDominion->round->mode, ['factions', 'factions-duration']) and $selectedDominion->isMonarch())
 <div class="row">
     <div class="col-sm-12 col-md-9">
         <div class="box box-primary">
