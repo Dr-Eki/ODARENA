@@ -42,6 +42,7 @@ class ComposerServiceProvider extends AbstractServiceProvider
         view()->composer('partials.main-sidebar', function (View $view) {
             $selectorService = app(SelectorService::class);
             $realmHelper = app(RealmHelper::class);
+            $landCalculator = app(LandCalculator::class);
             $techCalculator = app(TechCalculator::class);
             $researchCalculator = app(ResearchCalculator::class);
             $resourceCalculator = app(ResourceCalculator::class);
@@ -82,6 +83,7 @@ class ComposerServiceProvider extends AbstractServiceProvider
             $view->with('realmHelper', $realmHelper);
             $view->with('researchCalculator', $researchCalculator);
             $view->with('resourceCalculator', $resourceCalculator);
+            $view->with('landCalculator', $landCalculator);
             $view->with('techCalculator', $techCalculator);
             #$view->with('productionCalculator', $productionCalculator);
         });

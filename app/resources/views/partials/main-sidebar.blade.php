@@ -37,6 +37,10 @@
                             @if (!$selectedDominion->daily_land and $selectedDominion->protection_ticks == 0 and $selectedDominion->round->hasStarted())
                                 <small class="label label-primary pull-right"><i class="fa fa-plus"></i></small>
                             @endif
+
+                            @if(($barrenLand = $landCalculator->getTotalBarrenLand($selectedDominion)) > 0)
+                                <span class="label label-danger pull-right">{{ number_format($barrenLand) }}</span>
+                            @endif
                         </span>
                     </a>
                 </li>
