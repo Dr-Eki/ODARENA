@@ -19,11 +19,6 @@ class LandHelper
         ];
     }
 
-    public function getLandTypeForBuildingByRace(string $building, Race $race): string
-    {
-        return $this->getLandTypesByBuildingType($race)[$building];
-    }
-
     public function getLandTypeIconHtml(string $landType): string
     {
         switch ($landType)

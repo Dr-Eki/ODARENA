@@ -1,14 +1,15 @@
 <?php
 
-# 1000-acre factory
-
 namespace OpenDominion\Factories;
 
 use Auth;
 use DB;
 use OpenDominion\Exceptions\GameException;
+use OpenDominion\Models\Advancement;
+use OpenDominion\Models\Building;
 use OpenDominion\Models\Decree;
 use OpenDominion\Models\DecreeState;
+use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionAdvancement;
 use OpenDominion\Models\DominionDecreeState;
@@ -22,10 +23,9 @@ use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Tech;
-use OpenDominion\Models\Advancement;
+use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Title;
 use OpenDominion\Models\User;
-use OpenDominion\Models\Deity;
 
 #use Illuminate\Support\Carbon;
 use OpenDominion\Helpers\RaceHelper;
@@ -37,9 +37,22 @@ use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Services\Dominion\DeityService;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\ResourceService;
+use OpenDominion\Services\Dominion\TerrainService;
 
 class DominionFactory
 {
+
+    protected $raceHelper;
+    protected $buildingCalculator;
+    protected $barbarianCalculator;
+    protected $improvementCalculator;
+    protected $spellCalculator;
+
+    protected $deityService;
+    protected $resourceService;
+    protected $queueService;
+    protected $terrainService;
+
     public function __construct()
     {
         $this->raceHelper = app(RaceHelper::class);
@@ -51,6 +64,7 @@ class DominionFactory
         $this->deityService = app(DeityService::class);
         $this->resourceService = app(ResourceService::class);
         $this->queueService = app(QueueService::class);
+        $this->terrainService = app(TerrainService::class);
     }
 
     /**
@@ -114,6 +128,8 @@ class DominionFactory
             $this->getStartingBarrenLand($race, $acresBase),
             $startingBuildings
         );
+
+        $startingTerrain = $this->getStartingTerrain($race, $startingBuildings);
 
         # Late-joiner bonus:
         # Give +1.5% starting resources per hour late, max +150% (at 100 hours, mid-day 4).
@@ -318,7 +334,7 @@ class DominionFactory
 
         $this->buildingCalculator->createOrIncrementBuildings($dominion, $startingBuildings);
         $this->resourceService->updateResources($dominion, $startingResources);
-
+        $this->terrainService->update($dominion, $startingTerrain);
 
         if($race->name == 'Barbarian')
         {
@@ -689,6 +705,30 @@ class DominionFactory
         $startingLand[$race->home_land_type] += $startingBuildings['cabin'];
 
         return $startingLand;
+    }
+
+    public function getStartingTerrain(Race $race, array $startingBuildings): array
+    {
+        $startingTerrain = [];
+
+        $landUsed = 0;
+
+        foreach(Terrain::all() as $terrain)
+        {
+            $startingTerrain[$terrain->key] = 0;
+        }
+
+        foreach($startingBuildings as $building => $amount)
+        {
+            $building = Building::where('key', $building)->first();
+            $buildingTerrain = $building->terrain;
+            $startingTerrain[$terrain->key] += $amount;
+            $landUsed += $amount;
+        }
+
+        $startingTerrain[$race->homeTerrain()->key] += (1000 - $landUsed);
+
+        return $startingTerrain;
     }
 
     /**

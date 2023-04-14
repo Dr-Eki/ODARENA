@@ -2,6 +2,7 @@ name: Swarm
 alignment: good
 description: Swarm never loses buildings. They may lose control of the surface but the buildings deep below remain safe.
 home_land_type: plain
+home_terrain: plains
 playable: 1
 skill_level: 2
 

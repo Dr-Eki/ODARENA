@@ -194,9 +194,6 @@
     </div>
 </div>
 
-
-
-
 <div class="row">
     <div class="col-md-9">
         <div class="box box-primary">
@@ -220,6 +217,81 @@
         </div>
     </div>
 </div>
+
+@if(env('APP_ENV') == 'local')
+    <div class="row">
+        <div class="col-md-9">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-plus"></i> Terrain</h3>
+                </div>           
+                <div class="box-body table-responsive no-padding">
+                    <form action="{{ route('dominion.land') }}" method="post" role="form">
+                        @csrf
+                        <table class="table">
+                            <colgroup>
+                                <col width="100">
+                                <col width="100">
+                                <col width="100">
+                                <col width="100">
+                                <col width="100">
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <col>
+                                @endfor
+                                <col width="100">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Terrain</th>
+                                    <th class="text-center">Owned</th>
+                                    <th class="text-center">Barren</th>
+                                    <th class="text-center">Rezone From</th>
+                                    <th class="text-center">Rezone Into</th>
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        <th class="text-center">{{ $i }}</th>
+                                    @endfor
+                                    <th class="text-center">Total<br>Incoming</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
+                                    <tr>
+                                        <td>{{ $terrain->name }}</td>
+                                        <td class="text-center">{{ number_format($selectedDominion->{'terrain_' . $terrain->key}) }}</td>
+                                        <td class="text-center">-</td>
+                                        <td class="text-center">-</td>
+                                        <td class="text-center">-</td>
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <td class="text-center">-</td>
+                                        @endfor
+                                        <td class="text-center">-</td>
+                                    </tr>
+                                @endforeach
+                                <tr>
+                                    <td><strong>Total</strong></td>
+                                    <td class="text-center"><strong>{{ number_format($dominionCalculator->getLandSize($selectedDominion)) }}</strong></td>
+                                    <td class="text-center"><strong>{{ number_format($dominionCalculator->getTotalBarrenLand($selectedDominion)) }}</strong></td>
+                                    <td colspan="2">
+                                        @if ((bool)$selectedDominion->race->getPerkValue('cannot_rezone'))
+                                            <span class="label label-danger">{{ $selectedDominion->race->name }} dominions cannot rezone</span>
+                                        @else
+                                            <button type="submit" class="btn btn-primary btn-block" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>Rezone</button>
+                                        @endif
+                                    </td>
+                                    @for ($i = 1; $i <= 12; $i++)
+                                        <td class="text-center"><strong>-</strong></td>
+                                    @endfor
+                                    <td class="text-center"><strong>-</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
 @endsection
 
 @push('page-scripts')

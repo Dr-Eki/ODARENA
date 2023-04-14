@@ -7,25 +7,22 @@ use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\LandImprovementHelper;
 use OpenDominion\Helpers\RaceHelper;
 
+
 use OpenDominion\Calculators\Dominion\Actions\RezoningCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Http\Requests\Dominion\Actions\RezoneActionRequest;
-use OpenDominion\Services\Analytics\AnalyticsEvent;
-use OpenDominion\Services\Analytics\AnalyticsService;
 use OpenDominion\Services\Dominion\Actions\RezoneActionService;
 
-use OpenDominion\Calculators\Dominion\Actions\ExplorationCalculator;
-use OpenDominion\Http\Requests\Dominion\Actions\ExploreActionRequest;
-use OpenDominion\Services\Dominion\Actions\ExploreActionService;
 use OpenDominion\Services\Dominion\QueueService;
 
 use OpenDominion\Http\Requests\Dominion\Actions\DailyBonusesLandActionRequest;
 use OpenDominion\Services\Dominion\Actions\DailyBonusesActionService;
 
-use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\DominionCalculator;
 use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
 use OpenDominion\Calculators\Dominion\ProductionCalculator;
+use OpenDominion\Calculators\Dominion\SpellCalculator;
 
 class LandController extends AbstractDominionController
 {
@@ -50,9 +47,9 @@ class LandController extends AbstractDominionController
         }
 
         return view('pages.dominion.land', [
+            'dominionCalculator' => app(DominionCalculator::class),
             'landCalculator' => app(LandCalculator::class),
             'rezoningCalculator' => app(RezoningCalculator::class),
-            'explorationCalculator' => app(ExplorationCalculator::class),
             'landHelper' => app(LandHelper::class),
             'landImprovementHelper' => app(LandImprovementHelper::class),
             'queueService' => app(QueueService::class),
@@ -68,35 +65,8 @@ class LandController extends AbstractDominionController
     {
 
         $dominion = $this->getSelectedDominion();
-
-        # Explore
-        if($request->get('action') === 'explore')
-        {
-            $exploreActionService = app(ExploreActionService::class);
-
-            try {
-                $result = $exploreActionService->explore($dominion, $request->get('explore'));
-
-            } catch (GameException $e) {
-                return redirect()->back()
-                    ->withInput($request->all())
-                    ->withErrors([$e->getMessage()]);
-            }
-
-            // todo: fire laravel event
-            $analyticsService = app(AnalyticsService::class);
-            $analyticsService->queueFlashEvent(new AnalyticsEvent(
-                'dominion',
-                'explore',
-                '', // todo: make null?
-                array_sum($request->get('explore'))
-            ));
-
-            $request->session()->flash('alert-success', $result['message']);
-            return redirect()->route('dominion.land');
-        }
-        # Rezone
-        elseif($request->get('action') === 'rezone')
+        
+        if($request->get('action') === 'rezone')
         {
             $rezoneActionService = app(RezoneActionService::class);
 
@@ -112,15 +82,6 @@ class LandController extends AbstractDominionController
                     ->withInput($request->all())
                     ->withErrors([$e->getMessage()]);
             }
-
-            // todo: fire laravel event
-            $analyticsService = app(AnalyticsService::class);
-            $analyticsService->queueFlashEvent(new AnalyticsEvent(
-                'dominion',
-                'rezone',
-                '', // todo: make null?
-                array_sum($request->get('remove'))
-            ));
 
             $request->session()->flash('alert-success', $result['message']);
             return redirect()->route('dominion.land');

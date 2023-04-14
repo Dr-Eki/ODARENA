@@ -72,7 +72,55 @@ class DominionCalculator
         $strength = $base * $multiplier;
 
         return max(0, $strength);
+    }
 
+    public function getLandSize(Dominion $dominion): int
+    {
+        $landSize = 0;
+
+        foreach($dominion->terrains as $terrain)
+        {
+            $landSize += $terrain->pivot->amount;
+        }
+
+        return $landSize;
+    }
+
+    public function getTotalBuildings(Dominion $dominion): int
+    {
+        $totalBuildings = 0;
+
+        foreach($dominion->buildings as $building)
+        {
+            $totalBuildings += $building->pivot->amount;
+        }
+
+        return $totalBuildings;
+    }
+
+    public function getTotalBuildingsByTerrain(Dominion $dominion, string $terrainKey)
+    {
+        $totalBuildings = 0;
+
+        foreach($dominion->buildings as $building)
+        {
+            if($building->building->terrain === $terrainKey)
+            {
+                $totalBuildings += $building->amount;
+            }
+        }
+
+        return $totalBuildings;
+    }
+
+    public function getTotalBarrenLand(Dominion $dominion): int
+    {
+        return $this->getLandSize($dominion) - $this->getTotalBuildings($dominion);
+    }
+
+    public function getTotalBarrenLandByTerrain(Dominion $dominion, string $terrainKey): int
+    {
+        return $dominion->{'terrain_' . $terrainKey} - $this->getTotalBuildingsByTerrain($dominion, $terrainKey);
     }
 
 }

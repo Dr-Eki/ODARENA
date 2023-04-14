@@ -1,0 +1,59 @@
+plains:
+  name: Plains
+  order: 1
+  description: Vast, open expanses of land, plains are characterized by their gently rolling grasslands and sparse vegetation, providing ample space for agriculture and swift movement of troops or travelers. Wildlife and nomadic tribes often thrive in these seemingly endless flatlands.
+
+forest:
+  name: Forest
+  order: 2
+  description: Dense and mysterious, forests are teeming with life, providing a lush habitat for a variety of flora and fauna. Often considered enchanted or cursed, these wooded areas are a source of magical resources, hidden dangers, and the perfect refuge for secretive beings.
+
+mountains:
+  name: Mountains
+  order: 3
+  description: Towering and majestic, mountains dominate the landscape with their rocky slopes and snow-capped peaks. These harsh, imposing landforms offer natural fortifications for those who can adapt to the altitude, as well as being the homes of various mountain dwellers.
+
+hills:
+  name: Hills
+  order: 4
+  description: Rolling hills provide a gentle change in elevation and a picturesque landscape. These modest slopes often harbor hidden caves and serve as natural vantage points for scouts and watchtowers.
+
+swamps:
+  name: Swamps
+  order: 5
+  description: These dark and murky swamps are characterized by their stagnant water, thick vegetation, and soft, waterlogged ground. Home to a variety of unique creatures and plant life, swamps are often shrouded in superstition and can conceal both valuable resources and deadly hazards.
+
+water:
+  name: Water
+  order: 6
+  description: Water encompasses the serene beauty of lakes, the expansive power of oceans, and the diverse ecosystems of coastlines. Serving as both a vital source of life and an unpredictable force of nature, waterways enable trade, exploration, and encounters with aquatic creatures and civilizations.
+
+jungle:
+  name: Jungle
+  order: 7
+  description: Jungles boast an incredible diversity lush and vibrant plants, with dense vegetation and a humid climate. Home to strange creatures, ancient ruins, and powerful magic, these tropical rainforests offer untold adventures for the bold and curious.
+
+desert:
+  name: Desert
+  order: 8
+  description: The seemingly endless desert dunes are defined by their extreme heat, sparse vegetation, and lack of water. Despite the harsh conditions, resilient creatures and hardy plants have evolved to thrive, and hidden oases offer respite for weary travelers and adventurers.
+
+badlands:
+  name: Badlands
+  order: 9
+  description: The badlands are barren and eroded, characterized by their maze-like networks of canyons, ravines, and other sedimentary rock formations. These desolate landscapes offer little in the way of resources, but their natural labyrinths can provide refuge for outlaws and fugitives.
+
+glacier:
+  name: Glacier
+  order: 10
+  description: The frozen desert, these massive and slow-moving bodies of ice carve and shape the landscape. Treacherous and full of hidden crevasses, with abundance of unique wildlife, while also concealing ancient secrets and frozen artifacts.
+
+volcanic:
+  name: Volcanic
+  order: 11
+  description: Characterized by their imposing volcanoes, lava streams, and ash-laden grounds, volcanic regions offer both peril and opportunity. These mineral-rich landscapes, abundant with geothermal power, draw in audacious inhabitants, while legendary beings are said to reside in the blazing chasms below.
+
+wetlands:
+  name: Wetlands
+  order: 14
+  description: The wetlands are where land and water intertwine, brimming with mystery and enchantment. Amidst the saturated soils, diverse vegetation, and abundant wildlife, the wetlands provide a haven for many. In this ever-changing landscape, one finds an enthralling setting for exploration, trade, and encounters with local inhabitants.

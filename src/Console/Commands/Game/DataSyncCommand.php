@@ -34,6 +34,7 @@ use OpenDominion\Models\DominionResource;
 use OpenDominion\Models\DominionStat;
 use OpenDominion\Models\DominionSpell;
 use OpenDominion\Models\DominionTech;
+use OpenDominion\Models\DominionTerrain;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\ImprovementPerk;
 use OpenDominion\Models\ImprovementPerkType;
@@ -53,12 +54,17 @@ use OpenDominion\Models\Stat;
 use OpenDominion\Models\Tech;
 use OpenDominion\Models\TechPerk;
 use OpenDominion\Models\TechPerkType;
+use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Title;
 use OpenDominion\Models\TitlePerk;
 use OpenDominion\Models\TitlePerkType;
 use OpenDominion\Models\Unit;
 use OpenDominion\Models\UnitPerk;
 use OpenDominion\Models\UnitPerkType;
+
+# Helpers
+
+use OpenDominion\Helpers\BuildingHelper;
 
 class DataSyncCommand extends Command implements CommandInterface
 {
@@ -71,6 +77,8 @@ class DataSyncCommand extends Command implements CommandInterface
     /** @var Filesystem */
     protected $filesystem;
 
+    protected $buildingHelper;
+
     /**
      * DataSyncCommand constructor.
      *
@@ -81,6 +89,8 @@ class DataSyncCommand extends Command implements CommandInterface
         parent::__construct();
 
         $this->filesystem = $filesystem;
+
+        $this->buildingHelper = app(BuildingHelper::class);
     }
 
     /**
@@ -90,6 +100,8 @@ class DataSyncCommand extends Command implements CommandInterface
     {
         $start = now();
         DB::transaction(function () {
+            $this->syncResources();
+            $this->syncTerrains();
             $this->syncDeities();
             $this->syncRaces();
             $this->syncAdvancements();
@@ -100,10 +112,11 @@ class DataSyncCommand extends Command implements CommandInterface
             $this->syncSpyops();
             $this->syncImprovements();
             $this->syncStats();
-            $this->syncResources();
             $this->syncArtefacts();
             $this->syncDecrees();
             $this->syncQuickstarts();
+
+            $this->populateRaceTerrains();
         });
 
         $finish = now();
@@ -137,12 +150,32 @@ class DataSyncCommand extends Command implements CommandInterface
                 'mana'
             ];
 
+            if(isset($data->home_terrain))
+            {
+                $terrain = Terrain::where('key', $data->home_terrain)->first();
+                if(!$terrain)
+                {
+                    $this->error("Terrain key {$data->home_terrain} not found.");
+                    $terrainId = null;
+                }
+                else
+                {
+                    $terrainId = $terrain->id;
+                }
+            }
+            else
+            {
+                $this->error("Terrain not set for race {$data->name}");
+                $terrainId = null;
+            }
+
             // Race
             $race = Race::firstOrNew(['name' => $data->name])
                 ->fill([
                     'key' => generateKeyFromNameString(object_get($data, 'name')),
                     'alignment' => object_get($data, 'alignment'),
                     'description' => object_get($data, 'description'),
+                    'home_terrain_id' => $terrainId,
                     'home_land_type' => object_get($data, 'home_land_type'),
                     'playable' => object_get($data, 'playable', 0),
                     'skill_level' => object_get($data, 'skill_level'),
@@ -451,6 +484,26 @@ class DataSyncCommand extends Command implements CommandInterface
 
             $buildingsToSync[] = $buildingKey;
 
+            if(isset($buildingData->terrain))
+            {
+                $terrain = Terrain::where('key', $buildingData->terrain)->first();
+                if(!$terrain)
+                {
+                    $this->error("Terrain key {$buildingData->terrain} not found.");
+                    $terrainId = null;
+                }
+                else
+                {
+                    $terrainId = $terrain->id;
+                }
+            }
+            else
+            {
+                $this->error("Terrain not set for building {$buildingData->name}");
+                $terrainId = null;
+            }
+
+
             // Building
             $building = Building::firstOrNew(['key' => $buildingKey])
                 ->fill([
@@ -459,6 +512,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'excluded_races' => object_get($buildingData, 'excluded_races', []),
                     'exclusive_races' => object_get($buildingData, 'exclusive_races', []),
                     'enabled' => (int)object_get($buildingData, 'enabled', 1),
+                    'terrain_id' => $terrainId,
                 ]);
 
 
@@ -1644,7 +1698,114 @@ class DataSyncCommand extends Command implements CommandInterface
 
         $this->info('Advancements synced.');
     }
+    
 
+    /**
+     * Syncs terrains from .yml file to the database.
+     */
+    protected function syncTerrains()
+    {
+        $fileContents = $this->filesystem->get(base_path('app/data/terrains.yml'));
+        $terrainsToSync = [];
 
+        $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
+
+        foreach ($data as $terrainKey => $terrainData)
+        {
+            $terrainsToSync[] = $terrainData->name;
+
+            // Resource
+            $terrain = Terrain::firstOrNew(['key' => $terrainKey])
+                ->fill([
+                    'name' => $terrainData->name,
+                    'description' => object_get($terrainData, 'description'),
+                    'order' => object_get($terrainData, 'order'),
+                ]);
+
+            if (!$terrain->exists) {
+                $this->info("Adding terrain {$terrainData->name}");
+            } else {
+                $this->info("Processing terrain {$terrainData->name}");
+
+                $newValues = $terrain->getDirty();
+
+                foreach ($newValues as $key => $newValue)
+                {
+                    $originalValue = $terrain->getOriginal($key);
+
+                    if(is_array($originalValue))
+                    {
+                        $originalValue = implode(',', $originalValue);
+                    }
+                    if(is_array($newValue))
+                    {
+                        $newValue = implode(',', $newValue);
+                    }
+
+                    $this->info("[Change] {$key}: {$originalValue} -> {$newValue}");
+                }
+            }
+
+            $terrain->save();
+            $terrain->refresh();
+        }
+
+        foreach(Terrain::all() as $terrain)
+        {
+            if(!in_array($terrain->name, $terrainsToSync))
+            {
+                $this->info(">> Deleting terrain {$terrain->name}");
+
+                DominionTerrain::where('terrain_id', '=', $terrain->id)->delete();
+
+                $terrain->delete();
+            }
+        }
+
+        $this->info('Terrains synced.');
+    }
+
+    /**
+     * Populate race terrains by inferring from buildings
+     */
+
+    protected function populateRaceTerrains()
+    {
+
+        $this->info('Populating race terrains...');
+
+        DB::transaction( function ()
+        {
+            $sortingArray = Terrain::all()->sortBy('order')->pluck('key','order')->toArray();
+            foreach(Race::all()->where('playable',1) as $race)
+            {
+                $terrainKeys = [];
+                $this->info("\t $race->name");
+
+                foreach($this->buildingHelper->getBuildingsByRace($race) as $building)
+                {
+                    if($building->terrain)
+                    {
+                        $terrainKeys[] = $building->terrain->key;
+                    }
+                }
+    
+                $terrainKeys = array_values(array_unique($terrainKeys));
+    
+                $sortingArrayFlipped = array_flip($sortingArray);
+
+                usort($terrainKeys, function ($a, $b) use ($sortingArrayFlipped) {
+                    return $sortingArrayFlipped[$a] <=> $sortingArrayFlipped[$b];
+                });
+                
+                $race->terrains = $terrainKeys;
+        
+                $race->save();
+            }
+        });
+
+        $this->info('Race terrains populated.');
+
+    }
 
 }

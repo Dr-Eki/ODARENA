@@ -69,6 +69,7 @@ class GameEventService
 
         foreach($invasion->data['attacker']['units_returning'] as $slot => $amount)
         {
+            if()
             $unit = $attacker->race->units->where('slot', $slot)->first();
             $data['attacker']['units'][$unit->name]['returning'] = $amount;
         }

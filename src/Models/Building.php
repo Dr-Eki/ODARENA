@@ -24,6 +24,7 @@ class Building extends AbstractModel
         'exclusive_races' => 'array',
         'enabled' => 'integer',
         'land_type' => 'string',
+        #'terrain' => 'string',
     ];
 
     public function perks()
@@ -49,6 +50,12 @@ class Building extends AbstractModel
         }
 
         return $perks->first()->pivot->value;
+    }
+
+    # Return the terrain of the building
+    public function terrain()
+    {
+        return $this->belongsTo(Terrain::class);
     }
 
 }

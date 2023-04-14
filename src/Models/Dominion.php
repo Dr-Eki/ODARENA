@@ -334,6 +334,47 @@ class Dominion extends AbstractModel
             ->withPivot('level');
     }
 
+    public function terrains()
+    {
+        return $this->belongsToMany(
+            Terrain::class,
+            'dominion_terrains',
+            'dominion_id',
+            'terrain_id'
+        )
+            ->orderBy('order')
+            ->withPivot('amount');
+    }
+
+    # This code enables the following syntax:
+    # $dominion->get{$terrain}Terrain(), such as getForestTerrain()
+
+    public function __get($key)
+    {
+        if (preg_match('/^terrain_(\w+)$/', $key, $matches)) {
+            return $this->getTerrainAmount($matches[1]);
+        }
+    
+        return parent::__get($key);
+    }
+    
+    protected function getTerrainAmount($terrainKey)
+    {
+        $terrainKey = strtolower($terrainKey);
+    
+        $terrain = $this->terrains()
+            ->where('terrains.key', $terrainKey)
+            ->first();
+    
+        if ($terrain) {
+            return $terrain->pivot->amount;
+        }
+    
+        return 0;
+    }
+
+    # Cool, huh?
+
     public function states()
     {
         return $this->hasMany(DominionState::class);

@@ -46,7 +46,6 @@ class ComposerServiceProvider extends AbstractServiceProvider
             $techCalculator = app(TechCalculator::class);
             $researchCalculator = app(ResearchCalculator::class);
             $resourceCalculator = app(ResourceCalculator::class);
-            #$productionCalculator = app(ProductionCalculator::class);
             $worldNewsService = app(WorldNewsService::class);
 
             if (!$selectorService->hasUserSelectedDominion()) {

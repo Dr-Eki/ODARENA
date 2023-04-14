@@ -27,6 +27,7 @@ class Race extends AbstractModel
           'key' => 'text',
           'resources' => 'array',
           'improvement_resources' => 'array',
+          'terrains' => 'array',
           'land_improvements' => 'array',
           'peasants_production' => 'array',
           'home_land_type' => 'text',
@@ -64,7 +65,13 @@ class Race extends AbstractModel
         return $this->hasMany(Unit::class)
             ->orderBy('slot');
     }
-   
+
+    # Get race home terrain
+    public function homeTerrain()
+    {
+        return Terrain::where('id', $this->home_terrain_id)->first();
+    }
+
     public function getBuildings()
     {
         return Building::where(function ($query) {
