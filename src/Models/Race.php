@@ -23,24 +23,25 @@ namespace OpenDominion\Models;
 class Race extends AbstractModel
 {
 
-      protected $casts = [
-          'key' => 'text',
-          'resources' => 'array',
-          'improvement_resources' => 'array',
-          'terrains' => 'array',
-          'land_improvements' => 'array',
-          'peasants_production' => 'array',
-          'home_land_type' => 'text',
-          'peasants_alias' => 'text',
-          'draftees_alias' => 'text',
-          'construction_materials' => 'array',
-          'round_modes' => 'array',
-          'spies_cost' => 'text',
-          'wizards_cost' => 'text',
-          'archmages_cost' => 'text',
+    protected $casts = [
+        'key' => 'text',
+        'resources' => 'array',
+        'improvement_resources' => 'array',
+        'terrains' => 'array',
+        'land_improvements' => 'array',
+        'peasants_production' => 'array',
+        'home_land_type' => 'text',
+        'peasants_alias' => 'text',
+        'draftees_alias' => 'text',
+        'construction_materials' => 'array',
+        'round_modes' => 'array',
+        'spies_cost' => 'text',
+        'wizards_cost' => 'text',
+        'archmages_cost' => 'text',
 
-          'psionic_strength' => 'float',
-      ];
+        'psionic_strength' => 'float',
+        'magic_level' => 'integer',
+    ];
 
     public function dominions()
     {

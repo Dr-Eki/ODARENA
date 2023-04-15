@@ -183,6 +183,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'max_per_round' => object_get($data, 'max_per_round', NULL),
                     'minimum_rounds' => object_get($data, 'minimum_rounds', 0),
                     'psionic_strength' => object_get($data, 'psionic_strength', 1),
+                    'magic_level' => object_get($data, 'magic_level', 0),
                     'resources' => object_get($data, 'resources', $defaultResources),
                     'improvement_resources' => object_get($data, 'improvement_resources', $defaultImprovementResources),
                     'land_improvements' => object_get($data, 'land_improvements', NULL),
