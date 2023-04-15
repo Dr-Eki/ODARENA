@@ -25,40 +25,16 @@ use Webpatser\Uuid\Uuid;
  * @method static \Illuminate\Database\Eloquent\Builder|\OpenDominion\Models\GameEvent query()
  * @mixin \Eloquent
  */
-class GameEvent extends AbstractModel
+class GameEventStory extends AbstractModel
 {
-    public $incrementing = false;
-
+    protected $table = 'game_event_stories';
+    
     protected $casts = [
-        'data' => 'array',
+        'story' => 'text',
     ];
 
-    public function round()
+    public function gameEvent()
     {
-        return $this->belongsTo(Round::class);
-    }
-
-    public function source()
-    {
-        return $this->morphTo();
-    }
-
-    public function target()
-    {
-        return $this->morphTo();
-    }
-
-    public function story()
-    {
-        return $this->hasOne(GameEventStory::class, 'game_event_id');
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        self::creating(function ($model) {
-            $model->id = Uuid::generate();
-        });
+        return $this->belongsTo(GameEvent::class, 'game_event_id');
     }
 }

@@ -2,52 +2,62 @@
 
 namespace OpenDominion\Calculators\Dominion;
 
-use OpenDominion\Helpers\BuildingHelper;
-use OpenDominion\Helpers\LandHelper;
+use OpenDominion\Helpers\TerrainHelper;
 use OpenDominion\Models\Dominion;
-use OpenDominion\Services\Dominion\QueueService;
 
-# ODA
 use OpenDominion\Models\Realm;
 
-class LandCalculator
+class TerrainCalculator
 {
-    /** @var BuildingCalculator */
-    protected $buildingCalculator;
+    protected $dominionCalculator;
+    protected $terrainHelper;
 
-    /** @var BuildingHelper */
-    protected $buildingHelper;
-
-    /** @var QueueService */
-    protected $queueService;
-
-    /** @var LandHelper */
-    protected $landHelper;
-
-    /** @var SpellCalculator */
-    #protected $spellCalculator;
-
-    /** @var ImprovementCalculator */
-    #protected $improvementCalculator;
-
-    /**
-     * LandCalculator constructor.
-     *
-     * @param BuildingCalculator $buildingCalculator
-     * @param BuildingHelper $buildingHelper
-     * @param LandHelper $landHelper
-     * @param QueueService $queueService
-     */
     public function __construct(
-        BuildingCalculator $buildingCalculator,
-        BuildingHelper $buildingHelper,
-        LandHelper $landHelper,
-        QueueService $queueService
+        DominionCalculator $dominionCalculator,
+        TerrainHelper $terrainHelper
     ) {
-        $this->buildingCalculator = $buildingCalculator;
-        $this->buildingHelper = $buildingHelper;
-        $this->landHelper = $landHelper;
-        $this->queueService = $queueService;
+        $this->dominionCalculator = $dominionCalculator;
+        $this->terrainHelper = $terrainHelper;
+    }
+
+    public function getUnterrainedLand(Dominion $dominion): int
+    {
+        return $dominion->land - $this->getTotalTerrainedAmount($dominion);
+    }
+
+    public function getTotalTerrainedAmount(Dominion $dominion): int
+    {
+        $landSize = 0;
+
+        foreach($dominion->terrains as $terrain)
+        {
+            $landSize += $terrain->pivot->amount;
+        }
+
+        return $landSize;
+    }
+
+    public function getTerrainLost(Dominion $dominion, int $landLost): array
+    {
+        $terrains = $dominion->terrains->keyBy('key');
+        $terrainLost = [];
+
+        foreach($terrains as $terrainKey => $terrain)
+        {
+            $terrainLost[$terrainKey] = 0;
+        }
+
+        $totalTerrainedLand = $this->getTotalTerrainedAmount($dominion);
+
+        if($totalTerrainedLand > 0)
+        {
+            foreach($terrains as $terrainKey => $terrain)
+            {
+                $terrainLost[$terrainKey] = intval(round($landLost * ($terrain->pivot->amount / $totalTerrainedLand)))*-1;
+            }
+        }
+
+        return $terrainLost;
     }
 
     /**
@@ -86,21 +96,6 @@ class LandCalculator
         }
 
         return $incoming;
-    }
-
-    /**
-     * Returns the Dominion's total acres of barren land.
-     *
-     * @param Dominion $dominion
-     * @return int
-     */
-    public function getTotalBarrenLand(Dominion $dominion): int
-    {
-        return (
-            $this->getTotalLand($dominion)
-            - $this->buildingCalculator->getTotalBuildings($dominion)
-            - $this->queueService->getConstructionQueueTotal($dominion)
-        );
     }
 
     /**
@@ -179,11 +174,6 @@ class LandCalculator
         }
 
         return $return;
-    }
-
-    public function getLandLost(Dominion $dominion, float $landLossRatio): int
-    {
-        return (int)floor($dominion->land * $landLossRatio);
     }
 
     public function getLandLostByLandType(Dominion $dominion, float $landLossRatio): array

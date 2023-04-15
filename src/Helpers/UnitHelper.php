@@ -23,6 +23,14 @@ use OpenDominion\Services\Dominion\StatsService;
 class UnitHelper
 {
 
+    protected $buildingCalculator;
+    protected $landCalculator;
+
+    #protected $raceHelper;
+
+    protected $queueService;
+    protected $statsService;
+
     public function __construct()
     {
         $this->buildingCalculator = app(BuildingCalculator::class);
@@ -72,24 +80,33 @@ class UnitHelper
             return ucfirst(str_replace('military_', '', $unitType));
         }
 
+        if($unitType == 'military_draftees' or $unitType == 'draftees')
+        {
+            return $race->draftees_alias ? ucwords($race->draftees_alias) : 'Draftee';
+        }
+
+        if($unitType == 'peasants' or $unitType == 'peasant')
+        {
+            return $race->peasants_alias ? ucwords($race->peasants_alias) : 'Peasant';
+        }
+
         # If $unitSlot begins with 'unit', remove it
         if(substr($unitType, 0, 4) === 'unit')
         {
-            $unitSlot = substr($unitType, 4)-1; # -1 because the unit slots are 0-indexed in cases where we get unit1, unit2, etc.
+            $unitSlot = substr($unitType, 4);
         }
         # If $unitSlot begins with 'military_unit', remove it
         elseif(substr($unitType, 0, 13) === 'military_unit')
         {
-            $unitSlot = substr($unitType, 13)-1; # -1 because the unit slots are 0-indexed in cases where we get unit1, unit2, etc. NOT TESTED/USED???
+            $unitSlot = substr($unitType, 13);
         }
         else
         {
             $unitSlot = $unitType;
         }
 
-        $unitSlot = (int)$unitSlot;
+        return $race->units->where('slot', $unitSlot)->first()->name;
 
-        return $race->units[$unitSlot]->name;
     }
 
     public function isUnitOffensiveSpy(Unit $unit): bool

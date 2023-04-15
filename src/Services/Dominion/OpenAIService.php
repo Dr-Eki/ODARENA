@@ -3,6 +3,7 @@
 namespace OpenDominion\Services\Dominion;
 
 use GuzzleHttp\Client;
+use Exception;
 
 class OpenAIService
 {
@@ -22,9 +23,10 @@ class OpenAIService
         ]);
     }
 
-    public function sendMessageAndGetCompletion(string $storyteller, string $message, int $maxTokens = 50)
+    public function sendMessageAndGetCompletion(string $storyteller, string $message, int $maxTokens = 500)
     {
         $payload = [
+            'model' => 'gpt-3.5-turbo',
             'messages' => [
                 [
                     'role' => 'system',
@@ -39,7 +41,7 @@ class OpenAIService
         ];
 
         try {
-            $response = $this->client->post('chat', ['json' => $payload]);
+            $response = $this->client->post('chat/completions', ['json' => $payload]);
             $data = json_decode($response->getBody(), true);
 
             $assistantMessage = $data['choices'][0]['message']['content'];
@@ -48,6 +50,27 @@ class OpenAIService
                 'userMessage' => $message,
                 'assistantMessage' => $assistantMessage,
             ];
+        } catch (Exception $e) {
+            return [
+                'error' => $e->getMessage(),
+            ];
+        }
+    }
+
+    public function generateImagesFromText(string $text, int $n = 1, string $size = "512x512"): array
+    {
+        $payload = [
+            'prompt' => $text,
+            'n' => $n,
+            'size' => $size,
+            'response_format' => 'b64_json',
+        ];
+
+        try {
+            $response = $this->client->post('images/generations', ['json' => $payload]);
+            $data = json_decode($response->getBody(), true);
+
+            return $data;
         } catch (Exception $e) {
             return [
                 'error' => $e->getMessage(),

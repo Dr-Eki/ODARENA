@@ -46,8 +46,6 @@ class TickCommand extends Command implements CommandInterface
     public function handle(): void
     {
         $this->tickService->tickHourly();
-        #$hoursSinceRoundStarted = now()->startOfHour()->diffInHours(Carbon::parse($round->start_date)->startOfHour());
-        #if ($hoursSinceRoundStarted % 24 === 0 && now()->minute < 15)
         if (now()->hour === 0 && now()->minute < 15)
         {
             $this->tickService->tickDaily();

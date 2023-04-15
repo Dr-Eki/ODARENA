@@ -5,6 +5,7 @@ home_land_type: swamp
 home_terrain: swamps
 skill_level: 1
 playable: 1
+magic_level: 2
 
 peasants_alias: working one
 draftees_alias: drafted one

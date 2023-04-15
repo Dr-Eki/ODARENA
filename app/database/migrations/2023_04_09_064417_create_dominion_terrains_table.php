@@ -19,7 +19,7 @@ class CreateDominionTerrainsTable extends Migration
             $table->unsignedInteger('dominion_id');
             $table->foreign('dominion_id')->references('id')->on('dominions');
 
-            $table->unsignedBigInteger('terrain_id');
+            $table->unsignedBigInteger('terrain_id'); 
             $table->foreign('terrain_id')->references('id')->on('terrains');
 
             $table->integer('amount')->default(0);

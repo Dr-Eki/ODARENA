@@ -17,7 +17,7 @@ class CreateGameEventStoriesTable extends Migration
             $table->id();
 
             $table->uuid('game_event_id');
-            $table->string('story');
+            $table->longText('story');
 
             $table->timestamps();
 

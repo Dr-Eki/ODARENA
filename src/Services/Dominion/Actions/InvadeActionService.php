@@ -10,6 +10,7 @@ use OpenDominion\Models\Dominion;
 #use OpenDominion\Models\DominionSpell;
 #use OpenDominion\Models\Building;
 use OpenDominion\Models\GameEvent;
+use OpenDominion\Models\GameEventStory;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
@@ -694,13 +695,22 @@ class InvadeActionService
                 'tick' => $attacker->round->ticks
             ]);
 
-            # Generate event story
-            #$this->gameEventService->generateInvasionStory($this->invasionEvent);
+            if(env('OPENAI_API_KEY'))
+            {
+                $story = $this->gameEventService->generateInvasionStory($this->invasionEvent);
+                $image = null;#$this->gameEventService->generateInvasionImage($this->invasionEvent);
+                
+                GameEventStory::create([
+                    'game_event_id' => $this->invasionEvent->id,
+                    'story' => $story,
+                    'image' => $image
+                ]);
+            }
 
             # Debug before saving:
             if(env('APP_ENV') == 'local')
             {
-                dd($this->invasion);
+                #dd($this->invasion);
             }
 
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);

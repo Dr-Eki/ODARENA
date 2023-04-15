@@ -93,12 +93,12 @@ class DominionFactory
         $this->guardAgainstMismatchedAlignments($race, $realm, $realm->round);
 
         // Starting resources are based on this.
-        $acresBase = 1000;
+        $landBase = 1000;
 
         $startingParameters = [];
         $startingResources = [];
 
-        $startingParameters['prestige'] = $acresBase/2;
+        $startingParameters['prestige'] = $landBase/2;
         $startingParameters['npc_modifier'] = 0;
         $startingParameters['protection_ticks'] = 96;
 
@@ -118,14 +118,14 @@ class DominionFactory
             # For usage in this function, divide npc_modifier by 1000 to create a multiplier.
             $npcModifier = $startingParameters['npc_modifier'] / 1000;
 
-            $acresBase *= $npcModifier;
+            $landBase *= $npcModifier;
         }
 
-        $startingBuildings = $this->getStartingBuildings($race, $acresBase);
+        $startingBuildings = $this->getStartingBuildings($race, $landBase);
 
         $startingLand = $this->getStartingLand(
             $race,
-            $this->getStartingBarrenLand($race, $acresBase),
+            $this->getStartingBarrenLand($race, $landBase),
             $startingBuildings
         );
 
@@ -210,7 +210,7 @@ class DominionFactory
         }
         else
         {
-              $startingParameters['peasants'] = $acresBase * (rand(50,200)/100);
+              $startingParameters['peasants'] = $landBase * (rand(50,200)/100);
 
               $startingParameters['draft_rate'] = 0;
 
@@ -218,8 +218,8 @@ class DominionFactory
               $dpaTarget = $this->barbarianCalculator->getDpaTarget(null, $realm->round, $startingParameters['npc_modifier']);
               $opaTarget = $this->barbarianCalculator->getOpaTarget(null, $realm->round, $startingParameters['npc_modifier']);
 
-              $dpRequired = $acresBase * $dpaTarget;
-              $opRequired = $acresBase * $opaTarget;
+              $dpRequired = $landBase * $dpaTarget;
+              $opRequired = $landBase * $opaTarget;
 
               $specsRatio = rand($this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'), $this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'))/100;
               $elitesRatio = 1-$specsRatio;
@@ -239,7 +239,7 @@ class DominionFactory
         # Starting land
         $startingLand = $this->getStartingLand(
             $race,
-            $this->getStartingBarrenLand($race, $acresBase),
+            $this->getStartingBarrenLand($race, $landBase),
             $startingBuildings
         );
 
@@ -255,7 +255,7 @@ class DominionFactory
         $popBonus += $race->getPerkMultiplier('max_population');
         $popBonus *= 1 + $startingParameters['prestige']/10000;
 
-        $startingParameters['peasants'] = floor($acresBase * $housingPerBarren * $popBonus);
+        $startingParameters['peasants'] = floor($landBase * $housingPerBarren * $popBonus);
 
         if($race->getPerkValue('no_population'))
         {
@@ -319,6 +319,7 @@ class DominionFactory
             'military_wizards' => $startingParameters['wizards'],
             'military_archmages' => $startingParameters['archmages'],
 
+            'land' => array_sum($startingLand),
             'land_plain' => $startingLand['plain'],
             'land_mountain' => $startingLand['mountain'],
             'land_swamp' => $startingLand['swamp'],
@@ -476,7 +477,7 @@ class DominionFactory
      *
      * @return array
      */
-    protected function getStartingBarrenLand($race, $acresBase): array
+    protected function getStartingBarrenLand($race, $landBase): array
     {
         # Change this to just look at home land type?
         # Special treatment for Void, Growth, Myconid, Glimjir, and Swarm
@@ -508,7 +509,7 @@ class DominionFactory
         {
           return [
               'plain' => 0,
-              'mountain' => $acresBase,
+              'mountain' => $landBase,
               'swamp' => 0,
               'cavern' => 0,
               'forest' => 0,
@@ -537,14 +538,14 @@ class DominionFactory
               'cavern' => 0,
               'forest' => 0,
               'hill' => 0,
-              'water' => $acresBase,
+              'water' => $landBase,
           ];
         }
         elseif($race->name == 'Icekin')
         {
           return [
               'plain' => 0,
-              'mountain' => $acresBase,
+              'mountain' => $landBase,
               'swamp' => 0,
               'cavern' => 0,
               'forest' => 0,
@@ -559,7 +560,7 @@ class DominionFactory
               'mountain' => 0,
               'swamp' => 0,
               'cavern' => 0,
-              'forest' => $acresBase,
+              'forest' => $landBase,
               'hill' => 0,
               'water' => 0,
           ];
@@ -619,7 +620,7 @@ class DominionFactory
      *
      * @return array
      */
-    protected function getStartingBuildings($race, $acresBase): array
+    protected function getStartingBuildings($race, $landBase): array
     {
         # Default
         $startingBuildings = [
@@ -658,24 +659,24 @@ class DominionFactory
         }
         elseif($race->name == 'Growth')
         {
-          $startingBuildings['tissue_swamp'] = $acresBase;
+          $startingBuildings['tissue_swamp'] = $landBase;
         }
         elseif($race->name == 'Myconid')
         {
-          $startingBuildings['mycelia'] = $acresBase;
+          $startingBuildings['mycelia'] = $landBase;
         }
         elseif($race->name == 'Barbarian')
         {
-            $startingBuildings['farm'] = floor($acresBase*0.10);
-            $startingBuildings['smithy'] = floor($acresBase*0.10);
-            $startingBuildings['lumberyard'] = floor($acresBase*0.06);
-            $startingBuildings['constabulary'] = floor($acresBase*0.06);
-            $startingBuildings['ore_mine'] = floor($acresBase*0.10);
-            $startingBuildings['gem_mine'] = floor($acresBase*0.10);
-            $startingBuildings['barracks'] = floor($acresBase*0.20);
-            $startingBuildings['tower'] = floor($acresBase*0.06);
-            $startingBuildings['temple'] = floor($acresBase*0.06);
-            $startingBuildings['dock'] = floor($acresBase*0.10);
+            $startingBuildings['farm'] = floor($landBase*0.10);
+            $startingBuildings['smithy'] = floor($landBase*0.10);
+            $startingBuildings['lumberyard'] = floor($landBase*0.06);
+            $startingBuildings['constabulary'] = floor($landBase*0.06);
+            $startingBuildings['ore_mine'] = floor($landBase*0.10);
+            $startingBuildings['gem_mine'] = floor($landBase*0.10);
+            $startingBuildings['barracks'] = floor($landBase*0.20);
+            $startingBuildings['tower'] = floor($landBase*0.06);
+            $startingBuildings['temple'] = floor($landBase*0.06);
+            $startingBuildings['dock'] = floor($landBase*0.10);
         }
 
         return $startingBuildings;

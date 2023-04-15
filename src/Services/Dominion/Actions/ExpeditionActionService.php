@@ -39,6 +39,26 @@ class ExpeditionActionService
 
     protected const MIN_MORALE = 50;
 
+    protected $artefactCalculator;
+    protected $buildingCalculator;
+    protected $expeditionCalculator;
+    protected $landCalculator;
+    protected $militaryCalculator;
+    protected $spellCalculator;
+
+    protected $landHelper;
+    protected $raceHelper;
+    protected $spellHelper;
+    protected $unitHelper;
+
+    protected $artefactService;
+    protected $notificationService;
+    protected $protectionService;
+    protected $statsService;
+    protected $terrainService;
+    protected $queueService;
+
+
     /** @var array Invasion result array. todo: Should probably be refactored later to its own class */
     protected $expeditionResult = [];
 
@@ -50,8 +70,10 @@ class ExpeditionActionService
         $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
 
-
         $this->landHelper = app(LandHelper::class);
+        $this->spellHelper = app(SpellHelper::class);
+        $this->raceHelper = app(RaceHelper::class);
+        $this->unitHelper = app(UnitHelper::class);
 
         $this->artefactService = app(ArtefactService::class);
         $this->notificationService = app(NotificationService::class);
@@ -59,9 +81,7 @@ class ExpeditionActionService
         $this->statsService = app(StatsService::class);
         $this->queueService = app(QueueService::class);
         $this->spellCalculator = app(SpellCalculator::class);
-        $this->spellHelper = app(SpellHelper::class);
-        $this->raceHelper = app(RaceHelper::class);
-        $this->unitHelper = app(UnitHelper::class);
+        $this->terrainService = app(TerrainService::class);
     }
 
     /**

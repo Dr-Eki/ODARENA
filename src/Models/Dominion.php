@@ -141,6 +141,7 @@ class Dominion extends AbstractModel
         'military_wizards' => 'integer',
         'military_archmages' => 'integer',
 
+        'land' => 'integer',
         'land_plain' => 'integer',
         'land_mountain' => 'integer',
         'land_swamp' => 'integer',

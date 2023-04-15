@@ -193,3 +193,27 @@ if (!function_exists('capSum')) {
     }
 }
 
+if(!function_exists('indefiniteArticle'))
+{
+    /**
+     * Returns the indefinite article for a word.
+     *
+     * @param string $word
+     * @return string
+     */
+
+     function indefiniteArticle(string $word): string
+    {
+        $word = strtolower(trim($word));
+        $firstLetter = $word[0];
+
+        $vowels = ['a', 'e', 'i', 'o', 'u'];
+
+        if (in_array($firstLetter, $vowels)) {
+            return 'an';
+        } else {
+            return 'a';
+        }
+    }
+
+}

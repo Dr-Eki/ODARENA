@@ -86,6 +86,7 @@ class DominionCalculator
         return $landSize;
     }
 
+
     public function getTotalBuildings(Dominion $dominion): int
     {
         $totalBuildings = 0;

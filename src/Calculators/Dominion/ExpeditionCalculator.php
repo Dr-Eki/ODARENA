@@ -95,9 +95,6 @@ class ExpeditionCalculator
         }
 
         return $landDiscovered;
-
     }
-
-
 
 }

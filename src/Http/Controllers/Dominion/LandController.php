@@ -103,4 +103,29 @@ class LandController extends AbstractDominionController
             return redirect()->route('dominion.land');
         }
     }
+
+    public function postRezone(RezoneActionRequest $request)
+    {
+
+        $dominion = $this->getSelectedDominion();
+        
+        $rezoneActionService = app(RezoneActionService::class);
+
+        try {
+            $result = $rezoneActionService->rezoneTerrain(
+                $dominion,
+                $request->get('remove'),
+                $request->get('add')
+            );
+
+        } catch (GameException $e) {
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        $request->session()->flash('alert-success', $result['message']);
+        return redirect()->route('dominion.land');
+        
+    }
 }

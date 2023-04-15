@@ -64,6 +64,12 @@ class NotificationHelper
                 'route' => route('dominion.land'),
                 'iconClass' => 'fa fa-search text-green',
             ],
+            'rezoning_completed' => [
+                'label' => 'Land rezoning completed',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.land'),
+                'iconClass' => 'ra ra-shovel text-green',
+            ],
             'expedition_completed' => [
                 'label' => 'Units returned from expedition',
                 'defaults' => ['email' => false, 'ingame' => true],
@@ -534,6 +540,12 @@ class NotificationHelper
                     '%s %s returned from expedition',
                     number_format($units),
                     str_plural('unit', $units)
+                );
+
+            case 'hourly_dominion.rezoning_completed':
+                return sprintf(
+                    'Rezoning of %s land completed.',
+                    number_format(array_sum($data))
                 );
 
             case 'hourly_dominion.artefact_completed':
