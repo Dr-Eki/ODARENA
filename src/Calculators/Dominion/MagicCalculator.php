@@ -44,8 +44,6 @@ class MagicCalculator
         ->where('magic_level', $level)
         ->get()
         ->filter(function ($spell) use ($dominion) {
-            Log::debug('Checking spell', ['spell' => $spell->name, 'exclusive_races' => $spell->exclusive_races]);
-    
             // Check excluded_races
             if (!empty($spell->excluded_races) && in_array($dominion->race->name, $spell->excluded_races))
             {
@@ -59,8 +57,21 @@ class MagicCalculator
             }
     
             return true;
-        });
+        })
+        ->sortBy('name');
 
+    }
+
+    public function getSpells(Dominion $dominion)
+    {
+        $spells = new Collection();
+
+        for ($i = 0; $i <= $this->getMagicLevel($dominion); $i++)
+        {
+            $spells = $spells->merge($this->getLevelSpells($dominion, $i));
+        }
+
+        return $spells;    
     }
 
 }

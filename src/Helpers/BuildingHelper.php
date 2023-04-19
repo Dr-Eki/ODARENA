@@ -302,6 +302,12 @@ class BuildingHelper
 
             # SPECIAL DESCRIPTION PERKS
 
+            # If $perk->key ends with _theft_protection
+            if (str_ends_with($perk->key, '_theft_protection'))
+            {
+                #$perkValue = number_format($perkValue); # The , added here breaks the sprintf below
+            }
+
             foreach(Race::where('playable', 1)->pluck('key')->toArray() as $raceKey)
             {
                 if($perk->key == ($raceKey . '_unit_housing'))
@@ -328,14 +334,9 @@ class BuildingHelper
                         $unit = $race->units->firstWhere('slot', $unitSlot);
     
                         $perkValue = [$amountHoused, str_plural($unit->name, $amountHoused)];
-                        #dump('this one');
                     }
-
-                    #dd($perkValue);
                 }
             }
-
-
 
             if($perk->key === 'research_required_to_build')
             {
@@ -344,7 +345,6 @@ class BuildingHelper
 
                 $perkValue = $tech->name;
                 $nestedArrays = false;
-
             }
 
             if($perk->key === 'peasants_conversions')

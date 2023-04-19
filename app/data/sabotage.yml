@@ -2,83 +2,57 @@ assassinate_draftees:
   name: Assassinate Draftees
   scope: hostile
   excluded_races:
-    - Dimensionalists
-    - Dragon
-    - Lux
-    - Marshling
-    - Void
+    - Arwe
+    - Gorm
+    - Reptilians
   perks:
-    military_draftees: 10
+    military_draftees: 15
 
 assassinate_peasants:  
   name: Assassinate Peasants
   scope: hostile
   excluded_races:
-    - Dimensionalists
-    - Dragon
-    - Lux
-    - Marshling
-    - Void
+    - Arwe
+    - Gorm
+    - Reptilians
   perks:
-    peasants: 10
+    peasants: 15
 
 sabotage_food:  
   name: Destroy Food
   scope: hostile
   exclusive_races:
-    - Ants
-    - Goblin
-    - Halfling
-    - Kerranad
+    - Arwe
     - Reptilians
-    - Myconid
+    - Swarm
   perks:
-    resource: food,10
+    resource: food,15
 
 sabotage_lumber:  
   name: Destroy Lumber
   scope: hostile
   exclusive_races:
-    - Ants
-    - Goblin
-    - Halfling
-    - Kerranad
+    - Arwe
     - Reptilians
-    - Myconid
   perks:
-    resource: lumber,10
+    resource: lumber,15
 
 intimidation:  
   name: Intimidation
   scope: hostile
   exclusive_races:
-    - Armada
-    - Beastfolk
-    - Black Orc
-    - Cires
-    - Dark Elf
-    - Jagunii
-    - Legion
-    - Norse
-    - Orc
     - Reptilians
+    - Swarm
   perks:
-    peasants: 4
-    military_draftees: 4
-    morale: 8
+    peasants: 6
+    military_draftees: 6
+    morale: 10
 
-magic_snare:  
-  enabled: 0
+magic_snare:
   name: Magic Snare
   scope: hostile
-  excluded_races:
-    - Dimensionalists
-    - Dragon
-    - Lux
-    - Marshling
-    - Void
   perks:
-    wizard_strength: 20
+    wizard_strength: 30
 
 release_prisoners:  
   enabled: 0
@@ -109,13 +83,6 @@ release_souls:
 sabotage_construction:
   name: Sabotage Construction
   scope: hostile
-  excluded_races:
-    - Aurei
-    - Dimensionalists
-    - Dragon
-    - Lux
-    - Marshling
-    - Void
   perks:
     construction: 5
 
@@ -128,16 +95,15 @@ sabotage_defensive_buildings:
   exclusive_races:
     - Reptilians
   perks:
-    buildings: bulwark;0.5,battlement;1,guard_tower;2,stone_wall;1,turret;1,pillar;2,ringfort;0.5,wall;1
+    buildings: bulwark;1,battlement;2,guard_tower;4,stone_wall;2,turret;2,pillar;4,ringfort;1,wall;2
 
-sabotage_mines:  
-  enabled: 0
+sabotage_mines:
   name: Sabotage Mines
   scope: hostile
   exclusive_races:
     - Reptilians
   perks:
-    buildings: automated_mine;10,dwargen_mine;10,deep_mine;10,gem_mine;10,gold_mine;5,ore_mine;10,slave_mine;10,strip_mine;10
+    buildings: automated_mine;15,dwargen_mine;15,deep_mine;15,gem_mine;15,gold_mine;7.5,ore_mine;15,slave_mine;15,strip_mine;15
 
 sabotage_improvements_defense:
   name: Sabotage Defensive Improvements
@@ -145,7 +111,7 @@ sabotage_improvements_defense:
   exclusive_races:
     - Reptilians
   perks:
-    improvements: defenses;1,defense;1,bashing;2,halo;0.25,tranquillity;1,city_guard;1,camouflage;1.5,compassion;0.5
+    improvements: defenses;2,defense;2,bashing;4,halo;0.5,tranquillity;2,city_guard;2,camouflage;3,compassion;1
 
 sabotage_improvements_food:
   name: Sabotage Food Improvements
@@ -153,7 +119,7 @@ sabotage_improvements_food:
   exclusive_races:
     - Reptilians
   perks:
-    improvements: agriculture;2,irrigation;2,hunting;2,bloom;4,farming_kerranad;2,foraging;4
+    improvements: agriculture;4,irrigation;4,hunting;4,bloom;6,farming_kerranad;4,foraging;6
 
 sabotage_improvements_offense:
   name: Sabotage Offensive Improvements
@@ -161,7 +127,7 @@ sabotage_improvements_offense:
   exclusive_races:
     - Reptilians
   perks:
-    improvements: tactics;1,offense;1,smashing;1,coils;0.25,rage;1,warfare;1,fencing;1.5,brutality;0.5,aggression;1,striking;0.8
+    improvements: tactics;2,offense;2,smashing;2,coils;0.5,rage;2,warfare;2,fencing;3,brutality;1,aggression;2,striking;1.6
 
 # END REPTILIANS
 

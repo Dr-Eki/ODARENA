@@ -42,6 +42,68 @@ class SpellActionService
 {
     use DominionGuardsTrait;
 
+    /** @var ImprovementCalculator */
+    protected $improvementCalculator;
+
+    /** @var LandCalculator */
+    protected $landCalculator;
+
+    /** @var MilitaryCalculator */
+    protected $militaryCalculator;
+
+    /** @var NetworthCalculator */
+    protected $networthCalculator;
+
+    /** @var NotificationService */
+    protected $notificationService;
+
+    /** @var LandHelper */
+    protected $landHelper;
+
+    /** @var OpsHelper */
+    protected $opsHelper;
+
+    /** @var PopulationCalculator */
+    protected $populationCalculator;
+
+    /** @var ProtectionService */
+    protected $protectionService;
+
+    /** @var QueueService */
+    protected $queueService;
+
+    /** @var RaceHelper */
+    protected $raceHelper;
+
+    /** @var ImprovementHelper */
+    protected $improvementHelper;
+
+    /** @var RangeCalculator */
+    protected $rangeCalculator;
+
+    /** @var ResourceCalculator */
+    protected $resourceCalculator;
+
+    /** @var ResourceService */
+    protected $resourceService;
+
+    /** @var SorceryCalculator */
+    protected $sorceryCalculator;
+
+    /** @var SpellCalculator */
+    protected $spellCalculator;
+
+    /** @var SpellDamageCalculator */
+    protected $spellDamageCalculator;
+
+    /** @var SpellHelper */
+    protected $spellHelper;
+
+    /** @var StatsService */
+    protected $statsService;
+
+
+
     /**
      * SpellActionService constructor.
      */

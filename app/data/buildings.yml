@@ -5,6 +5,7 @@ barracks:
   excluded_races:
     - Beastfolk
     - Reptilians
+    - Sylvan
     - Swarm
   land_type: hill
   terrain: hills
@@ -17,6 +18,7 @@ farm:
   name: Farm
   excluded_races:
     - Reptilians
+    - Sylvan
     - Swarm
   land_type: plain
   terrain: plains
@@ -27,6 +29,7 @@ ore_mine:
   name: Ore Mine
   excluded_races:
     - Reptilians
+    - Sylvan
     - Swarm
   land_type: mountain
   terrain: mountains
@@ -44,6 +47,14 @@ saw_mill:
   perks:
     lumber_production_raw: 35
     #arwe_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+
+tower:
+  name: Tower
+  excluded_races:
+    - Sylvan
+  land_type: swamp
+  perks:
+    mana_production_raw: 20
 
 lumberyard:  
   name: Lumberyard
@@ -70,6 +81,7 @@ wall:
   name: Wall
   excluded_races:
     - Reptilians
+    - Sylvan
     - Swarm
   land_type: hill
   terrain: plains
@@ -94,6 +106,7 @@ vault:
   name: Vault
   excluded_races:
     - Reptilians
+    - Sylvan
   land_type: mountain
   terrain: mountains
   perks:
@@ -110,7 +123,6 @@ granary:
     lumber_theft_protection: 12500
 
 # HOMES
-
 den:  
   name: Den
   enabled: 0
@@ -143,6 +155,50 @@ residence:
 
 # END HOMES
 
+# BEGIN SYLVAN
+forest_haven:
+  name: Forest Haven
+  exclusive_races:
+    - Sylvan
+  land_type: forest
+  perks:
+    gold_theft_protection: 25000
+
+garden:
+  name: Garden
+  exclusive_races:
+    - Sylvan
+  land_type: forest
+  perks:
+    food_production_raw: 50
+
+mana_tree:
+  name: Mana Tree
+  exclusive_races:
+    - Sylvan
+  land_type: forest
+  perks:
+    mana_production_raw: 30
+
+meadow:
+  name: Meadow
+  exclusive_races:
+    - Sylvan
+  land_type: forest
+  perks:
+    housing: 28
+    jobs: 0
+
+orchard:
+  name: Orchard
+  exclusive_races:
+    - Sylvan
+  land_type: forest
+  perks:
+    improvements: 1,1 # Every 1% gives 2% higher imps
+
+# END SYLVAN
+
 # BEGIN SWARM
 
 aquifer:  
@@ -161,7 +217,7 @@ chrysalis:
   land_type: forest
   terrain: forest
   perks:
-    improvements: 1,1 # Every 1% gives 1% higher imps
+    improvements: 1,1.25 # Every 1% gives 1% higher imps
 
 burrow:
   name: Burrow
@@ -540,24 +596,6 @@ water_temple:
     population_growth: 1,6 # Every 1%, gives 6%
 
 # END GLIMJIR
-
-tower:  
-  enabled: 0
-  name: Tower
-  excluded_races:
-    - Dragon
-    - Growth
-    - Icekin
-    - Glimjir
-    - Monster
-    - Myconid
-    - Void
-    - Swarm
-    - Sylvan
-    - Wood Elf
-  land_type: swamp
-  perks:
-    mana_production_raw: 25
 
 mast:  
   enabled: 0
@@ -1281,49 +1319,7 @@ gill:
 
 # END GROWTH
 
-# BEGIN WOOD ELF AND SYLVAN #
-
-forest_haven:  
-  enabled: 0
-  name: Forest Haven
-  exclusive_races:
-    - Sylvan
-    - Wood Elf
-  land_type: forest
-  perks:
-    spy_losses: 1,-4
-    damage_from_fireball: 1,-8  # Every 1% reduces damage from FBs by 8%
-    spy_housing: 40
-
-garden:  
-  enabled: 0
-  name: Garden
-  exclusive_races:
-    - Sylvan
-    - Wood Elf
-  land_type: forest
-  perks:
-    food_production_raw: 60
-
-mana_tree:  
-  enabled: 0
-  name: Mana Tree
-  exclusive_races:
-    - Wood Elf
-  land_type: forest
-  perks:
-    mana_production_raw: 35
-
-orchard:  
-  enabled: 0
-  name: Orchard
-  exclusive_races:
-    - Wood Elf
-  land_type: forest
-  perks:
-    food_production_mod: 1,5,25
-    lumber_production_mod: 1,5,25
-
+# BEGIN WOOD ELF AND SYLVAN
 rootforge:  
   enabled: 0
   name: Rootforge
@@ -1738,16 +1734,6 @@ grove:
     - Simian
     - Weres
     - Wood Elf
-  land_type: forest
-  perks:
-    housing: 30
-    jobs: 0
-
-meadow:  
-  enabled: 0
-  name: Meadow
-  exclusive_races:
-    - Sylvan
   land_type: forest
   perks:
     housing: 30

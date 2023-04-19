@@ -33,24 +33,15 @@ class MagicController extends AbstractDominionController
     {
         $dominion = $this->getSelectedDominion();
 
-        $selfSpells = Spell::all()->where('scope','self')->where('enabled',1)->sortBy('name');
+        #$selfSpells = Spell::all()->where('scope','self')->where('enabled',1)->sortBy('name');
         #$friendlySpells = Spell::all()->where('scope','friendly')->where('enabled',1)->sortBy('name');
 
         return view('pages.dominion.magic', [
-            'landCalculator' => app(LandCalculator::class),
-            'protectionService' => app(ProtectionService::class),
-            'rangeCalculator' => app(RangeCalculator::class),
             'spellCalculator' => app(SpellCalculator::class),
-            'espionageCalculator' => app(EspionageCalculator::class),
             'spellHelper' => app(SpellHelper::class),
-            'espionageHelper' => app(EspionageHelper::class),
             'magicCalculator' => app(MagicCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'resourceCalculator' => app(ResourceCalculator::class),
-            'networthCalculator' => app(NetworthCalculator::class),
-            'spellDamageCalculator' => app(SpellDamageCalculator::class),
-            'selfSpells' => $selfSpells,
-            #'friendlySpells' => $friendlySpells
         ]);
     }
 
@@ -77,15 +68,6 @@ class MagicController extends AbstractDominionController
                     ->withInput($request->all())
                     ->withErrors([$e->getMessage()]);
             }
-
-            // todo: fire laravel event
-            $analyticsService = app(AnalyticsService::class);
-            $analyticsService->queueFlashEvent(new AnalyticsEvent(
-                'dominion',
-                'magic.cast',
-                $result['data']['spell'],
-                $result['data']['manaCost']
-            ));
 
             $request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
 

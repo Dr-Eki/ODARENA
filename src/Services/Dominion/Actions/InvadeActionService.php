@@ -906,6 +906,24 @@ class InvadeActionService
 
         $attackerPrestigeChange *= (1 + $attackerPrestigeChangeMultiplier);
 
+        # Check for prestige_losses
+        if($attackerPrestigeChange < 0)
+        {
+            $lossesMultiplier = 1;
+
+            $lossesMultiplier -= $attacker->getSpellPerkMultiplier('prestige_losses');
+
+            $attackerPrestigeChange *= $lossesMultiplier;
+        }
+        if($defenderPrestigeChange < 0)
+        {
+            $lossesMultiplier = 1;
+
+            $lossesMultiplier -= $defender->getSpellPerkMultiplier('prestige_losses');
+
+            $defenderPrestigeChange *= $lossesMultiplier;
+        }
+
         // 1/4 gains for hitting Barbarians.
         if($defender->race->name === 'Barbarian')
         {

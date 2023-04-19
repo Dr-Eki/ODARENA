@@ -1,10 +1,12 @@
 agriculture:  
   name: Agriculture
   perks:
-    food_production_mod: 40,10000
+    food_production_mod: 40,7000
 
 construction:
   name: Construction
+  excluded_races:
+    - Sylvan
   perks:
     construction_cost: -20,6000
     rezone_cost: -20,6000
@@ -12,28 +14,32 @@ construction:
 defenses:  
   name: Defenses
   excluded_races:
-    - Reptilians
+    - Beastfolk
+    - Sylvan
   perks:
-    defensive_power: 30,12000
+    defensive_power: 30,8500
 
 logging:
   name: Logging
   excluded_races:
-    - Reptilians
+    - Beastfolk
+    - Sylvan
   perks:
-    lumber_production_mod: 30,8000
+    lumber_production_mod: 30,7000
 
 housing:  
   name: Housing
   excluded_races:
-    - Reptilians
+    - Beastfolk
+    - Sylvan
   perks:
     population: 20,6000
 
 markets:
   name: Markets
   excluded_races:
-    - Reptilians
+    - Beastfolk
+    - Sylvan
   perks:
     gold_production_mod: 20,6000
     exchange_rate: 20,8000
@@ -44,16 +50,17 @@ mining:
     - Demon
     - Reptilians
     - Swarm
+    - Sylvan
   perks:
-    ore_production_mod: 30,8000
+    ore_production_mod: 30,7000
 
 tactics:  
   name: Tactics
   excluded_races:
-    - Reptilians
+    - Beastfolk
+    - Sylvan
   perks:
-    offensive_power: 30,12000
-
+    offensive_power: 30,8500
 
 # BEGIN BEASTFOLK #
 
@@ -77,7 +84,67 @@ tranquillity:
 
 # END BEASTFOLK #
 
-### 
+# BEGIN SYLVAN
+
+affinity:
+  name: Affinity
+  exclusive_races:
+    - Sylvan
+  perks:
+    mana_production_mod: 60,9000
+
+awareness:  
+  enabled: 0
+  name: Awareness
+  exclusive_races:
+    - Sylvan
+  perks:
+    spy_strength: 60,6000
+    xp_generation_mod: 40,6000
+    xp_gains: 60,4000
+
+bloom:
+  name: Bloom
+  exclusive_races:
+    - Sylvan
+  perks:
+    sapling_production_mod: 60,6000
+    food_production_mod: 40,6000
+
+nurture:
+  name: Nurture
+  exclusive_races:
+    - Sylvan
+  perks:
+    rezone_cost: -40,6000
+    land_discovered: 30,6000
+
+rage:
+  name: Rage
+  exclusive_races:
+    - Sylvan
+  perks:
+    target_defensive_power_mod: -15,7000
+    offensive_power: 20,8000
+
+roaming:
+  name: Roaming
+  exclusive_races:
+    - Sylvan
+  perks:
+    population: 20,6000
+
+resilience:
+  name: Resilience
+  exclusive_races:
+    - Sylvan
+  perks:
+    defensive_power: 30,9000
+    population_growth: 40,6000
+
+# END SYLVAN
+
+### DISABLED
 
 cartography:  
   enabled: 0
@@ -649,71 +716,7 @@ tissue:
 
 # END GROWTH #
 
-# BEGIN SYLVAN #
 
-affinity:  
-  enabled: 0
-  name: Affinity
-  exclusive_races:
-    - Sylvan
-  perks:
-    mana_production_mod: 60,6000
-
-awareness:  
-  enabled: 0
-  name: Awareness
-  exclusive_races:
-    - Sylvan
-  perks:
-    spy_strength: 60,6000
-    xp_generation_mod: 40,6000
-    xp_gains: 60,4000
-
-bloom:  
-  enabled: 0
-  name: Bloom
-  exclusive_races:
-    - Sylvan
-  perks:
-    sapling_production_mod: 75,7000
-    food_production_mod: 40,6000
-
-nurture:  
-  enabled: 0
-  name: Nurture
-  exclusive_races:
-    - Sylvan
-  perks:
-    rezone_cost: -40,6000
-    land_discovered: 20,4000
-
-rage:  
-  enabled: 0
-  name: Rage
-  exclusive_races:
-    - Sylvan
-  perks:
-    target_defensive_power_mod: -15,6000
-    offensive_power: 40,8000
-
-roaming:  
-  enabled: 0
-  name: Roaming
-  exclusive_races:
-    - Sylvan
-  perks:
-    population: 20,4000
-
-resilience:  
-  enabled: 0
-  name: Resilience
-  exclusive_races:
-    - Sylvan
-  perks:
-    defensive_power: 60,8000
-    population_growth: 60,6000
-
-# END SYLVAN #
 
 # BEGIN KERRANAD #
 cartography_kerranad:  

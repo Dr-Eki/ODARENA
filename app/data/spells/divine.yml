@@ -1,0 +1,250 @@
+blessing_of_azk_hurum:  
+  enabled: 0
+  name: Blessing of Azk'Hurum
+  scope: friendly
+  class: passive
+  cost: 7
+  duration: 48
+  deity: azk_hurum
+  perks:
+    offensive_power_on_retaliation: 2.5
+
+feast_of_azk_hurum:  
+  enabled: 0
+  name: Feast of Azk'Hurum
+  scope: self
+  class: passive
+  cost: 9
+  duration: 48
+  deity: azk_hurum
+  perks:
+    population_growth: 100
+    food_consumption_mod: 20
+
+fury_of_azk_hurum:  
+  enabled: 0
+  name: Fury of Azk'Hurum
+  scope: self
+  class: passive
+  cost: 7
+  duration: 12
+  cooldown: 96
+  deity: azk_hurum
+  perks:
+    increases_enemy_casualties_on_offense: 25
+    increases_enemy_casualties_on_defense: 25
+    food_consumption_mod: 20
+
+sacrifice_to_azk_hurum:  
+  enabled: 0
+  name: Sacrifice to Azk'Hurum
+  scope: self
+  class: active
+  cost: 9
+  deity: azk_hurum
+  perks:
+    peasant_to_resources_conversion: 50,1;soul,6;blood
+
+bregons_muster:  
+  enabled: 0
+  name: Bregon's Muster
+  scope: self
+  class: passive
+  cost: 12
+  duration: 12
+  cooldown: 96
+  deity: bregon
+  perks:
+    unit_gold_costs: -15
+    unit_ore_costs: -15
+    unit_lumber_costs: -5
+    training_time_raw: -6
+
+druvas_blessing:  
+  enabled: 0
+  name: Druva's Blessing
+  scope: self
+  class: passive
+  cost: 4
+  duration: 48
+  cooldown: 0
+  deity: druva
+  perks:
+    food_production_mod: 30
+    lumber_production_mod: 10
+
+druvas_granaries:  
+  enabled: 0
+  name: Druva's Granaries
+  scope: self
+  class: passive
+  cost: 5
+  duration: 36
+  cooldown: 72
+  deity: druva
+  perks:
+    lumber_theft: -100
+    food_theft: -100
+
+druvas_guard:  
+  enabled: 0
+  name: Druva's Guard
+  deity: druva
+  scope: self
+  class: passive
+  cost: 12
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Wood Elf
+  perks:
+    elk_production_raw_from_land: 0.01,forest
+
+elskas_anointment:  
+  enabled: 0
+  name: Elskas' Anointment
+  scope: self
+  class: passive
+  cost: 10
+  duration: 24
+  cooldown: 72
+  deity: elskas
+  perks:
+    casualties: -25
+
+
+elskas_vision:  
+  enabled: 0
+  name: Elskas' Vision
+  scope: self
+  class: passive
+  cost: 4
+  duration: 24
+  cooldown: 96
+  deity: elskas
+  perks:
+    spy_strength_recovery: 3
+
+glimjs_treasures:  
+  enabled: 0
+  name: Glimj's Treasures
+  scope: self
+  class: passive
+  cost: 5
+  duration: 36
+  cooldown: 72
+  deity: glimj
+  exclusive_races:
+    - Glimjir
+  perks:
+    gold_theft: -100
+    kelp_theft: -100
+    pearls_theft: -100
+
+mirnons_fortitude:  
+  enabled: 0
+  name: Mirnon's Fortitude
+  scope: self
+  class: passive
+  cost: 4
+  duration: 48
+  cooldown: 0
+  deity: mirnon
+  perks:
+    ore_production_mod: 20
+    gems_production_mod: 10
+
+mirnons_greed:  
+  enabled: 0
+  name: Mirnon's Greed
+  scope: self
+  class: passive
+  cost: 4
+  duration: 48
+  cooldown: 0
+  deity: mirnon
+  excluded_races:
+    - Dragon
+    - Lux
+  perks:
+    building_gold_mine_production_mod: 10
+    building_gold_quarry_production_mod: 10
+    food_consumption_mod: 20
+
+mirnons_secrets:  
+  enabled: 0
+  name: Mirnon's Secrets
+  scope: self
+  class: passive
+  cost: 5
+  duration: 36
+  cooldown: 72
+  deity: mirnon
+  perks:
+    ore_theft: -100
+    gems_theft: -100
+
+sazals_ward:  
+  enabled: 0
+  name: Sazal's Ward
+  scope: self
+  class: passive
+  cost: 12
+  duration: 36
+  cooldown: 72
+  deity: sazal
+  perks:
+    sorcery_damage_suffered: -50
+    sorcery_damage_dealt: -75
+
+sazals_wrath:  
+  enabled: 0
+  name: Sazal's Wrath
+  scope: self
+  class: passive
+  cost: 6
+  duration: 12
+  cooldown: 96
+  deity: sazal
+  perks:
+    sorcery_damage_suffered: 50
+    sorcery_damage_dealt: 25
+
+urugdakhs_benediction:  
+  enabled: 0
+  name: Urugdakh's Benediction
+  scope: self
+  class: active
+  cost: 6
+  duration: 48
+  cooldown: 96
+  deity: urugdakh
+  perks:
+    convert_peasants_to_prestige: 5000,50 # 5,000 peasants become 50 prestige
+
+urugdakhs_crusade:  
+  enabled: 0
+  name: Urugdakh's Crusade
+  scope: self
+  class: passive
+  cost: 8
+  duration: 1
+  cooldown: 96
+  deity: urugdakh
+  perks:
+    offensive_power_from_devotion: urugdakh,0.02,40
+    increases_enemy_casualties_on_offense: 25
+    no_land_discovered: 1
+
+zidurs_bane:  
+  enabled: 0
+  name: Zidur's Bane
+  scope: self
+  class: passive
+  cost: 6
+  duration: 0
+  cooldown: 96
+  deity: zidur
+  perks:
+    casualties: 10
+    drafting: -10

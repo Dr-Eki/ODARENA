@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 use OpenDominion\Helpers\SpellHelper;
 
-#use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionSpell;
@@ -16,10 +16,25 @@ use OpenDominion\Models\Spell;
 class SpellCalculator
 {
 
+    /**
+     * @var LandCalculator
+     */
+    protected $landCalculator;
+
+    /**
+     * @var MagicCalculator
+     */
+    protected $magicCalculator;
+
+    /**
+     * @var SpellHelper
+     */
+    protected $spellHelper;
+
     public function __construct()
     {
         $this->landCalculator = app(LandCalculator::class);
-        #$this->militaryCalculator = app(MilitaryCalculator::class);
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->spellHelper = app(SpellHelper::class);
     }
 
@@ -38,6 +53,11 @@ class SpellCalculator
         }
 
         $spell = Spell::where('key',$spellKey)->first();
+
+        if($spell->magic_level === 0)
+        {
+            return 0;
+        }
 
         $totalLand = $this->landCalculator->getTotalLand($dominion);
 
@@ -252,6 +272,12 @@ class SpellCalculator
 
         # This way because calling the resource calculator here breaks the resource calculator (circular reference).
         if(isset($manaOwned) and ($this->getManaCost($dominion, $spell->key) > $manaOwned) or ($manaOwned == 0 and $this->getManaCost($dominion, $spell->key) > 0))
+        {
+            return false;
+        }
+
+        # Check that dominion magic level is greater than or equal to the spell level
+        if($this->magicCalculator->getMagicLevel($dominion) < $spell->level)
         {
             return false;
         }

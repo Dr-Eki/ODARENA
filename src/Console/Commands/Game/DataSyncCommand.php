@@ -708,8 +708,6 @@ class DataSyncCommand extends Command implements CommandInterface
 
                 foreach ($data as $spellKey => $spellData)
                 {
-            
-
                     $spellsToSync[] = $spellData->name;
 
                     $deityId = null;
@@ -725,6 +723,7 @@ class DataSyncCommand extends Command implements CommandInterface
                             'scope' => object_get($spellData, 'scope'),
                             'class' => object_get($spellData, 'class'),
                             'cost' => object_get($spellData, 'cost', 1),
+                            'magic_level' => object_get($spellData, 'level', 0),
                             'duration' => (float)object_get($spellData, 'duration', 0),
                             'cooldown' => object_get($spellData, 'cooldown', 0),
                             'wizard_strength' => object_get($spellData, 'wizard_strength'),
@@ -816,7 +815,7 @@ class DataSyncCommand extends Command implements CommandInterface
      */
     protected function syncSpyops()
     {
-        $fileContents = $this->filesystem->get(base_path('app/data/spyops.yml'));
+        $fileContents = $this->filesystem->get(base_path('app/data/sabotage.yml'));
         $spyopsToSync = [];
 
         $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);

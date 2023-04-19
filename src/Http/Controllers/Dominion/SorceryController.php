@@ -36,7 +36,7 @@ class SorceryController extends AbstractDominionController
         $dominion = $this->getSelectedDominion();
         $sorceryHelper = app(SorceryHelper::class);
 
-        $spells = $sorceryHelper->getSorcerySpellsForRace($dominion->race) ;#Spell::all()->where('scope','hostile')->whereIn('class',['active'/*,'passive'*/])->where('enabled',1)->sortBy('name');
+        $spells = $sorceryHelper->getSorcerySpellsForDominion($dominion) ;#Spell::all()->where('scope','hostile')->whereIn('class',['active'/*,'passive'*/])->where('enabled',1)->sortBy('name');
 
         return view('pages.dominion.sorcery', [
             'spells' => $spells,

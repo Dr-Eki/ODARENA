@@ -3,38 +3,59 @@
 namespace OpenDominion\Helpers;
 
 #use Illuminate\Support\Collection;
+use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
 #use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
 
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 
 use OpenDominion\Services\Dominion\StatsService;
 
 class SorceryHelper
 {
+
+    protected $spellHelper;
+    protected $magicCalculator;
+    protected $landCalculator;
+    protected $statsService;
+
     public function __construct()
     {
         $this->spellHelper = app(SpellHelper::class);
-
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
-
         $this->statsService = app(StatsService::class);
     }
 
-    public function getSorcerySpellsForRace(Race $race)
+    public function getSorcerySpellsForDominion(Dominion $dominion)
     {
-        $spells = Spell::all()->where('scope','hostile')->whereIn('class',['active','passive'])->where('enabled',1)->sortBy('name');
 
-        foreach($spells as $key => $spell)
-        {
-            if(!$this->spellHelper->isSpellAvailableToRace($race, $spell))
+        return Spell::where('enabled', 1)
+        ->where('magic_level', '<=', $this->magicCalculator->getMagicLevel($dominion))
+        ->where('scope','hostile')
+        ->whereIn('class',['active','passive'])
+        ->orderBy('class', 'asc')
+        ->orderBy('magic_level', 'asc')
+        ->orderBy('name', 'asc')
+        ->get()
+        ->filter(function ($spell) use ($dominion) {
+            // Check excluded_races
+            if (!empty($spell->excluded_races) && in_array($dominion->race->name, $spell->excluded_races))
             {
-                $spells->forget($key);
+                return false;
             }
-        }
+    
+            // Check exclusive_races
+            if (!empty($spell->exclusive_races) && !in_array($dominion->race->name, $spell->exclusive_races))
+            {
+                return false;
+            }
+    
+            return true;
+        });
 
-        return $spells;
     }
 
     public function getSpellClassIcon(Spell $spell): string

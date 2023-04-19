@@ -154,6 +154,7 @@ class SpellHelper
             'no_attrition' => 'No unit attrition',
 
             'prestige_gains' => '%+g%% prestige gains',
+            'prestige_losses' => '%+g%% prestige losses',
 
             'defense_from_resource' => '%1$s raw defensive power per %2$s.',
             'offense_from_resource' => '%1$s raw offensive power per %2$s.',
@@ -215,7 +216,10 @@ class SpellHelper
             'cannot_be_stolen_from' => 'Cannot be stolen from.',
 
             'cannot_sabotage' => 'Cannot sabotage.',
-            'cannot_be_sabotages' => 'Cannot be sabotaged.',
+            'cannot_be_sabotaged' => 'Cannot be sabotaged.',
+
+            'sabotage_damage_suffered' => '%+g%% sabotage damage suffered',
+            'sabotage_damage_dealt' => '%+g%% sabotage damage dealt',
 
             // Conversions
             'conversions' => '%+g%% conversions',
