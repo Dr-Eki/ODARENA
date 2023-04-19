@@ -11,21 +11,29 @@ construction:
 
 defenses:  
   name: Defenses
+  excluded_races:
+    - Reptilians
   perks:
     defensive_power: 30,12000
 
 logging:
   name: Logging
+  excluded_races:
+    - Reptilians
   perks:
     lumber_production_mod: 30,8000
 
 housing:  
   name: Housing
+  excluded_races:
+    - Reptilians
   perks:
     population: 20,6000
 
 markets:
   name: Markets
+  excluded_races:
+    - Reptilians
   perks:
     gold_production_mod: 20,6000
     exchange_rate: 20,8000
@@ -33,6 +41,7 @@ markets:
 mining:
   name: Mining
   excluded_races:
+    - Demon
     - Reptilians
     - Swarm
   perks:
@@ -40,8 +49,33 @@ mining:
 
 tactics:  
   name: Tactics
+  excluded_races:
+    - Reptilians
   perks:
     offensive_power: 30,12000
+
+
+# BEGIN BEASTFOLK #
+
+brutality:
+  name: Brutality
+  exclusive_races:
+    - Beastfolk
+  perks:
+    offensive_power: 50,15000
+    casualties: 50,10000
+    increases_enemy_casualties: 50,10000
+
+tranquillity:
+  name: Tranquillity
+  exclusive_races:
+    - Beastfolk
+  perks:
+    defensive_power: 50,15000
+    casualties: -50,10000
+    increases_enemy_casualties: -50,10000
+
+# END BEASTFOLK #
 
 ### 
 
@@ -670,9 +704,9 @@ roaming:
   perks:
     population: 20,4000
 
-tranquillity:  
+resilience:  
   enabled: 0
-  name: Tranquillity
+  name: Resilience
   exclusive_races:
     - Sylvan
   perks:
@@ -977,29 +1011,6 @@ harbour:
 
 # END ARMADA #
 
-# BEGIN BEASTFOLK #
-
-compassion:  
-  enabled: 0
-  name: Compassion
-  exclusive_races:
-    - Beastfolk
-  perks:
-    defensive_power: 50,15000
-    casualties: -50,10000
-    increases_enemy_casualties: -50,10000
-
-brutality:  
-  enabled: 0
-  name: Brutality
-  exclusive_races:
-    - Beastfolk
-  perks:
-    offensive_power: 50,15000
-    casualties: 50,10000
-    increases_enemy_casualties: 50,10000
-
-# END BEASTFOLK #
 
 # BEGIN SACRED ORDER #
 

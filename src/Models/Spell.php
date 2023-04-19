@@ -29,6 +29,9 @@ class Spell extends AbstractModel
         'cooldown' => 'integer',
         'enabled' => 'integer',
         'wizard_strength' => 'integer',
+
+        'excluded_races' => 'array',
+        'exclusive_races' => 'array'        
     ];
 
     public function deity()

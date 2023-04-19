@@ -33,13 +33,13 @@ perks:
 
 units:
   - name: Scorpion
-    training_time: 9
+    training_time: 6
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 600
+      gold: 380
       draftees: 1
     power:
       offense: 2
@@ -74,7 +74,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 900
+      gold: 1040
       draftees: 1
     power:
       offense: 0
@@ -91,7 +91,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 2500
+      gold: 1800
       draftees: 1
     power:
       offense: 7

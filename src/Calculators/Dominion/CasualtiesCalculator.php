@@ -373,9 +373,14 @@ class CasualtiesCalculator
             }
         }
 
-        if($invasionData['result']['success'])
+        if($invasionData['result']['success'] and $mode == 'offense')
         {
             $multiplier += $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties_on_victory') / 100;
+        }
+
+        if(!$invasionData['result']['success'] and $mode == 'defense')
+        {
+            $multiplier += $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties_on_fending_off') / 100;
         }
 
         return $multiplier;

@@ -2,8 +2,10 @@ name: Sylvan
 alignment: good
 description:
 home_land_type: forest
-playable: 0 # Round 88
+home_terrain: forest
+playable: 1
 skill_level: 2
+magic_level: 3
 
 
 resources:
@@ -12,7 +14,7 @@ resources:
   - mana
 
 peasants_production:
-  sapling: 0.006
+  sapling: 0.0025
 
 construction_materials:
   - mana
@@ -20,15 +22,11 @@ construction_materials:
 peasants_alias: pixie
 
 improvement_resources:
-  mana: 6
-
-land_improvements:
-  forest:
-    mana_production_raw: 9
+  mana: 4
 
 perks:
   no_drafting: 1
-  extra_barren_forest_max_population: 10
+  #extra_barren_forest_max_population: 10
   cannot_exchange: 1
   cannot_train_spies: 1
   cannot_train_wizards: 1
@@ -43,17 +41,14 @@ units:
       - sentient
       - intelligent
     cost:
-      mana: 8
+      mana: 148
       sapling: 1
     power:
-      offense: 4
-      defense: 0
+      offense: 3
+      defense: 3
     perks:
-      no_draftee: 1
-      offense_if_recently_invaded: 2,24
-      dies_into_resource: 1,sapling
+      offense_if_recently_invaded: 1.5,24
       counts_as_spy: 0.5
-      immortal_spy: 1
 
   - name: Sprite
     training_time: 12
@@ -62,13 +57,12 @@ units:
       - sentient
       - intelligent
     cost:
-      mana: 96
+      mana: 180
       sapling: 1
     power:
       offense: 0
-      defense: 8
+      defense: 6
     perks:
-      no_draftee: 1
       counts_as_wizard_defense: 0.25
 
   - name: Dryad
@@ -78,15 +72,13 @@ units:
       - sentient
       - intelligent
     cost:
-      mana: 96
+      mana: 180
       sapling: 1
     power:
       offense: 0
-      defense: 8
+      defense: 6
     perks:
-      no_draftee: 1
       counts_as_wizard: 0.125
-      immortal_wizard: 1
 
   - name: Spriggan
     training_time: 12
@@ -95,12 +87,11 @@ units:
       - sentient
       - intelligent
     cost:
-      mana: 204
+      mana: 375
       sapling: 1
     power:
-      offense: 14
-      defense: 8
+      offense: 9
+      defense: 5
     perks:
-      no_draftee: 1
       offense_if_recently_invaded: 2,24
       defense_if_recently_invaded: 1,24

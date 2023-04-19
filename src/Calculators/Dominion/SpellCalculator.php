@@ -251,7 +251,7 @@ class SpellCalculator
         }
 
         # This way because calling the resource calculator here breaks the resource calculator (circular reference).
-        if(isset($manaOwned) and ($this->getManaCost($dominion, $spell->key) > $manaOwned) or $manaOwned == 0)
+        if(isset($manaOwned) and ($this->getManaCost($dominion, $spell->key) > $manaOwned) or ($manaOwned == 0 and $this->getManaCost($dominion, $spell->key) > 0))
         {
             return false;
         }

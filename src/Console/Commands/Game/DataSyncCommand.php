@@ -691,92 +691,105 @@ class DataSyncCommand extends Command implements CommandInterface
      */
     protected function syncSpells()
     {
-        $fileContents = $this->filesystem->get(base_path('app/data/spells.yml'));
+        #$fileContents = $this->filesystem->get(base_path('app/data/spells/spells.yml'));
         $spellsToSync = [];
 
-        $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
+        $spellDirectory = base_path('app/data/spells');
+        $ymlFiles = $this->filesystem->files($spellDirectory);
 
-        foreach ($data as $spellKey => $spellData)
+        #$data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
+
+        foreach ($ymlFiles as $ymlFile)
         {
-
-            $spellsToSync[] = $spellData->name;
-
-            $deityId = null;
-            if($deityKey = object_get($spellData, 'deity'))
+            if ($ymlFile->getExtension() === 'yml')
             {
-                $deityId = Deity::where('key', $deityKey)->first()->id;
-            }
+                $fileContents = $this->filesystem->get($ymlFile->getPathname());
+                $data = Yaml::parse($fileContents, Yaml::PARSE_OBJECT_FOR_MAP);
 
-            // Spell
-            $spell = Spell::firstOrNew(['key' => $spellKey])
-                ->fill([
-                    'name' => $spellData->name,
-                    'scope' => object_get($spellData, 'scope'),
-                    'class' => object_get($spellData, 'class'),
-                    'cost' => object_get($spellData, 'cost', 1),
-                    'duration' => (float)object_get($spellData, 'duration', 0),
-                    'cooldown' => object_get($spellData, 'cooldown', 0),
-                    'wizard_strength' => object_get($spellData, 'wizard_strength'),
-                    'deity_id' => $deityId,
-                    'enabled' => object_get($spellData, 'enabled', 1),
-                    'excluded_races' => object_get($spellData, 'excluded_races', []),
-                    'exclusive_races' => object_get($spellData, 'exclusive_races', []),
-                ]);
-
-            if (!$spell->exists) {
-                $this->info("Adding spell {$spellData->name}");
-            } else {
-                $this->info("Processing spell {$spellData->name}");
-
-                $newValues = $spell->getDirty();
-
-                foreach ($newValues as $key => $newValue)
+                foreach ($data as $spellKey => $spellData)
                 {
-                    $originalValue = $spell->getOriginal($key);
+            
 
-                    if(is_array($originalValue))
+                    $spellsToSync[] = $spellData->name;
+
+                    $deityId = null;
+                    if($deityKey = object_get($spellData, 'deity'))
                     {
-                        $originalValue = implode(',', $originalValue);
-                    }
-                    if(is_array($newValue))
-                    {
-                        $newValue = implode(',', $newValue);
+                        $deityId = Deity::where('key', $deityKey)->first()->id;
                     }
 
-                    $this->info("[Change] {$key}: {$originalValue} -> {$newValue}");
+                    // Spell
+                    $spell = Spell::firstOrNew(['key' => $spellKey])
+                        ->fill([
+                            'name' => $spellData->name,
+                            'scope' => object_get($spellData, 'scope'),
+                            'class' => object_get($spellData, 'class'),
+                            'cost' => object_get($spellData, 'cost', 1),
+                            'duration' => (float)object_get($spellData, 'duration', 0),
+                            'cooldown' => object_get($spellData, 'cooldown', 0),
+                            'wizard_strength' => object_get($spellData, 'wizard_strength'),
+                            'deity_id' => $deityId,
+                            'enabled' => object_get($spellData, 'enabled', 1),
+                            'excluded_races' => object_get($spellData, 'excluded_races', []),
+                            'exclusive_races' => object_get($spellData, 'exclusive_races', []),
+                        ]);
+
+                    if (!$spell->exists) {
+                        $this->info("Adding spell {$spellData->name}");
+                    } else {
+                        $this->info("Processing spell {$spellData->name}");
+
+                        $newValues = $spell->getDirty();
+
+                        foreach ($newValues as $key => $newValue)
+                        {
+                            $originalValue = $spell->getOriginal($key);
+
+                            if(is_array($originalValue))
+                            {
+                                $originalValue = implode(',', $originalValue);
+                            }
+                            if(is_array($newValue))
+                            {
+                                $newValue = implode(',', $newValue);
+                            }
+
+                            $this->info("[Change] {$key}: {$originalValue} -> {$newValue}");
+                        }
+                    }
+
+                    $spell->save();
+                    $spell->refresh();
+
+                    // Spell Perks
+                    $spellPerksToSync = [];
+
+                    foreach (object_get($spellData, 'perks', []) as $perk => $value)
+                    {
+                        $value = (string)$value;
+
+                        $spellPerkType = SpellPerkType::firstOrCreate(['key' => $perk]);
+
+                        $spellPerksToSync[$spellPerkType->id] = ['value' => $value];
+
+                        $spellPerk = SpellPerk::query()
+                            ->where('spell_id', $spell->id)
+                            ->where('spell_perk_type_id', $spellPerkType->id)
+                            ->first();
+
+                        if ($spellPerk === null)
+                        {
+                            $this->info("[Add Spell Perk] {$perk}: {$value}");
+                        }
+                        elseif ($spellPerk->value != $value)
+                        {
+                            $this->info("[Change Spell Perk] {$perk}: {$spellPerk->value} -> {$value}");
+                        }
+                    }
+
+                    $spell->perks()->sync($spellPerksToSync);
                 }
             }
-
-            $spell->save();
-            $spell->refresh();
-
-            // Spell Perks
-            $spellPerksToSync = [];
-
-            foreach (object_get($spellData, 'perks', []) as $perk => $value)
-            {
-                $value = (string)$value;
-
-                $spellPerkType = SpellPerkType::firstOrCreate(['key' => $perk]);
-
-                $spellPerksToSync[$spellPerkType->id] = ['value' => $value];
-
-                $spellPerk = SpellPerk::query()
-                    ->where('spell_id', $spell->id)
-                    ->where('spell_perk_type_id', $spellPerkType->id)
-                    ->first();
-
-                if ($spellPerk === null)
-                {
-                    $this->info("[Add Spell Perk] {$perk}: {$value}");
-                }
-                elseif ($spellPerk->value != $value)
-                {
-                    $this->info("[Change Spell Perk] {$perk}: {$spellPerk->value} -> {$value}");
-                }
-            }
-
-            $spell->perks()->sync($spellPerksToSync);
         }
 
         foreach(Spell::all() as $spell)

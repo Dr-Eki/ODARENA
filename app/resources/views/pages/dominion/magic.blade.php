@@ -2,23 +2,85 @@
 @section('title', 'Magic')
 @section('content')
 <div class="row">
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="ra ra-fairy-wand "></i> Self Spells</h3>
+                <h3 class="box-title"><i class="ra ra-fairy-wand "></i> Magic</h3>
                 <small class="pull-right text-muted">
                     <span data-toggle="tooltip" data-placement="top" title="Wizards Per Acre (Wizard Ratio) on offense">WPA</span>: {{ number_format($militaryCalculator->getWizardRatio($selectedDominion, 'offense'),3) }},
                     <span data-toggle="tooltip" data-placement="top" title="Wizard Strength">WS</span>: {{ $selectedDominion->wizard_strength }}%,
-                    Mana: {{ number_format($resourceCalculator->getAmount($selectedDominion, 'mana')) }}
+                    Mana: {{ number_format($resourceCalculator->getAmount($selectedDominion, 'mana')) }},
+                    Magic Level: {{ $magicCalculator->getMagicLevel($selectedDominion) }}
                 </small>
             </div>
                 <div class="box-body">
+                    @for ($i = 0; $i <= $magicCalculator->getMagicLevel($selectedDominion); $i++)
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12" id="level {{ $i }}">
+                                <div class="box">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Level {{ $i }}</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        {{-- //Columns must be a factor of 12 (1,2,3,4,6,12) --}}
+                                        @php
+                                            $numOfCols = 3;
+                                            $rowCount = 0;
+                                            $bootstrapColWidth = 12 / $numOfCols;
+                                        @endphp
+                                        <div class="row">
+                                            @foreach($magicCalculator->getLevelSpells($selectedDominion, $i) as $spell)
+                                                @php
+                                                    $canCast = $spellCalculator->canCastSpell($selectedDominion, $spell, $resourceCalculator->getAmount($selectedDominion, 'mana'));
+                                                    $isActive = $spellCalculator->isSpellActive($selectedDominion, $spell->key);
+                                                    $style = ($isActive ? 'success' : 'primary');
+                                                @endphp
+                                                <div class="col-md-{{ $bootstrapColWidth }}">
+                                                    <form action="{{ route('dominion.magic') }}" method="post" role="form">
+                                                        @csrf
+                                                        <input type="hidden" name="type" value="self_spell">
+                                                        <input type="hidden" name="spell" value="{{ $spell->key }}">
+                                                        <div class="box box-{{ $style }}">
+                                                            <div class="box-header with-border">
+                                                                <button type="submit" class="btn btn-{{ $style }} btn-block" {{ $selectedDominion->isLocked() || !$canCast ? 'disabled' : null }}>
+                                                                    {{ $spell->name }}
+                                                                </button>
+                                                            </div>
+                    
+                                                            <div class="box-body">
+                                                                
+                                                                <ul>
+                                                                    <li>@include('partials.dominion.spell-basics')</li>
+                                                                    @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
+                                                                        <li>{{ $effect }}</li>
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                    
+                                                @php
+                                                    $rowCount++;
+                                                @endphp
+                    
+                                                @if($rowCount % $numOfCols == 0)
+                                                    </div><div class="row">
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endfor
+                
+                {{--
                 <table class="table table-striped">
                     <colgroup>
                         <col width="180">
                     </colgroup>
                     @foreach($selfSpells as $spell)
-                            @if($spellCalculator->isSpellAvailableToDominion($selectedDominion, $spell))
                                 @php
                                     $canCast = $spellCalculator->canCastSpell($selectedDominion, $spell, $resourceCalculator->getAmount($selectedDominion, 'mana'));
                                     $isActive = $spellCalculator->isSpellActive($selectedDominion, $spell->key);
@@ -32,7 +94,7 @@
                                             <input type="hidden" name="spell" value="{{ $spell->key }}">
                                             <button type="submit" class="btn {{ $buttonStyle }} btn-block" {{ $selectedDominion->isLocked() || !$canCast ? 'disabled' : null }}>
                                                 {{ $spell->name }}
-                                            </button>
+                                            </button>                                            
                                         </form>
                                     </td>
                                     <td>
@@ -44,13 +106,14 @@
                                         </ul>
                                     </td>
                                 </tr>
-                            @endif
                     @endforeach
                 </table>
+                --}}
             </div>
         </div>
     </div>
 
+    {{-- 
     <div class="col-sm-12 col-md-6">
         <div class="box box-primary">
             <div class="box-header with-border">
@@ -176,6 +239,7 @@
             </div>
         </div>
     </div>
+    --}}
 
     {{--
     <div class="col-sm-12 col-md-4">
@@ -225,80 +289,6 @@
     <script type="text/javascript" src="{{ asset('assets/vendor/select2/js/select2.full.min.js') }}"></script>
 @endpush
 
-@push('inline-scripts')
-    <script type="text/javascript">
-        (function ($) {
-            $('#spell_dominion').select2({
-                templateResult: select2Template,
-                templateSelection: select2Template,
-            });
-            $('#spell_dominion').change(function(e) {
-                var warStatus = $(this).find(":selected").data('war');
-                if (warStatus == 1) {
-                    $('.war-spell').removeClass('disabled');
-                } else {
-                    $('.war-spell').addClass('disabled');
-                }
-            });
-            @if (session('spell_dominion'))
-                $('#spell_dominion').val('{{ session('spell_dominion') }}').trigger('change.select2').trigger('change');
-            @endif
-        })(jQuery);
-
-
-        (function ($) {
-            $('#friendly_dominion').select2({
-                templateResult: select2Template,
-                templateSelection: select2Template,
-            });
-            $('#friendly_dominion').change(function(e) {
-                var warStatus = $(this).find(":selected").data('war');
-                if (warStatus == 1) {
-                    $('.war-spell').removeClass('disabled');
-                } else {
-                    $('.war-spell').addClass('disabled');
-                }
-            });
-            @if (session('friendly_dominion'))
-                $('#friendly_dominion').val('{{ session('friendly_dominion') }}').trigger('change.select2').trigger('change');
-            @endif
-        })(jQuery);
-
-        function select2Template(state) {
-            if (!state.id) {
-                return state.text;
-            }
-
-            const land = state.element.dataset.land;
-            const percentage = state.element.dataset.percentage;
-            const networth = state.element.dataset.networth;
-            const war = state.element.dataset.war;
-            let difficultyClass;
-
-            if (percentage >= 120) {
-                difficultyClass = 'text-red';
-            } else if (percentage >= 75) {
-                difficultyClass = 'text-green';
-            } else if (percentage >= 60) {
-                difficultyClass = 'text-muted';
-            } else {
-                difficultyClass = 'text-gray';
-            }
-
-            warStatus = '';
-            if (war == 1) {
-                warStatus = '<div class="pull-left">&nbsp;<span class="text-red">WAR</span></div>';
-            }
-
-            return $(`
-                <div class="pull-left">${state.text}</div>
-                ${warStatus}
-                <div class="pull-right">${land} acres <span class="${difficultyClass}">(${percentage}%)</span> - ${networth} networth</div>
-                <div style="clear: both;"></div>
-            `);
-        }
-    </script>
-@endpush
 @push('page-scripts')
     <script type="text/javascript">
     $("form").submit(function () {

@@ -1,69 +1,63 @@
-# BEGIN GENERIC NON-SORCERY
+# LEVEL 0
 
-enhanced_yields:  
-  enabled: 0
+sazals_fog:
+  name: Fog
+  scope: self
+  class: passive
+  level: 0
+  cost: 0
+  duration: 12
+  cooldown: 96
+  perks:
+    fog_of_war: 1
+
+enhanced_yields:
   name: Enhanced Yields
   scope: self
   class: passive
-  cost: 2
-  duration: 48
-  cooldown: 0
-  excluded_races:
-    - Afflicted
-    - Demon
-    - Firewalker
-    - Lux
-    - Monster
-    - Spirit
-    - Sylvan
-    - Undead
-    - Void
+  level: 0
+  cost: 0
+  duration: 12
+  cooldown: 96
   perks:
     food_production_mod: 10
 
-harmony:  
-  enabled: 0
+magical_disguise:
+  name: Magical Disguise
+  scope: self
+  class: passive
+  level: 0
+  cost: 0
+  duration: 36
+  cooldown: 72
+  perks:
+    gold_theft: -100
+    food_theft: -100
+    lumber_theft: -100
+    ore_theft: -100
+    gems_theft: -100
+    horse_theft: -100
+
+harmony:
   name: Harmony
   scope: self
   class: passive
-  cost: 4
+  level: 0
+  cost: 0
   duration: 24
-  cooldown: 0
+  cooldown: 96
   excluded_races:
-    - Afflicted
     - Demon
-    - Monster
-    - Undead
-    - Void
   perks:
     population_growth: 50
     offensive_power: -5
 
-magic_disguise:  
-  enabled: 0
-  name: Magical Disguise
-  scope: self
-  class: passive
-  cost: 2
-  duration: 36
-  cooldown: 72
-  excluded_races:
-    - Elementals
-    - Growth
-    - Lux
-    - Monster
-    - Myconid
-    - Spirit
-    - Sylvan
-    - Void
-  perks:
-    gold_theft: -100
-
-miners_fortune:  
-  enabled: 0
+# LEVEL 1
+miners_fortune:
   name: Miner's Fortune
   scope: self
   class: passive
+  level: 1
   cost: 2
   duration: 24
   cooldown: 96
@@ -98,6 +92,8 @@ miners_fortune:
     - Yeti
   perks:
     gems_production_mod: 5
+
+# BEGIN DISABLED
 
 mining_strength:  
   enabled: 0
@@ -149,19 +145,6 @@ sazals_charge:
   perks:
     reset_spell_cooldowns: 1
 
-sazals_fog:  
-  enabled: 0
-  name: Sazal's Fog
-  scope: self
-  class: passive
-  cost: 0.5
-  duration: 12
-  cooldown: 96
-  excluded_races:
-    - Firewalker
-    - Monster
-  perks:
-    fog_of_war: 1
 
 surreal_perception:  
   enabled: 0
@@ -191,18 +174,7 @@ aura:
   perks:
     damage_from_spells: -20
 
-voidspellmanatheft:  
-  enabled: 0
-  name: ◣◹
-  scope: hostile
-  class: active
-  cost: 0.25 # 1/4
-  cooldown: 0
-  duration: 0
-  exclusive_races:
-    - Void
-  perks:
-    resource_theft: mana,0.25 # resource, rate # 1/4
+
 
 # END GENERIC NON-SORCERY
 
@@ -244,18 +216,6 @@ fury_of_azk_hurum:
     increases_enemy_casualties_on_offense: 25
     increases_enemy_casualties_on_defense: 25
     food_consumption_mod: 20
-
-mark_of_azk_hurum:  
-  enabled: 0
-  name: Mark of Azk'Hurum
-  scope: hostile
-  class: passive
-  cost: 2
-  cooldown: 24
-  duration: 0.25
-  deity: azk_hurum
-  perks:
-    defensive_power: -5
 
 sacrifice_to_azk_hurum:  
   enabled: 0
@@ -334,18 +294,6 @@ elskas_anointment:
   perks:
     casualties: -25
 
-elskas_blur:  
-  enabled: 0
-  name: Elskas' Blur
-  scope: hostile
-  class: passive
-  cost: 0.5
-  duration: 0.5
-  cooldown: 36
-  deity: elskas
-  perks:
-    blind_to_reptilian_spies_on_theft: 1
-    blind_to_reptilian_spies_on_sabotage: 1
 
 elskas_vision:  
   enabled: 0
@@ -374,19 +322,6 @@ glimjs_treasures:
     gold_theft: -100
     kelp_theft: -100
     pearls_theft: -100
-
-kinthys_bane:  
-  enabled: 0
-  name: Kinthys' Bane
-  scope: hostile
-  class: active
-  cost: 6
-  duration: 0
-  cooldown: 96
-  deity: kinthys
-  perks:
-    decrease_morale: 1.00
-    kill_peasants: 0.10
 
 mirnons_fortitude:  
   enabled: 0
@@ -457,18 +392,6 @@ sazals_wrath:
     sorcery_damage_suffered: 50
     sorcery_damage_dealt: 25
 
-tiranthaels_purification:  
-  enabled: 0
-  name: Tiranthael's Purification
-  scope: hostile
-  class: active
-  cost: 1.25
-  deity: tiranthael
-  exclusive_races:
-    - Sacred Order
-  perks:
-    kill_faction_units_percentage: Afflicted,1,0.1875
-
 urugdakhs_benediction:  
   enabled: 0
   name: Urugdakh's Benediction
@@ -511,63 +434,6 @@ zidurs_bane:
 # END DIVINE (INCLUDING SORCERY)
 
 # BEGIN FACTION SPECIFIC (SINGLE OR MULTI, NON-SORCERY)
-
-pestilence:  
-  enabled: 0
-  name: Pestilence
-  scope: hostile
-  class: invasion
-  cost: 0
-  duration: 192
-  cooldown: 0
-  exclusive_races:
-    - Afflicted
-  perks:
-    kill_peasants_and_converts_for_caster_unit: 0.25,1 # 0.25% die and become unit1
-    spreads_spell: lesser_pestilence
-
-lesser_pestilence:  
-  enabled: 0
-  name: Lesser Pestilence
-  scope: hostile
-  class: invasion
-  cost: 0
-  duration: 96
-  cooldown: 0
-  exclusive_races:
-    - Afflicted
-  perks:
-    kill_peasants_and_converts_for_caster_unit: 0.05,1
-
-great_fever:  
-  enabled: 0
-  name: Great Fever
-  scope: hostile
-  class: invasion
-  cost: 0
-  duration: 12
-  cooldown: 0
-  exclusive_races:
-    - Afflicted
-  perks:
-    population_growth: -80
-    gold_production_mod: -10
-    food_production_mod: -20
-
-festering_wounds:  
-  enabled: 0
-  name: Festering Wounds
-  scope: hostile
-  class: invasion
-  cost: 0
-  duration: 12
-  cooldown: 0
-  exclusive_races:
-    - Afflicted
-  perks:
-    casualties: 25
-    food_consumption_mod: 25
-
 forced_suicides:  
   enabled: 0
   name: Forced Suicides
@@ -773,20 +639,6 @@ mending_flames:
   perks:
     firewalker_unit_conversion_ratio: 1,4,1000,500 # from, to, amount
 
-pyroclast:  
-  enabled: 0
-  name: Pyroclast
-  scope: hostile
-  class: active
-  cost: 0.5 # 2/4
-  duration: 0
-  cooldown: 0
-  exclusive_races:
-    - Firewalker
-  perks:
-    kill_peasants: 0.5
-    destroy_resource: food,0.5
-
 pyromancy:  
   enabled: 0
   name: Pyromancy
@@ -840,19 +692,6 @@ iceshield:
     - Icekin
   perks:
     sorcery_damage_suffered: -10
-
-windchill:  
-  enabled: 0
-  name: Windchill
-  scope: hostile
-  class: passive
-  cost: 1.25
-  duration: 0.25
-  cooldown: 6
-  exclusive_races:
-    - Icekin
-  perks:
-    wizard_strength: -50
 
 blizzard:  
   enabled: 0
@@ -910,43 +749,6 @@ howling:
     - Kobold
   perks:
     increase_morale_from_net_victories: 1
-
-annexation:  
-  enabled: 0
-  name: Annexation
-  scope: hostile
-  class: invasion
-  cost: 0
-  duration: 48
-  cooldown: 0
-  exclusive_races:
-    - Legion
-  perks:
-    annexes_target: 1
-
-silence:  
-  enabled: 0
-  name: Silence
-  scope: hostile
-  class: passive
-  cost: 3
-  duration: 0.25
-  cooldown: 96
-  exclusive_races:
-    - Lux
-  perks:
-    cannot_perform_sorcery: 1
-
-solar_rays:  
-  enabled: 0
-  name: Solar Flares
-  scope: hostile
-  class: active
-  cost: 0.75
-  exclusive_races:
-    - Lux
-  perks:
-    kill_faction_units_percentage: Nox,1,0.5
 
 marsh_attacks:  
   enabled: 0
@@ -1190,18 +992,6 @@ guardian_spirit:
     defensive_power: 1
     casualties_resource_conversion_for_caster: 1,soul
 
-transcendence:  
-  enabled: 0
-  name: Transcendence
-  scope: hostile
-  class: passive
-  cost: 0.35
-  duration: 0.75
-  exclusive_races:
-    - Spirit
-  perks:
-    casualties_resource_conversion_for_caster: 1,soul
-
 chitin:  
   enabled: 0
   name: Chitin
@@ -1228,34 +1018,6 @@ aggression:
   perks:
     offensive_power: 5
     offensive_power_on_retaliation: 5
-
-curse_of_kinthys:  
-  enabled: 0
-  name: Curse of Kinthys
-  scope: hostile
-  class: active
-  cost: 2.5
-  duration: 0
-  cooldown: 24
-  exclusive_races:
-    - Revenants
-    - Undead
-  perks:
-    decrease_morale: 1.00
-
-curse_of_zidur:  
-  enabled: 0
-  name: Curse of Zidur
-  scope: hostile
-  class: passive
-  cost: 1.25
-  duration: 0.5
-  cooldown: 12
-  exclusive_races:
-    - Revenants
-    - Undead
-  perks:
-    casualties: 5
 
 dark_rites:  
   enabled: 0
@@ -1362,77 +1124,3 @@ weren_wandering:
     summon_weres_units_from_land_increasing: 1;2,2,0.08,forest # slots, base, extra percent per hour, land type
 
 # END FACTION SPECIFIC
-
-# BEGIN SORCERY (NON-DEITY SPECIFIC)
-
-blight:  
-  enabled: 0
-  name: Blight
-  scope: hostile
-  class: passive
-  cost: 1
-  duration: 1
-  excluded_races:
-    - Cult
-    - Dwarg
-    - Monster
-  perks:
-    food_production_mod: -10
-
-earthquake:  
-  enabled: 0
-  name: Earthquake
-  scope: hostile
-  class: passive
-  cost: 1
-  duration: 1
-  excluded_races:
-    - Dwarg
-    - Monster
-  perks:
-    ore_production_mod: -5
-    gems_production_mod: -5
-
-fireball:  
-  enabled: 0
-  name: Fireball
-  scope: hostile
-  class: active
-  cost: 1
-  excluded_races:
-    - Cult
-    - Dwarg
-    - Firewalker
-    - Monster
-  perks:
-    kill_peasants: 0.25
-    destroy_resource: food,0.25
-
-lightning_bolt:  
-  enabled: 0
-  name: Lightning Bolt
-  scope: hostile
-  class: active
-  cost: 1
-  excluded_races:
-    - Cult
-    - Dwarg
-    - Monster
-  perks:
-    improvements_damage: 0.05
-
-plague:  
-  enabled: 0
-  name: Plague
-  scope: hostile
-  class: passive
-  cost: 1
-  duration: 1
-  excluded_races:
-    - Dwarg
-    - Monster
-  perks:
-    population_growth: -25
-
-# END SORCERY
-

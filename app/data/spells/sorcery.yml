@@ -1,0 +1,394 @@
+# GENERIC
+
+## LEVEL 1
+
+### Fire
+firebolt:  
+  name: Firebolt
+  level: 1
+  scope: hostile
+  class: active
+  cost: 1
+  perks:
+    kill_peasants: 0.10
+    destroy_resource: food,0.10
+
+### Mining 
+tremors:
+  level: 1
+  name: Tremors
+  scope: hostile
+  class: passive
+  duration: 1
+  cost: 1
+  perks:
+    ore_production_mod: -2
+    gems_production_mod: -2
+
+### Plant life
+entangle:
+  name: Entangle
+  level: 1
+  scope: hostile
+  class: passive
+  duration: 1
+  cost: 1
+  perks:
+    food_production_mod: -2
+    lumber_production_mod: -2
+
+### Improvements
+thunderclap:  
+  name: Thunderclap
+  level: 1
+  scope: hostile
+  class: active
+  cost: 1
+  perks:
+    improvements_damage: 0.02
+
+### Population Growth
+plague:
+  name: Plague
+  scope: hostile
+  class: passive
+  cost: 1
+  duration: 1
+  perks:
+    population_growth: -25
+
+## LEVEL 2
+
+### Fire
+fireball:
+  name: Fireball
+  level: 2
+  scope: hostile
+  class: active
+  cost: 1.5
+  perks:
+    kill_peasants: 0.25
+    destroy_resource: food,0.25
+
+### Mining
+earthquake:
+  name: Earthquake
+  level: 2
+  scope: hostile
+  class: passive
+  duration: 1
+  cost: 1.5
+  perks:
+    ore_production_mod: -5
+    gems_production_mod: -5
+
+### Plant life
+blight:  
+  name: Blight
+  level: 2
+  scope: hostile
+  class: passive
+  duration: 1
+  cost: 1.5
+  perks:
+    food_production_mod: -5
+    lumber_production_mod: -5
+
+### Improvements
+lightning_bolt:  
+  name: Lightning Bolt
+  level: 2
+  scope: hostile
+  class: active
+  cost: 1.5
+  perks:
+    improvements_damage: 0.05
+
+## LEVEL 3
+
+### Fire
+firestorm:
+  name: Firestorm
+  level: 3
+  scope: hostile
+  class: active
+  cost: 3
+  perks:
+    kill_peasants: 0.50
+    destroy_resources: food;0.50,lumber;0.25
+
+### Plant life
+withering:
+  name: Withering
+  level: 3
+  scope: hostile
+  class: passive
+  duration: 0.8
+  cost: 3
+  perks:
+    food_production_mod: -10
+    lumber_production_mod: -10
+
+### Mining
+seismic_shift:
+  name: Seismic Shift
+  level: 3
+  scope: hostile
+  class: passive
+  duration: 0.75
+  cost: 1.5
+  perks:
+    ore_production_mod: -10
+    gems_production_mod: -10
+
+### Improvements
+chain_lightning:  
+  name: Chain Lightning
+  level: 3
+  scope: hostile
+  class: active
+  cost: 4
+  perks:
+    improvements_damage: 0.08
+
+# END GENERIC
+
+# BEGIN FACTION SPECIFIC
+
+## DEMON
+mark_of_azk_hurum:
+  enabled: 0
+  name: Mark of Azk'Hurum
+  scope: hostile
+  class: passive
+  cost: 2
+  cooldown: 24
+  duration: 0.25
+  deity: azk_hurum
+  perks:
+    defensive_power: -2.5
+
+## FIREWALKER
+pyroclast:  
+  enabled: 0
+  name: Pyroclast
+  scope: hostile
+  class: active
+  cost: 0.5
+  duration: 0
+  cooldown: 0
+  exclusive_races:
+    - Firewalker
+  perks:
+    kill_peasants: 0.5
+    destroy_resource: food,0.5
+
+## ICEKIN
+windchill:  
+  enabled: 0
+  name: Windchill
+  scope: hostile
+  class: passive
+  cost: 1.25
+  duration: 0.25
+  cooldown: 6
+  exclusive_races:
+    - Icekin
+  perks:
+    wizard_strength: -50
+
+## LUX
+silence:  
+  enabled: 0
+  name: Silence
+  scope: hostile
+  class: passive
+  cost: 3
+  duration: 0.25
+  cooldown: 96
+  exclusive_races:
+    - Lux
+  perks:
+    cannot_perform_sorcery: 1
+
+solar_rays:  
+  enabled: 0
+  name: Solar Flares
+  scope: hostile
+  class: active
+  cost: 0.75
+  exclusive_races:
+    - Lux
+  perks:
+    kill_faction_units_percentage: Nox,1,0.5
+
+## REPTILIANS
+elskas_blur:
+  enabled: 0
+  name: Elskas' Blur
+  scope: hostile
+  class: passive
+  cost: 0.5
+  duration: 0.5
+  cooldown: 36
+  deity: elskas
+  perks:
+    blind_to_reptilian_spies_on_theft: 1
+    blind_to_reptilian_spies_on_sabotage: 1
+
+## SPIRIT
+transcendence:  
+  enabled: 0
+  name: Transcendence
+  scope: hostile
+  class: passive
+  cost: 0.35
+  duration: 0.75
+  exclusive_races:
+    - Spirit
+  perks:
+    casualties_resource_conversion_for_caster: 1,soul
+
+## UNDEAD / REVENANTS
+curse_of_kinthys:  
+  enabled: 0
+  name: Curse of Kinthys
+  scope: hostile
+  class: active
+  cost: 2.5
+  duration: 0
+  cooldown: 24
+  exclusive_races:
+    - Revenants
+    - Undead
+  perks:
+    decrease_morale: 1.00
+
+curse_of_zidur:  
+  enabled: 0
+  name: Curse of Zidur
+  scope: hostile
+  class: passive
+  cost: 1.25
+  duration: 0.5
+  cooldown: 12
+  exclusive_races:
+    - Revenants
+    - Undead
+  perks:
+    casualties: 5
+
+## VOID
+voidspellmanatheft:  
+  enabled: 0
+  name: ◣◹
+  scope: hostile
+  class: active
+  cost: 0.25 # 1/4
+  cooldown: 0
+  duration: 0
+  exclusive_races:
+    - Void
+  perks:
+    resource_theft: mana,0.25 # resource, rate # 1/4
+
+# END FACTION SPECIFIC
+
+# BEGIN DEITY SPECIFIC
+kinthys_bane:  
+  enabled: 0
+  name: Kinthys' Bane
+  scope: hostile
+  class: active
+  cost: 6
+  duration: 0
+  cooldown: 96
+  deity: kinthys
+  perks:
+    decrease_morale: 1.00
+    kill_peasants: 0.10
+
+tiranthaels_purification:  
+  enabled: 0
+  name: Tiranthael's Purification
+  scope: hostile
+  class: active
+  cost: 1.25
+  deity: tiranthael
+  perks:
+    kill_faction_units_percentage: Afflicted,1,0.1875
+
+# END DEITY SPECIFIC
+
+# BEGIN INVASION SPELLS
+
+## AFFLICTED
+festering_wounds:  
+  enabled: 0
+  name: Festering Wounds
+  scope: hostile
+  class: invasion
+  cost: 0
+  duration: 12
+  cooldown: 0
+  exclusive_races:
+    - Afflicted
+  perks:
+    casualties: 25
+    food_consumption_mod: 25
+
+great_fever:  
+  enabled: 0
+  name: Great Fever
+  scope: hostile
+  class: invasion
+  cost: 0
+  duration: 12
+  cooldown: 0
+  exclusive_races:
+    - Afflicted
+  perks:
+    population_growth: -80
+    gold_production_mod: -10
+    food_production_mod: -20
+
+pestilence:  
+  enabled: 0
+  name: Pestilence
+  scope: hostile
+  class: invasion
+  cost: 0
+  duration: 192
+  cooldown: 0
+  exclusive_races:
+    - Afflicted
+  perks:
+    kill_peasants_and_converts_for_caster_unit: 0.25,1 # 0.25% die and become unit1
+    spreads_spell: lesser_pestilence
+
+lesser_pestilence:  
+  enabled: 0
+  name: Lesser Pestilence
+  scope: hostile
+  class: invasion
+  cost: 0
+  duration: 96
+  cooldown: 0
+  exclusive_races:
+    - Afflicted
+  perks:
+    kill_peasants_and_converts_for_caster_unit: 0.05,1
+
+## LEGION
+annexation:  
+  enabled: 0
+  name: Annexation
+  scope: hostile
+  class: invasion
+  cost: 0
+  duration: 48
+  cooldown: 0
+  exclusive_races:
+    - Legion
+  perks:
+    annexes_target: 1

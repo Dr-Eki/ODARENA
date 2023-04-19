@@ -10,22 +10,22 @@ use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\EspionageHelper;
 use OpenDominion\Helpers\SpellHelper;
-use OpenDominion\Http\Requests\Dominion\Actions\CastSpellRequest;
-use OpenDominion\Http\Requests\Dominion\Actions\PerformEspionageRequest;
+#use OpenDominion\Http\Requests\Dominion\Actions\CastSpellRequest;
+#use OpenDominion\Http\Requests\Dominion\Actions\PerformEspionageRequest;
 use OpenDominion\Http\Requests\Dominion\Actions\MagicRequest;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Analytics\AnalyticsEvent;
 use OpenDominion\Services\Analytics\AnalyticsService;
 use OpenDominion\Services\Dominion\Actions\SpellActionService;
-use OpenDominion\Services\Dominion\Actions\EspionageActionService;
+#use OpenDominion\Services\Dominion\Actions\EspionageActionService;
 use OpenDominion\Services\Dominion\ProtectionService;
 
-# ODA
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
-use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
+use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Models\Spell;
-use OpenDominion\Models\Spyop;
+#use OpenDominion\Models\Spyop;
 
 class MagicController extends AbstractDominionController
 {
@@ -34,7 +34,7 @@ class MagicController extends AbstractDominionController
         $dominion = $this->getSelectedDominion();
 
         $selfSpells = Spell::all()->where('scope','self')->where('enabled',1)->sortBy('name');
-        $friendlySpells = Spell::all()->where('scope','friendly')->where('enabled',1)->sortBy('name');
+        #$friendlySpells = Spell::all()->where('scope','friendly')->where('enabled',1)->sortBy('name');
 
         return view('pages.dominion.magic', [
             'landCalculator' => app(LandCalculator::class),
@@ -44,12 +44,13 @@ class MagicController extends AbstractDominionController
             'espionageCalculator' => app(EspionageCalculator::class),
             'spellHelper' => app(SpellHelper::class),
             'espionageHelper' => app(EspionageHelper::class),
+            'magicCalculator' => app(MagicCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'resourceCalculator' => app(ResourceCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),
             'spellDamageCalculator' => app(SpellDamageCalculator::class),
             'selfSpells' => $selfSpells,
-            'friendlySpells' => $friendlySpells
+            #'friendlySpells' => $friendlySpells
         ]);
     }
 

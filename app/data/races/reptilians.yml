@@ -14,7 +14,7 @@ resources:
   - gold
   - food
   - lumber
-  # - mana
+  - mana
   - gems
   #- prayer
 
@@ -27,8 +27,8 @@ perks:
     #starts_devoted_to_elskas: 1
     #cannot_renounce_deity: 1
     #prayer_production_raw_from_population: 0.10
-    cannot_train_wizards: 1
-    cannot_train_archmages: 1
+    #cannot_train_wizards: 1
+    #cannot_train_archmages: 1
 
 units:
   - name: Horned One
@@ -38,7 +38,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1100
+      gold: 980
       draftees: 1
     power:
       offense: 4
@@ -54,7 +54,7 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1550
+      gold: 1500
       draftees: 1
     power:
       offense: 5
@@ -70,13 +70,13 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1100
+      gold: 1400
       draftees: 1
     power:
       offense: 0
       defense: 7
     perks:
-  #    counts_as_wizard: 0.50
+      counts_as_wizard: 0.25
 
   # - name: Ancient One
   #   training_time: 12

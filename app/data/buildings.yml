@@ -3,6 +3,7 @@
 barracks:  
   name: Barracks
   excluded_races:
+    - Beastfolk
     - Reptilians
     - Swarm
   land_type: hill
@@ -246,6 +247,51 @@ trench:
     casualties_on_defense: 1,-0.5,50 # 1% gives -5%, max -50%
 
 # END REPTILIANS
+
+# BEGIN BEASTFOLK
+
+camp:
+  name: Camp
+  exclusive_races:
+    - Beastfolk
+  land_type: forest
+  perks:
+    # unit_gold_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
+    # unit_ore_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
+    military_housing: 20
+    housing: 20
+
+bloodstone:
+  name: Bloodstone
+  exclusive_races:
+    - Beastfolk
+  land_type: mountain
+  perks:
+    blood_invest_bonus: 1,5,100 # Every 1% gives 5% improvement points, max +100% improvements from blood
+    blood_theft_protection: 8000
+
+# END BEASTFOLK
+
+# BEGIN DEMON
+
+altar:
+  name: Altar
+  exclusive_races:
+    - Demon
+  land_type: mountain
+  perks:
+    blood_production_mod: 1,6,100 # ratio, perk, max
+    blood_theft_protection: 8000
+
+dungeon:
+  name: Dungeon
+  exclusive_races:
+    - Demon
+  land_type: mountain
+  perks:
+    housing: 30
+
+# END DEMON
 
 # Pre Round 88
 
@@ -1429,30 +1475,6 @@ mycelia:
 
 # END MYCONID
 
-# BEGIN BEASTFOLK
-
-camp:  
-  enabled: 0
-  name: Camp
-  exclusive_races:
-    - Beastfolk
-  land_type: forest
-  perks:
-    unit_gold_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
-    unit_ore_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
-    military_housing: 8
-
-bloodstone:  
-  enabled: 0
-  name: Bloodstone
-  exclusive_races:
-    - Beastfolk
-  land_type: mountain
-  perks:
-    blood_invest_bonus: 1,5,100 # Every 1% gives 5% improvement points, max +100% improvements from blood
-
-# END BEASTFOLK
-
 # BEGIN FIREWALKER
 
 blast_furnace:  
@@ -1546,30 +1568,6 @@ spawning_pool:
     marshling_production_raw: 0.08
 
 # END MARSHLING
-
-# BEGIN DEMON
-
-altar:  
-  enabled: 0
-  name: Altar
-  exclusive_races:
-    - Demon
-  land_type: mountain
-  perks:
-    blood_production_mod: 1,5,100 # ratio, perk, max
-    blood_theft_protection: 1000
-    food_production_mod: 1,8,40 # Every 1% gives +8% food production, max +40%
-
-dungeon:  
-  enabled: 0
-  name: Dungeon
-  exclusive_races:
-    - Demon
-  land_type: mountain
-  perks:
-    housing: 30
-
-# END DEMON
 
 # BEGIN AUREI
 

@@ -25,13 +25,26 @@ perks:
   draftee_dp: 1.5
 
 units:
+- name: Mauler
+  training_time: 8
+  type:
+    - living
+    - sentient
+  cost:
+    gold: 400
+    ore: 30
+    peasants: 1
+  power:
+    offense: 3
+    defense: 1
+
 - name: Ogre
   training_time: 12
   type:
     - living
     - sentient
   cost:
-    gold: 600
+    gold: 700
     ore: 150
     draftees: 1
   power:
@@ -45,7 +58,7 @@ units:
     - sentient
   cost:
     gold: 2000
-    ore: 340
+    ore: 430
     draftees: 1
   power:
     offense: 6

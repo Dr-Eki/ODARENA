@@ -13,8 +13,7 @@ commander:
     unit_mana_costs: -2
     unit_food_costs: -2
 
-conjurer:  
-  enabled: 0
+conjurer:
   name: Conjurer
   perks:
     spell_cost: -50
@@ -31,14 +30,12 @@ embalmer:
   perks:
     conversions: 5
 
-forester:  
-  enabled: 0
+forester:
   name: Forester
   perks:
     lumber_production_mod: 10
 
-excavator:  
-  enabled: 0
+excavator:
   name: Excavator
   perks:
     ore_production_mod: 10
@@ -51,8 +48,7 @@ general:
     prestige_gains: 15
     morale_gains: 30
 
-healer:  
-  enabled: 0
+healer:
   name: Healer
   perks:
     casualties: -12.5
@@ -63,22 +59,19 @@ high_priest:
   perks:
     deity_power: 50
 
-investigator:  
-  enabled: 0
+investigator:
   name: Investigator
   perks:
     spy_strength_on_defense: 50
     sabotage_damage_suffered: -25
     all_theft: -10
 
-merchant:  
-  enabled: 0
+merchant:
   name: Merchant
   perks:
     exchange_rate: 10
 
-pathfinder:  
-  enabled: 0
+pathfinder:
   name: Pathfinder
   perks:
     expedition_land_gains: 20
@@ -97,8 +90,7 @@ researcher:
   perks:
     research_time: -10
 
-rogue:  
-  enabled: 0
+rogue:
   name: Rogue
   perks:
     spy_strength_on_offense: 25

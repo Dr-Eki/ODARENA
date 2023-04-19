@@ -27,7 +27,7 @@ use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Title;
 use OpenDominion\Models\User;
 
-#use Illuminate\Support\Carbon;
+use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\BarbarianCalculator;
@@ -42,6 +42,7 @@ use OpenDominion\Services\Dominion\TerrainService;
 class DominionFactory
 {
 
+    protected $landHelper;
     protected $raceHelper;
     protected $buildingCalculator;
     protected $barbarianCalculator;
@@ -55,7 +56,9 @@ class DominionFactory
 
     public function __construct()
     {
+        $this->landHelper = app(LandHelper::class);
         $this->raceHelper = app(RaceHelper::class);
+
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->barbarianCalculator = app(BarbarianCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
@@ -693,17 +696,32 @@ class DominionFactory
      */
     protected function getStartingLand(Race $race, array $startingBarrenLand, array $startingBuildings): array
     {
-        $startingLand = [
-            'plain' => $startingBarrenLand['plain'] + $startingBuildings['farm'] + $startingBuildings['smithy'] + $startingBuildings['residence'],
-            'mountain' => $startingBarrenLand['mountain'] + $startingBuildings['ore_mine'] + $startingBuildings['gem_mine'],
-            'swamp' => $startingBarrenLand['swamp'] + $startingBuildings['tower'] + $startingBuildings['wizard_guild'] + $startingBuildings['temple'] + $startingBuildings['tissue_swamp'],
-            'cavern' => 0,
-            'forest' => $startingBarrenLand['forest'] + $startingBuildings['lumberyard'] + $startingBuildings['mycelia'],
-            'hill' => $startingBarrenLand['hill'] + $startingBuildings['barracks'] + $startingBuildings['constabulary'],
-            'water' => $startingBarrenLand['water'] + $startingBuildings['dock'],
-        ];
+        $startingLand = [];
 
-        $startingLand[$race->home_land_type] += $startingBuildings['cabin'];
+        if($race->name == 'Barbarian')
+        {
+            $startingLand = [
+                'plain' => $startingBarrenLand['plain'] + $startingBuildings['farm'] + $startingBuildings['smithy'] + $startingBuildings['residence'],
+                'mountain' => $startingBarrenLand['mountain'] + $startingBuildings['ore_mine'] + $startingBuildings['gem_mine'],
+                'swamp' => $startingBarrenLand['swamp'] + $startingBuildings['tower'] + $startingBuildings['wizard_guild'] + $startingBuildings['temple'] + $startingBuildings['tissue_swamp'],
+                'cavern' => 0,
+                'forest' => $startingBarrenLand['forest'] + $startingBuildings['lumberyard'] + $startingBuildings['mycelia'],
+                'hill' => $startingBarrenLand['hill'] + $startingBuildings['barracks'] + $startingBuildings['constabulary'],
+                'water' => $startingBarrenLand['water'] + $startingBuildings['dock'],
+            ];
+    
+            $startingLand[$race->home_land_type] += $startingBuildings['cabin'];    
+        }
+        else
+        {
+            $startingLand['cavern'] = 0;
+            # Loop through each land type
+            foreach($this->landHelper->getLandTypes() as $landType)
+            {
+                $startingLand[$landType] = $race->home_land_type == $landType ? 1000 : 0;
+            }
+
+        }
 
         return $startingLand;
     }

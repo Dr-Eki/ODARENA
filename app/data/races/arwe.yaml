@@ -1,6 +1,7 @@
 name: Arwe
 alignment: good
 description: >-
+gameplay_notes: >-
 home_land_type: plain
 home_terrain: plains
 skill_level: 1
@@ -33,7 +34,7 @@ units:
   cost:
     peasant: 1
     gold: 300
-    ore: 50
+    ore: 10
   power:
     offense: 0
     defense: 3
@@ -47,9 +48,8 @@ units:
     - intelligent
   cost:
     peasant: 1
-    gold: 300
-    ore: 65
-    lumber: 10
+    gold: 200
+    ore: 10
   power:
     offense: 2
     defense: 1
@@ -63,9 +63,9 @@ units:
     - living
     - intelligent
   cost:
-    gold: 570
+    gold: 610
     ore: 20
-    lumber: 40
+    lumber: 50
     draftees: 1
   power:
     offense: 0
@@ -77,12 +77,12 @@ units:
     - living
     - intelligent
   cost:
-    gold: 1220
-    ore: 200
+    gold: 1400
+    ore: 300
     draftees: 1
     horse: 1
   power:
-    offense: 5
+    offense: 6
     defense: 3
   perks:
     plunders: ore;2,lumber;1

@@ -27,6 +27,15 @@ use OpenDominion\Helpers\RoundHelper;
 
 class WorldNewsHelper
 {
+    protected $landCalculator;
+    protected $militaryCalculator;
+    protected $rangeCalculator;
+
+    protected $eventHelper;
+    protected $raceHelper;
+    protected $realmHelper;
+    protected $roundHelper;
+
     public function __construct()
     {
         $this->landCalculator = app(LandCalculator::class);
