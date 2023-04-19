@@ -59,6 +59,7 @@ tower:
 lumberyard:  
   name: Lumberyard
   exclusive_races:
+    - Beastfolk
     - Gorm
     - Reptilians
   land_type: forest
