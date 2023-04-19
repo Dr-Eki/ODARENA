@@ -20,7 +20,7 @@
                 <h4>Scope</h4>
                 <ul>
                     <li><b>Friendly</b>: cast on dominions in your realm.</li>
-                    <li><b>Hostile</b>: cast on dominions not in your realm.</li>
+                    <li><b>Hostile</b>: cast on enemy dominions.</li>
                     <li><b>Self</b>: cast on yourself.</li>
                 </ul>
             </div>
@@ -50,6 +50,7 @@
                   <table class="table table-striped">
                       <colgroup>
                           <col width="200">
+                          <col width="50">
                           <col width="100">
                           <col width="50">
                           <col width="50">
@@ -60,6 +61,7 @@
                       <thead>
                           <tr>
                               <th>Spell</th>
+                              <th>Level</th>
                               <th>Deity</th>
                               <th>Cost</th>
                               <th>Wizard Strength</th>
@@ -75,6 +77,7 @@
                                   {{ $spell->name }}
                                   {!! $spellHelper->getExclusivityString($spell) !!}
                               </td>
+                              <td>{{ $spell->magic_level }}</td>
                               <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                               <td>{{ $spell->cost }}x</td>
                               <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
@@ -110,6 +113,7 @@
                   <table class="table table-striped">
                       <colgroup>
                           <col width="200">
+                            <col width="50">
                           <col width="100">
                           <col width="50">
                           <col width="50">
@@ -120,6 +124,7 @@
                       <thead>
                           <tr>
                               <th>Spell</th>
+                                <th>Level</th>
                               <th>Deity</th>
                               <th>Cost</th>
                               <th>Wizard Strength</th>
@@ -136,6 +141,7 @@
                                   {{ $spell->name }}
                                   {!! $spellHelper->getExclusivityString($spell) !!}
                               </td>
+                                <td>{{ $spell->magic_level }}</td>
                               <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                               <td>{{ $spell->cost }}x</td>
                               <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
@@ -171,6 +177,7 @@
                   <table class="table table-striped">
                       <colgroup>
                           <col width="200">
+                            <col width="50">
                           <col width="100">
                           <col width="50">
                           <col width="50">
@@ -181,6 +188,7 @@
                       <thead>
                           <tr>
                               <th>Spell</th>
+                                <th>Level</th>
                               <th>Deity</th>
                               <th>Cost</th>
                               <th>Wizard Strength</th>
@@ -201,6 +209,7 @@
                                   {{ $spell->name }}
                                   {!! $spellHelper->getExclusivityString($spell) !!}
                               </td>
+                                <td>{{ $spell->magic_level }}</td>
                               <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                               <td>{{ $spell->cost }}x</td>
                               <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
@@ -243,6 +252,7 @@
                       <table class="table table-striped">
                           <colgroup>
                               <col width="200">
+                              <col width="50">
                               <col width="100">
                               <col width="50">
                               <col width="50">
@@ -252,6 +262,7 @@
                           <thead>
                               <tr>
                                   <th>Spell</th>
+                                    <th>Level</th>
                                   <th>Deity</th>
                                   <th>Cost</th>
                                   <th>Wizard Strength</th>
@@ -267,6 +278,7 @@
                                       {{ $spell->name }}
                                       {!! $spellHelper->getExclusivityString($spell) !!}
                                   </td>
+                                    <td>{{ $spell->magic_level }}</td>
                                   <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                                   <td>{{ $spell->cost }}x</td>
                                   <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
@@ -301,6 +313,7 @@
                       <table class="table table-striped">
                           <colgroup>
                               <col width="200">
+                                <col width="50">
                               <col width="100">
                               <col width="50">
                               <col width="50">
@@ -310,6 +323,7 @@
                           <thead>
                               <tr>
                                   <th>Spell</th>
+                                    <th>Level</th>
                                   <th>Deity</th>
                                   <th>Cost</th>
                                   <th>Wizard Strength</th>
@@ -325,6 +339,7 @@
                                       {{ $spell->name }}
                                       {!! $spellHelper->getExclusivityString($spell) !!}
                                   </td>
+                                    <td>{{ $spell->magic_level }}</td>
                                   <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                                   <td>{{ $spell->cost }}x</td>
                                   <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
@@ -360,6 +375,7 @@
                       <table class="table table-striped">
                           <colgroup>
                               <col width="200">
+                              <col width="50">
                               <col width="100">
                               <col width="50">
                               <col width="50">
@@ -369,6 +385,7 @@
                           <thead>
                               <tr>
                                   <th>Spell</th>
+                                    <th>Level</th>
                                   <th>Deity</th>
                                   <th>Cost</th>
                                   <th>Wizard Strength</th>
@@ -384,6 +401,7 @@
                                       {{ $spell->name }}
                                       {!! $spellHelper->getExclusivityString($spell) !!}
                                   </td>
+                                    <td>{{ $spell->magic_level }}</td>
                                   <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                                   <td>{{ $spell->cost }}x</td>
                                   <td>{{ $spellCalculator->getWizardStrengthCost($spell) }}%</td>
@@ -421,6 +439,7 @@
                       <table class="table table-striped">
                           <colgroup>
                               <col width="200">
+                              <col width="50">
                               <col width="100">
                               <col width="50">
                               <col>
@@ -428,6 +447,7 @@
                           <thead>
                               <tr>
                                   <th>Spell</th>
+                                  <th>Level</th>
                                   <th>Deity</th>
                                   <th>Duration</th>
                                   <th>Effect</th>
@@ -441,6 +461,7 @@
                                       {{ $spell->name }}
                                       {!! $spellHelper->getExclusivityString($spell) !!}
                                   </td>
+                                    <td>{{ $spell->magic_level }}</td>
                                   <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                                   <td>{{ $spell->duration }} ticks</td>
                                   <td>

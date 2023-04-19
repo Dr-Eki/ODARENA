@@ -54,6 +54,7 @@ thunderclap:
 ### Population Growth
 plague:
   name: Plague
+  level: 1
   scope: hostile
   class: passive
   cost: 1
