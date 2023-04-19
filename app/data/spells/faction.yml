@@ -1,10 +1,45 @@
 # FACTION SPECIFIC
 
-## Level 0
+## Demon
 
-### None
+feast:
+  name: Feast
+  scope: self
+  class: passive
+  cost: 9
+  duration: 48
+  exclusive_races:
+    - Demon
+  perks:
+    population_growth: 50
+    food_consumption_mod: 25
 
-## Level 1
+fury:
+  name: Fury
+  scope: self
+  class: passive
+  cost: 7
+  duration: 12
+  cooldown: 96
+  exclusive_races:
+    - Demon
+  perks:
+    increases_enemy_casualties_on_offense: 25
+    increases_enemy_casualties_on_defense: 25
+    food_consumption_mod: 20
+
+sacrifice:
+  name: Sacrifice
+  scope: self
+  class: active
+  cost: 9
+  exclusive_races:
+    - Demon
+  perks:
+    peasant_to_resources_conversion: 50,1;soul,100;blood
+
+## Swarm
+
 chitin:
   name: Chitin
   scope: self

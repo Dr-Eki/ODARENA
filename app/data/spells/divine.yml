@@ -35,8 +35,7 @@ fury_of_azk_hurum:
     increases_enemy_casualties_on_defense: 25
     food_consumption_mod: 20
 
-sacrifice_to_azk_hurum:  
-  enabled: 0
+sacrifice_to_azk_hurum:
   name: Sacrifice to Azk'Hurum
   scope: self
   class: active
