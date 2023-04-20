@@ -349,6 +349,7 @@ dungeon:
   land_type: mountain
   perks:
     housing: 30
+    jobs: 0
 
 # END DEMON
 
