@@ -39,7 +39,7 @@ sacrifice:
   exclusive_races:
     - Demon
   perks:
-    peasant_to_resources_conversion: 50,1;soul,100;blood
+    peasant_to_resources_conversion: 50,1;soul,10;blood
 
 ## Swarm
 
