@@ -366,7 +366,7 @@ class SabotageActionService
 
                         $this->queueService->queueResources('sabotage', $saboteur, ['military_unit1' => $damage], 12);
 
-                        dump($damage . ' Servants created from ' . $assassinatedPeasants . ' peasants killed, with a damage ratio of ' . $damageRatio . '');
+                        #dump($damage . ' Servants created from ' . $assassinatedPeasants . ' peasants killed, with a damage ratio of ' . $damageRatio . '');
             
                         $this->statsService->updateStat($saboteur, 'sabotage_units_converted', $damage);
 

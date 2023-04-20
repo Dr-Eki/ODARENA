@@ -270,7 +270,7 @@ class TrainingCalculator
 
             if(empty($trainableByCost))
             {
-                dd($unitType, $trainableByCost);
+                dd('$trainableByCost is empty.', $unitType, $trainableByCost);
             }
 
             $trainable[$unitType] = min($trainableByCost);

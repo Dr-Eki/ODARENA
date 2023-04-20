@@ -39,7 +39,7 @@ class MaxSendableCommand extends Command implements CommandInterface
 
         $this->info('Finished calculation at ' . now());
 
-        dump($result);
+        #dump($result);
     }
 
 

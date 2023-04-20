@@ -106,7 +106,7 @@ units:
       - massive
       - wise
     cost:
-      blood: 0
+      soul: 1000000
     power:
       offense: 1
       defense: 0
