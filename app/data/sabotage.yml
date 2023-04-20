@@ -111,7 +111,7 @@ sabotage_improvements_defense:
   exclusive_races:
     - Reptilians
   perks:
-    improvements: defenses;2,defense;2,bashing;4,halo;0.5,tranquillity;2,city_guard;2,camouflage;3,compassion;1
+    improvements: defenses;2,defense;2,bashing;4,halo;0.5,tranquillity;2,city_guard;2,camouflage;3
 
 sabotage_improvements_food:
   name: Sabotage Food Improvements

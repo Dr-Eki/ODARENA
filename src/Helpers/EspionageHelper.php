@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Helpers;
 
+use Log;
 use Illuminate\Support\Collection;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Improvement;
@@ -52,8 +53,7 @@ class EspionageHelper
         {
             if (!array_key_exists($perk->key, $spyopEffects))
             {
-                //\Debugbar::warning("Missing perk help text for unit perk '{$perk->key}'' on unit '{$unit->name}''.");
-                continue;
+                dd('Missing perk description for ' . $perk->key);
             }
 
             $perkValue = $perk->pivot->value;
