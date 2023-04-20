@@ -51,6 +51,7 @@ saw_mill:
 tower:
   name: Tower
   excluded_races:
+    - Gorm
     - Sylvan
   land_type: swamp
   perks:
