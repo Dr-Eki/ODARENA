@@ -14,6 +14,7 @@ resources:
   - gold
   - food
   - gems
+  - mana
 
 peasants_production:
   gold: 3

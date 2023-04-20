@@ -12,6 +12,7 @@ resources:
   - food
   - ore
   - lumber
+  - mana
 
 peasants_production:
   gold: 3

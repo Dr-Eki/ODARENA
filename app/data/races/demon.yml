@@ -19,7 +19,6 @@ peasants_production:
 resources:
   - gold
   - food
-#  - lumber
   - mana
   - blood
   - soul
