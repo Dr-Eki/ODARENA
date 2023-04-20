@@ -159,6 +159,7 @@ residence:
 # BEGIN SYLVAN
 forest_haven:
   name: Forest Haven
+  enabled: 0
   exclusive_races:
     - Sylvan
   land_type: forest
