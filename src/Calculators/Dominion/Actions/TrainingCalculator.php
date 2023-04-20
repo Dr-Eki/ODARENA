@@ -130,9 +130,16 @@ class TrainingCalculator
                     $cost[$costResourceKey] = ceil($amount * $multiplier);
                 }
 
-                if($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot(intval(str_replace('unit','',$unitType)), 'housing_count'))
+                if(($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot(intval(str_replace('unit','',$unitType)), 'housing_count')))
                 {
-                    $cost['draftees'] = min($nonStandardHousing, 1);
+                    if(isset($cost['peasants'])) 
+                    {
+                        $cost['peasants'] = min($nonStandardHousing, 1);
+                    }
+                    if(isset($cost['draftees']))
+                    {
+                        $cost['draftees'] = min($nonStandardHousing, 1);
+                    }
                 }
 
                 break;
