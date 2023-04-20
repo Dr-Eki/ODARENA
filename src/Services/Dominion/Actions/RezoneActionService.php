@@ -134,34 +134,18 @@ class RezoneActionService
                 throw new GameException("You do not have enough $resource to re-zone {$totalLand} acres of land.");
             }
 
-            $terrainAdd = $add;
-            $terrainRemove = array_map(function($value) {
-                return -$value;
-            }, $remove);
-
-            if((array_sum($terrainAdd) + array_sum($terrainRemove)) !== 0)
-            {
-                throw new GameException('Re-zoning was not completed due to bad input.');
-            }
-
             # All fine, perform changes.
             $this->resourceService->updateResources($dominion, [$resource => $cost*-1]);
 
             # Update spending statistics.
             $this->statsService->updateStat($dominion, ($resource . '_rezoning'), $cost);
-            DB::transaction(function () use ($dominion, $remove, $add, $terrainAdd, $terrainRemove)
+            DB::transaction(function () use ($dominion, $remove, $add)
             {
                 foreach ($remove as $landType => $amount) {
                     $dominion->{'land_' . $landType} -= $amount;
                 }
                 foreach ($add as $landType => $amount) {
                     $dominion->{'land_' . $landType} += $amount;
-                }
-
-                if(env('APP_ENV') == 'local')
-                {
-                    $this->terrainService->update($dominion, $terrainAdd);
-                    $this->terrainService->update($dominion, $terrainRemove);    
                 }
 
             });

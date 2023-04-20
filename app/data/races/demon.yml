@@ -43,7 +43,7 @@ units:
     cost:
       gold: 250
       blood: 50
-      peasants: 1
+      peasant: 1
     power:
       offense: 1.5
       defense: 0
