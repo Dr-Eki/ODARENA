@@ -16,8 +16,8 @@ commander:
 conjurer:
   name: Conjurer
   perks:
-    spell_cost: -50
-    unit_mana_costs: -7.5
+    spell_cost: -20
+    unit_mana_costs: -2.5
 
 engineer:
   name: Engineer
@@ -33,14 +33,14 @@ embalmer:
 forester:
   name: Forester
   perks:
-    lumber_production_mod: 10
+    lumber_production_mod: 5
 
 excavator:
   name: Excavator
   perks:
-    ore_production_mod: 10
-    gems_production_mod: 10
-    pearls_production_mod: 10
+    ore_production_mod: 5
+    gems_production_mod: 5
+    pearls_production_mod: 5
 
 general:
   name: General
@@ -51,7 +51,7 @@ general:
 healer:
   name: Healer
   perks:
-    casualties: -12.5
+    casualties: -7.5
 
 high_priest:  
   enabled: 0
@@ -62,20 +62,20 @@ high_priest:
 investigator:
   name: Investigator
   perks:
-    spy_strength_on_defense: 50
-    sabotage_damage_suffered: -25
-    all_theft: -10
+    spy_strength_on_defense: 20
+    sabotage_damage_suffered: -12.5
+    all_theft: -7.5
 
 merchant:
   name: Merchant
   perks:
-    exchange_rate: 10
+    exchange_rate: 7.5
 
 pathfinder:
   name: Pathfinder
   perks:
-    expedition_land_gains: 20
-    expedition_prestige_gains: 20
+    expedition_land_gains: 12.5
+    expedition_prestige_gains: 12.5
 
 professor:  
   enabled: 0
@@ -93,14 +93,14 @@ researcher:
 rogue:
   name: Rogue
   perks:
-    spy_strength_on_offense: 25
+    spy_strength_on_offense: 15
     theft_carry_capacity: 10
 
 surveyor:
   name: Surveyor
   perks:
-    construction_cost: -15
-    rezone_cost: -15
+    construction_cost: -10
+    rezone_cost: -10
     increased_construction_speed: 2
 
 warden:  
