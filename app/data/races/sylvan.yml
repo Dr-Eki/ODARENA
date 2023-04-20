@@ -6,7 +6,7 @@ home_terrain: forest
 playable: 1
 skill_level: 2
 magic_level: 4
-
+experimental: 1
 
 resources:
   - sapling
