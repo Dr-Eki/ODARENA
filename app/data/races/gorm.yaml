@@ -21,8 +21,6 @@ construction_materials:
   - ore
 
 perks:
-  cannot_train_wizards: 1
-  cannot_train_archmages: 1
   draftee_dp: 1.5
 
 units:

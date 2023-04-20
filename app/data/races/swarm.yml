@@ -29,8 +29,6 @@ perks:
   #damage_from_lightning_bolt: -75
   #damage_from_blight: -100
   indestructible_buildings: 1
-  cannot_train_wizards: 1
-  cannot_train_archmages: 1
 
 units:
   - name: Scorpion

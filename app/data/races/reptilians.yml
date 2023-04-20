@@ -22,13 +22,13 @@ peasants_production:
   gold: 3
 
 perks:
-    #opulation_growth: 20
-    #extra_barren_housing: 5
-    #starts_devoted_to_elskas: 1
-    #cannot_renounce_deity: 1
-    #prayer_production_raw_from_population: 0.10
-    #cannot_train_wizards: 1
-    #cannot_train_archmages: 1
+  #opulation_growth: 20
+  #extra_barren_housing: 5
+  #starts_devoted_to_elskas: 1
+  #cannot_renounce_deity: 1
+  #prayer_production_raw_from_population: 0.10
+  #cannot_train_wizards: 1
+  #cannot_train_archmages: 1
 
 units:
   - name: Horned One

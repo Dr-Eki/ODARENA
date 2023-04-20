@@ -23,8 +23,7 @@ construction_materials:
   - lumber
 
 perks:
-  cannot_train_wizards: 1
-  cannot_train_archmages: 1
+  #
 
 units:
 - name: Guard
