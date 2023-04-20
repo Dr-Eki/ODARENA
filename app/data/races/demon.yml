@@ -41,8 +41,8 @@ units:
     type:
       - feral
     cost:
-      gold: 600
-      blood: 85
+      gold: 250
+      blood: 50
       peasants: 1
     power:
       offense: 1.5
@@ -113,7 +113,7 @@ units:
       draftees: 1
     perks:
       immortal: 1
-      offense_from_resource: soul,4 # +1 OP per 4 souls, no max
+      offense_from_resource: soul,16 # +1 OP per 16 souls, no max
       amount_limit: 1
       cannot_be_released: 1
       kills_into_resource_per_casualty: 1,soul # each 1 OP/DP killed becomes
