@@ -6,6 +6,7 @@ home_land_type: mountain
 home_terrain: badlands
 playable: 1
 skill_level: 3
+magic_level: 4
 
 peasants_alias: sinner
 draftees_alias: minion

@@ -4,6 +4,7 @@
 
 feast:
   name: Feast
+  level: 1
   scope: self
   class: passive
   cost: 9
@@ -16,6 +17,7 @@ feast:
 
 fury:
   name: Fury
+  level: 1
   scope: self
   class: passive
   cost: 7
@@ -30,6 +32,7 @@ fury:
 
 sacrifice:
   name: Sacrifice
+  level: 1
   scope: self
   class: active
   cost: 9

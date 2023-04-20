@@ -36,6 +36,7 @@ fury_of_azk_hurum:
     food_consumption_mod: 20
 
 sacrifice_to_azk_hurum:
+  enabled: 0
   name: Sacrifice to Azk'Hurum
   scope: self
   class: active

@@ -158,8 +158,12 @@ class RezoneActionService
                     $dominion->{'land_' . $landType} += $amount;
                 }
 
-                $this->terrainService->update($dominion, $terrainAdd);
-                $this->terrainService->update($dominion, $terrainRemove);
+                if(env('APP_ENV') == 'local')
+                {
+                    $this->terrainService->update($dominion, $terrainAdd);
+                    $this->terrainService->update($dominion, $terrainRemove);    
+                }
+
             });
 
         $dominion->save(['event' => HistoryService::EVENT_ACTION_REZONE]);
