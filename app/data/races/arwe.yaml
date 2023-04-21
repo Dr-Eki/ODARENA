@@ -78,8 +78,8 @@ units:
     - living
     - intelligent
   cost:
-    gold: 1400
-    ore: 300
+    gold: 1000
+    ore: 220
     draftees: 1
     horse: 1
   power:
