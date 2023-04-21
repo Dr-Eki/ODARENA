@@ -91,7 +91,7 @@ affinity:
   exclusive_races:
     - Sylvan
   perks:
-    mana_production_mod: 60,9000
+    mana_production_mod: 40,8000
 
 awareness:  
   enabled: 0

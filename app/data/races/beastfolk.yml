@@ -30,7 +30,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1250
+      gold: 1100
       lumber: 20
     power:
       offense: 0
@@ -46,7 +46,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1400
+      gold: 1250
       ore: 100
     power:
       offense: 6
@@ -63,7 +63,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1400
+      gold: 1250
       ore: 100
     power:
       offense: 6
@@ -80,7 +80,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1400
+      gold: 1250
       ore: 100
     power:
       offense: 6

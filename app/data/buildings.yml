@@ -220,7 +220,7 @@ chrysalis:
   land_type: forest
   terrain: forest
   perks:
-    improvements: 1,1.25 # Every 1% gives 1% higher imps
+    improvements: 1,1 # Every 1% gives 1% higher imps
 
 burrow:
   name: Burrow

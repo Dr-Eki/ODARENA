@@ -32,7 +32,7 @@ units:
   cost:
     gold: 400
     ore: 30
-    peasants: 1
+    draftees: 1
   power:
     offense: 3
     defense: 1.5
