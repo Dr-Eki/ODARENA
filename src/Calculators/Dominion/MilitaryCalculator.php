@@ -1034,7 +1034,7 @@ class MilitaryCalculator
 
         if(isset($target) and $this->getRecentlyVictoriousCount($target) > 0)
         {
-            $amount = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot,"{$powerType}_if_target_recently_victorious");
+            $amount = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot,"{$powerType}_if_target_is_recently_victorious");
         }
 
         return $amount;
