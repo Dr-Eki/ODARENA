@@ -201,13 +201,16 @@ class UnitHelper
             'offense_if_recently_invaded' => 'Offense increased by %1$s if recently invaded (in the last %2$s ticks, includes non-overwhelmed failed invasions).',
             'defense_if_recently_invaded' => 'Defense increased by %1$s if recently invaded (in the last %2$s ticks, includes non-overwhelmed failed invasions).',
 
+
+            'offense_if_target_recently_invaded' => '%+g offensive power if target is recently invaded (in the last 12 ticks, includes non-overwhelmed failed invasions).',
+            'defense_if_target_recently_invaded' => '%+g defensive power if target is recently invaded (in the last 12 ticks, includes non-overwhelmed failed invasions).',
+
             'offense_if_recently_victorious' => 'Offense increased by %1$s if recently victorious (in the last %2$s ticks).',
             'defense_if_recently_victorious' => 'Defense increased by %1$s if recently victorious (in the last %2$s ticks).',
 
-            'offense_if_target_recently_invaded' => 'Offense increased by %1$s if target was invaded (in the last six hours, includes non-overwhelmed failed invasions).',
-            'defense_if_target_recently_invaded' => 'Defense increased by %1$s if invader was invaded (in the last six hours, includes non-overwhelmed failed invasions).',
-
             'offense_if_target_is_larger' => 'Offense increased by %1$s if target is larger than you.',
+
+            'offense_if_target_is_recently_victorious' => '%+g offense if target is recently victorious (in the last 12 ticks).',
 
             'offense_per_tick' => 'Offense increased by %1$s for each tick of the round (no max).',
             'defense_per_tick' => 'Defense increased by %1$s for each tick of the round (no max).',
@@ -239,8 +242,8 @@ class UnitHelper
             'defense_mob' => 'Defense increased by +%1$s if your troops at home (including units with no defensive power) outnumber the invading units.',
             'offense_mob' => 'Offense increased by +%1$s if the troops you send outnumber the target\'s entire military at home (including units with no defensive power).',
 
-            'offense_from_being_outnumbered' => 'Offense increased by +%1$s if total units sent are outnumbered by the target\'s entire military at home (including draftees and units with no defensive power).',
-            'defense_from_being_outnumbered' => 'Defense increased by +%1$s if total units at home defending are outnumbered by the invading units.',
+            'offense_from_being_outnumbered' => '%+g offensive power if your sent units are outnumbered by the target\'s entire military at home (including draftees and units with no defensive power).',
+            'defense_from_being_outnumbered' => '%+g defensive power if your defending units are outnumbered by the invader\'s units.',
 
             'offense_from_spell' => 'Offense increased by %2$s if the spell %1$s is active.',
             'defense_from_spell' => 'Defense increased by %2$s if the spell %1$s is active.',
