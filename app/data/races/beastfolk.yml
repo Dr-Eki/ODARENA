@@ -32,6 +32,7 @@ units:
     cost:
       gold: 1100
       lumber: 20
+      draftees: 1
     power:
       offense: 0
       defense: 6
@@ -48,6 +49,7 @@ units:
     cost:
       gold: 1250
       ore: 100
+      draftees: 1
     power:
       offense: 6
       defense: 3
@@ -65,6 +67,7 @@ units:
     cost:
       gold: 1250
       ore: 100
+      draftees: 1
     power:
       offense: 6
       defense: 3
@@ -82,6 +85,7 @@ units:
     cost:
       gold: 1250
       ore: 100
+      draftees: 1
     power:
       offense: 6
       defense: 3
