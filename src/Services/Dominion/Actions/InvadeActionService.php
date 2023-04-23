@@ -703,18 +703,6 @@ class InvadeActionService
                 #dd($this->invasion);
             }
 
-            if(env('OPENAI_API_KEY'))
-            {
-                $story = $this->gameEventService->generateInvasionStory($this->invasionEvent);
-                $image = null;#$this->gameEventService->generateInvasionImage($this->invasionEvent);
-                
-                GameEventStory::create([
-                    'game_event_id' => $this->invasionEvent->id,
-                    'story' => $story,
-                    'image' => $image
-                ]);
-            }
-
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
 
