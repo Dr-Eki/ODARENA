@@ -1133,24 +1133,26 @@
         </div>
     </div>
 
-    <div class="col-sm-12 col-md-3">
-        <div class="box box-info">
-            <div class="box-header with-border">
-                <h3 class="box-title">
-                    <i class="ra ra-quill-ink"></i>Chronicler
-                </h3>
-            </div>
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <p>
-                            {!! nl2br($event->story['story']) !!}
-                        </p>
+    @if($event->story)
+        <div class="col-sm-12 col-md-3">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        <i class="ra ra-quill-ink"></i>Chronicler
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p>
+                                {!! nl2br($event->story['story']) !!}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
 </div>
 
 {{-- 
