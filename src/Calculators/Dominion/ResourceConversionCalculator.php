@@ -19,6 +19,18 @@ use OpenDominion\Calculators\Dominion\SpellCalculator;
 class ResourceConversionCalculator
 {
 
+    protected $casualtiesCalculator;
+    protected $conversionCalculator;
+    protected $landCalculator;
+    protected $militaryCalculator;
+    protected $populationCalculator;
+    protected $rangeCalculator;
+    protected $resourceCalculator;
+    protected $spellCalculator;
+
+    protected $conversionHelper;
+    protected $unitHelper;
+
     public function __construct()
     {
         $this->casualtiesCalculator = app(CasualtiesCalculator::class);
