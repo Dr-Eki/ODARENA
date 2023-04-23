@@ -65,9 +65,21 @@ class GameEventService
             ]
             );
 
+
+
         if($invasion->data['result']['success'])
         {
-            $invasionSummary .= ' The attacker conquered ' . $invasion->data['data']['land_conquered'] . ' acres of land from the defender.';
+            $invasionSummary .= ' The attacker conquered ' . array_sum($invasion->data['attacker']['land_conquered']) . ' acres of land from the defender.';
+        }
+
+        if($data['attacker']['fogged'])
+        {
+            $invasionSummary .= ' The attacker used the fog of war spell to hide their exact number of units from the defender, but the defender still knows how many attacking units were killed (lost).';
+        }
+
+        if($data['defender']['fogged'])
+        {
+            $invasionSummary .= ' The defender used the fog of war spell to hide their exact number of units defending from the attacker, but the attacker still knows how many defending units were killed (lost).';
         }
 
         $story = $this->openAIService->sendMessageAndGetCompletion($storyteller, $invasionSummary);
@@ -104,6 +116,7 @@ class GameEventService
         $data['attacker']['faction'] = $attacker->race->name;
         $data['attacker']['faction_adjective'] = $this->raceHelper->getRaceAdjective($attacker->race);
         $data['attacker']['realm_adjective'] = $this->realmHelper->getAlignmentAdjective($attacker->realm->alignment);
+        $data['attacker']['fogged'] = $attacker->getSpellPerkValue('fog_of_war') > 0;
 
         # Look at invasion data of units sent, units lost, and units killed to get the full scope of slots used
         $data['attacker']['units'] = [];
@@ -134,6 +147,7 @@ class GameEventService
         $data['defender']['faction'] = $defender->race->name;
         $data['defender']['faction_adjective'] = $this->raceHelper->getRaceAdjective($defender->race);
         $data['defender']['realm_adjective'] = $this->realmHelper->getAlignmentAdjective($defender->realm->alignment);
+        $data['defender']['fogged'] = $defender->getSpellPerkValue('fog_of_war') > 0;
 
         # Look at invasion data of units defending, units lost, and units killed to get the full scope of slots used
         $data['defender']['units'] = [];
