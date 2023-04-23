@@ -2,8 +2,8 @@
 
 namespace OpenDominion\Services\Dominion;
 
+use DB;
 use Log;
-use LogicException;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\GameEventStory;
 use OpenDominion\Models\Round;
@@ -46,22 +46,24 @@ class GameEventService
             {
                 if($gameEvent->story == null)
                 {
-                    Log::info('Generating story for invasion event ' . $gameEvent->id);
-                    $story = $this->generateInvasionStory($gameEvent);
-                    $image = null;
+                    DB::transaction(function () use ($gameEvent) {
+                        Log::info('Generating story for invasion event ' . $gameEvent->id);
+                        $story = $this->generateInvasionStory($gameEvent);
+                        $image = null;
 
-                    if(!$story)
-                    {
-                        Log::error('Failed to generate story for invasion event ' . $gameEvent->id);
-                    }
-                    else
-                    {
-                        GameEventStory::create([
-                            'game_event_id' => $gameEvent->id,
-                            'story' => $story,
-                            'image' => $image
-                        ]);
-                    }
+                        if(!$story)
+                        {
+                            Log::error('Failed to generate story for invasion event ' . $gameEvent->id);
+                        }
+                        else
+                        {
+                            GameEventStory::create([
+                                'game_event_id' => $gameEvent->id,
+                                'story' => $story,
+                                'image' => $image
+                            ]);
+                        }
+                    });
                 }
             }
         }
