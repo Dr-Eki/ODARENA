@@ -10,7 +10,7 @@ use OpenDominion\Services\Dominion\GameEventService;
 # ODA
 #use OpenDominion\Models\Round;
 
-class TickCommand extends Command implements CommandInterface
+class GenerateStoriesCommand extends Command implements CommandInterface
 {
     /** @var string The name and signature of the console command. */
     protected $signature = 'game:generate:stories';
