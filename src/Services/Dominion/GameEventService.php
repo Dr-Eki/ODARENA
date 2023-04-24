@@ -132,7 +132,7 @@ class GameEventService
         ];
 
         #$prompt = 'A ' . $imageTypes[array_rand($imageTypes)] . ' of the battle between ';
-        $prompt = 'A detailed high quality concept art digital painting of a battle between ';
+        $prompt = 'High quality detailed concept art digital painting of a battle between ';
         $prompt .= $invasion->source->race->name . ' army of and ' . $invasion->target->race->name . ' army ';
         $prompt .= 'in a medieval fantasy setting.';
 
