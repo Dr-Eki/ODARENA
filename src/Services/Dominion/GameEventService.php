@@ -36,9 +36,7 @@ class GameEventService
 
     public function generateStories(): void
     {
-        $activeRounds = Round::active()->get();
-
-        foreach ($activeRounds as $round)
+        foreach (Round::active()->get() as $round)
         {
             $gameEvents = $round->gameEvents()->where('type', 'invasion')->get();
 
@@ -54,6 +52,10 @@ class GameEventService
                         if(!$story)
                         {
                             Log::error('Failed to generate story for invasion event ' . $gameEvent->id);
+                        }
+                        elseif(!$image)
+                        {
+                            Log::error('Failed to generate image for invasion event ' . $gameEvent->id);
                         }
                         else
                         {
