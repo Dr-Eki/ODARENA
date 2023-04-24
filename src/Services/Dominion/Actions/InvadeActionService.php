@@ -559,9 +559,8 @@ class InvadeActionService
             # Resource conversions
             $resourceConversions['attacker'] = $this->resourceConversionCalculator->getResourceConversions($attacker, $defender, $this->invasion, 'offense');
             $resourceConversions['defender'] = $this->resourceConversionCalculator->getResourceConversions($defender, $attacker, $this->invasion, 'defense');
-
             
-            dump($resourceConversions);
+            #dump($resourceConversions);
 
             if(array_sum($resourceConversions['attacker']) > 0)
             {
