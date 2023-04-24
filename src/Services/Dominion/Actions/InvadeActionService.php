@@ -560,9 +560,8 @@ class InvadeActionService
             $resourceConversions['attacker'] = $this->resourceConversionCalculator->getResourceConversions($attacker, $defender, $this->invasion, 'offense');
             $resourceConversions['defender'] = $this->resourceConversionCalculator->getResourceConversions($defender, $attacker, $this->invasion, 'defense');
 
-            #dd($resourceConversions['attacker']);
-
-            #dump($resourceConversions);
+            
+            dump($resourceConversions);
 
             if(array_sum($resourceConversions['attacker']) > 0)
             {
@@ -700,7 +699,7 @@ class InvadeActionService
             # Debug before saving:
             if(env('APP_ENV') == 'local')
             {
-                #dd($this->invasion);
+                dd($this->invasion);
             }
 
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);

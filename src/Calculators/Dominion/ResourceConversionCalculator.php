@@ -129,6 +129,10 @@ class ResourceConversionCalculator
                     (!$invasion['result']['success'] and $mode == 'defense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resources_per_casualty_on_success'])) or
                     $this->unitHelper->checkUnitHasPerks($converter, $unit, ['converts_displaced_peasants_into_resources']) or
 
+                    $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resources_per_value']) or
+                    ($invasion['result']['success'] and $mode == 'offense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resources_per_value_on_success'])) or
+                    (!$invasion['result']['success'] and $mode == 'defense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['kills_into_resources_per_value_on_success'])) or
+
                     # Dies into resource
                     $this->unitHelper->checkUnitHasPerks($converter, $unit, ['dies_into_resource']) or
                     ($invasion['result']['success'] and $mode == 'offense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, ['dies_into_resource_on_success'])) or
@@ -228,8 +232,8 @@ class ResourceConversionCalculator
                     }
 
                     # Multiple resources per value killed
-                    $multiResourcePerValueConversionPerk = $converter->race->getUnitPerkValueForUnitSlot($converterUnitSlot, 'kills_into_resources_per_casualty');
-                    is_array($multiResourcePerValueConversionPerk) ?: $multiResourcePerValueConversionPerk = $converter->race->getUnitPerkValueForUnitSlot($converterUnitSlot, 'kills_into_resources_per_casualty_on_success');
+                    $multiResourcePerValueConversionPerk = $converter->race->getUnitPerkValueForUnitSlot($converterUnitSlot, 'kills_into_resources_per_value');
+                    is_array($multiResourcePerValueConversionPerk) ?: $multiResourcePerValueConversionPerk = $converter->race->getUnitPerkValueForUnitSlot($converterUnitSlot, 'kills_into_resources_per_value_on_success');
 
                     if($multiResourcePerValueConversionPerk)
                     {
