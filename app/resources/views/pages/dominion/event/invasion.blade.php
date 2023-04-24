@@ -1156,7 +1156,7 @@
 </div>
 
 
-@if($event->story)
+@if($event->story and $event->story['image'])
 <div class="row">
     <div class="col-sm-12 col-md-6">
         <div class="box box-info">
