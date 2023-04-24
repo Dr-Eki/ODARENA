@@ -58,17 +58,6 @@ class RealmController extends AbstractDominionController
 
         $isOwnRealm = ($realmNumber === (int)$dominion->realm->number);
 
-        // Eager load some relational data to save on SQL queries down the road in NetworthCalculator and
-        // ProtectionService
-        $with = [
-            'dominions.queues',
-            'dominions.race',
-            'dominions.race.units',
-            'dominions.race.units.perks',
-            'dominions.realm',
-            'dominions.round',
-        ];
-
         if ($isOwnRealm) {
             $with[] = 'dominions.user';
         }
@@ -78,7 +67,12 @@ class RealmController extends AbstractDominionController
                 'round_id' => $round->id,
                 'number' => $realmNumber,
             ])
-            ->firstOrFail();
+            ->first();
+
+        if($realm === null)
+        {
+            return redirect()->route('dominion.realm', ['realmNumber' => $dominion->realm->number]);
+        }
 
         // todo: still duplicate queries on this page. investigate later
 
@@ -94,7 +88,6 @@ class RealmController extends AbstractDominionController
                     });
             })
             ->flatten();
-
 
         $realms = Realm::where('round_id', $round->id)->get();
         foreach($realms as $aRealm) # Using "$realm" breaks other stuff
@@ -134,7 +127,6 @@ class RealmController extends AbstractDominionController
         }
 
         $barbarianSettings = [];
-        #$hoursIntoTheRound = now()->startOfHour()->diffInHours(Carbon::parse($dominion->round->start_date)->startOfHour());
 
         if($realm->alignment == 'good')
         {
@@ -202,7 +194,6 @@ class RealmController extends AbstractDominionController
             'alignmentNoun',
             'alignmentAdjective',
             'barbarianSettings',
-            #'hoursIntoTheRound',
             'statsService',
             'realmNames',
             'defaultRealmNames',

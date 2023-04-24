@@ -23,14 +23,15 @@ class WorldNewsController extends AbstractDominionController
 
         $this->updateDominionNewsLastRead($dominion);
 
-        if ($realmNumber !== null) {
-            $realm = Realm::where([
-                'round_id' => $dominion->round_id,
-                'number' => $realmNumber,
-            ])
-            ->first();
+        $realm = Realm::where([
+            'round_id' => $dominion->round_id,
+            'number' => $realmNumber,
+        ])
+        ->first();
 
-            $worldNewsData = $worldNewsService->getWorldNewsForRealm($realm, $viewer = $dominion);
+        if ($realm)
+        {
+            $worldNewsData = $worldNewsService->getWorldNewsForRealm($realm, $dominion);
         }
         else
         {
@@ -38,13 +39,11 @@ class WorldNewsController extends AbstractDominionController
             $worldNewsData = $worldNewsService->getWorldNewsForDominion($dominion);
         }
 
-        $gameEvents = $worldNewsData;
-
         $realmCount = Realm::where('round_id', $dominion->round_id)->count();
 
         return view('pages.dominion.world-news', [
             'worldNewsHelper' => app(WorldNewsHelper::class),
-            'gameEvents' => $gameEvents,
+            'gameEvents' => $worldNewsData,
             'realm' => $realm,
             'realmCount' => $realmCount,
             'landCalculator' => app(LandCalculator::class),

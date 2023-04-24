@@ -111,12 +111,12 @@ class GameEventService
 
         if($data['attacker']['fogged'])
         {
-            $invasionSummary .= ' The attacker used the fog of war spell to hide their exact number of units from the defender, but the defender still knows how many attacking units were killed (lost).';
+            $invasionSummary .= ' The attacker used a magical fog to hide its number of sent units, so the story shall not contain any specific number of attacker\'s units sent (but attacker\'s units lost is known).';
         }
 
         if($data['defender']['fogged'])
         {
-            $invasionSummary .= ' The defender used the fog of war spell to hide their exact number of units defending from the attacker, but the attacker still knows how many defending units were killed (lost).';
+            $invasionSummary .= ' The defender used a magical fog to hide its number of sent units, so the story shall not contain any specific number of defender\'s units defending (but defender\'s units lost is known).';
         }
 
         $story = $this->openAIService->sendMessageAndGetCompletion($storyteller, $invasionSummary);
