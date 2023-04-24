@@ -58,12 +58,7 @@ class RealmController extends AbstractDominionController
 
         $isOwnRealm = ($realmNumber === (int)$dominion->realm->number);
 
-        if ($isOwnRealm) {
-            $with[] = 'dominions.user';
-        }
-
-        $realm = Realm::with($with)
-            ->where([
+        $realm = Realm::where([
                 'round_id' => $round->id,
                 'number' => $realmNumber,
             ])

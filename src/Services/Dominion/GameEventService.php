@@ -49,7 +49,7 @@ class GameEventService
                     DB::transaction(function () use ($gameEvent) {
                         Log::info('Generating story for invasion event ' . $gameEvent->id);
                         $story = $this->generateInvasionStory($gameEvent);
-                        $image = null;
+                        $image = $this->generateInvasionImage($gameEvent);
 
                         if(!$story)
                         {
@@ -136,10 +136,10 @@ class GameEventService
         $prompt .= $invasion->source->race->name . ' army of and ' . $invasion->target->race->name . ' army ';
         $prompt .= 'in a medieval fantasy setting.';
 
-        return '';
+        #return '';
 
-        #$image = $this->openAIService->generateImagesFromText($prompt);
-        #return $image['data'][0]['b64_json'];
+        $image = $this->openAIService->generateImagesFromText($prompt);
+        return $image['data'][0]['b64_json'];
     }
 
     public function getDataArrayFromInvasion(GameEvent $invasion): array
