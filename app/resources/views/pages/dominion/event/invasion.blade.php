@@ -1155,8 +1155,8 @@
     @endif
 </div>
 
-
-@if($event->story and $event->story['image'])
+{{-- 
+@if($event->story)
 <div class="row">
     <div class="col-sm-12 col-md-6">
         <div class="box box-info">
@@ -1190,4 +1190,5 @@
     </div>
 </div>
 @endif
+--}}
 @endsection
