@@ -9,8 +9,8 @@ use OpenDominion\Models\GameEventStory;
 use OpenDominion\Models\Round;
 
 use OpenDominion\Services\Dominion\OpenAIService;
+use OpenDominion\Services\Dominion\StabilityAIService;
 
-use OpenDominion\Helpers\EventHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\RealmHelper;
 use OpenDominion\Helpers\UnitHelper;
@@ -19,19 +19,20 @@ class GameEventService
 {
 
     private $openAIService;
-    private $eventHelper;
+    private $stabilityAIService;
+    
     private $raceHelper;
     private $realmHelper;
     private $unitHelper;
 
     public function __construct()
     {
-        $this->eventHelper = app(EventHelper::class);
         $this->raceHelper = app(RaceHelper::class);
         $this->realmHelper = app(RealmHelper::class);
         $this->unitHelper = app(UnitHelper::class);
 
         $this->openAIService = app(OpenAIService::class);
+        $this->stabilityAIService = app(StabilityAIService::class);
     }
 
     public function generateStories(): void
@@ -47,7 +48,7 @@ class GameEventService
                     DB::transaction(function () use ($gameEvent) {
                         Log::info('Generating story for invasion event ' . $gameEvent->id);
                         $story = $this->generateInvasionStory($gameEvent);
-                        $image = $this->generateInvasionImage($gameEvent);
+                        $image = null;#$this->generateInvasionImage($gameEvent);
 
                         if(!$story)
                         {
@@ -130,20 +131,24 @@ class GameEventService
     {
         $imageTypes = [
             'video game concept art digital painting',
-            'medieval fantasy painting',
-            'Baroque fantasy painting',
-            'ancient alack and white sketch',
+            #'medieval fantasy painting',
+            #'Baroque fantasy painting',
+            #'ancient alack and white sketch',
         ];
 
-        $prompt = 'High-quality, detailed ' . $imageTypes[array_rand($imageTypes)] . ' of the battle between ';
-        $prompt = ' of a battle between ';
-        $prompt .= $invasion->source->race->name . ' army of and ' . $invasion->target->race->name . ' army ';
-        $prompt .= 'in a medieval fantasy setting.';
+        $prompt = 'High-quality, detailed concept art of the battle between ';
+        $prompt .= $invasion->source->race->name . ' and ' . $invasion->target->race->name;
 
-        #return '';
+        return '';
 
-        $image = $this->openAIService->generateImagesFromText($prompt);
-        return $image['data'][0]['b64_json'];
+        #$image = $this->openAIService->generateImagesFromText($prompt);
+        #$imageBase64 = $image['data'][0]['b64_json'];
+        #$image['data'][0]['b64_json'];
+
+        #$image = $this->stabilityAIService->generateImagesFromText($prompt);
+        #$imageBase64 = $image['artifacts'][0]['base64'];
+
+        #return $imageBase64;
     }
 
     public function getDataArrayFromInvasion(GameEvent $invasion): array

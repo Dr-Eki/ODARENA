@@ -1155,40 +1155,41 @@
     @endif
 </div>
 
-{{-- 
-@if($event->story)
-<div class="row">
-    <div class="col-sm-12 col-md-6">
-        <div class="box box-info">
-            <div class="box-header with-border">
-                <h3 class="box-title">
-                    <i class="ra ra-quill-ink"></i>Chronicler
-                </h3>
-            </div>
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <p>
-                            {!! nl2br($event->story['story']) !!}
-                        </p>
+@if(Request::get('viewImage'))
+    @if($event->story and $event->story['image'])
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        <i class="ra ra-quill-ink"></i>Chronicler
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p>
+                                {!! nl2br($event->story['story']) !!}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-12 col-md-6">
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">
-                    <i class="fa-solid fa-paintbrush"></i>Artist's Impression
-                </h3>
-            </div>
-            <div class="box-body">
-                <img src="data:image/png;base64, {{ $event->story['image'] }}" width="100%" height="100%" alt="Artist's impression" />
+        <div class="col-sm-12 col-md-6">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        <i class="fa-solid fa-paintbrush"></i>Artist's Impression
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <img src="data:image/png;base64, {{ $event->story['image'] }}" width="100%" height="100%" alt="Artist's impression" />
+                </div>
             </div>
         </div>
     </div>
-</div>
+    @endif
 @endif
---}}
+
 @endsection

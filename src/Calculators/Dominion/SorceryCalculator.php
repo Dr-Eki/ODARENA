@@ -97,8 +97,7 @@ class SorceryCalculator
         {
             return 1.5;
         }
-        $multiplier += clamp((($casterWpa - $targetWpa) / $casterWpa), 0, 1.5);
-        $multiplier *= 2;
+        $multiplier += min((($casterWpa - $targetWpa) / $casterWpa), 1.5);
 
         return $multiplier;
     }
