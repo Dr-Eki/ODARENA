@@ -127,12 +127,14 @@ class GameEventService
     public function generateInvasionImage(GameEvent $invasion): string
     {
         $imageTypes = [
+            'video game concept art digital painting',
             'medieval fantasy painting',
-            'black and white sketch',
+            'Baroque fantasy painting',
+            'ancient alack and white sketch',
         ];
 
-        #$prompt = 'A ' . $imageTypes[array_rand($imageTypes)] . ' of the battle between ';
-        $prompt = 'High quality detailed concept art digital painting of a battle between ';
+        $prompt = 'High-quality, detailed ' . $imageTypes[array_rand($imageTypes)] . ' of the battle between ';
+        $prompt = ' of a battle between ';
         $prompt .= $invasion->source->race->name . ' army of and ' . $invasion->target->race->name . ' army ';
         $prompt .= 'in a medieval fantasy setting.';
 
