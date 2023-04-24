@@ -240,6 +240,7 @@ nest:
   terrain: forest
   perks:
     military_housing: 34
+    housing: 0
     jobs: 0
 
 tunnel:  
@@ -319,6 +320,7 @@ camp:
     # unit_ore_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
     military_housing: 20
     housing: 20
+    jobs: 0
 
 bloodstone:
   name: Bloodstone

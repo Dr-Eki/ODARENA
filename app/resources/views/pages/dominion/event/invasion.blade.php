@@ -1155,6 +1155,7 @@
     @endif
 </div>
 
+{{-- 
 @if(Request::get('viewImage'))
     @if($event->story and $event->story['image'])
     <div class="row">
@@ -1191,5 +1192,6 @@
     </div>
     @endif
 @endif
+--}}
 
 @endsection
