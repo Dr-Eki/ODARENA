@@ -34,6 +34,13 @@ class GovernmentActionService
 
     /** @var SpellCalculator */
     protected $spellCalculator;
+
+    /** @var GovernmentCalculator */
+    protected $governmentCalculator;
+
+    /** @var AllianceCalculator */
+    protected $allianceCalculator;
+
     /**
      * GovernmentActionService constructor.
      *

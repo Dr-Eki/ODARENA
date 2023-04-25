@@ -47,7 +47,7 @@ class GameEventService
                 {
                     DB::transaction(function () use ($gameEvent) {
                         Log::info('Generating story for invasion event ' . $gameEvent->id);
-                        $story = $this->generateInvasionStory($gameEvent);
+                        $story = null;#$this->generateInvasionStory($gameEvent);
                         $image = null;#$this->generateInvasionImage($gameEvent);
 
                         if(!$story)

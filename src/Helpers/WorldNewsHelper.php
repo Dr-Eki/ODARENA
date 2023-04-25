@@ -187,7 +187,7 @@ class WorldNewsHelper
         if($viewerIsInviterRealm)
         {
             $string = sprintf(
-                'We are now allied with %s.',
+                'We are now allied with %s',
                 $this->generateRealmOnlyString($invited, 'neutral', $viewer)
               );
         }
