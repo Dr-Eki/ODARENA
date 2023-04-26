@@ -43,6 +43,13 @@ class GameEventService
 
             foreach ($gameEvents as $gameEvent)
             {
+
+                GameEventStory::create([
+                    'game_event_id' => $gameEvent->id,
+                    'story' => 'Story is being written...',
+                    'image' => null
+                ]);
+
                 if($gameEvent->story == null)
                 {
                     DB::transaction(function () use ($gameEvent) {
