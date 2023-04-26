@@ -13,6 +13,26 @@ use OpenDominion\Calculators\Dominion\PopulationCalculator;
 class CasualtiesCalculator
 {
 
+    /**
+     * @var LandCalculator
+     */
+    protected $landCalculator;
+
+    /**
+     * @var MilitaryCalculator
+     */
+    protected $militaryCalculator;
+
+    /**
+     * @var PopulationCalculator
+     */
+    protected $populationCalculator;
+
+    /**
+     * @var SpellDamageCalculator
+     */
+    protected $spellDamageCalculator;
+
     /*
      * CasualtiesCalculator constructor.
      */
@@ -43,7 +63,7 @@ class CasualtiesCalculator
         $baseRatio *= $this->getBaseRatioModifiers($dominion, $invasionData, $mode);
         $baseRatio *= $this->getOnlyDiesVsRawPowerPerkMultiplier($dominion, $unit, $enemy, $invasionData, $mode);
 
-        #dump('$baseRatio for ' . $dominion->name . ' unit ' . $unit->name . ': ' . $baseRatio . ' (mode: ' . $mode . ')');
+        dump('$baseRatio for ' . $dominion->name . ' unit ' . $unit->name . ': ' . $baseRatio . ' (mode: ' . $mode . ')');
 
         # The mode as seen by the enemy
         $enemyMode = 'offense';
@@ -55,20 +75,20 @@ class CasualtiesCalculator
 
         $multiplier = 1;
 
-        #dump('getBasicCasualtiesPerkMultipliers', $this->getBasicCasualtiesPerkMultipliers($dominion, $mode));
+        dump('getBasicCasualtiesPerkMultipliers', $this->getBasicCasualtiesPerkMultipliers($dominion, $mode));
         $multiplier += $this->getBasicCasualtiesPerkMultipliers($dominion, $mode);
 
-        #dump('getCasualtiesPerkMultipliersForThisUnit', $this->getCasualtiesPerkMultipliersForThisUnit($dominion, $enemy, $unit, $invasionData, $mode));
+        dump('getCasualtiesPerkMultipliersForThisUnit', $this->getCasualtiesPerkMultipliersForThisUnit($dominion, $enemy, $unit, $invasionData, $mode));
         $multiplier += $this->getCasualtiesPerkMultipliersForThisUnit($dominion, $enemy, $unit, $invasionData, $mode);
 
-        #dump('getCasualtiesPerkMultipliersFromUnits', $this->getCasualtiesPerkMultipliersFromUnits($dominion, $enemy, $invasionData, $mode));
+        dump('getCasualtiesPerkMultipliersFromUnits', $this->getCasualtiesPerkMultipliersFromUnits($dominion, $enemy, $invasionData, $mode));
         $multiplier += $this->getCasualtiesPerkMultipliersFromUnits($dominion, $enemy, $invasionData, $mode);
 
-        #dump('getCasualtiesPerkMultipliersFromEnemy', $this->getCasualtiesPerkMultipliersFromEnemy($enemy, $dominion, $invasionData, $enemyMode));
+        dump('getCasualtiesPerkMultipliersFromEnemy', $this->getCasualtiesPerkMultipliersFromEnemy($enemy, $dominion, $invasionData, $enemyMode));
         $multiplier *= $this->getCasualtiesPerkMultipliersFromEnemy($enemy, $dominion, $invasionData, $enemyMode);
 
         $multiplier = min(2, max(0.10, $multiplier));
-        #dump('multiplier', $multiplier);
+        dump('multiplier', $multiplier);
 
         $ratio = $baseRatio * $multiplier;
 

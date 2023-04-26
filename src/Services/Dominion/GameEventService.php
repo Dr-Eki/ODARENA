@@ -47,17 +47,17 @@ class GameEventService
                 {
                     DB::transaction(function () use ($gameEvent) {
                         Log::info('Generating story for invasion event ' . $gameEvent->id);
-                        $story = null;#$this->generateInvasionStory($gameEvent);
+                        $story = $this->generateInvasionStory($gameEvent);
                         $image = null;#$this->generateInvasionImage($gameEvent);
 
                         if(!$story)
                         {
                             Log::error('Failed to generate story for invasion event ' . $gameEvent->id);
                         }
-                        elseif(!$image)
-                        {
-                            Log::error('Failed to generate image for invasion event ' . $gameEvent->id);
-                        }
+                        // elseif(!$image)
+                        // {
+                        //     Log::error('Failed to generate image for invasion event ' . $gameEvent->id);
+                        // }
                         else
                         {
                             GameEventStory::create([
