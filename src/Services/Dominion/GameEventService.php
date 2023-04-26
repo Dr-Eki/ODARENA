@@ -47,7 +47,7 @@ class GameEventService
                 if($gameEvent->story == null and $gameEvent->story !== 'Story is being written...')
                 {
 
-                    GameEventStory::create([
+                    $gameEvent->story()->create([
                         'game_event_id' => $gameEvent->id,
                         'story' => 'Story is being written...',
                         'image' => null
@@ -68,8 +68,7 @@ class GameEventService
                         // }
                         else
                         {
-                            GameEventStory::create([
-                                'game_event_id' => $gameEvent->id,
+                            $gameEvent->story()->update([
                                 'story' => $story,
                                 'image' => $image
                             ]);
