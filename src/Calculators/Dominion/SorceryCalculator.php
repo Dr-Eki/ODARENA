@@ -7,7 +7,7 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
 
-use OpenDominion\Calculators\Dominion\ImprovementCalculator;
+#use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
@@ -15,6 +15,14 @@ use OpenDominion\Calculators\Dominion\SpellCalculator;
 
 class SorceryCalculator
 {
+
+    #private $improvementCalculator;
+    private $landCalculator;
+    private $militaryCalculator;
+    private $spellCalculator;
+    #private $spellDamageCalculator;
+
+
     /**
      * SpellCalculator constructor.
      *
@@ -23,7 +31,7 @@ class SorceryCalculator
      */
     public function __construct()
     {
-        $this->improvementCalculator = app(ImprovementCalculator::class);
+        #$this->improvementCalculator = app(ImprovementCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->spellCalculator = app(SpellCalculator::class);

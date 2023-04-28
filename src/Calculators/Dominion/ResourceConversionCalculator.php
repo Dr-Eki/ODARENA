@@ -246,8 +246,16 @@ class ResourceConversionCalculator
                             {
                                 if($this->conversionHelper->isSlotConvertible($enemyUnitKilledSlot, $enemy))
                                 {
-                                    $resourceConversions[$resourceKey] += $enemyUnitKilledAmount * $resourceAmount * $convertingUnits[$converterUnitSlot]['power_proportion'];
-                                    #$resourceConversions[$resourceKey] *= $this->conversionCalculator->getConversionReductionMultiplier($enemy);
+                                    if($mode == 'offense')
+                                    {
+                                        $killedUnitsRawPower = $this->militaryCalculator->getDefensivePowerRaw($enemy, $converter, null, [$enemyUnitKilledSlot => $enemyUnitKilledAmount]);
+                                    }
+                                    else
+                                    {
+                                        $killedUnitsRawPower = $this->militaryCalculator->getOffensivePowerRaw($enemy, $converter, null, [$enemyUnitKilledSlot => $enemyUnitKilledAmount]);
+                                    }
+
+                                    $resourceConversions[$resourceKey] += $killedUnitsRawPower * $resourceAmount * $convertingUnits[$converterUnitSlot]['power_proportion'];
                                     $resourceConversions[$resourceKey] *= $this->getInvasionResultMultiplier($invasion, $mode);
                                 }
                             }
