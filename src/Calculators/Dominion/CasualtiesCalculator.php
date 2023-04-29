@@ -63,7 +63,7 @@ class CasualtiesCalculator
         $baseRatio *= $this->getBaseRatioModifiers($dominion, $invasionData, $mode);
         $baseRatio *= $this->getOnlyDiesVsRawPowerPerkMultiplier($dominion, $unit, $enemy, $invasionData, $mode);
 
-        dump('$baseRatio for ' . $dominion->name . ' unit ' . $unit->name . ': ' . $baseRatio . ' (mode: ' . $mode . ')');
+        ldump('$baseRatio for ' . $dominion->name . ' unit ' . $unit->name . ': ' . $baseRatio . ' (mode: ' . $mode . ')');
 
         # The mode as seen by the enemy
         $enemyMode = 'offense';
@@ -75,20 +75,20 @@ class CasualtiesCalculator
 
         $multiplier = 1;
 
-        dump('getBasicCasualtiesPerkMultipliers', $this->getBasicCasualtiesPerkMultipliers($dominion, $mode));
+        ldump('getBasicCasualtiesPerkMultipliers', $this->getBasicCasualtiesPerkMultipliers($dominion, $mode));
         $multiplier += $this->getBasicCasualtiesPerkMultipliers($dominion, $mode);
 
-        dump('getCasualtiesPerkMultipliersForThisUnit', $this->getCasualtiesPerkMultipliersForThisUnit($dominion, $enemy, $unit, $invasionData, $mode));
+        ldump('getCasualtiesPerkMultipliersForThisUnit', $this->getCasualtiesPerkMultipliersForThisUnit($dominion, $enemy, $unit, $invasionData, $mode));
         $multiplier += $this->getCasualtiesPerkMultipliersForThisUnit($dominion, $enemy, $unit, $invasionData, $mode);
 
-        dump('getCasualtiesPerkMultipliersFromUnits', $this->getCasualtiesPerkMultipliersFromUnits($dominion, $enemy, $invasionData, $mode));
+        ldump('getCasualtiesPerkMultipliersFromUnits', $this->getCasualtiesPerkMultipliersFromUnits($dominion, $enemy, $invasionData, $mode));
         $multiplier += $this->getCasualtiesPerkMultipliersFromUnits($dominion, $enemy, $invasionData, $mode);
 
-        dump('getCasualtiesPerkMultipliersFromEnemy', $this->getCasualtiesPerkMultipliersFromEnemy($enemy, $dominion, $invasionData, $enemyMode));
+        ldump('getCasualtiesPerkMultipliersFromEnemy', $this->getCasualtiesPerkMultipliersFromEnemy($enemy, $dominion, $invasionData, $enemyMode));
         $multiplier *= $this->getCasualtiesPerkMultipliersFromEnemy($enemy, $dominion, $invasionData, $enemyMode);
 
         $multiplier = min(2, max(0.10, $multiplier));
-        dump('multiplier', $multiplier);
+        ldump('multiplier', $multiplier);
 
         $ratio = $baseRatio * $multiplier;
 
@@ -108,7 +108,7 @@ class CasualtiesCalculator
         # Modify the base ratio
         $baseRatio *= $this->getBaseRatioModifiers($dominion, $invasionData, $mode);
 
-        #dump('$baseRatio for ' . $dominion->name . ' unit ' . $unit->name . ': ' . $baseRatio . ' (mode: ' . $mode . ')');
+        #ldump('$baseRatio for ' . $dominion->name . ' unit ' . $unit->name . ': ' . $baseRatio . ' (mode: ' . $mode . ')');
 
         # The mode as seen by the enemy
         $enemyMode = 'offense';
@@ -120,17 +120,17 @@ class CasualtiesCalculator
 
         $multiplier = 1;
 
-        #dump('getBasicCasualtiesPerkMultipliers', $this->getBasicCasualtiesPerkMultipliers($dominion, $mode));
+        #ldump('getBasicCasualtiesPerkMultipliers', $this->getBasicCasualtiesPerkMultipliers($dominion, $mode));
         $multiplier += $this->getBasicCasualtiesPerkMultipliers($dominion, $mode);
 
-        #dump('getCasualtiesPerkMultipliersFromUnits', $this->getCasualtiesPerkMultipliersFromUnits($dominion, $enemy, $invasionData, $mode));
+        #ldump('getCasualtiesPerkMultipliersFromUnits', $this->getCasualtiesPerkMultipliersFromUnits($dominion, $enemy, $invasionData, $mode));
         $multiplier += $this->getCasualtiesPerkMultipliersFromUnits($dominion, $enemy, $invasionData, $mode);
 
-        #dump('getCasualtiesPerkMultipliersFromEnemy', $this->getCasualtiesPerkMultipliersFromEnemy($enemy, $dominion, $invasionData, $enemyMode));
+        #ldump('getCasualtiesPerkMultipliersFromEnemy', $this->getCasualtiesPerkMultipliersFromEnemy($enemy, $dominion, $invasionData, $enemyMode));
         $multiplier *= $this->getCasualtiesPerkMultipliersFromEnemy($enemy, $dominion, $invasionData, $enemyMode);
 
         $multiplier = min(2, max(0.10, $multiplier));
-        #dump('multiplier', $multiplier);
+        #ldump('multiplier', $multiplier);
 
         $ratio = $baseRatio * $multiplier;
 
@@ -139,7 +139,7 @@ class CasualtiesCalculator
 
     public function getInvasionCasualties(Dominion $dominion, array $units, Dominion $enemy, array $invasionData = [], string $mode = 'offense'): array
     {
-        #dump('$mode for ' . $dominion->name . ' is ' . $mode);
+        #ldump('$mode for ' . $dominion->name . ' is ' . $mode);
         $casualties = [];
 
         foreach($units as $slot => $amountSent)
@@ -154,7 +154,7 @@ class CasualtiesCalculator
 
                 if(!$this->isUnitImmortal($dominion, $enemy, $unit, $invasionData, $mode))
                 {
-                    #dump($this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode));
+                    #ldump($this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode));
                     $casualties[$slot] += (int)round($amountSent * $this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode));
                 }
             }
@@ -163,7 +163,7 @@ class CasualtiesCalculator
                 $unitType = $slot;
                 if(!$this->isUnitTypeImmortal($dominion, $enemy, $unitType, $invasionData, $mode))
                 {
-                    #dump($this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode));
+                    #ldump($this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode));
                     $casualties[$slot] += (int)round($amountSent * $this->getInvasionCasualtiesRatioForUnitType($dominion, $unitType, $enemy, $invasionData, $mode));
                 }
             }
@@ -413,7 +413,7 @@ class CasualtiesCalculator
 
         $multiplier = 1;
 
-        #dump('Mode for ' . $dominion->name . ': ' . $enemyMode);
+        #ldump('Mode for ' . $dominion->name . ': ' . $enemyMode);
 
         # Title perks
         $multiplier += $dominion->title->getPerkMultiplier('increases_enemy_casualties');
@@ -669,7 +669,7 @@ class CasualtiesCalculator
                         $multiplier += ($amount * $unitOp) / $rawOp;
                     }
 
-                    #dump('Check if ' . $enemy->name . ' ' . $attackingUnit->name . ' can kill our ' . $unit->name .'. Min OP to kill: ' . $minPowerToKill . '. Enemy unit has: ' . $unitOp);
+                    #ldump('Check if ' . $enemy->name . ' ' . $attackingUnit->name . ' can kill our ' . $unit->name .'. Min OP to kill: ' . $minPowerToKill . '. Enemy unit has: ' . $unitOp);
                 }
             }
         }

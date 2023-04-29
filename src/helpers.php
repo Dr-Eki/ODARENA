@@ -217,3 +217,40 @@ if(!function_exists('indefiniteArticle'))
     }
 
 }
+
+
+if(!function_exists('ldump'))
+{
+    /**
+     * Dumps but only if running locally.
+     *
+     * @param string $word
+     * @return string
+     */
+
+     function ldump($input)
+    {
+        if(env('APP_ENV') == 'local')
+        {
+            dump($input);
+        }
+    }
+}
+
+if(!function_exists('ldd'))
+{
+    /**
+     * Dumps but only if running locally.
+     *
+     * @param string $word
+     * @return string
+     */
+
+     function ldd($input)
+    {
+        if(env('APP_ENV') == 'local')
+        {
+            dd($input);
+        }
+    }
+}
