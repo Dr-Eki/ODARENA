@@ -16,6 +16,9 @@ resources:
   - mana
   - blood
 
+peasants_production:
+  gold: 3
+
 improvement_resources:
   blood: 6
 
