@@ -126,119 +126,125 @@
         </div>
       </div>
 
-      <a id="perks"></a>
-      <div class="col-sm-12 col-md-3 no-padding">
-          <div class="col-sm-12 col-md-12">
-              <div class="box">
-                  <div class="box-header with-border">
-                      <h3 class="box-title">Traits</h3>
-                  </div>
-                  <div class="box-body table-responsive no-padding">
-                      <table class="table table-striped">
-                          <colgroup>
-                              <col>
-                              <col>
-                          </colgroup>
-                          <tbody>
-                              @if(!$race->getPerkValue('no_population'))
-                                  <tr>
-                                      <td>
-                                          <span data-toggle="tooltip" data-placement="top" title="Term used for workers in this faction (<em>peasants</em> by default)">Workers:</span>
-                                      </td>
-                                      <td>{{ $raceHelper->getPeasantsTerm($race) }} {!! $race->getPerkValue('peasant_dp') ? '<small class="text-muted">(DP:&nbsp;' . $race->getPerkValue('peasant_dp') . ')</small>' : '' !!} </td>
-                                  </tr>
-                                  @if(!$race->getPerkValue('no_drafting'))
-                                      <tr>
-                                          <td>
-                                              <span data-toggle="tooltip" data-placement="top" title="Term used for draftees in this faction (<em>draftees</em> by default)">Draftees:</span>
-                                          </td>
-                                          <td>{{ $raceHelper->getDrafteesTerm($race) }} <small class="text-muted">(DP:&nbsp;{{$race->getPerkValue('draftee_dp') ?: 1}})</small></td>
-                                      </tr>
-                                  @endif
-                              @endif
-                              @if($race->max_per_round)
+    <a id="perks"></a>
+    <div class="col-sm-12 col-md-3 no-padding">
+        <div class="col-sm-12 col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Traits</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-striped">
+                        <colgroup>
+                            <col>
+                            <col>
+                        </colgroup>
+                        <tbody>
+                            @if(!$race->getPerkValue('no_population'))
                                 <tr>
                                     <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="Maximum amount of dominions of this faction per round">Max per round:</span>
+                                        <span data-toggle="tooltip" data-placement="top" title="Term used for workers in this faction (<em>peasants</em> by default)">Workers:</span>
                                     </td>
-                                    <td><span class="text-red">{{ $race->max_per_round }}</a></td>
+                                    <td>{{ $raceHelper->getPeasantsTerm($race) }} {!! $race->getPerkValue('peasant_dp') ? '<small class="text-muted">(DP:&nbsp;' . $race->getPerkValue('peasant_dp') . ')</small>' : '' !!} </td>
                                 </tr>
-                              @endif
-                              @if($race->minimum_rounds)
-                                <tr>
-                                    <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="Minimum rounds you must have played in order to select this faction">Minimum rounds played:</span>
-                                    </td>
-                                    <td><span class="text-red">{{ $race->minimum_rounds }}</a></td>
-                                </tr>
-                              @endif
-                              {{--
-                              @if($race->psionic_strength !== 1)
-                                <tr>
-                                    <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="Standard is 1">Psionic base strength:</span>
-                                    </td>
-                                    <td><span class="text-info">{{ number_format($race->psionic_strength,6) }}</a></td>
-                                </tr>
-                              @endif
-                              --}}
-                              @if(!$race->getPerkValue('no_population'))
-                              <tr>
-                                  <td>
-                                      <span data-toggle="tooltip" data-placement="top" title="What each worker produces">{{ $raceHelper->getPeasantsTerm($race) }} production:</span>
-                                  </td>
-                                  <td>
-                                      @php
-                                          $x = 0;
-                                          $peasantProductions = count($race->peasants_production);
-                                      @endphp
-                                      @foreach ($race->peasants_production as $resourceKey => $amount)
-                                          @php
-                                              $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
-                                              $x++;
-                                          @endphp
+                                @if(!$race->getPerkValue('no_drafting'))
+                                    <tr>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="Term used for draftees in this faction (<em>draftees</em> by default)">Draftees:</span>
+                                        </td>
+                                        <td>{{ $raceHelper->getDrafteesTerm($race) }} <small class="text-muted">(DP:&nbsp;{{$race->getPerkValue('draftee_dp') ?: 1}})</small></td>
+                                    </tr>
+                                @endif
+                            @endif
+
+                            <tr>
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title="">Home terrain:</span>
+                                </td>
+                                <td></td>
+                            @if($race->max_per_round)
+                            <tr>
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title="Maximum amount of dominions of this faction per round">Max per round:</span>
+                                </td>
+                                <td><span class="text-red">{{ $race->max_per_round }}</a></td>
+                            </tr>
+                            @endif
+                            @if($race->minimum_rounds)
+                            <tr>
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title="Minimum rounds you must have played in order to select this faction">Minimum rounds played:</span>
+                                </td>
+                                <td><span class="text-red">{{ $race->minimum_rounds }}</a></td>
+                            </tr>
+                            @endif
+                            {{--
+                            @if($race->psionic_strength !== 1)
+                            <tr>
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title="Standard is 1">Psionic base strength:</span>
+                                </td>
+                                <td><span class="text-info">{{ number_format($race->psionic_strength,6) }}</a></td>
+                            </tr>
+                            @endif
+                            --}}
+                            @if(!$race->getPerkValue('no_population'))
+                            <tr>
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title="What each worker produces">{{ $raceHelper->getPeasantsTerm($race) }} production:</span>
+                                </td>
+                                <td>
+                                    @php
+                                        $x = 0;
+                                        $peasantProductions = count($race->peasants_production);
+                                    @endphp
+                                    @foreach ($race->peasants_production as $resourceKey => $amount)
+                                        @php
+                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                            $x++;
+                                        @endphp
 
 
-                                          <span class="text-green">
-                                              @if($x < $peasantProductions)
-                                                  {{ number_format($amount,2) }}&nbsp;{{ $resource->name }},
-                                              @else
-                                                  {{ number_format($amount,2) }}&nbsp;{{ $resource->name }}
-                                              @endif
-                                          </span>
-                                      @endforeach
-                                  </td>
-                              </tr>
-                              @endif
-                              @foreach ($race->perks as $perk)
-                                  @php
-                                      $perkDescription = $raceHelper->getPerkDescriptionHtmlWithValue($perk);
-                                  @endphp
-                                  <tr>
-                                      <td>
-                                          {!! $perkDescription['description'] !!}
-                                      </td>
-                                      <td>
-                                          {!! $perkDescription['value'] !!}
-                                      </td>
-                                  </tr>
-                              @endforeach
-                              <tr>
-                                <th colspan="2">Round modes</th>
-                              </tr>
-                              <tr>
-                                <td colspan="2">
-                                    @foreach($race->round_modes as $roundMode)
-
-                                        <span data-toggle="tooltip" data-placement="top" title="{{ $roundHelper->getRoundModeDescription(null, $roundMode) }}">{!! $roundHelper->getRoundModeIcon(null, $roundMode) !!}&nbsp;{{ $roundHelper->getRoundModeString(null, $roundMode, true) }}</span><br>
-
+                                        <span class="text-green">
+                                            @if($x < $peasantProductions)
+                                                {{ number_format($amount,2) }}&nbsp;{{ $resource->name }},
+                                            @else
+                                                {{ number_format($amount,2) }}&nbsp;{{ $resource->name }}
+                                            @endif
+                                        </span>
                                     @endforeach
                                 </td>
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
-          </div>
+                            </tr>
+                            @endif
+                            @foreach ($race->perks as $perk)
+                                @php
+                                    $perkDescription = $raceHelper->getPerkDescriptionHtmlWithValue($perk);
+                                @endphp
+                                <tr>
+                                    <td>
+                                        {!! $perkDescription['description'] !!}
+                                    </td>
+                                    <td>
+                                        {!! $perkDescription['value'] !!}
+                                    </td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                            <th colspan="2">Round modes</th>
+                            </tr>
+                            <tr>
+                            <td colspan="2">
+                                @foreach($race->round_modes as $roundMode)
+
+                                    <span data-toggle="tooltip" data-placement="top" title="{{ $roundHelper->getRoundModeDescription(null, $roundMode) }}">{!! $roundHelper->getRoundModeIcon(null, $roundMode) !!}&nbsp;{{ $roundHelper->getRoundModeString(null, $roundMode, true) }}</span><br>
+
+                                @endforeach
+                            </td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
       </div>
 </div>

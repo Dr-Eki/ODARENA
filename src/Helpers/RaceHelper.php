@@ -16,6 +16,11 @@ use OpenDominion\Services\Dominion\StatsService;
 class RaceHelper
 {
 
+    protected $chroniclesHelper;
+    protected $landCalculator;
+    protected $unitHelper;
+    protected $statsService;
+
     public function __construct()
     {
         $this->chroniclesHelper = app(ChroniclesHelper::class);

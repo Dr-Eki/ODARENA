@@ -25,6 +25,42 @@ class MilitaryCalculator
     /** @var bool */
     protected $forTick = false;
 
+    /** @var AdvancementCalculator */
+    protected $advancementCalculator;
+
+    /** @var BuildingCalculator */
+    protected $buildingCalculator;
+
+    /** @var GovernmentService */
+    protected $governmentService;
+
+    /** @var ImprovementCalculator */
+    protected $improvementCalculator;
+
+    /** @var LandCalculator */
+    protected $landCalculator;
+
+    /** @var PrestigeCalculator */
+    protected $prestigeCalculator;
+
+    /** @var QueueService */
+    protected $queueService;
+
+    /** @var ResourceCalculator */
+    protected $resourceCalculator;
+
+    /** @var SpellCalculator */
+    protected $spellCalculator;
+
+    /** @var StatsService */
+    protected $statsService;
+
+    /** @var LandImprovementCalculator */
+    protected $landImprovementCalculator;
+
+    /** @var ImprovementHelper */
+    protected $improvementHelper;
+
     public function __construct()
     {
         $this->advancementCalculator = app(AdvancementCalculator::class);
@@ -2665,14 +2701,14 @@ class MilitaryCalculator
 
         $spell = Spell::where('key', $ambushSpellKey)->first();
 
-        $spellPerkValues = $spell->getActiveSpellPerkValues($spell->key, 'reduces_target_raw_defense_from_land');
+        $spellPerkValues = $spell->getActiveSpellPerkValues($spell->key, 'reduces_target_raw_defense_from_terrain');
 
         $reduction = $spellPerkValues[0];
         $ratio = $spellPerkValues[1];
-        $landType = $spellPerkValues[2];
+        $terrainKey = $spellPerkValues[2];
         $max = $spellPerkValues[3] / 100;
 
-        $landTypeRatio = $attacker->{'land_' . $landType} / $this->landCalculator->getTotalLand($attacker);
+        $landTypeRatio = $attacker->{'terrain_' . $terrainKey} / $attacker->land;
 
         $ambushReductionRatio = min(($landTypeRatio / $ratio) * $reduction, $max);
 

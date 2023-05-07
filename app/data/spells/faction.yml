@@ -162,7 +162,7 @@ ambush:
   exclusive_races:
     - Beastfolk
   perks:
-    reduces_target_raw_defense_from_land: 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
+    reduces_target_raw_defense_from_terrain: 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
 
 enchanted_blades:  
   enabled: 0
