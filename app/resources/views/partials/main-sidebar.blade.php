@@ -32,30 +32,31 @@
                     <a href="{{ route('dominion.land') }}">
                         <i class="fa fa-map fa-fw"></i>
                         <span>Land</span>
-
-                        <span class="pull-right-container">
-                            @if (!$selectedDominion->daily_land and $selectedDominion->protection_ticks == 0 and $selectedDominion->round->hasStarted())
-                                <small class="label label-primary pull-right"><i class="fa fa-plus"></i></small>
-                            @endif
-
-                            @if(($barrenLand = $landCalculator->getTotalBarrenLand($selectedDominion)) > 0)
-                                <span class="label label-danger pull-right">{{ number_format($barrenLand) }}</span>
-                            @endif
-                        </span>
+                        @if (!$selectedDominion->daily_land and $selectedDominion->protection_ticks == 0 and $selectedDominion->round->hasStarted())
+                            <span class="label label-primary pull-right"><i class="fa fa-plus"></i></span>
+                        @endif
                     </a>
                 </li>
 
                 @if ($selectedDominion->round->getSetting('buildings') and !$selectedDominion->race->getPerkValue('cannot_build'))
-                    <li class="{{ Route::is('dominion.buildings') ? 'active' : null }}"><a href="{{ route('dominion.buildings') }}"><i class="fa fa-home fa-fw"></i><span>Buildings</span></a></li>
+                    <li class="{{ Route::is('dominion.buildings') ? 'active' : null }}">
+                        <a href="{{ route('dominion.buildings') }}">
+                            <i class="fa fa-home fa-fw"></i>
+                            <span>Buildings</span>
+                            @if(($barrenLand = $landCalculator->getTotalBarrenLand($selectedDominion)))
+                                <span class="label label-danger pull-right">{{ number_format($barrenLand) }}</span>
+                            @endif
+                        </a>
+                    </li>
                 @endif
 
 
                 @if ($selectedDominion->round->getSetting('improvements') and !$selectedDominion->race->getPerkValue('cannot_improve'))
                     <li class="{{ Route::is('dominion.improvements') ? 'active' : null }}">
-                            <a href="{{ route('dominion.improvements') }}">
-                                <i class="fas fa-arrow-up fa-fw"></i><span>Improvements</span>
-                            </a>
-                        </li>
+                        <a href="{{ route('dominion.improvements') }}">
+                            <i class="fas fa-arrow-up fa-fw"></i><span>Improvements</span>
+                        </a>
+                    </li>
                 @endif
 
                 @if ($selectedDominion->round->getSetting('advancements') and !$selectedDominion->race->getPerkValue('cannot_tech'))

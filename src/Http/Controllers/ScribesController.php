@@ -37,6 +37,7 @@ use OpenDominion\Models\Race;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Title;
 use OpenDominion\Models\Tech;
+use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Spyop;
 
@@ -256,6 +257,13 @@ class ScribesController extends AbstractController
         return view('pages.scribes.resources', [
             'resources' => Resource::all()->where('enabled',1)->keyBy('key')->sortBy('name'),
             'resourceHelper' => app(ResourceHelper::class),
+        ]);
+    }
+
+    public function getTerrain()
+    {
+        return view('pages.scribes.terrain', [
+            'terrains' => Terrain::all()->sortBy('name'),
         ]);
     }
 

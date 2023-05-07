@@ -2,6 +2,7 @@ name: Troll
 alignment: evil
 description: <p>While Trolls cannot research and can only level up advancements to level 4, XP yields more generated land at a rate of +1% for every 22,500 XP (max +100% generated).</p>
 home_land_type: hill
+home_terrain: hills
 playable: 0 # Round 88
 skill_level: 2
 

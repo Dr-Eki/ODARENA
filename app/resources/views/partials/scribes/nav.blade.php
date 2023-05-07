@@ -14,6 +14,7 @@
                 <li class="{{ Route::is('scribes.resources') ? 'active' : null }}"><a href="{{ route('scribes.resources') }}">Resources</a></li>
                 <li class="{{ Route::is('scribes.sabotage') ? 'active' : null }}"><a href="{{ route('scribes.sabotage') }}">Sabotage</a></li>
                 <li class="{{ Route::is('scribes.spells') ? 'active' : null }}"><a href="{{ route('scribes.spells') }}">Spells</a></li>
+                <li class="{{ Route::is('scribes.terrain') ? 'active' : null }}"><a href="{{ route('scribes.terrain') }}">Terrain</a></li>
                 <li class="{{ Route::is('scribes.titles') ? 'active' : null }}"><a href="{{ route('scribes.titles') }}">Titles</a></li>
             </ul>
         </div>

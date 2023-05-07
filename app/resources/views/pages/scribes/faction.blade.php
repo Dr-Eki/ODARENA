@@ -21,9 +21,6 @@
                     <a href="#resources">Resources</a> |
                     <a href="#buildings">Buildings</a> |
                     <a href="#improvements">Improvements</a> |
-                    @if($raceHelper->hasLandImprovements($race))
-                        <a href="#land_improvements">Land Perks</a> |
-                    @endif
                     <a href="#spells">Spells</a> |
                     <a href="#sabotage">Sabotage</a> |
                     <a href="#terrains">Terrains</a>
@@ -309,19 +306,16 @@
                       <table class="table table-striped">
                           <colgroup>
                               <col width="200">
-                              <col width="100">
                           </colgroup>
                           <thead>
                               <tr>
                                   <th>Building</th>
-                                  <th>Land Type</th>
                                   <th>Perks</th>
                               </tr>
                           </thead>
                           @foreach ($buildings as $building)
                               <tr>
                                   <td>{{ $building->name }}</td>
-                                  <td>{{ ucwords($building->land_type) }}</td>
                                   <td>{!! $buildingHelper->getBuildingDescription($building) !!}</td>
                               </tr>
                           @endforeach
@@ -333,58 +327,6 @@
         </div>
     </div>
 </div>
-
-@if($raceHelper->hasLandImprovements($race))
-<a id="land_improvements"></a>
-<div class="row">
-    <div class="col-sm-12 col-md-12">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Land Perks</h3>
-            </div>
-
-            <div class="box-body table-responsive">
-                <div class="row">
-                    <div class="col-md-12">
-                      <table class="table table-striped">
-                          <colgroup>
-                              <col width="200">
-                              <col>
-                          </colgroup>
-                          <thead>
-                              <tr>
-                                  <th>Land Type</th>
-                                  <th>Perks</th>
-                              </tr>
-                          </thead>
-                          @foreach ($landHelper->getLandTypes() as $landType)
-                              <tr>
-                                  <td>
-                                      {!! $landHelper->getLandTypeIconHtml($landType) !!}&nbsp;{{ ucwords($landType) }}
-                                  </td>
-                                  <td>
-                                      <ul>
-                                      @if(isset($race->land_improvements[$landType]))
-                                          @foreach($race->land_improvements[$landType] as $perk => $value)
-                                              <li>
-                                              {!! $LandImprovementHelper->getPerkDescription($perk, $value) !!}
-                                              </li>
-                                          @endforeach
-                                      @else
-                                          &mdash;
-                                      @endif
-                                      </ul>
-                                  </td>
-                              </tr>
-                          @endforeach
-                      </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
 
 <a id="improvements"></a>
 <div class="row">

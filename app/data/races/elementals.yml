@@ -2,6 +2,7 @@ name: Elementals
 alignment: good
 description:
 home_land_type: water
+home_terrain: water
 experimental: 1
 skill_level: 1
 

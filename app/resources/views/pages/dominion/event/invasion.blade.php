@@ -1013,7 +1013,7 @@
                             </colgroup>
                             <thead>
                                 <tr>
-                                    <th>Landtype</th>
+                                    <th>Terrain</th>
                                     <th>
                                         @if ($event->target->realm->id === $selectedDominion->realm->id)
                                             Lost
@@ -1039,34 +1039,30 @@
                                         @php
                                             $terrainKey = str_replace('terrain_', '', $terrainKey);
                                             $terrain = OpenDominion\Models\Terrain::where('key', $terrainKey)->first();
+
+                                            $conqueredAmount = abs($event->data['attacker']['terrain_conquered']['available'][$terrainKey] ?? 0);
+                                            $conqueredAmount += abs($event->data['attacker']['terrain_conquered']['queued'][$terrainKey] ?? 0);
+
+                                            $discoveredAmount = abs($event->data['attacker']['terrain_discovered'][$terrainKey] ?? 0);
                                         @endphp
                                         <tr>
                                             <td>{{ $terrain->name }}</td>
-                                            <td>
-                                                @if(isset($event->data['attacker']['terrain_conquered'][$terrainKey]))
-                                                    {{ number_format($event->data['attacker']['terrain_conquered'][$terrainKey]) }}
-                                                @else
-                                                    &mdash;
-                                                @endif
-                                            </td>
+                                            <td>{!! $conqueredAmount ? $conqueredAmount : '&mdash;' !!}</td>
                                             @if ($event->source->realm->id === $selectedDominion->realm->id)
-                                                <td>
-                                                    @if(isset($event->data['attacker']['terrain_discovered'][$terrainKey]))
-                                                        {{ number_format($event->data['attacker']['terrain_discovered'][$terrainKey]) }}
-                                                    @else
-                                                        &mdash;
-                                                    @endif
-                                                </td>
-                                            @else
-                                                <td></td>
+                                                <td>{!! $discoveredAmount ? $discoveredAmount : '&mdash;' !!}</td>
                                             @endif
                                         </tr>
                                     @endforeach
-
+                                    <tr>
+                                        <td><strong>Total</strong></td>
+                                        <td><strong>{{ number_format($event->data['attacker']['land_conquered']) }}</strong></td>
+                                        @if ($event->source->realm->id === $selectedDominion->realm->id)
+                                            <td><strong>{{ number_format($event->data['attacker']['land_discovered']) }}</strong></td>
+                                        @endif
+                                    </tr>
                                 @endif
                             </tbody>
                         </table>
-
 
                         <table class="table">
                             <div class="text-center">
@@ -1084,14 +1080,14 @@
                                 <col width="50%">
                             </colgroup>
                             <tbody>
-                                @if(isset($event->data['defender']['buildings_lost']))
-                                    @foreach($event->data['defender']['buildings_lost'] as $buildingKey => $amount)
+                                @if(isset($event->data['defender']['buildings_lost_total']))
+                                    @foreach($event->data['defender']['buildings_lost_total'] as $buildingKey => $amount)
                                         @php
                                             $building = OpenDominion\Models\Building::where('key', $buildingKey)->first();
                                         @endphp
                                     <tr>
                                         <td>{{ $building->name }}</td>
-                                        <td>{{ number_format($destroyed )}}</td>
+                                        <td>{{ number_format($amount )}}</td>
                                     </tr>
                                     @endforeach
                                 @else
@@ -1120,9 +1116,7 @@
                         <div class="col-sm-4">
                             <div class="pull-right">
                                 <small class="text-muted">
-                                    Invasion recorded at
-                                    {{ $event->created_at }}, tick
-                                    {{ number_format($event->tick) }}.
+                                    Invasion recorded at tick {{ number_format($event->tick) }}, {{ ($selectedDominion->round->ticks - $event->tick) }} ticks ago.
                                 </small>
                             </div>
                         </div>

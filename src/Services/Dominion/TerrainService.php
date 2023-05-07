@@ -83,6 +83,7 @@ class TerrainService
     public function auditAndRepairTerrain(Dominion $dominion): void
     {
         $unterrainedLand = $this->terrainCalculator->getUnterrainedLand($dominion);
+        $terrainedLand = $this->terrainCalculator->getTotalTerrainedAmount($dominion);
         if($unterrainedLand == 0)
         {
             return;
@@ -123,7 +124,7 @@ class TerrainService
             }
         }
 
-        if(($unterrainedLand - $totalTerrainBeingRezoned) > 0)
+        if(($unterrainedLand - $totalTerrainBeingRezoned) > 0 and $terrainedLand > 0)
         {
             /* Calculate how much terrain should be added (absolute value of $unterrainedLand)
             *   proportional to how much of that terrain is owned.
@@ -133,7 +134,7 @@ class TerrainService
 
             foreach($dominion->terrains as $terrain)
             {
-                $terrainRatio = $terrain->amount / $this->terrainCalculator->getTotalTerrainedAmount($dominion);
+                $terrainRatio = $terrain->amount / $terrainedLand;
                 $amountToAdd = round($totalTerrainToAdd * $terrainRatio);
 
                 if($totalTerrainToAdd <= 0)

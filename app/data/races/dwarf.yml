@@ -2,6 +2,7 @@ name: Dwarf
 alignment: good
 description:
 home_land_type: mountain
+home_terrain: mountains
 playable: 0 # Replaced with Dwarg
 skill_level: 1
 

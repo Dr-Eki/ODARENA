@@ -281,6 +281,7 @@ $router->group(['prefix' => 'scribes', 'as' => 'scribes.'], static function (Rou
     $router->get('resources')->uses('ScribesController@getResources')->name('resources');
     $router->get('sabotage')->uses('ScribesController@getSabotage')->name('sabotage');
     $router->get('spells')->uses('ScribesController@getSpells')->name('spells');
+    $router->get('terrain')->uses('ScribesController@getTerrain')->name('terrain');
     $router->get('titles')->uses('ScribesController@getTitles')->name('titles');
 
     $router->get('quickstarts')->uses('ScribesController@getQuickstarts')->name('quickstarts');

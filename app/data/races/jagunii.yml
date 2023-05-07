@@ -2,6 +2,7 @@ name: Jagunii
 alignment: good
 description:
 home_land_type: hill
+home_terrain: desert
 playable: 0 # Round 88
 skill_level: 2
 

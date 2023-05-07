@@ -126,13 +126,7 @@ class DominionFactory
 
         $startingBuildings = $this->getStartingBuildings($race, $landBase);
 
-        $startingLand = $this->getStartingLand(
-            $race,
-            $this->getStartingBarrenLand($race, $landBase),
-            $startingBuildings
-        );
-
-        $startingTerrain = $this->getStartingTerrain($race, $startingBuildings);
+        $startingTerrain = $this->getStartingTerrain($race, $landBase);
 
         # Late-joiner bonus:
         # Give +1.5% starting resources per hour late, max +150% (at 100 hours, mid-day 4).
@@ -150,7 +144,6 @@ class DominionFactory
         $startingParameters['wizards'] = 0;
         $startingParameters['archmages'] = 0;
         $startingResources['food'] = 0;
-
 
         if($race->name !== 'Barbarian')
         {
@@ -238,21 +231,12 @@ class DominionFactory
         }
 
         $startingParameters['xp'] = $startingParameters['prestige'];
+        $startingParameters['land'] = $landBase;
 
-        # Starting land
-        $startingLand = $this->getStartingLand(
-            $race,
-            $this->getStartingBarrenLand($race, $landBase),
-            $startingBuildings
-        );
 
         # Peasants
         $housingPerBarren = 5;
         $housingPerBarren += $race->getPerkValue('extra_barren_housing');
-        foreach($startingLand as $landType => $amount)
-        {
-            $housingPerBarren += $race->getPerkValue('extra_barren_' . $landType . '_max_population');
-        }
 
         $popBonus = 1;
         $popBonus += $race->getPerkMultiplier('max_population');
@@ -296,17 +280,6 @@ class DominionFactory
             'spy_strength' => 100,
             'wizard_strength' => 100,
 
-            'resource_gold' => 0,
-            'resource_food' => 0,
-            'resource_lumber' => 0,
-            'resource_mana' => 0,
-            'resource_ore' => 0,
-            'resource_gems' => 0,
-            'resource_champion' => 0,
-            'resource_soul' => 0,
-            'resource_blood' => 0,
-            'resource_tech' => 0,
-
             'military_draftees' => $startingParameters['draftees'],
             'military_unit1' => $startingParameters['unit1'] ?? 0,
             'military_unit2' => $startingParameters['unit2'] ?? 0,
@@ -318,18 +291,18 @@ class DominionFactory
             'military_unit8' => $startingParameters['unit8'] ?? 0,
             'military_unit9' => $startingParameters['unit9'] ?? 0,
             'military_unit10' => $startingParameters['unit10'] ?? 0,
-            'military_spies' => $startingParameters['spies'],
-            'military_wizards' => $startingParameters['wizards'],
-            'military_archmages' => $startingParameters['archmages'],
+            'military_spies' => $startingParameters['spies'] ?? 0,
+            'military_wizards' => $startingParameters['wizards'] ?? 0,
+            'military_archmages' => $startingParameters['archmages'] ?? 0,
 
-            'land' => array_sum($startingLand),
-            'land_plain' => $startingLand['plain'],
-            'land_mountain' => $startingLand['mountain'],
-            'land_swamp' => $startingLand['swamp'],
-            'land_cavern' => $startingLand['cavern'],
-            'land_forest' => $startingLand['forest'],
-            'land_hill' => $startingLand['hill'],
-            'land_water' => $startingLand['water'],
+            'land' => $startingParameters['land'],
+            'land_plain' => 0,
+            'land_mountain' => 0,
+            'land_swamp' => 0,
+            'land_cavern' => 0,
+            'land_forest' => 0,
+            'land_hill' =>  0,
+            'land_water' => 0,
 
             'npc_modifier' => $startingParameters['npc_modifier'],
 
@@ -476,149 +449,6 @@ class DominionFactory
     }
 
     /**
-     * Get amount of barren land a new Dominion starts with.
-     *
-     * @return array
-     */
-    protected function getStartingBarrenLand($race, $landBase): array
-    {
-        # Change this to just look at home land type?
-        # Special treatment for Void, Growth, Myconid, Glimjir, and Swarm
-        if($race->name == 'Void')
-        {
-          return [
-              'plain' => 100,
-              'mountain' => 500,
-              'swamp' => 200,
-              'cavern' => 0,
-              'forest' => 0,
-              'hill' => 200,
-              'water' => 0,
-          ];
-        }
-        elseif($race->name == 'Growth')
-        {
-          return [
-              'plain' => 0,
-              'mountain' => 0,
-              'swamp' => 0,
-              'cavern' => 0,
-              'forest' => 0,
-              'hill' => 0,
-              'water' => 0,
-          ];
-        }
-        elseif($race->name == 'Dragon')
-        {
-          return [
-              'plain' => 0,
-              'mountain' => $landBase,
-              'swamp' => 0,
-              'cavern' => 0,
-              'forest' => 0,
-              'hill' => 0,
-              'water' => 0,
-          ];
-        }
-        elseif($race->name == 'Myconid')
-        {
-          return [
-              'plain' => 0,
-              'mountain' => 0,
-              'swamp' => 0,
-              'cavern' => 0,
-              'forest' => 0,
-              'hill' => 0,
-              'water' => 0,
-          ];
-        }
-        elseif($race->name == 'Glimjir')
-        {
-          return [
-              'plain' => 0,
-              'mountain' => 0,
-              'swamp' => 0,
-              'cavern' => 0,
-              'forest' => 0,
-              'hill' => 0,
-              'water' => $landBase,
-          ];
-        }
-        elseif($race->name == 'Icekin')
-        {
-          return [
-              'plain' => 0,
-              'mountain' => $landBase,
-              'swamp' => 0,
-              'cavern' => 0,
-              'forest' => 0,
-              'hill' => 0,
-              'water' => 0,
-          ];
-        }
-        elseif($race->name == 'Sylvan' or $race->name == 'Wood Elf')
-        {
-          return [
-              'plain' => 0,
-              'mountain' => 0,
-              'swamp' => 0,
-              'cavern' => 0,
-              'forest' => $landBase,
-              'hill' => 0,
-              'water' => 0,
-          ];
-        }
-        elseif($race->name == 'Elementals')
-        {
-          return [
-              'plain' => 170,
-              'mountain' => 166,
-              'swamp' => 166,
-              'cavern' => 0,
-              'forest' => 166,
-              'hill' => 166,
-              'water' => 166,
-          ];
-        }
-        elseif($race->name == 'Kerranad')
-        {
-          return [
-              'plain' => 0,
-              'mountain' => 0,
-              'swamp' => 0,
-              'cavern' => 0,
-              'forest' => 0,
-              'hill' => 0,
-              'water' => 0,
-          ];
-        }
-        elseif($race->name == 'Barbarian')
-        {
-          return [
-              'plain' => 10,
-              'mountain' => 10,
-              'swamp' => 10,
-              'cavern' => 0,
-              'forest' => 10,
-              'hill' => 10,
-              'water' => 10,
-          ];
-        }
-        else
-        {
-            return [
-                'plain' => 175,
-                'mountain' => 175,
-                'swamp' => 175,
-                'cavern' => 0,
-                'forest' => 175,
-                'hill' => 150,
-                'water' => 150,
-            ];
-        }
-    }
-
-    /**
      * Get amount of buildings a new Dominion starts with.
      *
      * @return array
@@ -626,25 +456,7 @@ class DominionFactory
     protected function getStartingBuildings($race, $landBase): array
     {
         # Default
-        $startingBuildings = [
-            'farm' => 0,
-            'smithy' => 0,
-            'residence' => 0,
-            'lumberyard' => 0,
-            'constabulary' => 0,
-            'ore_mine' => 0,
-            'gem_mine' => 0,
-            'barracks' => 0,
-            'tower' => 0,
-            'wizard_guild' => 0,
-            'temple' => 0,
-            'dock' => 0,
-            'cabin' => 0,
-
-            'tissue_swamp' => 0,
-            'mycelia' => 0,
-            'ziggurat' => 0,
-        ];
+        $startingBuildings = [];
 
         if($race->name == 'Kerranad')
         {
@@ -685,67 +497,9 @@ class DominionFactory
         return $startingBuildings;
     }
 
-    /**
-     * Get amount of total starting land a new Dominion starts with, factoring
-     * in both buildings and barren land.
-     *
-     * @param Race $race
-     * @param array $startingBarrenLand
-     * @param array $startingBuildings
-     * @return array
-     */
-    protected function getStartingLand(Race $race, array $startingBarrenLand, array $startingBuildings): array
+    public function getStartingTerrain(Race $race, int $landBase): array
     {
-        $startingLand = [];
-
-        if($race->name == 'Barbarian')
-        {
-            $startingLand = [
-                'plain' => $startingBarrenLand['plain'] + $startingBuildings['farm'] + $startingBuildings['smithy'] + $startingBuildings['residence'],
-                'mountain' => $startingBarrenLand['mountain'] + $startingBuildings['ore_mine'] + $startingBuildings['gem_mine'],
-                'swamp' => $startingBarrenLand['swamp'] + $startingBuildings['tower'] + $startingBuildings['wizard_guild'] + $startingBuildings['temple'] + $startingBuildings['tissue_swamp'],
-                'cavern' => 0,
-                'forest' => $startingBarrenLand['forest'] + $startingBuildings['lumberyard'] + $startingBuildings['mycelia'],
-                'hill' => $startingBarrenLand['hill'] + $startingBuildings['barracks'] + $startingBuildings['constabulary'],
-                'water' => $startingBarrenLand['water'] + $startingBuildings['dock'],
-            ];
-    
-            $startingLand[$race->home_land_type] += $startingBuildings['cabin'];    
-        }
-        else
-        {
-            $startingLand['cavern'] = 0;
-            # Loop through each land type
-            foreach($this->landHelper->getLandTypes() as $landType)
-            {
-                $startingLand[$landType] = $race->home_land_type == $landType ? 1000 : 0;
-            }
-
-        }
-
-        return $startingLand;
-    }
-
-    public function getStartingTerrain(Race $race, array $startingBuildings): array
-    {
-        $startingTerrain = [];
-
-        $landUsed = 0;
-
-        foreach(Terrain::all() as $terrain)
-        {
-            $startingTerrain[$terrain->key] = 0;
-        }
-
-        foreach($startingBuildings as $building => $amount)
-        {
-            $building = Building::where('key', $building)->first();
-            $buildingTerrain = $building->terrain;
-            $startingTerrain[$terrain->key] += $amount;
-            $landUsed += $amount;
-        }
-
-        $startingTerrain[$race->homeTerrain()->key] += (1000 - $landUsed);
+        $startingTerrain[$race->homeTerrain()->key] = $landBase;
 
         return $startingTerrain;
     }
@@ -811,13 +565,14 @@ class DominionFactory
             'military_wizards' => $quickstart->units['wizards'],
             'military_archmages' => $quickstart->units['archmages'],
 
-            'land_plain' => isset($quickstart->land['plain']) ? $quickstart->land['plain'] : 0,
-            'land_mountain' => isset($quickstart->land['mountain']) ? $quickstart->land['mountain'] : 0,
-            'land_swamp' => isset($quickstart->land['swamp']) ? $quickstart->land['swamp'] : 0,
+            'land_plain' => $quickstart->land,
+            'land_plain' => 0,
+            'land_mountain' => 0,
+            'land_swamp' => 0,
             'land_cavern' => 0,
-            'land_forest' => isset($quickstart->land['forest']) ? $quickstart->land['forest'] : 0,
-            'land_hill' => isset($quickstart->land['hill']) ? $quickstart->land['hill'] : 0,
-            'land_water' => isset($quickstart->land['water']) ? $quickstart->land['water'] : 0,
+            'land_forest' => 0,
+            'land_hill' => 0,
+            'land_water' => 0,
 
             'npc_modifier' => 0,
             'protection_ticks' => $quickstart->protection_ticks,

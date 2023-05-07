@@ -6,6 +6,7 @@ description: >-
   <hr />
   <p>This is the Second Legion, consisting of subjugates of Demon, Lycanthrope, and and Icekin origin. The Reanimated can only be obtained through conversion. Unlike the First Legion, this one can train Spies and Wizards.</p>
 home_land_type: hill
+home_terrain: hills
 playable: 0 # Concept removed, Legion changed
 skill_level: 2
 

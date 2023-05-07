@@ -2,6 +2,7 @@ name: Nox
 alignment: evil
 description:
 home_land_type: swamp
+home_terrain: swamp
 playable: 0 # Round 88
 skill_level: 2
 

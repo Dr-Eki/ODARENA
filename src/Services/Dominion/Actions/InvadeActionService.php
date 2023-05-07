@@ -518,7 +518,7 @@ class InvadeActionService
             $this->handleMoraleChanges($attacker, $defender, $landRatio, $units);
             $this->handleLandGrabs($attacker, $target, $landRatio);
             $this->handleDeathmatchGovernorshipChanges($attacker, $defender);
-            $this->handleResearchPoints($attacker, $defender, $units);
+            $this->handleXp($attacker, $defender, $units);
 
             # Dwarg
             $this->handleStun($attacker, $defender, $units, $landRatio);
@@ -961,6 +961,9 @@ class InvadeActionService
             $defenderPrestigeChange = 0;
         }
 
+        $attackerPrestigeChange = intval($attackerPrestigeChange);
+        $defenderPrestigeChange = intval($defenderPrestigeChange);
+
         if ($attackerPrestigeChange !== 0)
         {
             if (!$this->invasion['result']['success'])
@@ -1248,13 +1251,11 @@ class InvadeActionService
         $extraLandDiscovered = $this->militaryCalculator->getExtraLandDiscovered($attacker, $target, $discoverLand, $landConquered);
 
 
-        $this->invasion['defender']['land_lost'] = $landConquered;
+        $this->invasion['defender']['land_lost'] = intval($landConquered);
         $this->invasion['defender']['terrain_lost'] = $this->terrainCalculator->getTerrainLost($target, $landConquered);
         $this->invasion['defender']['buildings_lost'] = $this->buildingCalculator->getBuildingsLost($target, $landConquered);
 
-        $this->invasion['attacker']['land_conquered'] = $this->invasion['defender']['land_lost'];
-        $this->invasion['attacker']['land_discovered'] = $this->invasion['defender']['land_lost'];
-        $this->invasion['attacker']['extra_land_discovered'] = $extraLandDiscovered;
+        $this->invasion['attacker']['land_conquered'] = intval($this->invasion['defender']['land_lost']);
         $this->invasion['attacker']['terrain_conquered'] = $this->invasion['defender']['terrain_lost'];
 
         # Remove land
@@ -1302,12 +1303,12 @@ class InvadeActionService
             {
                 $landDiscovered /= 3;
             }
-            $landDiscovered = floor($landDiscovered);
+            $landDiscovered = intval(floor($landDiscovered));
 
             $this->invasion['attacker']['land_discovered'] = $landDiscovered;
             $this->invasion['attacker']['terrain_discovered'] = $this->terrainCalculator->getTerrainDiscovered($attacker, $landDiscovered);
 
-            $this->invasion['attacker']['extra_land_discovered'] = $extraLandDiscovered;
+            $this->invasion['attacker']['extra_land_discovered'] = intval($extraLandDiscovered);
         }
 
         $this->landLost = $landConquered;
@@ -1332,7 +1333,7 @@ class InvadeActionService
 
         foreach($summedQueueData as $terrainKey => $amount)
         {
-            $queueData[('terrain_' . $terrainKey)] = $amount;
+            $queueData[('terrain_' . $terrainKey)] = abs($amount);
         }
 
         $this->queueService->queueResources(
@@ -1341,12 +1342,19 @@ class InvadeActionService
             $queueData
         );
 
-        # 
-        $mergedBuildingsArrays = array_merge_recursive($this->invasion['defender']['buildings_lost']['available'], $this->invasion['attacker']['buildings_lost']['queued']);
+        $this->queueService->queueResources(
+            'invasion',
+            $attacker,
+            ['land' => ($this->invasion['attacker']['land_conquered'] + $this->invasion['attacker']['land_discovered'] + $this->invasion['attacker']['extra_land_discovered'])]
+        );
+
+        # Populate buildings_lost_total
+
+        $mergedBuildingsArrays = array_merge_recursive($this->invasion['defender']['buildings_lost']['available'], $this->invasion['defender']['buildings_lost']['queued']);
 
         $buildingsLostTotal = [];
 
-        foreach ($mergedArrays as $terrainKey => $terrainValues) {
+        foreach ($mergedBuildingsArrays as $terrainKey => $terrainValues) {
             if (is_array($terrainValues)) {
                 $buildingsLostTotal[$terrainKey] = array_sum($terrainValues);
             } else {
@@ -1474,6 +1482,10 @@ class InvadeActionService
         {
             $defenderMoraleChange = 0;
         }
+        
+        # Round
+        $attackerMoraleChange = intval(round($attackerMoraleChange));
+        $defenderMoraleChange = intval(round($defenderMoraleChange));
 
         # Change attacker morale.
 
@@ -1487,7 +1499,7 @@ class InvadeActionService
 
         if($attackerMoraleChange > 0 and $attacker->isProtector())
         {
-            $attacker->protectedDominion->morale += round($attackerMoraleChange / 4);
+            $attacker->protectedDominion->morale += intval(round($attackerMoraleChange / 4));
         }
 
         # Change defender morale.
@@ -1495,7 +1507,7 @@ class InvadeActionService
         // Make sure it doesn't go below 0.
         if(($defender->morale + $defenderMoraleChange) < 0)
         {
-            $defenderMoraleChange = ($defender->morale * -1);
+            $defenderMoraleChange = intval($defender->morale * -1);
         }
 
         $defender->morale += $defenderMoraleChange;
@@ -1504,10 +1516,6 @@ class InvadeActionService
         {
             $defender->protectedDominion->morale += $defenderMoraleChange;
         }
-        
-        # Round
-        $attackerMoraleChange = round($attackerMoraleChange);
-        $defenderMoraleChange = round($defenderMoraleChange);
 
         $this->invasion['attacker']['morale_change'] = $attackerMoraleChange;
         $this->invasion['defender']['morale_change'] = $defenderMoraleChange;
@@ -1520,7 +1528,7 @@ class InvadeActionService
      * @param Dominion $attacker
      * @param array $units
      */
-    protected function handleResearchPoints(Dominion $attacker, Dominion $defender, array $units): void
+    protected function handleXp(Dominion $attacker, Dominion $defender, array $units): void
     {
         $researchPointsPerAcre = 60;
 
@@ -1556,6 +1564,8 @@ class InvadeActionService
 
             $researchPointsGained = $landConquered * $researchPointsPerAcre * $researchPointsPerAcreMultiplier;
             $researchPointsGained += $landDiscovered * $researchPointsPerAcre * $researchPointsForGeneratedAcresMultiplier;
+
+            $researchPointsGained = intval($researchPointsGained);
 
             $slowestTroopsReturnHours = $this->getSlowestUnitReturnHours($attacker, $units);
 

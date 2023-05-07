@@ -2,6 +2,7 @@ name: Myconid
 alignment: independent
 description: >-
 home_land_type: forest
+home_terrain: forest
 playable: 0 # Round 88
 skill_level: 3
 minimum_rounds_played: 2

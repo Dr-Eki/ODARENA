@@ -4,6 +4,7 @@ description: >-
   <p>Gunpowder is required for Field Cannons and Arquebusiers to fire on defense. Only units for which there is enough gunpowder are able to defend. Gunpowder is distributed to Arquebusiers first and Field Cannons second. No gunpowder is spent if the invading dominion is overwhelmed.</p>
   <p>With their spell, Cires can achieve unit training cost reduction greater than 50%.</p>
 home_land_type: plain
+home_terrain: plains
 skill_level: 1
 playable: 0 # Round 88
 experimental: 1

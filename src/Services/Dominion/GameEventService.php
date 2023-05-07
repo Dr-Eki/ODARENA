@@ -116,7 +116,7 @@ class GameEventService
 
         if($invasion->data['result']['success'])
         {
-            $invasionSummary .= ' The attacker conquered ' . array_sum($invasion->data['attacker']['land_conquered']) . ' acres of land from the defender.';
+            $invasionSummary .= ' The attacker conquered ' . $invasion->data['attacker']['land_conquered'] . ' acres of land from the defender.';
         }
 
         if($data['attacker']['fogged'])

@@ -2,6 +2,9 @@
 
 namespace OpenDominion\Calculators\Dominion;
 
+use Log;
+use OpenDominion\Exceptions\GameException;
+
 use OpenDominion\Helpers\TerrainHelper;
 
 use OpenDominion\Models\Dominion;
@@ -57,15 +60,29 @@ class TerrainCalculator
         $totalTerrainedLand = $this->getTotalTerrainedAmount($dominion);
     
         if ($totalTerrainedLand > 0) {
-            foreach ($dominion->terrains as $terrainKey => $terrain) {
-                $terrainLost['available'][$terrainKey] = intval(round(negative($landLost * ($terrain->pivot->amount / $totalTerrainedLand))));
+            foreach ($dominion->terrains as $dominionTerrain)
+            {
+                $terrainLost['available'][$dominionTerrain->key] = intval(round(negative($landLost * ($dominionTerrain->pivot->amount / $totalTerrainedLand))));
             }
         }
     
-        if (array_sum($terrainLost['available']) < $landLost)
+        if (abs(array_sum($terrainLost['available'])) < $landLost)
         {
             $terrainLost['queued'] = array_fill_keys(Terrain::pluck('key')->toArray(), 0);
             $rezoningQueueTotal = $this->queueService->getRezoningQueueTotal($dominion);
+
+            if($rezoningQueueTotal <= 0)
+            {
+                Log::error('Rezoning queue total is 0 or less, but terrain left to lose after taking from available is greater than 0. This should not happen.');
+                Log::error('Dominion: ' . $dominion->id . ' (' . $dominion->name . ')');
+                Log::error('Land lost: ' . $landLost);
+                Log::error('Total terrained land: ' . $totalTerrainedLand);
+                Log::error('Terrain lost: ' . print_r($terrainLost, true));
+                Log::error('Rezoning queue total: ' . $rezoningQueueTotal);
+                Log::error('Rezoning queue: ' . print_r($this->queueService->getRezoningQueue($dominion), true));
+
+                throw new GameException('An error occurred while calculating terrain lost. Please try again.');
+            }
     
             $terrainLeftToLose = $landLost - array_sum($terrainLost['available']);
     

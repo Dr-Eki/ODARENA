@@ -2,6 +2,7 @@ name: Gnome
 alignment: good
 description:
 home_land_type: mountain
+home_terrain: mountains
 playable: 0 # Round 88
 skill_level: 2
 
