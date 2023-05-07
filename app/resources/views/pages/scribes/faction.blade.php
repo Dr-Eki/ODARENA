@@ -161,7 +161,7 @@
                                 <td>
                                     <span data-toggle="tooltip" data-placement="top" title="">Home terrain:</span>
                                 </td>
-                                <td></td>
+                                <td>{{ $race->homeTerrain()->name }}</td>
                             @if($race->max_per_round)
                             <tr>
                                 <td>
