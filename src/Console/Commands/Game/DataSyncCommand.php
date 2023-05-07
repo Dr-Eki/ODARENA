@@ -382,18 +382,26 @@ class DataSyncCommand extends Command implements CommandInterface
                 $terrain = Terrain::where('key', $terrainKey)->first();
                 $raceTerrain = RaceTerrain::where('race_id', $race->id)->where('terrain_id', $terrain->id)->first();
 
-                foreach($terrainPerks as $terrainPerkKey => $terrainPerkValue)
+                if(!$raceTerrain)
                 {
-                    $terrainPerkValue = (float)$terrainPerkValue;
+                    $this->warn('Race terrain not synced yet. Run command again.');
+                }
+                else
+                {
+                    foreach($terrainPerks as $terrainPerkKey => $terrainPerkValue)
+                    {
+                        $terrainPerkValue = (float)$terrainPerkValue;
+    
+                        $raceTerrainPerkType = RaceTerrainPerkType::firstOrCreate(['key' => $terrainPerkKey]);
+    
+                        $raceTerrainPerk = RaceTerrainPerk::updateOrCreate(['race_terrain_id' => $raceTerrain->id, 'race_terrain_perk_type_id' => $raceTerrainPerkType->id],
+                        [
+                            'value' => $terrainPerkValue
+                        ]);
+    
+                        $terrainPerksToSync[] = $raceTerrainPerk->id;
+                    }
 
-                    $raceTerrainPerkType = RaceTerrainPerkType::firstOrCreate(['key' => $terrainPerkKey]);
-
-                    $raceTerrainPerk = RaceTerrainPerk::updateOrCreate(['race_terrain_id' => $raceTerrain->id, 'race_terrain_perk_type_id' => $raceTerrainPerkType->id],
-                    [
-                        'value' => $terrainPerkValue
-                    ]);
-
-                    $terrainPerksToSync[] = $raceTerrainPerk->id;
                 }
             }
 
