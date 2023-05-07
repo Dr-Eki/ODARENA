@@ -4,6 +4,7 @@ namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
 use OpenDominion\Calculators\Dominion\Actions\ConstructionCalculator;
+use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\BuildingHelper;
@@ -25,6 +26,7 @@ class BuildActionService
     use DominionGuardsTrait;
 
     protected $buildingHelper;
+    protected $buildingCalculator;
     protected $constructionCalculator;
     protected $landCalculator;
     protected $landHelper;
@@ -40,6 +42,7 @@ class BuildActionService
     public function __construct()
     {
         $this->buildingHelper = app(BuildingHelper::class);
+        $this->buildingCalculator = app(BuildingCalculator::class);
         $this->constructionCalculator = app(ConstructionCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
         $this->landHelper = app(LandHelper::class);
@@ -116,10 +119,21 @@ class BuildActionService
             {
                 throw new GameException('Construction was not completed due to bad input.');
             }
-
             $buildingKey = str_replace('building_', '', $buildingKey);
 
             $building = Building::where('key', $buildingKey)->first();
+
+            if($this->buildingCalculator->buildingHasCapacityLimit($building))
+            {
+                $buildingCapacityLimit = $this->buildingCalculator->getBuildingCapacityLimit($dominion, $building);
+                $availableCapacityForBuilding = $this->buildingCalculator->getAvailableCapacityForBuilding($dominion, $building);
+
+                if($amount > $availableCapacityForBuilding)
+                {
+                    throw new GameException('You do not have enough capacity to build ' . $amount . ' ' . $building->name . ' (you have ' . $availableCapacityForBuilding . ' available capacity out of ' . $buildingCapacityLimit . ').');
+                }
+            }
+
 
             if (!$building->enabled)
             {

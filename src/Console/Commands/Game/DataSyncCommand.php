@@ -528,7 +528,7 @@ class DataSyncCommand extends Command implements CommandInterface
             }
             else
             {
-                $this->error("Terrain not set for building {$buildingData->name}");
+                #$this->error("Terrain not set for building {$buildingData->name}");
                 $terrainId = null;
             }
 
@@ -543,7 +543,6 @@ class DataSyncCommand extends Command implements CommandInterface
                     'enabled' => (int)object_get($buildingData, 'enabled', 1),
                     'terrain_id' => $terrainId,
                 ]);
-
 
             if (!$building->exists) {
                 $this->info("Adding building {$buildingData->name}");

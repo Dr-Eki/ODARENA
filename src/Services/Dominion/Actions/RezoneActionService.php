@@ -8,6 +8,7 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Terrain;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\StatsService;
 use OpenDominion\Traits\DominionGuardsTrait;
@@ -102,121 +103,31 @@ class RezoneActionService
                 $add[$key] -= $sub;
             }
 
-
             // Filter out empties.
             $remove = array_filter($remove);
             $add = array_filter($add);
 
             $totalLand = array_sum($remove);
 
-            if (($totalLand <= 0) || $totalLand !== array_sum($add)) {
-                throw new GameException('Re-zoning was not completed due to bad input.');
-            }
-
-            // Check if the requested amount of land is barren.
-            foreach ($remove as $landType => $landToRemove) {
-
-                if($landToRemove < 0) {
-                    throw new GameException('Re-zoning was not completed due to bad input.');
-                }
-
-                $landAvailable = $this->landCalculator->getTotalBarrenLandByLandType($dominion, $landType);
-                if ($landToRemove > $landAvailable) {
-                    throw new GameException('You do not have enough barren land to re-zone ' . $landToRemove . ' ' . str_plural($landType, $landAvailable));
-                }
-            }
-
-            $cost = $totalLand * $this->rezoningCalculator->getRezoningCost($dominion);
-            $resource = $this->rezoningCalculator->getRezoningMaterial($dominion);
-
-            if($cost > $this->resourceCalculator->getAmount($dominion,$resource))
+            if (($totalLand <= 0) or $totalLand !== array_sum($add) or $totalLand > $dominion->land or array_sum($remove) > $dominion->land or array_sum($add) > $dominion->land)
             {
-                throw new GameException("You do not have enough $resource to re-zone {$totalLand} acres of land.");
-            }
-
-            # All fine, perform changes.
-            $this->resourceService->updateResources($dominion, [$resource => $cost*-1]);
-
-            # Update spending statistics.
-            $this->statsService->updateStat($dominion, ($resource . '_rezoning'), $cost);
-            DB::transaction(function () use ($dominion, $remove, $add)
-            {
-                foreach ($remove as $landType => $amount) {
-                    $dominion->{'land_' . $landType} -= $amount;
-                }
-                foreach ($add as $landType => $amount) {
-                    $dominion->{'land_' . $landType} += $amount;
-                }
-
-            });
-
-        $dominion->save(['event' => HistoryService::EVENT_ACTION_REZONE]);
-
-        return [
-            'message' => sprintf(
-                'Your land has been re-zoned at a cost of %1$s %2$s.',
-                number_format($cost),
-                $resource
-            ),
-            'data' => [
-                'cost' => $cost,
-                'resource' => $resource,
-            ]
-        ];
-    }
-
-    /**
-     * Does a rezone action for a Dominion.
-     *
-     * @param Dominion $dominion
-     * @param array $remove Land to remove
-     * @param array $add Land to add.
-     * @return array
-     * @throws GameException
-     */
-    public function rezoneTerrain(Dominion $dominion, array $remove, array $add): array
-    {
-        
-            $this->guardLockedDominion($dominion);
-            $this->guardActionsDuringTick($dominion);
-
-            if(!$dominion->round->getSetting('rezoning'))
-            {
-                throw new GameException('Rezoning is disabled this round.');
-            }
-
-            // Qur: Statis
-            if($dominion->getSpellPerkValue('stasis'))
-            {
-                throw new GameException('You cannot rezone land while you are in stasis.');
-            }
-
-            if ($dominion->race->getPerkValue('cannot_rezone'))
-            {
-                throw new GameException($dominion->race->name . ' cannot rezone land.');
-            }
-
-            // Level out rezoning going to the same type.
-            foreach (array_intersect_key($remove, $add) as $key => $value) {
-                $sub = min($value, $add[$key]);
-                $remove[$key] -= $sub;
-                $add[$key] -= $sub;
-            }
-
-            // Filter out empties.
-            $remove = array_filter($remove);
-            $add = array_filter($add);
-
-            $totalLand = array_sum($remove);
-
-            if (($totalLand <= 0) || $totalLand !== array_sum($add)) {
                 throw new GameException('Rezoning was not started due to bad input.');
             }
 
+            foreach($remove as $terrainKey => $amount)
+            {
+                $terrain = Terrain::where('key', $terrainKey)->first();
+
+                if(abs($amount) > $dominion->{'terrain_' . $terrainKey})
+                {
+                    throw new GameException('You do not have enough ' . $terrain->name . ' to rezone ' . number_format(abs($amount)) . ' acres.');
+                }
+            }
+
             $cost = $totalLand * $this->rezoningCalculator->getRezoningCost($dominion);
             $resource = $this->rezoningCalculator->getRezoningMaterial($dominion);
 
-            if($cost > $this->resourceCalculator->getAmount($dominion,$resource))
+            if($cost > $this->resourceCalculator->getAmount($dominion, $resource))
             {
                 throw new GameException("You do not have enough $resource to rezone {$totalLand} acres of land.");
             }

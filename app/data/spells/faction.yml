@@ -1,5 +1,19 @@
 # FACTION SPECIFIC
 
+## Beastfolk
+ambush:
+  name: Ambush
+  level: 0
+  scope: self
+  class: passive
+  cost: 2
+  duration: 1
+  cooldown: 24
+  exclusive_races:
+    - Beastfolk
+  perks:
+    reduces_target_raw_defense_from_terrain: 0.2,1,forest,10 # -1% raw DP, per 5% forest, max -10%
+
 ## Demon
 
 feast:
@@ -151,18 +165,7 @@ halcyon_phase:
   perks:
     aurei_unit_conversion: 4,3,1000 # from, to, amount
 
-ambush:  
-  enabled: 0
-  name: Ambush
-  scope: self
-  class: passive
-  cost: 2
-  duration: 1
-  cooldown: 24
-  exclusive_races:
-    - Beastfolk
-  perks:
-    reduces_target_raw_defense_from_terrain: 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
+
 
 enchanted_blades:  
   enabled: 0

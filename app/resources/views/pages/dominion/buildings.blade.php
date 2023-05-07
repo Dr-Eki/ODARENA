@@ -6,7 +6,6 @@
     $availableBuildings = $buildingHelper->getBuildingsByRace($selectedDominion->race)->sortBy('name');
 @endphp
 
-
 <div class="row">
     <div class="col-md-9">
         <form action="{{ route('dominion.buildings') }}" method="post" role="form">

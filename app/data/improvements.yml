@@ -1,15 +1,15 @@
 agriculture:  
   name: Agriculture
   perks:
-    food_production_mod: 40,7000
+    food_production_mod: 40,5600
 
 construction:
   name: Construction
   excluded_races:
     - Sylvan
   perks:
-    construction_cost: -20,6000
-    rezone_cost: -20,6000
+    construction_cost: -20,4800
+    rezone_cost: -20,4800
 
 defenses:  
   name: Defenses
@@ -17,7 +17,7 @@ defenses:
     - Beastfolk
     - Sylvan
   perks:
-    defensive_power: 30,8500
+    defensive_power: 30,6800
 
 logging:
   name: Logging
@@ -25,7 +25,7 @@ logging:
     - Beastfolk
     - Sylvan
   perks:
-    lumber_production_mod: 30,7000
+    lumber_production_mod: 30,5600
 
 housing:  
   name: Housing
@@ -33,7 +33,7 @@ housing:
     - Beastfolk
     - Sylvan
   perks:
-    population: 20,6000
+    population: 20,4800
 
 markets:
   name: Markets
@@ -41,8 +41,8 @@ markets:
     - Beastfolk
     - Sylvan
   perks:
-    gold_production_mod: 20,6000
-    exchange_rate: 20,8000
+    gold_production_mod: 20,4800
+    exchange_rate: 20,6400
 
 mining:
   name: Mining
@@ -52,7 +52,7 @@ mining:
     - Swarm
     - Sylvan
   perks:
-    ore_production_mod: 30,7000
+    ore_production_mod: 30,5600
 
 tactics:  
   name: Tactics
@@ -60,7 +60,7 @@ tactics:
     - Beastfolk
     - Sylvan
   perks:
-    offensive_power: 30,8500
+    offensive_power: 30,6800
 
 # BEGIN BEASTFOLK #
 
@@ -69,18 +69,18 @@ brutality:
   exclusive_races:
     - Beastfolk
   perks:
-    offensive_power: 50,15000
-    casualties: 50,10000
-    increases_enemy_casualties: 50,10000
+    offensive_power: 50,9000
+    casualties: 50,6000
+    increases_enemy_casualties: 50,6000
 
 tranquillity:
   name: Tranquillity
   exclusive_races:
     - Beastfolk
   perks:
-    defensive_power: 50,15000
-    casualties: -50,10000
-    increases_enemy_casualties: -50,10000
+    defensive_power: 50,9000
+    casualties: -50,6000
+    increases_enemy_casualties: -50,6000
 
 # END BEASTFOLK #
 
@@ -91,7 +91,7 @@ affinity:
   exclusive_races:
     - Sylvan
   perks:
-    mana_production_mod: 40,8000
+    mana_production_mod: 40,6400
 
 awareness:  
   enabled: 0
@@ -99,48 +99,48 @@ awareness:
   exclusive_races:
     - Sylvan
   perks:
-    spy_strength: 60,6000
-    xp_generation_mod: 40,6000
-    xp_gains: 60,4000
+    spy_strength: 60,4800
+    xp_generation_mod: 40,4800
+    xp_gains: 60,3200
 
 bloom:
   name: Bloom
   exclusive_races:
     - Sylvan
   perks:
-    sapling_production_mod: 60,6000
-    food_production_mod: 40,6000
+    sapling_production_mod: 60,4800
+    food_production_mod: 40,4800
 
 nurture:
   name: Nurture
   exclusive_races:
     - Sylvan
   perks:
-    rezone_cost: -40,6000
-    land_discovered: 30,6000
+    rezone_cost: -40,4800
+    land_discovered: 30,4800
 
 rage:
   name: Rage
   exclusive_races:
     - Sylvan
   perks:
-    target_defensive_power_mod: -15,7000
-    offensive_power: 20,8000
+    target_defensive_power_mod: -15,5600
+    offensive_power: 20,5600
 
 roaming:
   name: Roaming
   exclusive_races:
     - Sylvan
   perks:
-    population: 20,6000
+    population: 20,4800
 
 resilience:
   name: Resilience
   exclusive_races:
     - Sylvan
   perks:
-    defensive_power: 30,9000
-    population_growth: 40,6000
+    defensive_power: 30,7200
+    population_growth: 40,4800
 
 # END SYLVAN
 

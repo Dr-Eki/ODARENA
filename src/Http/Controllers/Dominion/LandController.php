@@ -112,7 +112,7 @@ class LandController extends AbstractDominionController
         $rezoneActionService = app(RezoneActionService::class);
 
         try {
-            $result = $rezoneActionService->rezoneTerrain(
+            $result = $rezoneActionService->rezone(
                 $dominion,
                 $request->get('remove'),
                 $request->get('add')

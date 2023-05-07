@@ -99,7 +99,7 @@ turret:
   terrain: plains
   perks:
     defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
-    building_capacity_limit: 1,10,wall # amount allowed, per x of, building
+    building_capacity_limit: 1,2,wall # amount allowed, per x of, building
     arwe_unit_housing: 3,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 # GENERIC ANTI-THEFT

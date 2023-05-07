@@ -50,7 +50,7 @@
                                         <input name="remove[{{ $terrain->key }}]" type="number"
                                             class="form-control text-center" placeholder="0" min="0"
                                             max="{{ $amount }}"
-                                            value="{{ old('remove.' . $terrain->key) }}" {{ ($selectedDominion->isLocked() || !isset($amount)) ? 'disabled' : null }}>
+                                            value="{{ old('remove.' . $terrain->key) }}" {{ ($selectedDominion->isLocked() or !$amount) ? 'disabled' : null }}>
                                     </td>
                                     <td class="text-center">
                                         <input name="add[{{ $terrain->key }}]" type="number"
@@ -160,7 +160,7 @@
                 <h3 class="box-title"><i class="fa fa-plus"></i> Daily Bonus</h3>
             </div>
             <div class="box-body">
-                <p>The Daily Land Bonus instantly gives you some barren acres of <strong>{{ $selectedDominion->race->home_land_type }}</strong>.</p>
+                <p>The Daily Land Bonus instantly gives you some land with <strong>{{ $selectedDominion->race->homeTerrain()->name }}</strong> terrain.</p>
                 <p>You have a 0.50% chance to get 100 acres, and a 99.50% chance to get a random amount between 10 and 40 acres.</p>
                 @if ($selectedDominion->protection_ticks > 0 or !$selectedDominion->round->hasStarted())
                 <p><strong>You cannot claim daily bonus while you are in protection or before the round has started.</strong></p>

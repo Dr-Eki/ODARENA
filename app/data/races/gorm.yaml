@@ -20,6 +20,11 @@ construction_materials:
   - gold
   - ore
 
+improvement_resources:
+  gold: 1
+  ore: 2.2
+  lumber: 2.2
+
 perks:
   draftee_dp: 1.5
 
@@ -30,11 +35,11 @@ units:
     - living
     - sentient
   cost:
-    gold: 400
+    gold: 475
     ore: 30
     draftees: 1
   power:
-    offense: 3
+    offense: 3.5
     defense: 1.5
 
 - name: Ogre

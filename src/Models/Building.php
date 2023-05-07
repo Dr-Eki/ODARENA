@@ -52,6 +52,38 @@ class Building extends AbstractModel
         return $perks->first()->pivot->value;
     }
 
+    public function extractPerkValues(string $key)
+    {
+
+        # Get building perk with key
+        $perk = $this->perks->filter(static function (BuildingPerkType $buildingPerkType) use ($key) {
+            return ($buildingPerkType->key === $key);
+        });
+
+        if($perk->count() == 0)
+        {
+            return 0;
+        }
+
+        $perkValue = $perk->first()->pivot->value;
+        if (str_contains($perkValue, ','))
+        {
+            $perkValue = explode(',', $perkValue);
+
+            foreach($perkValue as $key => $value)
+            {
+                if (!str_contains($value, ';'))
+                {
+                    continue;
+                }
+
+                $perkValue[$key] = explode(';', $value);
+            }
+        }
+
+        return $perkValue;
+    }
+
     # Return the terrain of the building
     public function terrain()
     {

@@ -253,7 +253,7 @@ class SpellHelper
             'defensive_power_vs_blight' => '%+g%% defensive power if attacker has Insect Swarm',
             'offensive_power_vs_blight' => '%+g%% offensive power if target has Insect Swarm',
 
-            'reduces_target_raw_defense_from_terrain' => 'Targets raw defensive power lowered by %1$s%% for every %2$s%% of your own %3$s, max %4$s%% reduction.',# 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
+            'reduces_target_raw_defense_from_terrain' => 'Target raw defensive power lowered by %1$s%% for every %2$s%% of your own %3$s, max %4$s%% reduction.',
 
             'increases_enemy_casualties_on_offense_from_wizard_ratio' => 'Enemy casualties on offense increased by %+g%% for every 1 wizard ratio.',
             'increases_enemy_casualties_on_defense_from_wizard_ratio' => 'Enemy casualties on defense increased by %+g%% for every 1 wizard ratio.',
@@ -262,8 +262,8 @@ class SpellHelper
 
             'defensive_power_from_peasants' => '%s raw defensive power per peasant',
 
-            'offensive_power_from_devotion' => '%2$s%% offensive power for every tick devoted to %1$s (max %3$s%%).',# 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
-            'defense_from_devotion' => '%2$s%% offensive power for every tick devoted to %1$s (max %3$s%%).',# 1,5,forest,10 # -1% raw DP, per 5% forest, max -10%
+            'offensive_power_from_devotion' => '%2$s%% offensive power for every tick devoted to %1$s (max %3$s%%).',
+            'defense_from_devotion' => '%2$s%% offensive power for every tick devoted to %1$s (max %3$s%%).',
 
             // Improvements
             'invest_bonus' => '%+g%% improvement points from investments made while spell is active',

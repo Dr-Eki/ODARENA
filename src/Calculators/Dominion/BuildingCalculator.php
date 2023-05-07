@@ -304,8 +304,49 @@ class BuildingCalculator
         {
             return 0;
         }
+    }
 
+    public function buildingHasCapacityLimit(Building $building): bool
+    {
+        foreach($building->perks as $perk)
+        {
+            if($perk->key === 'building_capacity_limit')
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public function getBuildingCapacityLimit(Dominion $dominion, Building $building): int
+    {
+        # Check if building has building_capacity_limit perk
+        $buildingCapacityLimitPerk = $building->perks->filter(function ($perk) {
+            return $perk->key === 'building_capacity_limit';
+        })->first();
+
+        $buildingCapacityLimitPerk = explode(',', $buildingCapacityLimitPerk->pivot->value);
+
+        $maxOfThisBuilding = (float)$buildingCapacityLimitPerk[0];
+        $perOfLimitingBuilding = (float)$buildingCapacityLimitPerk[1];
+        $limitingBuildingKey = (string)$buildingCapacityLimitPerk[2];
+        $limitingBuilding = Building::where('key', $limitingBuildingKey)->firstOrFail();
+
+        # How many of the $limitingBuilding does the $dominion have?
+        $limitingBuildingsOwned = $this->getBuildingAmountOwned($dominion, $limitingBuilding);
+
+        $maxCapacity = $limitingBuildingsOwned * $perOfLimitingBuilding;
+
+        return $maxCapacity;
+    }
+
+    public function getAvailableCapacityForBuilding(Dominion $dominion, Building $building): int
+    {
+        $maxCapacity = $this->getBuildingCapacityLimit($dominion, $building);
+        $owned = $this->getBuildingAmountOwned($dominion, $building);
+        $owned += $this->queueService->getConstructionQueueTotalByResource($dominion, ('building_' . $building->key));
+
+        return $maxCapacity - $owned;
     }
 
 }

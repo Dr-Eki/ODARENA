@@ -32,7 +32,7 @@ perks:
 
 units:
   - name: Horned One
-    training_time: 12
+    training_time: 9
     type:
       - living
       - sentient
@@ -54,7 +54,7 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1250
+      gold: 1200
       draftees: 1
     power:
       offense: 5

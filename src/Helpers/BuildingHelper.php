@@ -197,6 +197,8 @@ class BuildingHelper
 
             'unit_send_capacity' => '%+g units sendable.',
 
+            'building_capacity_limit' => 'You can at most have %1$s of this building for every %2$s %3$s you have.',
+
             # OP/DP
             'raw_defense' => 'Provides %g raw defensive power.',
             'offensive_power' => 'Offensive power increased by %2$s%% for every %1$s%% (max +%3$s%% OP)',
@@ -344,6 +346,19 @@ class BuildingHelper
                 $tech = Tech::where('key', $techKey)->first();
 
                 $perkValue = $tech->name;
+                $nestedArrays = false;
+            }
+
+            
+            if($perk->key === 'building_capacity_limit')
+            {
+                $maxOfThisBuilding = (float)$perkValue[0];
+                $perOfLimitingBuilding = (float)$perkValue[1];
+                $buildingKey = (string)$perkValue[2];
+                $limitingBuilding = Building::where('key', $buildingKey)->firstOrFail();
+
+                $perkValue = [display_number_format($maxOfThisBuilding), display_number_format($perOfLimitingBuilding), str_plural($limitingBuilding->name, $perOfLimitingBuilding)];
+
                 $nestedArrays = false;
             }
 
