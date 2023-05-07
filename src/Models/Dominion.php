@@ -1352,7 +1352,6 @@ class Dominion extends AbstractModel
 
     public function getSpellPerkValue(string $perkKey): float
     {
-        $landSize = $this->land_plain + $this->land_mountain + $this->land_swamp + $this->land_forest + $this->land_hill + $this->land_water;
         $deityKey = $this->hasDeity() ? $this->deity->key : null;
         $perk = 0;
 
@@ -1481,7 +1480,6 @@ class Dominion extends AbstractModel
     public function getImprovementPerkValue(string $perkKey): float
     {
         $perk = 0;
-        $landSize = $this->land_plain + $this->land_mountain + $this->land_swamp + $this->land_forest + $this->land_hill + $this->land_water;
 
         foreach ($this->improvements as $improvement)
         {
@@ -1492,7 +1490,7 @@ class Dominion extends AbstractModel
                 $coefficient = (float)$perkValues[1];
                 $invested = (float)$improvement->pivot->invested;
 
-                $perk += $max * (1 - exp(-$invested / ($coefficient * $landSize + 15000)));
+                $perk += $max * (1 - exp(-$invested / ($coefficient * $this->land + 15000)));
             }
         }
 
@@ -1503,8 +1501,6 @@ class Dominion extends AbstractModel
 
     public function getImprovementsMod(string $perkKey = null): float
     {
-        $landSize = $this->land_plain + $this->land_mountain + $this->land_swamp + $this->land_forest + $this->land_hill + $this->land_water;
-
         $multiplier = 1;
         $multiplier += $this->getBuildingPerkMultiplier('improvements');
         $multiplier += $this->getBuildingPerkMultiplier('improvements_capped');
@@ -1519,7 +1515,7 @@ class Dominion extends AbstractModel
         if($this->race->getPerkValue('improvements_from_souls'))
         {
             $resourceCalculator = app(ResourceCalculator::class);
-            $multiplier += $resourceCalculator->getAmount($this, 'soul') / ($landSize * 1000);
+            $multiplier += $resourceCalculator->getAmount($this, 'soul') / ($this->land * 1000);
         }
 
         if($improvementsPerVictoryPerk = $this->race->getPerkValue('improvements_per_net_victory'))
