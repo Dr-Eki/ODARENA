@@ -31,6 +31,7 @@ class Race extends AbstractModel
         'land_improvements' => 'array',
         'peasants_production' => 'array',
         'home_land_type' => 'text',
+        'home_terrain' => 'text',
         'peasants_alias' => 'text',
         'draftees_alias' => 'text',
         'construction_materials' => 'array',
@@ -59,6 +60,25 @@ class Race extends AbstractModel
             ->withTimestamps()
             ->withPivot('value')
             ->orderBy('race_perk_types.key');
+    }
+
+    public function terrainPerks()
+    {
+        return $this->belongsToMany(
+            RaceTerrainPerkType::class,
+            'race_terrain_perks',
+            'race_terrain_id',
+            'race_terrain_perk_type_id'
+        )
+            ->withTimestamps()
+            ->withPivot('value')
+            ->orderBy('race_terrain_perk_types.key');
+    }
+
+
+    public function raceTerrains()
+    {
+        return $this->hasMany(RaceTerrain::class);
     }
 
     public function units()

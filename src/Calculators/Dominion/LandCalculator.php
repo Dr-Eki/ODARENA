@@ -7,8 +7,8 @@ use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\QueueService;
 
-# ODA
 use OpenDominion\Models\Realm;
+use OpenDominion\Models\Terrain;
 
 class LandCalculator
 {
@@ -58,6 +58,7 @@ class LandCalculator
      */
     public function getTotalLand(Dominion $dominion, bool $canBeZero = false): int
     {
+        return $dominion->land;
         $totalLand = 0;
 
         foreach ($this->landHelper->getLandTypes() as $landType)
@@ -78,12 +79,9 @@ class LandCalculator
     public function getTotalLandIncoming(Dominion $dominion): int
     {
         $incoming = 0;
-        foreach ($this->landHelper->getLandTypes() as $landType)
-        {
-            $incoming += $this->queueService->getExplorationQueueTotalByResource($dominion, "land_{$landType}");
-            $incoming += $this->queueService->getInvasionQueueTotalByResource($dominion, "land_{$landType}");
-            $incoming += $this->queueService->getExpeditionQueueTotalByResource($dominion, "land_{$landType}");
-        }
+        $incoming += $this->queueService->getExplorationQueueTotalByResource($dominion, 'land');
+        $incoming += $this->queueService->getInvasionQueueTotalByResource($dominion, 'land');
+        $incoming += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'land');
 
         return $incoming;
     }
@@ -184,6 +182,28 @@ class LandCalculator
     public function getLandLost(Dominion $dominion, float $landLossRatio): int
     {
         return (int)floor($dominion->land * $landLossRatio);
+    }
+
+    public function getTerrainLost(Dominion $dominion, int $landLost): array
+    {
+        
+        $terrainLost = [];
+        foreach(Terrain::all() as $terrain)
+        {
+            $ratio = $dominion->{'terrain_' . $terrain->key} / $dominion->land;
+            $terrainLost['terrain_' . $terrain->key] = floor($landLost * $ratio);
+        }
+
+        if(array_sum($terrainLost) !== $landLost)
+        {
+            $terrainLost['terrain_' . $dominion->race->homeTerrain()->key] += ($landLost - array_sum($terrainLost));
+        }
+
+        $terrainLost = array_map('intval', $terrainLost);
+
+        return $terrainLost;
+        
+
     }
 
     public function getLandLostByLandType(Dominion $dominion, float $landLossRatio): array

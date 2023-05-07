@@ -181,12 +181,6 @@ class ConstructionCalculator
             );
         }
 
-        # Simian hack
-        if($dominion->race->getPerkValue('forest_construction_cost'))
-        {
-            return max($this->landCalculator->getTotalBarrenLandByLandType($dominion, 'forest'), $maxAfford);
-        }
-
         return $maxAfford;
     }
 

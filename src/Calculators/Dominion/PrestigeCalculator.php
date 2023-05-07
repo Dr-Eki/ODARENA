@@ -6,6 +6,11 @@ use OpenDominion\Models\Dominion;
 
 class PrestigeCalculator
 {
+
+    protected $militaryCalculator;
+
+
+
     /**
      * Returns the Dominion's prestige multiplier.
      *

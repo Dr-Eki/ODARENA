@@ -190,7 +190,7 @@ class ConversionCalculator
             return $convertedUnits;
         }
 
-        $landConquered = array_sum($invasion['attacker']['land_conquered']);
+        $landConquered = $invasion['attacker']['land_conquered'];
         $displacedPeasants = intval(($defender->peasants / $invasion['defender']['land_size']) * $landConquered);
 
         # Apply reduced conversions
@@ -242,7 +242,7 @@ class ConversionCalculator
             return $convertedUnits;
         }
 
-        $landConquered = array_sum($invasion['attacker']['land_conquered']);
+        $landConquered = $invasion['attacker']['land_conquered'];
         $displacedPeasants = intval(($defender->peasants / $invasion['defender']['land_size']) * $landConquered);
 
         # Apply reduced conversions
@@ -858,7 +858,7 @@ class ConversionCalculator
 
             $ratio = $baseRatio * $ratioMultiplier;
 
-            foreach($invasion['defender']['surviving_units'] as $slot => $amount)
+            foreach($invasion['defender']['units_surviving'] as $slot => $amount)
             {
                 if($this->conversionHelper->isSlotConvertible($slot, $enemy, [], [], true, $cult, $invasion, $mode))
                 {
@@ -915,7 +915,7 @@ class ConversionCalculator
 
             $ratio = $baseRatio * $ratioMultiplier;
 
-            foreach($invasion['attacker']['surviving_units'] as $slot => $amount)
+            foreach($invasion['attacker']['units_surviving'] as $slot => $amount)
             {
                 # Lazy because they all become Unit1/Thrall for now.
                 $amountConverted = intval(min($invasion['attacker']['units_lost'][$slot], $amount, $amount * $ratio));

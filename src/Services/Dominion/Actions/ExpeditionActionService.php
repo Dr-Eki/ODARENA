@@ -25,6 +25,7 @@ use OpenDominion\Calculators\Dominion\ExpeditionCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\TerrainCalculator;
 
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
@@ -45,6 +46,7 @@ class ExpeditionActionService
     protected $landCalculator;
     protected $militaryCalculator;
     protected $spellCalculator;
+    protected $terrainCalculator;
 
     protected $landHelper;
     protected $raceHelper;
@@ -55,12 +57,12 @@ class ExpeditionActionService
     protected $notificationService;
     protected $protectionService;
     protected $statsService;
-    protected $terrainService;
+    #protected $terrainService;
     protected $queueService;
 
 
     /** @var array Invasion result array. todo: Should probably be refactored later to its own class */
-    protected $expeditionResult = [];
+    protected $expedition = [];
 
     public function __construct()
     {
@@ -81,7 +83,8 @@ class ExpeditionActionService
         $this->statsService = app(StatsService::class);
         $this->queueService = app(QueueService::class);
         $this->spellCalculator = app(SpellCalculator::class);
-        $this->terrainService = app(TerrainService::class);
+        $this->terrainCalculator = app(TerrainCalculator::class);
+        #$this->terrainService = app(TerrainService::class);
     }
 
     /**
@@ -248,18 +251,16 @@ class ExpeditionActionService
                 throw new GameException('You cannot send out expeditions while you are in stasis.');
             }
 
-            $this->expeditionResult['units_sent'] = $units;
-            $this->expeditionResult['land_size'] = $this->landCalculator->getTotalLand($dominion);
+            $this->expedition['units_sent'] = $units;
+            $this->expedition['land_size'] = $this->landCalculator->getTotalLand($dominion);
 
-            $this->expeditionResult['op_sent'] = $this->militaryCalculator->getOffensivePower($dominion, null, null, $units);
-            $this->expeditionResult['op_raw'] = $this->militaryCalculator->getOffensivePowerRaw($dominion, null, null, $units, [], true);
+            $this->expedition['op_sent'] = $this->militaryCalculator->getOffensivePower($dominion, null, null, $units);
+            $this->expedition['op_raw'] = $this->militaryCalculator->getOffensivePowerRaw($dominion, null, null, $units, [], true);
 
+            $this->expedition['land_discovered'] = $this->expeditionCalculator->getLandDiscoveredAmount($dominion, $this->expedition['op_sent']);
+            $this->expedition['terrain_discovered'] = $this->terrainCalculator->getTerrainDiscovered($dominion, $this->expedition['land_discovered']);
 
-            $this->expeditionResult['land_discovered_amount'] = $this->expeditionCalculator->getLandDiscoveredAmount($dominion, $this->expeditionResult['op_sent']);
-            $this->expeditionResult['land_discovered'] = $this->expeditionCalculator->getLandDiscovered($dominion, $this->expeditionResult['land_discovered_amount']);
-
-
-            if($this->expeditionResult['land_discovered'] <= 0)
+            if($this->expedition['land_discovered'] < 1)
             {
                 throw new GameException('Expeditions must discover at least some land.');
             }
@@ -267,35 +268,35 @@ class ExpeditionActionService
             $this->queueService->queueResources(
                 'expedition',
                 $dominion,
-                $this->expeditionResult['land_discovered']
+                ['land' => $this->expedition['land_discovered']]
             );
 
-            $this->handlePrestigeChanges($dominion, $this->expeditionResult['land_discovered_amount'], $this->expeditionResult['land_size'], $units);
-            $this->handleXp($dominion, $this->expeditionResult['land_discovered_amount']);
+            $this->queueService->queueResources(
+                'expedition',
+                $dominion,
+                $this->expedition['terrain_discovered']
+            );
+
+            $this->handlePrestigeChanges($dominion, $this->expedition['land_discovered'], $this->expedition['land_size'], $units);
+            $this->handleXp($dominion, $this->expedition['land_discovered']);
             $this->handleAshFindings($dominion);
-            if($dominion->round->mode == 'artefacts')
-            {
-                $this->handleArtefactsDiscovery($dominion);
-            }
+            $this->handleArtefactsDiscovery($dominion);
             $this->handleReturningUnits($dominion, $units);
 
-            $this->statsService->updateStat($dominion, 'land_discovered', $this->expeditionResult['land_discovered_amount']);
+            $this->statsService->updateStat($dominion, 'land_discovered', $this->expedition['land_discovered']);
             $this->statsService->updateStat($dominion, 'expeditions', 1);
 
             # Debug before saving:
-            if(request()->getHost() === 'odarena.local' or request()->getHost() === 'odarena.virtual')
-            {
-                #dd($this->expeditionResult);
-            }
+            ldd($this->expedition);
 
-            $this->invasionEvent = GameEvent::create([
+            $this->expedition = GameEvent::create([
                 'round_id' => $dominion->round_id,
                 'source_type' => Dominion::class,
                 'source_id' => $dominion->id,
                 'target_type' => NULL,
                 'target_id' => NULL,
                 'type' => 'expedition',
-                'data' => $this->expeditionResult,
+                'data' => $this->expedition,
                 'tick' => $dominion->round->ticks
             ]);
 
@@ -304,14 +305,14 @@ class ExpeditionActionService
 
         $message = sprintf(
                 'Your units are sent out on an expedition and discover %s acres of land!',
-                number_format($this->expeditionResult['land_discovered_amount'])
+                number_format($this->expedition['land_discovered'])
             );
             $alertType = 'success';
 
         return [
             'message' => $message,
             'alert-type' => $alertType,
-            'redirect' => route('dominion.event', [$this->invasionEvent->id])
+            'redirect' => route('dominion.event', [$this->expedition->id])
         ];
     }
 
@@ -340,7 +341,7 @@ class ExpeditionActionService
             12
         );
 
-        $this->expeditionResult['prestige_change'] = $prestigeChange;
+        $this->expedition['prestige_change'] = $prestigeChange;
     }
 
     /**
@@ -368,7 +369,7 @@ class ExpeditionActionService
             12
         );
 
-        $this->expeditionResult['xp'] = $xpGained;
+        $this->expedition['xp'] = $xpGained;
 
     }
     protected function handleAshFindings(Dominion $dominion): void
@@ -378,7 +379,7 @@ class ExpeditionActionService
             return;
         }
 
-        $ashFound = $this->expeditionResult['op_raw'] * $dominion->race->getPerkValue('ash_per_raw_op_on_expeditions');
+        $ashFound = $this->expedition['op_raw'] * $dominion->race->getPerkValue('ash_per_raw_op_on_expeditions');
 
         $this->queueService->queueResources(
             'expedition',
@@ -387,15 +388,20 @@ class ExpeditionActionService
             12
         );
 
-        $this->expeditionResult['ash_found'] = $ashFound;
+        $this->expedition['ash_found'] = $ashFound;
 
     }
 
-    protected function handleArtefactsDiscovery($dominion)
+    protected function handleArtefactsDiscovery($dominion): void
     {
-        $this->expeditionResult['artefact']['found'] = false;
+        $this->expedition['artefact']['found'] = false;
+
+        if($dominion->round->mode == 'artefacts')
+        {
+            return;
+        }
         
-        if(random_chance($this->artefactCalculator->getChanceToDiscoverArtefactOnExpedition($dominion, $this->expeditionResult)))
+        if(random_chance($this->artefactCalculator->getChanceToDiscoverArtefactOnExpedition($dominion, $this->expedition)))
         {
             $artefact = $this->artefactService->getRandomArtefact($dominion->round);
 
@@ -405,10 +411,10 @@ class ExpeditionActionService
                 [$artefact->key => 1],
                 12
             );
-            $this->expeditionResult['artefact']['found'] = true;
-            $this->expeditionResult['artefact']['id'] = $artefact->id;
-            $this->expeditionResult['artefact']['key'] = $artefact->key;
-            $this->expeditionResult['artefact']['name'] = $artefact->name;
+            $this->expedition['artefact']['found'] = true;
+            $this->expedition['artefact']['id'] = $artefact->id;
+            $this->expedition['artefact']['key'] = $artefact->key;
+            $this->expedition['artefact']['name'] = $artefact->name;
         }
     }
 
@@ -418,7 +424,7 @@ class ExpeditionActionService
         # If instant return
         if(random_chance($dominion->getImprovementPerkMultiplier('chance_of_instant_return')) or $dominion->race->getPerkValue('instant_return') or $dominion->getSpellPerkValue('instant_return'))
         {
-            $this->expeditionResult['attacker']['instantReturn'] = true;
+            $this->expedition['attacker']['instantReturn'] = true;
         }
         # Normal return
         else
@@ -458,9 +464,9 @@ class ExpeditionActionService
                 $returningUnits[$returningUnitKey][$ticks] += $amountReturning;
 
                 # Look for dies_into and variations amongst the dead attacking units.
-                if(isset($this->expeditionResult['units_lost'][$slot]))
+                if(isset($this->expedition['units_lost'][$slot]))
                 {
-                    $casualties = $this->expeditionResult['attacker']['units_lost'][$slot];
+                    $casualties = $this->expedition['attacker']['units_lost'][$slot];
 
                     if($diesIntoPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'dies_into'))
                     {
@@ -504,7 +510,7 @@ class ExpeditionActionService
                         $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += floor($casualties * $newUnitAmount);
                     }
 
-                    if($this->expeditionResult['result']['success'] and $diesIntoMultiplePerkOnVictory = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple_on_victory'))
+                    if($this->expedition['result']['success'] and $diesIntoMultiplePerkOnVictory = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple_on_victory'))
                     {
                         # Which unit do they die into?
                         $newUnitSlot = $diesIntoMultiplePerkOnVictory[0];
@@ -515,7 +521,7 @@ class ExpeditionActionService
                         $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += floor($casualties * $newUnitAmount);
                     }
 
-                    if(!$this->expeditionResult['result']['success'] and $diesIntoMultiplePerkOnVictory = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple_on_victory'))
+                    if(!$this->expedition['result']['success'] and $diesIntoMultiplePerkOnVictory = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple_on_victory'))
                     {
                         # Which unit do they die into?
                         $newUnitSlot = $diesIntoMultiplePerkOnVictory[0];
@@ -597,7 +603,7 @@ class ExpeditionActionService
                     }
                 }
                 $slot = str_replace('military_unit', '', $unitKey);
-                $this->expeditionResult['units_returning'][$slot] = array_sum($unitKeyTicks);
+                $this->expedition['units_returning'][$slot] = array_sum($unitKeyTicks);
             }
 
             $dominion->save();

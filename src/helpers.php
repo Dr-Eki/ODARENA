@@ -237,6 +237,7 @@ if(!function_exists('ldump'))
     }
 }
 
+
 if(!function_exists('ldd'))
 {
     /**
@@ -254,3 +255,20 @@ if(!function_exists('ldd'))
         }
     }
 }
+
+if(!function_exists('negative'))
+{
+    /**
+     * Always reeturns the value as a negative.
+     *
+     * @param string $word
+     * @return string
+     */
+
+     function negative(float $value): float
+     {
+         return -abs($value);
+     }
+     
+}
+

@@ -41,6 +41,9 @@ use OpenDominion\Models\ImprovementPerkType;
 use OpenDominion\Models\Quickstart;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\RacePerk;
+use OpenDominion\Models\RaceTerrain;
+use OpenDominion\Models\RaceTerrainPerk;
+use OpenDominion\Models\RaceTerrainPerkType;
 use OpenDominion\Models\RacePerkType;
 use OpenDominion\Models\RealmArtefact;
 use OpenDominion\Models\Resource;
@@ -117,6 +120,8 @@ class DataSyncCommand extends Command implements CommandInterface
             $this->syncQuickstarts();
 
             $this->populateRaceTerrains();
+
+            $this->syncRaceTerrains();
         });
 
         $finish = now();
@@ -369,6 +374,29 @@ class DataSyncCommand extends Command implements CommandInterface
                     }
                 }
             }
+
+            // Terrain Perks
+            $terrainPerksToSync = [];
+            foreach (object_get($data, 'terrain_perks', []) as $terrainKey => $terrainPerks)
+            {
+                $terrain = Terrain::where('key', $terrainKey)->first();
+                $raceTerrain = RaceTerrain::where('race_id', $race->id)->where('terrain_id', $terrain->id)->first();
+
+                foreach($terrainPerks as $terrainPerkKey => $terrainPerkValue)
+                {
+                    $terrainPerkValue = (float)$terrainPerkValue;
+
+                    $raceTerrainPerkType = RaceTerrainPerkType::firstOrCreate(['key' => $terrainPerkKey]);
+
+                    $raceTerrainPerk = RaceTerrainPerk::updateOrCreate(['race_terrain_id' => $raceTerrain->id, 'race_terrain_perk_type_id' => $raceTerrainPerkType->id],
+                    [
+                        'value' => $terrainPerkValue
+                    ]);
+
+                    $terrainPerksToSync[] = $raceTerrainPerk->id;
+                }
+            }
+
         }
 
         $this->info('Races and units synced.');
@@ -1820,5 +1848,24 @@ class DataSyncCommand extends Command implements CommandInterface
         $this->info('Race terrains populated.');
 
     }
+
+    protected function syncRaceTerrains()
+    {
+        $this->info('Syncing race terrains...');
+
+        DB::transaction( function ()
+        {
+            foreach(Race::all() as $race)
+            {
+                foreach(Terrain::all() as $terrain)
+                {
+                    RaceTerrain::updateOrCreate(['race_id' => $race->id, 'terrain_id' => $terrain->id]);
+                }
+            }
+        });
+
+        $this->info('Race terrains synced.');
+    }
+    
 
 }

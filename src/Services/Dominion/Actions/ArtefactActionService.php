@@ -360,14 +360,14 @@ class ArtefactActionService
                 $this->statsService->updateStat($target, 'units_converted', array_sum($conversions['defender']));
             }
 
-            $this->handleReturningUnits($dominion, $this->invasionResult['attacker']['surviving_units'], $offensiveConversions, $defensiveConversions);
+            $this->handleReturningUnits($dominion, $this->invasionResult['attacker']['units_surviving'], $offensiveConversions, $defensiveConversions);
             $this->handleDefensiveConversions($target, $defensiveConversions);
 
             # Handle dies_into_resource, dies_into_resources, kills_into_resource, kills_into_resources
             $this->handleResourceConversions($dominion, $target, $landRatio);
 
             # Imperial Crypt
-            #$this->handleCrypt($dominion, $target, $this->invasionResult['attacker']['surviving_units'], $offensiveConversions, $defensiveConversions);
+            #$this->handleCrypt($dominion, $target, $this->invasionResult['attacker']['units_surviving'], $offensiveConversions, $defensiveConversions);
 
             // Stat changes
             if ($this->invasionResult['result']['success'])
@@ -600,7 +600,7 @@ class ArtefactActionService
             foreach ($this->invasionResult['attacker']['units_lost'] as $slot => $amount)
             {
                 $dominion->{"military_unit{$slot}"} -= $amount;
-                $this->invasionResult['attacker']['surviving_units'][$slot] = $this->invasionResult['attacker']['units_sent'][$slot] - $this->invasionResult['attacker']['units_lost'][$slot];
+                $this->invasionResult['attacker']['units_surviving'][$slot] = $this->invasionResult['attacker']['units_sent'][$slot] - $this->invasionResult['attacker']['units_lost'][$slot];
 
                 if(in_array($slot,[1,2,3,4,5,6,7,8,9,10]))
                 {

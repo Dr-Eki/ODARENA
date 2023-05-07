@@ -3,20 +3,24 @@
 namespace OpenDominion\Calculators\Dominion;
 
 use OpenDominion\Helpers\TerrainHelper;
-use OpenDominion\Models\Dominion;
 
-use OpenDominion\Models\Realm;
+use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Terrain;
+use OpenDominion\Services\Dominion\QueueService;
 
 class TerrainCalculator
 {
     protected $dominionCalculator;
+    protected $queueService;
     protected $terrainHelper;
 
     public function __construct(
         DominionCalculator $dominionCalculator,
+        QueueService $queueService,
         TerrainHelper $terrainHelper
     ) {
         $this->dominionCalculator = $dominionCalculator;
+        $this->queueService = $queueService;
         $this->terrainHelper = $terrainHelper;
     }
 
@@ -39,211 +43,76 @@ class TerrainCalculator
 
     public function getTerrainLost(Dominion $dominion, int $landLost): array
     {
-        $terrains = $dominion->terrains->keyBy('key');
-        $terrainLost = [];
+        
+        $terrainLost = [
+            'available' => [],
+            'queued' => []
+        ];
 
-        foreach($terrains as $terrainKey => $terrain)
+        if($landLost <= 0)
         {
-            $terrainLost[$terrainKey] = 0;
+            return $terrainLost;
         }
-
+    
         $totalTerrainedLand = $this->getTotalTerrainedAmount($dominion);
-
-        if($totalTerrainedLand > 0)
-        {
-            foreach($terrains as $terrainKey => $terrain)
-            {
-                $terrainLost[$terrainKey] = intval(round($landLost * ($terrain->pivot->amount / $totalTerrainedLand)))*-1;
+    
+        if ($totalTerrainedLand > 0) {
+            foreach ($dominion->terrains as $terrainKey => $terrain) {
+                $terrainLost['available'][$terrainKey] = intval(round(negative($landLost * ($terrain->pivot->amount / $totalTerrainedLand))));
             }
         }
+    
+        if (array_sum($terrainLost['available']) < $landLost)
+        {
+            $terrainLost['queued'] = array_fill_keys(Terrain::pluck('key')->toArray(), 0);
+            $rezoningQueueTotal = $this->queueService->getRezoningQueueTotal($dominion);
+    
+            $terrainLeftToLose = $landLost - array_sum($terrainLost['available']);
+    
+            $lastNonZeroTerrainKey = null;
+            foreach ($terrainLost['queued'] as $terrainKey => $terrainAmount) {
+                $terrainLost['queued'][$terrainKey] = intval($terrainLeftToLose * ($this->queueService->getRezoningQueueTotalByResource($dominion, ('terrain_' . $terrainKey)) / $rezoningQueueTotal));
+                
+                if ($terrainLost['queued'][$terrainKey] > 0) {
+                    $lastNonZeroTerrainKey = $terrainKey;
+                }
+            }
+    
+            // Adjust the last non-zero terrain by the difference between the desired total and the current total
+            if ($lastNonZeroTerrainKey !== null) {
+                $terrainLost['queued'][$lastNonZeroTerrainKey] += $terrainLeftToLose - array_sum($terrainLost['queued']);
+            }
 
+            $terrainLost['queued'] = array_filter($terrainLost['queued'], function($value) {
+                return $value !== 0;
+            });
+        }
+    
         return $terrainLost;
     }
+    
 
-    /**
-     * Returns the Dominion's total acres of land.
-     *
-     * @param Dominion $dominion
-     * @return int
-     */
-    public function getTotalLand(Dominion $dominion, bool $canBeZero = false): int
+    public function getTerrainDiscovered(Dominion $dominion, int $landChange, $isLoss = false): array
     {
-        $totalLand = 0;
-
-        foreach ($this->landHelper->getLandTypes() as $landType)
+        $terrainChanged = [];
+        foreach(Terrain::all() as $terrain)
         {
-            $totalLand += $dominion->{'land_' . $landType};
+            $terrainRatio = $dominion->{'terrain_' . $terrain->key} / $dominion->land;
+            $terrainChanged[$terrain->key] = floor($landChange * $terrainRatio) * ($isLoss ? -1 : 1);
         }
-
-        if($canBeZero)
+    
+        if(array_sum($terrainChanged) !== $landChange)
         {
-            return $totalLand;
-        }
-        else
-        {
-            return max(1,$totalLand);
-        }
-    }
-
-    public function getTotalLandIncoming(Dominion $dominion): int
-    {
-        $incoming = 0;
-        foreach ($this->landHelper->getLandTypes() as $landType)
-        {
-            $incoming += $this->queueService->getExplorationQueueTotalByResource($dominion, "land_{$landType}");
-            $incoming += $this->queueService->getInvasionQueueTotalByResource($dominion, "land_{$landType}");
-            $incoming += $this->queueService->getExpeditionQueueTotalByResource($dominion, "land_{$landType}");
+            $terrainChanged[$dominion->race->homeTerrain()->key] += ($landChange - array_sum($terrainChanged)) * ($isLoss ? -1 : 1);
         }
 
-        return $incoming;
+        $terrainChanged = array_map('intval', $terrainChanged);
+
+        $terrainChanged = array_filter($terrainChanged, function($value) {
+            return $value !== 0;
+        });    
+    
+        return $terrainChanged;
     }
-
-    /**
-     * Returns the Dominion's total acres of barren land.
-     * In this function, queued buildings still count as barren.
-     *
-     * @param Dominion $dominion
-     * @return int
-     */
-    public function getTotalBarrenLandForSwarm(Dominion $dominion): int
-    {
-        return ($this->getTotalLand($dominion) - $this->buildingCalculator->getTotalBuildings($dominion));
-    }
-
-    /**
-     * Returns the Dominion's total barren land by land type.
-     *
-     * @param Dominion $dominion
-     * @param string $landType
-     * @return int
-     */
-    public function getTotalBarrenLandByLandType(Dominion $dominion, $landType): int
-    {
-        return $this->getBarrenLandByLandType($dominion)[$landType];
-    }
-
-    /**
-     * Returns the Dominion's barren land by land type.
-     *
-     * @param Dominion $dominion
-     * @return array
-     */
-    public function getBarrenLandByLandType(Dominion $dominion): array
-    {
-        $barrenLandByLandType = [];
-        $landTypes = $this->landHelper->getLandTypes();
-        $availableBuildings = $this->buildingHelper->getBuildingsByRace($dominion->race);
-        $dominionBuildings = $this->buildingCalculator->getDominionBuildings($dominion);
-
-        foreach ($landTypes as $landType)
-        {
-            $barrenLandByLandType[$landType] = 0;
-
-            $barren = $dominion->{'land_' . $landType};
-            foreach($availableBuildings->where('land_type',$landType) as $building)
-            {
-                if(isset($dominionBuildings->where('building_id', $building->id)->first()->owned) and $dominionBuildings->where('building_id', $building->id)->first()->owned > 0)
-                {
-                    $barren -= $dominionBuildings->where('building_id', $building->id)->first()->owned;
-                }
-                $barren -= $this->queueService->getConstructionQueueTotalByResource($dominion, "building_{$building->key}");
-                $barren -= $this->queueService->getSabotageQueueTotalByResource($dominion, "building_{$building->key}");
-            }
-
-            $barrenLandByLandType[$landType] += $barren;
-        }
-
-        if($dominion->race->getPerkValue('indestructible_buildings'))
-        {
-            foreach($barrenLandByLandType as $landType => $barren)
-            {
-            #    $barrenLandByLandType[$landType] = max(0, $barren);
-            }
-        }
-
-        return $barrenLandByLandType;
-
-    }
-
-    public function getLandByLandType(Dominion $dominion): array
-    {
-        $return = [];
-        foreach ($this->landHelper->getLandTypes() as $landType)
-        {
-            $return[$landType] = $dominion->{"land_{$landType}"};
-        }
-
-        return $return;
-    }
-
-    public function getLandLostByLandType(Dominion $dominion, float $landLossRatio): array
-    {
-        $targetLand = $this->getTotalLand($dominion);
-        $totalLandToLose = (int)floor($targetLand * $landLossRatio);
-        $barrenLandByLandType = $this->getBarrenLandByLandType($dominion);
-        $landPerType = $this->getLandByLandType($dominion);
-
-        arsort($landPerType);
-
-        $landLeftToLose = $totalLandToLose;
-//        $totalLandLost = 0;
-        $landLostByLandType = [];
-
-        foreach ($landPerType as $landType => $totalLandForType) {
-            if ($landLeftToLose === 0) {
-                break;
-            }
-
-            $landTypeLoss = ($totalLandForType * $landLossRatio);
-
-            $totalLandTypeLoss = (int)ceil($landTypeLoss);
-
-            if ($totalLandTypeLoss === 0) {
-                continue;
-            }
-
-            if ($totalLandTypeLoss > $landLeftToLose) {
-                $totalLandTypeLoss = $landLeftToLose;
-            }
-
-//            $totalLandLost += $totalLandTypeLoss;
-            $barrenLandForLandType = $barrenLandByLandType[$landType];
-
-            if ($barrenLandForLandType <= $totalLandTypeLoss) {
-                $barrenLandLostForLandType = $barrenLandForLandType;
-            } else {
-                $barrenLandLostForLandType = $totalLandTypeLoss;
-            }
-
-            $buildingsToDestroy = $totalLandTypeLoss - $barrenLandLostForLandType;
-            $landLostByLandType[$landType] = [
-                'land_lost' => $totalLandTypeLoss,
-                'barrenLandLost' => $barrenLandLostForLandType,
-                'buildingsToDestroy' => $buildingsToDestroy
-            ];
-
-            $landLeftToLose -= $totalLandTypeLoss;
-        }
-
-        return $landLostByLandType;
-    }
-
-    /**
-     * Returns the Dominion's total acres of land.
-     *
-     * @param Dominion $dominion
-     * @return int
-     */
-    public function getTotalLandForRealm(Realm $realm): int
-    {
-      $land = 0;
-
-      foreach ($realm->dominions as $dominion)
-      {
-          $land += $this->getTotalLand($dominion);
-      }
-
-      return $land;
-  }
 
 }

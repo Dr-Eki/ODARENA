@@ -184,7 +184,7 @@
 
                             <td>
                                 @if($dominion)
-                                    {{ number_format($landCalculator->getTotalLand($dominion)) }}
+                                    {{ number_format($dominion->land) }}
                                 @else
                                     &mdash;
                                 @endif

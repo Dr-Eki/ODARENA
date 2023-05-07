@@ -72,12 +72,12 @@ class ResourceConversionCalculator
         # Check if any converting units were sent and survived
         foreach($converter->race->units as $unit)
         {
-            if($mode == 'offense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, $resourceConversionPerks) and isset($invasion['attacker']['surviving_units'][$unit->slot]))
+            if($mode == 'offense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, $resourceConversionPerks) and isset($invasion['attacker']['units_surviving'][$unit->slot]))
             {
                 $convertingUnits[$unit->slot] = 1;
             }
 
-            if($mode == 'defense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, $resourceConversionPerks) and isset($invasion['defender']['surviving_units'][$unit->slot]))
+            if($mode == 'defense' and $this->unitHelper->checkUnitHasPerks($converter, $unit, $resourceConversionPerks) and isset($invasion['defender']['units_surviving'][$unit->slot]))
             {
                 $convertingUnits[$unit->slot] = 1;
             }
@@ -90,13 +90,13 @@ class ResourceConversionCalculator
 
         if($mode == 'offense')
         {
-            $converterUnits = $invasion['attacker']['surviving_units'];
+            $converterUnits = $invasion['attacker']['units_surviving'];
             $converterUnitsLost = $invasion['attacker']['units_lost'];
             $enemyUnitsKilled = $invasion['defender']['units_lost'];
         }
         else
         {
-            $converterUnits = $invasion['defender']['surviving_units'];
+            $converterUnits = $invasion['defender']['units_surviving'];
             $converterUnitsLost = $invasion['defender']['units_lost'];
             $enemyUnitsKilled = $invasion['attacker']['units_lost'];
         }

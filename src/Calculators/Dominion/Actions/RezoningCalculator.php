@@ -19,6 +19,9 @@ class RezoningCalculator
     /** @var ImprovementCalculator */
     protected $improvementCalculator;
 
+    /** @var ResourceCalculator */
+    protected $resourceCalculator;
+
     /**
      * RezoningCalculator constructor.
      *
@@ -45,12 +48,7 @@ class RezoningCalculator
      */
     public function getRezoningMaterial(Dominion $dominion): string
     {
-        if($dominion->race->construction_materials === null)
-        {
-            return [];
-        }
-
-        return $dominion->race->construction_materials[0];
+        return $dominion->race->construction_materials[0] ?? null;
     }
 
     /**
@@ -74,9 +72,11 @@ class RezoningCalculator
 
         $cost *= 0.85;
 
+        $cost /= 4;
+
         $cost *= $this->getCostMultiplier($dominion);
 
-        return round($cost);
+        return ceil($cost);
 
     }
 
@@ -90,7 +90,7 @@ class RezoningCalculator
     {
         if($dominion->race->getPerkValue('no_rezone_costs') or $dominion->protection_ticks == 96)
         {
-            return $this->landCalculator->getTotalBarrenLand($dominion);
+            return $dominion->land;
         }
 
         $resource = $this->getRezoningMaterial($dominion);
@@ -98,7 +98,7 @@ class RezoningCalculator
 
         return min(
             floor($this->resourceCalculator->getAmount($dominion, $resource) / $cost),
-            $this->landCalculator->getTotalBarrenLand($dominion)
+            $dominion->land
           );
 
     }

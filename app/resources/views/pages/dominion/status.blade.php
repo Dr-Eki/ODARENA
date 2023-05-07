@@ -43,7 +43,7 @@
                                 </tr>
                                 <tr>
                                     <td>Land:</td>
-                                    <td>{{ number_format($landCalculator->getTotalLand($selectedDominion, true)) }}</td>
+                                    <td>{{ number_format($selectedDominion->land) }}</td>
                                 </tr>
                                 <tr>
                                     <td>{{ $raceHelper->getPeasantsTerm($selectedDominion->race) }}:</td>

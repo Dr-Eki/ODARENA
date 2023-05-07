@@ -4,347 +4,88 @@
 @section('content')
 @php
     $availableBuildings = $buildingHelper->getBuildingsByRace($selectedDominion->race)->sortBy('name');
-    $dominionBuildings = $buildingCalculator->getDominionBuildings($selectedDominion)->sortBy('name');
 @endphp
 
 
 <div class="row">
-    <div class="col-sm-12 col-md-9">
+    <div class="col-md-9">
         <form action="{{ route('dominion.buildings') }}" method="post" role="form">
         @csrf
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-home"></i> Buildings </h3>
-                <small class="pull-right text-muted">
-                    <span data-toggle="tooltip" data-placement="top" title="How many buildings you can afford to explore right now">Max buildable</span>: {{ number_format($constructionCalculator->getMaxAfford($selectedDominion)) }} {{ str_plural('acre', $constructionCalculator->getMaxAfford($selectedDominion)) }}
-                </small>
-            </div>
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-home"></i> Buildings </h3>
+                </div>           
+                <div class="box-body">
+                    @php
+                        $numOfCols = 4;
+                        $rowCount = 0;
+                        $bootstrapColWidth = 12 / $numOfCols;
+                    @endphp
+                    <div class="row">
+                    @foreach($availableBuildings as $building)
+                        @php
+                            $amountOwned = $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building);
+                            $constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}");
+                            $boxClass = '';
+                            $titleClass = '';
 
-            <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <div class="">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{!! $landHelper->getLandTypeIconHtml('plain') !!}  Plains</h3>
-                            <span class="pull-right barren-land">Barren: <strong>{{ number_format($landCalculator->getTotalBarrenLandByLandType($selectedDominion, 'plain')) }}</strong></span>
+                            $amountOwned ? $boxClass = 'box-primary' : null;
+                            $constructionAmount ? $boxClass = 'box-warning' : null;
+                            (($amountOwned + $constructionAmount) == 0) ? $titleClass = 'text-muted' : null;
+                        
+                        @endphp
+                        <div class="col-md-{{ $bootstrapColWidth }}">
+                            <div class="box {{ $boxClass }}">
+                                <div class="box-header with-border">
+                                    <strong data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
+                                        <span class="{{ $titleClass }}">
+                                            {{ $building->name }}
+                                        </span>
+                                    </strong>
+                                </div>
+
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            @if($amountOwned)
+                                                {{ number_format($amountOwned) }}
+                                                <small class="text-muted">({{ number_format(($amountOwned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
+                                            @else
+                                                0 <small class="text-muted">(0%)</small>
+                                            @endif
+                                            
+                                            @if($constructionAmount)
+                                                <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($constructionAmount + $amountOwned) }} <small>({{ number_format((($constructionAmount + $amountOwned) / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>">
+                                                    <br>({{ number_format($constructionAmount) }})
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-8">                                                
+                                            <input type="number" name="build[building_{{ $building->key }}]" class="form-control text-center" placeholder="0" min="0" max="{{ $constructionCalculator->getMaxAfford($selectedDominion) }}" value="{{ old('build.' . $building->key) }}" {{ ($selectedDominion->isLocked() or !$constructionCalculator->canBuildBuilding($selectedDominion, $building)) ? 'disabled' : null }}>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="box-body table-responsive no-padding">
-                            <table class="table">
-                                <colgroup>
-                                    <col>
-                                    <col width="100">
-                                    <col width="150">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>Building</th>
-                                        <th class="text-center">Owned<br>(Constructing)</th>
-                                        <th class="text-center">Build</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                      @foreach($availableBuildings->where('land_type','plain') as $building)
-                                          <tr>
-                                              <td>
-                                                  <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
-                                                      {{ $building->name }}
-                                                  </span>
-                                              </td>
-                                              <td class="text-center">
-                                                    @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
-                                                        <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
-                                                    @else
-                                                        0 <small class="text-muted">(0%)</small>
-                                                    @endif
+                        @php
+                            $rowCount++;
+                        @endphp
 
-                                                    @if($constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}"))
-                                                        <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }} <small>({{ number_format((($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>">
-                                                            <br>({{ number_format($constructionAmount) }})
-                                                        </span>
-                                                    @endif
-                                              </td>
-                                              <td class="text-center"><input type="number" name="build[building_{{ $building->key }}]" class="form-control text-center" placeholder="0" min="0" max="{{ $constructionCalculator->getMaxAfford($selectedDominion) }}" value="{{ old('build.' . $building->key) }}" {{ ($selectedDominion->isLocked() or !$constructionCalculator->canBuildBuilding($selectedDominion, $building)) ? 'disabled' : null }}></td>
-                                          </tr>
-                                      @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                        @if($rowCount % $numOfCols == 0)
+                            </div><div class="row">
+                        @endif
 
-                    </div>
+                    @endforeach
                 </div>
-                <div class="col-sm-12 col-md-6">
-                    <div class="">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{!! $landHelper->getLandTypeIconHtml('forest') !!}  Forest</h3>
-                            <span class="pull-right barren-land">Barren: <strong>{{ number_format($landCalculator->getTotalBarrenLandByLandType($selectedDominion, 'forest')) }}</strong></span>
-                        </div>
-
-                        <div class="box-body table-responsive no-padding">
-                            <table class="table">
-                                <colgroup>
-                                    <col>
-                                    <col width="100">
-                                    <col width="150">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>Building</th>
-                                        <th class="text-center">Owned<br>(Constructings)</th>
-                                        <th class="text-center">Build</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                      @foreach($availableBuildings->where('land_type','forest') as $building)
-                                          <tr>
-                                              <td>
-                                                  <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
-                                                      {{ $building->name }}
-                                                  </span>
-                                              </td>
-                                              <td class="text-center">
-                                                    @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
-                                                        <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
-                                                    @else
-                                                        0 <small class="text-muted">(0%)</small>
-                                                    @endif
-
-                                                    @if($constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}"))
-                                                        <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }} <small>({{ number_format((($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>">
-                                                            <br>({{ number_format($constructionAmount) }})
-                                                        </span>
-                                                    @endif
-                                              </td>
-                                              <td class="text-center"><input type="number" name="build[building_{{ $building->key }}]" class="form-control text-center" placeholder="0" min="0" max="{{ $constructionCalculator->getMaxAfford($selectedDominion) }}" value="{{ old('build.' . $building->key) }}" {{ ($selectedDominion->isLocked() or !$constructionCalculator->canBuildBuilding($selectedDominion, $building)) ? 'disabled' : null }}></td>
-                                          </tr>
-                                      @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary pull-right" id="submit" {{ ($selectedDominion->race->getPerkValue('cannot_build') or $selectedDominion->race->getPerkValue('growth_cannot_build')) ? 'disabled' : '' }} >Begin Construction</button>
+                </div>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <div class="">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{!! $landHelper->getLandTypeIconHtml('mountain') !!} Mountains</h3>
-                            <span class="pull-right barren-land">Barren: <strong>{{ number_format($landCalculator->getTotalBarrenLandByLandType($selectedDominion, 'mountain')) }}</strong></span>
-                        </div>
-
-                        <div class="box-body table-responsive no-padding">
-                            <table class="table">
-                                <colgroup>
-                                    <col>
-                                    <col width="100">
-                                    <col width="150">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>Building</th>
-                                        <th class="text-center">Owned<br>(Constructing)</th>
-                                        <th class="text-center">Build</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                      @foreach($availableBuildings->where('land_type','mountain') as $building)
-                                          <tr>
-                                              <td>
-                                                  <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
-                                                      {{ $building->name }}
-                                                  </span>
-                                              </td>
-                                              <td class="text-center">
-                                                    @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
-                                                        <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
-                                                    @else
-                                                        0 <small class="text-muted">(0%)</small>
-                                                    @endif
-
-                                                    @if($constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}"))
-                                                        <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }} <small>({{ number_format((($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>">
-                                                            <br>({{ number_format($constructionAmount) }})
-                                                        </span>
-                                                    @endif
-                                              </td>
-                                              <td class="text-center"><input type="number" name="build[building_{{ $building->key }}]" class="form-control text-center" placeholder="0" min="0" max="{{ min($constructionCalculator->getMaxAfford($selectedDominion), $landCalculator->getTotalBarrenLandByLandType($selectedDominion, 'mountain')) }}" value="{{ old('build.' . $building->key) }}" {{ ($selectedDominion->isLocked() or !$constructionCalculator->canBuildBuilding($selectedDominion, $building)) ? 'disabled' : null }}></td>
-                                          </tr>
-                                      @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <div class="">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{!! $landHelper->getLandTypeIconHtml('hill') !!}  Hills</h3>
-                            <span class="pull-right barren-land">Barren: <strong>{{ number_format($landCalculator->getTotalBarrenLandByLandType($selectedDominion, 'hill')) }}</strong></span>
-                        </div>
-
-                        <div class="box-body table-responsive no-padding">
-                            <table class="table">
-                                <colgroup>
-                                    <col>
-                                    <col width="100">
-                                    <col width="150">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>Building</th>
-                                        <th class="text-center">Owned<br>(Constructing)</th>
-                                        <th class="text-center">Build</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                      @foreach($availableBuildings->where('land_type','hill') as $building)
-                                          <tr>
-                                              <td>
-                                                  <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
-                                                      {{ $building->name }}
-                                                  </span>
-                                              </td>
-                                              <td class="text-center">
-                                                    @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
-                                                        <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
-                                                    @else
-                                                        0 <small class="text-muted">(0%)</small>
-                                                    @endif
-
-                                                    @if($constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}"))
-                                                        <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }} <small>({{ number_format((($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>">
-                                                            <br>({{ number_format($constructionAmount) }})
-                                                        </span>
-                                                    @endif
-                                              </td>
-                                              <td class="text-center"><input type="number" name="build[building_{{ $building->key }}]" class="form-control text-center" placeholder="0" min="0" max="{{ $constructionCalculator->getMaxAfford($selectedDominion) }}" value="{{ old('build.' . $building->key) }}" {{ ($selectedDominion->isLocked() or !$constructionCalculator->canBuildBuilding($selectedDominion, $building)) ? 'disabled' : null }}></td>
-                                          </tr>
-                                      @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <div class="">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{!! $landHelper->getLandTypeIconHtml('swamp') !!}  Swamp</h3>
-                            <span class="pull-right barren-land">Barren: <strong>{{ number_format($landCalculator->getTotalBarrenLandByLandType($selectedDominion, 'swamp')) }}</strong></span>
-                        </div>
-
-                        <div class="box-body table-responsive no-padding">
-                            <table class="table">
-                                <colgroup>
-                                    <col>
-                                    <col width="100">
-                                    <col width="150">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>Building</th>
-                                        <th class="text-center">Owned<br>(Constructing)</th>
-                                        <th class="text-center">Build</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                      @foreach($availableBuildings->where('land_type','swamp') as $building)
-                                          <tr>
-                                              <td>
-                                                  <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
-                                                      {{ $building->name }}
-                                                  </span>
-                                              </td>
-                                              <td class="text-center">
-                                                    @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
-                                                        <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
-                                                    @else
-                                                        0 <small class="text-muted">(0%)</small>
-                                                    @endif
-
-                                                    @if($constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}"))
-                                                        <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }} <small>({{ number_format((($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>">
-                                                            <br>({{ number_format($constructionAmount) }})
-                                                        </span>
-                                                    @endif
-                                              </td>
-                                              <td class="text-center"><input type="number" name="build[building_{{ $building->key }}]" class="form-control text-center" placeholder="0" min="0" max="{{ $constructionCalculator->getMaxAfford($selectedDominion) }}" value="{{ old('build.' . $building->key) }}" {{ ($selectedDominion->isLocked() or !$constructionCalculator->canBuildBuilding($selectedDominion, $building)) ? 'disabled' : null }}></td>
-                                          </tr>
-                                      @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-sm-12 col-md-6">
-                    <div class="">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{!! $landHelper->getLandTypeIconHtml('water') !!}  Water</h3>
-                            <span class="pull-right barren-land">Barren: <strong>{{ number_format($landCalculator->getTotalBarrenLandByLandType($selectedDominion, 'water')) }}</strong></span>
-                        </div>
-
-                        <div class="box-body table-responsive no-padding">
-                            <table class="table">
-                                <colgroup>
-                                    <col>
-                                    <col width="100">
-                                    <col width="150">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>Building</th>
-                                        <th class="text-center">Owned<br>(Constructing)</th>
-                                        <th class="text-center">Build</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                      @foreach($availableBuildings->where('land_type','water') as $building)
-                                          <tr>
-                                              <td>
-                                                  <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
-                                                      {{ $building->name }}
-                                                  </span>
-                                              </td>
-                                              <td class="text-center">
-                                                    @if($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building))
-                                                        {{ number_format($buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }}
-                                                        <small class="text-muted">({{ number_format(($dominionBuildings->where('building_id', $building->id)->first()->owned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
-                                                    @else
-                                                        0 <small class="text-muted">(0%)</small>
-                                                    @endif
-
-                                                    @if($constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}"))
-                                                        <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) }} <small>({{ number_format((($constructionAmount + $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building)) / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>">
-                                                            <br>({{ number_format($constructionAmount) }})
-                                                        </span>
-                                                    @endif
-                                              </td>
-                                              <td class="text-center"><input type="number" name="build[building_{{ $building->key }}]" class="form-control text-center" placeholder="0" min="0" max="{{ $constructionCalculator->getMaxAfford($selectedDominion) }}" value="{{ old('build.' . $building->key) }}" {{ ($selectedDominion->isLocked() or !$constructionCalculator->canBuildBuilding($selectedDominion, $building)) ? 'disabled' : null }}></td>
-                                          </tr>
-                                      @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="box-footer">
-                <button type="submit" class="btn btn-primary pull-right" id="submit" {{ ($selectedDominion->race->getPerkValue('cannot_build') or $selectedDominion->race->getPerkValue('growth_cannot_build')) ? 'disabled' : '' }} >Build</button>
-            </div>
-        </div>
         </form>
     </div>
+        
     <div class="col-sm-12 col-md-3">
         <div class="box">
             <div class="box-header with-border">
@@ -373,7 +114,7 @@
                 <p>
                     {{ $costString }}
 
-                    @if($multiplier !== 1)
+                    @if($multiplier != 1)
                         Your construction costs are
                         @if($multiplier > 1)
                             increased
@@ -385,10 +126,8 @@
                 </p>
 
                 <p>You have {{ number_format($landCalculator->getTotalBarrenLand($selectedDominion)) . ' ' . str_plural('acre', $landCalculator->getTotalBarrenLand($selectedDominion)) }} of barren land
-                  and can afford to construct <strong>{{ number_format($constructionCalculator->getMaxAfford($selectedDominion)) }} {{ str_plural('building', $constructionCalculator->getMaxAfford($selectedDominion)) }}</strong>.</p>
+                and can afford to construct <strong>{{ number_format($constructionCalculator->getMaxAfford($selectedDominion)) }} {{ str_plural('building', $constructionCalculator->getMaxAfford($selectedDominion)) }}</strong>.</p>
                 <p>You may also <a href="{{ route('dominion.demolish') }}">demolish buildings</a> if you wish.</p>
-
-                <a href="{{ route('scribes.buildings') }}"><span><i class="ra ra-scroll-unfurled"></i> Read more about Buildings in the Scribes.</span></a>
             </div>
         </div>
     </div>

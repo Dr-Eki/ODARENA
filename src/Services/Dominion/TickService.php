@@ -220,6 +220,7 @@ class TickService
                         if(static::EXTENDED_LOGGING) { Log::debug('*** $largestDominion =' . number_format($largestDominionSize)); }
 
                         if(static::EXTENDED_LOGGING) { Log::debug('** Checking for countdown'); }
+                        
                         # If we don't already have a countdown, see if any dominion triggers it.
                         if(!$round->hasCountdown())
                         {
@@ -760,7 +761,9 @@ class TickService
                     and $row->source !== 'artefact'
                     and $row->source !== 'research'
                     and $row->source !== 'rezoning'
-                    and substr($row->resource, 0, strlen('resource_')) !== 'resource_')
+                    and substr($row->resource, 0, strlen('resource_')) !== 'resource_'
+                    and substr($row->resource, 0, strlen('terrain_')) !== 'terrain_'
+            )
             {
                 $tick->{$row->resource} += $row->amount;
                 // Temporarily add next hour's resources for accurate calculations
@@ -1275,7 +1278,10 @@ class TickService
                 $row->source !== 'deity'
                 and $row->source !== 'research'
                 and $row->source !== 'artefact'
-                and substr($row->resource, 0, strlen('resource_')) !== 'resource_')
+                and substr($row->resource, 0, strlen('resource_')) !== 'resource_'
+                and substr($row->resource, 0, strlen('terrain_')) !== 'terrain_'
+            )
+                
             {
                 // Reset current resources in case object is saved later
                 $dominion->{$row->resource} -= $row->amount;
@@ -1599,18 +1605,7 @@ class TickService
         # Special case for Growth
         if($dominion->race->name == 'Growth')
         {
-            foreach($this->landHelper->getLandTypes() as $landType)
-            {
-                $barrenLand = $this->landCalculator->getTotalBarrenLandByLandType($dominion, $landType);
-                if($barrenLand > 0)
-                {
-                    $buildingKeyToGenerate = $dominion->getDecreePerkValue('generate_building_' . $landType);
-                    if($buildingKeyToGenerate)
-                    {
-                        $this->queueService->queueResources('construction', $dominion, [('building_' . $buildingKeyToGenerate) => $barrenLand], 12);
-                    }
-                }
-            }
+            dd('E101 - unsupported');
         }
 
         # Handle self-destruct

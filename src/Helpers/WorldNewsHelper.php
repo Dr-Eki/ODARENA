@@ -537,11 +537,12 @@ class WorldNewsHelper
         $isAttackerFriendly = ($attacker->realm->id == $viewer->realm->id);
         $isDefenderFriendly = ($defender->realm->id == $viewer->realm->id);
 
-        if($isSuccessful = $invasion['data']['result']['success'])
+        if ($isSuccessful = $invasion['data']['result']['success'])
         {
-            $landConquered += array_sum($invasion['data']['attacker']['land_conquered']);
-            $landDiscovered += array_sum($invasion['data']['attacker']['land_discovered']);
-            $landDiscovered += array_sum($invasion['data']['attacker']['extra_land_discovered']);
+            $landConquered += intval($invasion['data']['attacker']['land_conquered']);
+
+            $landDiscovered += intval($invasion['data']['attacker']['land_discovered']);
+            $landDiscovered += intval($invasion['data']['attacker']['extra_land_discovered']);
         }
 
         # Deathmatch in-realm sucessful invasion

@@ -162,18 +162,6 @@ class PopulationCalculator
         $housingPerBarrenAcre += $dominion->race->getPerkValue('extra_barren_housing_per_victory') * $this->statsService->getStat($dominion, 'invasion_victories');
         $housingPerBarrenAcre += $dominion->race->getPerkValue('extra_barren_housing_per_net_victory') * max(($this->statsService->getStat($dominion, 'invasion_victories') - $this->statsService->getStat($dominion, 'defense_failures')), 0);
 
-        foreach ($this->landHelper->getLandTypes($dominion) as $landType)
-        {
-            if($dominion->race->getPerkValue('barren_housing_only_on_water') and $landType !== 'water')
-            {
-                $population += 0;
-            }
-            else
-            {
-                $population += $this->landCalculator->getTotalBarrenLandByLandType($dominion, $landType) * ($housingPerBarrenAcre + $dominion->race->getPerkValue('extra_barren_' . $landType . '_max_population'));
-            }
-        }
-
         return $population;
     }
 
@@ -804,11 +792,6 @@ class PopulationCalculator
             {
                 $jobs += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot) * $dominion->race->getUnitPerkValueForUnitSlot($slot, 'provides_jobs');
             }
-        }
-
-        foreach ($this->landHelper->getLandTypes($dominion) as $landType)
-        {
-            $jobs += $this->landCalculator->getTotalBarrenLandByLandType($dominion, $landType) * ($dominion->race->getPerkValue('extra_barren_' . $landType . '_jobs'));
         }
 
         $multiplier = 1;

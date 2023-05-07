@@ -630,11 +630,6 @@ class ResourceCalculator
             }
         }
 
-        foreach ($this->landHelper->getLandTypes($dominion) as $landType)
-        {
-            $jobs += $this->landCalculator->getTotalBarrenLandByLandType($dominion, $landType) * ($dominion->race->getPerkValue('extra_barren_' . $landType . '_jobs'));
-        }
-
         $multiplier = 1;
         $multiplier += $dominion->getAdvancementPerkMultiplier('jobs_per_building');
         $multiplier += $dominion->getTechPerkMultiplier('jobs_per_building');

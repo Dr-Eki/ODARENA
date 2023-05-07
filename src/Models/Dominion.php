@@ -733,7 +733,6 @@ class Dominion extends AbstractModel
     }
 
     # BUILDINGS
-
     protected function getBuildingPerks()
     {
         return $this->buildings->flatMap(
@@ -744,9 +743,9 @@ class Dominion extends AbstractModel
         );
     }
 
-    public function getBuildingPerkValue(string $perkKey)#: float
+    public function getBuildingPerkValue(string $perkKey)
     {
-        $landSize = $this->land_plain + $this->land_mountain + $this->land_swamp + $this->land_forest + $this->land_hill + $this->land_water;
+        $landSize = $this->land;#$this->land_plain + $this->land_mountain + $this->land_swamp + $this->land_forest + $this->land_hill + $this->land_water;
         $perk = 0;
 
         foreach ($this->buildings as $building)
@@ -754,36 +753,9 @@ class Dominion extends AbstractModel
             $perkValueString = $building->getPerkValue($perkKey);
 
             $perkValueString = is_numeric($perkValueString) ? (float)$perkValueString : $perkValueString;
-
-            /*
-            # Default value for housing.
-            if($perkKey == 'housing' and !is_numeric($perkValueString))
-            {
-                $perk += 15 * $building->pivot->owned;
-                $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
-            }
-            elseif($perkKey == 'housing' and is_numeric($perkValueString))
-            {
-                $perk += $perkValueString * $building->pivot->owned;
-                $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
-            }
-
-            # Default value for jobs.
-            if($perkKey == 'jobs' and !is_numeric($perkValueString))
-            {
-                $perk += 20 * $building->pivot->owned;
-                $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
-            }
-            elseif($perkKey == 'jobs' and is_numeric($perkValueString))
-            {
-                $perk += $perkValueString * $building->pivot->owned;
-                $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
-            }
-            */
             
             if(in_array($perkKey, ['housing','jobs']))
             {
-
                 if(is_numeric($perkValueString))
                 {
                     $perk += $perkValueString * $building->pivot->owned;
@@ -793,8 +765,6 @@ class Dominion extends AbstractModel
                     $defaultPerkValueString = ($perkKey == 'housing') ? 15 : 20;
                     $perk += $defaultPerkValueString * $building->pivot->owned;
                 }
-
-                $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
             }
             elseif(!in_array($perkKey,['jobs','housing']) and $perkValueString)
             {
@@ -985,7 +955,6 @@ class Dominion extends AbstractModel
                 if(in_array($perkKey, $singleValuePerks))
                 {
                     $perk += $perkValueString * $building->pivot->owned;
-                    $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
                 }
 
                 # Mods with ratio, multiplier, and max
@@ -1005,8 +974,6 @@ class Dominion extends AbstractModel
                     {
                         $perk += min($owned / $landSize * $ratio * $multiplier, $max) * 100;
                     }
-
-                    $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
 
                 }
                 # Mods with ratio, multiplier, and no max
@@ -1038,7 +1005,6 @@ class Dominion extends AbstractModel
                     $owned = $building->pivot->owned;
 
                     $perk += ($owned / $landSize * $ratio * $multiplier) * 100;
-                    $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
                 }
                 # Production depleting
                 elseif(
@@ -1058,7 +1024,6 @@ class Dominion extends AbstractModel
                     $buildingOwned = $building->pivot->owned;
 
                     $perk += $buildingOwned * max(0, ($baseProduction - ($ticklyReduction * $ticks)));
-                    $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
                 }
                 # Production/housing increasing
                 elseif(
@@ -1082,7 +1047,6 @@ class Dominion extends AbstractModel
                     $buildingOwned = $building->pivot->owned;
 
                     $perk += $buildingOwned * ($baseValue + ($ticklyIncrease * $ticks));
-                    $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
 
                 }
                 # Resource conversion
@@ -1173,7 +1137,6 @@ class Dominion extends AbstractModel
                     $prisonersWorking = min($maxPrisonersWorking, $prisoners);
 
                     $perk += floor($prisonersWorking * $productionPerPrisoner);
-                    $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
                 }
                 elseif(
                           $perkKey == 'thunderstone_production_raw_random'
@@ -1192,7 +1155,6 @@ class Dominion extends AbstractModel
                     }
 
                     $perk += $randomlyGenerated;
-                    $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
                 }
                 elseif(
                           $perkKey == 'dimensionalists_unit1_production_raw_capped' or
@@ -1211,7 +1173,6 @@ class Dominion extends AbstractModel
                     $availableBuildings = min($building->pivot->owned, floor($landSize * $maxBuildingRatio));
 
                     $perk += $availableBuildings * $unitPerBuilding;
-                    $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
                 }
                 # Buildings where we only ever want a single value
                 elseif(
@@ -1287,10 +1248,6 @@ class Dominion extends AbstractModel
                     {
                         $perk += $amountProduced * $building->pivot->owned;
                     }
-
-                    $perk *= 1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect');
-
-                    #dd($perk);
                 }
 
                 elseif($perkKey == ($this->race->key . '_unit_housing'))
@@ -1311,7 +1268,7 @@ class Dominion extends AbstractModel
                         $unitSlot = (int)$perkValue[0];
                         $amountHoused = (float)$perkValue[1];
                             
-                        $amountHousable = $amountHoused * $buildingsOwned * (1 + $this->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect'));
+                        $amountHousable = $amountHoused * $buildingsOwned;
                         $amountHousable = intval($amountHousable);
 
                         $result[$unitSlot] = (isset($result[$unitSlot]) ? $result[$unitSlot] + $amountHousable : $amountHousable);
@@ -1340,7 +1297,6 @@ class Dominion extends AbstractModel
                     $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_perk_mod');
                     $buildingSpecificMultiplier += $this->getTechPerkMultiplier('building_' . $building->key . '_perk_mod');
                 }
-                
             }
 
             $perk *= $buildingSpecificMultiplier ?? 1;
@@ -1755,6 +1711,37 @@ class Dominion extends AbstractModel
                 $perk += $this->race->land_improvements[$landType][$perkKey] * ($this->{'land_' . $landType} / $landCalculator->getTotalLand($this));
             }
         }
+        return $perk;
+    }
+
+    # Race Terrain Perks 2.0 - finish this with AI
+    public function getRaceTerrainPerks()
+    {
+        return $this->race->raceTerrains->flatMap(
+            function ($raceTerrain)
+            {
+                return $raceTerrain->perks;
+            }
+        );
+    }
+
+    public function getTerrainPerkValue(string $perkKey): float
+    {
+        dd($this->getRaceTerrainPerks());
+    }
+
+    public function getTerrainPerkMultiplier(string $perkKey): float
+    {
+        $landCalculator = app(LandCalculator::class);
+        $landHelper = app(LandHelper::class);
+
+        $perk = 0;
+
+        foreach(RaceTerrain::where('race_id', $this->race->id)->get() as $raceTerrain)
+        {
+            dd($raceTerrain->perks());
+        }
+
         return $perk;
     }
 

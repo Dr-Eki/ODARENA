@@ -228,33 +228,50 @@ class RezoneActionService
 
             if((array_sum($terrainAdd) + array_sum($terrainRemove)) !== 0)
             {
-                throw new GameException('Rezoning was not started due to bad input. 321');
+                throw new GameException('Rezoning was not started due to bad input.');
             }
 
-            $ticks = 12;
-
-            DB::transaction(function () use ($dominion, $terrainAdd, $terrainRemove, $resource, $cost, $ticks)
+            # Instant rezone in 96 protection ticks
+            if($dominion->protection_ticks === 96)
             {
-                # Update spending statistics.
-                $this->statsService->updateStat($dominion, ($resource . '_rezoning'), $cost);
-
-                # All fine, perform changes.
-                $this->resourceService->updateResources($dominion, [$resource => $cost*-1]);
-                
                 # Queue the rezoning.
                 foreach($terrainAdd as $terrain => $amount)
                 {
-                    $this->queueService->queueResources('rezoning', $dominion, [('terrain_' . $terrain) => $amount], $ticks);
-                }
-
-                foreach($terrainRemove as $terrain => $amount)
-                {
-                    #$this->queueService->queueResources('rezoning', $dominion, [$terrain => $amount], 12);
-
-                    # Remove the terrain
                     $this->terrainService->update($dominion, [$terrain => $amount]);
                 }
-            });
+
+                # Remove the terrain
+                foreach($terrainRemove as $terrain => $amount)
+                {
+                    $this->terrainService->update($dominion, [$terrain => $amount]);
+                }
+            }   
+            else
+            {
+                $ticks = 12;
+    
+                DB::transaction(function () use ($dominion, $terrainAdd, $terrainRemove, $resource, $cost, $ticks)
+                {
+                    # Update spending statistics.
+                    $this->statsService->updateStat($dominion, ($resource . '_rezoning'), $cost);
+    
+                    # All fine, perform changes.
+                    $this->resourceService->updateResources($dominion, [$resource => $cost*-1]);
+                    
+                    # Queue the rezoning.
+                    foreach($terrainAdd as $terrain => $amount)
+                    {
+                        $this->queueService->queueResources('rezoning', $dominion, [('terrain_' . $terrain) => $amount], $ticks);
+                    }
+    
+                    # Remove the terrain
+                    foreach($terrainRemove as $terrain => $amount)
+                    {
+                        $this->terrainService->update($dominion, [$terrain => $amount]);
+                    }
+                });
+
+            }      
 
         $dominion->save(['event' => HistoryService::EVENT_ACTION_REZONE]);
 

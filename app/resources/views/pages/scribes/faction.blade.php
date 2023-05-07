@@ -25,7 +25,8 @@
                         <a href="#land_improvements">Land Perks</a> |
                     @endif
                     <a href="#spells">Spells</a> |
-                    <a href="#sabotage">Sabotage</a>
+                    <a href="#sabotage">Sabotage</a> |
+                    <a href="#terrains">Terrains</a>
                 </div>
 
                 <div class="col-sm-2 text-center">
@@ -801,6 +802,41 @@
                         </tr>
                         @endif
                     @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <a id="sabotage"></a>
+    <div class="col-sm-12 col-md-12">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Terrains</h3>
+            </div>
+            <div class="box-body">
+                <table class="table table-striped">
+                    <colgroup>
+                        <col width="200">
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Terrain</th>
+                            <th>Perks</th>
+                        </tr>
+                    <tbody>
+                        @php
+                            $raceTerrains = OpenDominion\Models\RaceTerrain::all()->where('race_id', $race->id);
+                        @endphp
+                        @foreach ($raceTerrains as $raceTerrain)
+                            <tr>
+                                <td>{{ $raceTerrain->terrain->name }}</td>
+                                <td>{{ dump($raceTerrain->perks) }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

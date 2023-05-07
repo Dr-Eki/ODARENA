@@ -1035,28 +1035,30 @@
                                     </tr>
                                 @else
 
-                                    @foreach($landHelper->getLandTypes() as $landType)
+                                    @foreach($event->data['attacker']['terrain_gained'] as $terrainKey => $amount)
+                                        @php
+                                            $terrainKey = str_replace('terrain_', '', $terrainKey);
+                                            $terrain = OpenDominion\Models\Terrain::where('key', $terrainKey)->first();
+                                        @endphp
                                         <tr>
-                                            <td>{{ ucwords($landType) }}</td>
+                                            <td>{{ $terrain->name }}</td>
                                             <td>
-                                                @if(isset($event->data['attacker']['land_conquered'][$landType]))
-                                                    {{ number_format($event->data['attacker']['land_conquered'][$landType]) }}
+                                                @if(isset($event->data['attacker']['terrain_conquered'][$terrainKey]))
+                                                    {{ number_format($event->data['attacker']['terrain_conquered'][$terrainKey]) }}
                                                 @else
                                                     &mdash;
                                                 @endif
                                             </td>
                                             @if ($event->source->realm->id === $selectedDominion->realm->id)
                                                 <td>
-                                                    @if(isset($event->data['attacker']['land_discovered'][$landType]))
-                                                        @if(isset($event->data['attacker']['extra_land_discovered'][$landType]))
-                                                            {{ number_format($event->data['attacker']['land_discovered'][$landType]+$event->data['attacker']['extra_land_discovered'][$landType]) }}
-                                                        @else
-                                                            {{ number_format($event->data['attacker']['land_discovered'][$landType]) }}
-                                                        @endif
+                                                    @if(isset($event->data['attacker']['terrain_discovered'][$terrainKey]))
+                                                        {{ number_format($event->data['attacker']['terrain_discovered'][$terrainKey]) }}
                                                     @else
                                                         &mdash;
                                                     @endif
                                                 </td>
+                                            @else
+                                                <td></td>
                                             @endif
                                         </tr>
                                     @endforeach
@@ -1068,39 +1070,36 @@
 
                         <table class="table">
                             <div class="text-center">
-                            <h4>
-                                @if ($event->target->realm->id === $selectedDominion->realm->id)
-                                    Buildings Lost
-                                @else
-                                    Buildings Destroyed
-                                @endif
-                            </h4>
-                            <small class="text-muted" style="font-weight: normal;">(including unfinished)</small>
+                                <h4>
+                                    @if ($event->target->realm->id === $selectedDominion->realm->id)
+                                        Buildings Lost
+                                    @else
+                                        Buildings Destroyed
+                                    @endif
+                                </h4>
+                                <small class="text-muted" style="font-weight: normal;">(including unfinished)</small>
                             </div>
                             <colgroup>
                                 <col width="50%">
                                 <col width="50%">
                             </colgroup>
                             <tbody>
-                            @if(isset($event->data['defender']['buildings_lost']))
-                                @foreach($event->data['defender']['buildings_lost'] as $buildingKey => $details)
-                                    @php
-                                        $building = OpenDominion\Models\Building::where('key', $buildingKey)->first();
-
-                                        $destroyed = array_sum($details);
-                                    @endphp
-
-                                <tr>
-                                    <td>{{ $building->name }}</td>
-                                    <td>{{ number_format($destroyed )}}</td>
-                                </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="2" class="text-center">
-                                        <em>None</em>
-                                    </td>
-                            @endif
+                                @if(isset($event->data['defender']['buildings_lost']))
+                                    @foreach($event->data['defender']['buildings_lost'] as $buildingKey => $amount)
+                                        @php
+                                            $building = OpenDominion\Models\Building::where('key', $buildingKey)->first();
+                                        @endphp
+                                    <tr>
+                                        <td>{{ $building->name }}</td>
+                                        <td>{{ number_format($destroyed )}}</td>
+                                    </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <em>None</em>
+                                        </td>
+                                @endif
                             </tbody>
                         </table>
                     </div>

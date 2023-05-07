@@ -135,17 +135,21 @@
                                         <th class="text-center">Land Type</th>
                                         <th class="text-center">Discovered</th>
                                     </tr>
-                                    @foreach($event->data['land_discovered'] as $landType => $amount)
+                                    @foreach($event->data['terrain_discovered'] as $terrainKey => $amount)
                                         @if($amount > 0)
+                                            @php
+                                                $terrainKey = str_replace('terrain_', '', $terrainKey);
+                                                $terrain = OpenDominion\Models\Terrain::where('key', $terrainKey)->first();
+                                            @endphp
                                             <tr>
-                                                <td class="text-center">{{ ucfirst(str_replace('land_','',$landType)) }}</td>
+                                                <td class="text-center">{{ $terrain->name }}</td>
                                                 <td class="text-center">{{ number_format($amount) }}</td>
                                             </tr>
                                         @endif
                                     @endforeach
                                     <tr>
                                         <td class="text-center"><b>Total</b></td>
-                                        <td class="text-center"><b>{{ number_format(array_sum($event->data['land_discovered'])) }}</b></td>
+                                        <td class="text-center"><b>{{ number_format($event->data['land_discovered_amount']) }}</b></td>
                                     </tr>
                                 </thead>
                                 <tbody>

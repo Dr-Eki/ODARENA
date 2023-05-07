@@ -29,14 +29,14 @@ class ArtefactCalculator
     public function getChanceToDiscoverArtefactOnExpedition(Dominion $dominion, array $expedition): float
     {
 
-        if(!$expedition['land_discovered_amount'])
+        if(!$expedition['land_discovered'])
         {
             return 0;
         }
         
         return 1;
 
-        return log($dominion->round->ticks) / 10 * $expedition['land_discovered_amount'] / 100;
+        return log($dominion->round->ticks) / 10 * $expedition['land_discovered'] / 100;
     }
 
     public function getChanceToDiscoverArtefactOnInvasion(Dominion $dominion, array $invasion): float

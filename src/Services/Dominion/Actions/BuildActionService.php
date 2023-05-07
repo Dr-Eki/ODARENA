@@ -24,6 +24,16 @@ class BuildActionService
 {
     use DominionGuardsTrait;
 
+    protected $buildingHelper;
+    protected $constructionCalculator;
+    protected $landCalculator;
+    protected $landHelper;
+    protected $queueService;
+    protected $raceHelper;
+    protected $resourceService;
+    protected $spellCalculator;
+    protected $statsService;
+
     /**
      * ConstructionActionService constructor.
      */
@@ -77,6 +87,11 @@ class BuildActionService
             throw new GameException('Construction was not started due to bad input.');
         }
 
+        if ($totalBuildingsToConstruct > $this->landCalculator->getTotalBarrenLand($dominion))
+        {
+            throw new GameException('You do not have enough barren land to construct ' . number_format($totalBuildingsToConstruct) . ' buildings.');
+        }
+
         if ($dominion->race->getPerkValue('cannot_build') or $dominion->getSpellPerkValue('cannot_build') or $dominion->race->getPerkValue('growth_cannot_build'))
         {
             throw new GameException('Your faction is unable to construct buildings.');
@@ -87,7 +102,8 @@ class BuildActionService
             throw new GameException('You do not have enough resources to construct ' . number_format($totalBuildingsToConstruct) . '  buildings.');
         }
 
-        $buildingsByLandType = [];
+        $primaryCostTotal = 0;
+        $secondaryCostTotal = 0;
 
         foreach ($data as $buildingKey => $amount)
         {
@@ -105,7 +121,7 @@ class BuildActionService
 
             $building = Building::where('key', $buildingKey)->first();
 
-            if ($building->enabled !== 1)
+            if (!$building->enabled)
             {
                 throw new GameException('Cannot build ' . $building->name . ' because it is not enabled.');
             }
@@ -115,18 +131,11 @@ class BuildActionService
                 throw new GameException('You do not have the necessary technological research to build ' . $building->name . '.');
             }
 
-            $landType = $building->land_type;
+            $primaryCost = $this->constructionCalculator->getConstructionCostPrimary($dominion);# * $totalBuildingsToConstruct;
+            $secondaryCost = $this->constructionCalculator->getConstructionCostSecondary($dominion);# * $totalBuildingsToConstruct;
 
-            if(!isset($buildingsByLandType[$landType]))
-            {
-                $buildingsByLandType[$landType] = $amount;
-            }
-            else
-            {
-                $buildingsByLandType[$landType] += $amount;
-            }
-
-
+            $primaryCostTotal =+ $amount * $primaryCost;
+            $secondaryCostTotal =+ $amount * $secondaryCost;
         }
 
         # Get construction materials
@@ -143,30 +152,6 @@ class BuildActionService
         {
             $secondaryResource = $constructionMaterials[1];
         }
-
-        foreach ($buildingsByLandType as $landType => $amount)
-        {
-
-            if ($amount > $this->landCalculator->getTotalBarrenLandByLandType($dominion, $landType))
-            {
-                throw new GameException("You do not have enough barren land to construct {$totalBuildingsToConstruct} buildings.");
-            }
-
-            $primaryCost = $this->constructionCalculator->getConstructionCostPrimary($dominion);# * $totalBuildingsToConstruct;
-            $secondaryCost = $this->constructionCalculator->getConstructionCostSecondary($dominion);# * $totalBuildingsToConstruct;
-
-            if(($landConstructionCostPerk = $dominion->race->getPerkMultiplier($landType.'_construction_cost')) or ($landConstructionCostPerk = $dominion->realm->getArtefactPerkMultiplier($landType.'_construction_cost')))
-            {
-                $primaryCost *= (1 + $landConstructionCostPerk);
-                $secondaryCost *=  (1 + $landConstructionCostPerk);
-            }
-
-            $primaryCostPerLandType[$landType] = $amount * $primaryCost;
-            $secondaryCostPerLandType[$landType] = $amount * $secondaryCost;
-        }
-
-        $primaryCostTotal = array_sum($primaryCostPerLandType);
-        $secondaryCostTotal = array_sum($secondaryCostPerLandType);
 
         DB::transaction(function () use ($dominion, $data, $primaryCostTotal, $secondaryCostTotal, $primaryResource, $secondaryResource, $totalBuildingsToConstruct)
         {

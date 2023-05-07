@@ -44,6 +44,50 @@ class BuildingCalculator
     }
     */
 
+    public function getBuildingsLost(Dominion $dominion, int $landLost): array
+    {
+        $buildingsLost = [
+            'available' => [],
+            'queued' => []
+        ];
+    
+        $totalBuildings = $dominion->buildings->map(function ($building) {
+            return $building->pivot->owned;
+        })->sum();
+    
+        // First, take into account the queued buildings
+        $buildingsLost['queued'] = array_fill_keys(Building::pluck('key')->toArray(), 0);
+        $rezoningQueueTotal = $this->queueService->getRezoningQueueTotal($dominion);
+    
+        $buildingsLeftToLose = $landLost;
+        $lastNonZeroBuildingKey = null;
+        foreach ($buildingsLost['queued'] as $buildingKey => $buildingAmount) {
+            $queuedBuildingAmount = $this->queueService->getConstructionQueueTotalByResource($dominion, 'building_' . $buildingKey);
+            $buildingsLost['queued'][$buildingKey] = min($queuedBuildingAmount, $buildingsLeftToLose);
+            $buildingsLeftToLose -= $buildingsLost['queued'][$buildingKey];
+    
+            if ($buildingsLost['queued'][$buildingKey] > 0) {
+                $lastNonZeroBuildingKey = $buildingKey;
+            }
+        }
+    
+        // Then, take into account the available buildings
+        if ($buildingsLeftToLose > 0 && $totalBuildings > 0) {
+            foreach ($dominion->buildings as $index => $dominionBuilding) {
+                if ($dominionBuilding->pivot->owned > 0) {
+                    $buildingsLost['available'][$dominionBuilding->key] = intval(round($buildingsLeftToLose * ($dominionBuilding->pivot->owned / $totalBuildings)));
+                }
+            }
+        }
+    
+        $buildingsLost['queued'] = array_filter($buildingsLost['queued'], function ($value) {
+            return $value !== 0;
+        });
+   
+        return $buildingsLost;
+    }
+    
+
     public function getBuildingsToDestroy(Dominion $dominion, int $totalBuildingsToDestroy, string $landType): array
     {
         if($totalBuildingsToDestroy <= 0 or $dominion->race->getPerkValue('indestructible_buildings'))
@@ -136,22 +180,12 @@ class BuildingCalculator
     }
 
     # BUILDINGS VERSION 2
-     public function getTotalBuildings(Dominion $dominion): int
-     {
-         $totalBuildings = 0;
-         $dominionBuildings = $this->getDominionBuildings($dominion);
-
-         foreach ($this->buildingHelper->getBuildingKeys($dominion) as $buildingKey)
-         {
-             $buildingId = Building::where('key', $buildingKey)->pluck('id')->first();
-             if($dominionBuildings->contains('building_id', $buildingId))
-             {
-                 $totalBuildings += $dominionBuildings->where('building_id', $buildingId)->first()->owned;
-             }
-         }
-
-         return $totalBuildings;
-     }
+    public function getTotalBuildings(Dominion $dominion): int
+    {
+        return $dominion->buildings->map(function ($building) {
+            return $building->pivot->owned;
+        })->sum();
+    }
 
     public function dominionHasBuilding(Dominion $dominion, string $buildingKey): bool
     {
@@ -195,38 +229,19 @@ class BuildingCalculator
     {
         foreach($buildingKeys as $buildingKey => $amountToDestroy)
         {
-            if($amountToDestroy['builtBuildingsToDestroy'] > 0)
+            if($amountToDestroy > 0)
             {
                 $building = Building::where('key', $buildingKey)->first();
-                $amountToDestroy = intval($amountToDestroy['builtBuildingsToDestroy']);
+                $amountToDestroy = intval($amountToDestroy);
                 $owned = $this->getBuildingAmountOwned($dominion, $building);
 
                 if($this->dominionHasBuilding($dominion, $buildingKey))
                 {
-                    # Are we destroying some or all?
-
-                    # Some...
-                    if($amountToDestroy < $owned)
+                    DB::transaction(function () use ($dominion, $building, $amountToDestroy)
                     {
-                        DB::transaction(function () use ($dominion, $building, $amountToDestroy)
-                        {
-                            DominionBuilding::where('dominion_id', $dominion->id)->where('building_id', $building->id)
-                            ->decrement('owned', $amountToDestroy);
-                        });
-                    }
-                    # All
-                    elseif($amountToDestroy == $owned)
-                    {
-                        DB::transaction(function () use ($dominion, $building, $amountToDestroy)
-                        {
-                            DominionBuilding::where('dominion_id', $dominion->id)->where('building_id', $building->id)
-                            ->delete();
-                        });
-                    }
-                    else
-                    {
-                        // Do nothing.
-                    }
+                        DominionBuilding::where('dominion_id', $dominion->id)->where('building_id', $building->id)
+                        ->decrement('owned', $amountToDestroy);
+                    });
                 }
             }
         }

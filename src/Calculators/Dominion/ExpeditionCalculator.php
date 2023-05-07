@@ -9,6 +9,7 @@ use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\UnitHelper;
 
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Terrain;
 
 use OpenDominion\Calculators\Dominion\LandCalculator;
 
@@ -44,8 +45,7 @@ class ExpeditionCalculator
 
     public function getOpPerLand(Dominion $dominion): float
     {
-        $land = $this->landCalculator->getTotalLand($dominion);
-        return ($land ** 1.25) / 5;
+        return ($dominion->land ** 1.25) / 5;
     }
 
     public function getLandDiscoveredAmount(Dominion $dominion, float $op): int

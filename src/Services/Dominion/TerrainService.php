@@ -34,14 +34,11 @@ class TerrainService
             {
                 $terrain = Terrain::where('key', $terrainKey)->first();
                 $amount = intval(max(0, $amount));
+                $dominionTerrain = DominionTerrain::where(['dominion_id' => $dominion->id, 'terrain_id' => $terrain->id])->first();
 
-                if($dominion->{'get'.$terrainKey.'Terrain'})
+                if($dominionTerrain)
                 {
-                    DB::transaction(function () use ($dominion, $terrain, $amount)
-                    {
-                        DominionTerrain::where('dominion_id', $dominion->id)->where('terrain_id', $terrain->id)
-                        ->increment('amount', $amount);
-                    });
+                    $dominionTerrain->increment('amount', $amount);
                 }
                 else
                 {
@@ -60,13 +57,13 @@ class TerrainService
             {
                 $terrain = Terrain::where('key', $terrainKey)->first();
 
-                $owned = $dominion->{'terrain_' . $terrainKey};#$this->terrainCalculator->getAmount($dominion, $terrain->key);
+                $owned = $dominion->{'terrain_' . $terrainKey};
 
                 $amountToRemove = min(abs($amount), $owned);
 
                 if($owned)
                 {
-                    if($amountToRemove <= $owned)
+                    if($amountToRemove)
                     {
                         DB::transaction(function () use ($dominion, $terrain, $amountToRemove)
                         {
