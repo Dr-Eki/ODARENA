@@ -41,7 +41,7 @@ units:
       - sentient
       - intelligent
     cost:
-      mana: 296
+      mana: 248
       sapling: 1
     power:
       offense: 3
@@ -57,7 +57,7 @@ units:
       - sentient
       - intelligent
     cost:
-      mana: 360
+      mana: 306
       sapling: 1
     power:
       offense: 0
@@ -72,7 +72,7 @@ units:
       - sentient
       - intelligent
     cost:
-      mana: 360
+      mana: 306
       sapling: 1
     power:
       offense: 0
@@ -87,7 +87,7 @@ units:
       - sentient
       - intelligent
     cost:
-      mana: 750
+      mana: 620
       sapling: 1
     power:
       offense: 9

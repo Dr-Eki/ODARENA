@@ -251,7 +251,7 @@ class DominionFactory
 
         if(!$race->getPerkValue('no_food_consumption'))
         {
-            $startingResources['food'] += floor($startingParameters['peasants'] * 24 * 0.25 * (1 + $race->getPerkValue('food_consumption_raw')));
+            $startingResources['food'] += floor($startingParameters['peasants'] * 48 * 0.25 * (1 + $race->getPerkValue('food_consumption_raw')));
         }
 
         foreach($startingResources as $resourceKey => $amount)
