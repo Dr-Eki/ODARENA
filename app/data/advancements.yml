@@ -1,6 +1,5 @@
 # MILITARY
 tactics:
-  enabled: 0
   name: Tactics
   perks:
     casualties_on_offense: -1.75
@@ -8,7 +7,6 @@ tactics:
 
 anvils:
   name: Anvils
-  enabled: 0
   excluded_races:
     - Dimensionalists
     - Growth
@@ -23,7 +21,6 @@ anvils:
 
 lean_mass:
   name: Lean Mass
-  enabled: 0
   exclusive_races:
     - Afflicted
     - Aurei
@@ -37,7 +34,6 @@ lean_mass:
 
 magical_weapons:
   name: Magical Weapons
-  enabled: 0
   exclusive_races:
     - Aurei
     - Dark Elf
@@ -58,13 +54,11 @@ magical_weapons:
 
 strategy:
   name: Strategy
-  enabled: 0
   perks:
     offensive_power: 2.5
 
 fortifications:
   name: Fortifications
-  enabled: 0
   excluded_races:
     - Artillery
   perks:
@@ -72,7 +66,6 @@ fortifications:
 
 honour:
   name: Honour
-  enabled: 0
   excluded_races:
     - Myconid
   perks:
@@ -82,14 +75,12 @@ honour:
 
 architecture:
   name: Architecture
-  enabled: 0
   perks:
     construction_cost: -5
     rezone_cost: -5
 
 foundations:
   name: Foundations
-  enabled: 0
   perks:
     construction_time: -3.75
 
@@ -97,21 +88,18 @@ foundations:
 
 undercover:
   name: Undercover
-  enabled: 0
   perks:
     spy_costs: -5
     spy_losses: -5
 
 intelligence:
   name: Intelligence
-  enabled: 0
   perks:
     spy_strength: 2.5
     spy_strength_recovery: 0.25
 
 deep_pockets:
   name: Deep Pockets
-  enabled: 0
   excluded_races:
     - Myconid
     - Void
@@ -122,14 +110,12 @@ deep_pockets:
 
 wizardry_tradition:
   name: Wizardry Tradition
-  enabled: 0
   perks:
     wizard_costs: -5
     spell_costs: -5
 
 concentration:
   name: Concentration
-  enabled: 0
   perks:
     wizard_strength: 2.5
     wizard_strength_recovery: 0.25
@@ -138,7 +124,6 @@ concentration:
 
 agriculture:
   name: Agriculture
-  enabled: 0
   excluded_races:
     - Firewalker
     - Lux
@@ -150,7 +135,6 @@ agriculture:
 
 drills:
   name: Drills
-  enabled: 0
   excluded_races:
     - Afflicted
     - Ants
@@ -172,7 +156,6 @@ drills:
 
 mills:
   name: Mills
-  enabled: 0
   excluded_races:
     - Aurei
     - Barbarian
@@ -194,13 +177,11 @@ mills:
 
 invocations:
   name: Invocations
-  enabled: 0
   perks:
     mana_production_mod: 2.5
 
 mining_equipment:
   name: Mining Equipment
-  enabled: 0
   excluded_races:
     - Afflicted
     - Aurei
@@ -232,7 +213,6 @@ mining_equipment:
 
 minting:
   name: Minting
-  enabled: 0
   excluded_races:
     - Growth
     - Lux
@@ -244,7 +224,6 @@ minting:
 
 molluscs:
   name: Molluscs
-  enabled: 0
   exclusive_races:
     - Glimjir
   perks:
@@ -252,7 +231,6 @@ molluscs:
 
 commerce:
   name: Commerce
-  enabled: 0
   excluded_races:
     - Void
   perks:
@@ -262,13 +240,11 @@ commerce:
 
 housing:
   name: Quarters
-  enabled: 0
   perks:
     max_population: 1.25
 
 conscription:
   name: Conscription
-  enabled: 0
   excluded_races:
     - Spirit
   perks:
@@ -276,7 +252,6 @@ conscription:
 
 lodging:
   name: Lodging
-  enabled: 0
   excluded_races:
     - Glimjir
     - Growth
@@ -289,7 +264,6 @@ lodging:
 
 craftsmanship:
   name: Craftsmanship
-  enabled: 0
   excluded_races:
     - Growth
     - Myconid
@@ -304,13 +278,11 @@ craftsmanship:
 
 infrastructure:
   name: Infrastructure
-  enabled: 0
   perks:
     improvements: 5
 
 budget:
   name: Budget
-  enabled: 0
   excluded_races:
     - Growth
     - Lux
@@ -322,7 +294,6 @@ budget:
 
 gemcutting:
   name: Gemcutting
-  enabled: 0
   excluded_races:
     - Afflicted
     - Ants
@@ -344,7 +315,6 @@ gemcutting:
 
 stoneworks:
   name: Stoneworks
-  enabled: 0
   excluded_races:
     - Afflicted
     - Aurei
@@ -377,7 +347,6 @@ stoneworks:
 
 woodworks:
   name: Woodworks
-  enabled: 0
   excluded_races:
     - Aurei
     - Barbarian
@@ -413,7 +382,6 @@ research:
 
 obsidian_liners:
   name: Obsidian Liners
-  enabled: 0
   exclusive_races:
     - Firewalker
   perks:

@@ -12,10 +12,15 @@ use OpenDominion\Helpers\AdvancementHelper;
 class AdvancementCalculator
 {
 
+    /** @var LandCalculator */
+    protected $landCalculator;
+
+    /** @var AdvancementHelper */
+    protected $advancementHelper;
+
     public function __construct()
     {
         $this->landCalculator = app(LandCalculator::class);
-
         $this->advancementHelper = app(AdvancementHelper::class);
     }
 
@@ -37,6 +42,8 @@ class AdvancementCalculator
         {
             $cost *= (1 + $level / 10);
         }
+
+        $cost *= 1.50;
 
         $cost *= 1 + $this->getAdvancementCostMultiplier($dominion);
 
