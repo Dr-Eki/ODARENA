@@ -51,7 +51,7 @@ general:
 healer:
   name: Healer
   perks:
-    casualties: -7.5
+    casualties: -5
 
 high_priest:  
   enabled: 0
