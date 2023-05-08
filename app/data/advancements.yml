@@ -1,5 +1,6 @@
 # MILITARY
 tactics:
+  enabled: 0
   name: Tactics
   perks:
     casualties_on_offense: -1.75
