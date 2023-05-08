@@ -57,13 +57,13 @@ units:
       - living
       - sentient
     cost:
-      gold: 450
+      gold: 400
       draftees: 1
     power:
       offense: 0
       defense: 2
     perks:
-      gems_production_raw: 0.333
+      gems_production_raw: 0.4
       #immortal_on_fending_off: 1
       #casualties_on_defense: -25
 
