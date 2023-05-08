@@ -70,7 +70,7 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1500
+      gold: 1400
       draftees: 1
     power:
       offense: 0

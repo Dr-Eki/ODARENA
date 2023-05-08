@@ -44,8 +44,8 @@ class BarbarianCalculator
     # 120% - 8.0% raw 16.0% total
     # 133% - 9.20% raw 18.4% total
 
-    protected const LAND_GAIN_MIN = 48.3; # 65% hit + 5%
-    protected const LAND_GAIN_MAX = 115.5; # 95% hit
+    protected const LAND_GAIN_MIN = 30;
+    protected const LAND_GAIN_MAX = 100;
 
     # Send between these two values when hitting. /1000
     protected const SENT_RATIO_MIN = 800;
@@ -79,13 +79,22 @@ class BarbarianCalculator
     /** @var QueueService */
     protected $queueService;
 
+    /** @var StatsService */
+    protected $statsService;
+
+    /** @var LandCalculator */
+    protected $landCalculator;
+
+    /** @var MilitaryCalculator */
+    protected $militaryCalculator;
+
     /**
      * BuildingCalculator constructor.
      *
      * @param BuildingHelper $buildingHelper
      * @param QueueService $queueService
      */
-    public function __construct(BuildingHelper $buildingHelper, QueueService $queueService)
+    public function __construct()
     {
         $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
@@ -166,7 +175,7 @@ class BarbarianCalculator
     }
 
 
-    public function getOpaTarget(?Dominion $dominion = null, ?Round $round = null, ?float $npcModifier = 1000): int
+    public function getOpaTarget(Dominion $dominion = null, Round $round = null, float $npcModifier = 1000): int
     {
         return $this->getDpaTarget($dominion, $round, $npcModifier) * static::OPA_MULTIPLIER;
     }
@@ -237,14 +246,10 @@ class BarbarianCalculator
         return $this->getOpPaid($dominion) / $this->landCalculator->getTotalLand($dominion);
     }
 
-
-
     public function getOpaAtHome(Dominion $dominion): int
     {
         return $this->getOpAtHome($dominion) / $this->landCalculator->getTotalLand($dominion);
     }
-
-
 
     public function getOpaDeltaPaid(Dominion $dominion): int
     {

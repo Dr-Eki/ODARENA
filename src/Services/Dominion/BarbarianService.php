@@ -35,9 +35,39 @@ use OpenDominion\Services\Dominion\Action\ImproveActionService;
 class BarbarianService
 {
 
-    /**
-     * BarbarianService constructor.
-     */
+    /** @var LandCalculator */
+    protected $landCalculator;
+
+    /** @var QueueService */
+    protected $queueService;
+
+    /** @var MilitaryCalculator */
+    protected $militaryCalculator;
+
+    /** @var LandHelper */
+    protected $landHelper;
+
+    /** @var SpellCalculator */
+    protected $spellCalculator;
+
+    /** @var RangeCalculator */
+    protected $rangeCalculator;
+
+    /** @var DominionFactory */
+    protected $dominionFactory;
+
+    /** @var BarbarianCalculator */
+    protected $barbarianCalculator;
+
+    /** @var ResourceService */
+    protected $resourceService;
+
+    /** @var StatsService */
+    protected $statsService;
+
+    /** @var ImprovementCalculator */
+    protected $improvementCalculator;
+
     public function __construct()
     {
         #$this->now = now();
@@ -148,7 +178,10 @@ class BarbarianService
         {
 
             $currentDay = $dominion->round->start_date->subDays(1)->diffInDays(now());
-            $chanceOneIn =  $this->barbarianCalculator->getSetting('CHANCE_TO_HIT_CONSTANT') - (14 - $currentDay);
+            $chanceOneIn = $this->barbarianCalculator->getSetting('CHANCE_TO_HIT_CONSTANT') - (14 - $currentDay);
+
+            $chanceOneIn += floor($this->statsService->getStat($dominion, 'defense_failures') * 0.125);
+
             $chanceToHit = rand(1,$chanceOneIn);
 
             $logString .= "\t\t* OP/DP\n";
