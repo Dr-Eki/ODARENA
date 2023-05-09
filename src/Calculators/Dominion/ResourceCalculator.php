@@ -260,7 +260,10 @@ class ResourceCalculator
 
                 $extraProducingUnits = $availableProducingUnit; #min($availableProducingUnit, $availablePairingUnits); -- Archdemon breaks the min()
 
-                $production += $extraProducingUnits * $productionPerPair;
+                if($availablePairingUnits)
+                {
+                    $production += $extraProducingUnits * $productionPerPair;
+                }
             }
 
             # Check for RESOURCE_production_raw_from_time
