@@ -258,7 +258,7 @@ class ResourceCalculator
 
                 $availableProducingUnit = $dominion->{'military_unit' . $slot};
 
-                $extraProducingUnits = min($availableProducingUnit, $availablePairingUnits);
+                $extraProducingUnits = $availableProducingUnit; #min($availableProducingUnit, $availablePairingUnits); -- Archdemon breaks the min()
 
                 $production += $extraProducingUnits * $productionPerPair;
             }
