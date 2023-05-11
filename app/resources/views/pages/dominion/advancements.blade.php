@@ -171,8 +171,8 @@
                         @for ($level = 1; $level <= $advancementCalculator->getDominionMaxLevel($selectedDominion); $level++)
                             <tr>
                                 <td class="text-center">{{ $level }}</td>
-                                <td class="text-center">{{ number_format($advancementCalculator->getLevelUpCost($selectedDominion, null, $level-1)) }}</td>
-                                <td class="text-center">{{ max(0, ceil(($advancementCalculator->getLevelUpCost($selectedDominion, null, $level-1) - $selectedDominion->xp) / $productionCalculator->getXpGeneration($selectedDominion))) }}</td>
+                                <td class="text-center">{{ number_format($advancementCalculator->getLevelUpCost($selectedDominion, null, $level)) }}</td>
+                                <td class="text-center">{{ max(0, ceil(($advancementCalculator->getLevelUpCost($selectedDominion, null, $level) - $selectedDominion->xp) / $productionCalculator->getXpGeneration($selectedDominion))) }}</td>
                             </tr>
                         @endfor
                     </tbody>

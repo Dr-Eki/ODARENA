@@ -168,4 +168,27 @@ class AdvancementCalculator
 
     }
 
+    public function maxLevelAfforded(Dominion $dominion)
+    {
+        $maxLevel = $this->getDominionMaxLevel($dominion);
+
+        if(!$maxLevel)
+        {
+            dd('ugh');
+            return 0;
+        }
+
+        for ($level = $maxLevel; $level > 0; $level--)
+        {
+            $levelCost = $this->getLevelUpCost($dominion, null, $level-1);
+            if($dominion->xp >= $levelCost)
+            {
+                return $level;
+            }
+        }
+
+        return 0;
+
+    }
+
 }

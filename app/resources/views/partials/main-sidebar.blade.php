@@ -63,8 +63,8 @@
                     <li class="{{ Route::is('dominion.advancements') ? 'active' : null }}">
                         <a href="{{ route('dominion.advancements') }}"><i class="fas fa-layer-group fa-fw"></i> <span>Advancements</span>
 
-                        @if($techCalculator->maxLevelAfforded($selectedDominion) !== 0)
-                            <span class="pull-right-container"><small class="label pull-right bg-green">{{ $techCalculator->maxLevelAfforded($selectedDominion) }}</small></span></a>
+                        @if($advancementCalculator->maxLevelAfforded($selectedDominion))
+                            <span class="pull-right-container"><small class="label pull-right bg-green">{{ $advancementCalculator->maxLevelAfforded($selectedDominion) }}</small></span></a>
                         @else
                             </a>
                         @endif
