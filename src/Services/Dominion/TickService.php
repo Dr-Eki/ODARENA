@@ -530,17 +530,14 @@ class TickService
             });
         
             # Run audit functions after tick transaction is completed.
-            if(env('APP_ENV') == 'local')
+            DB::transaction(function () use ($round)
             {
-                DB::transaction(function () use ($round)
+                if(static::EXTENDED_LOGGING) { Log::debug('** Audit and repair terrain'); }
+                foreach($round->activeDominions as $dominion)
                 {
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Audit and repair terrain'); }
-                    foreach($round->activeDominions as $dominion)
-                    {
-                        $this->terrainService->auditAndRepairTerrain($dominion);
-                    }
-                });
-            }
+                    $this->terrainService->auditAndRepairTerrain($dominion);
+                }
+            });
 
             Log::info(sprintf(
                 '[QUEUES] Cleaned up queues, sent notifications, and precalculated %s dominions in %s ms in %s',
@@ -1375,13 +1372,10 @@ class TickService
         });
         
         # Run audit functions after tick transaction is completed.
-        if(env('APP_ENV') == 'local')
+        DB::transaction(function () use ($dominion)
         {
-            DB::transaction(function () use ($dominion)
-            {
-                $this->terrainService->auditAndRepairTerrain($dominion);
-            });
-        }
+            $this->terrainService->auditAndRepairTerrain($dominion);
+        });
 
         $this->dominionStateService->saveDominionState($dominion);
 
@@ -1818,10 +1812,7 @@ class TickService
             $terrainKey = str_replace('terrain_', '', $finishedTerrainInQueue->resource);
             $amount = intval($finishedTerrainInQueue->amount);
             #$terrain = Terrain::where('key', $terrainKey)->first();
-            if(env('APP_ENV') == 'local')
-            {
-                $this->terrainService->update($dominion, [$terrainKey => $amount]);
-            }
+            $this->terrainService->update($dominion, [$terrainKey => $amount]);
         }
     }
 
