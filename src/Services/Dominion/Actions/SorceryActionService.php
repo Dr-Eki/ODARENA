@@ -272,8 +272,8 @@ class SorceryActionService
                         $target->peasants -= $damageDealt;
                         $peasantsAfter = $peasantsBefore - $damageDealt;
 
-                        $this->statsService->updateStat($caster, 'sorcery_peasants_killed', $damageDealt);
-                        $this->statsService->updateStat($target, 'sorcery_peasants_lost', $damageDealt);
+                        $this->statsService->updateStat($caster, 'sorcery_peasants_killed', abs($damageDealt));
+                        $this->statsService->updateStat($target, 'sorcery_peasants_lost', abs($damageDealt));
 
                         # For Empire, add killed draftees go in the crypt
                         if($target->realm->alignment === 'evil')
