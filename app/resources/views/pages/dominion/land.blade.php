@@ -108,7 +108,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </table>
+                </form>
             </div>
         </div>
     </div>
@@ -165,7 +165,7 @@
                 @if ($selectedDominion->protection_ticks > 0 or !$selectedDominion->round->hasStarted())
                 <p><strong>You cannot claim daily bonus while you are in protection or before the round has started.</strong></p>
                 @endif
-                <form action="{{ route('dominion.land') }}" method="post" role="form">
+                <form action="{{ route('dominion.land.daily-bonus') }}" method="post" role="form">
                     @csrf
                     <input type="hidden" name="action" value="daily_land">
                     <button type="submit" name="land" class="btn btn-primary btn-block btn-lg" {{ !$canClaim ? 'disabled' : null }}>

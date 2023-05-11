@@ -61,49 +61,6 @@ class LandController extends AbstractDominionController
         ]);
     }
 
-    public function postLand(RezoneActionRequest $request)
-    {
-
-        $dominion = $this->getSelectedDominion();
-        
-        if($request->get('action') === 'rezone')
-        {
-            $rezoneActionService = app(RezoneActionService::class);
-
-            try {
-                $result = $rezoneActionService->rezone(
-                    $dominion,
-                    $request->get('remove'),
-                    $request->get('add')
-                );
-
-            } catch (GameException $e) {
-                return redirect()->back()
-                    ->withInput($request->all())
-                    ->withErrors([$e->getMessage()]);
-            }
-
-            $request->session()->flash('alert-success', $result['message']);
-            return redirect()->route('dominion.land');
-        }
-        # Daily Bonus
-        elseif($request->get('action') === 'daily_land')
-        {
-            $dailyBonusesActionService = app(DailyBonusesActionService::class);
-
-            try {
-                $result = $dailyBonusesActionService->claimLand($dominion);
-            } catch (GameException $e) {
-                return redirect()->back()
-                    ->withInput($request->all())
-                    ->withErrors([$e->getMessage()]);
-            }
-
-            $request->session()->flash('alert-success', $result['message']);
-            return redirect()->route('dominion.land');
-        }
-    }
-
     public function postRezone(RezoneActionRequest $request)
     {
 
@@ -127,5 +84,23 @@ class LandController extends AbstractDominionController
         $request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.land');
         
+    }
+
+    public function postDailyBonus(RezoneActionRequest $request)
+    {
+        $dominion = $this->getSelectedDominion();
+        
+        $dailyBonusesActionService = app(DailyBonusesActionService::class);
+
+        try {
+            $result = $dailyBonusesActionService->claimLand($dominion);
+        } catch (GameException $e) {
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        $request->session()->flash('alert-success', $result['message']);
+        return redirect()->route('dominion.land');
     }
 }
