@@ -1266,7 +1266,7 @@ class InvadeActionService
         ## Start with available terrain
         foreach($this->invasion['defender']['terrain_lost']['available'] as $terrainKey => $amount)
         {
-            $this->terrainService->update($target, [('terrain_' . $terrainKey) => $amount]);
+            $this->terrainService->update($target, [$terrainKey => $amount]);
         }
 
         ## Then look through queued terrain to remove (dequeue)

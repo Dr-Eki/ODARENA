@@ -43,6 +43,82 @@ use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
 
 class SorceryActionService
 {
+
+    use DominionGuardsTrait;
+        
+    protected $sorcery = [
+        'class' => '',
+        'spell_key' => '',
+        'caster' => [],
+        'target' => [],
+        'damage' => []
+    ];
+
+    protected $sorceryEvent;
+
+    /** @var ImprovementCalculator */
+    protected $improvementCalculator;
+
+    /** @var LandCalculator */
+    protected $landCalculator;
+
+    /** @var MilitaryCalculator */
+    protected $militaryCalculator;
+
+    /** @var NetworthCalculator */
+    protected $networthCalculator;
+
+    /** @var NotificationService */
+    protected $notificationService;
+
+    /** @var LandHelper */
+    protected $landHelper;
+
+    /** @var OpsHelper */
+    protected $opsHelper;
+
+    /** @var PopulationCalculator */
+    protected $populationCalculator;
+
+    /** @var ProtectionService */
+    protected $protectionService;
+
+    /** @var QueueService */
+    protected $queueService;
+
+    /** @var RaceHelper */
+    protected $raceHelper;
+
+    /** @var ImprovementHelper */
+    protected $improvementHelper;
+
+    /** @var RangeCalculator */
+    protected $rangeCalculator;
+
+    /** @var ResourceCalculator */
+    protected $resourceCalculator;
+
+    /** @var ResourceService */
+    protected $resourceService;
+
+    /** @var SorceryCalculator */
+    protected $sorceryCalculator;
+
+    /** @var SpellCalculator */
+    protected $spellCalculator;
+
+    /** @var SpellHelper */
+    protected $spellHelper;
+
+    /** @var SpellDamageCalculator */
+    protected $spellDamageCalculator;
+
+    /** @var StatsService */
+    protected $statsService;
+
+    /**
+     * SorceryActionService constructor.
+     */
     public function __construct()
     {
         $this->improvementCalculator = app(ImprovementCalculator::class);
@@ -69,6 +145,7 @@ class SorceryActionService
 
     public function performSorcery(Dominion $caster, Dominion $target, Spell $spell, int $wizardStrength, Resource $enhancementResource = null, int $enhancementAmount = 0): array
     {
+
         DB::transaction(function () use ($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount)
         {
 
@@ -595,6 +672,8 @@ class SorceryActionService
 
             // Remove wizard strength
             $caster->wizard_strength -= $wizardStrength;
+
+            ldd($this->sorcery);
 
             // Create event
             $this->sorceryEvent = GameEvent::create([

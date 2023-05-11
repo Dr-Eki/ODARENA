@@ -7,16 +7,27 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\StatsService;
+use OpenDominion\Services\Dominion\TerrainService;
 use OpenDominion\Traits\DominionGuardsTrait;
 
 class DailyBonusesActionService
 {
     use DominionGuardsTrait;
 
+    /** @var ResourceService */
+    protected $resourceService;
+
+    /** @var StatsService */
+    protected $statsService;
+
+    /** @var TerrainService */
+    protected $terrainService;
+
     public function __construct()
     {
         $this->resourceService = app(ResourceService::class);
         $this->statsService = app(StatsService::class);
+        $this->terrainService = app(TerrainService::class);
     }
 
     /**
@@ -63,10 +74,11 @@ class DailyBonusesActionService
 
         $landGained = rand(1,200) == 1 ? 100 : rand(10, 40);
         $xpGained = $landGained * 20;
-        $attribute = ('land_' . $dominion->race->home_land_type);
+        $terrain = $dominion->race->homeTerrain();
 
-        $dominion->{$attribute} += $landGained;
+        $dominion->land += $landGained;
         $dominion->xp += $xpGained;
+        $this->terrainService->update($dominion, [$terrain->key => $landGained]);
 
         $this->statsService->updateStat($dominion, 'land_discovered', $landGained);
 
@@ -77,7 +89,7 @@ class DailyBonusesActionService
             'message' => sprintf(
                 'You gain %d acres of %s and %s XP.',
                 $landGained,
-                str_plural($dominion->race->home_land_type),
+                $terrain->name,
                 number_format($xpGained)
             ),
             'data' => [

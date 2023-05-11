@@ -30,6 +30,7 @@
                                                     data-land="{{ number_format($landCalculator->getTotalLand($dominion)) }}"
                                                     data-networth="{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}"
                                                     data-percentage="{{ number_format($rangeCalculator->getDominionRange($selectedDominion, $dominion), 1) }}"
+                                                    data-wpa="{{ number_format($militaryCalculator->getWizardRatio($dominion, 'defense'), 3) }}"
                                                     data-abandoned="{{ $dominion->isAbandoned() ? 1 : 0 }}">
                                                 {{ $dominion->name }} (#{{ $dominion->realm->number }}) - {{ $dominion->race->name }}
                                             </option>
@@ -445,6 +446,7 @@
             const land = state.element.dataset.land;
             const percentage = state.element.dataset.percentage;
             const networth = state.element.dataset.networth;
+            const wpa = state.element.dataset.wpa;
             const abandoned = state.element.dataset.abandoned;
             let difficultyClass;
 
@@ -466,7 +468,7 @@
             return $(`
                 <div class="pull-left">${state.text}</div>
                 ${abandonedStatus}
-                <div class="pull-right">${land} acres <span class="${difficultyClass}">(${percentage}%)</span> - ${networth} networth</div>
+                <div class="pull-right">${land} acres <span class="${difficultyClass}">(${percentage}%)</span> - ${wpa} WPA - ${networth} networth</div>
                 <div style="clear: both;"></div>
             `);
         }

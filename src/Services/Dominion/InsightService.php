@@ -14,7 +14,7 @@ use OpenDominion\Models\Decree;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionDecreeState;
 use OpenDominion\Models\DominionInsight;
-use OpenDominion\Models\Tech;
+use OpenDominion\Models\Terrain;
 
 use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\ImprovementHelper;
@@ -360,6 +360,14 @@ class InsightService
         foreach($target->techs as $dominionTech)
         {
             $data['research'][] = $dominionTech->key;
+        }
+
+        # Terrain
+        $data['terrain'] = [];
+
+        foreach(Terrain::all() as $terrain)
+        {
+            $data['terrain'][$terrain->key] = $target->{'terrain_' . $terrain->key};
         }
 
         # Land
