@@ -32,6 +32,14 @@ use OpenDominion\Models\GameEvent;
 
 class RoundController extends AbstractController
 {
+
+    /** @var DominionFactory */
+    protected $dominionFactory;
+
+    /** @var RoundHelper */
+    protected $roundHelper;
+
+
     /**
      * RoundController constructor.
      *
@@ -54,16 +62,6 @@ class RoundController extends AbstractController
         }
 
         $races =$this->roundHelper->getRoundRaces($round);
-
-        /*
-        $races = Race::query()
-            ->orderBy('name')
-            ->where('playable',1)
-            ->get();
-        */
-
-        # For each race, check if round->mode is in race->round_modes, remove if not.
-        
         
         $countAlignment = DB::table('dominions')
                             ->join('races', 'dominions.race_id', '=', 'races.id')
@@ -317,6 +315,7 @@ class RoundController extends AbstractController
 
     public function postRegister(Request $request, Round $round)
     {
+
         try {
             $this->guardAgainstUserAlreadyHavingDominionInRound($round);
         } catch (GameException $e) {
@@ -344,10 +343,19 @@ class RoundController extends AbstractController
             $alignment = str_replace('any', '%', $alignment);
 
             
-            $races = $races =$this->roundHelper->getRoundRaces($round)
-                      ->where('alignment', 'like', $alignment)
-                      ->where('playable', 1)
-                      ->pluck('id')->all();
+            if(in_array($round->mode,['factions','factions-duration']))
+            {
+                $races = $races =$this->roundHelper->getRoundRaces($round)
+                    ->where('playable', 1)
+                    ->pluck('id')->all();
+            }
+            else
+            {
+                $races = $races =$this->roundHelper->getRoundRaces($round)
+                    ->where('alignment', 'like', $alignment)
+                    ->where('playable', 1)
+                    ->pluck('id')->all();
+            }
             
             $request['race'] = $races[array_rand($races)];
 

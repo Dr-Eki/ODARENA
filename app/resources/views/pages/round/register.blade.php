@@ -69,73 +69,100 @@
                     </div>
                 </div>
 
-                <!-- Race -->
-                <div class="form-group">
-                    <label for="faction" class="col-sm-3 control-label">Faction</label>
-                    <div class="col-sm-6">
-                        <select name="race" id="faction" class="form-control select2" data-placeholder="Select a faction" required>
-                            <option></option>
-                            <option value="random_any"
-                                      data-current="{{ array_sum($countAlignment) }}">
-                                  Random
-                            </option>
-
-                            <optgroup label="The Commonwealth">
-                                <option value="random_good"
-                                          data-current="{{ isset($countAlignment['good']) ? number_format($countAlignment['good']) : 0 }}"
-                                          data-alignment="Commonwealth">
-                                      Random Commonwealth
-                                </option>
-                                @foreach ($races->filter(function ($race) { return $race->alignment === 'good'; }) as $race)
+                <!-- Faction -->
+                @if(in_array($round->mode, ['factions','factions-duration']))
+                    <div class="form-group">
+                        <label for="faction" class="col-sm-3 control-label">Faction</label>
+                        <div class="col-sm-6">
+                            <select name="race" id="faction" class="form-control select2" data-placeholder="Select a faction" required>
+                                @foreach ($races->filter(function ($race) { return $race->playable === 1; }) as $race)
                                     <option value="{{ $race->id }}"
-                                          data-current="{{ isset($countRaces[$race->name]) ? number_format($countRaces[$race->name]) : 0 }}"
-                                          data-maxPerRound="{{ $race->max_per_round }}"
-                                          data-experimental="{{ $race->experimental }}"
-                                          data-minRoundsPlayed="{{ $race->minimum_rounds ? number_format($race->minimum_rounds) : 0 }}">
+                                        data-current="{{ isset($countRaces[$race->name]) ? number_format($countRaces[$race->name]) : 0 }}"
+                                        data-maxPerRound="{{ $race->max_per_round }}"
+                                        data-experimental="{{ $race->experimental }}"
+                                        data-minRoundsPlayed="{{ $race->minimum_rounds ? number_format($race->minimum_rounds) : 0 }}">
                                         {{ $race->name }}
                                     </option>
                                 @endforeach
-                            </optgroup>
-
-                            <optgroup label="The Empire">
-                                <option value="random_evil"
-                                          data-current="{{ isset($countAlignment['evil']) ? number_format($countAlignment['evil']) : 0 }}"
-                                          data-alignment="Imperial">
-                                      Random Imperial
-                                </option>
-                                @foreach ($races->filter(function ($race) { return $race->alignment === 'evil'; }) as $race)
-                                    <option value="{{ $race->id }}"
-                                          data-current="{{ isset($countRaces[$race->name]) ? number_format($countRaces[$race->name]) : 0 }}"
-                                          data-maxPerRound="{{ $race->max_per_round }}"
-                                          data-experimental="{{ $race->experimental }}"
-                                          data-minRoundsPlayed="{{ $race->minimum_rounds ? number_format($race->minimum_rounds) : 0 }}">
-                                        {{ $race->name }}
+                                    <option value="random_any"
+                                        data-current="{{ count($countRaces) }}"
+                                        data-maxPerRound="{{ null }}"
+                                        data-experimental="{{ null }}"
+                                        data-minRoundsPlayed="0">
+                                        Random (any)
                                     </option>
-                                @endforeach
-                            </optgroup>
-
-                            <optgroup label="The Independent">
-                                <option value="random_independent"
-                                          data-current="{{ isset($countAlignment['independent']) ? number_format($countAlignment['independent']) : 0 }}"
-                                          data-alignment="Independent">
-                                      Random Independent
-                                </option>
-                                @foreach ($races->filter(function ($race) { return $race->alignment === 'independent'; }) as $race)
-                                    <option value="{{ $race->id }}"
-                                          data-current="{{ isset($countRaces[$race->name]) ? number_format($countRaces[$race->name]) : 0 }}"
-                                          data-maxPerRound="{{ $race->max_per_round }}"
-                                          data-experimental="{{ $race->experimental }}"
-                                          data-minRoundsPlayed="{{ $race->minimum_rounds ? number_format($race->minimum_rounds) : 0 }}">
-                                        {{ $race->name }}
-                                    </option>
-                                @endforeach
-                            </optgroup>
-
-                      </select>
-                        <small class="help-block">Consult <a href="{{ route('scribes.factions') }}" target="_blank">The Scribes</a> for details about each faction and ruler titles.</small>
-                        <small class="help-block">Factions labelled <span class="label label-danger">Experimental</span> have significant changes that have been deemed at risk of being overpowered. If you play such a faction, you understand that if the community agrees (or if admin decides) that it is overpowered or unfit, the dominion will be locked. Not for violating any rules; but to keep the round fun and exciting. &mdash; When permitted, we recommend playing at least one additional dominion, just in case.</small>
+                            </select>
+                        </div>
                     </div>
-                </div>
+
+                @else
+                    <div class="form-group">
+                        <label for="faction" class="col-sm-3 control-label">Faction</label>
+                        <div class="col-sm-6">
+                            <select name="race" id="faction" class="form-control select2" data-placeholder="Select a faction" required>
+                                <option></option>
+                                <option value="random_any"
+                                        data-current="{{ array_sum($countAlignment) }}">
+                                    Random
+                                </option>
+
+                                <optgroup label="The Commonwealth">
+                                    <option value="random_good"
+                                            data-current="{{ isset($countAlignment['good']) ? number_format($countAlignment['good']) : 0 }}"
+                                            data-alignment="Commonwealth">
+                                        Random Commonwealth
+                                    </option>
+                                    @foreach ($races->filter(function ($race) { return $race->alignment === 'good'; }) as $race)
+                                        <option value="{{ $race->id }}"
+                                            data-current="{{ isset($countRaces[$race->name]) ? number_format($countRaces[$race->name]) : 0 }}"
+                                            data-maxPerRound="{{ $race->max_per_round }}"
+                                            data-experimental="{{ $race->experimental }}"
+                                            data-minRoundsPlayed="{{ $race->minimum_rounds ? number_format($race->minimum_rounds) : 0 }}">
+                                            {{ $race->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+                                <optgroup label="The Empire">
+                                    <option value="random_evil"
+                                            data-current="{{ isset($countAlignment['evil']) ? number_format($countAlignment['evil']) : 0 }}"
+                                            data-alignment="Imperial">
+                                        Random Imperial
+                                    </option>
+                                    @foreach ($races->filter(function ($race) { return $race->alignment === 'evil'; }) as $race)
+                                        <option value="{{ $race->id }}"
+                                            data-current="{{ isset($countRaces[$race->name]) ? number_format($countRaces[$race->name]) : 0 }}"
+                                            data-maxPerRound="{{ $race->max_per_round }}"
+                                            data-experimental="{{ $race->experimental }}"
+                                            data-minRoundsPlayed="{{ $race->minimum_rounds ? number_format($race->minimum_rounds) : 0 }}">
+                                            {{ $race->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+                                <optgroup label="The Independent">
+                                    <option value="random_independent"
+                                            data-current="{{ isset($countAlignment['independent']) ? number_format($countAlignment['independent']) : 0 }}"
+                                            data-alignment="Independent">
+                                        Random Independent
+                                    </option>
+                                    @foreach ($races->filter(function ($race) { return $race->alignment === 'independent'; }) as $race)
+                                        <option value="{{ $race->id }}"
+                                            data-current="{{ isset($countRaces[$race->name]) ? number_format($countRaces[$race->name]) : 0 }}"
+                                            data-maxPerRound="{{ $race->max_per_round }}"
+                                            data-experimental="{{ $race->experimental }}"
+                                            data-minRoundsPlayed="{{ $race->minimum_rounds ? number_format($race->minimum_rounds) : 0 }}">
+                                            {{ $race->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+                        </select>
+                            <small class="help-block">Consult <a href="{{ route('scribes.factions') }}" target="_blank">The Scribes</a> for details about each faction and ruler titles.</small>
+                            <small class="help-block">Factions labelled <span class="label label-danger">Experimental</span> have significant changes that have been deemed at risk of being overpowered. If you play such a faction, you understand that if the community agrees (or if admin decides) that it is overpowered or unfit, the dominion will be locked. Not for violating any rules; but to keep the round fun and exciting. &mdash; When permitted, we recommend playing at least one additional dominion, just in case.</small>
+                        </div>
+                    </div>
+                @endif
 
                 {{-- Terms and Conditions --}}
                 <div class="form-group">

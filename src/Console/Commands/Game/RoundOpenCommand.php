@@ -108,7 +108,7 @@ class RoundOpenCommand extends Command implements CommandInterface
         {
             $setting = $this->ask("[$counting / $counter] Enable $name (y/n) [y]: ");
 
-            $settings[$key] = ($setting == 'y' ? true : false);
+            $settings[$key] = ($setting == 'n' ? false : true);
 
             $counting++;
         }

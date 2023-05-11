@@ -263,19 +263,19 @@ class RoundHelper
     public function getRoundSettings(): array
     {
         return [
-            'improvements' => 'Improvements',
+            'advancements' => 'Advancements',
+            'barbarians' => 'Barbarians',
             'buildings' => 'Buildings',
-            'rezoning' => 'Rezoning',
+            'deities' => 'Deities',
             'expeditions' => 'Expeditions',
+            'improvements' => 'Improvements',
+            'research' => 'Research',
+            'rezoning' => 'Rezoning',
             'invasions' => 'Invasions',
             'sabotage' => 'Sabotage',
+            'spells' => 'Spells',
             'sorcery' => 'Sorcery',
             'theft' => 'Theft',
-            'deities' => 'Deities',
-            'advancements' => 'Advancements',
-            'research' => 'Research',
-            'spells' => 'Spells',
-            'barbarians' => 'Barbarians',
         ];
     }
 
