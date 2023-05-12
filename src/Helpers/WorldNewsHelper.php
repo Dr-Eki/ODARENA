@@ -477,7 +477,7 @@ class WorldNewsHelper
                 'An expedition sent out by %s discovered <strong class="%s">%s</strong> land and found an artefact: <span class="%s">%s</span>.',
                 $this->generateDominionString($dominion, 'neutral', $viewer),
                 $this->getSpanClass($mode),
-                number_format($expedition['data']['land_discovered_amount']),
+                number_format($expedition['data']['land_discovered']),
                 $this->getSpanClass('info'),
                 Artefact::findOrFail($expedition['data']['artefact']['id'])->name
               );
@@ -490,7 +490,7 @@ class WorldNewsHelper
                 'An expedition sent out by %s discovered <strong class="%s">%s</strong> land.',
                 $this->generateDominionString($dominion, 'neutral', $viewer),
                 $this->getSpanClass($mode),
-                number_format($expedition['data']['land_discovered_amount'])
+                number_format($expedition['data']['land_discovered'])
               );
 
         }
