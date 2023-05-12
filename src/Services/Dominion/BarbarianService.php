@@ -349,7 +349,7 @@ class BarbarianService
                 $data = [
                     'type' => $invasionTypes[rand(0,count($invasionTypes)-1)],
                     'target' => $invasionTargets[rand(0,count($invasionTargets)-1)],
-                    'land' => $totalLandToGain,
+                    'land' => $landGained,
                   ];
 
                 $barbarianInvasionEvent = GameEvent::create([
