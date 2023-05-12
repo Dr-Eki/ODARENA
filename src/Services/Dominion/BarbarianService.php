@@ -299,12 +299,11 @@ class BarbarianService
                 $logString .= "\t\t**Land gain ratio: " . number_format($landGainRatio*100,2) . "% \n";
 
                 # Calculate the amount of acres to grow.
-                $logString .= "\t\t**Land to gain: " . number_format($totalLandToGain). "\n";
-
-                $logString .= "\t\t**Actual land gained: " . array_sum($landGained) . "\n";
+                $landGained = intval($this->landCalculator->getTotalLand($dominion) * $landGainRatio);
+                $logString .= "\t\t**Land to gain: " . number_format($landGained). "\n";
 
                 # Add the land gained to the $dominion.
-                $this->statsService->updateStat($dominion, 'land_conquered', $totalLandToGain);
+                $this->statsService->updateStat($dominion, 'land_conquered', $landGained);
                 $this->statsService->updateStat($dominion, 'invasion_victories', 1);
 
                 $sentRatio = rand($this->barbarianCalculator->getSetting('SENT_RATIO_MIN'), $this->barbarianCalculator->getSetting('SENT_RATIO_MAX'))/1000;

@@ -258,22 +258,23 @@ class ExpeditionActionService
             $this->expedition['op_raw'] = $this->militaryCalculator->getOffensivePowerRaw($dominion, null, null, $units, [], true);
 
             $this->expedition['land_discovered'] = $this->expeditionCalculator->getLandDiscoveredAmount($dominion, $this->expedition['op_sent']);
-            $this->expedition['terrain_discovered'] = $this->terrainCalculator->getTerrainDiscovered($dominion, $this->expedition['land_discovered']);
+            
 
             if($this->expedition['land_discovered'] < 1)
             {
                 throw new GameException('Expeditions must discover at least some land.');
             }
-
-            /*
+            
             $this->queueService->queueResources(
                 'expedition',
                 $dominion,
                 ['land' => $this->expedition['land_discovered']]
             );
-            */
 
-            dd($this->expedition['terrain_discovered']);
+            foreach($this->terrainCalculator->getTerrainDiscovered($dominion, $this->expedition['land_discovered']) as $terrainKey => $amount)
+            {
+                $this->expedition['terrain_discovered']['terrain_' . $terrainKey] = $amount;
+            }
 
             $this->queueService->queueResources(
                 'expedition',
