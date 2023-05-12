@@ -299,16 +299,7 @@ class BarbarianService
                 $logString .= "\t\t**Land gain ratio: " . number_format($landGainRatio*100,2) . "% \n";
 
                 # Calculate the amount of acres to grow.
-                $totalLandToGain = intval($this->landCalculator->getTotalLand($dominion) * $landGainRatio);
                 $logString .= "\t\t**Land to gain: " . number_format($totalLandToGain). "\n";
-
-                # Split the land gained evenly across all 6 land types.
-                $landGained['land_plain'] = intval($totalLandToGain/6);
-                $landGained['land_mountain'] = intval($totalLandToGain/6);
-                $landGained['land_forest'] = intval($totalLandToGain/6);
-                $landGained['land_swamp'] = intval($totalLandToGain/6);
-                $landGained['land_hill'] = intval($totalLandToGain/6);
-                $landGained['land_water'] = intval($totalLandToGain/6);
 
                 $logString .= "\t\t**Actual land gained: " . array_sum($landGained) . "\n";
 
@@ -343,7 +334,7 @@ class BarbarianService
                 $this->queueService->queueResources(
                     'invasion',
                     $dominion,
-                    $landGained
+                    ['land' => $landGained]
                 );
 
                 # Queue the returning units.

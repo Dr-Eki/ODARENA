@@ -265,11 +265,15 @@ class ExpeditionActionService
                 throw new GameException('Expeditions must discover at least some land.');
             }
 
+            /*
             $this->queueService->queueResources(
                 'expedition',
                 $dominion,
                 ['land' => $this->expedition['land_discovered']]
             );
+            */
+
+            dd($this->expedition['terrain_discovered']);
 
             $this->queueService->queueResources(
                 'expedition',
@@ -287,7 +291,7 @@ class ExpeditionActionService
             $this->statsService->updateStat($dominion, 'expeditions', 1);
 
             # Debug before saving:
-            ldd($this->expedition);
+            #ldd($this->expedition);
 
             $this->expedition = GameEvent::create([
                 'round_id' => $dominion->round_id,
@@ -396,7 +400,7 @@ class ExpeditionActionService
     {
         $this->expedition['artefact']['found'] = false;
 
-        if($dominion->round->mode == 'artefacts')
+        if($dominion->round->mode !== 'artefacts')
         {
             return;
         }
