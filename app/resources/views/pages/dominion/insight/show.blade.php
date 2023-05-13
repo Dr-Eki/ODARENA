@@ -796,33 +796,23 @@
                     <col>
                     <col width="100">
                     <col width="100">
-                    <col width="100">
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>Land Type</th>
+                        <th>Terrain</th>
                         <th class="text-center">Number</th>
                         <th class="text-center">% of total</th>
-                        <th class="text-center">Barren</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($landHelper->getLandTypes() as $landType)
+                    @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
+                        @php
+                            $amount = $selectedDominion->{'terrain_' . $terrain->key};
+                        @endphp
                         <tr>
-                            <td>
-                                {{ ucfirst($landType) }}
-                                @if ($landType === $dominion->race->home_land_type)
-                                    <small class="text-muted"><i>(home)</i></small>
-                                @endif
-                            </td>
-                            <td class="text-center">{{ number_format($dominion->{'land_' . $landType}) }}</td>
-                            <td class="text-center">{{ number_format(($dominion->{'land_' . $landType} / $landCalculator->getTotalLand($dominion)) * 100, 2) }}%</td>
-                            <td class="text-center">{{ number_format($landCalculator->getTotalBarrenLandByLandType($dominion, $landType)) }}</td>
-                            @if ($dominion->race->getPerkValue('defense_from_' . $landType))
-                                <td class="text-center">
-                                      +{{ number_format($militaryCalculator->getDefensivePowerModifierFromLandType($dominion, $landType)*100,2) }}% Defensive Power
-                                </td>
-                            @endif
+                            <td>{{ ucfirst($terrain->name) }}</td>
+                            <td class="text-center">{{ number_format($amount) }}</td>
+                            <td class="text-center">{{ number_format(($amount / $dominion->land) * 100, 2) }}%</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -847,7 +837,7 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>Land Type</th>
+                        <th>Terrain</th>
                         @for ($i = 1; $i <= 12; $i++)
                             <th class="text-center">{{ $i }}</th>
                         @endfor
@@ -855,19 +845,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($landHelper->getLandTypes() as $landType)
+                    @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
                         <tr>
-                            <td>
-                                {{ ucfirst($landType) }}
-                                @if ($landType === $dominion->race->home_land_type)
-                                    <small class="text-muted"><i>(home)</i></small>
-                                @endif
-                            </td>
+                            <td>{{ ucfirst($terrain->name) }}</td>
                             @for ($i = 1; $i <= 12; $i++)
                                 @php
-                                    $amount = $queueService->getExplorationQueueAmount($dominion, "land_{$landType}", $i);
-                                    $amount += $queueService->getInvasionQueueAmount($dominion, "land_{$landType}", $i);
-                                    $amount += $queueService->getExpeditionQueueAmount($dominion, "land_{$landType}", $i);
+                                    $amount = $queueService->getExplorationQueueAmount($dominion, "terrain_{$terrain->key}", $i);
+                                    $amount += $queueService->getInvasionQueueAmount($dominion, "terrain_{$terrain->key}", $i);
+                                    $amount += $queueService->getExpeditionQueueAmount($dominion, "terrain_{$terrain->key}", $i);
                                 @endphp
                                 <td class="text-center">
                                     @if ($amount === 0)
@@ -877,7 +862,7 @@
                                     @endif
                                 </td>
                             @endfor
-                            <td class="text-center">{{ number_format($queueService->getExplorationQueueTotalByResource($dominion, "land_{$landType}") + $queueService->getInvasionQueueTotalByResource($dominion, "land_{$landType}")  + $queueService->getExpeditionQueueTotalByResource($dominion, "land_{$landType}")) }}</td>
+                            <td class="text-center">{{ number_format($queueService->getExplorationQueueTotalByResource($dominion, "terrain_{$terrain->key}") + $queueService->getInvasionQueueTotalByResource($dominion, "terrain_{$terrain->key}")  + $queueService->getExpeditionQueueTotalByResource($dominion, "terrain_{$terrain->key}")) }}</td>
                         </tr>
                     @endforeach
                 </tbody>

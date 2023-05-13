@@ -1250,7 +1250,6 @@ class InvadeActionService
         $discoverLand = $this->militaryCalculator->checkDiscoverLand($attacker, $target, $landConquered);
         $extraLandDiscovered = $this->militaryCalculator->getExtraLandDiscovered($attacker, $target, $discoverLand, $landConquered);
 
-
         $this->invasion['defender']['land_lost'] = intval($landConquered);
         $this->invasion['defender']['terrain_lost'] = $this->terrainCalculator->getTerrainLost($target, $landConquered);
         $this->invasion['defender']['buildings_lost'] = $this->buildingCalculator->getBuildingsLost($target, $landConquered);
