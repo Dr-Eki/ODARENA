@@ -24,6 +24,8 @@ class ExpeditionCalculationService
     /** @var RangeCalculator */
     protected $rangeCalculator;
 
+    
+
     /** @var array Calculation result array. */
     protected $calculationResult = [
         'result' => 'success',
@@ -39,7 +41,7 @@ class ExpeditionCalculationService
         'home_dpa' => 0,
         'max_op' => 0,
         'min_dp' => 0,
-        'land_discovered_amount' => 0,
+        'land_discovered' => 0,
         'land_ratio' => 0.5,
         'spell_bonus' => null,
         'units_sent' => 0,
@@ -141,7 +143,7 @@ class ExpeditionCalculationService
         $this->calculationResult['max_op'] = $this->calculationResult['home_defense'] * (4/3);
         $this->calculationResult['min_dp'] = $this->calculationResult['away_offense'] / 3;
 
-        $this->calculationResult['land_discovered_amount'] = $this->expeditionCalculator->getLandDiscoveredAmount($dominion, $this->calculationResult['away_offense']);
+        $this->calculationResult['land_discovered'] = $this->expeditionCalculator->getLandDiscoveredAmount($dominion, $this->calculationResult['away_offense']);
 
         $this->calculationResult['artefact_discovery_chance'] = $this->artefactCalculator->getChanceToDiscoverArtefactOnExpedition($dominion, $this->calculationResult) * 100;
 

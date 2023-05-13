@@ -379,7 +379,7 @@
                             invasionForceOPElement.data('amount', response.away_offense);
                             invasionForceDPElement.data('amount', response.away_defense);
                             invasionForceMaxOPElement.data('amount', response.max_op);
-                            invasionLandDiscoveredElement.data('amount', response.land_discovered_amount);
+                            invasionLandDiscoveredElement.data('amount', response.land_discovered);
                             homeForcesOPElement.data('amount', response.home_offense);
                             homeForcesDPElement.data('amount', response.home_defense);
                             homeForcesDPRawElement.data('amount', response.home_defense_raw);
@@ -391,7 +391,7 @@
                             invasionForceOPElement.text(response.away_offense.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             invasionForceDPElement.text(response.away_defense.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             invasionForceMaxOPElement.text(response.max_op.toLocaleString(undefined, {maximumFractionDigits: 2}));
-                            invasionLandDiscoveredElement.text(response.land_discovered_amount.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            invasionLandDiscoveredElement.text(response.land_discovered.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             homeForcesOPElement.text(response.home_offense.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             homeForcesDPElement.text(response.home_defense.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             homeForcesDPRawElement.text(response.home_defense_raw.toLocaleString(undefined, {maximumFractionDigits: 2}));

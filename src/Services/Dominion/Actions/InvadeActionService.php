@@ -1291,7 +1291,7 @@ class InvadeActionService
         {
             if($amount > 0)
             {
-                $this->queueService->dequeueResource('building', $target, ('terrain_' . $terrainKey), $amount);
+                $this->queueService->dequeueResource('building', $target, ('building_' . $buildingKey), $amount);
             }
         }
 
@@ -1348,7 +1348,7 @@ class InvadeActionService
             ['land' => ($this->invasion['attacker']['land_conquered'] + $this->invasion['attacker']['land_discovered'] + $this->invasion['attacker']['extra_land_discovered'])]
         );
 
-        # Populate buildings_lost_total
+        # Populate buildings_lost_total (for display purposes)
 
         $mergedBuildingsArrays = array_merge_recursive($this->invasion['defender']['buildings_lost']['available'], $this->invasion['defender']['buildings_lost']['queued']);
 

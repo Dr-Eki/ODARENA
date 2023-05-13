@@ -149,7 +149,7 @@
                                     @endforeach
                                     <tr>
                                         <td class="text-center"><b>Total</b></td>
-                                        <td class="text-center"><b>{{ number_format($event->data['land_discovered_amount']) }}</b></td>
+                                        <td class="text-center"><b>{{ number_format($event->data['land_discovered']) }}</b></td>
                                     </tr>
                                 </thead>
                                 <tbody>
