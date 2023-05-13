@@ -1295,6 +1295,9 @@ class InvadeActionService
         }
 
         $landDiscovered = 0;
+        $this->invasion['attacker']['terrain_discovered'] = [];
+        $this->invasion['attacker']['extra_land_discovered'] = 0;
+        
         if($discoverLand)
         {
             $landDiscovered = $landConquered;
