@@ -367,8 +367,38 @@ class InsightService
 
         foreach(Terrain::all() as $terrain)
         {
-            $data['terrain'][$terrain->key] = $target->{'terrain_' . $terrain->key};
+            $amount = $target->{'terrain_' . $terrain->key};
+            $data['terrain'][$terrain->key]['amount'] = $amount;
+            $data['terrain'][$terrain->key]['percentage'] = ($amount / $target->land) * 100;
+            $data['terrain']['incoming'][$terrain->key] = array_fill(1, 12, 0);
         }
+
+        $this->queueService->getExplorationQueue($target)->each(static function ($row) use (&$data)
+        {
+            if (starts_with($row->resource, 'terrain_'))
+            {
+                $landType = str_replace('terrain_', '', $row->resource);
+                $data['terrain']['incoming'][$landType][$row->hours] += $row->amount;
+            }
+        });
+
+        $this->queueService->getInvasionQueue($target)->each(static function ($row) use (&$data)
+        {
+            if (starts_with($row->resource, 'terrain_'))
+            {
+                $landType = str_replace('terrain_', '', $row->resource);
+                $data['terrain']['incoming'][$landType][$row->hours] += $row->amount;
+            }
+        });
+
+        $this->queueService->getExpeditionQueue($target)->each(static function ($row) use (&$data)
+        {
+            if (starts_with($row->resource, 'terrain_'))
+            {
+                $landType = str_replace('terrain_', '', $row->resource);
+                $data['terrain']['incoming'][$landType][$row->hours] += $row->amount;
+            }
+        });
 
         # Land
         $data['land'] = [];

@@ -675,30 +675,17 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>Land Type</th>
+                        <th>Terrain</th>
                         <th class="text-center">Number</th>
                         <th class="text-center">% of total</th>
-                        <th class="text-center">Barren</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($landHelper->getLandTypes() as $landType)
+                    @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
                         <tr>
-                            <td>
-                                {{ ucfirst($landType) }}
-                                @if ($landType === $dominion->race->home_land_type)
-                                    <small class="text-muted"><i>(home)</i></small>
-                                @endif
-                            </td>
-                            <td class="text-center">{{ number_format($data['land'][$landType]['amount']) }}</td>
-                            <td class="text-center">{{ number_format($data['land'][$landType]['percentage'], 2) }}%</td>
-                            <td class="text-center">{{ number_format($data['land'][$landType]['barren']) }}</td>
-
-                            @if ($dominion->race->getPerkValue('defense_from_' . $landType))
-                                <td class="text-center">
-                                      +{{ number_format($data['land'][$landType]['landtype_defense']*100,2) }}% Defensive Power
-                                </td>
-                            @endif
+                            <td>{{ $terrain->name }}</td>
+                            <td class="text-center">{{ number_format($data['terrain'][$terrain->key]['amount']) }}</td>
+                            <td class="text-center">{{ number_format($data['terrain'][$terrain->key]['percentage'], 2) }}%</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -723,7 +710,7 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>Land Type</th>
+                        <th>Terrain</th>
                         @for ($i = 1; $i <= 12; $i++)
                             <th class="text-center">{{ $i }}</th>
                         @endfor
@@ -731,17 +718,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($landHelper->getLandTypes() as $landType)
+                    @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
                         <tr>
-                            <td>
-                                {{ ucfirst($landType) }}
-                                @if ($landType === $dominion->race->home_land_type)
-                                    <small class="text-muted"><i>(home)</i></small>
-                                @endif
-                            </td>
+                            <td>{{ $terrain->name }}</td>
                             @for ($i = 1; $i <= 12; $i++)
                                 @php
-                                    $amount = $data['land']['incoming'][$landType][$i];
+                                    $amount = $data['terrain']['incoming'][$terrain->key][$i];
                                 @endphp
                                 <td class="text-center">
                                     @if ($amount === 0)
@@ -751,7 +733,7 @@
                                     @endif
                                 </td>
                             @endfor
-                            <td class="text-center">{{ number_format(array_sum($data['land']['incoming'][$landType])) }}</td>
+                            <td class="text-center">{{ number_format(array_sum($data['terrain']['incoming'][$terrain->key])) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
