@@ -807,7 +807,7 @@
                 <tbody>
                     @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
                         @php
-                            $amount = $selectedDominion->{'terrain_' . $terrain->key};
+                            $amount = $dominion->{'terrain_' . $terrain->key};
                         @endphp
                         <tr>
                             <td>{{ ucfirst($terrain->name) }}</td>
