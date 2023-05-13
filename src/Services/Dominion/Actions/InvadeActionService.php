@@ -2795,6 +2795,11 @@ class InvadeActionService
     protected function handleCrypt(Dominion $attacker, Dominion $defender, array $offensiveConversions, array $defensiveConversions): void
     {
 
+        if(in_array($attacker->round->mode, ['factions','factions-duration','deathmatch','deathmatch-duration','artefacts']))
+        {
+            return;
+        }
+
         if($attacker->race->alignment === 'evil' or $defender->race->alignment === 'evil')
         {
 
