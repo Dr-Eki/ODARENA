@@ -43,21 +43,21 @@ class SorceryCalculator
         return false;
     }
 
-    public function getSorcerySpellManaCost(Dominion $caster, Spell $spell, int $wizardStrength): int
+    public function getSpellManaCost(Dominion $caster, Spell $spell, int $wizardStrength): int
     {
         $manaCost = $this->getManaCost($caster, $spell->key);
 
         return $manaCost * $wizardStrength;
     }
 
-    public function getSorcerySpellDuration(Dominion $caster, Dominion $target, Spell $spell, int $wizardStrength, Resource $enhancementResource = null, int $enhancementAmount = 0): int
+    public function getSpellDuration(Dominion $caster, Dominion $target, Spell $spell, int $wizardStrength, Resource $enhancementResource = null, int $enhancementAmount = 0): int
     {
         $duration = $spell->duration;
 
         $duration *= $wizardStrength;
 
         $multiplier = 1;
-        $multiplier += $this->getSorcerySpellDamageMultiplier($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount) / 25;
+        $multiplier += $this->getSpellDamageMultiplier($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount) / 25;
         $multiplier += $caster->realm->getArtefactPerkMultiplier('sorcery_spell_duration');
 
         $duration *= $multiplier;
@@ -69,26 +69,32 @@ class SorceryCalculator
         return $duration;
     }
 
-    public function getSorcerySpellDamageMultiplier(Dominion $caster, Dominion $target, Spell $spell, int $wizardStrength, Resource $enhancementResource = null, int $enhancementAmount = 0, string $perkKey = null): float
+    public function getSpellDamageMultiplier(Dominion $caster, Dominion $target, Spell $spell, int $wizardStrength, Resource $enhancementResource = null, int $enhancementAmount = 0, string $perkKey = null): float
     {
         $multiplier = 1;
+        #dump("1/4 getSpellDamageMultiplier starting point: $multiplier");
 
-        $multiplier += $this->getSorceryDamageDealtMultiplier($caster, $target);
+        $multiplier *= $this->getDamageDealtMultiplier($caster, $target);
+        #dump("2/4 getSpellDamageMultiplier after getDamageDealtMultiplier: $multiplier");
 
-        $multiplier *= $this->getSorceryWizardStrengthMultiplier($wizardStrength);
-        $multiplier *= $this->getSorceryWizardRatioMultiplier($caster, $target);
+        $multiplier *= $this->getyWizardStrengthMultiplier($wizardStrength);
+        #dump("3/4 getSpellDamageMultiplier after getyWizardStrengthMultiplier: $multiplier");
+
+        $multiplier *= $this->getWizardRatioMultiplier($caster, $target);
+        #dump("4/4 getSpellDamageMultiplier after getWizardRatioMultiplier: $multiplier");
 
         return $multiplier;
     }
 
-    public function getSorceryWizardStrengthMultiplier(int $wizardStrength): float
+    public function getyWizardStrengthMultiplier(int $wizardStrength): float
     {
-        return max($wizardStrength, $wizardStrength * (exp($wizardStrength/120)-1));
+        #dump("getyWizardStrengthMultiplier: " . $wizardStrength * (exp($wizardStrength/120)-1));
+        return $wizardStrength * (exp($wizardStrength/120)-1);
     }
 
-    public function getSorceryWizardRatioMultiplier(Dominion $caster, Dominion $target): float
+    public function getWizardRatioMultiplier(Dominion $caster, Dominion $target): float
     {
-        $multiplier = 0;
+        $multiplier = 1;
         $casterWpa = $this->militaryCalculator->getWizardRatio($caster, 'offense');
         $targetWpa = $this->militaryCalculator->getWizardRatio($target, 'defense');
 
@@ -98,18 +104,24 @@ class SorceryCalculator
         }
         if($targetWpa <= 0)
         {
-            return 1.5;
+            return min($casterWpa, 1.50);
         }
-        $multiplier += min((($casterWpa - $targetWpa) / $casterWpa), 1.5);
+
+        $multiplier += max(min((($casterWpa - $targetWpa) / $casterWpa), 1.5), 0);
+
+        #dump("getWizardRatioMultiplier: $multiplier (casterWpa: $casterWpa / targetWpa: $targetWpa)");
 
         return $multiplier;
     }
 
-    public function getSorceryDamageDealtMultiplier(Dominion $caster): float
+    public function getDamageDealtMultiplier(Dominion $caster): float
     {
         $multiplier = 1;
         $multiplier += $caster->getDecreePerkMultiplier('sorcery_damage_dealt_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($caster, 'offense');
         $multiplier += $caster->getSpellPerkMultiplier('sorcery_damage_dealt');
+        $multiplier += $caster->getImprovementPerkMultiplier('sorcery_damage_dealt');
+        $multiplier += $caster->getBuildingPerkMultiplier('sorcery_damage_dealt');
+        $multiplier += $caster->getDeityPerkMultiplier('sorcery_damage_dealt');
 
         return $multiplier;
     }
@@ -206,6 +218,23 @@ class SorceryCalculator
 
 
         return max(0, $modifier);
+    }
+
+    public function getMultipliers(
+            Dominion $caster,
+            Dominion $target,
+            Spell $spell,
+            int $wizardStrength,
+            Resource $enhancementResource = null,
+            int $enhancementAmount = 0,
+            string $perkKey,
+            string $attribute
+        ): array
+    {
+        return [
+            'sorcerySpellDamageMultiplier' => $this->getSpellDamageMultiplier($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perkKey),
+            'spellDamageMultiplier' => $this->getDominionHarmfulSpellDamageModifier($target, $caster, $spell, $attribute)
+        ];
     }
 
 }

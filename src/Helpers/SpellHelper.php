@@ -12,6 +12,8 @@ use OpenDominion\Models\Spell;
 class SpellHelper
 {
 
+    protected $deityHelper;
+
     public function __construct()
     {
         $this->deityHelper = app(DeityHelper::class);
@@ -44,11 +46,6 @@ class SpellHelper
     {
 
         $effectStrings = [];
-
-        #if(isset($spell->deity))
-        #{
-        #    $effectStrings[] = 'Can only be cast if devoted to ' . $spell->deity->name . '.';
-       # }
 
         $spellEffects = [
 
@@ -164,7 +161,7 @@ class SpellHelper
 
             // Population
             'population_growth' => '%+g%% population growth rate',
-            'kill_peasants' => 'Kills %1$s%% of the target\'s peasants.',
+            'kill_peasants' => 'Kills %g%% of the target\'s peasants.',
             'peasants_converted' => '%+g%% peasants killed in Mass Graves',
 
             // Resources

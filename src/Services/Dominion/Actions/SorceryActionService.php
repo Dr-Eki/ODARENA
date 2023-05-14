@@ -7,20 +7,13 @@ use Exception;
 use LogicException;
 use Illuminate\Support\Carbon;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
-use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
-use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Exceptions\GameException;
-use OpenDominion\Helpers\OpsHelper;
-use OpenDominion\Helpers\RaceHelper;
-use OpenDominion\Helpers\LandHelper;
-use OpenDominion\Helpers\SpellHelper;
-use OpenDominion\Helpers\ImprovementHelper;
 
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionSpell;
@@ -28,14 +21,10 @@ use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
-use OpenDominion\Models\Tech;
-use OpenDominion\Models\Unit;
 
 use OpenDominion\Services\Dominion\HistoryService;
-use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\StatsService;
-use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Traits\DominionGuardsTrait;
 
@@ -57,35 +46,14 @@ class SorceryActionService
     /** @var ImprovementCalculator */
     protected $improvementCalculator;
 
-    /** @var LandCalculator */
-    protected $landCalculator;
-
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
-
-    /** @var NetworthCalculator */
-    protected $networthCalculator;
 
     /** @var NotificationService */
     protected $notificationService;
 
-    /** @var LandHelper */
-    protected $landHelper;
-
     /** @var PopulationCalculator */
     protected $populationCalculator;
-
-    /** @var ProtectionService */
-    protected $protectionService;
-
-    /** @var QueueService */
-    protected $queueService;
-
-    /** @var RaceHelper */
-    protected $raceHelper;
-
-    /** @var ImprovementHelper */
-    protected $improvementHelper;
 
     /** @var RangeCalculator */
     protected $rangeCalculator;
@@ -102,9 +70,6 @@ class SorceryActionService
     /** @var SpellCalculator */
     protected $spellCalculator;
 
-    /** @var SpellHelper */
-    protected $spellHelper
-
     /** @var StatsService */
     protected $statsService;
 
@@ -114,27 +79,22 @@ class SorceryActionService
     public function __construct()
     {
         $this->improvementCalculator = app(ImprovementCalculator::class);
-        $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
-        $this->networthCalculator = app(NetworthCalculator::class);
         $this->notificationService = app(NotificationService::class);
-        $this->landHelper = app(LandHelper::class);
         $this->populationCalculator = app(PopulationCalculator::class);
-        $this->protectionService = app(ProtectionService::class);
-        $this->queueService = app(QueueService::class);
-        $this->raceHelper = app(RaceHelper::class);
-        $this->improvementHelper = app(ImprovementHelper::class);
         $this->rangeCalculator = app(RangeCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
         $this->resourceService = app(ResourceService::class);
         $this->sorceryCalculator = app(SorceryCalculator::class);
         $this->spellCalculator = app(SpellCalculator::class);
-        $this->spellHelper = app(SpellHelper::class);
         $this->statsService = app(StatsService::class);
     }
 
     public function performSorcery(Dominion $caster, Dominion $target, Spell $spell, int $wizardStrength, Resource $enhancementResource = null, int $enhancementAmount = 0): array
     {
+
+        $this->guardActionsDuringTick($caster);
+        $this->guardActionsDuringTick($target);
 
         DB::transaction(function () use ($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount)
         {
@@ -171,12 +131,7 @@ class SorceryActionService
                 throw new GameException('You cannot cast spells while you are in stasis.');
             }
 
-            if($caster->protection_ticks !== 0)
-            {
-                throw new GameException('You cannot perform sorcery while in protection.');
-            }
-
-            if ($spell->enabled !== 1)
+            if (!$spell->enabled)
             {
                 throw new LogicException("Spell {$spell->name} is not enabled.");
             }
@@ -206,7 +161,7 @@ class SorceryActionService
                 throw new GameException("You spend at least 4% Wizard Strength.");
             }
 
-            $manaCost = $this->sorceryCalculator->getSorcerySpellManaCost($caster, $spell, $wizardStrength);
+            $manaCost = $this->sorceryCalculator->getSpellManaCost($caster, $spell, $wizardStrength);
             $casterManaAmount = $this->resourceCalculator->getAmount($caster, 'mana');
 
             if ($manaCost > $casterManaAmount)
@@ -219,12 +174,12 @@ class SorceryActionService
                 throw new GameException("You must select a target when performing sorcery.");
             }
 
-            if ($this->protectionService->isUnderProtection($caster))
+            if ($caster->protection_ticks != 0)
             {
                 throw new GameException("You cannot perform sorcery while under protection");
             }
 
-            if ($this->protectionService->isUnderProtection($target))
+            if ($target->protection_ticks != 0)
             {
                 throw new GameException("You cannot perform sorcery against targets under protection");
             }
@@ -253,6 +208,7 @@ class SorceryActionService
             {
                 throw new GameException('Nice try, but you cannot cast spells cross-round');
             }
+
             # END VALIDATION
 
             $this->sorcery = [
@@ -280,7 +236,7 @@ class SorceryActionService
 
             if($spell->class == 'passive')
             {
-                $duration = $this->sorceryCalculator->getSorcerySpellDuration($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount);
+                $duration = $this->sorceryCalculator->getSpellDuration($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount);
 
                 $this->sorcery['damage']['duration'] = $duration;
 
@@ -319,7 +275,6 @@ class SorceryActionService
             }
             elseif($spell->class == 'active')
             {
-                #dump($caster->name . ' is casting ' . $spell->name. ' at ' . $target->name . ', costing ' . number_format($manaCost) . ' mana, having ' . number_format($casterManaAmount) . '.');
                 foreach($spell->perks as $perk)
                 {
                     $spellPerkValues = $spell->getActiveSpellPerkValues($spell->key, $perk->key);
@@ -327,8 +282,11 @@ class SorceryActionService
                     if($perk->key === 'kill_peasants')
                     {
                         $baseDamage = (float)$spellPerkValues / 100;
-                        $sorcerySpellDamageMultiplier = $this->sorceryCalculator->getSorcerySpellDamageMultiplier($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key);
-                        $spellDamageMultiplier = $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($target, $caster, $spell, 'peasants');
+
+                        $multipliers = $this->sorceryCalculator->getMultipliers($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key, 'peasants');
+
+                        $sorcerySpellDamageMultiplier = $multipliers['sorcerySpellDamageMultiplier'];
+                        $spellDamageMultiplier =  $multipliers['spellDamageMultiplier'];
 
                         $damage = $baseDamage * $sorcerySpellDamageMultiplier * $spellDamageMultiplier;
 
@@ -357,17 +315,18 @@ class SorceryActionService
                             'peasants_before' => $peasantsBefore,
                             'peasants_after' => $peasantsAfter,
                         ];
-
-                        $verb = 'kills';
                     }
 
                     if($perk->key === 'kill_draftees')
                     {
                         $baseDamage = (float)$spellPerkValues / 100;
-                        $sorcerySpellDamageMultiplier = $this->sorceryCalculator->getSorcerySpellDamageMultiplier($target, $caster, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key);
-                        $damageMultiplier = $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($target, $caster, $spell, 'draftees');
 
-                        $damage = $baseDamage * $sorcerySpellDamageMultiplier * $damageMultiplier;
+                        $multipliers = $this->sorceryCalculator->getMultipliers($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key, 'draftees');
+
+                        $sorcerySpellDamageMultiplier = $multipliers['sorcerySpellDamageMultiplier'];
+                        $spellDamageMultiplier =  $multipliers['spellDamageMultiplier'];
+
+                        $damage = $baseDamage * $sorcerySpellDamageMultiplier * $spellDamageMultiplier;
 
                         $damageDealt = min($target->peasants * $damage, $target->peasants);
                         $damageDealt = floor($damageDealt);
@@ -396,8 +355,11 @@ class SorceryActionService
                     if($perk->key === 'disband_spies')
                     {
                         $baseDamage = (float)$spellPerkValues / 100;
-                        $sorcerySpellDamageMultiplier = $this->sorceryCalculator->getSorcerySpellDamageMultiplier($target, $caster, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key);
-                        $spellDamageMultiplier = $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($target, $caster, $spell, 'spies');
+
+                        $multipliers = $this->sorceryCalculator->getMultipliers($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key, 'spies');
+
+                        $sorcerySpellDamageMultiplier = $multipliers['sorcerySpellDamageMultiplier'];
+                        $spellDamageMultiplier =  $multipliers['spellDamageMultiplier'];
 
                         $damage = $baseDamage * $sorcerySpellDamageMultiplier * $spellDamageMultiplier;
 
@@ -432,8 +394,10 @@ class SorceryActionService
                         $resource = Resource::where('key', $resourceKey)->firstOrFail();
                         $baseDamage = (float)$spellPerkValues[1] / 100;
 
-                        $sorcerySpellDamageMultiplier = $this->sorceryCalculator->getSorcerySpellDamageMultiplier($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key);
-                        $damageMultiplier = $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($target, $caster, $spell, 'draftees');
+                        $multipliers = $this->sorceryCalculator->getMultipliers($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key, ('resource_'.$resourceKey));
+
+                        $sorcerySpellDamageMultiplier = $multipliers['sorcerySpellDamageMultiplier'];
+                        $spellDamageMultiplier =  $multipliers['spellDamageMultiplier'];
 
                         $damage = $baseDamage * $sorcerySpellDamageMultiplier * $spellDamageMultiplier;
 
@@ -472,12 +436,14 @@ class SorceryActionService
                             $baseDamage = 0;
                         }
 
-                        $sorcerySpellDamageMultiplier = $this->sorceryCalculator->getSorcerySpellDamageMultiplier($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key);
-                        $spellDamageMultiplier = $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($target, $caster, $spell, ('military_unit'.$slot));
+                        $multipliers = $this->sorceryCalculator->getMultipliers($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key, ('resource_'.$resourceKey));
+
+                        $sorcerySpellDamageMultiplier = $multipliers['sorcerySpellDamageMultiplier'];
+                        $spellDamageMultiplier =  $multipliers['spellDamageMultiplier'];
 
                         $damage = $baseDamage * $sorcerySpellDamageMultiplier * $spellDamageMultiplier;
 
-                        $damageDealt = min($target->{'military_unit'.$slot} * $ratio * $damageMultiplier, $this->resourceCalculator->getAmount($target, $resourceKey));
+                        $damageDealt = min($target->{'military_unit'.$slot} * $damage * $this->resourceCalculator->getAmount($target, $resourceKey));
                         $damageDealt = floor($damageDealt);
 
                         $targetUnitAmount = $target->{'military_unit'.$slot};
@@ -487,12 +453,10 @@ class SorceryActionService
                             return ($unit->slot == $slot);
                         })->first();
 
-                        #$result[] = sprintf('%s %s', number_format($damage), str_plural(dominion_attr_display($unit->name, $damageDealt), $damageDealt));
-
-                        $this->statsService->updateStat($caster, 'units_killed', $damage);
-                        $this->statsService->updateStat($caster, 'sorcery_units_killed', $damage);
-                        $this->statsService->updateStat($target, ('unit' . $slot . '_lost'), $damage);
-                        $this->statsService->updateStat($target, 'sorcery_units_lost', $damage);
+                        $this->statsService->updateStat($caster, 'units_killed', $damageDealt);
+                        $this->statsService->updateStat($caster, 'sorcery_units_killed', $damageDealt);
+                        $this->statsService->updateStat($target, ('unit' . $slot . '_lost'), $damageDealt);
+                        $this->statsService->updateStat($target, 'sorcery_units_lost', $damageDealt);
 
                         $this->sorcery['damage'][$perk->key] = [
                             'sorcery_spell_damage_multiplier' => $sorcerySpellDamageMultiplier,
@@ -510,8 +474,10 @@ class SorceryActionService
                     {
                         $baseDamage = (float)$spellPerkValues / 100;
 
-                        $sorcerySpellDamageMultiplier = $this->sorceryCalculator->getSorcerySpellDamageMultiplier($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key);
-                        $spellDamageMultiplier = $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($target, $caster, $spell, 'morale');
+                        $multipliers = $this->sorceryCalculator->getMultipliers($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key, ('resource_'.$resourceKey));
+
+                        $sorcerySpellDamageMultiplier = $multipliers['sorcerySpellDamageMultiplier'];
+                        $spellDamageMultiplier =  $multipliers['spellDamageMultiplier'];
 
                         $damage = $baseDamage * $sorcerySpellDamageMultiplier * $spellDamageMultiplier;
 
@@ -531,8 +497,6 @@ class SorceryActionService
                             'target_morale_before' => $moraleBefore,
                             'target_morale_after' => $moraleAfter,
                         ];
-
-                        $verb = 'weakens morale by';
                     }
 
                     if($perk->key === 'improvements_damage')
@@ -542,27 +506,15 @@ class SorceryActionService
                         $totalImprovementPoints = $this->improvementCalculator->getDominionImprovementTotalAmountInvested($target);
                         $targetImprovements = $this->improvementCalculator->getDominionImprovements($target);
 
-                        $sorcerySpellDamageMultiplier = $this->sorceryCalculator->getSorcerySpellDamageMultiplier($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key);
-                        $spellDamageMultiplier = $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($target, $caster, $spell, 'improvements');
+                        $multipliers = $this->sorceryCalculator->getMultipliers($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key, 'improvements');
+
+                        $sorcerySpellDamageMultiplier = $multipliers['sorcerySpellDamageMultiplier'];
+                        $spellDamageMultiplier =  $multipliers['spellDamageMultiplier'];
 
                         $damage = $baseDamage * $sorcerySpellDamageMultiplier * $spellDamageMultiplier;
 
                         $damageDealt = min($totalImprovementPoints * $damage, $totalImprovementPoints);
                         $damageDealt = floor($damageDealt);
-
-                        #dump('Base damage: ' . $baseDamage);
-                        #dump('Sorcery Spell Damage Multiplier: ' . $sorcerySpellDamageMultiplier);
-                        #dump('Spell Damage Multiplier: ' . $spellDamageMultiplier);
-                        #dump('Damage: ' . $damage);
-                        #dump('Damage dealt: ' . number_format($damageDealt));
-                        #dump('Total Improvement Points: ' . number_format($totalImprovementPoints));
-#
-                        #dump('Target spell damage reduction from spells: ' . $target->getSpellPerkMultiplier('damage_from_spells'));
-                        #dump('Target spell damage reduction from imps: ' . $target->getImprovementPerkMultiplier('spell_damage'));
-#
-                        #dd('Caster sorcery damage dealt spell perk: '. $caster->getSpellPerkMultiplier('sorcery_damage_dealt'));
-#
-                        #dd();
 
                         if($damageDealt > 0)
                         {
@@ -586,8 +538,6 @@ class SorceryActionService
                             'damage_dealt' => $damageDealt,
                             'total_improvement_points' => $totalImprovementPoints
                         ];
-
-                        $verb = 'damages';
                     }
 
                     if($perk->key === 'resource_theft')
@@ -595,7 +545,7 @@ class SorceryActionService
                         $resourceKey = $spellPerkValues[0];
                         $resource = Resource::where('key', $resourceKey)->first();
 
-                        $sorcerySpellDamageMultiplier = $this->sorceryCalculator->getSorcerySpellDamageMultiplier($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key);
+                        $sorcerySpellDamageMultiplier = $this->sorceryCalculator->getSpellDamageMultiplier($caster, $target, $spell, $wizardStrength, $enhancementResource, $enhancementAmount, $perk->key);
                         $spellDamageMultiplier = $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($target, $caster, $spell, 'theft');
 
                         $baseDamage = (float)$spellPerkValues[1] / 100;
@@ -694,8 +644,6 @@ class SorceryActionService
                 'event' => HistoryService::EVENT_ACTION_SORCERY,
                 'action' => $spell->key
             ]);
-
-            #dd($this->sorcery, $this->sorceryEvent);
         });
 
         $this->notificationService->sendNotifications($target, 'irregular_dominion');

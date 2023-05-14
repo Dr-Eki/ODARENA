@@ -2,7 +2,6 @@
 
 namespace OpenDominion\Services\Dominion\API;
 
-use LogicException;
 use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Spell;
@@ -10,12 +9,14 @@ use OpenDominion\Models\Spell;
 class SorceryCalculationService
 {
 
-
     /** @var array Calculation result array. */
     protected $calculationResult = [
         'result' => 'success',
         'mana_cost' => 0,
     ];
+
+    /** @var SorceryCalculator */
+    protected $sorceryCalculator;
 
     /**
      * InvadeActionService constructor.
@@ -23,11 +24,9 @@ class SorceryCalculationService
      * @param MilitaryCalculator $militaryCalculator
      * @param RangeCalculator $rangeCalculator
      */
-    public function __construct(
-        SorceryCalculator $sorceryCalculator
-    )
+    public function __construct()
     {
-        $this->sorceryCalculator = $sorceryCalculator;
+        $this->sorceryCalculator = app(SorceryCalculator::class);
     }
 
     /**
@@ -39,7 +38,7 @@ class SorceryCalculationService
      */
     public function calculate(Dominion $caster, Spell $spell, int $wizardStrength): array
     {
-        $this->calculationResult['mana_cost'] = $this->sorceryCalculator->getSorcerySpellManaCost($caster, $spell, $wizardStrength);
+        $this->calculationResult['mana_cost'] = $this->sorceryCalculator->getSpellManaCost($caster, $spell, $wizardStrength);
 
         return $this->calculationResult;
     }

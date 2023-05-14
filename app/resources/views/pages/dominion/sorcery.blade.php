@@ -204,7 +204,7 @@
                 <p>Select target, spell, and how much of your wizard strength you wish to use.</p>
                 <p>The amount of wizard strength you use determines how much mana you need per 1% of Wizard Strength. You must use at least 4% Wizard Strength to perform sorcery.</p>
                 <p>Performing sorcery requires that you have a wizard ratio of at least 0.10 and 4% available Wizard Strength.</p>
-                @if(($sorceryDamageDealtMultiplier = $sorceryCalculator->getSorceryDamageDealtMultiplier($selectedDominion)) > 1)
+                @if(($sorceryDamageDealtMultiplier = $sorceryCalculator->getDamageDealtMultiplier($selectedDominion)) > 1)
                     <p>Sorcery damage dealt is increased by <strong>{{ number_format(($sorceryDamageDealtMultiplier-1) * 100, 2) }}%</strong>.</p>
                 @endif
                 <table class="table">

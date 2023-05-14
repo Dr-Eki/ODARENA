@@ -2,31 +2,20 @@
 
 namespace OpenDominion\Helpers;
 
-#use Illuminate\Support\Collection;
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\Race;
-#use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
 
-use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MagicCalculator;
 
-use OpenDominion\Services\Dominion\StatsService;
 
 class SorceryHelper
 {
 
-    protected $spellHelper;
     protected $magicCalculator;
-    protected $landCalculator;
-    protected $statsService;
 
     public function __construct()
     {
-        $this->spellHelper = app(SpellHelper::class);
         $this->magicCalculator = app(MagicCalculator::class);
-        $this->landCalculator = app(LandCalculator::class);
-        $this->statsService = app(StatsService::class);
     }
 
     public function getSorcerySpellsForDominion(Dominion $dominion)
