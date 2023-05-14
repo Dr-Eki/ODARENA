@@ -30,7 +30,7 @@
                                                     data-land="{{ number_format($landCalculator->getTotalLand($dominion)) }}"
                                                     data-networth="{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}"
                                                     data-percentage="{{ number_format($rangeCalculator->getDominionRange($selectedDominion, $dominion), 1) }}"
-                                                    data-wpa="{{ number_format($militaryCalculator->getWizardRatio($dominion, 'defense'), 3) }}"
+                                                    data-wpa="{{ $dominion->getSpellPerkValue('fog_of_war') ? 'Unknown' : number_format($militaryCalculator->getWizardRatio($dominion, 'defense'), 3) }}"
                                                     data-abandoned="{{ $dominion->isAbandoned() ? 1 : 0 }}">
                                                 {{ $dominion->name }} (#{{ $dominion->realm->number }}) - {{ $dominion->race->name }}
                                             </option>
