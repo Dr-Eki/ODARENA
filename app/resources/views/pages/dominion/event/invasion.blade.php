@@ -500,20 +500,20 @@
                                 </tr>
                                 @endif
 
-                                @if (isset($event->data['attacker']['resource_conversion']) and array_sum($event->data['attacker']['resource_conversion']) > 0)
+                                @if (isset($event->data['attacker']['resource_conversions']) and array_sum($event->data['attacker']['resource_conversions']) > 0)
                                 <tr>
                                     <th colspan="2">New Resources</th>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><small class="text-muted">Some of the fallen return to us as new resources.</small></td>
+                                    <td colspan="2"><small class="text-muted">The invading units extract the following resources from the battle field.</small></td>
                                 </tr>
-                                    @foreach($event->data['attacker']['resource_conversion'] as $resource => $amount)
+                                    @foreach($event->data['attacker']['resource_conversions'] as $resourceKey => $amount)
                                         @php
-                                            $resourceName = str_replace('resource_','',$resource);
+                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
                                         @endphp
                                         @if($amount > 0)
                                             <tr>
-                                                <td>{{ ucwords($resourceName) }}:</td>
+                                                <td>{{ ucwords($resource->name) }}:</td>
                                                 <td><span class="text-green">+{{ number_format($amount) }}</span></td>
                                             </tr>
                                         @endif
@@ -902,20 +902,20 @@
                                     </tr>
                                 @endif
 
-                                @if (isset($event->data['defender']['resource_conversion']) and array_sum($event->data['defender']['resource_conversion']) > 0)
-                                    <tr>
-                                        <th colspan="2">New Resources</th>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2"><small class="text-muted">Some of the fallen return to us as new resources.</small></td>
-                                    </tr>
-                                    @foreach($event->data['defender']['resource_conversion'] as $resource => $amount)
+                                @if (isset($event->data['defender']['resource_conversions']) and array_sum($event->data['defender']['resource_conversions']) > 0)
+                                <tr>
+                                    <th colspan="2">New Resources</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><small class="text-muted">The invading units extract the following resources from the battle field.</small></td>
+                                </tr>
+                                    @foreach($event->data['defender']['resource_conversions'] as $resourceKey => $amount)
                                         @php
-                                            $resourceName = str_replace('resource_','',$resource);
+                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
                                         @endphp
                                         @if($amount > 0)
                                             <tr>
-                                                <td>{{ ucwords($resourceName) }}:</td>
+                                                <td>{{ ucwords($resource->name) }}:</td>
                                                 <td><span class="text-green">+{{ number_format($amount) }}</span></td>
                                             </tr>
                                         @endif
