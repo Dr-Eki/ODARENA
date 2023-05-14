@@ -505,7 +505,7 @@
                                     <th colspan="2">New Resources</th>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><small class="text-muted">The invading units extract the following resources from the battle field.</small></td>
+                                    <td colspan="2"><small class="text-muted">The invading units extract resources from the battle field.</small></td>
                                 </tr>
                                     @foreach($event->data['attacker']['resource_conversions'] as $resourceKey => $amount)
                                         @php
@@ -907,7 +907,7 @@
                                     <th colspan="2">New Resources</th>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><small class="text-muted">The defending units extract the following resources from the battle field.</small></td>
+                                    <td colspan="2"><small class="text-muted">The defending units extract resources from the battle field.</small></td>
                                 </tr>
                                     @foreach($event->data['defender']['resource_conversions'] as $resourceKey => $amount)
                                         @php
