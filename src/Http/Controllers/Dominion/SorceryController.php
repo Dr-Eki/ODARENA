@@ -26,7 +26,6 @@ use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Calculators\Dominion\SorceryCalculator;
-use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
 use OpenDominion\Models\Spell;
 
 class SorceryController extends AbstractDominionController
@@ -55,7 +54,6 @@ class SorceryController extends AbstractDominionController
             'resourceCalculator' => app(ResourceCalculator::class),
             'sorceryCalculator' => app(SorceryCalculator::class),
             'spellCalculator' => app(SpellCalculator::class),
-            'spellDamageCalculator' => app(SpellDamageCalculator::class),
         ]);
     }
 

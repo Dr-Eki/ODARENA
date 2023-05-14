@@ -21,8 +21,8 @@ use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\ProductionCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
+use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
-use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
 use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RoundHelper;
@@ -67,8 +67,8 @@ class TickService
     protected $productionCalculator;
     protected $realmCalculator;
     protected $resourceCalculator;
+    protected $sorceryCalculator;
     protected $spellCalculator;
-    protected $spellDamageCalculator;
 
     protected $improvementHelper;
     protected $landHelper;
@@ -108,7 +108,7 @@ class TickService
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->moraleCalculator = app(MoraleCalculator::class);
         $this->realmCalculator = app(RealmCalculator::class);
-        $this->spellDamageCalculator = app(SpellDamageCalculator::class);
+        $this->sorceryCalculator = app(SorceryCalculator::class);
 
         $this->improvementHelper = app(ImprovementHelper::class);
         $this->landHelper = app(LandHelper::class);
@@ -793,7 +793,7 @@ class TickService
             $slot = $pestilence[1];
             $caster = $this->spellCalculator->getCaster($dominion, 'pestilence');
 
-            $amountToDie = $dominion->peasants * $ratio * $this->spellDamageCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, Spell::where('key', 'pestilence')->first(), null);
+            $amountToDie = $dominion->peasants * $ratio * $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, Spell::where('key', 'pestilence')->first(), null);
             $amountToDie *= $this->conversionCalculator->getConversionReductionMultiplier($dominion);
             $amountToDie = (int)round($amountToDie);
 
@@ -809,7 +809,7 @@ class TickService
             $slot = $lesserPestilence[1];
             $caster = $this->spellCalculator->getCaster($dominion, 'lesser_pestilence');
 
-            $amountToDie = $dominion->peasants * $ratio * $this->spellDamageCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, Spell::where('key', 'lesser_pestilence')->first(), null);
+            $amountToDie = $dominion->peasants * $ratio * $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, Spell::where('key', 'lesser_pestilence')->first(), null);
             $amountToDie *= $this->conversionCalculator->getConversionReductionMultiplier($dominion);
             $amountToDie = (int)round($amountToDie);
 

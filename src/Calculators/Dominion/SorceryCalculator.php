@@ -7,11 +7,9 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
 
-#use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
-#use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
 
 class SorceryCalculator
 {
@@ -20,7 +18,6 @@ class SorceryCalculator
     private $landCalculator;
     private $militaryCalculator;
     private $spellCalculator;
-    #private $spellDamageCalculator;
 
 
     /**
@@ -31,11 +28,9 @@ class SorceryCalculator
      */
     public function __construct()
     {
-        #$this->improvementCalculator = app(ImprovementCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->spellCalculator = app(SpellCalculator::class);
-        #$this->spellDamageCalculator = app(SpellDamageCalculator::class);
     }
 
     public function canPerformSorcery(Dominion $caster): bool
@@ -155,5 +150,62 @@ class SorceryCalculator
         return max(0.1, $multiplier);
     }
     
+    public function getDominionHarmfulSpellDamageModifier(Dominion $target, Dominion $caster = null, Spell $spell = null, string $attribute = null): float
+    {
+        $modifier = 1;
+
+        // Improvements
+        $modifier += $target->getImprovementPerkMultiplier('spell_damage');
+        $modifier += $target->getImprovementPerkMultiplier('sorcery_damage_suffered');
+
+        # Spell
+        $modifier += $target->getSpellPerkMultiplier('damage_from_spells');
+        $modifier += $target->getSpellPerkMultiplier('sorcery_damage_suffered');
+
+        // Advancement — unused
+        $modifier += $target->getAdvancementPerkMultiplier('damage_from_spells');
+
+        for ($slot = 1; $slot <= $target->race->units->count(); $slot++)
+        {
+            if($reducesSpellDamagePerk = $target->race->getUnitPerkValueForUnitSlot($slot, 'reduces_spell_damage'))
+            {
+                $modifier -= ($this->militaryCalculator->getTotalUnitsForSlot($target, $slot) / $this->landCalculator->getTotalLand($target)) * $reducesSpellDamagePerk;
+            }
+        }
+
+        #dump('Before spell specific checks: ' . $modifier);
+        if(isset($spell))
+        {
+            $modifier += $target->race->getPerkMultiplier('damage_from_' . $spell->key);
+            $modifier += $target->getBuildingPerkMultiplier('damage_from_' . $spell->key);
+            $modifier += $target->getSpellPerkMultiplier('damage_from_' . $spell->key);
+
+            ## Disband Spies: spies
+            if($spell->key == 'disband_spies' and ($target->race->getPerkValue('immortal_spies') or $target->realm->getArtefactPerkMultiplier('immortal_spies')))
+            {
+                $modifier = -1;
+            }
+
+            ## Purification: only effective against Afflicted.
+            if($spell->key == 'purification' and $target->race->name !== 'Afflicted')
+            {
+                $modifier = -1;
+            }
+
+            ## Solar Flare: only effective against Nox.
+            if($spell->key == 'solar_rays' and $target->race->name !== 'Nox')
+            {
+                $modifier = -1;
+            }
+        }
+
+        if($attribute == 'morale' and $target->race->getPerkValue('no_morale_changes'))
+        {
+            $modifier = -1;
+        }
+
+
+        return max(0, $modifier);
+    }
 
 }

@@ -30,7 +30,6 @@ class PopulationCalculator
           $this->queueService = app(QueueService::class);
           $this->raceHelper = app(RaceHelper::class);
           $this->spellCalculator = app(SpellCalculator::class);
-          $this->spellDamageCalculator = app(SpellDamageCalculator::class);
           $this->statsService = app(StatsService::class);
           $this->unitHelper = app(UnitHelper::class);
     }

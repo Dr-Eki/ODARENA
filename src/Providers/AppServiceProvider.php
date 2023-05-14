@@ -30,8 +30,8 @@ use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\ProductionCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
+use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
-use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
 use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Calculators\RealmCalculator;
 
@@ -122,7 +122,6 @@ class AppServiceProvider extends AbstractServiceProvider
         $this->app->singleton(RangeCalculator::class);
         $this->app->singleton(SorceryCalculator::class);
         $this->app->singleton(SpellCalculator::class);
-        $this->app->singleton(SpellDamageCalculator::class);
         $this->app->singleton(TheftCalculator::class);
 
         // Dominion Action Calculators

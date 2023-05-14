@@ -12,7 +12,6 @@ use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
-use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Exceptions\GameException;
@@ -20,11 +19,8 @@ use OpenDominion\Helpers\OpsHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\SpellHelper;
-use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionSpell;
-use OpenDominion\Models\Improvement;
-use OpenDominion\Models\InfoOp;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Services\Dominion\ResourceService;
@@ -35,8 +31,6 @@ use OpenDominion\Traits\DominionGuardsTrait;
 
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
-use OpenDominion\Models\Tech;
-use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
 
 class SpellActionService
 {
@@ -75,9 +69,6 @@ class SpellActionService
     /** @var RaceHelper */
     protected $raceHelper;
 
-    /** @var ImprovementHelper */
-    protected $improvementHelper;
-
     /** @var RangeCalculator */
     protected $rangeCalculator;
 
@@ -87,22 +78,14 @@ class SpellActionService
     /** @var ResourceService */
     protected $resourceService;
 
-    /** @var SorceryCalculator */
-    protected $sorceryCalculator;
-
     /** @var SpellCalculator */
     protected $spellCalculator;
-
-    /** @var SpellDamageCalculator */
-    protected $spellDamageCalculator;
 
     /** @var SpellHelper */
     protected $spellHelper;
 
     /** @var StatsService */
     protected $statsService;
-
-
 
     /**
      * SpellActionService constructor.
@@ -120,14 +103,11 @@ class SpellActionService
         $this->protectionService = app(ProtectionService::class);
         $this->queueService = app(QueueService::class);
         $this->raceHelper = app(RaceHelper::class);
-        $this->improvementHelper = app(ImprovementHelper::class);
         $this->rangeCalculator = app(RangeCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
         $this->resourceService = app(ResourceService::class);
-        $this->sorceryCalculator = app(SorceryCalculator::class);
         $this->spellCalculator = app(SpellCalculator::class);
         $this->spellHelper = app(SpellHelper::class);
-        $this->spellDamageCalculator = app(SpellDamageCalculator::class);
         $this->statsService = app(StatsService::class);
     }
 
@@ -141,7 +121,7 @@ class SpellActionService
      * @throws GameException
      * @throws LogicException
      */
-    public function castSpell(Dominion $dominion, string $spellKey, Dominion $target = null, bool $isInvasionSpell = false): array
+    public function castSpell(Dominion $dominion, string $spellKey, Dominion $target = null): array
     {
         $this->guardLockedDominion($dominion);
         $this->guardActionsDuringTick($dominion);
@@ -178,7 +158,7 @@ class SpellActionService
             throw new LogicException("Cannot cast unknown spell '{$spellKey}'");
         }
 
-        if ($spell->enabled !== 1)
+        if (!$spell->enabled)
         {
             throw new LogicException("Spell {$spell->name} is not enabled.");
         }
@@ -212,8 +192,6 @@ class SpellActionService
         DB::transaction(function () use ($dominion, $manaCost, $spell, &$result, $target, $wizardStrengthCost)
         {
 
-            #$spell = Spell::where('key', $spellKey)->first();
-
             if ($spell->class == 'active')
             {
                 $result = $this->castActiveSpell($dominion, $target, $spell, $wizardStrengthCost);
@@ -235,13 +213,6 @@ class SpellActionService
 
                 $wizardStrengthCost = min($wizardStrengthCost, $dominion->wizard_strength);
                 $dominion->wizard_strength -= $wizardStrengthCost;
-
-                # XP Gained.
-                if($result['success'] == True and isset($result['damage']))
-                {
-                    $xpGained = $this->calculateXpGain($dominion, $target, $result['damage']);
-                    $dominion->xp += $xpGained;
-                }
             }
 
             $dominion->save([
@@ -802,7 +773,7 @@ class SpellActionService
 
             $this->notificationService
                 ->queueNotification('received_hostile_spell', [
-                    'sourceDominionId' => $sourceDominionId,
+                    'sourceDominionId' => $caster->id,
                     'spellKey' => $spell->key,
                 ])
                 ->sendNotifications($target, 'irregular_dominion');
@@ -1037,21 +1008,6 @@ class SpellActionService
         }
 
         return 'Your wizards successfully cast %s at a cost of %s mana.';
-    }
-
-    protected function calculateXpGain(Dominion $dominion, Dominion $target, int $damage): int
-    {
-        if($damage === 0 or $damage === NULL)
-        {
-            return 0;
-        }
-        else
-        {
-            $landRatio = $this->rangeCalculator->getDominionRange($dominion, $target) / 100;
-            $base = 30;
-
-            return $base * $landRatio;
-        }
     }
 
   }

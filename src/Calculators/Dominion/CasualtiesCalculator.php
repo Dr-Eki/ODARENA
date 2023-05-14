@@ -29,9 +29,9 @@ class CasualtiesCalculator
     protected $populationCalculator;
 
     /**
-     * @var SpellDamageCalculator
+     * @var SorceryCalculator
      */
-    protected $spellDamageCalculator;
+    protected $sorceryCalculator;
 
     /*
      * CasualtiesCalculator constructor.
@@ -41,7 +41,7 @@ class CasualtiesCalculator
         $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->populationCalculator = app(PopulationCalculator::class);
-        $this->spellDamageCalculator = app(SpellDamageCalculator::class);
+        $this->sorceryCalculator = app(SorceryCalculator::class);
     }
 
     private function getInvasionCasualtiesRatioForUnit(Dominion $dominion, Unit $unit, Dominion $enemy = null, array $invasionData = [], string $mode = 'offense'): float
@@ -432,8 +432,8 @@ class CasualtiesCalculator
         $multiplier += $dominion->getTechPerkMultiplier('increases_enemy_casualties_on_' . $enemyMode);
 
         # Spells: apply spell damage modifier
-        $multiplier += $dominion->getSpellPerkMultiplier('increases_enemy_casualties') * $this->spellDamageCalculator->getDominionHarmfulSpellDamageModifier($enemy);
-        $multiplier += $dominion->getSpellPerkMultiplier('increases_enemy_casualties_on_' . $enemyMode) * $this->spellDamageCalculator->getDominionHarmfulSpellDamageModifier($enemy);
+        $multiplier += $dominion->getSpellPerkMultiplier('increases_enemy_casualties') * $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($enemy);
+        $multiplier += $dominion->getSpellPerkMultiplier('increases_enemy_casualties_on_' . $enemyMode) * $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($enemy);
 
         if($casualtiesFromWpa = $dominion->getSpellPerkValue('increases_enemy_casualties_on_' . $enemyMode . '_from_wizard_ratio'))
         {

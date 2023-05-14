@@ -18,12 +18,9 @@ use OpenDominion\Services\Analytics\AnalyticsEvent;
 use OpenDominion\Services\Analytics\AnalyticsService;
 use OpenDominion\Services\Dominion\Actions\SpellActionService;
 #use OpenDominion\Services\Dominion\Actions\EspionageActionService;
-use OpenDominion\Services\Dominion\ProtectionService;
 
 use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
-use OpenDominion\Calculators\Dominion\SpellDamageCalculator;
-use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Models\Spell;
 #use OpenDominion\Models\Spyop;
 
