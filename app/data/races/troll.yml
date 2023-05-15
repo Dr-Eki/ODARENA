@@ -1,94 +1,70 @@
-name: Troll
+name: Gorm
 alignment: evil
-description: <p>While Trolls cannot research and can only level up advancements to level 4, XP yields more generated land at a rate of +1% for every 22,500 XP (max +100% generated).</p>
+description: >-
 home_land_type: hill
 home_terrain: hills
-playable: 0 # Round 88
-skill_level: 2
+skill_level: 1
+magic_level: 0
 
+resources:
+  - gold
+  - food
+  - ore
+  - gems
+
+peasants_production:
+  gold: 3
+
+construction_materials:
+  - gold
+  - ore
 
 improvement_resources:
-  gold: 0.75
-  ore: 1.5
-  lumber: 1.5
+  gold: 1
+  ore: 2
   gems: 9
 
 perks:
-  food_consumption_mod: 25
-  gems_production_mod: 50
-  salvaging: 20
-  cannot_research: 1
-  max_advancements_level: 4
-  advancement_costs: 25
-  
+  draftee_dp: 1.5
+
 units:
-  - name: Magical Boots
-    training_time: 9
-    static_networth: 1
-    type:
-      - equipment
-    cost:
-      gold: 450
-      mana: 50
-    power:
-      offense: 0
-      defense: 0
-    perks:
-      only_dies_vs_raw_power: 8 # >=
-      sendable_with_zero_op: 1
-      does_not_count_as_population: 1
-      no_draftee: 1
-      faster_return: 3
+- name: Hill Troll
+  training_time: 12
+  type:
+    - living
+    - sentient
+  cost:
+    gold: 900
+    ore: 250
+    draftees: 1
+  power:
+    offense: 0
+    defense: 6
 
-  - name: Forest Troll
-    training_time: 9
-    type:
-      - living
-      - sentient
-    cost:
-      gold: 950
-      lumber: 80
-    power:
-      offense: 8
-      defense: 6
-    perks:
-      only_dies_vs_raw_power: 8 # >=
-      plunder: lumber,4
-      faster_return_if_paired: 1,3 # slot, ticks
-      #faster_return: 3
+- name: Forest Troll
+  training_time: 12
+  type:
+    - living
+    - sentient
+  cost:
+    gold: 550
+    ore: 175
+    draftees: 1
+  power:
+    offense: 4
+    defense: 2
 
-  - name: Ironskin
-    training_time: 12
-    static_networth: 6
-    type:
-      - equipment
-    cost:
-      ore: 300
-      gems: 50
-    power:
-      offense: 0
-      defense: 0
-    perks:
-      sendable_with_zero_op: 1
-      does_not_count_as_population: 1
-      no_draftee: 1
-
-  - name: Mountain Troll
-    training_time: 12
-    type:
-      - living
-      - sentient
-      - massive
-    cost:
-      gold: 2250
-      ore: 500
-    power:
-      offense: 10
-      defense: 16
-    perks:
-      eats_peasants_on_attack: 0.1 # Each Mountain Troll eats 0.1 peasant on attack.
-      eats_draftees_on_attack: 0.1 # Each Mountain Troll eats 0.1 draftee on attack.
-      only_dies_vs_raw_power: 12 # >=
-      offense_from_pairing: 3,4 # slot, amount
-      defense_from_pairing: 3,4 # slot, amount
-      plunders: food;2,gems;1
+- name: Mountain Troll
+  training_time: 12
+  type:
+    - living
+    - sentient
+  cost:
+    gold: 1500
+    ore: 500
+    draftees: 1
+  power:
+    offense: 6
+    defense: 7
+  perks:
+    plunders: ore;4,lumber;2
