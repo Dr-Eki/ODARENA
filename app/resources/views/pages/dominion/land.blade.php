@@ -45,7 +45,10 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $terrain->name }}</td>
-                                    <td class="text-center">{{ number_format($selectedDominion->{'terrain_' . $terrain->key}) }}</td>
+                                    <td class="text-center">
+                                        {{ number_format($selectedDominion->{'terrain_' . $terrain->key}) }}
+                                        <small class="text-muted">({{ number_format(($selectedDominion->{'terrain_' . $terrain->key} / $selectedDominion->land)*100,2) }}%)</small>
+                                    </td>
                                     <td class="text-center">
                                         <input name="remove[{{ $terrain->key }}]" type="number"
                                             class="form-control text-center" placeholder="0" min="0"
