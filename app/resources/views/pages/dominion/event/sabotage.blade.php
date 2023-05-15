@@ -93,6 +93,18 @@
                                                         {{ $improvement->name }}: {{ number_format($amount) }}<br>
                                                     @endforeach
                                                 </td>
+
+                                            @elseif($damageType == 'resources')
+                                                <td class="text-right">Resources sabotaged:</td>
+                                                <td>
+                                                    @foreach($damageData as $resourceKey => $amount)
+                                                        @php
+                                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                                        @endphp
+                                                        {{ $resource->name }}: {{ number_format($amount) }}<br>
+                                                    @endforeach
+                                                </td>
+
                                             @else
                                                 <td class="text-right">{{ $sabotageHelper->getDamageTypeString($damageType, $event->target->race, intval($damageData[$damageType])) }}:</td>
                                                 <td>{{ number_format($damageData[$damageType]) }}</td>
