@@ -632,7 +632,13 @@ class UnitHelper
                     #$perkValue = []
                 }
 
-
+                # 'Returns %1$s ticks faster from per %2$%% %3$s (rounds down).',
+                if($perk->key == 'faster_return_from_terrain')
+                {
+                    $perkValue[0] = intval($perkValue[0]);
+                    $perkValue[1] = number_format($perkValue[1], 2);
+                    $perkValue[2] = Terrain::where('key', $perkValue[2])->first()->name;
+                }
 
                 // Special case for casualties, casualties_on_defense, and casualties_on_offense
                 if ($perk->key === 'casualties' || $perk->key === 'casualties_on_defense' || $perk->key === 'casualties_on_offense')

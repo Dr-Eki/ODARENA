@@ -1273,7 +1273,7 @@ class InvadeActionService
         {
             if($amount > 0)
             {
-                $this->queueService->dequeueResource('terrain', $target, ('terrain_' . $terrainKey), $amount);
+                $this->queueService->dequeueResource('rezoning', $target, ('terrain_' . $terrainKey), $amount);
             }
         }
 
@@ -1290,7 +1290,7 @@ class InvadeActionService
         {
             if($amount > 0)
             {
-                $this->queueService->dequeueResource('building', $target, ('building_' . $buildingKey), $amount);
+                $this->queueService->dequeueResource('construction', $target, ('building_' . $buildingKey), $amount);
             }
         }
 
