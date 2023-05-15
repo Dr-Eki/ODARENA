@@ -1,0 +1,86 @@
+name: Elf
+alignment: independent
+description: >-
+gameplay_notes: >-
+home_land_type: forest
+home_terrain: forest
+skill_level: 1
+playable: 1
+magic_level: 2
+
+resources:
+  - gold
+  - food
+  - ore
+  - lumber
+  - mana
+  - horse
+
+peasants_production:
+  gold: 3
+
+construction_materials:
+  - gold
+  - lumber
+
+perks:
+  #
+
+units:
+- name: Light Archer
+  training_time: 9
+  type:
+    - living
+    - intelligent
+  cost:
+    gold: 350
+    ore: 20
+    draftees: 1
+  power:
+    offense: 0
+    defense: 3
+
+- name: Striker
+  training_time: 9
+  type:
+    - living
+    - intelligent
+  cost:
+    gold: 400
+    ore: 40
+    lumber: 20
+    draftees: 1
+  power:
+    offense: 3
+    defense: 1
+
+- name: Aegis
+  training_time: 12
+  type:
+    - living
+    - intelligent
+  cost:
+    gold: 720
+    ore: 20
+    lumber: 60
+    draftees: 1
+  power:
+    offense: 0
+    defense: 5
+
+- name: Lightbringer
+  training_time: 12
+  type:
+    - living
+    - intelligent
+  cost:
+    gold: 1075
+    ore: 220
+    draftees: 1
+    horse: 1
+  power:
+    offense: 6
+    defense: 3
+  perks:
+    plunders: ore;2,lumber;1
+    faster_return: 2

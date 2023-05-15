@@ -3,50 +3,53 @@
 namespace OpenDominion\Calculators\Dominion;
 
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\Resource;
+use OpenDominion\Models\GameEvent;
 
 use OpenDominion\Helpers\UnitHelper;
-use OpenDominion\Helpers\TitleHelper;
 
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
-use OpenDominion\Calculators\Dominion\ResourceCalculator;
 
 class UnitReturnCalculator
 {
     protected $militaryCalculator;
-    protected $resourceCalculator;
-
-    protected $theftHelper;
     protected $unitHelper;
 
     public function __construct()
     {
-        $this->titleHelper = app(TitleHelper::class);
+        $this->militaryCalculator = app()->make(MilitaryCalculator::class);
+        $this->unitHelper = app()->make(UnitHelper::class);
     }
 
-    public function getUnitsReturningArray(Dominion $dominion, array $event, array $convertedUnits, string $eventType): array
+    public function getUnitsReturningArray(Dominion $dominion, array $returningUnits, GameEvent $event): array
     {
         $returningUnits = [];
-        foreach($dominion->race->units as $unit)
-        {
-            $returningUnits['military_unit'.$unit->slot] = array_fill(1, 12, 0);
+        $unitKeys = [
+            'peasants',
+            'military_draftees',
+            'military_spies',
+            'military_wizards',
+            'military_archmages'
+        ];
+        
+        foreach ($dominion->race->units as $unit) {
+            $unitKeys[] = 'military_unit' . $unit->slot;
         }
-
-        $returningUnits['military_spies'] = array_fill(1, 12, 0);
-        $returningUnits['military_wizards'] = array_fill(1, 12, 0);
-        $returningUnits['military_archmages'] = array_fill(1, 12, 0);
-
+        
+        foreach ($unitKeys as $key) {
+            $returningUnits[$key] = array_fill(1, 12, 0);
+        }
+        
         $someWinIntoUnits = array_fill(1, $dominion->race->units->count(), 0);
 
-        foreach($returningUnits as $unitKey => $values)
+        foreach($returningUnits as $unitKey)
         {
             $unitType = str_replace('military_', '', $unitKey);
-            $slot = str_replace('unit', '', $unitType);
+            $slot = (int)str_replace('unit', '', $unitType);
             $amountReturning = 0;
 
             $returningUnitKey = $unitKey;
 
-            if(in_array($slot, [1,2,3,4,5,6,7,8,9,10]))
+            if(is_numeric($slot))
             {
                 # See if slot $slot has wins_into perk.
                 if($event['result']['success'])
@@ -309,21 +312,4 @@ class UnitReturnCalculator
 
         return $unitsReturning;
     }
-
-    protected function getUnitReturnTicksForSlot(Dominion $dominion, int $slot): int
-    {
-        $ticks = 12;
-
-        $unit = $dominion->race->units->filter(function ($unit) use ($slot) {
-            return ($unit->slot === $slot);
-        })->first();
-
-        $ticks -= (int)$unit->getPerkValue('faster_return');
-        $ticks -= (int)$dominion->getSpellPerkValue('faster_return');
-        $ticks -= (int)$dominion->getAdvancementPerkValue('faster_return');
-        $ticks -= (int)$dominion->realm->getArtefactPerkValue('faster_return');
-
-        return min(max(1, $ticks), 12);
-    }
-
 }

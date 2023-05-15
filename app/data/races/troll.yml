@@ -26,6 +26,12 @@ improvement_resources:
 
 perks:
   draftee_dp: 1.5
+  food_consumption_mod: 20
+  salvaging: 20
+  cannot_research: 1
+  max_advancements_level: 4
+  advancement_costs: 25
+  magic_level: 1
 
 units:
 - name: Hill Troll
