@@ -10,6 +10,7 @@ use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Resource;
+use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Unit;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
@@ -451,6 +452,7 @@ class UnitHelper
             'instant_return' => 'Returns instantly from invasion.',
 
             'faster_return_from_time' => 'Returns %3$s ticks faster from battle if sent out between %1$s:00 and %2$s:00.',
+            'faster_return_from_terrain' => 'Returns %1$s ticks faster from per %2$%% %3$s (rounds down).',
 
             // Training
             'cannot_be_trained' => 'Cannot be trained.',

@@ -24,6 +24,7 @@ use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
+use OpenDominion\Calculators\Dominion\TerrainCalculator;
 
 use OpenDominion\Http\Requests\Dominion\Actions\InvadeActionRequest;
 use OpenDominion\Services\Dominion\Actions\InvadeActionService;
@@ -68,6 +69,9 @@ class BarbarianService
     /** @var ImprovementCalculator */
     protected $improvementCalculator;
 
+    /** @var TerrainCalculator */
+    protected $terrainCalculator;
+
     public function __construct()
     {
         #$this->now = now();
@@ -80,6 +84,7 @@ class BarbarianService
         $this->rangeCalculator = app(RangeCalculator::class);
         $this->dominionFactory = app(DominionFactory::class);
         $this->barbarianCalculator = app(BarbarianCalculator::class);
+        $this->terrainCalculator = app(TerrainCalculator::class);
         $this->resourceService = app(ResourceService::class);
         $this->statsService = app(StatsService::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
@@ -329,11 +334,20 @@ class BarbarianService
                 $unitsReturning['military_unit1'] = intval(max($unitsSent['military_unit1'] - $unitsLost['military_unit1'],0));
                 $unitsReturning['military_unit4'] = intval(max($unitsSent['military_unit4'] - $unitsLost['military_unit4'],0));
 
+                $terrainGained = $this->terrainCalculator->getTerrainDiscovered($dominion, $landGained);
+
                 # Queue the incoming land.
                 $this->queueService->queueResources(
                     'invasion',
                     $dominion,
                     ['land' => $landGained]
+                );
+
+                # Queue the incoming terrain.
+                $this->queueService->queueResources(
+                    'invasion',
+                    $dominion,
+                    $terrainGained
                 );
 
                 # Queue the returning units.
