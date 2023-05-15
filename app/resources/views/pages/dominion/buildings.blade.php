@@ -13,6 +13,11 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="fa fa-home"></i> Buildings </h3>
+
+                    <small class="pull-right text-muted">
+                        <span data-toggle="tooltip" data-placement="top" title="
+                        <small class='text-muted'>Buildings afforded:</small> {{ $constructionCalculator->getMaxAfford($selectedDominion) }}">Barren</span>: {{ $landCalculator->getTotalBarrenLand($selectedDominion) }}
+                    </small>
                 </div>           
                 <div class="box-body">
                     @php
