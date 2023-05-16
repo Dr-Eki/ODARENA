@@ -343,12 +343,16 @@ class BarbarianService
                     ['land' => $landGained]
                 );
 
-                # Queue the incoming terrain.
-                $this->queueService->queueResources(
-                    'invasion',
-                    $dominion,
-                    $terrainGained
-                );
+                foreach($terrainGained as $terrainKey => $amount)
+                {
+                    # Queue the incoming terrain.
+                    $this->queueService->queueResources(
+                        'invasion',
+                        $dominion,
+                        [('terrain_'.$terrainKey) => $amount]
+                    );
+                }
+
 
                 # Queue the returning units.
                 $this->queueService->queueResources(
