@@ -1420,6 +1420,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'offensive_power' => object_get($data, 'offensive_power', 0),
                     'defensive_power' => object_get($data, 'defensive_power', 0),
                     
+                    'land' => object_get($data, 'land', 1000),
                     'draft_rate' => object_get($data, 'draft_rate', 50),
                     'devotion_ticks' => isset($deity) ? max(min(object_get($data, 'devotion_ticks', 0), 96),0) : 0,
                     'morale' => object_get($data, 'morale', 100),
@@ -1432,12 +1433,12 @@ class DataSyncCommand extends Command implements CommandInterface
 
                     'buildings' => object_get($data, 'buildings', []),
                     'improvements' => object_get($data, 'improvements', []),
-                    'land' => object_get($data, 'land', []),
                     'resources' => object_get($data, 'resources', []),
                     'spells' => object_get($data, 'spells', []),
                     'advancements' => object_get($data, 'advancements', []),
                     'decree_states' => object_get($data, 'decree_states', []),
                     'techs' => object_get($data, 'techs', []),
+                    'terrains' => object_get($data, 'terrains', []),
                     'units' => object_get($data, 'units', []),
                     'queues' => object_get($data, 'queues', []),
                 ]);

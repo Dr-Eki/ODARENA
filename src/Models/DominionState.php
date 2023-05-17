@@ -23,6 +23,7 @@ class DominionState extends AbstractModel
     protected $table = 'dominion_states';
 
     protected $casts = [
+        'land' => 'integer',
         'daily_land' => 'integer',
         'daily_gold' => 'integer',
         'monarchy_vote_for_dominion_id' => 'integer',
@@ -46,7 +47,6 @@ class DominionState extends AbstractModel
 
         'buildings' => 'array',
         'improvements' => 'array',
-        'land' => 'array',
         'resources' => 'array',
         'spells' => 'array',
         'advancements' => 'array',

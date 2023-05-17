@@ -566,7 +566,7 @@ class DominionFactory
             'military_wizards' => $quickstart->units['wizards'],
             'military_archmages' => $quickstart->units['archmages'],
 
-            'land_plain' => $quickstart->land,
+            'land' => $quickstart->land,
             'land_plain' => 0,
             'land_mountain' => 0,
             'land_swamp' => 0,

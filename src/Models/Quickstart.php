@@ -23,6 +23,7 @@ class Quickstart extends AbstractModel
 
     protected $casts = [
         'enabled' => 'integer',
+        'land' => 'integer',
         'devotion_ticks' => 'integer',
         'draft_rate' => 'integer',
         'morale' => 'integer',
@@ -35,7 +36,6 @@ class Quickstart extends AbstractModel
         'buildings' => 'array',
         'cooldown' => 'array',
         'improvements' => 'array',
-        'land' => 'array',
         'resources' => 'array',
         'spells' => 'array',
         'advancements' => 'array',

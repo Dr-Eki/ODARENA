@@ -36,7 +36,7 @@
                                 <td class="text-center"><input type="radio" id="quickstart{{ $quickstart->id}}" name="quickstart" value="{{ $quickstart->id }}" required></td>
                                 <td class="text-left"><label style="font-weight: normal; display: block;" for="quickstart{{ $quickstart->id}}"><a href="{{ route('scribes.quickstart', $quickstart->id) }}" target="_blank">{{ $quickstart->name }}</a></label></td>
                                 <td>{{ $quickstart->race->name }}</td>
-                                <td>{{ number_format(array_sum($quickstart->land)) }}</td>
+                                <td>{{ number_format($quickstart->land) }}</td>
                                 <td>{{ number_format($quickstart->protection_ticks) }}</td>
                             </tr>
                     @endforeach

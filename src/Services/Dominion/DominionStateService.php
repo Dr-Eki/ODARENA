@@ -141,6 +141,7 @@ class DominionStateService
             'dominion_id' => $dominion->id,
             'dominion_protection_tick' => $dominion->protection_ticks,
             
+            'land' => object_get($stateData, 'land', 1000),
             'daily_land' => object_get($stateData, 'daily_land', 0),
             'daily_gold' => object_get($stateData, 'daily_gold', 0),
             'monarchy_vote_for_dominion_id' => object_get($stateData, 'monarchy_vote_for_dominion_id', null),
@@ -164,7 +165,6 @@ class DominionStateService
     
             'buildings' => object_get($stateData, 'buildings', []),
             'improvements' => object_get($stateData, 'improvements', []),
-            'land' => object_get($stateData, 'land', []),
             'resources' => object_get($stateData, 'resources', []),
             'spells' => object_get($stateData, 'spells', []),
             'advancements' => object_get($stateData, 'advancements', []),
@@ -202,6 +202,7 @@ class DominionStateService
             DominionState::where('dominion_id', $dominion->id)->where('dominion_protection_tick', '<', $dominionState->dominion_protection_tick)->delete();
 
             // Basics
+            $dominion->land = $dominionState->land;
             $dominion->daily_land = $dominionState->daily_land;
             $dominion->daily_gold = $dominionState->daily_gold;
             $dominion->monarchy_vote_for_dominion_id = $dominionState->monarchy_vote_for_dominion_id;
@@ -323,7 +324,7 @@ class DominionStateService
             // Add terrains
             foreach($dominionState->terrains as $terrainKey => $amount)
             {
-                $terrain = Tech::where('key', $terrainKey)->first();
+                $terrain = Terrain::where('key', $terrainKey)->first();
 
                 DominionTerrain::updateOrCreate(['dominion_id' => $dominion->id, 'terrain_id' => $terrain->id, 'amount' => $amount]);
             }
@@ -369,12 +370,6 @@ class DominionStateService
             {
                 $dominion->{'military_' . $unitType} = $amount;
             }
-    
-            // Update land
-            foreach($dominionState->land as $landType => $amount)
-            {
-                $dominion->{'land_' . $landType} = $amount;
-            }
 
             $dominion->save();
         });
@@ -394,6 +389,7 @@ class DominionStateService
     {
         $basics = sprintf(
 "
+land: %s
 daily_land: %s
 daily_gold: %s
 monarchy_vote_for_dominion_id: %s
@@ -415,6 +411,7 @@ wizard_strength: %s
 protection_ticks: %s
 ticks: %s
 \n",
+            (int)$dominion->land,
             (int)$dominion->daily_land,
             (int)$dominion->daily_gold,
             $dominion->monarchy_vote_for_dominion_id,
@@ -449,12 +446,6 @@ ticks: %s
             $improvements .= "    $improvement->key: {$this->improvementCalculator->getDominionImprovementAmountInvested($dominion, $improvement)}\n";
         }
 
-        $land = "\nland:\n";
-        foreach ($this->landHelper->getLandTypes() as $landType)
-        {
-            $land .= "    $landType: " . $dominion->{'land_' . $landType} . "\n";
-        }
-
         $resources = "\nresources:\n";
         foreach($dominion->race->resources as $resourceKey)
         {
@@ -483,7 +474,7 @@ ticks: %s
         $terrains = "\nterrains:\n";
         foreach($dominion->terrains->sortBy('key') as $dominionTerrain)
         {
-            $terrains .= "   - {$dominionTerrain->key},{$dominionTerrain->pivot->amount}\n";
+            $terrains .= "   {$dominionTerrain->key}: {$dominionTerrain->pivot->amount}\n";
         }
 
         $decreeStates = "\ndecree_states:\n";
@@ -520,7 +511,7 @@ ticks: %s
             $queues .= "    - {$queue->source},{$queue->resource},{$queue->hours},{$queue->amount}\n";
         }
 
-        $string = $basics . $buildings . $improvements . $land . $resources . $spells . $advancements . $techs . $decreeStates . $units . $queues;
+        $string = $basics . $buildings . $improvements . $resources . $spells . $advancements . $techs . $terrains . $decreeStates . $units . $queues;
         
         return $string;
     }
