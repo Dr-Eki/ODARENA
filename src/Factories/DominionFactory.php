@@ -16,6 +16,7 @@ use OpenDominion\Models\DominionDecreeState;
 use OpenDominion\Models\DominionDeity;
 use OpenDominion\Models\DominionSpell;
 use OpenDominion\Models\DominionTech;
+use OpenDominion\Models\DominionTerrain;
 use OpenDominion\Models\Pack;
 use OpenDominion\Models\Quickstart;
 use OpenDominion\Models\Race;
@@ -653,6 +654,18 @@ class DominionFactory
                 DominionTech::create([
                     'dominion_id' => $dominion->id,
                     'tech_id' => Tech::where('key',$techKey)->first()->id
+                ]);
+            });
+        }
+
+        foreach($quickstart->terrains as $terrainKey => $amount)
+        {
+            DB::transaction(function () use ($dominion, $terrainKey, $amount)
+            {
+                DominionTerrain::create([
+                    'dominion_id' => $dominion->id,
+                    'terrain_id' => Terrain::where('key',$terrainKey)->first()->id,
+                    'amount' => $amount
                 ]);
             });
         }

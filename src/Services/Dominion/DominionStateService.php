@@ -18,8 +18,10 @@ use OpenDominion\Models\DominionDeity;
 use OpenDominion\Models\DominionSpell;
 use OpenDominion\Models\DominionState;
 use OpenDominion\Models\DominionTech;
+use OpenDominion\Models\DominionTerrain;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Tech;
+use OpenDominion\Models\Terrain;
 
 use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\ImprovementHelper;
@@ -45,6 +47,63 @@ use OpenDominion\Services\Dominion\StatsService;
 
 class DominionStateService
 {
+
+    /** @var BuildingHelper */
+    protected $buildingHelper;
+
+    /** @var ImprovementHelper */
+    protected $improvementHelper;
+
+    /** @var LandHelper */
+    protected $landHelper;
+
+    /** @var LandImprovementHelper */
+    protected $landImprovementHelper;
+
+    /** @var RaceHelper */
+    protected $raceHelper;
+
+    /** @var TitleHelper */
+    protected $titleHelper;
+
+    /** @var BuildingCalculator */
+    protected $buildingCalculator;
+
+    /** @var ImprovementCalculator */
+    protected $improvementCalculator;
+
+    /** @var LandCalculator */
+    protected $landCalculator;
+
+    /** @var LandImprovementCalculator */
+    protected $landImprovementCalculator;
+
+    /** @var MilitaryCalculator */
+    protected $militaryCalculator;
+
+    /** @var NetworthCalculator */
+    protected $networthCalculator;
+
+    /** @var PopulationCalculator */
+    protected $populationCalculator;
+
+    /** @var ResourceCalculator */
+    protected $resourceCalculator;
+
+    /** @var SpellCalculator */
+    protected $spellCalculator;
+
+    /** @var ProtectionService */
+    protected $protectionService;
+
+    /** @var QueueService */
+    protected $queueService;
+
+    /** @var ResourceService */
+    protected $resourceService;
+
+    /** @var StatsService */
+    protected $statsService;
 
     public function __construct()
     {
@@ -110,6 +169,7 @@ class DominionStateService
             'spells' => object_get($stateData, 'spells', []),
             'advancements' => object_get($stateData, 'advancements', []),
             'techs' => object_get($stateData, 'techs', []),
+            'terrains' => object_get($stateData, 'terrains', []),
             'decree_states' => object_get($stateData, 'decree_states', []),
             'units' => object_get($stateData, 'units', []),
             'queues' => object_get($stateData, 'queues', []),
@@ -255,6 +315,17 @@ class DominionStateService
                 $tech = Tech::where('key', $techKey)->first();
 
                 DominionTech::updateOrCreate(['dominion_id' => $dominion->id, 'tech_id' => $tech->id]);
+            }
+
+            // Delete terrains
+            DB::table('dominion_terrains')->where('dominion_id', '=', $dominion->id)->delete();
+
+            // Add terrains
+            foreach($dominionState->terrains as $terrainKey => $amount)
+            {
+                $terrain = Tech::where('key', $terrainKey)->first();
+
+                DominionTerrain::updateOrCreate(['dominion_id' => $dominion->id, 'terrain_id' => $terrain->id, 'amount' => $amount]);
             }
     
             // Delete queues
@@ -409,6 +480,11 @@ ticks: %s
             $techs .= "    - {$dominionTech->key}\n";
         }
 
+        $terrains = "\nterrains:\n";
+        foreach($dominion->terrains->sortBy('key') as $dominionTerrain)
+        {
+            $terrains .= "   - {$dominionTerrain->key},{$dominionTerrain->pivot->amount}\n";
+        }
 
         $decreeStates = "\ndecree_states:\n";
         foreach(DominionDecreeState::where('dominion_id', $dominion->id)->get() as $dominionDecreeState)
