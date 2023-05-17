@@ -20,9 +20,11 @@ class UnitReturnCalculator
         $this->unitHelper = app()->make(UnitHelper::class);
     }
 
-    public function getUnitsReturningArray(Dominion $dominion, array $returningUnits, string $eventType, array $event): array
+    public function getUnitsReturningArray(Dominion $dominion, array $returningUnits, array $unitsSent, string $eventType, array $event, array $convertedUnits = []): array
     {
+        $units = $unitsSent;
         $returningUnits = [];
+        
         $unitKeys = [
             'peasants',
             'military_draftees',
