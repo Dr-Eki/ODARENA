@@ -36,6 +36,9 @@ use OpenDominion\Services\Dominion\Action\ImproveActionService;
 class BarbarianService
 {
 
+    /** @var BuildingHelper */
+    protected $buildingHelper;
+
     /** @var LandCalculator */
     protected $landCalculator;
 
@@ -75,6 +78,7 @@ class BarbarianService
     public function __construct()
     {
         #$this->now = now();
+        $this->buildingHelper = app(BuildingHelper::class);
         $this->landCalculator = app(LandCalculator::class);
         $this->queueService = app(QueueService::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
@@ -393,56 +397,17 @@ class BarbarianService
 
     public function handleBarbarianConstruction(Dominion $dominion): void
     {
-        # Get barren land
         $buildings = [];
 
-        $housingRatio = max(0.15, min($dominion->round->ticks / 1000, 0.65));
-
         # Determine buildings
-        foreach ($this->landCalculator->getBarrenLandByLandType($dominion) as $landType => $acres)
+        if(($barrenLand = $this->landCalculator->getTotalBarrenLand($dominion)) > 0)
         {
-            if($acres > 0)
+            foreach($this->buildingHelper->getBuildingsByRace($dominion->race) as $building)
             {
-                if($landType === 'plain')
-                {
-                    $buildings['building_shed'] = floor($acres * $housingRatio);
-                    #$buildings['building_smithy'] = floor($acres * (1 - $housingRatio) * 0.75);
-                    $buildings['building_farm'] = floor($acres * (1 - $housingRatio) * 0.25);
-                }
-
-                if($landType === 'mountain')
-                {
-                    $buildings['building_shelter'] = floor($acres * $housingRatio);
-                    $buildings['building_ore_mine'] = floor($acres * (1 - $housingRatio) * 0.75);
-                    #$buildings['building_gem_mine'] = floor($acres * (1 - $housingRatio) * 0.25);
-                }
-
-                if($landType === 'swamp')
-                {
-                    $buildings['building_hovel'] = floor($acres * $housingRatio);
-                    #$buildings['building_tower'] = floor($acres * (1 - $housingRatio) * 0.70);
-                    #$buildings['building_temple'] = floor($acres * (1 - $housingRatio) * 0.20);
-                    #$buildings['building_wizard_guild'] = floor($acres * (1 - $housingRatio) * 0.10);
-                }
-
-                if($landType === 'forest')
-                {
-                    $buildings['building_cabin'] = floor($acres * $housingRatio);
-                    $buildings['building_lumberyard'] = floor($acres * (1 - $housingRatio));
-                }
-
-                if($landType === 'hill')
-                {
-                    $buildings['building_shack'] = floor($acres * $housingRatio);
-                    $buildings['building_barracks'] = floor($acres * (1 - $housingRatio));
-                }
-
-                if($landType === 'water')
-                {
-                    $buildings['building_shanty'] = floor($acres * $housingRatio);
-                    #$buildings['building_dock'] = floor($acres * (1 - $housingRatio));
-                }
+                $buildings[('building_' . $building->key)] = intval($barrenLand / $this->buildingHelper->getBuildingsByRace($dominion->race)->count());
             }
+
+            $buildings = array_map('intval', $buildings);
         }
 
         if(array_sum($buildings) > 0)
