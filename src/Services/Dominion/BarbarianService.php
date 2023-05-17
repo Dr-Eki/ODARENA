@@ -14,6 +14,7 @@ use OpenDominion\Models\User;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Title;
 
+use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\LandHelper;
 
 use OpenDominion\Factories\DominionFactory;
