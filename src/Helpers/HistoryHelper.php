@@ -32,7 +32,7 @@ class HistoryHelper
           'tech' => ''
         ];
 
-        return $icons[$event] ? $icons[$event] : '';
+        return $icons[$event] ? $icons[$event] : 'Undefined event type (' . $event . ')';
     }
 
     public function getEventName(string $event): string
@@ -57,6 +57,7 @@ class HistoryHelper
           'tick' => 'Tick',
           'train' => 'Training',
           'update notes' => 'Notes',
+          'tech' => 'Advancement',
         ];
 
         return $name[$event] ? $name[$event] : 'Undefined event type (' . $event . ')';
