@@ -82,6 +82,7 @@ stable:
 wall:
   name: Wall
   excluded_races:
+    - Barbarian
     - Reptilians
     - Sylvan
     - Swarm

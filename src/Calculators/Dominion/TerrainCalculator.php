@@ -66,7 +66,7 @@ class TerrainCalculator
             }
         }
     
-        if (abs(array_sum($terrainLost['available'])) < $landLost)
+        if ($landLost > $totalTerrainedLand)
         {
             $terrainLost['queued'] = array_fill_keys(Terrain::pluck('key')->toArray(), 0);
             $rezoningQueueTotal = $this->queueService->getRezoningQueueTotal($dominion);

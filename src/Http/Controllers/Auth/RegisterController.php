@@ -107,7 +107,7 @@ class RegisterController extends AbstractController
             'password' => Hash::make($data['password']),
             'display_name' => $data['display_name'],
             'activation_code' => str_random(),
-            'activated' => in_array(request()->getHost(), ['odarena.local','odarena.virtual']),
+            'activated' => 1,#in_array(request()->getHost(), ['odarena.local','odarena.virtual']),
         ]);
     }
 }
