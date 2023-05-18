@@ -66,7 +66,7 @@ class TerrainCalculator
             }
         }
     
-        if (abs(array_sum($terrainLost['available'])) < $landLost)
+        if ($landLost > $totalTerrainedLand)
         {
             $terrainLost['queued'] = array_fill_keys(Terrain::pluck('key')->toArray(), 0);
             $rezoningQueueTotal = $this->queueService->getRezoningQueueTotal($dominion);
@@ -81,7 +81,7 @@ class TerrainCalculator
                 Log::error('Rezoning queue total: ' . $rezoningQueueTotal);
                 Log::error('Rezoning queue: ' . print_r($this->queueService->getRezoningQueue($dominion), true));
 
-                #throw new GameException('An error occurred while calculating terrain lost. Please try again.');
+                throw new GameException('An error occurred while calculating terrain lost. Please try again.');
             }
     
             $terrainLeftToLose = $landLost - array_sum($terrainLost['available']);
