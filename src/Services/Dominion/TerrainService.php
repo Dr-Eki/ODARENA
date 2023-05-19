@@ -73,7 +73,7 @@ class TerrainService
                     }
                     else
                     {
-                        dd('[MEGA ERROR] Trying to remove more of a terrain than you have. This might have been a temporary glitch due to multiple simultaneous events. Try again, but please report your findings on Discord.', $terrain, $amountToRemove, $owned);
+                        #dd('[MEGA ERROR] Trying to remove more of a terrain than you have. This might have been a temporary glitch due to multiple simultaneous events. Try again, but please report your findings on Discord.', $terrain, $amountToRemove, $owned);
                     }
                 }
             }
