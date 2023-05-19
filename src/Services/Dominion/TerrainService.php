@@ -63,18 +63,22 @@ class TerrainService
 
                 if($owned)
                 {
-                    #if($amountToRemove)
-                    #{
+                    if($amountToRemove)
+                    {
                         DB::transaction(function () use ($dominion, $terrain, $amountToRemove)
                         {
                             DominionTerrain::where('dominion_id', $dominion->id)->where('terrain_id', $terrain->id)
                             ->decrement('amount', $amountToRemove);
                         });
-                    #}
-                    #else
-                    #{
-                    #    dd('[MEGA ERROR] Trying to remove more of a terrain than you have. This might have been a temporary glitch due to multiple simultaneous events. Try again, but please report your findings on Discord.', $terrain, $amountToRemove, $owned);
-                    #}
+                    }
+                    else
+                    {
+                        DB::transaction(function () use ($dominion, $terrain)
+                        {
+                            DominionTerrain::where('dominion_id', $dominion->id)->where('terrain_id', $terrain->id)
+                            ->delete();
+                        });
+                    }
                 }
             }
         }
