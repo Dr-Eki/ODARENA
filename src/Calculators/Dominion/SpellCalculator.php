@@ -27,6 +27,11 @@ class SpellCalculator
     protected $magicCalculator;
 
     /**
+     * @var PopulationCalculator
+     */
+    protected $populationCalculator;
+
+    /**
      * @var SpellHelper
      */
     protected $spellHelper;
@@ -406,6 +411,20 @@ class SpellCalculator
         $amount = floor($amount);
 
         return $amount;
+    }
+
+    public function getWizardStrengthRecoveryMultiplier(Dominion $dominion): float
+    {
+        $multiplier = 1;
+
+        $multiplier += $dominion->realm->getArtefactPerkValue('wizard_strength_recovery_mod');
+
+        foreach($dominion->race->units as $unit)
+        {
+            $multiplier += $unit->getPerkValue('wizard_strength_recovery_mod');
+        }
+
+        return $multiplier;
     }
 
 }

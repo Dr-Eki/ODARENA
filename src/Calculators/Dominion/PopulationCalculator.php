@@ -833,8 +833,6 @@ class PopulationCalculator
         return (min(1, ($this->getPopulationEmployed($dominion) / $dominion->peasants)) * 100);
     }
 
-
-
     public function getAnnexedPeasants($dominion): int
     {
         $annexedPeasants = 0;

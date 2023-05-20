@@ -3,7 +3,7 @@ alignment: independent
 description: >-
 home_land_type: mountain
 home_terrain: mountains
-playable: 0 # Round 88
+playable: 1
 skill_level: 3
 
 peasants_alias: wild yeti
@@ -17,7 +17,7 @@ resources:
   - mana
 
 peasants_production:
-  food: 0.50
+  food: 1
 
 construction_materials:
   - food
@@ -35,46 +35,45 @@ perks:
   unemployed_peasants_produce: 1
 
 units:
-  - name: Worker
-    training_time: 6
+  - name: Rockbreaker
+    training_time: 9
     type:
       - living
       - sentient
       - intelligent
       - wise
     cost:
-      food: 900
-      ore: 100
-      lumber: 25
+      food: 100
+      ore: 50
+      lumber: 50
     power:
       offense: 0
-      defense: 6
+      defense: 3
     perks:
-      #only_dies_vs_raw_power: 6 # >=
-      #counts_as_wizard: 0.5
-      #immortal_wizard: 1
+      ore_production_raw: 1
 
   - name: Mutterer
-    training_time: 6
+    training_time: 9
     type:
       - living
       - sentient
       - intelligent
       - wise
     cost:
-      food: 900
-      ore: 100
-      lumber: 25
+      food: 200
+      ore: 150
+      lumber: 100
     power:
       offense: 0
       defense: 6
     perks:
       #only_dies_vs_raw_power: 6 # >=
-      counts_as_wizard: 0.1
+      #counts_as_wizard: 0.1
       #immortal_wizard: 1
+      mana_production_raw: 0.1
 
-  - name: Fighter
-    training_time: 9
+  - name: Thrasher
+    training_time: 12
     type:
       - living
       - sentient
@@ -105,7 +104,7 @@ units:
       defense: 3
     perks:
       #only_dies_vs_raw_power: 6 # >=
-      offense_from_resource_capped_exhausting: 6,60,ore # +16 OP if paired with 150 ore
+      offense_from_resource_capped_exhausting: 6,60,ore # +6 OP if paired with 60 ore
       faster_return: 2
       sendable_with_zero_op: 1
       #immortal_on_victory: 1
