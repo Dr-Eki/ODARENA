@@ -6,7 +6,6 @@ home_terrain: mountains
 playable: 0 # Round 88
 skill_level: 3
 
-
 peasants_alias: wild yeti
 draftees_alias: yeti
 
@@ -18,8 +17,7 @@ resources:
   - mana
 
 peasants_production:
-  lumber: 0.50
-  ore: 0.65
+  food: 0.50
 
 construction_materials:
   - food
@@ -30,31 +28,31 @@ wizards_cost: 200,food
 archmages_cost: 400,food
 
 perks:
-  draftee_dp: 2
+  draftee_dp: 1.5
   cannot_train_wizards: 1
   cannot_train_archmages: 1
-  construction_cost: -50
+  #construction_cost: -50
   unemployed_peasants_produce: 1
 
 units:
   - name: Worker
-    training_time: 1
+    training_time: 6
     type:
       - living
       - sentient
       - intelligent
+      - wise
     cost:
-      food: 120
-      ore: 20
-      lumber: 10
+      food: 900
+      ore: 100
+      lumber: 25
     power:
       offense: 0
-      defense: 2
+      defense: 6
     perks:
-      only_dies_vs_raw_power: 4 # >=
-      gems_production_raw: 0.70
-      lumber_production_raw: 0.85
-      ore_production_raw: 1.2
+      #only_dies_vs_raw_power: 6 # >=
+      #counts_as_wizard: 0.5
+      #immortal_wizard: 1
 
   - name: Mutterer
     training_time: 6
@@ -69,11 +67,11 @@ units:
       lumber: 25
     power:
       offense: 0
-      defense: 12
+      defense: 6
     perks:
-      only_dies_vs_raw_power: 6 # >=
-      counts_as_wizard: 0.5
-      immortal_wizard: 1
+      #only_dies_vs_raw_power: 6 # >=
+      counts_as_wizard: 0.1
+      #immortal_wizard: 1
 
   - name: Fighter
     training_time: 9
@@ -83,14 +81,14 @@ units:
       - intelligent
       - wise
     cost:
-      food: 500
-      ore: 300
+      food: 200
+      ore: 200
       lumber: 200
     power:
-      offense: 12
-      defense: 10
+      offense: 5
+      defense: 4
     perks:
-      only_dies_vs_raw_power: 6 # >=
+     #only_dies_vs_raw_power: 6 # >=
 
   - name: Stonethrower
     training_time: 12
@@ -100,14 +98,15 @@ units:
       - intelligent
       - wise
     cost:
-      food: 860
-      ore: 100
+      food: 300
+      ore: 300
     power:
       offense: 0
-      defense: 8
+      defense: 3
     perks:
-      only_dies_vs_raw_power: 6 # >=
-      offense_from_resource_capped_exhausting: 16,150,ore # +16 OP if paired with 150 ore
-      faster_return: 4
+      #only_dies_vs_raw_power: 6 # >=
+      offense_from_resource_capped_exhausting: 6,60,ore # +16 OP if paired with 150 ore
+      faster_return: 2
       sendable_with_zero_op: 1
-      immortal_on_victory: 1
+      #immortal_on_victory: 1
+      casualties_on_victory: -50
