@@ -226,7 +226,7 @@ class UnitHelper
             'offense_from_resource' => 'Offense increased by 1 for every %2$s %1$s (no max).',
             'offense_from_resource_exhausting' => 'Offense increased by 1 for every %2$s %1$s (no max). All %1$s is spent when the unit attacks.',
             'defense_from_resource' => 'Defense increased by 1 for every %2$s %1$s (no max).',
-            'offense_from_resource_capped_exhausting' => 'Offense increased by %1$s if you have %2$s %3$s. The %3$s is spent when the unit attacks.',
+            'offense_from_resource_capped_exhausting' => 'Offense increased by %1$s if you have %2$s %3$s, which is spent when the unit attacks.',
 
             'offense_from_military_percentage' => 'Gains +1x(Military / Total Population) OP, max +1 at 100%% military.',
 
