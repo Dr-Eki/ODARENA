@@ -18,7 +18,7 @@
     </span>
 @endif
 @if($spell->cooldown > 0)
-  / <span data-toggle="tooltip" data-placement="top" title="Cooldown until spell can be cast again (ticks)">
+  <span data-toggle="tooltip" data-placement="top" title="Cooldown until spell can be cast again (ticks)">
         <i class="fas fa-hourglass-end"></i>:
         @if($spellCalculator->isOnCooldown($selectedDominion, $spell))
             <span class="text-red">{{ number_format($spellCalculator->getSpellCooldown($selectedDominion, $spell)) }}/{{ number_format($spell->cooldown) }}</span>
@@ -28,4 +28,4 @@
         ticks
     </span>
 @endif
-  / <span data-toggle="tooltip" data-placement="top" title="Wizard strength required to cast spell">WS</span>: {{ $spellCalculator->getWizardStrengthCost($spell) }}%
+  <span data-toggle="tooltip" data-placement="top" title="Wizard strength required to cast spell">WS</span>: {{ $spellCalculator->getWizardStrengthCost($spell) }}%

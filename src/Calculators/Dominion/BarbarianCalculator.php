@@ -11,7 +11,6 @@ use OpenDominion\Models\Round;
 
 use Illuminate\Support\Carbon;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
-use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\StatsService;
 
@@ -82,9 +81,6 @@ class BarbarianCalculator
     /** @var StatsService */
     protected $statsService;
 
-    /** @var LandCalculator */
-    protected $landCalculator;
-
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
 
@@ -96,7 +92,6 @@ class BarbarianCalculator
      */
     public function __construct()
     {
-        $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->queueService = app(QueueService::class);
         $this->statsService = app(StatsService::class);
@@ -227,28 +222,28 @@ class BarbarianCalculator
 
     public function getDpaCurrent(Dominion $dominion): int
     {
-        return $this->getDpCurrent($dominion) / $this->landCalculator->getTotalLand($dominion);
+        return $this->getDpCurrent($dominion) / $dominion->land;
     }
 
     public function getOpaCurrent(Dominion $dominion): int
     {
-        return $this->getOpCurrent($dominion) / $this->landCalculator->getTotalLand($dominion);
+        return $this->getOpCurrent($dominion) / $dominion->land;
     }
 
 
     public function getDpaPaid(Dominion $dominion): int
     {
-        return $this->getDpPaid($dominion) / $this->landCalculator->getTotalLand($dominion);
+        return $this->getDpPaid($dominion) / $dominion->land;
     }
 
     public function getOpaPaid(Dominion $dominion): int
     {
-        return $this->getOpPaid($dominion) / $this->landCalculator->getTotalLand($dominion);
+        return $this->getOpPaid($dominion) / $dominion->land;
     }
 
     public function getOpaAtHome(Dominion $dominion): int
     {
-        return $this->getOpAtHome($dominion) / $this->landCalculator->getTotalLand($dominion);
+        return $this->getOpAtHome($dominion) / $dominion->land;
     }
 
     public function getOpaDeltaPaid(Dominion $dominion): int

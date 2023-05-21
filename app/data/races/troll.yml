@@ -31,7 +31,6 @@ perks:
   cannot_research: 1
   max_advancements_level: 4
   advancement_costs: 25
-  magic_level: 1
 
 units:
 - name: Hill Troll

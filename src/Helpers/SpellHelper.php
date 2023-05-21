@@ -108,6 +108,7 @@ class SpellHelper
             // Military
             'drafting' => '%+g%% drafting',
             'training_time_raw' => '%s ticks training time for military units (does not include Spies, Wizards, or Archmages)',
+            'training_time_raw_from_morale' => '%1s tick training time for military units (does not include Spies, Wizards, or Archmages) per %2s morale (max %3s).',
             'training_costs' => '%+g%% military unit training costs',
             'unit_gold_costs' => '%+g%% military unit gold costs',
             'unit_ore_costs' => '%+g%% military unit ore costs',
@@ -128,7 +129,7 @@ class SpellHelper
 
             'increase_morale' => 'Restores target morale by %+g%% (up to maximum of 100%%).',
             'decrease_morale' => 'Lowers target morale by %+g%% (minimum 0%%).',
-            'increase_morale_from_net_victories' => 'Increases morale by %+g%% per net victory (minimum +0%%).',
+            'increase_morale_from_net_victories' => 'Gain %+g morale per net victory (minimum +0%%).',
 
             'kill_draftees' => 'Kills %1$s%% of the target\'s draftees.',
 
@@ -873,5 +874,4 @@ class SpellHelper
 
         return $breakSpellHelperString;
     }
-
 }

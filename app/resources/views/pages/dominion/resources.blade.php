@@ -151,26 +151,26 @@
                         <td>{{ number_format($populationCalculator->getPopulationMilitary($selectedDominion)) }}</td>
                     </tr>
 
-                    </tr>
-                        <td><span data-toggle="tooltip" data-placement="top" title="Available jobs:<br>Peasants / Available Jobs">Jobs:</span></td></td>
-                        <td>{{ number_format($populationCalculator->getPopulationEmployed($selectedDominion)) }} / {{ number_format($populationCalculator->getEmploymentJobs($selectedDominion)) }}</td>
-                    </tr>
-                    @php
-                        $jobsNeeded = ($selectedDominion->peasants - $populationCalculator->getEmploymentJobs($selectedDominion))
-                    @endphp
-                    @if ($jobsNeeded < 0)
-                    <tr>
-                        <td><span data-toggle="tooltip" data-placement="top" title="How many peasants you need in order to fill all available jobs">Jobs available:</span></td>
-                        <td>{{ number_format(abs($jobsNeeded)) }}</td>
-                    </tr>
-                    @else
-                    <tr>
-                        <td><span data-toggle="tooltip" data-placement="top" title="How many new jobs need to be created to provide employment for all currently unemployed peasants<br>Peasants - Jobs = Jobs Needed">Jobs needed:</span></td>
-                        <td>{{ number_format(abs($jobsNeeded)) }}</td>
-                    </tr>
+                    @if(!$selectedDominion->race->getPerkValue('unemployed_peasants_produce'))
+                        </tr>
+                            <td><span data-toggle="tooltip" data-placement="top" title="Available jobs:<br>Peasants / Available Jobs">Jobs:</span></td></td>
+                            <td>{{ number_format($populationCalculator->getPopulationEmployed($selectedDominion)) }} / {{ number_format($populationCalculator->getEmploymentJobs($selectedDominion)) }}</td>
+                        </tr>
+                        @php
+                            $jobsNeeded = ($selectedDominion->peasants - $populationCalculator->getEmploymentJobs($selectedDominion))
+                        @endphp
+                        @if ($jobsNeeded < 0)
+                            <tr>
+                                <td><span data-toggle="tooltip" data-placement="top" title="How many peasants you need in order to fill all available jobs">Jobs available:</span></td>
+                                <td>{{ number_format(abs($jobsNeeded)) }}</td>
+                            </tr>
+                        @else
+                            <tr>
+                                <td><span data-toggle="tooltip" data-placement="top" title="How many new jobs need to be created to provide employment for all currently unemployed peasants<br>Peasants - Jobs = Jobs Needed">Jobs needed:</span></td>
+                                <td>{{ number_format(abs($jobsNeeded)) }}</td>
+                            </tr>
+                        @endif
                     @endif
-
-                    @include('partials.dominion.housing')
                     </tbody>
                 </table>
 

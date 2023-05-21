@@ -3,56 +3,48 @@ alignment: independent
 description:
 home_land_type: hill
 home_terrain: hills
-playable: 0 # Round 88
+playable: 1
 skill_level: 2
 
-
 perks:
-  max_population: 50
+  max_population: 40
   population_growth: 20
   food_consumption_mod: -25
-  spy_strength: -10
-  wizard_strength: -10
-  salvaging: 10
-  reduced_conversions: 25
-  morale_change_tick: -50
+  #reduced_conversions: 25
+  #morale_change_tick: -50
   morale_change_invasion: 100
 
 units:
-  - name: Grunt
+  - name: Skitterblade
     training_time: 9
-    static_networth: 3
     type:
       - living
       - sentient
     cost:
-      gold: 200
-      ore: 20
+      gold: 250
+      ore: 30
     power:
       offense: 2
       defense: 0
     perks:
       offense_from_pairing: 4,0.5,1 # slot, amount, num required
-      plunders: gold;0.1,gems;0.01
-      housing_count: 0.5
+      plunders: gold;0.1,ore;0.05 # resource;amount
 
-  - name: Underling
+  - name: Snarlshield
     training_time: 9
-    static_networth: 3
     type:
       - living
       - sentient
     cost:
-      gold: 200
-      ore: 20
+      gold: 250
+      ore: 30
     power:
       offense: 0
       defense: 2
     perks:
       defense_from_pairing: 3,1,1 # slot, amount, num required
-      housing_count: 0.5
 
-  - name: Beast
+  - name: Cragguard
     training_time: 12
     type:
       - living
@@ -63,11 +55,11 @@ units:
       ore: 80
     power:
       offense: 0
-      defense: 5
+      defense: 4
     perks:
       defense_mob: 1 # +1 DP when they outnumber attacker's units
 
-  - name: Overlord
+  - name: Fang Marshal
     training_time: 12
     type:
       - living
@@ -75,9 +67,9 @@ units:
       - intelligent
     cost:
       gold: 800
-      ore: 100
+      ore: 80
     power:
-      offense: 5
+      offense: 4
       defense: 2
     perks:
       offense_mob: 1 # +1 OP when they outnumber the defender's units

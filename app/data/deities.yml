@@ -2,7 +2,6 @@
 
 azk_hurum:
   name: Azk'Hurum
-  enabled: 0
   range_multiplier: 0.60
   exclusive_races:
     - Demon
@@ -16,7 +15,6 @@ azk_hurum:
 
 barathu_bint:
   name: Barathu Bint
-  enabled: 0
   excluded_races:
     - Afflicted
     - Myconid
@@ -31,7 +29,6 @@ barathu_bint:
 
 bregon:
   name: Bregon
-  enabled: 0
   range_multiplier: 0.75
   excluded_races:
     - Nox
@@ -44,7 +41,6 @@ bregon:
 
 druva:
   name: Druva
-  enabled: 0
   range_multiplier: 0.40
   excluded_races:
     - Afflicted
@@ -59,8 +55,7 @@ druva:
 
 elskas:
   name: Elskas
-  enabled: 0
-  range_multiplier: 0.75
+  range_multiplier: 0.60
   exclusive_races:
     - Reptilians
   perks:
@@ -70,11 +65,10 @@ elskas:
 
 glimj:
   name: Glimj
-  enabled: 0
   range_multiplier: 0.75
   exclusive_races:
     - Armada
-    - Merfolk
+    - Glimjir
   perks:
     defensive_power: 5
     food_production_mod: 10
@@ -82,7 +76,6 @@ glimj:
 
 ib_tham:
   name: Ib-Tham
-  enabled: 0
   range_multiplier: 0.60
   exclusive_races:
     - Barbarian
@@ -94,7 +87,6 @@ ib_tham:
 
 ix:
   name: Ix
-  enabled: 0
   excluded_races:
     - Void
   range_multiplier: 0.75
@@ -120,7 +112,6 @@ kinthys:
 
 mirnon:
   name: Mirnon
-  enabled: 0
   range_multiplier: 0.75
   excluded_races:
     - Afflicted
@@ -134,7 +125,6 @@ mirnon:
 
 sazal:
   name: Sazal
-  enabled: 0
   range_multiplier: 0.75
   excluded_races:
     - Myconid

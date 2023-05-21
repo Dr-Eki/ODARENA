@@ -9,7 +9,6 @@ use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\UnitHelper;
 use OpenDominion\Models\Advancement;
-use OpenDominion\Models\Building;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Resource;
 use OpenDominion\Services\Dominion\HistoryService;
@@ -25,32 +24,60 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
-use OpenDominion\Calculators\Dominion\Actions\TechCalculator;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\ResourceHelper;
+use OpenDominion\Helpers\SpellHelper;
 
 class TrainActionService
 {
     use DominionGuardsTrait;
 
+    protected $queueService;
+    protected $trainingCalculator;
+    protected $unitHelper;
+    protected $raceHelper;
+    protected $resourceHelper;
+    protected $buildingCalculator;
+    protected $resourceCalculator;
+    protected $resourceService;
+    protected $statsService;
+    protected $advancementCalculator;
+    protected $improvementCalculator;
+    protected $spellCalculator;
+    protected $militaryCalculator;
+    protected $landCalculator;
+    protected $populationCalculator;
+    protected $spellHelper;
+
     public function __construct(
+        QueueService $queueService,
+        TrainingCalculator $trainingCalculator,
+        UnitHelper $unitHelper,
+        RaceHelper $raceHelper,
+        SpellHelper $spellHelper,
+        ResourceHelper $resourceHelper,
+        BuildingCalculator $buildingCalculator,
+        ResourceCalculator $resourceCalculator,
+        ResourceService $resourceService,
+        StatsService $statsService,
         AdvancementCalculator $advancementCalculator,
         ImprovementCalculator $improvementCalculator,
         SpellCalculator $spellCalculator,
         MilitaryCalculator $militaryCalculator,
         LandCalculator $landCalculator,
         PopulationCalculator $populationCalculator
-        )
+    )
     {
-        $this->queueService = app(QueueService::class);
-        $this->trainingCalculator = app(TrainingCalculator::class);
-        $this->unitHelper = app(UnitHelper::class);
-        $this->raceHelper = app(RaceHelper::class);
-        $this->resourceHelper = app(ResourceHelper::class);
-        $this->buildingCalculator = app(BuildingCalculator::class);
-        $this->resourceCalculator = app(ResourceCalculator::class);
-        $this->resourceService = app(ResourceService::class);
-        $this->statsService = app(StatsService::class);
+        $this->queueService = $queueService;
+        $this->trainingCalculator = $trainingCalculator;
+        $this->unitHelper = $unitHelper;
+        $this->raceHelper = $raceHelper;
+        $this->spellHelper = $spellHelper;
+        $this->resourceHelper = $resourceHelper;
+        $this->buildingCalculator = $buildingCalculator;
+        $this->resourceCalculator = $resourceCalculator;
+        $this->resourceService = $resourceService;
+        $this->statsService = $statsService;
 
         $this->advancementCalculator = $advancementCalculator;
         $this->improvementCalculator = $improvementCalculator;
@@ -410,6 +437,7 @@ class TrainActionService
                     $ticks += $dominion->getSpellPerkValue('training_time_raw');
                     $ticks += $dominion->title->getPerkValue('training_time_raw');
                     $ticks += $dominion->realm->getArtefactPerkValue('training_time_raw');
+                    $ticks += $dominion->getSpellPerkValue('training_time_raw_from_morale');
 
                     // Spell: Spawning Pool (increase units trained, for free)
                     if ($this->spellCalculator->isSpellActive($dominion, 'spawning_pool') and $unitType == 'military_unit1')
@@ -422,6 +450,7 @@ class TrainActionService
                     {
                         $amountToTrain *= (1 + $dominion->getBuildingPerkMultiplier('extra_units_trained'));
                     }
+
 
                     # Multiplier
                     $ticksMultiplier = 1;

@@ -1,83 +1,27 @@
-# Round 88+
+## Military Buildings
 
 barracks:  
   name: Barracks
   excluded_races:
     - Beastfolk
+    - Kobold
     - Reptilians
     - Sylvan
     - Swarm
-  land_type: hill
-  terrain: hills
   perks:
     military_housing: 36
     housing: 0
     jobs: 0
 
-farm:  
-  name: Farm
-  excluded_races:
-    - Reptilians
-    - Sylvan
-    - Swarm
-  land_type: plain
-  terrain: plains
-  perks:
-    food_production_raw: 50
-
-ore_mine:  
-  name: Ore Mine
-  excluded_races:
-    - Reptilians
-    - Sylvan
-    - Swarm
-  land_type: mountain
-  terrain: mountains
-  perks:
-    ore_production_raw: 35
-    #arwe_unit_housing: 2,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
-    #gorm_unit_housing: 2,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
-
-saw_mill:  
-  name: Saw Mill
+turret:
+  name: Turret
+  enabled: 0
   exclusive_races:
     - Arwe
-  land_type: forest
-  terrain: forest
   perks:
-    lumber_production_raw: 35
-    #arwe_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
-
-tower:
-  name: Tower
-  excluded_races:
-    - Gorm
-    - Sylvan
-  land_type: swamp
-  perks:
-    mana_production_raw: 20
-
-lumberyard:  
-  name: Lumberyard
-  exclusive_races:
-    - Beastfolk
-    - Gorm
-    - Reptilians
-  land_type: forest
-  terrain: forest
-  perks:
-    lumber_production_raw: 35
-    #gorm_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
-
-stable:  
-  name: Stable
-  exclusive_races:
-    - Arwe
-  land_type: plain
-  terrain: plains
-  perks:
-    horse_production_raw: 1
-    horse_theft_reduction: 1,10,100  # Every 1% reduces plat stolen by 10%, max 100% reduction
+    defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
+    building_capacity_limit: 1,2,wall # amount allowed, per x of, building
+    arwe_unit_housing: 3,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 wall:
   name: Wall
@@ -86,32 +30,108 @@ wall:
     - Reptilians
     - Sylvan
     - Swarm
-  land_type: hill
-  terrain: plains
   perks:
     defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
     raw_defense: 6
 
-turret:
-  name: Turret
+## Production Buildings
+
+farm:  
+  name: Farm
+  excluded_races:
+    - Reptilians
+    - Sylvan
+    - Swarm
+  perks:
+    food_production_raw: 50
+
+gold_mine:
+  name: Gold Mine
+  excluded_races:
+    - Sylvan
+    - Swarm
+    - Yeti
+  perks:
+    gold_production_raw: 20
+
+gem_mine:
+  name: Gem Mine
+  excluded_races:
+    - Beastfolk
+    - Demon
+    - Reptilians
+    - Swarm
+    - Sylvan
+  terrain: mountain
+  perks:
+    gems_production_raw: 6
+
+lumberyard:  
+  name: Lumberyard
+  exclusive_races:
+    - Beastfolk
+    - Reptilians
+  perks:
+    lumber_production_raw: 35
+
+ore_mine:  
+  name: Ore Mine
+  excluded_races:
+    - Reptilians
+    - Sylvan
+    - Swarm
+  perks:
+    ore_production_raw: 35
+
+saw_mill:  
+  name: Saw Mill
+  exclusive_races:
+    - Kobold
+  perks:
+    lumber_production_raw: 35
+
+tower:
+  name: Tower
+  excluded_races:
+    - Sylvan
+  perks:
+    mana_production_raw: 20
+
+stable:  
+  name: Stable
   exclusive_races:
     - Arwe
-  land_type: hill
-  terrain: plains
   perks:
-    defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
-    building_capacity_limit: 1,2,wall # amount allowed, per x of, building
-    arwe_unit_housing: 3,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    horse_production_raw: 1
+    horse_theft_reduction: 1,10,100  # Every 1% reduces plat stolen by 10%, max 100% reduction
 
-# GENERIC ANTI-THEFT
+## Improvements
+school:
+  name: School
+  excluded_races:
+    - Beastfolk
+    - Swarm
+    - Sylvan
+    - Troll
+  perks:
+    improvements: 1,0.8 # Every 1% gives 0.8% higher imps
+
+stronghold:
+  name: Stronghold
+  exclusive_races:
+    - Troll
+  perks:
+    improvements: 1,1 # Every 1% gives 1% higher imps
+    gem_theft_reduction: 1,2,100  # Every 1% reduces plat stolen by 8%, max 100% reduction
+    improvements_damage_reduction: 1,0.50 # Every 1% reduces damage to improvements by 0.75%
+
+## Anti-Theft
 
 vault:  
   name: Vault
   excluded_races:
     - Reptilians
     - Sylvan
-  land_type: mountain
-  terrain: mountains
   perks:
     gold_theft_protection: 25000
     gems_theft_protection: 2500
@@ -119,44 +139,44 @@ vault:
 
 granary:
   name: Granary
-  land_type: forest
-  terrain: forest
   perks:
     food_theft_protection: 25000
     lumber_theft_protection: 12500
 
-# HOMES
+## Homes
+cave:  
+  name: Cave
+  exclusive_races:
+    - Yeti
+  perks:
+    housing: 30
+    jobs: 0
+
 den:  
   name: Den
-  enabled: 0
   exclusive_races:
-    - Therozou
-  land_type: forest
+    - Kobold
   perks:
-    housing: 32
+    housing: 30
     jobs: 0
 
 hut:
   name: Hut
   exclusive_races:
-    - Gorm
-  land_type: hill
-  terrain: hills
+    - Troll
   perks:
-    jobs: 0
     housing: 28
+    jobs: 0
 
 residence:
   name: Residence
   exclusive_races:
-    - Arwe
+    - Elf
   land_type: plain
   terrain: plains
   perks:
     housing: 30
     jobs: 0
-
-# END HOMES
 
 # BEGIN SYLVAN
 forest_haven:
@@ -373,54 +393,6 @@ alchemy:
   land_type: plain
   perks:
     gold_production_mod: 1,4,20 # Every 1% gives +4% gold production, max +20%
-
-gold_mine:  
-  enabled: 0
-  name: Gold Mine
-  excluded_races:
-    - Aurei
-    - Dragon
-    - Glimjir
-    - Growth
-    - Icekin
-    - Marshling
-    - Lux
-    - Monster
-    - Myconid
-    - Void
-    - Spirit
-    - Sylvan
-    - Swarm
-    - Yeti
-    - Wood Elf
-  land_type: plain
-  perks:
-    gold_production_raw: 50
-
-gem_mine:  
-  enabled: 0
-  name: Gem Mine
-  excluded_races:
-    - Afflicted
-    - Ants
-    - Aurei
-    - Beastfolk
-    - Demon
-    - Glimjir
-    - Growth
-    - Marshling
-    - Monster
-    - Myconid
-    - Reptilians
-    - Simian
-    - Swarm
-    - Sylvan
-    - Void
-    - Weres
-    - Wood Elf
-  land_type: mountain
-  perks:
-    gems_production_raw: 15
 
 deep_mine:  
   enabled: 0
@@ -697,38 +669,6 @@ shipyard:
     unit_ore_costs: 1,-2,50 # Every 1% gives 2% reduction, max 50%
 
 ## Mod Buildings
-
-school:  
-  enabled: 0
-  name: School
-  excluded_races:
-    - Armada
-    - Dragon
-    - Growth
-    - Icekin
-    - Glimjir
-    - Monster
-    - Myconid
-    - Void
-    - Swarm
-    - Beastfolk
-    - Sylvan
-    - Troll
-    - Wood Elf
-  land_type: plain
-  perks:
-    improvements: 1,2.75 # Every 1% gives 2.75% higher imps
-
-stronghold:  
-  enabled: 0
-  name: Stronghold
-  exclusive_races:
-    - Troll
-  land_type: mountain
-  perks:
-    improvements: 1,2.75 # Every 1% gives 2.75% higher imps
-    gem_theft_reduction: 1,2,100  # Every 1% reduces plat stolen by 8%, max 100% reduction
-    damage_from_lightning_bolt: 1,-0.75 # Every 1% reduces damage from LBs by 0.75%
 
 naval_institute:  
   enabled: 0
@@ -1631,17 +1571,6 @@ sanctuary:
     jobs: 0
 
 # END LUX
-
-cave:  
-  enabled: 0
-  name: Cave
-  exclusive_races:
-    - Yeti
-  land_type: mountain
-  perks:
-    housing: 30
-    jobs: 0
-
 plateau:  
   enabled: 0
   name: Plateau

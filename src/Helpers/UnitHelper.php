@@ -202,7 +202,6 @@ class UnitHelper
             'offense_if_recently_invaded' => 'Offense increased by %1$s if recently invaded (in the last %2$s ticks, includes non-overwhelmed failed invasions).',
             'defense_if_recently_invaded' => 'Defense increased by %1$s if recently invaded (in the last %2$s ticks, includes non-overwhelmed failed invasions).',
 
-
             'offense_if_target_recently_invaded' => '%+g offensive power if target is recently invaded (in the last 12 ticks, includes non-overwhelmed failed invasions).',
             'defense_if_target_recently_invaded' => '%+g defensive power if target is recently invaded (in the last 12 ticks, includes non-overwhelmed failed invasions).',
 
@@ -325,7 +324,7 @@ class UnitHelper
             'immortal_on_victory' => 'Immortal on invasion if victorious.',
             'immortal_on_fending_off' => 'Immortal if successfully fending off invader.',
 
-            #'kills_immortal' => 'Kills immortal units.',
+            'kills_immortal' => 'Kills immortal units.',
 
             'reduces_spell_damage' => 'Reduces spell damage suffered by (([Units] / [Land]) * %s)%%.',
 
@@ -493,7 +492,6 @@ class UnitHelper
             'population_growth' => 'Increases population growth by 2%% for every 1%% of population.',
 
             'houses_military_units' => 'Houses %1$s military units.',
-            'norse_unit1_housing' => 'Houses %1$s Warriors.',
             'houses_people' => 'Houses %1$s people.',
 
             'provides_jobs' => 'Provides %1$s jobs.',

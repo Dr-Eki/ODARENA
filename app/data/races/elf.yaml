@@ -6,7 +6,7 @@ home_land_type: forest
 home_terrain: forest
 skill_level: 1
 playable: 1
-magic_level: 2
+magic_level: 3
 
 resources:
   - gold
@@ -24,17 +24,17 @@ construction_materials:
   - lumber
 
 perks:
-  #
+  salvage: 50
 
 units:
-- name: Light Archer
+- name: Ranger
   training_time: 9
   type:
     - living
     - intelligent
   cost:
-    gold: 350
-    ore: 20
+    gold: 370
+    lumber: 50
     draftees: 1
   power:
     offense: 0
@@ -46,9 +46,8 @@ units:
     - living
     - intelligent
   cost:
-    gold: 400
-    ore: 40
-    lumber: 20
+    gold: 410
+    lumber: 50
     draftees: 1
   power:
     offense: 3
@@ -60,9 +59,8 @@ units:
     - living
     - intelligent
   cost:
-    gold: 720
-    ore: 20
-    lumber: 60
+    gold: 920
+    lumber: 100
     draftees: 1
   power:
     offense: 0
@@ -74,12 +72,12 @@ units:
     - living
     - intelligent
   cost:
-    gold: 1075
-    ore: 220
+    gold: 1400
+    lumber: 80
     draftees: 1
   power:
     offense: 6
     defense: 3
   perks:
     counts_as_wizard: 0.10
-    faster_return_from_terrain: 1,40,forest # 1 tick faster per 10% forest
+    faster_return_from_terrain: 1,40,forest,2 # 1 tick faster per 40% forest, max 2

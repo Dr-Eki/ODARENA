@@ -13,6 +13,19 @@ use OpenDominion\Calculators\Dominion\PopulationCalculator;
 class MoraleCalculator
 {
 
+
+    /** @var BuildingCalculator */
+    protected $buildingCalculator;
+
+    /** @var LandCalculator */
+    protected $landCalculator;
+
+    /** @var MilitaryCalculator */
+    protected $militaryCalculator;
+
+    /** @var PopulationCalculator */
+    protected $populationCalculator;
+
     public function __construct()
     {
         $this->buildingCalculator = app(BuildingCalculator::class);

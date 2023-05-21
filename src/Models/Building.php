@@ -23,7 +23,7 @@ class Building extends AbstractModel
         'excluded_races' => 'array',
         'exclusive_races' => 'array',
         'enabled' => 'integer',
-        'land_type' => 'string',
+        #'land_type' => 'string',
         #'terrain' => 'string',
     ];
 

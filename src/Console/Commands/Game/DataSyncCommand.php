@@ -521,35 +521,13 @@ class DataSyncCommand extends Command implements CommandInterface
 
             $buildingsToSync[] = $buildingKey;
 
-            if(isset($buildingData->terrain))
-            {
-                $terrain = Terrain::where('key', $buildingData->terrain)->first();
-                if(!$terrain)
-                {
-                    $this->error("Terrain key {$buildingData->terrain} not found.");
-                    $terrainId = null;
-                }
-                else
-                {
-                    $terrainId = $terrain->id;
-                }
-            }
-            else
-            {
-                #$this->error("Terrain not set for building {$buildingData->name}");
-                $terrainId = null;
-            }
-
-
             // Building
             $building = Building::firstOrNew(['key' => $buildingKey])
                 ->fill([
                     'name' => $buildingData->name,
-                    'land_type' => object_get($buildingData, 'land_type'),
                     'excluded_races' => object_get($buildingData, 'excluded_races', []),
                     'exclusive_races' => object_get($buildingData, 'exclusive_races', []),
-                    'enabled' => (int)object_get($buildingData, 'enabled', 1),
-                    'terrain_id' => $terrainId,
+                    'enabled' => (int)object_get($buildingData, 'enabled', 1)
                 ]);
 
             if (!$building->exists) {

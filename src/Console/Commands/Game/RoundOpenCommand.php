@@ -174,7 +174,7 @@ class RoundOpenCommand extends Command implements CommandInterface
                 $this->realmFactory->create($round, 'npc');
 
                 // Create a realm per playable race
-                foreach(Race::where('playable',1)->get() as $race)
+                foreach(Race::where('playable',1)->orderBy('name')->get() as $race)
                 {
                     $this->realmFactory->create($round, $race->key);
                 }

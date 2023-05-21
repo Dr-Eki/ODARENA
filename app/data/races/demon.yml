@@ -32,8 +32,8 @@ improvement_resources:
   blood: 6
 
 perks:
-  #starts_devoted_to_azk_hurum: 1
-  #cannot_renounce_deity: 1
+  starts_devoted_to_azk_hurum: 1
+  cannot_renounce_deity: 1
   improvements_from_souls: 1
 
 units:

@@ -1412,6 +1412,18 @@ class Dominion extends AbstractModel
 
                     $perk += floor($perAcre * $this->{'land_' . $landType});
                 }
+                elseif($perkKey == 'training_time_raw_from_morale')
+                {
+                    $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
+
+                    $perMoraleChunk = (float)$perkValueArray[0];
+                    $moraleChunk = (int)$perkValueArray[1];
+                    $max = (int)$perkValueArray[2];
+
+                    $reduction = floor($this->morale / $moraleChunk) * $perMoraleChunk;
+
+                    $perk += max($reduction, $max);
+                }
                 else
                 {
                     dd("[Error] Undefined spell perk type:", $perkKey, $perkValueString);

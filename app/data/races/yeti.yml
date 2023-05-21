@@ -5,6 +5,7 @@ home_land_type: mountain
 home_terrain: mountains
 playable: 1
 skill_level: 3
+magic_level: 2
 
 peasants_alias: wild yeti
 draftees_alias: yeti
@@ -33,6 +34,7 @@ perks:
   cannot_train_archmages: 1
   #construction_cost: -50
   unemployed_peasants_produce: 1
+  max_advancements_level: 6
 
 units:
   - name: Rockbreaker
@@ -98,14 +100,14 @@ units:
       - wise
     cost:
       food: 300
-      ore: 300
+      ore: 250
     power:
       offense: 0
       defense: 3
     perks:
       #only_dies_vs_raw_power: 6 # >=
-      offense_from_resource_capped_exhausting: 6,60,ore # +6 OP if paired with 60 ore
+      offense_from_resource_capped_exhausting: 6,60,ore # +6 OP if paired with 60 ore (was +16 from 150 ore)
       faster_return: 2
       sendable_with_zero_op: 1
       #immortal_on_victory: 1
-      casualties_on_victory: -50
+      casualties_on_victory: -20

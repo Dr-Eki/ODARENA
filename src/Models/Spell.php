@@ -95,4 +95,5 @@ class Spell extends AbstractModel
         return $perkValue;
     }
 
+
 }

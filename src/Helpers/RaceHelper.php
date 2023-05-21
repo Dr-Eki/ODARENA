@@ -317,11 +317,6 @@ class RaceHelper
                 $description = 'Cannot steal';
                 $booleanValue = true;
                 break;
-            case 'cannot_submit_to_deity':
-                $negativeBenefit = true;
-                $description = 'Cannot submit to a deity';
-                $booleanValue = true;
-                break;
             case 'cannot_train_spies':
                 $negativeBenefit = true;
                 $description = 'Cannot train spies';
@@ -633,14 +628,19 @@ class RaceHelper
                 $valueType = ' per raw OP';
                 $booleanValue = 'static';
                 break;
+            case 'deity_power':
+                $negativeBenefit = false;
+                $description = 'Deity perks';
+                break;
+            case 'cannot_submit_to_deity':
+                $negativeBenefit = true;
+                $description = 'Cannot submit to a deity';
+                $booleanValue = true;
+                break;
             case 'cannot_renounce_deity':
                 $negativeBenefit = true;
                 $description = 'Cannot renounce deity';
                 $booleanValue = true;
-                break;
-            case 'deity_power':
-                $negativeBenefit = false;
-                $description = 'Deity perks';
                 break;
             case 'starts_devoted_to_azk_hurum':
                 $negativeBenefit = false;
@@ -744,7 +744,6 @@ class RaceHelper
             {
                 $result['value'] = "<span class=\"text-red\">{$valueString}</span>";
             }
-
         }
         else
         {

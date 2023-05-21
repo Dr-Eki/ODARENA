@@ -222,4 +222,11 @@ class Round extends AbstractModel
     {
         return $this->settings[$key] ?? $default;
     }
+
+    # Get the nth largest dominion in the round
+    public function getNthLargestDominion(int $n): Dominion
+    {
+        return $this->dominions()->orderBy('land', 'desc')->skip($n - 1)->first();
+    }
+
 }
