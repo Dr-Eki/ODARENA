@@ -5,7 +5,7 @@ gameplay_notes: >-
 home_land_type: plain
 home_terrain: plains
 skill_level: 1
-playable: 1
+playable: 0
 magic_level: 1
 
 resources:
