@@ -1,10 +1,11 @@
-name: Gorm
+name: Troll
 alignment: evil
 description: >-
 home_land_type: hill
 home_terrain: hills
 skill_level: 1
-magic_level: 0
+playable: 1
+magic_level: 1
 
 resources:
   - gold
