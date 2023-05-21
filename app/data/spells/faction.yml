@@ -76,7 +76,7 @@ rousing_roar:
   scope: self
   class: passive
   cost: 0
-  duration: 1
+  duration: 6
   cooldown: 96
   exclusive_races:
     - Kobold
