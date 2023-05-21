@@ -43,7 +43,7 @@ units:
       offense: 0
       defense: 2
     perks:
-      defense_from_pairing: 3,1,1 # slot, amount, num required
+      defense_from_pairing: 3,0.5,1 # slot, amount, num required
 
   - name: Cragguard
     training_time: 12
