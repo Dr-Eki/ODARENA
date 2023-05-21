@@ -13,6 +13,7 @@ perks:
   #reduced_conversions: 25
   #morale_change_tick: -50
   morale_change_invasion: 100
+  draftee_dp: 0.5
 
 units:
   - name: Skitterblade
