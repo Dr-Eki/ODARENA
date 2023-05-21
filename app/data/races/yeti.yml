@@ -30,8 +30,8 @@ archmages_cost: 400,food
 
 perks:
   draftee_dp: 1.5
-  cannot_train_wizards: 1
-  cannot_train_archmages: 1
+  #cannot_train_wizards: 1
+  #cannot_train_archmages: 1
   #construction_cost: -50
   unemployed_peasants_produce: 1
   max_advancements_level: 6
