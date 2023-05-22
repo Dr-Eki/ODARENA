@@ -83,6 +83,20 @@ rousing_roar:
   perks:
     training_time_raw_from_morale: -1,150,-3 # 1 tick faster per 150 morale, max 3 ticks faster
 
+soothing_hum:
+  name: Soothing Hum
+  level: 0
+  scope: self
+  class: passive
+  cost: 0
+  duration: 36
+  cooldown: 72
+  exclusive_races:
+    - Kobold
+  perks:
+    offensive_power: -10
+    morale_change_tick: -50
+
 ## Swarm
 
 chitin:

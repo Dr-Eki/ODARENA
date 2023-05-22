@@ -122,6 +122,7 @@ class MoraleCalculator
         $moraleChangeModifier = 1;
 
         $moraleChangeModifier += $dominion->race->getPerkMultiplier('morale_change_tick');
+        $moraleChangeModifier += $dominion->getSpellPerkMultiplier('morale_change_tick');
 
         return max(0.10, $moraleChangeModifier);
 

@@ -130,7 +130,8 @@ class SpellHelper
             'increase_morale' => 'Restores target morale by %+g%% (up to maximum of 100%%).',
             'decrease_morale' => 'Lowers target morale by %+g%% (minimum 0%%).',
             'increase_morale_from_net_victories' => 'Gain %+g morale per net victory (minimum +0%%).',
-
+            'morale_change_tick' => '%+g%% morale normalisation per tick (if morale is greater than base morale).',
+            
             'kill_draftees' => 'Kills %1$s%% of the target\'s draftees.',
 
             'kill_faction_units_percentage' => 'Kills %3$s%% of %1$s %2$s.',
