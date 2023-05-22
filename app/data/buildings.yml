@@ -114,14 +114,14 @@ school:
     - Sylvan
     - Troll
   perks:
-    improvements: 1,0.8 # Every 1% gives 0.8% higher imps
+    improvements: 1,1 # Every 1% gives 0.8% higher imps
 
 stronghold:
   name: Stronghold
   exclusive_races:
     - Troll
   perks:
-    improvements: 1,1 # Every 1% gives 1% higher imps
+    improvements: 1,1.5 # Every 1% gives 1% higher imps
     gem_theft_reduction: 1,2,100  # Every 1% reduces plat stolen by 8%, max 100% reduction
     improvements_damage_reduction: 1,0.50 # Every 1% reduces damage to improvements by 0.75%
 
