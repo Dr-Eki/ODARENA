@@ -32,6 +32,7 @@ perks:
   cannot_research: 1
   max_advancements_level: 4
   advancement_costs: 25
+  gems_production_mod: 50
 
 units:
 - name: Hill Troll
