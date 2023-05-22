@@ -350,8 +350,6 @@
                                     <td>Prestige:</td>
                                     <td>{{ number_format($realmDominionsStats['prestige']) }}</td>
                                   </tr>
-                                <tr>
-                                <tr>
                                   <td>Total land:</td>
                                   <td>{{ number_format($landCalculator->getTotalLandForRealm($realm)) }}</td>
                                 </tr>
@@ -396,40 +394,19 @@
 
                       <p class="text-center"><a href="{{ route('dominion.world-news', [$realm->number]) }}">Read the News from the {{ $alignmentNoun }}</a></p>
 
-                      @if(isset($realmDominionsStats) and array_sum($realmDominionsStats) > 0)
-                          <div class="col-xs-12">
-                              <div class="box-body table-responsive no-padding">
-                                  <table class="table">
-                                      <colgroup>
-                                          <col width="25%">
-                                          <col width="25%">
-                                          <col width="25%">
-                                          <col width="25%">
-                                      </colgroup>
-                                      <tr>
-                                          <th colspan="6" class="text-center">{{ $alignmentAdjective }} Lands</th>
-                                      </tr>
-                                      <tr>
-                                          <td>Plains:</td>
-                                          <td><span data-toggle="tooltip" data-placement="top" title="{{ number_format( ($realmDominionsStats['plain'] / array_sum($realmDominionsStats)) * 100,2) }}%">{{ number_format($realmDominionsStats['plain']) }}</span></td>
-                                          <td>Mountains:</td>
-                                          <td><span data-toggle="tooltip" data-placement="top" title="{{ number_format( ($realmDominionsStats['mountain'] / array_sum($realmDominionsStats)) * 100,2) }}%">{{ number_format($realmDominionsStats['mountain']) }}</span></td>
-                                          <td>Swamp:</td>
-                                          <td><span data-toggle="tooltip" data-placement="top" title="{{ number_format( ($realmDominionsStats['swamp'] / array_sum($realmDominionsStats)) * 100,2) }}%">{{ number_format($realmDominionsStats['swamp']) }}</span></td>
-                                      </tr>
-
-                                      <tr>
-                                          <td>Forest:</td>
-                                          <td><span data-toggle="tooltip" data-placement="top" title="{{ number_format( ($realmDominionsStats['forest'] / array_sum($realmDominionsStats)) * 100,2) }}%">{{ number_format($realmDominionsStats['forest']) }}</span></td>
-                                          <td>Hills:</td>
-                                          <td><span data-toggle="tooltip" data-placement="top" title="{{ number_format( ($realmDominionsStats['hill'] / array_sum($realmDominionsStats)) * 100,2) }}%">{{ number_format($realmDominionsStats['hill']) }}</span></td>
-                                          <td>Water:</td>
-                                          <td><span data-toggle="tooltip" data-placement="top" title="{{ number_format( ($realmDominionsStats['water'] / array_sum($realmDominionsStats)) * 100,2) }}%">{{ number_format($realmDominionsStats['water']) }}</span></td>
-                                      </tr>
-                                  </table>
+                        @if(isset($realmDominionsStats) and array_sum($realmDominionsStats) > 0)
+                            <div class="col-xs-12">
+                                <div class="row">
+                                    <strong>{{ $alignmentAdjective }} Lands</strong><br>
+                                <div class="row">
+                                    @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
+                                        <div class="col-xs-4">
+                                            {{ $terrain->name }}: {{ number_format($realmDominionsStats['terrain'][$terrain->key]) }}
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
-                    @endif
+                        @endif
                     </div>
                 </div>
             </div>

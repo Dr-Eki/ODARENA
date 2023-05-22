@@ -266,14 +266,8 @@ class LandCalculator
      */
     public function getTotalLandForRealm(Realm $realm): int
     {
-      $land = 0;
-
-      foreach ($realm->dominions as $dominion)
-      {
-          $land += $this->getTotalLand($dominion);
-      }
-
-      return $land;
-  }
+        # Sum land of all dominions in realm
+        return $realm->dominions->sum('land');
+    }
 
 }

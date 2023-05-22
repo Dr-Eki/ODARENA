@@ -10,6 +10,7 @@ use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Realm;
+use OpenDominion\Models\Terrain;
 use OpenDominion\Services\Dominion\StatsService;
 use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
@@ -24,7 +25,6 @@ use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\RealmHelper;
 use OpenDominion\Services\Dominion\BarbarianService;
-use Illuminate\Support\Carbon;
 
 class RealmController extends AbstractDominionController
 {
@@ -97,6 +97,7 @@ class RealmController extends AbstractDominionController
             'total_land_discovered' => 0,
             'total_land_lost' => 0,
             'prestige' => 0,
+            'terrain' => [],
           ];
 
         foreach($dominions as $dominion)
@@ -108,15 +109,15 @@ class RealmController extends AbstractDominionController
             $realmDominionsStats['total_land_lost'] += $statsService->getStat($dominion, 'land_lost');
             $realmDominionsStats['prestige'] += floor($dominion->prestige);
 
-            foreach($landHelper->getLandTypes() as $landType)
+            foreach(Terrain::all() as $terrain)
             {
-                if(isset($realmDominionsStats[$landType]))
+                if(isset($realmDominionsStats['terrain'][$terrain->key]))
                 {
-                    $realmDominionsStats[$landType] += $dominion->{'land_'.$landType};
+                    $realmDominionsStats['terrain'][$terrain->key] += $dominion->{'terrain_'.$terrain->key};
                 }
                 else
                 {
-                    $realmDominionsStats[$landType] = $dominion->{'land_'.$landType};
+                    $realmDominionsStats['terrain'][$terrain->key] = $dominion->{'terrain_'.$terrain->key};
                 }
             }
         }

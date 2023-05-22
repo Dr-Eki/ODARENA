@@ -48,6 +48,7 @@ units:
       food: 100
       ore: 50
       lumber: 50
+      draftee: 1
     power:
       offense: 0
       defense: 3
@@ -65,6 +66,7 @@ units:
       food: 200
       ore: 150
       lumber: 100
+      draftee: 1
     power:
       offense: 0
       defense: 6
@@ -85,6 +87,7 @@ units:
       food: 200
       ore: 200
       lumber: 200
+      draftee: 1
     power:
       offense: 5
       defense: 4
@@ -101,6 +104,7 @@ units:
     cost:
       food: 300
       ore: 250
+      draftee: 1
     power:
       offense: 0
       defense: 3
