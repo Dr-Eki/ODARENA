@@ -172,8 +172,6 @@ residence:
   name: Residence
   exclusive_races:
     - Elf
-  land_type: plain
-  terrain: plains
   perks:
     housing: 30
     jobs: 0
@@ -184,7 +182,6 @@ forest_haven:
   enabled: 0
   exclusive_races:
     - Sylvan
-  land_type: forest
   perks:
     gold_theft_protection: 25000
 
@@ -192,7 +189,6 @@ garden:
   name: Garden
   exclusive_races:
     - Sylvan
-  land_type: forest
   perks:
     food_production_raw: 50
 
@@ -200,7 +196,6 @@ mana_tree:
   name: Mana Tree
   exclusive_races:
     - Sylvan
-  land_type: forest
   perks:
     mana_production_raw: 30
 
@@ -208,7 +203,6 @@ meadow:
   name: Meadow
   exclusive_races:
     - Sylvan
-  land_type: forest
   perks:
     housing: 28
     jobs: 0
@@ -217,9 +211,8 @@ orchard:
   name: Orchard
   exclusive_races:
     - Sylvan
-  land_type: forest
   perks:
-    improvements: 1,1 # Every 1% gives 2% higher imps
+    improvements: 1,1.5 # Every 1% gives 1.5% higher imps
 
 # END SYLVAN
 
@@ -229,8 +222,6 @@ aquifer:
   name: Aquifer
   exclusive_races:
     - Swarm
-  land_type: water
-  terrain: water
   perks:
     food_production_raw: 40
 
@@ -238,8 +229,6 @@ chrysalis:
   name: Chrysalis
   exclusive_races:
     - Swarm
-  land_type: forest
-  terrain: forest
   perks:
     improvements: 1,1 # Every 1% gives 1% higher imps
 
@@ -247,8 +236,6 @@ burrow:
   name: Burrow
   exclusive_races:
     - Swarm
-  land_type: plain
-  terrain: plains
   perks:
     housing: 28
     jobs: 0
@@ -257,8 +244,6 @@ nest:
   name: Nest
   exclusive_races:
     - Swarm
-  land_type: forest
-  terrain: forest
   perks:
     military_housing: 34
     housing: 0
@@ -268,8 +253,6 @@ tunnel:
   name: Tunnel
   exclusive_races:
     - Swarm
-  land_type: hill
-  terrain: hills
   perks:
     faster_returning_units_increasing: 60,0.04 # faster returning units, increase per tick
 
@@ -281,8 +264,6 @@ bog:
   name: Bog
   exclusive_races:
     - Reptilians
-  land_type: swamp
-  terrain: swamps
   perks:
     food_production_raw: 50
 
@@ -290,10 +271,8 @@ mire:
   name: Mire
   exclusive_races:
     - Reptilians
-  land_type: swamp
-  terrain: swamps
   perks:
-    housing: 28
+    housing: 30
     jobs: 0
 
 swamp_vault:
