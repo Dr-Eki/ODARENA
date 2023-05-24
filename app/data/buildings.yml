@@ -70,7 +70,9 @@ lumberyard:
   name: Lumberyard
   exclusive_races:
     - Beastfolk
+    - Elf
     - Reptilians
+    - Yeti
   perks:
     lumber_production_raw: 35
 

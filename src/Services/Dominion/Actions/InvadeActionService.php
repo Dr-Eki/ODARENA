@@ -2374,6 +2374,27 @@ class InvadeActionService
                             $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += floor($casualties * $newUnitAmount);
                         }
 
+                        # Check for faster_return_from_terrain
+                        if($fasterReturnFromTerrainPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_from_terrain'))
+                        {
+
+                            $perChunk = $fasterReturnFromTerrainPerk[0];
+                            $chunkSize = $fasterReturnFromTerrainPerk[1];
+                            $terrainKey = $fasterReturnFromTerrainPerk[1];
+                            $maxPerk = $fasterReturnFromTerrainPerk[1];
+
+                            $ticksFaster = ($attacker->{'terrain_' . $terrainKey} / $attacker->land) * 100 / $chunkSize * $perChunk;
+                            $ticksFaster = min($ticksFaster, $maxPerk);
+
+                            $fasterReturningTicks = min(max(1, ($ticks - $ticksFaster)), 12);
+
+                            # How many of $slot should return faster?
+                            $unitsWithFasterReturnTime = $amountReturning;
+
+                            $returningUnits[$unitKey][$fasterReturningTicks] += $unitsWithFasterReturnTime;
+                            $returningUnits[$unitKey][$ticks] -= $unitsWithFasterReturnTime;
+                        }
+
                         # Check for faster_return_from_time
                         if($fasterReturnFromTimePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_from_time'))
                         {

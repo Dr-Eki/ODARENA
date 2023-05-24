@@ -266,6 +266,7 @@ class RoundHelper
             'advancements' => 'Advancements',
             'barbarians' => 'Barbarians',
             'buildings' => 'Buildings',
+            'decrees' => 'Decrees',
             'deities' => 'Deities',
             'expeditions' => 'Expeditions',
             'improvements' => 'Improvements',
