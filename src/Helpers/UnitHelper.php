@@ -451,7 +451,7 @@ class UnitHelper
             'instant_return' => 'Returns instantly from invasion.',
 
             'faster_return_from_time' => 'Returns %3$s ticks faster from battle if sent out between %1$s:00 and %2$s:00.',
-            'faster_return_from_terrain' => 'Returns %1$s ticks faster from per %2$%% %3$s (rounds down).',
+            'faster_return_from_terrain' => 'Returns %1$s ticks faster per %2$s%% %3$s (rounds down, max %4$s).',
 
             // Training
             'cannot_be_trained' => 'Cannot be trained.',
@@ -636,6 +636,7 @@ class UnitHelper
                     $perkValue[0] = intval($perkValue[0]);
                     $perkValue[1] = number_format($perkValue[1], 2);
                     $perkValue[2] = Terrain::where('key', $perkValue[2])->first()->name;
+                    $perkValue[3] = intval($perkValue[3]);
                 }
 
                 // Special case for casualties, casualties_on_defense, and casualties_on_offense
