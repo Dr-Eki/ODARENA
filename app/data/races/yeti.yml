@@ -21,7 +21,6 @@ peasants_production:
   food: 1
 
 construction_materials:
-  - food
   - lumber
 
 spies_cost: 400,food
