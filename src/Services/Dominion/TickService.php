@@ -464,7 +464,7 @@ class TickService
                     {
                         if(static::EXTENDED_LOGGING) { Log::debug('** Handle starvation for ' . $dominion->name); }
                         
-                        if($foodConsumed > 0 and ($foodOwned + $foodNetChange) < 0)
+                        if($this->resourceCalculator->isOnBrinkOfStarvation($dominion) and !$dominion->isAbandoned())
                         {
                             $this->notificationService->queueNotification('starvation_occurred');
                             Log::info('[STARVATION] ' . $dominion->name . ' (# ' . $dominion->realm->number . ') is starving.');
