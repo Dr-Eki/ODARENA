@@ -492,7 +492,7 @@ class EspionageActionService
                     array_set($data, "explored.{$landType}.barren",
                         $this->landCalculator->getTotalBarrenLandByLandType($target, $landType));
 
-                    $data['landtype_defense'][$landType] = $this->militaryCalculator->getDefensivePowerModifierFromLandType($target, $landType);
+                    $data['landtype_defense'][$landType] = 0;#$this->militaryCalculator->getDefensivePowerModifierFromLandType($target, $landType);
                 }
 
                 if($target->race->getPerkValue('land_improvements'))

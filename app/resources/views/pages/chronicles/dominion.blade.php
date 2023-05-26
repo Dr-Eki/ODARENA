@@ -646,11 +646,6 @@
                             <td class="text-center">{{ number_format($dominion->{'land_' . $landType}) }}</td>
                             <td class="text-center">{{ number_format(($dominion->{'land_' . $landType} / $landCalculator->getTotalLand($dominion)) * 100, 2) }}%</td>
                             <td class="text-center">{{ number_format($landCalculator->getTotalBarrenLandByLandType($dominion, $landType)) }}</td>
-                            @if ($dominion->race->getPerkValue('defense_from_' . $landType))
-                                <td class="text-center">
-                                      +{{ number_format($militaryCalculator->getDefensivePowerModifierFromLandType($dominion, $landType)*100,2) }}% Defensive Power
-                                </td>
-                            @endif
                         </tr>
                     @endforeach
                 </tbody>
