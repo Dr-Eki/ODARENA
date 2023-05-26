@@ -14,7 +14,6 @@ resources:
   - ore
   - lumber
   - mana
-  - horse
 
 peasants_production:
   gold: 3
