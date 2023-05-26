@@ -463,7 +463,8 @@ class TickService
                     DB::transaction(function () use ($dominion)
                     {
                         if(static::EXTENDED_LOGGING) { Log::debug('** Handle starvation for ' . $dominion->name); }
-                        if(/*$dominion->tick->starvation_casualties*/ $this->resourceCalculator->isOnBrinkOfStarvation($dominion) and !$dominion->isAbandoned())
+                        
+                        if($foodConsumed > 0 and ($foodOwned + $foodNetChange) < 0)
                         {
                             $this->notificationService->queueNotification('starvation_occurred');
                             Log::info('[STARVATION] ' . $dominion->name . ' (# ' . $dominion->realm->number . ') is starving.');

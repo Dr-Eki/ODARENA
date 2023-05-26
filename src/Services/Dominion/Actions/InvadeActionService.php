@@ -2380,8 +2380,8 @@ class InvadeActionService
 
                             $perChunk = $fasterReturnFromTerrainPerk[0];
                             $chunkSize = $fasterReturnFromTerrainPerk[1];
-                            $terrainKey = $fasterReturnFromTerrainPerk[1];
-                            $maxPerk = $fasterReturnFromTerrainPerk[1];
+                            $terrainKey = $fasterReturnFromTerrainPerk[2];
+                            $maxPerk = $fasterReturnFromTerrainPerk[3];
 
                             $ticksFaster = ($attacker->{'terrain_' . $terrainKey} / $attacker->land) * 100 / $chunkSize * $perChunk;
                             $ticksFaster = min($ticksFaster, $maxPerk);
