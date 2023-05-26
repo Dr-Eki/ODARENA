@@ -409,7 +409,7 @@ class InsightService
             $data['land'][$landType]['amount'] = $amount;
             $data['land'][$landType]['percentage'] = ($amount / $this->landCalculator->getTotalLand($target)) * 100;
             $data['land'][$landType]['barren'] = $this->landCalculator->getTotalBarrenLandByLandType($target, $landType);
-            $data['land'][$landType]['landtype_defense'] = 0#$this->militaryCalculator->getDefensivePowerModifierFromLandType($target, $landType);
+            $data['land'][$landType]['landtype_defense'] = 0;#$this->militaryCalculator->getDefensivePowerModifierFromLandType($target, $landType);
 
             $data['land']['incoming'][$landType] = array_fill(1, 12, 0);
         }
