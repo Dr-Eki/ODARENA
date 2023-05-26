@@ -42,7 +42,7 @@ units:
     - living
     - sentient
   cost:
-    gold: 900
+    gold: 800
     ore: 250
     draftees: 1
   power:
@@ -69,7 +69,7 @@ units:
     - sentient
   cost:
     gold: 1500
-    ore: 500
+    ore: 400
     draftees: 1
   power:
     offense: 6
