@@ -86,7 +86,7 @@ class NetworthCalculator
         
         if($dominion->race->name == 'Yeti')
         {
-            $networth += min($this->resourceCalculator->getAmount($dominion, 'ore') / 150, $this->militaryCalculator->getTotalUnitsForSlot($dominion, 4)) * 16;
+            $networth += min($this->resourceCalculator->getAmount($dominion, 'ore') / 60, $this->militaryCalculator->getTotalUnitsForSlot($dominion, 4)) * 6;
         }
 
         return round($networth);
