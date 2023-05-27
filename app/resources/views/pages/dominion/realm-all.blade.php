@@ -77,7 +77,7 @@
                     @endif
                   </div>
             </div>
-            <div class="box-body table-responsive no-padding">
+            <div class="box-body table-responsive">
 
                 <table class="table" id="dominions-table">
                     <colgroup>
@@ -386,7 +386,8 @@
                 order: [4, 'desc'],
                 paging: false,
                 pageLength: 100,
-                searching: false  // Add this line
+                searching: false,
+                info: false 
             });
         })(jQuery);
     </script>
