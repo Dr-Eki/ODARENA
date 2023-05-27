@@ -75,4 +75,4 @@ units:
     offense: 6
     defense: 7
   perks:
-    plunders: ore;4,lumber;2
+    plunder: ore,4
