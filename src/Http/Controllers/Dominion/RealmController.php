@@ -28,7 +28,7 @@ use OpenDominion\Services\Dominion\BarbarianService;
 
 class RealmController extends AbstractDominionController
 {
-    public function getRealm(Request $request, int $realmNumber = null)
+    public function getRealm(Request $request, $realmNumber = null)
     {
         $landCalculator = app(LandCalculator::class);
         $barbarianCalculator = app(BarbarianCalculator::class);
@@ -55,7 +55,6 @@ class RealmController extends AbstractDominionController
         {
             $realmNumber = (int)$dominion->realm->number;
         }
-
         $isOwnRealm = ($realmNumber === (int)$dominion->realm->number);
 
         $realm = Realm::where([
@@ -195,9 +194,121 @@ class RealmController extends AbstractDominionController
             'defaultRealmNames',
         ));
     }
-
-    public function postChangeRealm(Request $request)
+    public function getAllRealms(Request $request)
     {
-        return redirect()->route('dominion.realm', (int)$request->get('realm'));
+        $landCalculator = app(LandCalculator::class);
+        $barbarianCalculator = app(BarbarianCalculator::class);
+        $networthCalculator = app(NetworthCalculator::class);
+        $protectionService = app(ProtectionService::class);
+        $spellCalculator = app(SpellCalculator::class);
+        $realmCalculator = app(RealmCalculator::class);
+        $resourceCalculator = app(ResourceCalculator::class);
+        $militaryCalculator = app(MilitaryCalculator::class);
+        $artefactHelper = app(ArtefactHelper::class);
+        $dominionHelper = app(DominionHelper::class);
+        $landHelper = app(LandHelper::class);
+        $deityHelper = app(DeityHelper::class);
+        $raceHelper = app(RaceHelper::class);
+        $realmHelper = app(RealmHelper::class);
+        $barbarianService = app(BarbarianService::class);
+        $statsService = app(StatsService::class);
+        $dominionHelper = app(DominionHelper::class);
+
+        $dominion = $this->getSelectedDominion();
+        $round = $dominion->round;
+
+        $realms = Realm::where([
+                'round_id' => $round->id,
+            ])
+            ->get();
+
+        # Get all dominions in all realms
+        $dominions = collect();
+
+        foreach ($realms as $realm) {
+            $dominions = $dominions->concat($realm->dominions);
+        }
+
+        # Sort dominions by dominion->land
+        $dominions = $dominions->sortByDesc('land');
+
+        $realms = Realm::where('round_id', $round->id)->get();
+        foreach($realms as $aRealm) # Using "$realm" breaks other stuff
+        {
+            $realmNames[$aRealm->number] = $aRealm->name;
+        }
+
+        $realmsDominionsStats = [
+            'victories' => 0,
+            'total_land_conquered' => 0,
+            'total_land_explored' => 0,
+            'total_land_discovered' => 0,
+            'total_land_lost' => 0,
+            'prestige' => 0,
+            'terrain' => [],
+          ];
+
+        foreach($dominions as $dominion)
+        {
+            $realmsDominionsStats['victories'] += $statsService->getStat($dominion, 'invasion_victories');
+            $realmsDominionsStats['total_land_conquered'] += $statsService->getStat($dominion, 'land_conquered');
+            $realmsDominionsStats['total_land_explored'] += $statsService->getStat($dominion, 'land_explored');
+            $realmsDominionsStats['total_land_discovered'] += $statsService->getStat($dominion, 'land_discovered');
+            $realmsDominionsStats['total_land_lost'] += $statsService->getStat($dominion, 'land_lost');
+            $realmsDominionsStats['prestige'] += floor($dominion->prestige);
+
+            foreach(Terrain::all() as $terrain)
+            {
+                if(isset($realmsDominionsStats['terrain'][$terrain->key]))
+                {
+                    $realmsDominionsStats['terrain'][$terrain->key] += $dominion->{'terrain_'.$terrain->key};
+                }
+                else
+                {
+                    $realmsDominionsStats['terrain'][$terrain->key] = $dominion->{'terrain_'.$terrain->key};
+                }
+            }
+        }
+
+        $barbarianSettings = [];
+
+        $alignmentNoun = '';
+        $alignmentAdjective = '';
+
+        $realmName = $request->input('realm');
+
+        $defaultRealmNames = [
+            'The Commonwealth',
+            'The Empire',
+            'The Independent',
+            'The Barbarian Horde'
+        ];
+
+        return view('pages.dominion.realm-all', compact(
+            'landCalculator',
+            'networthCalculator',
+            'realm',
+            'round',
+            'dominions',
+            'protectionService',
+            #'isOwnRealm',
+            'spellCalculator',
+            'realmsDominionsStats',
+            'realmCalculator',
+            'resourceCalculator',
+            'militaryCalculator',
+            'dominionHelper',
+            'artefactHelper',
+            'deityHelper',
+            'landHelper',
+            'raceHelper',
+            'realmHelper',
+            'alignmentNoun',
+            'alignmentAdjective',
+            'barbarianSettings',
+            'statsService',
+            'realmNames',
+            'defaultRealmNames',
+        ));
     }
 }

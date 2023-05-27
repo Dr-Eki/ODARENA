@@ -153,10 +153,6 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             // Calculations
             $router->get('calculations')->uses('Dominion\CalculationsController@getIndex')->name('calculations');
 
-            // Hostile Ops
-            $router->get('offensive-ops')->uses('Dominion\OffensiveOpsController@getOffensiveOps')->name('offensive-ops');
-            $router->post('offensive-ops')->uses('Dominion\OffensiveOpsController@postOffensiveOps');
-
             // Sabotage
             $router->get('sabotage')->uses('Dominion\SabotageController@getSabotage')->name('sabotage');
             $router->post('sabotage')->uses('Dominion\SabotageController@postSabotage');
@@ -221,8 +217,8 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->post('decrees/revoke-decree')->uses('Dominion\DecreesController@postRevokeDecree')->name('decrees.revoke-decree');
 
             // Realm
+            $router->get('realm/all')->uses('Dominion\RealmController@getAllRealms')->name('realm.all');
             $router->get('realm/{realmNumber?}')->uses('Dominion\RealmController@getRealm')->name('realm');
-            $router->post('realm/change-realm')->uses('Dominion\RealmController@postChangeRealm')->name('realm.change-realm');
 
             // Town Crier
             $router->get('world-news/{realmNumber?}')->uses('Dominion\WorldNewsController@getIndex')->name('world-news');

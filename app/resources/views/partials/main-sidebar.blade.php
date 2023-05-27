@@ -139,6 +139,7 @@
                         <span class="pull-right-container">
                             <span href="#realms" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-angle-down"></i></span>
                             <ul class="collapse" id="realms">
+                                <li>&nbsp;<a href="{{ route('dominion.realm.all') }}">All</a></li>
                                 @foreach($selectedDominion->round->realms()->get() as $realm)
                                     <li>&nbsp;<a href="{{ route('dominion.realm', $realm->number) }}">{{ $realmHelper->getAlignmentNoun($realm->alignment) }} (# {{ $realm->number }})</a></li>
                                 @endforeach
