@@ -710,6 +710,11 @@ class RaceHelper
                 $valueType = ' mana/tick';
                 $booleanValue = 'static';
                 break;
+            case 'can_desecrate':
+                $negativeBenefit = false;
+                $description = 'Can desecrate';
+                $booleanValue = true;
+                break;
             default:
                 $negativeBenefit = false;
                 $description = 'No description for perk: ' . $perkType->key;

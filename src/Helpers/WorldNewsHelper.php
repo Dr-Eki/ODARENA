@@ -20,6 +20,7 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 
+use OpenDominion\Helpers\DesecrationHelper;
 use OpenDominion\Helpers\EventHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\RealmHelper;
@@ -31,6 +32,7 @@ class WorldNewsHelper
     protected $militaryCalculator;
     protected $rangeCalculator;
 
+    protected $desecrationHelper;
     protected $eventHelper;
     protected $raceHelper;
     protected $realmHelper;
@@ -42,6 +44,7 @@ class WorldNewsHelper
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->rangeCalculator = app(RangeCalculator::class);
 
+        $this->desecrationHelper = app(DesecrationHelper::class);
         $this->eventHelper = app(EventHelper::class);
         $this->raceHelper = app(RaceHelper::class);
         $this->realmHelper = app(RealmHelper::class);
@@ -87,6 +90,9 @@ class WorldNewsHelper
 
             case 'deity_renounced':
                 return $this->generateDeityRenouncedString($event->target, $event->source, $viewer);
+
+            case 'desecration':
+                return $this->generateDesecrationString($event->source, $event, $viewer);
 
             case 'expedition':
                 return $this->generateExpeditionString($event->source, $event, $viewer);
@@ -454,6 +460,45 @@ class WorldNewsHelper
             $deityClass,
             $deity->name,
           );
+
+        return $string;
+    }
+
+    public function generateDesecrationString(Dominion $desecrator, GameEvent $desecration, Dominion $viewer): string
+    {
+        /*
+            %s units have desecrated a battlefield.
+            %s has desecrated a battlefield.
+        */
+
+        $mode = 'other';
+        if($desecrator->realm->id == $viewer->realm->id)
+        {
+            $mode = 'green';
+        }
+
+        $originalEvent = GameEvent::findOrFail($desecration->data['game_event_id']);
+
+        $eventTypeString = $this->desecrationHelper->getDesecrationTargetTypeString($originalEvent);
+
+        $viewerInvolved = ($desecrator->realm->id == $viewer->realm->id);
+
+        if($viewerInvolved)
+        {
+            $string = sprintf(
+                '%s has desecrated a %s.',
+                $this->generateDominionString($desecrator, 'friendly', $viewer),
+                $eventTypeString
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                '%s units have desecrated a %s.',
+                $this->raceHelper->getRaceAdjective($desecrator->race),
+                $eventTypeString
+            );
+        }
 
         return $string;
     }
@@ -1066,6 +1111,7 @@ class WorldNewsHelper
             'decree_revoked' => 'Decree revoked',
             'deity_completed' => 'Deity completed',
             'deity_renounced' => 'Deity renounced',
+            'desecration' => 'Desecration',
             'expedition' => 'Expedition',
             'governor' => 'Governor appointment',
             'invasion' => 'Invasion',

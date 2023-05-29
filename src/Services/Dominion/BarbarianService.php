@@ -153,7 +153,7 @@ class BarbarianService
 
     }
 
-    public function handleBarbarianInvasion(Dominion $dominion, int $largestDominionSize = null): void
+    public function handleBarbarianInvasion(Dominion $dominion): void
     {
         $invade = false;
 
@@ -313,11 +313,11 @@ class BarbarianService
                 $logString .= "\t\t**Land to gain: " . number_format($landGained). "\n";
 
                 # After 384 ticks into the round, Barbarian will abort invasion if the land gained would put the Barbarian within 60% of the largest dominion of the round
-                if($dominion->round->ticks > 384)
+                if($dominion->round->ticks > 384 and !(env('APP_ENV') == 'local'))
                 {
                     $largestDominion = $$dominion->round->getNthLargestDominion(1);
 
-                    if(($dominion->land + $landGained) > ($largestDominion->land * 0.6))
+                    if(($dominion->land + $landGained) >= ($largestDominion->land * 0.6))
                     {
                         $logString .= "\t\t**Land to gain would put Barbarian within 60% of largest dominion. Aborting invasion.\n";
                         Log::info($logString);
@@ -379,13 +379,69 @@ class BarbarianService
                     $unitsReturning
                 );
 
-                $invasionTypes = ['attacked', 'raided', 'pillaged', 'ransacked', 'looted', 'devastated', 'plundered', 'sacked', 'invaded', 'laid waste to'];
-                $invasionTargets = ['settlement', 'village', 'town', 'hamlet', 'plot of unclaimed land', 'community', 'trading hub', 'merchant outpost', 'camp'];
+                $invasionTypes = [
+                    'attacked', 
+                    'raided', 
+                    'pillaged', 
+                    'ransacked', 
+                    'looted', 
+                    'devastated', 
+                    'plundered', 
+                    'sacked', 
+                    'invaded', 
+                    'laid waste to',
+                    'besieged',
+                    'overran',
+                    'stormed',
+                    'conquered',
+                    'overwhelmed',
+                    'assaulted',
+                    'breached',
+                    'overpowered',
+                    'subdued',
+                    'infested',
+                    'infiltrated',
+                    'seized'
+                ];
+                
+                $invasionTargets = [
+                    'settlement', 
+                    'village', 
+                    'town', 
+                    'hamlet', 
+                    'plot of unclaimed land', 
+                    'community', 
+                    'trading hub', 
+                    'merchant outpost', 
+                    'camp',
+                    'outpost',
+                    'farmstead',
+                    'hamlet',
+                    'cottage',
+                    'thorp',
+                    'croft',
+                    'shanty',
+                    'cabana',
+                    'huts',
+                ];
+                
 
+                $bodies = array_sum($unitsLost) / 10 + $landGained;
+                $bodies = (int)floor($bodies);
+               
                 $data = [
                     'type' => $invasionTypes[rand(0,count($invasionTypes)-1)],
                     'target' => $invasionTargets[rand(0,count($invasionTargets)-1)],
                     'land' => $landGained,
+                    'result' =>
+                        [
+                        'bodies' =>
+                            [
+                            'fallen' => $bodies,
+                            'available' => $bodies,
+                            'desecrated' => 0
+                            ],
+                        ],
                   ];
 
                 $barbarianInvasionEvent = GameEvent::create([

@@ -281,6 +281,8 @@ class SpellHelper
             // Special
             'opens_portal' => 'Opens a portal required to teleport otherwordly units to enemy lands',
 
+            'can_see_battlefield_bodies' => 'Can see number of available bodies in a battlefield',
+
             'stasis' => 'Freezes time. No production, cannot take actions, and cannot have actions taken against it. Units returning from battle continue to return but do not finish and arrive home until Stasis is over.',
 
             'cannot_take_hostile_actions' => 'Cannot take hostile actions against other dominions.',

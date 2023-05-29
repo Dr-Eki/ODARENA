@@ -593,6 +593,9 @@ class InvadeActionService
             # Imperial Crypt
             $this->handleCrypt($attacker, $defender, $this->invasion['attacker']['units_surviving'], $this->invasion['attacker']['conversions'], $this->invasion['defender']['conversions']);
 
+            # Calculate bodies left behind
+            $this->handleTheDead($attacker, $defender, $this->invasion['attacker']['units_lost'], $this->invasion['defender']['units_lost']);
+
             # Watched Dominions
             $this->handleWatchedDominions($attacker, $defender);
 
@@ -704,7 +707,6 @@ class InvadeActionService
                 'tick' => $attacker->round->ticks
             ]);
 
-            
             # Debug before saving:
             ldd($this->invasion);
 
@@ -2961,6 +2963,35 @@ class InvadeActionService
 
         }
 
+    }
+
+    protected function handleTheDead(Dominion $attacker, Dominion $defender, array $attackerUnitsLost, array $defenderUnitsLost): void
+    {
+        $bodies = 0;
+
+        $winner = $this->invasion['result']['success'] ? 'attacker' : 'defender';
+
+        foreach($attackerUnitsLost as $slot => $amount)
+        {
+            if($this->conversionHelper->isSlotConvertible($slot, $attacker))
+            {
+                $amount *= ($winner == 'attacker' ? 0.5 : 1);
+                $bodies += (int)floor($amount);
+            }
+        }
+
+        foreach($defenderUnitsLost as $slot => $amount)
+        {
+            if($this->conversionHelper->isSlotConvertible($slot, $defender))
+            {
+                $amount *= ($winner == 'defender' ? 0.5 : 1);
+                $bodies += (int)floor($amount);
+            }
+        }
+
+        $this->invasion['result']['bodies']['fallen'] = $bodies;
+        $this->invasion['result']['bodies']['available'] = $bodies;
+        $this->invasion['result']['bodies']['desecrated'] = 0;
     }
 
     protected function handleWatchedDominions(Dominion $attacker, Dominion $defender): void

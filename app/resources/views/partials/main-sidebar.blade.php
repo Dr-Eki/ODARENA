@@ -91,6 +91,11 @@
                     <li class="{{ Route::is('dominion.invade') ? 'active' : null }}"><a href="{{ route('dominion.invade') }}"><i class="ra ra-crossed-swords ra-fw"></i> <span>Invade</span></a></li>
                 @endif
 
+                <!-- Hide Invade from cannot_invade races -->
+                @if ($selectedDominion->round->getSetting('invasions') and $selectedDominion->race->getPerkValue('can_desecrate'))
+                    <li class="{{ Route::is('dominion.desecrate') ? 'active' : null }}"><a href="{{ route('dominion.desecrate') }}"><i class="ra ra-tombstone ra-fw"></i> <span>Desecrate</span></a></li>
+                @endif
+
 
                 @if ($selectedDominion->round->mode == 'artefacts')
                     <li class="{{ Route::is('dominion.artefacts') ? 'active' : null }}"><a href="{{ route('dominion.artefacts') }}"><i class="ra ra-alien-fire"></i> <span>Artefacts</span></a></li>

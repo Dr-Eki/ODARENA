@@ -17,7 +17,7 @@
 @endphp
 @if($selectedDominion->realm->id !== $event->source->realm->id and $selectedDominion->realm->id !== $event->target->realm->id)
     <div class="row">
-        <div class="col-sm-12 col-md-4 col-md-offset-4">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
             <div class="box box-{{ $boxColor }}">
                 <div class="box-header with-border">
                     <h3 class="box-title">
@@ -32,7 +32,7 @@
     </div>
 @else
     <div class="row">
-        <div class="col-sm-12 col-md-4 col-md-offset-4">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
             <div class="box box-{{ $boxColor }}">
                 <div class="box-header with-border">
                     <h3 class="box-title">

@@ -50,6 +50,14 @@ class ConversionHelper
         {
             $isConvertible = true;
         }
+        elseif(($slot == 'wizards' or $slot == 'archmages') and !$dominion->race->getPerkValue('immortal_wizards'))
+        {
+            $isConvertible = true;
+        }
+        elseif($slot == 'spies' and !$dominion->race->getPerkValue('immortal_spies'))
+        {
+            $isConvertible = true;
+        }
         else
         {
             # Get the $unit

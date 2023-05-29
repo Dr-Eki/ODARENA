@@ -1,5 +1,7 @@
 agriculture:  
   name: Agriculture
+  excluded_races:
+    - Sylvan
   perks:
     food_production_mod: 40,5600
 
@@ -116,7 +118,7 @@ nurture:
   exclusive_races:
     - Sylvan
   perks:
-    rezone_cost: -40,4800
+    construction_cost: -40,4800
     land_discovered: 30,4800
 
 rage:

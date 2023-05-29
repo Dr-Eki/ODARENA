@@ -10,6 +10,7 @@ class HistoryService
 {
     public const EVENT_TICK = 'tick';
     public const EVENT_ACTION_DAILY_BONUS = 'daily bonus';
+    public const EVENT_ACTION_DESECRATION = 'desecration';
     public const EVENT_ACTION_EXPLORE = 'explore';
     public const EVENT_ACTION_CONSTRUCT = 'construct';
     public const EVENT_ACTION_DESTROY = 'destroy';

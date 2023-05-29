@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 
 use OpenDominion\Helpers\BuildingHelper;
+use OpenDominion\Helpers\DesecrationHelper;
 use OpenDominion\Helpers\EventHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RaceHelper;
@@ -53,6 +54,7 @@ class EventController extends AbstractDominionController
             'event' => $event,
             'unitHelper' => app(UnitHelper::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
+            'desecrationHelper' => app(DesecrationHelper::class),
             'buildingHelper' => app(BuildingHelper::class),
             'landHelper' => app(LandHelper::class),
             'raceHelper' => app(RaceHelper::class),

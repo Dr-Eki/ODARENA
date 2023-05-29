@@ -498,7 +498,7 @@ class UnitHelper
 
             'housing_count' => 'Takes up %1$s housing.',
 
-            // Other
+            // Other and Special
             'increases_morale_by_population' => '%+g%% base morale for every 1%% of population.',
             'increases_morale_fixed' => '%+g base morale.',
             'increases_morale_gains' => '%+g%% morale gains for every 1%% of units sent.',
@@ -515,6 +515,8 @@ class UnitHelper
             'gold_improvements' => 'Increases improvement points from gold by (([Units]/[Land])/100)%%.',
 
             'cost_increase_to_train_per_unit' => 'Cost increased by %d%% each.',
+
+            'desecration' => 'Can desecrate up to %1$s casualties into %2$s %3$s each.',
 
             // Decree
             'decree_state_required_to_send' => '%1$s decree must be issued in %2$s state to send this unit.',
@@ -818,6 +820,16 @@ class UnitHelper
                     {
                         $perkValue = [str_plural($resource->name, $amount), $amount];
                     }
+                }
+
+                if($perk->key == 'desecration')
+                {
+                    $fromAmount = (float)$perkValue[0];
+                    $toAmount = (float)$perkValue[1];
+                    $resourceKey = (string)$perkValue[2];
+                    $resource = Resource::where('key', $resourceKey)->firstOrFail();
+
+                    $perkValue = [$fromAmount, $toAmount, str_plural($resource->name, $toAmount)];
 
                 }
 

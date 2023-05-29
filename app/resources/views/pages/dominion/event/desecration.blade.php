@@ -1,9 +1,10 @@
 @extends('layouts.master')
-@section('title', 'Theft')
+@section('title', 'Desecration')
 
 @section('content')
     @php
         $boxColor = 'success';
+        $originalEvent = OpenDominion\Models\GameEvent::where('id', $event->data['game_event_id'])->firstOrFail();
     @endphp
     @if($selectedDominion->realm->id !== $event->source->realm->id and $selectedDominion->realm->id !== $event->target->realm->id)
         <div class="row">
@@ -11,7 +12,7 @@
                 <div class="box box-{{ $boxColor }}">
                     <div class="box-header with-border">
                         <h3 class="box-title">
-                            <i class="fas fa-hand-lizard"></i> Theft
+                            <i class="ra ra-tombstone"></i> Desecration
                         </h3>
                     </div>
                     <div class="box-bod no-padding">
@@ -26,40 +27,38 @@
                 <div class="box box-{{ $boxColor }}">
                     <div class="box-header with-border">
                         <h3 class="box-title">
-                            <i class="fas fa-hand-lizard"></i> Theft
+                            <i class="ra ra-tombstone"></i> Desecration
                         </h3>
                     </div>
                     <div class="box-bod no-padding">
                         <div class="row">
                             <div class="col-xs-12 col-sm-12">
                                 <div class="text-center">
-                                <h4>{{ $event->source->name }} theft from {{ $event->target->name }} </h4>
+                                <h4>{{ ucwords($desecrationHelper->getDesecrationTargetTypeString($originalEvent)) }} desecrated by {{ $event->source->name }}</h4>
                                 </div>
                                 <table class="table">
                                     <colgroup>
-                                        <col width="25%">
-                                        <col width="25%">
-                                        <col width="25%">
-                                        <col width="25%">
+                                        <col width="100">
+                                        <col width="100">
+                                        <col width="100">
                                     </colgroup>
                                     <thead>
                                         <tr>
                                             <th>Unit</th>
                                             <th>Sent</th>
-                                            @if($event->source->realm->id == $selectedDominion->realm->id)
-                                                <th>Lost</th>
-                                            @else
-                                                <th>Killed</th>
-                                            @endif
                                             <th>Returning</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($event->data['units'] as $slot => $amount)
+                                        @foreach($event->data['units_sent'] as $slot => $amount)
                                             @php
-                                                if($slot == 'spies')
+                                                if($slot == 'wizards')
                                                 {
-                                                    $unitType = 'spies';
+                                                    $unitType = 'wizards';
+                                                }
+                                                elseif($slot == 'archmages')
+                                                {
+                                                    $unitType = 'archmages';
                                                 }
                                                 else
                                                 {
@@ -69,43 +68,65 @@
                                             @endphp
                                             <tr>
                                                 <td>
-                                                    @if($slot !== 'spies')
+                                                    @if(is_numeric($slot))
                                                         <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $event->source->race, [$militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(0), 'offense'), $militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(0), 'defense'), ]) }}">
                                                             {{ $event->source->race->units->where('slot', $slot)->first()->name }}
                                                         </span>
                                                     @else
-                                                        Spies
+                                                        {{ ucwords($unitType) }}
                                                     @endif
                                                 </td>
-                                                <td>{{ number_format($event->data['units'][$slot]) }}</td>
-                                                <td>{{ isset($event->data['killed_units'][$slot]) ? number_format($event->data['killed_units'][$slot]) : 0 }}</td>
-                                                <td>{{ number_format($event->data['returning_units'][$slot]) }}</td>
+                                                <td>{{ number_format($amount)}}</td>
+                                                <td>{{ number_format($event->data['units_returning'][$slot])}}</td>
                                             </tr>
                                         @endforeach
                                 </table>
 
                                 <table class="table">
                                     <colgroup>
-                                        <col width="25%">
-                                        <col>
+                                        <col width="100">
+                                        <col width="200">
                                     </colgroup>
                                     <tbody>
                                         <tr>
-                                            <td>Resource:</td>
-                                            <td>{{ $event->data['resource']['name'] }}</td>
+                                            <td>Bodies desecrated</td>
+                                            <td>{{ number_format($event->data['bodies']['desecrated']) }}</td>
                                         </tr>
                                         <tr>
-                                            <td>Amount:</td>
-                                            @if($event->source->realm->id == $selectedDominion->realm->id)
-                                                <td><span class="text-green">+{{ number_format($event->data['amount_stolen']) }}</span></td>
-                                            @else
-                                                <td><span class="text-red">-{{ number_format($event->data['amount_stolen']) }}</span></td>
-                                            @endif
+                                            <td>{{ str_plural($event->data['result']['resource_name']) }} returning</td>
+                                            <td>{{ number_format($event->data['result']['amount']) }}</td>
                                         </tr>
-                                        @if($event->source->realm->id == $selectedDominion->realm->id)
+                                        @if($originalEvent->type == 'barbarian_invasion')
                                             <tr>
-                                                <td>Spy strength:</td>
-                                                <td><span class="text-red">-{{ number_format($event->data['spy_units_sent_ratio']) }}%</span></td>
+                                                <td>Battle</td>
+                                                <td>
+                                                    <em>
+                                                    {{ $originalEvent->source->name }} (# {{ $originalEvent->source->realm->number }})  {{ $originalEvent->data['type'] }} a {{ $originalEvent->data['target'] }} for {{ $originalEvent->data['land'] }} acres
+                                                    </em>
+                                                </td>
+                                            </tr>
+                                        @elseif($originalEvent->type == 'invasion')
+                                            <tr>
+                                                <td>Battle</td>
+                                                <td>
+                                                    <em>
+                                                    {{ $battlefield->source->name }}
+
+                                                    @if($battlefield->data['result']['success'])
+                                                        successfully
+                                                    @endif
+        
+                                                    @if($battlefield->data['result']['isAmbus'])
+                                                        ambushed
+                                                    @endif
+        
+                                                    {{ $battlefield->target->name }} (# {{ $battlefield->target->realm->number }}) 
+        
+                                                    @if($battlefield->data['result']['success'])
+                                                        conquering {{ $battlefield->data['result']['land'] }} acres
+                                                    @endif
+                                                    </em>
+                                                </td>
                                             </tr>
                                         @endif
                                     </tbody>
@@ -116,7 +137,7 @@
                     <div class="box-footer">
                         <div class="pull-right">
                             <small class="text-muted">
-                                Theft recorded at
+                                Desecration recorded at
                                 {{ $event->created_at }}, tick
                                 {{ number_format($event->tick) }}.
                             </small>

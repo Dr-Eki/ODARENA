@@ -387,7 +387,11 @@
                 paging: false,
                 pageLength: 100,
                 searching: false,
-                info: false 
+                info: false,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             });
         })(jQuery);
     </script>

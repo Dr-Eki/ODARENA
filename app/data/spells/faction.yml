@@ -126,6 +126,21 @@ aggression:
     offensive_power: 5
     offensive_power_on_retaliation: 5
 
+## Undead
+
+visions_of_death:
+  name: Visions of Death
+  scope: self
+  class: passive
+  cost: 10
+  level: 3
+  duration: 12
+  cooldown: 48
+  exclusive_races:
+    - Undead
+  perks:
+    can_see_battlefield_bodies: 1
+
 # BEGIN DISABLED
 
 # BEGIN FACTION SPECIFIC (SINGLE OR MULTI, NON-SORCERY)

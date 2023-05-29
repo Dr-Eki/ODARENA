@@ -5,9 +5,8 @@ home_land_type: swamp
 home_terrain: badlands
 playable: 0 # Round 88
 skill_level: 2
-max_per_round: 2
 minimum_rounds_played: 2
-
+magic_level: 4
 
 resources:
   - gold
@@ -15,58 +14,60 @@ resources:
   - lumber
   - gems
   - mana
+  - body
 
 perks:
-  max_population: -35
-  wizards_training_time: 6
-  converts_executed_spies: 3 # into slot 3
+  can_desecrate: 1
+
 units:
   - name: Ghoul
-    training_time: 12
+    training_time: 0
     type:
       - mindless
     cost:
-      gold: 325
-      mana: 5
+      mana: 200
+      body: 1
     power:
-      offense: 3
+      offense: 4
       defense: 2
     perks:
-      housing_count: 0.25
+      kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
 
-  - name: Skeleton
-    training_time: 12
+  - name: Wraith
+    training_time: 0
     type:
       - mindless
       - magical
+    cost:
+      mana: 200
+      body: 1
     power:
-      offense: 2
-      defense: 2
+      offense: 0
+      defense: 3
     perks:
-      cannot_be_trained: 1
-      does_not_count_as_population: 1
-      attrition: 10
-      fixed_casualties_if_overwhelmed: 100
-      fixed_casualties: 50
-      pairing_limit: 4,5 # Unit slot, amount
+      kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
 
   - name: Wight
-    training_time: 12
+    training_time: 0
     type:
       - sentient
       - intelligent
+    cost:
+      gold: 500
+      mana: 10
+      body: 1
     power:
-      offense: 8
-      defense: 8
+      offense: 6
+      defense: 6
     perks:
-      cannot_be_trained: 1
       dies_into: 3
       increases_enemy_casualties_on_offense: 1
       increases_enemy_casualties_on_defense: 1
-      does_not_count_as_population: 1
+      kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
+      counts_as_wizard: -0.01
 
   - name: Necromancer
-    training_time: 6
+    training_time: 12
     type:
       - sentient
       - intelligent
@@ -77,8 +78,8 @@ units:
       mana: 25
     power:
       offense: 0
-      defense: 6
+      defense: 0
     perks:
-      immortal_on_fending_off: 1
       counts_as_wizard_offense: 0.50
       counts_as_wizard_defense: 0.25
+      desecration: 8,1,body # Can desecrate up to 8 bodies into 1 body each
