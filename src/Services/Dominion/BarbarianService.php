@@ -313,11 +313,11 @@ class BarbarianService
                 $logString .= "\t\t**Land to gain: " . number_format($landGained). "\n";
 
                 # After 384 ticks into the round, Barbarian will abort invasion if the land gained would put the Barbarian within 60% of the largest dominion of the round
-                if($dominion->round->ticks > 384)
+                if($dominion->round->ticks >= 384)
                 {
                     $largestDominion = $$dominion->round->getNthLargestDominion(1);
 
-                    if(($dominion->land + $landGained) > ($largestDominion->land * 0.6))
+                    if(($dominion->land + $landGained) >= ($largestDominion->land * 0.6))
                     {
                         $logString .= "\t\t**Land to gain would put Barbarian within 60% of largest dominion. Aborting invasion.\n";
                         Log::info($logString);
