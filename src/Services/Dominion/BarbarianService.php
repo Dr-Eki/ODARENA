@@ -315,7 +315,7 @@ class BarbarianService
                 # After 384 ticks into the round, Barbarian will abort invasion if the land gained would put the Barbarian within 60% of the largest dominion of the round
                 if($dominion->round->ticks >= 384)
                 {
-                    $largestDominion = $$dominion->round->getNthLargestDominion(1);
+                    $largestDominion = $dominion->round->getNthLargestDominion(1);
 
                     if(($dominion->land + $landGained) >= ($largestDominion->land * 0.6))
                     {
