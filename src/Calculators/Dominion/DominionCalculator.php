@@ -105,7 +105,7 @@ class DominionCalculator
     {
         # land - buildings
 
-        return $$dominion->land - $this->getTotalBuildings($dominion);
+        return $dominion->land - $this->getTotalBuildings($dominion);
     }
 
     public function getTotalBarrenLandByTerrain(Dominion $dominion, string $terrainKey): int
