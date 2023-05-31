@@ -102,17 +102,25 @@ class RegisterController extends AbstractController
      */
     protected function create(array $data)
     {
-        $activate = (env('APP_ENV') == 'local') ? 1 : 0;
+        $activate = (env('APP_ENV') !== 'local') ? 1 : 0;
 
+        #dd($activate);
 
-        dump($activate, 'this far');
+        try {
+            $user = User::create([
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'display_name' => $data['display_name'],
+                'activation_code' => str_random(),
+                'activated' => $activate,
+            ]);
 
-        return User::create([
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'display_name' => $data['display_name'],
-            'activation_code' => str_random(),
-            'activated' => $activate,#in_array(request()->getHost(), ['odarena.local','odarena.virtual']),
-        ]);
+        } catch (ModelNotFoundException $e) {
+            return redirect()
+                ->route('home')
+                ->withErrors(['Invalid activation code']);
+        }
+
+        return $user;
     }
 }
