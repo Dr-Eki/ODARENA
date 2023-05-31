@@ -82,6 +82,12 @@ class NotificationHelper
                 'route' => route('dominion.artefacts'),
                 'iconClass' => 'ra ra-alien-fire text-green',
             ],
+            'desecration_completed' => [
+                'label' => 'Units returned from desecration',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.desecration'),
+                'iconClass' => 'fas fa-hand-lizard text-green',
+            ],
             'theft_completed' => [
                 'label' => 'Units returned from theft',
                 'defaults' => ['email' => false, 'ingame' => true],

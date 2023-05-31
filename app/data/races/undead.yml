@@ -20,6 +20,20 @@ perks:
   can_desecrate: 1
 
 units:
+  - name: Desecrator
+    training_time: 0
+    type:
+      - mindless
+    cost:
+      mana: 200
+      body: 1
+    power:
+      offense: 0
+      defense: 4
+    perks:
+      desecration: 8,1,body # Can desecrate up to 8 bodies into 1 body each
+      kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
+
   - name: Ghoul
     training_time: 0
     type:
@@ -30,20 +44,6 @@ units:
     power:
       offense: 4
       defense: 2
-    perks:
-      kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
-
-  - name: Wraith
-    training_time: 0
-    type:
-      - mindless
-      - magical
-    cost:
-      mana: 200
-      body: 1
-    power:
-      offense: 0
-      defense: 3
     perks:
       kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
 
@@ -82,4 +82,3 @@ units:
     perks:
       counts_as_wizard_offense: 0.50
       counts_as_wizard_defense: 0.25
-      desecration: 8,1,body # Can desecrate up to 8 bodies into 1 body each
