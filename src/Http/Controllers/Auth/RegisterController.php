@@ -48,9 +48,11 @@ class RegisterController extends AbstractController
             'terms' => 'required',
         ]);
 
+        dump($request);
+
         $user = $this->create($request->all());
 
-        #event(new UserRegisteredEvent($user));
+        dd($user);
 
         $request->session()->flash(
             'alert-success',
