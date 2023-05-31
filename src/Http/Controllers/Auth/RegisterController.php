@@ -102,12 +102,15 @@ class RegisterController extends AbstractController
      */
     protected function create(array $data)
     {
+
+        $activate = (env('APP_ENV') == 'local') ? 1 : 0;
+
         return User::create([
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'display_name' => $data['display_name'],
             'activation_code' => str_random(),
-            'activated' => 1,#in_array(request()->getHost(), ['odarena.local','odarena.virtual']),
+            'activated' => $activate,#in_array(request()->getHost(), ['odarena.local','odarena.virtual']),
         ]);
     }
 }
