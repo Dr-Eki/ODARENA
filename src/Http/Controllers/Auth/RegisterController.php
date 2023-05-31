@@ -104,7 +104,7 @@ class RegisterController extends AbstractController
     {
         $activate = (env('APP_ENV') !== 'local') ? 1 : 0;
 
-        #dd($activate);
+        dd($data);
 
         try {
             $user = User::create([
@@ -118,7 +118,7 @@ class RegisterController extends AbstractController
         } catch (ModelNotFoundException $e) {
             return redirect()
                 ->route('home')
-                ->withErrors(['Invalid activation code']);
+                ->withErrors(['Unable to create user. Try again or contact an administrator on Discord.']);
         }
 
         return $user;
