@@ -41,14 +41,15 @@ class RegisterController extends AbstractController
      */
     public function register(Request $request)
     {
+
+        dump($request);
+        
         $this->validate($request, [
             'display_name' => 'required|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed|min:8',
             'terms' => 'required',
         ]);
-
-        dump($request);
 
         $user = $this->create($request->all());
 
