@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Routing\Router;
-use Spatie\Honeypot\ProtectAgainstSpam;
+#use Spatie\Honeypot\ProtectAgainstSpam;
 
 /** @var Router $router */
 $router->get('/')->uses('HomeController@getIndex')->name('home');
@@ -18,7 +18,7 @@ $router->group(['prefix' => 'auth', 'as' => 'auth.'], static function (Router $r
 
         // Registration
         $router->get('register')->uses('Auth\RegisterController@showRegistrationForm')->name('register');
-        $router->post('register')->uses('Auth\RegisterController@register')->middleware(ProtectAgainstSpam::class);
+        $router->post('register')->uses('Auth\RegisterController@register');#->middleware(ProtectAgainstSpam::class);
         $router->get('activate/{activation_code}')->uses('Auth\RegisterController@activate')->name('activate');
 
         // Password Reset
@@ -138,10 +138,6 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             // Invade
             $router->get('invade')->uses('Dominion\InvasionController@getInvade')->name('invade');
             $router->post('invade')->uses('Dominion\InvasionController@postInvade');
-
-            // Desecrate
-            $router->get('desecrate')->uses('Dominion\DesecrationController@getDesecrate')->name('desecrate');
-            $router->post('desecrate')->uses('Dominion\DesecrationController@postDesecrate');
 
             // Expedition
             $router->get('expedition')->uses('Dominion\ExpeditionController@getExpedition')->name('expedition');
