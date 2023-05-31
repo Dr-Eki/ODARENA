@@ -48,13 +48,18 @@ class RegisterController extends AbstractController
             'terms' => 'required',
         ]);
 
-        $user = $this->create($request->all());
+        $alwaysActivate = true;
+
+        $user = $this->create($request->all(), $alwaysActivate);
 
         #event(new UserRegisteredEvent($user));
 
+        $message = 'You have been successfully registered. An activation email has been dispatched to your address.';
+        $message = $alwaysActivate ? 'You have been successfully registered. You can now login.' : $message;
+
         $request->session()->flash(
             'alert-success',
-            'You have been successfully registered. An activation email has been dispatched to your address.'
+            $message
         );
 
         return redirect($this->redirectPath());
@@ -100,10 +105,9 @@ class RegisterController extends AbstractController
      * @param array $data
      * @return User
      */
-    protected function create(array $data)
+    protected function create(array $data, bool $alwaysActivate)
     {
-
-        $activate = (env('APP_ENV') == 'local') ? 1 : 0;
+        $activate = (env('APP_ENV') == 'local' or $alwaysActivate) ? 1 : 0;
 
         return User::create([
             'email' => $data['email'],
