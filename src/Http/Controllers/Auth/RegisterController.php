@@ -104,8 +104,6 @@ class RegisterController extends AbstractController
     {
         $activate = (env('APP_ENV') !== 'local') ? 1 : 0;
 
-        dd($data);
-
         try {
             $user = User::create([
                 'email' => $data['email'],
