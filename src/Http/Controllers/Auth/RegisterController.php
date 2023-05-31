@@ -42,8 +42,6 @@ class RegisterController extends AbstractController
     public function register(Request $request)
     {
 
-        dump($request);
-        
         $this->validate($request, [
             'display_name' => 'required|unique:users',
             'email' => 'required|email|unique:users',
@@ -52,8 +50,6 @@ class RegisterController extends AbstractController
         ]);
 
         $user = $this->create($request->all());
-
-        dd($user);
 
         $request->session()->flash(
             'alert-success',
