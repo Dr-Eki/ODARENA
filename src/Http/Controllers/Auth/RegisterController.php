@@ -41,7 +41,6 @@ class RegisterController extends AbstractController
      */
     public function register(Request $request)
     {
-
         $this->validate($request, [
             'display_name' => 'required|unique:users',
             'email' => 'required|email|unique:users',
@@ -49,11 +48,18 @@ class RegisterController extends AbstractController
             'terms' => 'required',
         ]);
 
-        $user = $this->create($request->all());
+        $alwaysActivate = true;
+
+        $user = $this->create($request->all(), $alwaysActivate);
+
+        #event(new UserRegisteredEvent($user));
+
+        $message = 'You have been successfully registered. An activation email has been dispatched to your address.';
+        $message = $alwaysActivate ? 'You have been successfully registered. You can now login.' : $message;
 
         $request->session()->flash(
             'alert-success',
-            'You have been successfully registered. An activation email has been dispatched to your address.'
+            $message
         );
 
         return redirect($this->redirectPath());
@@ -99,25 +105,16 @@ class RegisterController extends AbstractController
      * @param array $data
      * @return User
      */
-    protected function create(array $data)
+    protected function create(array $data, bool $alwaysActivate)
     {
-        $activate = (env('APP_ENV') !== 'local') ? 1 : 0;
+        $activate = (env('APP_ENV') == 'local' or $alwaysActivate) ? 1 : 0;
 
-        try {
-            $user = User::create([
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'display_name' => $data['display_name'],
-                'activation_code' => str_random(),
-                'activated' => $activate,
-            ]);
-
-        } catch (ModelNotFoundException $e) {
-            return redirect()
-                ->route('home')
-                ->withErrors(['Unable to create user. Try again or contact an administrator on Discord.']);
-        }
-
-        return $user;
+        return User::create([
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'display_name' => $data['display_name'],
+            'activation_code' => str_random(),
+            'activated' => $activate,#in_array(request()->getHost(), ['odarena.local','odarena.virtual']),
+        ]);
     }
 }
