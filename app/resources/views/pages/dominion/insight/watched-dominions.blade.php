@@ -40,7 +40,7 @@
                                 $dominionDP = $militaryCalculator->getDefensivePower(
                                    $dominion,
                                    $selectedDominion,
-                                   $landCalculator->getTotalLand($dominion) / $landCalculator->getTotalLand($selectedDominion),
+                                   $dominion->land / $selectedDominion->land,
                                    null,
                                    $dpMultiplierReduction,
                                    false, # Ignore ambush
@@ -103,7 +103,7 @@
                                     </td>
                                     <td>{{ $dominion->race->name }}</td>
                                     <td><a href="{{ route('dominion.realm', [$dominion->realm->number]) }}"># {{ $dominion->realm->number }}</a></td>
-                                    <td>{{ number_format($landCalculator->getTotalLand($dominion)) }}</td>
+                                    <td>{{ number_format($dominion->land) }}</td>
                                     <td>{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}</td>
                                     <td>{!! $dominionFogged ? '<span class="label label-default">Fog</span>' : number_format($dominionDP) . ' *' !!}</td>
                                     <td>

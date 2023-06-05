@@ -37,7 +37,7 @@
                           @endif
                       </td>
                       <td class="text-left">{{ $dominion->race->name }}</td>
-                      <td class="text-left">{{ number_format($landCalculator->getTotalLand($dominion)) }}</td>
+                      <td class="text-left">{{ number_format($dominion->land) }}</td>
                       <td class="text-left">{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}</td>
                   </tr>
               @endforeach

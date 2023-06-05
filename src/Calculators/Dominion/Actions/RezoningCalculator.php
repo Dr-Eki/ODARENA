@@ -65,7 +65,7 @@ class RezoningCalculator
         }
 
         $cost = 0;
-        $cost += $this->landCalculator->getTotalLand($dominion);
+        $cost += $dominion->land;
         $cost -= 250;
         $cost *= 0.6;
         $cost += 250;

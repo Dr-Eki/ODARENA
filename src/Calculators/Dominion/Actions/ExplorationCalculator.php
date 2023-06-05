@@ -44,7 +44,7 @@ class ExplorationCalculator
      */
     public function getGoldCostRaw(Dominion $dominion): int
     {
-        $totalLand = $this->landCalculator->getTotalLand($dominion);
+        $totalLand = $dominion->land;
         $totalLand += $this->landCalculator->getTotalLandIncoming($dominion);
         $gold = sqrt($totalLand)*$totalLand/6-1000;
 
@@ -103,7 +103,7 @@ class ExplorationCalculator
     public function getDrafteeCostRaw(Dominion $dominion): int
     {
         $draftees = 5;
-        $totalLand = $this->landCalculator->getTotalLand($dominion);
+        $totalLand = $dominion->land;
         $draftees += (0.003 * (($totalLand - 300) ** 1.07));
 
         return ceil($draftees);
@@ -153,7 +153,7 @@ class ExplorationCalculator
         return min(
             floor($this->resourceCalculator->getAmount($dominion, 'gold') / $this->getGoldCost($dominion)),
             floor($dominion->military_draftees / $this->getDrafteeCost($dominion)),
-            floor($this->landCalculator->getTotalLand($dominion) * (($dominion->morale/100)/8))
+            floor($dominion->land * (($dominion->morale/100)/8))
         );
     }
 
@@ -166,7 +166,7 @@ class ExplorationCalculator
      */
     public function getMoraleDrop($dominion, $amountToExplore): int
     {
-        $moraleDrop = ($amountToExplore / $this->landCalculator->getTotalLand($dominion)) * 8 * 100;
+        $moraleDrop = ($amountToExplore / $dominion->land) * 8 * 100;
 
         return max($moraleDrop, 1);
 

@@ -235,7 +235,7 @@
                                 <a href="{{ route('scribes.faction', str_slug($dominion->race->name)) }}" target="_blank"><i class="ra ra-scroll-unfurled"></i></a>&nbsp;
                                 <a href="{{ route('chronicles.faction', $dominion->race->name) }}">{{ $dominion->race->name }}</a>
                             </td>
-                            <td>{{ number_format($landCalculator->getTotalLand($dominion)) }}</td>
+                            <td>{{ number_format($dominion->land) }}</td>
                             <td>{{ $roundHelper->getDominionPlacementInRound($dominion) . ' ' . $roundHelper->getRoundPlacementEmoji($roundHelper->getDominionPlacementInRound($dominion)) }}</td>
                             <td>{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}</td>
                             <td><a href="{{ route('chronicles.round', $dominion->round) }}">{{ $dominion->round->name }}</a></td>

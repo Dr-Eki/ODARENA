@@ -282,7 +282,7 @@ class MilitaryCalculator
      */
     public function getOffensivePowerRatio(Dominion $dominion): float
     {
-        return ($this->getOffensivePower($dominion) / $this->landCalculator->getTotalLand($dominion));
+        return ($this->getOffensivePower($dominion) / $dominion->land);
     }
 
     /**
@@ -293,7 +293,7 @@ class MilitaryCalculator
      */
     public function getOffensivePowerRatioRaw(Dominion $dominion): float
     {
-        return ($this->getOffensivePowerRaw($dominion) / $this->landCalculator->getTotalLand($dominion));
+        return ($this->getOffensivePowerRaw($dominion) / $dominion->land);
     }
 
     /**
@@ -455,7 +455,7 @@ class MilitaryCalculator
             return $dp;
         }
 
-        $dp = max($dp, $minDPPerAcre * $this->landCalculator->getTotalLand($defender));
+        $dp = max($dp, $minDPPerAcre * $defender->land);
 
         return $dp;
     }
@@ -522,7 +522,7 @@ class MilitaryCalculator
      */
     public function getDefensivePowerRatio(Dominion $dominion): float
     {
-        return ($this->getDefensivePower($dominion) / $this->landCalculator->getTotalLand($dominion));
+        return ($this->getDefensivePower($dominion) / $dominion->land);
     }
 
     /**
@@ -533,7 +533,7 @@ class MilitaryCalculator
      */
     public function getDefensivePowerRatioRaw(Dominion $dominion): float
     {
-        return ($this->getDefensivePowerRaw($dominion) / $this->landCalculator->getTotalLand($dominion));
+        return ($this->getDefensivePowerRaw($dominion) / $dominion->land);
     }
 
     public function getUnitPowerWithPerks(
@@ -623,7 +623,7 @@ class MilitaryCalculator
         $terrainKey = $landPerkData[0];
         $ratio = (int)$landPerkData[1];
         $max = (int)$landPerkData[2];
-        $totalLand = $this->landCalculator->getTotalLand($dominion);
+        $totalLand = $dominion->land;
 
         $landPercentage = ($dominion->{"terrain_{$terrainKey}"} / $totalLand) * 100;
 
@@ -645,7 +645,7 @@ class MilitaryCalculator
         $buildingType = $buildingPerkData[0];
         $ratio = (int)$buildingPerkData[1];
         $max = (int)$buildingPerkData[2];
-        $totalLand = $this->landCalculator->getTotalLand($dominion);
+        $totalLand = $dominion->land;
         $landPercentage = ($this->buildingCalculator->getBuildingAmountOwned($dominion, null, $buildingType) / $totalLand) * 100;
 
         $powerFromBuilding = $landPercentage / $ratio;
@@ -885,7 +885,7 @@ class MilitaryCalculator
                 $landPercentage = (float) $calc["{$buildingKey}_percent"];
             }
         } elseif ($target !== null) {
-            $totalLand = $this->landCalculator->getTotalLand($target);
+            $totalLand = $target->land;
             $landPercentage = ($this->buildingCalculator->getBuildingAmountOwned($dominion, null, $buildingKey) / $totalLand) * 100;
         }
 
@@ -963,7 +963,7 @@ class MilitaryCalculator
         }
         elseif ($target !== null)
         {
-            $totalLand = $this->landCalculator->getTotalLand($target);
+            $totalLand = $target->land;
             $barrenLand = $this->landCalculator->getTotalBarrenLandForSwarm($target);
             $barrenLandPercentage = ($barrenLand / $totalLand) * 100;
             $barrenLandPercentage = max(0, $barrenLandPercentage);
@@ -1079,7 +1079,7 @@ class MilitaryCalculator
     {
         $amount = 0;
 
-        if(isset($target) and $this->landCalculator->getTotalLand($target) > $this->landCalculator->getTotalLand($dominion))
+        if(isset($target) and $target->land > $dominion->land)
         {
             $amount = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot,"{$powerType}_if_target_is_larger");
         }
@@ -1738,7 +1738,7 @@ class MilitaryCalculator
           $buildingTypes = $buildingsPerkData[0];
           $ratio = (int)$buildingsPerkData[1];
           $max = (int)$buildingsPerkData[2];
-          $totalLand = $this->landCalculator->getTotalLand($dominion);
+          $totalLand = $dominion->land;
           $buildingsLand = 0;
 
           foreach($buildingTypes as $buildingKey)
@@ -1885,7 +1885,7 @@ class MilitaryCalculator
 
         $spies += $this->getWizardPoints($dominion) * $dominion->getDecreePerkValue('wizards_count_as_spies');
 
-        return ($spies / $this->landCalculator->getTotalLand($dominion));
+        return ($spies / $dominion->land);
     }
 
     /**
@@ -2015,7 +2015,7 @@ class MilitaryCalculator
                 $ratio = (float)$landPerkData[1];
                 $terrainKey = (string)$landPerkData[2];
 
-                $wizards += $dominion->{"military_unit{$unit->slot}"} * (((($dominion->{'terrain_' . $terrainKey} / $this->landCalculator->getTotalLand($dominion)) * 100) / $ratio) * $power);
+                $wizards += $dominion->{"military_unit{$unit->slot}"} * (((($dominion->{'terrain_' . $terrainKey} / $dominion->land) * 100) / $ratio) * $power);
             }
 
             if ($landPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ("counts_as_wizard_on_" . $type ."_from_terrain"), null))
@@ -2024,7 +2024,7 @@ class MilitaryCalculator
                 $ratio = (float)$landPerkData[1];
                 $terrainKey = (string)$landPerkData[2];
 
-                $wizards += $dominion->{"military_unit{$unit->slot}"} * (((($dominion->{'terrain' . $terrainKey} / $this->landCalculator->getTotalLand($dominion)) * 100) / $ratio) * $power);
+                $wizards += $dominion->{"military_unit{$unit->slot}"} * (((($dominion->{'terrain' . $terrainKey} / $dominion->land) * 100) / $ratio) * $power);
             }
 
             # Check for wizard_from_title
@@ -2040,7 +2040,7 @@ class MilitaryCalculator
             }
         }
 
-        return ($wizards / $this->landCalculator->getTotalLand($dominion));
+        return ($wizards / $dominion->land);
     }
 
     /**
@@ -2618,7 +2618,7 @@ class MilitaryCalculator
     {
         $rangeMultiplier = $landRatio/100;
 
-        $attackerLandWithRatioModifier = ($this->landCalculator->getTotalLand($attacker));
+        $attackerLandWithRatioModifier = ($attacker->land);
 
         if ($landRatio < 55)
         {
@@ -2717,7 +2717,7 @@ class MilitaryCalculator
     {
         $multiplier = 0.0;
 
-        $multiplier += $dominion->race->getPerkValue('defense_from_'.$terrainKey) * ($dominion->{'terrain_'.$terrainKey} / $this->landCalculator->getTotalLand($dominion));
+        $multiplier += $dominion->race->getPerkValue('defense_from_'.$terrainKey) * ($dominion->{'terrain_'.$terrainKey} / $dominion->land);
 
         return $multiplier;
     }
@@ -2850,7 +2850,7 @@ class MilitaryCalculator
         
         if($enemy)
         {
-            $landRatio = $this->landCalculator->getTotalLand($dominion) / $this->landCalculator->getTotalLand($enemy);
+            $landRatio = $dominion->land / $enemy->land;
         }
         else
         {

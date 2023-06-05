@@ -196,7 +196,7 @@ class RoundHelper
 
         foreach($this->getRoundDominions($round) as $dominion)
         {
-            $dominions[$dominion->id] = $this->landCalculator->getTotalLand($dominion);
+            $dominions[$dominion->id] = $dominion->land;
         }
 
         arsort($dominions);

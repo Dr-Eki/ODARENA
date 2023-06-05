@@ -481,7 +481,7 @@
                                             @foreach ($dominions as $dominion)
                                                 @if(!$dominion->race->getPerkValue('cannot_vote'))
                                                     <option value="{{ $dominion->id }}"
-                                                            data-land="{{ number_format($landCalculator->getTotalLand($dominion)) }}"
+                                                            data-land="{{ number_format($dominion->land) }}"
                                                             data-networth="{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}"
                                                             data-percentage="{{ number_format($rangeCalculator->getDominionRange($selectedDominion, $dominion), 1) }}">
                                                         {{ $dominion->name }} (#{{ $dominion->realm->number }})

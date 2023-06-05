@@ -80,7 +80,7 @@ class InsightController extends AbstractDominionController
                 );
             })
             ->sortByDesc(function ($dominion) use($landCalculator) {
-                return $landCalculator->getTotalLand($dominion);
+                return $dominion->land;
             })
             ->values();
 

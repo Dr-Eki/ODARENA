@@ -53,13 +53,13 @@
                                         <div class="col-md-4">
                                             @if($amountOwned)
                                                 {{ number_format($amountOwned) }}
-                                                <small class="text-muted">({{ number_format(($amountOwned / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>
+                                                <small class="text-muted">({{ number_format(($amountOwned / $selectedDominion->land)*100,2) }}%)</small>
                                             @else
                                                 0 <small class="text-muted">(0%)</small>
                                             @endif
                                             
                                             @if($constructionAmount)
-                                                <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($constructionAmount + $amountOwned) }} <small>({{ number_format((($constructionAmount + $amountOwned) / $landCalculator->getTotalLand($selectedDominion))*100,2) }}%)</small>">
+                                                <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($constructionAmount + $amountOwned) }} <small>({{ number_format((($constructionAmount + $amountOwned) / $selectedDominion->land)*100,2) }}%)</small>">
                                                     <br>({{ number_format($constructionAmount) }})
                                                 </span>
                                             @endif

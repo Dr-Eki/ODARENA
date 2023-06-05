@@ -74,7 +74,7 @@ class NetworthCalculator
         $networth += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'wizards') * 5;
         $networth += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'archmages') * 10;
         
-        $networth += ($this->landCalculator->getTotalLand($dominion) * 20);
+        $networth += ($dominion->land * 20);
         $networth += ($this->buildingCalculator->getTotalBuildings($dominion) * 5);
 
         if($dominion->race->name == 'Demon')

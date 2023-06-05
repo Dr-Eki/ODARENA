@@ -152,7 +152,7 @@
                                 <a href="{{ route('chronicles.ruler', $dominion->user->display_name) }}">{{ $dominion->user->display_name }}</a>
                             @endif
                         </td>
-                        <td>{{ number_format($landCalculator->getTotalLand($dominion)) }}</td>
+                        <td>{{ number_format($dominion->land) }}</td>
                         <td>{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}</td>
                         <td><a href="{{ route('chronicles.round', $dominion->round) }}">{{ $dominion->round->name }}</a></td>
                         <td>{{ $dominion->round->league->description }}</td>

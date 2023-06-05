@@ -24,7 +24,7 @@
                         @foreach($selectedDominion->watchedDominions()->get() as $watchedDominion)
                             @php
                             $dpMultiplierReduction = $militaryCalculator->getDefensiveMultiplierReduction($selectedDominion);
-                            $landRatio = $landCalculator->getTotalLand($watchedDominion) / $landCalculator->getTotalLand($selectedDominion);
+                            $landRatio = $watchedDominion->land / $selectedDominion->land;
 
                             $dominionDP = $militaryCalculator->getDefensivePower(
                                 $watchedDominion,
@@ -42,7 +42,7 @@
                         @endphp
                             <tr>
                                 <td><a href="{{ route('dominion.insight.show', $watchedDominion) }}">{{ $watchedDominion->name }}</a> <a href="{{ route('dominion.realm', [$watchedDominion->realm->number]) }}">(# {{ $watchedDominion->realm->number }})</a></td>
-                                <td>{{ number_format($landCalculator->getTotalLand($watchedDominion)) }} <small class="text-muted">({{ number_format($landRatio * 100, 2) }}%)</small></td>
+                                <td>{{ number_format($watchedDominion->land) }} <small class="text-muted">({{ number_format($landRatio * 100, 2) }}%)</small></td>
                                 <td>{!! $dominionFogged ? '<span class="label label-default">Fog</span>' : number_format($dominionDP) . ' *' !!}</td>
                                 <td>
                                     @if ($militaryCalculator->hasReturningUnits($watchedDominion))

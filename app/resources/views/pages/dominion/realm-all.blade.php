@@ -233,7 +233,7 @@
                                             &mdash;
                                         @endif
                                     </td>
-                                    <td class="text-center">{{ number_format($landCalculator->getTotalLand($dominion, true)) }}</td>
+                                    <td class="text-center">{{ number_format($dominion->land) }}</td>
                                     <td class="text-center">{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}</td>
                                     <td class="text-center">
                                         @if ($militaryCalculator->hasReturningUnits($dominion))

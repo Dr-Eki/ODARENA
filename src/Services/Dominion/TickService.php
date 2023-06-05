@@ -216,7 +216,7 @@ class TickService
                         }
 
                         if(static::EXTENDED_LOGGING) { Log::debug('** Calculate $largestDominion'); }
-                        $largestDominionSize = max($this->landCalculator->getTotalLand($dominion), $largestDominionSize);
+                        $largestDominionSize = max($dominion->land, $largestDominionSize);
                         if(static::EXTENDED_LOGGING) { Log::debug('*** $largestDominion =' . number_format($largestDominionSize)); }
 
                         if(static::EXTENDED_LOGGING) { Log::debug('** Checking for countdown'); }
@@ -247,7 +247,7 @@ class TickService
                             # For indefinite rounds, create a countdown.
                             if(in_array($round->mode, ['standard', 'deathmatch', 'factions']))
                             {
-                                if($this->landCalculator->getTotalLand($dominion) >= $round->goal)
+                                if($dominion->land >= $round->goal)
                                 {
                                     $endTick = $round->ticks + $this->roundHelper->getRoundCountdownTickLength();
 
@@ -953,7 +953,7 @@ class TickService
             // Myconid: Land generation
             if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_per_tick'))
             {
-                $landPerTick = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_per_tick') * (1 - ($this->landCalculator->getTotalLand($dominion)/12000));
+                $landPerTick = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_per_tick') * (1 - ($dominion->land/12000));
                 $multiplier = 1;
                 $multiplier += $dominion->getSpellPerkMultiplier('land_generation_mod');
                 $multiplier += $dominion->getImprovementPerkMultiplier('land_generation_mod');

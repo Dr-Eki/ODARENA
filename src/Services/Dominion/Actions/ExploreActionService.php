@@ -129,7 +129,7 @@ class ExploreActionService
             throw new GameException('You do not have enough gold and/or draftees to explore for ' . number_format($totalLandToExplore) . ' acres.');
         }
 
-        $maxAllowed = $this->landCalculator->getTotalLand($dominion) * 1.5;
+        $maxAllowed = $dominion->land * 1.5;
         if($totalLandToExplore > $maxAllowed)
         {
             throw new GameException('You cannot explore more than ' . number_format($maxAllowed) . ' acres.');

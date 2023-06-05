@@ -102,7 +102,7 @@ class BarbarianService
             return;
         }
 
-        $land = $this->landCalculator->getTotalLand($dominion);
+        $land = $dominion->land;
 
         foreach($this->landHelper->getLandTypes() as $landType)
         {
@@ -176,7 +176,7 @@ class BarbarianService
 
         $logString = "\n[BARBARIAN]\n\t[invasion]\n";
         $logString .= "\t\tName: $dominion->name\n";
-        $logString .= "\t\tSize: ".number_format($this->landCalculator->getTotalLand($dominion))."\n";
+        $logString .= "\t\tSize: ".number_format($dominion->land)."\n";
 
         $oneLineLogString = '[BARBARIAN]{T' . $dominion->round->ticks . '} #' . $dominion->id;
         $oneLineLogString .= ' | Current DPA: ' . number_format($this->barbarianCalculator->getDpaCurrent($dominion),2) . ' | Current DP: ' . number_format($this->barbarianCalculator->getDpCurrent($dominion),2);
@@ -309,7 +309,7 @@ class BarbarianService
                 $logString .= "\t\t**Land gain ratio: " . number_format($landGainRatio*100,2) . "% \n";
 
                 # Calculate the amount of acres to grow.
-                $landGained = intval($this->landCalculator->getTotalLand($dominion) * $landGainRatio);
+                $landGained = intval($dominion->land * $landGainRatio);
                 $logString .= "\t\t**Land to gain: " . number_format($landGained). "\n";
 
                 # After 384 ticks into the round, Barbarian will abort invasion if the land gained would put the Barbarian within 60% of the largest dominion of the round

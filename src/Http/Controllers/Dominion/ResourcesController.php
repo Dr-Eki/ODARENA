@@ -2,19 +2,12 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
-use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
-use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\ProductionCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
-use OpenDominion\Calculators\Dominion\SpellCalculator;
-use OpenDominion\Helpers\BuildingHelper;
-use OpenDominion\Helpers\LandHelper;
+use OpenDominion\Calculators\Dominion\TheftCalculator;
 use OpenDominion\Helpers\ResourceHelper;
-use OpenDominion\Helpers\SpellHelper;
-use OpenDominion\Helpers\UnitHelper;
-use OpenDominion\Services\Dominion\QueueService;
 
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Http\Requests\Dominion\Actions\BankActionRequest;
@@ -25,8 +18,6 @@ use OpenDominion\Services\Dominion\Actions\BankActionService;
 # ODA
 use OpenDominion\Calculators\RealmCalculator;
 use OpenDominion\Helpers\RaceHelper;
-use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
-use OpenDominion\Models\Spell;
 use OpenDominion\Models\Resource;
 
 class ResourcesController extends AbstractDominionController
@@ -61,6 +52,7 @@ class ResourcesController extends AbstractDominionController
               'raceHelper' => app(RaceHelper::class),
               'resourceHelper' => app(ResourceHelper::class),
               'resources' => $resources,
+              'theftCalculator' => app(TheftCalculator::class),
           ]);
     }
 

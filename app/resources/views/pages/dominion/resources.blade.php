@@ -18,20 +18,38 @@
                                 <col width="150">
                             </colgroup>
                             <tbody>
-                                  @foreach($selectedDominion->race->resources as $resourceKey)
-                                      @php
-                                          $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
-                                      @endphp
+                                    <thead>
+                                        <tr>
+                                            <th>Resource</th>
+                                            <th>Net Production</th>
+                                            <th>Production</th>
+                                            <th>Usage</th>
+                                            <th>Available</th>
+                                            <th>Protected</th>
+                                            <th>Interest</th>
+                                            <th>Max Storage</th>
+                                        </tr>
+                                    </thead>
+                                    @foreach($selectedDominion->race->resources as $resourceKey)
+                                        @php
+                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                            $production = $resourceCalculator->getProduction($selectedDominion, $resourceKey);
+                                            $consumption = $resourceCalculator->getConsumption($selectedDominion, $resourceKey);
+                                            $netProduction = $resourceCalculator->getProduction($selectedDominion, $resourceKey) - $resourceCalculator->getConsumption($selectedDominion, $resourceKey);
+                                            $protected = $theftCalculator->getTheftProtection($selectedDominion, $resourceKey);
+                                            $interest = $resourceCalculator->getInterest($selectedDominion, $resourceKey);
+                                            $currentAmount = $resourceCalculator->getAmount($selectedDominion, $resourceKey);
+                                        @endphp
 
                                     <tr>
                                         <td>
                                             <span data-toggle="tooltip" data-placement="top" title="{{ $resource->description }}">{{ $resource->name }}</span>
                                         </td>
                                         <td>
-                                            @if ($production = $resourceCalculator->getProduction($selectedDominion, $resourceKey))
-                                                <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Raw:</small> {{ number_format($resourceCalculator->getProductionRaw($selectedDominion, $resourceKey)) }}'>
-                                                    <span class="text-green">{{ number_format($production) }}</span>
-                                                </span>
+                                            @if ($netProduction > 0)
+                                                <span class="text-green">{{ number_format($netProduction) }}</span>
+                                            @elseif ($netProduction < 0)
+                                                <span class="text-red">{{ number_format($netProduction) }}</span>
                                             @else
                                                 0
                                             @endif
@@ -39,56 +57,80 @@
                                             @if ($selectedDominion->getBuildingPerkValue($resourceKey . '_production_raw_random') > 0.00)
                                                 <span class="text-muted" data-toggle="tooltip" data-placement="top" title="Production of this resource is wholly or partly random. Actual production is determined during at each tick.">*</span>
                                             @endif
-
-                                            <small class="text-muted">({{ number_format(($resourceCalculator->getProductionMultiplier($selectedDominion, $resourceKey)-1) * 100,2) }}%)</small>
-
-
-                                            @if ($consumption = $resourceCalculator->getConsumption($selectedDominion, $resourceKey))
-                                                <span class="text-muted">
-                                                    @php
-                                                        $netConsumption = $resourceCalculator->getProduction($selectedDominion, $resourceKey) - $resourceCalculator->getConsumption($selectedDominion, $resourceKey);
-                                                    @endphp
-                                                    <br>
-                                                    {{ $resourceHelper->getResourceConsumptionTerm($resourceKey) }}: <span class="text-red">{{ number_format($consumption) }}</span>
-
-                                                    <br>
-                                                    Net:
-                                                    @if($netConsumption < 0)
-                                                        <span class="text-red">{{ number_format($netConsumption) }}</span>
-                                                    @else
-                                                        <span class="text-green">+{{ number_format($netConsumption) }}</span>
-                                                    @endif
+                                        </td>
+                                        <td>
+                                            @if ($production)
+                                                <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Raw:</small> {{ number_format($resourceCalculator->getProductionRaw($selectedDominion, $resourceKey)) }}'>
+                                                    <span class="text-green">{{ number_format($production) }}</span>
                                                 </span>
+                                            @else
+                                                0
                                             @endif
 
-
-                                            @if ($interest = $resourceCalculator->getInterest($selectedDominion, $resourceKey))
+                                            <small class="text-muted">({{ number_format(($resourceCalculator->getProductionMultiplier($selectedDominion, $resourceKey)-1) * 100,2) }}%)</small>
+                                        </td>
+                                        <td>
+                                            @if ($consumption)
+                                                <span class="text-muted">
+                                                    <span class="text-red" data-toggle="tooltip" data-placement="top" title="{{ $resourceHelper->getResourceConsumptionTerm($resourceKey) }}">{{ number_format($consumption) }}</span>
+                                                </span>
+                                            @else
+                                                0
+                                            @endif
+                                        </td>
+                                        <td>{{ number_format($currentAmount) }}</td>
+                                        <td>
+                                            @if ($protected)
+                                                @php
+                                                    $spanClass = ($currentAmount >= $protected ? 'text-red' : 'text-green');
+                                                @endphp
+                                                <span class="text-muted">
+                                                    <span class="{{ $spenClass }}" data-toggle="tooltip" data-placement="top" title="Amount protected from theft">{{ number_format($consumption) }}</span>
+                                                </span>
+                                            @else
+                                                0
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($interest)
                                                 <span class="text-muted">
                                                     <br>
                                                     <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Interest rate:</small> {{ $resourceCalculator->getInterestRate($selectedDominion, $resourceKey)*100 }}%<br><small class="text-muted">Stockpile to reach max interest:</small> {{ number_format($resourceCalculator->getStockpileRequiredToMaxOutInterest($selectedDominion, $resourceKey)) }}'>
                                                         Interest: <span class="text-green">{{ number_format($interest) }}</span>
                                                     </span>
                                                 </span>
+                                            @else
+                                                0
                                             @endif
-
-                                            
+                                        </td>
+                                        <td>
                                             @if ($resourceCalculator->hasMaxStorage($selectedDominion, $resourceKey))
                                                 @php
                                                     $maxStorage = $resourceCalculator->getMaxStorage($selectedDominion, $resourceKey);
-                                                    $spanClass = ($resourceCalculator->getAmount($selectedDominion, $resourceKey) >= $maxStorage ? 'text-red' : 'text-green');
+                                                    $spanClass = ($currentAmount >= $maxStorage ? 'text-red' : 'text-green');
 
                                                 @endphp
                                                 <span class="text-muted">
-                                                    <br>
-                                                    Max storage: <span class="{{ $spanClass }}">{{ number_format($maxStorage) }}
+                                                    <span class="{{ $spanClass }}">{{ number_format($maxStorage) }}
                                                 </span>
+                                            @else
+                                                &mdash;
                                             @endif
                                         </td>
                                     </tr>
                                 @endforeach
 
                                 <tr>
-                                    <td>Experience Points:</td>
+                                    <td>Experience Points</td>
+                                    <td>
+                                        @if ($xpGeneration = $productionCalculator->getXpGeneration($selectedDominion))
+                                            <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Raw:</small> {{ number_format($productionCalculator->getXpGenerationRaw($selectedDominion, $resourceKey)) }}'>
+                                                <span class="text-green">{{ number_format($xpGeneration) }}</span>
+                                            </span>
+                                        @else
+                                            0
+                                        @endif
+                                    </td>
                                     <td>
                                         @if ($xpGeneration = $productionCalculator->getXpGeneration($selectedDominion))
                                             <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Raw:</small> {{ number_format($productionCalculator->getXpGenerationRaw($selectedDominion, $resourceKey)) }}'>
@@ -100,6 +142,11 @@
 
                                         <small class="text-muted">({{ number_format(($productionCalculator->getXpGenerationMultiplier($selectedDominion)-1) * 100,2) }}%)</small>
                                     </td>
+                                    <td>&mdash;</td>
+                                    <td>{{ number_format($selectedDominion->xp) }}</td>
+                                    <td>&mdash;</td>
+                                    <td>&mdash;</td>
+                                    <td>&mdash;</td>
                                 </tr>
                             </tbody>
                         </table>

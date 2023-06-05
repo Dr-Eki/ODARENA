@@ -72,7 +72,7 @@ class RealmController extends AbstractDominionController
 
         $dominions = $realm->dominions
             ->groupBy(static function (Dominion $dominion) use ($landCalculator) {
-                return $landCalculator->getTotalLand($dominion);
+                return $dominion->land;
             })
             ->sortKeysDesc()
             ->map(static function (Collection $collection) use ($networthCalculator) {

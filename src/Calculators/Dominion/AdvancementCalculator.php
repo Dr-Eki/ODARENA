@@ -32,7 +32,7 @@ class AdvancementCalculator
      */
     public function getLevelUpCost(Dominion $dominion, DominionAdvancement $dominionAdvancement = null, int $level = null): int
     {
-        $cost = max($this->landCalculator->getTotalLand($dominion) * 5, 5000);
+        $cost = max($dominion->land * 5, 5000);
 
         if($dominionAdvancement)
         {

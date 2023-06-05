@@ -82,7 +82,7 @@ class ExpeditionCalculator
     public function getLandDiscovered(Dominion $dominion, int $landDiscoveredAmount): array
     {
         $landDiscovered = [];
-        $landSize = $this->landCalculator->getTotalLand($dominion);
+        $landSize = $dominion->land;
         foreach($this->landHelper->getLandTypes() as $landType)
         {
             $ratio = $dominion->{'land_' . $landType} / $landSize;

@@ -959,7 +959,7 @@ class RaceHelper
 
         foreach($this->getRaceDominions($race, false, $maxRoundsAgo) as $dominion)
         {
-            $totalLand += $this->landCalculator->getTotalLand($dominion);
+            $totalLand += $dominion->land;
         }
 
         return $totalLand;
@@ -977,7 +977,7 @@ class RaceHelper
 
         foreach($this->getRaceDominions($race, false, $maxRoundsAgo) as $dominion)
         {
-            $land = max($land, $this->landCalculator->getTotalLand($dominion));
+            $land = max($land, $dominion->land);
         }
 
         return $land;

@@ -83,7 +83,7 @@ class ConstructionCalculator
             return $cost;
         }
 
-        $cost = 250 + ($this->landCalculator->getTotalLand($dominion) * 1.5);
+        $cost = 250 + ($dominion->land * 1.5);
         $cost /= 2;
 
         if(count($dominion->race->construction_materials) === 1)
@@ -120,7 +120,7 @@ class ConstructionCalculator
             return $cost;
         }
 
-        $cost = 100 + (($this->landCalculator->getTotalLand($dominion) - 250) * (pi()/10));
+        $cost = 100 + (($dominion->land - 250) * (pi()/10));
         $cost /= 2;
         return $cost;
     }

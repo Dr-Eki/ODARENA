@@ -27,7 +27,7 @@
                                         <option></option>
                                         @foreach ($rangeCalculator->getDominionsInRange($selectedDominion) as $dominion)
                                             <option value="{{ $dominion->id }}"
-                                                    data-land="{{ number_format($landCalculator->getTotalLand($dominion)) }}"
+                                                    data-land="{{ number_format($dominion->land) }}"
                                                     data-networth="{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}"
                                                     data-percentage="{{ number_format($rangeCalculator->getDominionRange($selectedDominion, $dominion), 1) }}"
                                                     data-spa="{{ $dominion->getSpellPerkValue('fog_of_war') ? 'Unknown' : number_format($militaryCalculator->getSpyRatio($dominion, 'defense'), 3) }}"

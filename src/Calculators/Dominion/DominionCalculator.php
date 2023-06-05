@@ -86,31 +86,9 @@ class DominionCalculator
         return $totalBuildings;
     }
 
-    public function getTotalBuildingsByTerrain(Dominion $dominion, string $terrainKey)
-    {
-        $totalBuildings = 0;
-
-        foreach($dominion->buildings as $building)
-        {
-            if($building->building->terrain === $terrainKey)
-            {
-                $totalBuildings += $building->amount;
-            }
-        }
-
-        return $totalBuildings;
-    }
-
     public function getTotalBarrenLand(Dominion $dominion): int
     {
-        # land - buildings
-
         return $dominion->land - $this->getTotalBuildings($dominion);
-    }
-
-    public function getTotalBarrenLandByTerrain(Dominion $dominion, string $terrainKey): int
-    {
-        return $dominion->{'terrain_' . $terrainKey} - $this->getTotalBuildingsByTerrain($dominion, $terrainKey);
     }
 
 }

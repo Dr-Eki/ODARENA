@@ -42,7 +42,7 @@ class GovernmentController extends AbstractDominionController
             ])
             ->get()
             ->sortByDesc(function ($dominion) {
-                return app(LandCalculator::class)->getTotalLand($dominion);
+                return $dominion->land;
             });
 
         $allianceableRealms = Realm::where('round_id','=',$dominion->round->id)

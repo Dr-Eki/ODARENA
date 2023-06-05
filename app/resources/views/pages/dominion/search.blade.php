@@ -48,9 +48,9 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12 text-right">
-                                    <button class="btn btn-default search-range" data-min="{{ ceil($landCalculator->getTotalLand($selectedDominion) * 0.40) }}" data-max="{{ floor($landCalculator->getTotalLand($selectedDominion) / 0.40) }}">40%</button>
-                                    <button class="btn btn-danger search-range" data-min="{{ ceil($landCalculator->getTotalLand($selectedDominion) * 0.60) }}" data-max="{{ floor($landCalculator->getTotalLand($selectedDominion) / 0.60) }}">60%</button>
-                                    <button class="btn btn-warning search-range" data-min="{{ ceil($landCalculator->getTotalLand($selectedDominion) * 0.75) }}" data-max="{{ floor($landCalculator->getTotalLand($selectedDominion) / 0.75) }}">75%</button>
+                                    <button class="btn btn-default search-range" data-min="{{ ceil($selectedDominion->land * 0.40) }}" data-max="{{ floor($selectedDominion->land / 0.40) }}">40%</button>
+                                    <button class="btn btn-danger search-range" data-min="{{ ceil($selectedDominion->land * 0.60) }}" data-max="{{ floor($selectedDominion->land / 0.60) }}">60%</button>
+                                    <button class="btn btn-warning search-range" data-min="{{ ceil($selectedDominion->land * 0.75) }}" data-max="{{ floor($selectedDominion->land / 0.75) }}">75%</button>
                                 </div>
                             </div>
                         </div>
@@ -181,8 +181,8 @@
                                         <td class="text-center">
                                             {{ $dominion->race->name }}
                                         </td>
-                                        <td class="text-center" data-order="{{ $landCalculator->getTotalLand($dominion) }}" data-search="{{ $landCalculator->getTotalLand($dominion) }}">
-                                            {{ number_format($landCalculator->getTotalLand($dominion)) }}
+                                        <td class="text-center" data-order="{{ $dominion->land }}" data-search="{{ $dominion->land }}">
+                                            {{ number_format($dominion->land) }}
                                         </td>
                                         <td class="text-center" data-order="{{ $networthCalculator->getDominionNetworth($dominion) }}" data-search="{{ $networthCalculator->getDominionNetworth($dominion) }}">
                                             {{ number_format($networthCalculator->getDominionNetworth($dominion)) }}

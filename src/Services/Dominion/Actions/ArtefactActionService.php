@@ -279,8 +279,8 @@ class ArtefactActionService
 
             $this->invasionResult['defender']['recently_invaded_count'] = $this->militaryCalculator->getRecentlyInvadedCount($target);
             $this->invasionResult['attacker']['units_sent'] = $units;
-            $this->invasionResult['attacker']['land_size'] = $this->landCalculator->getTotalLand($dominion);
-            $this->invasionResult['defender']['land_size'] = $this->landCalculator->getTotalLand($target);
+            $this->invasionResult['attacker']['land_size'] = $dominion->land;
+            $this->invasionResult['defender']['land_size'] = $target->land;
 
             $this->invasionResult['attacker']['fog'] = $dominion->getSpellPerkValue('fog_of_war') ? true : false;
             $this->invasionResult['defender']['fog'] = $target->getSpellPerkValue('fog_of_war') ? true : false;

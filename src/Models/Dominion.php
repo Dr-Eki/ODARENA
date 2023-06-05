@@ -1716,7 +1716,7 @@ class Dominion extends AbstractModel
             if(isset($this->race->land_improvements[$landType][$perkKey]))
             {
                 #dd($this->race->land_improvements, $landType, $perkKey, $this->race->land_improvements[$landType][$perkKey]);
-                $perk += $this->race->land_improvements[$landType][$perkKey] * ($this->{'land_' . $landType} / $landCalculator->getTotalLand($this));
+                $perk += $this->race->land_improvements[$landType][$perkKey] * ($this->{'land_' . $landType} / $this->land);
             }
         }
         return $perk;

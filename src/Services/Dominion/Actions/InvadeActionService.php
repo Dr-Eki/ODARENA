@@ -435,9 +435,9 @@ class InvadeActionService
                 $landGained += $data['land_discovered'];
                 $landGained += $data['extra_land_discovered'];
                 
-                $newLand = $this->landCalculator->getTotalLand($attacker) + $landGained;
+                $newLand = $attacker->land + $landGained;
 
-                if($newLand > ($this->landCalculator->getTotalLand($attacker->protector) * (4/3)))
+                if($newLand > ($attacker->protector->land) * (4/3))
                 {
                     throw new GameException('You cannot invade this target because your land gained plus current total land exceeds 133% of your protector\'s land.');
                 }
@@ -445,8 +445,8 @@ class InvadeActionService
         
             $this->invasion['defender']['recently_invaded_count'] = $this->militaryCalculator->getRecentlyInvadedCount($defender);
             $this->invasion['attacker']['units_sent'] = $units;
-            $this->invasion['attacker']['land_size'] = $this->landCalculator->getTotalLand($attacker);
-            $this->invasion['defender']['land_size'] = $this->landCalculator->getTotalLand($target);
+            $this->invasion['attacker']['land_size'] = $attacker->land;
+            $this->invasion['defender']['land_size'] = $target->land;
 
             $this->invasion['attacker']['fog'] = $attacker->getSpellPerkValue('fog_of_war') ? true : false;
             $this->invasion['defender']['fog'] = $defender->getSpellPerkValue('fog_of_war') ? true : false;
@@ -3352,7 +3352,7 @@ class InvadeActionService
     {
         $attackingForceOP = $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $units);
 
-        return ($attackingForceOP > $this->landCalculator->getTotalLand($target) * static::MINIMUM_DPA);
+        return ($attackingForceOP > $target->land * static::MINIMUM_DPA);
     }
 
 

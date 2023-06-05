@@ -138,7 +138,7 @@ class ExpeditionCalculationService
         $this->calculationResult['home_defense'] = $this->militaryCalculator->getDefensivePower($dominion, null, null, $unitsHome);
         $this->calculationResult['home_defense_raw'] = $this->militaryCalculator->getDefensivePowerRaw($dominion, null, null, $unitsHome);
         $this->calculationResult['home_offense'] = $this->militaryCalculator->getOffensivePower($dominion, null, null, $unitsHome, $calc);
-        $this->calculationResult['home_dpa'] = $this->calculationResult['home_defense'] / $this->landCalculator->getTotalLand($dominion);
+        $this->calculationResult['home_dpa'] = $this->calculationResult['home_defense'] / $dominion->land;
 
         $this->calculationResult['max_op'] = $this->calculationResult['home_defense'] * (4/3);
         $this->calculationResult['min_dp'] = $this->calculationResult['away_offense'] / 3;

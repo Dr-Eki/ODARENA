@@ -53,8 +53,8 @@ class RangeCalculator
      */
     public function isInRange(Dominion $self, Dominion $target): bool
     {
-        $selfLand = $this->landCalculator->getTotalLand($self);
-        $targetLand = $this->landCalculator->getTotalLand($target);
+        $selfLand = $self->land;
+        $targetLand = $target->land;
 
         $selfModifier = $this->getRangeModifier($self);
         $targetModifier = $this->getRangeModifier($target, true);
@@ -100,8 +100,8 @@ class RangeCalculator
      */
     public function getDominionRange(Dominion $self, Dominion $target): float
     {
-        $selfLand = $this->landCalculator->getTotalLand($self);
-        $targetLand = $this->landCalculator->getTotalLand($target);
+        $selfLand = $self->land;
+        $targetLand = $target->land;
 
         return (($targetLand / $selfLand) * 100);
     }
@@ -191,7 +191,7 @@ class RangeCalculator
                 );
             })
             ->sortByDesc(function ($dominion) {
-                return $this->landCalculator->getTotalLand($dominion);
+                return $dominion->land;
             })
             ->values();
         
@@ -228,7 +228,7 @@ class RangeCalculator
                 );
             })
             ->sortByDesc(function ($dominion) {
-                return $this->landCalculator->getTotalLand($dominion);
+                return $dominion->land;
             })
             ->values();
     }

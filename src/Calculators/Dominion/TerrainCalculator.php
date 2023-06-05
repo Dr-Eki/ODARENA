@@ -109,18 +109,18 @@ class TerrainCalculator
     }
     
 
-    public function getTerrainDiscovered(Dominion $dominion, int $landChange, $isLoss = false): array
+    public function getTerrainDiscovered(Dominion $dominion, int $landChange): array
     {
         $terrainChanged = [];
         foreach(Terrain::all() as $terrain)
         {
             $terrainRatio = $dominion->{'terrain_' . $terrain->key} / $dominion->land;
-            $terrainChanged[$terrain->key] = floor($landChange * $terrainRatio) * ($isLoss ? -1 : 1);
+            $terrainChanged[$terrain->key] = round($landChange * $terrainRatio); # floor() caused missing land
         }
     
         if(array_sum($terrainChanged) !== $landChange)
         {
-            $terrainChanged[$dominion->race->homeTerrain()->key] += ($landChange - array_sum($terrainChanged)) * ($isLoss ? -1 : 1);
+            $terrainChanged[$dominion->race->homeTerrain()->key] += ($landChange - array_sum($terrainChanged));
         }
 
         $terrainChanged = array_map('intval', $terrainChanged);

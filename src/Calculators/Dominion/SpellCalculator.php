@@ -64,7 +64,7 @@ class SpellCalculator
             return 0;
         }
 
-        $totalLand = $this->landCalculator->getTotalLand($dominion);
+        $totalLand = $dominion->land;
 
         $baseCost = $totalLand * $spell->cost;
 

@@ -86,10 +86,10 @@ class MoraleCalculator
                         $ratio = (float)$buildingPerkValues[0];
                         $perk = (float)$buildingPerkValues[1];
                         $max = (float)$buildingPerkValues[2];
-                        $maxOfThisBuildingToMaxOutPerk = ceil($this->landCalculator->getTotalLand($dominion) * (($max / $perk) / 100));
+                        $maxOfThisBuildingToMaxOutPerk = ceil($dominion->land * (($max / $perk) / 100));
                         #dump($amountOfThisUnit);
                         $amountOfThisUnit = min($amountOfThisUnit, $maxOfThisBuildingToMaxOutPerk * $maxPerBuilding);
-                        #dd($ratio, $perk, $max, $this->landCalculator->getTotalLand($dominion), $maxOfThisBuildingToMaxOutPerk, $amountOfThisUnit);
+                        #dd($ratio, $perk, $max, $dominion->land, $maxOfThisBuildingToMaxOutPerk, $amountOfThisUnit);
                     }
 
                 }

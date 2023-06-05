@@ -2,50 +2,46 @@
 
 namespace OpenDominion\Helpers;
 
-use Illuminate\Support\Collection;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
-use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+#use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\ProductionCalculator;
 
 class DominionHelper
 {
+
+    #/** @var MilitaryCalculator */
+   #protected $militaryCalculator;
+
+    /** @var ProductionCalculator */
+    protected $productionCalculator;
+
     public function __construct()
     {
-        $this->militaryCalculator = app(MilitaryCalculator::class);
+        #$this->militaryCalculator = app(MilitaryCalculator::class);
         $this->productionCalculator = app(ProductionCalculator::class);
     }
 
     public function isEnraged(Dominion $dominion): bool
     {
-        $enragedMaxTicksAgo = 24;
-
         if($dominion->race->name !== 'Sylvan')
         {
             return false;
         }
-
-        $invasionEvents = GameEvent::query()
+    
+        $enragedMaxTicksAgo = 24;
+    
+        return GameEvent::query()
             ->where('tick', '>=', ($dominion->round->ticks - $enragedMaxTicksAgo))
             ->where([
                 'target_type' => Dominion::class,
                 'target_id' => $dominion->id,
                 'type' => 'invasion',
             ])
-            ->get();
-
-        if ($invasionEvents->isEmpty())
-        {
-            return false;
-        }
-
-        $invasionEvents = $invasionEvents->filter(function (GameEvent $event)
-        {
-            return !$event->data['result']['overwhelmed'];
-        });
-
-        return $invasionEvents->count() ? true : false;
+            ->where('data->result->overwhelmed', '!=', true)
+            ->exists();
     }
+    
 
     public function getTicksActive(Dominion $dominion): int
     {

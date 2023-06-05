@@ -8,6 +8,7 @@ use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionBuilding;
+#use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Services\Dominion\QueueService;
 
 class BuildingCalculator
@@ -18,31 +19,24 @@ class BuildingCalculator
     /** @var QueueService */
     protected $queueService;
 
+    #/** @var LandCalculator */
+    #protected $landCalculator;
+
     /**
      * BuildingCalculator constructor.
      *
      * @param BuildingHelper $buildingHelper
      * @param QueueService $queueService
      */
-    public function __construct(BuildingHelper $buildingHelper, QueueService $queueService)
+    public function __construct(
+        BuildingHelper $buildingHelper,
+        #LandCalculator $landCalculator,
+        QueueService $queueService)
     {
         $this->buildingHelper = $buildingHelper;
+        #$this->landCalculator = $landCalculator;
         $this->queueService = $queueService;
     }
-    /*
-    public function getTotalBuildingsForLandType(Dominion $dominion, string $landType): int
-    {
-        $totalBuildings = 0;
-        $buildingTypesForLandType = $this->buildingHelper->getBuildingTypesByRace($dominion)[$landType];
-
-        foreach ($buildingTypesForLandType as $buildingType)
-        {
-            $totalBuildings += $dominion->{"building_{$buildingType}"};
-        }
-
-        return $totalBuildings;
-    }
-    */
 
     public function getBuildingsLost(Dominion $dominion, int $landLost): array
     {
@@ -54,12 +48,20 @@ class BuildingCalculator
         $totalBuildings = $dominion->buildings->map(function ($building) {
             return $building->pivot->owned;
         })->sum();
+
+        $barrenLand = $dominion->land - $this->getTotalBuildings($dominion);
+        $buildingsToDestroy = max(0, $landLost - $barrenLand);
+
+        if($buildingsToDestroy <= 0)
+        {
+            return $buildingsLost;
+        }
     
         // First, take into account the queued buildings
         $buildingsLost['queued'] = array_fill_keys(Building::pluck('key')->toArray(), 0);
-        $rezoningQueueTotal = $this->queueService->getRezoningQueueTotal($dominion);
+        #$rezoningQueueTotal = $this->queueService->getRezoningQueueTotal($dominion);
     
-        $buildingsLeftToLose = $landLost;
+        $buildingsLeftToLose = $buildingsToDestroy;
         $lastNonZeroBuildingKey = null;
         foreach ($buildingsLost['queued'] as $buildingKey => $buildingAmount) {
             $queuedBuildingAmount = $this->queueService->getConstructionQueueTotalByResource($dominion, 'building_' . $buildingKey);
@@ -87,98 +89,6 @@ class BuildingCalculator
         return $buildingsLost;
     }
     
-
-    public function getBuildingsToDestroy(Dominion $dominion, int $totalBuildingsToDestroy, string $landType): array
-    {
-        if($totalBuildingsToDestroy <= 0 or $dominion->race->getPerkValue('indestructible_buildings'))
-        {
-            return [];
-        }
-
-        $raceBuildingsForLandType = $this->buildingHelper->getBuildingsByRace($dominion->race, $landType);
-
-        $buildingsPerType = [];
-
-        $totalBuildingsForLandType = 0;
-
-        foreach($raceBuildingsForLandType as $building)
-        {
-            $resourceName = "building_{$building->key}";
-            $buildingsOwned = $this->getBuildingAmountOwned($dominion, $building);
-
-            $totalBuildingsForLandType += $buildingsOwned;
-
-            $buildingsInQueueForType = $this->queueService->getConstructionQueueTotalByResource($dominion, $resourceName);
-            $totalBuildingsForLandType += $buildingsInQueueForType;
-
-            $buildingsPerType[$building->key] = [
-                'constructedBuildings' => $buildingsOwned,
-                'buildingsInQueue' => $buildingsInQueueForType];
-        }
-
-        uasort($buildingsPerType, function ($item1, $item2) {
-            $item1Total = $item1['constructedBuildings'] + $item1['buildingsInQueue'];
-            $item2Total = $item2['constructedBuildings'] + $item2['buildingsInQueue'];
-
-            return $item2Total <=> $item1Total;
-        });
-
-        $buildingsToDestroyRatio = $totalBuildingsToDestroy / $totalBuildingsForLandType;
-
-        $buildingsLeftToDestroy = $totalBuildingsToDestroy;
-        $buildingsToDestroyByType = [];
-        foreach($buildingsPerType as $buildingType => $buildings) {
-            if($buildingsLeftToDestroy == 0)
-            {
-                break;
-            }
-
-            $constructedBuildings = $buildings['constructedBuildings'];
-            $buildingsInQueue = $buildings['buildingsInQueue'];
-
-            $totalBuildings = $constructedBuildings + $buildingsInQueue;
-            $buildingsToDestroy = (int)ceil($totalBuildings * $buildingsToDestroyRatio);
-
-            if($buildingsToDestroy <= 0) {
-                continue;
-            }
-
-            if($buildingsToDestroy > $buildingsLeftToDestroy) {
-                $buildingsToDestroy = $buildingsLeftToDestroy;
-            }
-
-            $buildingsToDestroyByType[$buildingType] = $buildingsToDestroy;
-
-            $buildingsLeftToDestroy -= $buildingsToDestroy;
-        }
-
-        $actualTotalBuildingsDestroyed = 0;
-        $buildingsDestroyedByType = [];
-        foreach($buildingsToDestroyByType as $buildingType => $buildingsToDestroy) {
-            $buildings = $buildingsPerType[$buildingType];
-            $constructedBuildings = $buildings['constructedBuildings'];
-            $buildingsInQueue = $buildings['buildingsInQueue'];
-
-            $buildingsInQueueToDestroy = 0;
-            if($buildingsInQueue <= $buildingsToDestroy) {
-                $buildingsInQueueToDestroy = $buildingsInQueue;
-            }
-            else {
-                $buildingsInQueueToDestroy = $buildingsToDestroy;
-            }
-
-            $constructedBuildingsToDestroy = $buildingsToDestroy - $buildingsInQueueToDestroy;
-
-            $actualTotalBuildingsDestroyed += $buildingsToDestroy;
-
-            $buildingsDestroyedByType[$buildingType] = [
-                'builtBuildingsToDestroy' => $constructedBuildingsToDestroy,
-                'buildingsInQueueToRemove' => $buildingsInQueueToDestroy];
-        }
-
-        return $buildingsDestroyedByType;
-    }
-
     # BUILDINGS VERSION 2
     public function getTotalBuildings(Dominion $dominion): int
     {

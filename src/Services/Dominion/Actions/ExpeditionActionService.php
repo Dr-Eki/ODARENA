@@ -252,7 +252,7 @@ class ExpeditionActionService
             }
 
             $this->expedition['units_sent'] = $units;
-            $this->expedition['land_size'] = $this->landCalculator->getTotalLand($dominion);
+            $this->expedition['land_size'] = $dominion->land;
 
             $this->expedition['op_sent'] = $this->militaryCalculator->getOffensivePower($dominion, null, null, $units);
             $this->expedition['op_raw'] = $this->militaryCalculator->getOffensivePowerRaw($dominion, null, null, $units, [], true);
@@ -323,7 +323,7 @@ class ExpeditionActionService
 
     protected function handlePrestigeChanges(Dominion $dominion, int $landDiscovered, int $landSize, array $units): void
     {
-        $prestigeChange = intval($landDiscovered / $this->landCalculator->getTotalLand($dominion) * 400);
+        $prestigeChange = intval($landDiscovered / $dominion->land * 400);
 
         $prestigeChangeMultiplier = 1;
         $prestigeChangeMultiplier += $dominion->race->getPerkMultiplier('prestige_gains');

@@ -40,7 +40,7 @@ class TechCalculator
         $cost = 0;
 
         # Add 5 x acres, minimum 5,000
-        $cost += max($this->landCalculator->getTotalLand($dominion) * 5, 5000);
+        $cost += max($dominion->land * 5, 5000);
 
         # Add extra cost from level (from $techToUnlock, if known, or from $level)
         if($techToUnlock !== null)

@@ -475,7 +475,7 @@ class EspionageActionService
 
                 array_set($data, 'barren_land', $this->landCalculator->getTotalBarrenLand($target));
                 array_set($data, 'constructing_land', $totalConstructingLand);
-                array_set($data, 'total_land', $this->landCalculator->getTotalLand($target));
+                array_set($data, 'total_land', $target->land);
 
                 $infoOp->data = $data;
                 break;
@@ -488,7 +488,7 @@ class EspionageActionService
 
                     array_set($data, "explored.{$landType}.amount", $amount);
                     array_set($data, "explored.{$landType}.percentage",
-                        (($amount / $this->landCalculator->getTotalLand($target)) * 100));
+                        (($amount / $target->land) * 100));
                     array_set($data, "explored.{$landType}.barren",
                         $this->landCalculator->getTotalBarrenLandByLandType($target, $landType));
 
@@ -620,7 +620,7 @@ class EspionageActionService
     {
         $selfSpa = $this->militaryCalculator->getSpyRatio($dominion, 'offense');
         $targetSpa = $this->militaryCalculator->getSpyRatio($target, 'defense');
-        $spyUnits = $this->militaryCalculator->getSpyRatioRaw($dominion) * $this->landCalculator->getTotalLand($dominion);
+        $spyUnits = $this->militaryCalculator->getSpyRatioRaw($dominion) * $dominion->land;
 
         if($targetSpa == 0.0 or random_chance($this->opsHelper->operationSuccessChance($selfSpa, $targetSpa, static::HOSTILE_MULTIPLIER_SUCCESS_RATE)))
         {

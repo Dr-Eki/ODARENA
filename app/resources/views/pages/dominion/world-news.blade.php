@@ -84,7 +84,7 @@
                                         @if ($gameEvent->type == 'sabotage' and ($gameEvent->source->realm_id == $selectedDominion->realm->id or $gameEvent->target->realm_id == $selectedDominion->realm->id))
                                             <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="fa fa-user-secret fa-fw"></i></a>
                                         @endif
-                                        @if ($gameEvent->type == 'desecration' and ($gameEvent->source->realm_id == $selectedDominion->realm->id or $gameEvent->target->realm_id == $selectedDominion->realm->id))
+                                        @if ($gameEvent->type == 'desecration')
                                             <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="ra ra-tombstone ra-fw"></i></a>
                                         @endif
                                     </td>

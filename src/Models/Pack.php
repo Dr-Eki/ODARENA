@@ -30,12 +30,6 @@ class Pack extends AbstractModel
 {
     protected $dates = ['closed_at', 'created_at', 'updated_at'];
 
-    # A user
-    public function captain()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
     public function dominions()
     {
         return $this->hasMany(Dominion::class);

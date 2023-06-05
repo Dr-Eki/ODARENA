@@ -135,7 +135,7 @@ class SorceryCalculator
 
         $spell = Spell::where('key',$spellKey)->first();
 
-        $totalLand = $this->landCalculator->getTotalLand($dominion);
+        $totalLand = $dominion->land;
 
         $baseCost = $totalLand * $spell->cost;
 
@@ -181,7 +181,7 @@ class SorceryCalculator
         {
             if($reducesSpellDamagePerk = $target->race->getUnitPerkValueForUnitSlot($slot, 'reduces_spell_damage'))
             {
-                $modifier -= ($this->militaryCalculator->getTotalUnitsForSlot($target, $slot) / $this->landCalculator->getTotalLand($target)) * $reducesSpellDamagePerk;
+                $modifier -= ($this->militaryCalculator->getTotalUnitsForSlot($target, $slot) / $target->land) * $reducesSpellDamagePerk;
             }
         }
 

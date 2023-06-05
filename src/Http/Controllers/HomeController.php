@@ -65,7 +65,7 @@ class HomeController extends AbstractController
         $largestDominion = 0;
         foreach($dominions as $dominion)
         {
-            $largestDominion = max($largestDominion, $landCalculator->getTotalLand($dominion));
+            $largestDominion = max($largestDominion, $dominion->land);
         }
 
         $factions = Race::all()->where('playable',1)->count();

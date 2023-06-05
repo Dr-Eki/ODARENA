@@ -270,7 +270,7 @@ class SabotageCalculator
         $rawDamage = ($baseDamage / 100);
 
         $targetSpa = $this->militaryCalculator->getSpyRatio($target, 'defense') * 10;
-        $rawDamage *= ($totalSabotagePowerSent / $this->landCalculator->getTotalLand($target));
+        $rawDamage *= ($totalSabotagePowerSent / $target->land);
 
         if($targetSpa != 0)
         {

@@ -44,9 +44,9 @@
                                 <tr>
                                     <td>OPA</td>
                                     <td>
-                                        <strong>{{ number_format(($militaryCalculator->getOffensivePower($selectedDominion) / $landCalculator->getTotalLand($selectedDominion)), 3) }}</strong>
+                                        <strong>{{ number_format(($militaryCalculator->getOffensivePower($selectedDominion) / $selectedDominion->land), 3) }}</strong>
                                         @if ($militaryCalculator->getOffensivePowerMultiplier($selectedDominion) !== 1.0)
-                                            <small class="text-muted">({{ number_format(($militaryCalculator->getOffensivePowerRaw($selectedDominion) / $landCalculator->getTotalLand($selectedDominion)), 3) }})</small>
+                                            <small class="text-muted">({{ number_format(($militaryCalculator->getOffensivePowerRaw($selectedDominion) / $selectedDominion->land), 3) }})</small>
                                         @endif
                                     </td>
                                 </tr>
@@ -91,9 +91,9 @@
                                     <tr>
                                         <td>DPA</td>
                                         <td>
-                                            <strong>{{ number_format(($militaryCalculator->getDefensivePower($selectedDominion) / $landCalculator->getTotalLand($selectedDominion)), 3) }}</strong>
+                                            <strong>{{ number_format(($militaryCalculator->getDefensivePower($selectedDominion) / $selectedDominion->land), 3) }}</strong>
                                             @if ($militaryCalculator->getDefensivePowerMultiplier($selectedDominion) !== 1.0)
-                                                <small class="text-muted">({{ number_format(($militaryCalculator->getDefensivePowerRaw($selectedDominion) / $landCalculator->getTotalLand($selectedDominion)), 3) }})</small>
+                                                <small class="text-muted">({{ number_format(($militaryCalculator->getDefensivePowerRaw($selectedDominion) / $selectedDominion->land), 3) }})</small>
                                             @endif
                                         </td>
                                     </tr>

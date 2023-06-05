@@ -109,7 +109,7 @@
                             <tr>
                                 <td>Land:</td>
                                 <td>
-                                    {{ number_format($landCalculator->getTotalland($dominion)) }}
+                                    {{ number_format($dominion->land) }}
                                     <span class="{{ $rangeCalculator->getDominionRangeSpanClass($selectedDominion, $dominion) }}">
                                         ({{ number_format($rangeCalculator->getDominionRange($selectedDominion, $dominion), 2) }}%)
                                     </span>
@@ -689,11 +689,11 @@
             @slot('noPadding', true)
             @slot('titleExtra')
                 @if($dominion->race->name == 'Swarm')
-                    <span class="pull-right" data-toggle="tooltip" data-placement="top" title="Barren vs Swarm: <strong>{{ number_format($landCalculator->getTotalBarrenLandForSwarm($dominion)) }}</strong> ({{ number_format((($landCalculator->getTotalBarrenLandForSwarm($dominion) / $landCalculator->getTotalLand($dominion)) * 100), 2) }}%)">
+                    <span class="pull-right" data-toggle="tooltip" data-placement="top" title="Barren vs Swarm: <strong>{{ number_format($landCalculator->getTotalBarrenLandForSwarm($dominion)) }}</strong> ({{ number_format((($landCalculator->getTotalBarrenLandForSwarm($dominion) / $dominion->land) * 100), 2) }}%)">
                 @else
                     <span class="pull-right">
                 @endif
-                    Barren Land: <strong>{{ number_format($landCalculator->getTotalBarrenLand($dominion)) }}</strong> ({{ number_format((($landCalculator->getTotalBarrenLand($dominion) / $landCalculator->getTotalLand($dominion)) * 100), 2) }}%)</span>
+                    Barren Land: <strong>{{ number_format($landCalculator->getTotalBarrenLand($dominion)) }}</strong> ({{ number_format((($landCalculator->getTotalBarrenLand($dominion) / $dominion->land) * 100), 2) }}%)</span>
             @endslot
 
             <table class="table">
@@ -721,7 +721,7 @@
                                 </span>
                             </td>
                             <td class="text-center">{{ number_format($amount) }}</td>
-                            <td class="text-center">{{ number_format((($amount / $landCalculator->getTotalLand($dominion)) * 100), 2) }}%</td>
+                            <td class="text-center">{{ number_format((($amount / $dominion->land) * 100), 2) }}%</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -734,7 +734,7 @@
             @slot('title', 'Incoming buildings')
             @slot('titleIconClass', 'fa fa-clock-o')
             @slot('titleExtra')
-                <span class="pull-right">Incoming Buildings: <strong>{{ number_format($queueService->getConstructionQueueTotal($dominion) + $queueService->getRepairQueueTotal($dominion)) }}</strong> ({{ number_format(((($queueService->getConstructionQueueTotal($dominion) + $queueService->getRepairQueueTotal($dominion)) / $landCalculator->getTotalLand($dominion)) * 100), 2) }}%)</span>
+                <span class="pull-right">Incoming Buildings: <strong>{{ number_format($queueService->getConstructionQueueTotal($dominion) + $queueService->getRepairQueueTotal($dominion)) }}</strong> ({{ number_format(((($queueService->getConstructionQueueTotal($dominion) + $queueService->getRepairQueueTotal($dominion)) / $dominion->land) * 100), 2) }}%)</span>
             @endslot
             @slot('noPadding', true)
 

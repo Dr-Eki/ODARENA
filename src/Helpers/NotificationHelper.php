@@ -85,7 +85,7 @@ class NotificationHelper
             'desecration_completed' => [
                 'label' => 'Units returned from desecration',
                 'defaults' => ['email' => false, 'ingame' => true],
-                'route' => route('dominion.desecration'),
+                'route' => route('dominion.desecrate'),
                 'iconClass' => 'fas fa-hand-lizard text-green',
             ],
             'theft_completed' => [

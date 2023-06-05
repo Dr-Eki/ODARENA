@@ -139,6 +139,10 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('invade')->uses('Dominion\InvasionController@getInvade')->name('invade');
             $router->post('invade')->uses('Dominion\InvasionController@postInvade');
 
+            // Desecrate
+            $router->get('desecrate')->uses('Dominion\DesecrationController@getDesecrate')->name('desecrate');
+            $router->post('desecrate')->uses('Dominion\DesecrationController@postDesecrate');
+
             // Expedition
             $router->get('expedition')->uses('Dominion\ExpeditionController@getExpedition')->name('expedition');
             $router->post('expedition')->uses('Dominion\ExpeditionController@postExpedition');

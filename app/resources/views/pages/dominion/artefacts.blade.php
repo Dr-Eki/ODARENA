@@ -232,7 +232,7 @@
                                         <tr>
                                             <td>DPA:</td>
                                             <td id="home-forces-dpa" data-amount="0">
-                                                {{ number_format($militaryCalculator->getDefensivePower($selectedDominion) / $landCalculator->getTotalLand($selectedDominion), 2) }}
+                                                {{ number_format($militaryCalculator->getDefensivePower($selectedDominion) / $selectedDominion->land, 2) }}
                                             </td>
                                         </tr>
                                     </tbody>

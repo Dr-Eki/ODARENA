@@ -38,7 +38,7 @@
                             <td class="text-left"><a href="{{ route('chronicles.dominion', $dominionId) }}">{{ $dominion->name }}</a></td>
                             <td class="text-left"><a href="{{ route('chronicles.ruler', $dominion->user->display_name) }}">{{ $dominion->user->display_name }}</a></td>
                             <td class="text-left">{{ $dominion->race->name }}</td>
-                            <td class="text-left">{{ number_format($landCalculator->getTotalLand($dominion)) }}</td>
+                            <td class="text-left">{{ number_format($dominion->land) }}</td>
                         </tr>
                     @endforeach
                     </tbody>

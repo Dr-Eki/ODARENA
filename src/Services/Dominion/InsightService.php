@@ -104,7 +104,7 @@ class InsightService
             'title_perks' => $this->titleHelper->getRulerTitlePerksForDominion($target),
             'ruler' => $target->ruler_name,
             'race' => $target->race->name,
-            'total_land' => $this->landCalculator->getTotalLand($target),
+            'total_land' => $target->land,
             'peasants' => $target->peasants,
             'employment' => $this->populationCalculator->getEmploymentPercentage($target),
             'networth' => $this->networthCalculator->getDominionNetworth($target),
@@ -407,7 +407,7 @@ class InsightService
         {
             $amount = $target->{'land_' . $landType};
             $data['land'][$landType]['amount'] = $amount;
-            $data['land'][$landType]['percentage'] = ($amount / $this->landCalculator->getTotalLand($target)) * 100;
+            $data['land'][$landType]['percentage'] = ($amount / $target->land) * 100;
             $data['land'][$landType]['barren'] = $this->landCalculator->getTotalBarrenLandByLandType($target, $landType);
             $data['land'][$landType]['landtype_defense'] = 0;#$this->militaryCalculator->getDefensivePowerModifierFromLandType($target, $landType);
 

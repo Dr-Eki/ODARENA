@@ -32,7 +32,7 @@
                 <tbody>
                     @foreach ($dominions as $dominion)
                         @php
-                        $land = $landCalculator->getTotalLand($dominion);
+                        $land = $dominion->land;
                         $networth = $networthCalculator->getDominionNetworth($dominion);
                         @endphp
                         <tr>

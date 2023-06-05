@@ -20,7 +20,7 @@
                                 <option></option>
                                 @foreach ($rangeCalculator->getDominionsInRange($selectedDominion) as $dominion)
                                     <option value="{{ $dominion->id }}"
-                                            data-land="{{ number_format($landCalculator->getTotalLand($dominion)) }}"
+                                            data-land="{{ number_format($dominion->land) }}"
                                             data-networth="{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}"
                                             data-percentage="{{ $rangeCalculator->getDominionRange($selectedDominion, $dominion) }}"
                                             data-abandoned="{{ $dominion->isAbandoned() ? 1 : 0 }}"
@@ -467,7 +467,7 @@
                                         <tr>
                                             <td>DPA:</td>
                                             <td id="home-forces-dpa" data-amount="0">
-                                                {{ number_format($militaryCalculator->getDefensivePower($selectedDominion) / $landCalculator->getTotalLand($selectedDominion), 2) }}
+                                                {{ number_format($militaryCalculator->getDefensivePower($selectedDominion) / $selectedDominion->land, 2) }}
                                             </td>
                                         </tr>
                                         @if($selectedDominion->getSpellPerkValue('fog_of_war'))
