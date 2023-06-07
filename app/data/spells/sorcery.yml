@@ -339,8 +339,8 @@ festering_wounds:
   exclusive_races:
     - Afflicted
   perks:
-    casualties: 25
-    food_consumption_mod: 25
+    casualties: 15
+    food_consumption_mod: 20
 
 great_fever:  
   enabled: 0
@@ -353,8 +353,8 @@ great_fever:
   exclusive_races:
     - Afflicted
   perks:
-    population_growth: -80
-    gold_production_mod: -10
+    population_growth: -50
+    production_from_peasants_mod: -10
     food_production_mod: -20
 
 pestilence:  

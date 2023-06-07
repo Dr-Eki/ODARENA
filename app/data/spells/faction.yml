@@ -94,8 +94,9 @@ soothing_hum:
   exclusive_races:
     - Kobold
   perks:
-    offensive_power: -10
     morale_change_tick: -50
+    no_morale_bonus_on_offense: 1
+    no_morale_bonus_on_defense: 1
 
 ## Swarm
 

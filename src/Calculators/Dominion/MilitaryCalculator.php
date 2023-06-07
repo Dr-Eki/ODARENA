@@ -106,7 +106,7 @@ class MilitaryCalculator
     {
         $op = ($this->getOffensivePowerRaw($attacker, $defender, $landRatio, $units, $calc) * $this->getOffensivePowerMultiplier($attacker, $defender));
 
-        $op *= $this->getMoraleMultiplier($attacker);
+        $op *= $this->getMoraleMultiplier($attacker, 'offense');
 
         if($isInvasion)
         {
@@ -114,8 +114,6 @@ class MilitaryCalculator
         }
 
         return $op;
-
-        #return ($op * $this->getMoraleMultiplier($attacker));
     }
 
     /**
@@ -329,7 +327,7 @@ class MilitaryCalculator
         $dp = $this->getDefensivePowerRaw($defender, $attacker, $landRatio, $units, $multiplierReduction, $isAmbush, $ignoreRawDpFromBuildings, $invadingUnits, $ignoreRawDpFromAnnexedDominions);
         $dp *= $this->getDefensivePowerMultiplier($defender, $attacker, $multiplierReduction);
 
-        return ($dp * $this->getMoraleMultiplier($defender));
+        return ($dp * $this->getMoraleMultiplier($defender, 'defense'));
     }
 
     /**
@@ -1824,8 +1822,13 @@ class MilitaryCalculator
      * @param Dominion $dominion
      * @return float
      */
-    public function getMoraleMultiplier(Dominion $dominion): float
+    public function getMoraleMultiplier(Dominion $dominion, string $mode): float
     {
+        if($dominion->getSpellPerkValue('no_morale_bonus_on_' . $mode))
+        {
+            return 1;
+        }
+        
         return 0.90 + $dominion->morale / 1000;
     }
 
@@ -3122,6 +3125,14 @@ class MilitaryCalculator
             ->count();
 
         return $recentAttacks;
+    }
+
+    public function getTotalPowerOfUnit(Dominion $dominion, Dominion $enemy, float $landRatio = null, Unit $unit, $units = null, $invadingUnits = null): float
+    {
+        $op = $this->getUnitPowerWithPerks($dominion, $enemy, $landRatio, $unit, 'offense', null, $units, $invadingUnits);
+        $dp = $this->getUnitPowerWithPerks($dominion, $enemy, $landRatio, $unit, 'defense', null, $units, $invadingUnits);
+
+        return $op + $dp;
     }
 
 }

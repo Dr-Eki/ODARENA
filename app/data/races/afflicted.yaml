@@ -2,18 +2,15 @@ name: Afflicted
 alignment: evil
 description: >-
   <p>For any invasion where the Afflicted are at least half as strong as the defender, a <strong>Pestilence</strong> will linger with the defender causing their peasants to die and quickly decompose into Abominations which start the long walk back to their Afflicted masters.</p>
+  <p>A dominion affected by Pestilence will spread <strong>Lesser Pestilence</strong> to any dominion it invades or invaded by.</p>
   <p>If the invasion is successful, a malady known only as <strong>Great Fever</strong> will also befall the defender.</p>
   <p>Anyone invading the Afflicted will bring back with them a terrible disease called <strong>Festering Wounds</strong>.</p>
-  <hr />
-  <ul>
-  <li><strong>Pestilence</strong>: (1% * [Land Ratio]) of target's peasants die and return to the Afflicted as Abominations (takes 12 ticks).</li>
-  <li><strong>Great Fever</strong>: no population growth, -10% gold production, -20% food production.</li>
-  <li><strong>Festering Wounds</strong>: +25% casualties, +25% food consumption.</li>
-  </ul>
 home_land_type: hill
 home_terrain: hills
 skill_level: 3
+magic_level: 3
 
+draftees_alias: mourner
 
 resources:
   - gold
@@ -29,10 +26,9 @@ improvement_resources:
   lumber: 2
 
 perks:
-  max_population: 20
+  max_population: 10
   population_growth: 30
-  converts_assassinated_draftees: 1 # into slot 1
-  converts_executed_spies: 1 # into slot 1
+  can_invade_at_any_morale: 1
 
 units:
   - name: Abomination
@@ -42,7 +38,8 @@ units:
       - living
       - mindless
     cost:
-      food: 100
+      food: 85
+      draftees: 1
     power:
       offense: 2
       defense: 1
@@ -50,6 +47,7 @@ units:
       attrition: 0.25 # 0.25% lost each tick.
       no_draftee_on_release: 1
       releases_into_resource: 10,food
+      desecration: 1,2,miasma # Can desecrate up to 1 bodies into 2 miasma each
 
   - name: Pest Rat
     training_time: 9
@@ -58,12 +56,14 @@ units:
       - sentient
     cost:
       gold: 300
+      food: 10
+      peasants: 1
     power:
       offense: 0
       defense: 3
     perks:
-      housing_count: 0.75
       miasma_production_raw: 0.04
+      kills_into_resource_per_value: 25,miasma # 25 miasma per value of killed units
 
   - name: Wretch
     training_time: 12
@@ -71,10 +71,11 @@ units:
       - living
       - sentient
     cost:
-      gold: 1000
+      gold: 800
+      draftees: 1
     power:
       offense: 0
-      defense: 7
+      defense: 5
 
   - name: Reaper
     training_time: 12
@@ -85,9 +86,10 @@ units:
     cost:
       gold: 600
       miasma: 8
+      draftees: 2
     power:
-      offense: 10
-      defense: -1
+      offense: 6
+      defense: -0.5
     perks:
       increases_enemy_casualties_on_offense: 1
       value_conversion: 1,1 # [Killed points]*1 = number of unit1 created

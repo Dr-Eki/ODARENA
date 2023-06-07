@@ -19,7 +19,7 @@ blood:
 
 body:
   name: Body
-  description: A body of adequate size taken by the Empire and placed in the Crypt.
+  description: The body of a fallen warrior of normal stature.
   buy: null
   sell: null
 

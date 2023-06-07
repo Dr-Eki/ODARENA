@@ -168,7 +168,9 @@ class ResourceCalculator
         {
             $productionPerPeasant = (float)$dominion->race->peasants_production[$resourceKey];
 
-            $productionPerPeasant *= 1 + $dominion->getTechPerkMultiplier('production_from_peasants_mod');
+            $productionPerPeasantMultiplier = 1;
+            $productionPerPeasantMultiplier += $dominion->getTechPerkMultiplier('production_from_peasants_mod');
+            $productionPerPeasantMultiplier += $dominion->getSpellPerkMultiplier('production_from_peasants_mod');
 
             if($dominion->race->getPerkValue('unemployed_peasants_produce'))
             {

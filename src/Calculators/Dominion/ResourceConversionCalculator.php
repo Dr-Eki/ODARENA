@@ -62,6 +62,8 @@ class ResourceConversionCalculator
             'dies_into_resource_on_success',
         ];
 
+        $resourcesThatUseEntireBodies = ['body'];
+
         $convertingUnits = array_fill(1, $converter->race->units->count(), 0);
 
         foreach($converter->race->resources as $resourceKey)
@@ -87,6 +89,8 @@ class ResourceConversionCalculator
         {
             return $resourceConversions;
         }
+
+        $resourceConversions['bodies_taken'] = 0;
 
         if($mode == 'offense')
         {
@@ -179,6 +183,11 @@ class ResourceConversionCalculator
                                 $resourceConversions[$resourceKey] += $enemyUnitKilledAmount * $resourceAmount * $convertingUnits[$converterUnitSlot]['power_proportion'];
                                 $resourceConversions[$resourceKey] *= $this->conversionCalculator->getConversionReductionMultiplier($enemy);
                                 $resourceConversions[$resourceKey] *= $this->getInvasionResultMultiplier($invasion, $mode);
+
+                                if(in_array($resourceKey, $resourcesThatUseEntireBodies))
+                                {
+                                    $resourceConversions['bodies_spent'] += $enemyUnitKilledAmount;
+                                }
                             }
                         }
                     }
@@ -201,6 +210,11 @@ class ResourceConversionCalculator
                                     $resourceConversions[$resourceKey] += $enemyUnitKilledAmount * $resourceAmount * $convertingUnits[$converterUnitSlot]['power_proportion'];
                                     $resourceConversions[$resourceKey] *= $this->conversionCalculator->getConversionReductionMultiplier($enemy);
                                     $resourceConversions[$resourceKey] *= $this->getInvasionResultMultiplier($invasion, $mode);
+
+                                    if(in_array($resourceKey, $resourcesThatUseEntireBodies))
+                                    {
+                                        $resourceConversions['bodies_spent'] += $enemyUnitKilledAmount;
+                                    }
                                 }
                             }
                         }
@@ -233,6 +247,11 @@ class ResourceConversionCalculator
                                 $resourceGained *= $this->getInvasionResultMultiplier($invasion, $mode);
 
                                 $resourceConversions[$resourceKey] += $resourceGained;
+
+                                if(in_array($resourceKey, $resourcesThatUseEntireBodies))
+                                {
+                                    $resourceConversions['bodies_spent'] += $enemyUnitKilledAmount;
+                                }
                             }
                         }
                     }
@@ -263,6 +282,11 @@ class ResourceConversionCalculator
 
                                     $resourceConversions[$resourceKey] += $killedUnitsRawPower * $resourceAmount * $convertingUnits[$converterUnitSlot]['power_proportion'];
                                     $resourceConversions[$resourceKey] *= $this->getInvasionResultMultiplier($invasion, $mode);
+
+                                    if(in_array($resourceKey, $resourcesThatUseEntireBodies))
+                                    {
+                                        $resourceConversions['bodies_spent'] += $enemyUnitKilledAmount;
+                                    }
                                 }
                             }
                         }
@@ -300,7 +324,6 @@ class ResourceConversionCalculator
                             $resourceConversions[$resourceKey] += $displacedPeasants * $resourceAmount * $convertingUnits[$converterUnitSlot]['power_proportion'];
                             #$resourceConversions[$resourceKey] *= $this->conversionCalculator->getConversionReductionMultiplier($enemy);
                             $resourceConversions[$resourceKey] *= $this->getInvasionResultMultiplier($invasion, $mode);
-                                
                         }
                     }
 
@@ -316,6 +339,11 @@ class ResourceConversionCalculator
                         $resourceConversions[$resourceKey] += $converterUnitsLost[$converterUnitSlot] * $resourceAmount;
                         #$resourceConversions[$resourceKey] *= $this->conversionCalculator->getConversionReductionMultiplier($enemy);
                         #$resourceConversions[$resourceKey] *= $this->getInvasionResultMultiplier($invasion, $mode);
+
+                        if(in_array($resourceKey, $resourcesThatUseEntireBodies))
+                        {
+                            $resourceConversions['bodies_spent'] += $converterUnitsLost[$converterUnitSlot];
+                        }
                     }
                 }
             }

@@ -715,6 +715,11 @@ class RaceHelper
                 $description = 'Can desecrate';
                 $booleanValue = true;
                 break;
+            case 'can_invade_at_any_morale':
+                $negativeBenefit = false;
+                $description = 'Can invade regardless of morale';
+                $booleanValue = true;
+                break;
             default:
                 $negativeBenefit = false;
                 $description = 'No description for perk: ' . $perkType->key;

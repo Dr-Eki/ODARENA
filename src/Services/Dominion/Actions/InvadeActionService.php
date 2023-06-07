@@ -275,7 +275,7 @@ class InvadeActionService
 
             if ($attacker->race->name !== 'Barbarian')
             {
-                if ($attacker->morale < static::MIN_MORALE)
+                if ($attacker->morale < static::MIN_MORALE and !$attacker->race->getPerkValue('can_invade_at_any_morale'))
                 {
                     throw new GameException('You do not have enough morale to invade.');
                 }
@@ -2969,6 +2969,14 @@ class InvadeActionService
     {
         $bodies = 0;
 
+        $bodiesRemovedFromConversion = 0;
+        $bodiesRemovedFromConversion += $this->invasion['attacker']['conversion']['bodies_spent'];
+        $bodiesRemovedFromConversion += $this->invasion['defender']['conversion']['bodies_spent'];
+        $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversion']['bodies_spent'];
+        $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversion']['bodies_spent'];
+
+        $bodies -= $bodiesRemovedFromConversion;
+
         $winner = $this->invasion['result']['success'] ? 'attacker' : 'defender';
 
         foreach($attackerUnitsLost as $slot => $amount)
@@ -2988,6 +2996,10 @@ class InvadeActionService
                 $bodies += (int)floor($amount);
             }
         }
+
+        $bodies = max(0, $bodies);
+
+        # Deduct from $bodies the number of bodies already ransacked/converted
 
         $this->invasion['result']['bodies']['fallen'] = $bodies;
         $this->invasion['result']['bodies']['available'] = $bodies;
