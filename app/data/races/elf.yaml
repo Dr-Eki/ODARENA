@@ -11,7 +11,6 @@ magic_level: 3
 resources:
   - gold
   - food
-  - ore
   - lumber
   - mana
 
@@ -71,7 +70,7 @@ units:
     - living
     - intelligent
   cost:
-    gold: 1400
+    gold: 1350
     lumber: 80
     draftees: 1
   power:

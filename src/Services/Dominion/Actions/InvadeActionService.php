@@ -2387,6 +2387,7 @@ class InvadeActionService
 
                             $ticksFaster = ($attacker->{'terrain_' . $terrainKey} / $attacker->land) * 100 / $chunkSize * $perChunk;
                             $ticksFaster = min($ticksFaster, $maxPerk);
+                            $ticksFaster = floor($ticksFaster);
 
                             $fasterReturningTicks = min(max(1, ($ticks - $ticksFaster)), 12);
 

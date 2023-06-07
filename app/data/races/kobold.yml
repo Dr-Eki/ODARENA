@@ -28,7 +28,7 @@ units:
       offense: 2
       defense: 0
     perks:
-      offense_from_pairing: 4,1,1 # slot, amount, num required
+      offense_from_pairing: 4,0.5,1 # slot, amount, num required
       plunders: gold;0.1,ore;0.05 # resource;amount
 
   - name: Snarlshield
@@ -78,4 +78,5 @@ units:
       defense: 2
     perks:
       offense_mob: 1 # +1 OP when they outnumber the defender's units
-      defense_mob: 1 # +1 DP when they outnumber attacker's units
+      #defense_mob: 1 # +1 DP when they outnumber attacker's units
+      defense_from_pairing: 3,1,1 # slot, amount, num required

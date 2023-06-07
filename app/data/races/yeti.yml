@@ -83,9 +83,9 @@ units:
       - intelligent
       - wise
     cost:
-      food: 200
-      ore: 200
-      lumber: 200
+      food: 225
+      ore: 160
+      lumber: 100
       draftees: 1
     power:
       offense: 5
@@ -109,7 +109,7 @@ units:
       defense: 3
     perks:
       #only_dies_vs_raw_power: 6 # >=
-      offense_from_resource_capped_exhausting: 6,60,ore # +6 OP if paired with 60 ore (was +16 from 150 ore)
+      offense_from_resource_capped_exhausting: 6,30,ore # +6 OP if paired with 30 ore (was +16 from 150 ore)
       faster_return: 2
       sendable_with_zero_op: 1
       #immortal_on_victory: 1

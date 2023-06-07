@@ -343,7 +343,8 @@ altar:
     - Demon
   land_type: mountain
   perks:
-    blood_production_mod: 1,6,100 # ratio, perk, max
+    blood_production_mod: 1,4,100 # ratio, perk, max
+    population_growth_capped: 1,4,100 # Every 1%, gives 4%, max 100
     blood_theft_protection: 8000
 
 dungeon:

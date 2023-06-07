@@ -950,6 +950,7 @@ class Dominion extends AbstractModel
                     // Other/special
                     'deity_power',
                     'population_capped',
+                    'population_growth_capped',
                 ];
 
                 if(in_array($perkKey, $singleValuePerks))

@@ -53,8 +53,7 @@ healer:
   perks:
     casualties: -5
 
-high_priest:  
-  enabled: 0
+high_priest:
   name: High Priest
   perks:
     deity_power: 50
@@ -77,8 +76,7 @@ pathfinder:
     expedition_land_gains: 12.5
     expedition_prestige_gains: 12.5
 
-professor:  
-  enabled: 0
+professor:
   name: Professor
   perks:
     xp_generation_mod: 5

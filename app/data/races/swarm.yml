@@ -91,7 +91,8 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1750
+      gold: 1580
+      food: 50
       draftees: 1
     power:
       offense: 7
