@@ -129,6 +129,10 @@ class BuildingHelper
 
             'xp_generation_mod' => 'XP generation increased by %2$s%% for every %1$s%% (max +%3$s%%).',
 
+            'blood_resource_conversion_mod' => 'Blood conversion increased by %2$s%% for every %1$s%% (max +%3$s%%).',
+
+            'defensive_power' => 'Defensive power DP).',
+
             'resource_conversion' => 'Converts %1$s %2$s into %3$s %4$s per tick.',
             'peasants_conversion' => 'Converts %1$s peasants into %2$s %3$s per tick.',
             'peasants_conversions' => 'Converts %1$s of your peasants into %2$s each per tick.',

@@ -146,6 +146,108 @@ resilience:
 
 # END SYLVAN
 
+# BEGIN TROLL #
+
+bashing:
+  name: Bashing
+  exclusive_races:
+    - Troll
+  perks:
+    defensive_power: 65,8500
+
+building:
+  name: Building
+  exclusive_races:
+    - Troll
+  perks:
+    construction_cost: -65,4500
+    rezone_cost: -65,4500
+
+fighting:
+  name: Fighting
+  exclusive_races:
+    - Troll
+  perks:
+    casualties_on_offense: -40,5000
+    casualties_on_defense: -60,5000
+
+glimmering:
+  name: Glimmering
+  exclusive_races:
+    - Troll
+  perks:
+    gold_production_mod: 65,6500
+
+hunting:
+  name: Hunting
+  exclusive_races:
+    - Troll
+  perks:
+    food_production_mod: 115,5500
+
+muttering:
+  name: Muttering
+  exclusive_races:
+    - Troll
+  perks:
+    wizard_strength: 65,5500
+    mana_production_mod: 65,5500
+    sorcery_damage_suffered: -65,5500
+    wizard_housing: 65,5500
+
+nesting:
+  name: Nesting
+  exclusive_races:
+    - Troll
+  perks:
+    population: 60,5000
+
+rock_throwing:
+  name: Rock Throwing
+  exclusive_races:
+    - Troll
+  perks:
+    ore_production_mod: 50,4500
+
+smashing:
+  name: Smashing
+  exclusive_races:
+    - Troll
+  perks:
+    offensive_power: 50,8500
+
+sneaking:
+  name: Sneaking
+  exclusive_races:
+    - Troll
+  perks:
+    spy_strength: 115,5500
+    spy_losses: -100,5500
+    spy_housing: 115,5500
+
+trampling:
+  name: Trampling
+  exclusive_races:
+    - Troll
+  perks:
+    land_discovered: 70,4800
+
+training:
+  name: Training
+  exclusive_races:
+    - Troll
+  perks:
+    unit_gold_costs: -50,4500
+    unit_ore_costs: -50,4500
+
+uprooting:
+  name: Uprooting
+  exclusive_races:
+    - Troll
+  perks:
+    lumber_production_mod: 65,4500
+# END TROLL #
+
 ### DISABLED
 
 cartography:  
@@ -516,121 +618,6 @@ hollowing:
   perks:
     population: 40,8000
     thunderstone_production_mod: 20,8000
-
-# BEGIN TROLL #
-
-bashing:  
-  enabled: 0
-  name: Bashing
-  exclusive_races:
-    - Troll
-  perks:
-    defensive_power: 65,8500
-
-building:  
-  enabled: 0
-  name: Building
-  exclusive_races:
-    - Troll
-  perks:
-    construction_cost: -65,4500
-    rezone_cost: -65,4500
-
-fighting:  
-  enabled: 0
-  name: Fighting
-  exclusive_races:
-    - Troll
-  perks:
-    casualties_on_offense: -40,5000
-    casualties_on_defense: -60,5000
-
-glimmering:  
-  enabled: 0
-  name: Glimmering
-  exclusive_races:
-    - Troll
-  perks:
-    gold_production_mod: 65,6500
-
-hunting:  
-  enabled: 0
-  name: Hunting
-  exclusive_races:
-    - Troll
-  perks:
-    food_production_mod: 115,5500
-
-muttering:  
-  enabled: 0
-  name: Muttering
-  exclusive_races:
-    - Troll
-  perks:
-    wizard_strength: 65,5500
-    mana_production_mod: 65,5500
-    sorcery_damage_suffered: -65,5500
-    wizard_housing: 65,5500
-
-nesting:  
-  enabled: 0
-  name: Nesting
-  exclusive_races:
-    - Troll
-  perks:
-    population: 60,5000
-
-rock_throwing:  
-  enabled: 0
-  name: Rock Throwing
-  exclusive_races:
-    - Troll
-  perks:
-    ore_production_mod: 50,4500
-
-smashing:  
-  enabled: 0
-  name: Smashing
-  exclusive_races:
-    - Troll
-  perks:
-    offensive_power: 50,8500
-
-sneaking:  
-  enabled: 0
-  name: Sneaking
-  exclusive_races:
-    - Troll
-  perks:
-    spy_strength: 115,5500
-    spy_losses: -100,5500
-    spy_housing: 115,5500
-
-trampling:  
-  enabled: 0
-  name: Trampling
-  exclusive_races:
-    - Troll
-  perks:
-    land_discovered: 70,4800
-
-training:  
-  enabled: 0
-  name: Training
-  exclusive_races:
-    - Troll
-  perks:
-    unit_gold_costs: -50,4500
-    unit_ore_costs: -50,4500
-
-uprooting:  
-  enabled: 0
-  name: Uprooting
-  exclusive_races:
-    - Troll
-  perks:
-    lumber_production_mod: 65,4500
-# END TROLL #
 
 # BEGIN UNDEAD #
 

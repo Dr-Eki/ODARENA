@@ -887,6 +887,8 @@ class Dominion extends AbstractModel
                     'swamp_gas_production_mod',
                     'miasma_production_mod',
                     'exchange_rate',
+
+                    'blood_resource_conversion_mod',
                 
                     // Unit costs
                     'unit_gold_costs',

@@ -397,4 +397,13 @@ class ResourceConversionCalculator
         }
     }
 
+    protected function getResourceConversionsMultiplier(Dominion $dominion, string $resourceKey): float
+    {
+        $multiplier = 1;
+
+        $multiplier += $dominion->getBuildingPerkMultiplier($resourceKey . '_resource_conversion_mod');
+
+        return $multiplier;
+    }
+
 }

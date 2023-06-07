@@ -69,7 +69,7 @@ units:
     - equipment
   cost:
     ore: 200
-    gems: 10
+    gems: 20
   power:
     offense: 0
     defense: 0
@@ -83,14 +83,14 @@ units:
     - living
     - sentient
   cost:
-    gold: 3000
-    ore: 500
+    gold: 2800
+    ore: 400
     draftees: 1
   power:
-    offense: 8
-    defense: 10
+    offense: 7
+    defense: 11
   perks:
       offense_from_pairing: 3,2 # slot;amount
       defense_from_pairing: 3,2 # slot;amount
       plunders: food;12,ore;6,gems;2
-      only_dies_vs_raw_power: 6 # >=
+      #only_dies_vs_raw_power: 6 # >=

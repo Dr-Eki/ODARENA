@@ -3,6 +3,7 @@
 barracks:  
   name: Barracks
   excluded_races:
+    - Afflicted
     - Beastfolk
     - Kobold
     - Reptilians
@@ -45,6 +46,19 @@ wall:
     raw_defense: 6
 
 ## Production Buildings
+
+aqueduct:
+  name: Aqueduct
+  excluded_races:
+    - Demon
+    - Swarm
+    - Sylvan
+    - Undead
+    - Yeti
+  land_type: water
+  perks:
+    food_production_mod: 1,8,40 # Every 1% gives +8% food production, max +40%
+    population_growth_capped: 1,8,40 # Every 1%, gives 6%, no max
 
 farm:  
   name: Farm
@@ -102,13 +116,6 @@ saw_mill:
   perks:
     lumber_production_raw: 35
 
-tower:
-  name: Tower
-  excluded_races:
-    - Sylvan
-  perks:
-    mana_production_raw: 20
-
 stable:  
   name: Stable
   exclusive_races:
@@ -116,6 +123,25 @@ stable:
   perks:
     horse_production_raw: 1
     horse_theft_reduction: 1,10,100  # Every 1% reduces plat stolen by 10%, max 100% reduction
+
+tower:
+  name: Tower
+  excluded_races:
+    - Sylvan
+  perks:
+    mana_production_raw: 20
+
+watermill:
+  name: Watermill
+  excluded_races:
+    - Demon
+    - Elf
+    - Reptilians
+    - Swarm
+    - Sylvan
+  perks:
+    gems_production_mod: 1,4,20 # Every 1% gives +4% gem production, max +20%
+    ore_production_mod: 1,4,20 # Every 1% gives +4% ore production, max +20%
 
 ## Improvements
 school:
@@ -180,12 +206,37 @@ hut:
     housing: 28
     jobs: 0
 
+pit:
+  name: Pit
+  exclusive_races:
+    - Afflicted
+  perks:
+    afflicted_unit1_housing: 200
+    housing: 0
+
 residence:
   name: Residence
   exclusive_races:
     - Elf
   perks:
     housing: 30
+    jobs: 0
+
+tomb:
+  name: Tomb
+  exclusive_races:
+    #- Revenants
+    - Undead
+  perks:
+    housing: 30
+    jobs: 0
+
+warren:  
+  name: Warren
+  exclusive_races:
+    - Afflicted
+  perks:
+    housing: 32
     jobs: 0
 
 ## Other
@@ -208,45 +259,109 @@ obelisk:
   perks:
     deity_power: 1,10,100
 
-# BEGIN SYLVAN
-forest_haven:
-  name: Forest Haven
-  enabled: 0
-  exclusive_races:
-    - Sylvan
-  perks:
-    gold_theft_protection: 25000
+# BEGIN AFFLICTED
 
-garden:
-  name: Garden
+mass_grave:
+  name: Mass Grave
   exclusive_races:
-    - Sylvan
+    - Afflicted
+  perks:
+    peasants_conversions: 3,6;miasma,18;food # amountFrom, amountTo;resourceTo, amountTo;resourceTo
+
+# END AFFLICTED
+
+# BEGIN BEASTFOLK
+
+camp:
+  name: Camp
+  exclusive_races:
+    - Beastfolk
+  land_type: forest
+  perks:
+    # unit_gold_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
+    # unit_ore_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
+    military_housing: 20
+    housing: 20
+    jobs: 0
+
+bloodstone:
+  name: Bloodstone
+  exclusive_races:
+    - Beastfolk
+  land_type: mountain
+  perks:
+    blood_invest_bonus: 1,5,100 # Every 1% gives 5% improvement points, max +100% improvements from blood
+    blood_resource_conversion_mod: 1,2.5,50 # Every 1% gives 4% conversion, max +100% conversion
+    blood_theft_protection: 8000
+
+# END BEASTFOLK
+
+# BEGIN DEMON
+
+altar:
+  name: Altar
+  exclusive_races:
+    - Demon
+  land_type: mountain
+  perks:
+    blood_production_mod: 1,4,100 # ratio, perk, max
+    population_growth_capped: 1,4,100 # Every 1%, gives 4%, max 100
+    blood_theft_protection: 8000
+
+dungeon:
+  name: Dungeon
+  exclusive_races:
+    - Demon
+  land_type: mountain
+  perks:
+    housing: 30
+    jobs: 0
+
+# END DEMON
+
+# BEGIN REPTILIANS
+
+bog:  
+  name: Bog
+  exclusive_races:
+    - Reptilians
   perks:
     food_production_raw: 50
 
-mana_tree:
-  name: Mana Tree
+mire:  
+  name: Mire
   exclusive_races:
-    - Sylvan
+    - Reptilians
   perks:
-    mana_production_raw: 30
-
-meadow:
-  name: Meadow
-  exclusive_races:
-    - Sylvan
-  perks:
-    housing: 28
+    housing: 30
     jobs: 0
 
-orchard:
-  name: Orchard
+swamp_vault:
+  name: Vault
   exclusive_races:
-    - Sylvan
+    - Reptilians
   perks:
-    improvements: 1,1.5 # Every 1% gives 1.5% higher imps
+  perks:
+    gold_theft_protection: 25000
+    gems_theft_protection: 2500
 
-# END SYLVAN
+siftery:
+  name: Siftery
+  exclusive_races:
+    - Reptilians
+  perks:
+    gems_production_raw: 6
+    gems_production_mod: 1,0.50,50 # Every 1% gives +0.40% gem production, max +40%
+
+trench:
+  name: Trench
+  exclusive_races:
+    - Reptilians
+  perks:
+    defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
+    casualties_on_defense: 1,-0.5,50 # 1% gives -5%, max -50%
+
+# END REPTILIANS
 
 # BEGIN SWARM
 
@@ -290,103 +405,45 @@ tunnel:
 
 # END SWARM
 
-# BEGIN REPTILIANS
-
-bog:  
-  name: Bog
+# BEGIN SYLVAN
+forest_haven:
+  name: Forest Haven
+  enabled: 0
   exclusive_races:
-    - Reptilians
+    - Sylvan
+  perks:
+    gold_theft_protection: 25000
+
+garden:
+  name: Garden
+  exclusive_races:
+    - Sylvan
   perks:
     food_production_raw: 50
 
-mire:  
-  name: Mire
+mana_tree:
+  name: Mana Tree
   exclusive_races:
-    - Reptilians
+    - Sylvan
   perks:
-    housing: 30
+    mana_production_raw: 30
+
+meadow:
+  name: Meadow
+  exclusive_races:
+    - Sylvan
+  perks:
+    housing: 28
     jobs: 0
 
-swamp_vault:
-  name: Vault
+orchard:
+  name: Orchard
   exclusive_races:
-    - Reptilians
-  land_type: water
-  terrain: water
+    - Sylvan
   perks:
-  perks:
-    gold_theft_protection: 25000
-    gems_theft_protection: 2500
+    improvements: 1,1.5 # Every 1% gives 1.5% higher imps
 
-siftery:
-  name: Siftery
-  exclusive_races:
-    - Reptilians
-  land_type: water
-  terrain: water
-  perks:
-    gems_production_raw: 6
-    gems_production_mod: 1,0.50,50 # Every 1% gives +0.40% gem production, max +40%
-
-trench:
-  name: Trench
-  exclusive_races:
-    - Reptilians
-  land_type: plain
-  terrain: plains
-  perks:
-    defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
-    casualties_on_defense: 1,-0.5,50 # 1% gives -5%, max -50%
-
-# END REPTILIANS
-
-# BEGIN BEASTFOLK
-
-camp:
-  name: Camp
-  exclusive_races:
-    - Beastfolk
-  land_type: forest
-  perks:
-    # unit_gold_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
-    # unit_ore_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
-    military_housing: 20
-    housing: 20
-    jobs: 0
-
-bloodstone:
-  name: Bloodstone
-  exclusive_races:
-    - Beastfolk
-  land_type: mountain
-  perks:
-    blood_invest_bonus: 1,5,100 # Every 1% gives 5% improvement points, max +100% improvements from blood
-    blood_theft_protection: 8000
-
-# END BEASTFOLK
-
-# BEGIN DEMON
-
-altar:
-  name: Altar
-  exclusive_races:
-    - Demon
-  land_type: mountain
-  perks:
-    blood_production_mod: 1,4,100 # ratio, perk, max
-    population_growth_capped: 1,4,100 # Every 1%, gives 4%, max 100
-    blood_theft_protection: 8000
-
-dungeon:
-  name: Dungeon
-  exclusive_races:
-    - Demon
-  land_type: mountain
-  perks:
-    housing: 30
-    jobs: 0
-
-# END DEMON
+# END SYLVAN
 
 # Pre Round 88
 
@@ -618,57 +675,6 @@ dock:
     food_production_raw: 40
     xp_generation_mod: 1,5,25 #Every 1% gives +5% XP production, max +25%
     exchange_rate: 1,4,20 # Every 1% gives +4% exchange rate, max +20%
-
-watermill:  
-  enabled: 0
-  name: Watermill
-  excluded_races:
-    - Ants
-    - Aurei
-    - Demon
-    - Dragon
-    - Growth
-    - Marshling
-    - Glimjir
-    - Monster
-    - Myconid
-    - Reptilians
-    - Simian
-    - Swarm
-    - Sylvan
-    - Void
-    - Weres
-    - Wood Elf
-  land_type: water
-  perks:
-    gems_production_mod: 1,4,20 # Every 1% gives +4% gem production, max +20%
-    ore_production_mod: 1,4,20 # Every 1% gives +4% ore production, max +20%
-
-aqueduct:  
-  enabled: 0
-  name: Aqueduct
-  excluded_races:
-    - Demon
-    - Dragon
-    - Firewalker
-    - Glimjir
-    - Growth
-    - Icekin
-    - Lux
-    - Myconid
-    - Monster
-    - Reptilians
-    - Revenants
-    - Swarm
-    - Sylvan
-    - Undead
-    - Void
-    - Wood Elf
-    - Yeti
-  land_type: water
-  perks:
-    food_production_mod: 1,8,40 # Every 1% gives +8% food production, max +40%
-    population_growth: 1,18 # Every 1%, gives 6%, no max
 
 shipyard:  
   enabled: 0
@@ -969,15 +975,6 @@ hunting_lodge:
   perks:
     food_production_raw: 80
     draftee_housing: 10
-
-mass_grave:  
-  enabled: 0
-  name: Mass Grave
-  exclusive_races:
-    - Afflicted
-  land_type: swamp
-  perks:
-    peasants_conversions: 3,6;miasma,18;food # amountFrom, amountTo;resourceTo, amountTo;resourceTo
 
 yak_breeder:  
   enabled: 0
@@ -1585,7 +1582,6 @@ dwelling:
   enabled: 0
   name: Dwelling
   exclusive_races:
-    - Afflicted
     - Goblin
     - Halfling
     - Kobold
@@ -1784,28 +1780,6 @@ mansion:
     vampires_unit1_housing: 60
 
 ###
-
-tomb:  
-  enabled: 0
-  name: Tomb
-  exclusive_races:
-    - Revenants
-    - Undead
-  land_type: swamp
-  perks:
-    housing: 30
-    jobs: 0
-    #crypt_bodies_decay_protection: 30
-
-pit:  
-  enabled: 0
-  name: Pit
-  exclusive_races:
-    - Afflicted
-  land_type: plain
-  perks:
-    afflicted_unit1_housing: 680
-    housing: 0
 
 wizard_dome:  
   enabled: 0
