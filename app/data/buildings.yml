@@ -81,6 +81,7 @@ gold_mine:
 gem_mine:
   name: Gem Mine
   excluded_races:
+    - Afflicted
     - Beastfolk
     - Demon
     - Reptilians
@@ -93,9 +94,11 @@ gem_mine:
 lumberyard:  
   name: Lumberyard
   exclusive_races:
+    - Afflicted
     - Beastfolk
     - Elf
     - Reptilians
+    - Undead
     - Yeti
   perks:
     lumber_production_raw: 35
@@ -103,9 +106,11 @@ lumberyard:
 ore_mine:  
   name: Ore Mine
   excluded_races:
+    - Afflicted
     - Reptilians
     - Sylvan
     - Swarm
+    - Undead
   perks:
     ore_production_raw: 35
 
