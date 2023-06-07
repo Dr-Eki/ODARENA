@@ -19,6 +19,7 @@ resources:
 perks:
   can_desecrate: 1
   cannot_train_archmages: 1
+  wizards_training_time: 6
 
 units:
   - name: Desecrator
@@ -70,7 +71,7 @@ units:
       pairing_limit: 4,40 # Unit slot, amount
 
   - name: Necromancer
-    training_time: 12
+    training_time: 6
     type:
       - sentient
       - intelligent
