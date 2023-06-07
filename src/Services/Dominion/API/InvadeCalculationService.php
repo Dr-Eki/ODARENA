@@ -4,12 +4,10 @@ namespace OpenDominion\Services\Dominion\API;
 
 use OpenDominion\Traits\DominionGuardsTrait;
 
-use LogicException;
-use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Models\Dominion;
+
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
-use OpenDominion\Models\Dominion;
-use OpenDominion\Services\Dominion\ProtectionService;
 
 class InvadeCalculationService
 {
@@ -64,11 +62,8 @@ class InvadeCalculationService
      */
     public function __construct()
     {
-        $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->rangeCalculator = app(RangeCalculator::class);
-
-        $this->protectionService = app(ProtectionService::class);
     }
 
     /**
@@ -108,7 +103,6 @@ class InvadeCalculationService
         }
 
         // Calculate unit stats
-        #$unitsThatNeedBoats = 0;
         foreach ($dominion->race->units as $unit) {
             $this->calculationResult['units'][$unit->slot]['dp'] = $this->militaryCalculator->getUnitPowerWithPerks(
                 $dominion,
@@ -125,15 +119,8 @@ class InvadeCalculationService
                 'offense',
                 $calc
             );
-            // Calculate boats needed
-            #if (isset($units[$unit->slot]) && $unit->need_boat) {
-            #    $unitsThatNeedBoats += (int)$units[$unit->slot];
-            #}
         }
         $this->calculationResult['units_sent'] = array_sum($units);
-
-        #$this->calculationResult['boats_needed'] = ceil($unitsThatNeedBoats / $dominion->race->getBoatCapacity());
-        #$this->calculationResult['boats_remaining'] = floor($dominion->resource_boats - $this->calculationResult['boats_needed']);
 
         // Calculate total offense and defense
         $this->calculationResult['dp_multiplier'] = $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
@@ -177,7 +164,7 @@ class InvadeCalculationService
             $this->calculationResult['min_dp'] = $this->calculationResult['home_defense'];         
         }
 
-        if(isset($target) and $dominion->round->hasStarted() and !$this->protectionService->isUnderProtection($target))
+        if(isset($target) and $dominion->round->hasStarted() and $target->protection_ticks == 0)
         {
             $this->calculationResult['land_conquered'] = $this->militaryCalculator->getLandConquered($dominion, $target, $landRatio*100);
 

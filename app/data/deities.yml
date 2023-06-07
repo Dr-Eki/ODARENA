@@ -98,7 +98,6 @@ ix:
 
 kinthys:
   name: Kinthys
-  enabled: 0
   range_multiplier: 0.75
   exclusive_races:
     - Afflicted
@@ -162,7 +161,6 @@ urugdakh:
 
 zidur:
   name: Zidur
-  enabled: 0
   range_multiplier: 0.60
   exclusive_races:
     - Afflicted

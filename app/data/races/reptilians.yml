@@ -78,22 +78,21 @@ units:
     perks:
       counts_as_wizard: 0.25
 
-  # - name: Ancient One
-  #   training_time: 12
-  #   type:
-  #     - living
-  #     - sentient
-  #     - massive
-  #   cost:
-  #     gold: 100000
-  #     mana: 10000
-  #   power:
-  #     offense: 600
-  #     defense: 800
-  #   perks:
-  #     building_limit: shrine,3 # building, buildings per unit, imp to increased
-  #     casualties: -90
-  #     no_draftee: 1
+  - name: Ancient One
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - massive
+    cost:
+      gold: 20000 # 100,000 when unit was 600/800
+      mana: 1200 # 10,000 when unit was 600/800
+    power:
+      offense: 100
+      defense: 140
+    perks:
+      building_limit: monument,1 # building, buildings per unit, imp to increased
+      casualties: -90
 
   # - name: Eternal One
   #   training_time: 12

@@ -174,8 +174,11 @@ class UnitHelper
             'offense_vs_land' => 'Offense increased by 1 against every %2$s%% %1$ss of target (max +%3$s).',
             'defense_vs_land' => 'Defense increased by 1 for every %2$s%% %1$ss of attacker (max +%3$s).',
 
-            'defense_from_pairing' => 'Defense increased by %2$s when paired with %3$s %1$s at home.',
-            'offense_from_pairing' => 'Offense increased by %2$s when paired with %3$s %1$s on attack.',
+            'defense_from_pairing' => '%2$+g defensive power when paired with %3$s %1$s at home.',
+            'offense_from_pairing' => '%2$+g offensive power when paired with %3$s %1$s on attack.',
+
+            'defense_from_pairings' => '%2$+g defensive power when paired with %3$s %1$s at home.',
+            'offense_from_pairings' => '%2$+g offensive power when paired with %3$s %1$s on attack.',
 
             'defense_from_prestige' => 'Defense increased by 1 for every %1$s prestige (max +%2$s).',
             'offense_from_prestige' => 'Offense increased by 1 for every %1$s prestige (max +%2$s).',
@@ -630,6 +633,38 @@ class UnitHelper
                     $perkValue[1] = number_format($perkValue[1], 2);
 
                     #$perkValue = []
+                }
+
+
+                // Special case for pairings
+                if ($perk->key === 'defense_from_pairings' or
+                    $perk->key === 'offense_from_pairings'
+                    )
+                {
+
+                    $data = [];
+                    foreach ($perkValue as $index => $pairing)
+                    {
+                        $slot = (int)$pairing[0];
+                        $pairedUnitName = $race->units->filter(static function ($unit) use ($slot) {
+                            return ($unit->slot === $slot);
+                        })->first()->name;
+                        $power = (float)$pairing[1];
+
+                        if (isset($pairing[2]) && $pairing[2] > 0)
+                        {
+                            $unitsNeeded = $pairing[2];
+                            $pairedUnitName = str_plural($pairedUnitName);
+                        }
+                        else
+                        {
+                            $unitsNeeded = 1;
+                        }
+
+                        $data[$index] = [$pairedUnitName, $power, $unitsNeeded];
+                    }
+
+                    $perkValue = $data;
                 }
 
                 # 'Returns %1$s ticks faster from per %2$%% %3$s (rounds down).',

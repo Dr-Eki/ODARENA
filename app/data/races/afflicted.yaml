@@ -9,6 +9,7 @@ home_land_type: hill
 home_terrain: hills
 skill_level: 3
 magic_level: 3
+playable: 1
 
 draftees_alias: mourner
 

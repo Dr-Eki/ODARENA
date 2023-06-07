@@ -26,7 +26,6 @@ improvement_resources:
 
 perks:
   no_drafting: 1
-  #extra_barren_forest_max_population: 10
   cannot_exchange: 1
   cannot_train_spies: 1
   cannot_train_wizards: 1
