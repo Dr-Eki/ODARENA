@@ -139,6 +139,7 @@ tower:
 watermill:
   name: Watermill
   excluded_races:
+    - Afflicted
     - Demon
     - Elf
     - Reptilians
