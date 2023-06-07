@@ -57,6 +57,11 @@ class DesecrationService
                 throw new GameException('Invasions are disabled this round.');
             }
 
+            if(!$desecrator->race->getPerkValue('can_desecrate'))
+            {
+                throw new GameException('You cannot desecrate.');
+            }
+
             if($desecrator->protection_ticks > 0)
             {
                 throw new GameException('You cannot desecrate while under protection.');
