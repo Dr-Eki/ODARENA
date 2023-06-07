@@ -23,7 +23,7 @@ perks:
 
 units:
   - name: Desecrator
-    training_time: 0
+    training_time: 9
     type:
       - mindless
     cost:
