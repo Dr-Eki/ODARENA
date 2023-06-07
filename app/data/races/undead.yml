@@ -28,7 +28,7 @@ units:
       - mindless
     cost:
       gold: 500
-      draftee: 1
+      draftees: 1
     power:
       offense: 0
       defense: 3
@@ -79,7 +79,7 @@ units:
     cost:
       gold: 2000
       lumber: 1
-      wizard: 1
+      wizards: 1
     power:
       offense: 0
       defense: 0
