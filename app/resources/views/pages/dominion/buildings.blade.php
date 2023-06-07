@@ -16,7 +16,7 @@
 
                     <small class="pull-right text-muted">
                         <span data-toggle="tooltip" data-placement="top" title="
-                        <small class='text-muted'>Buildings afforded:</small> {{ $constructionCalculator->getMaxAfford($selectedDominion) }}">Barren</span>: {{ $landCalculator->getTotalBarrenLand($selectedDominion) }}
+                        <small class='text-muted'>Buildings afforded:</small> {{ number_format($constructionCalculator->getMaxAfford($selectedDominion)) }}">Barren</span>: {{ number_format($landCalculator->getTotalBarrenLand($selectedDominion)) }}
                     </small>
                 </div>           
                 <div class="box-body">
