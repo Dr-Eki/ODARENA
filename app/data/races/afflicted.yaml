@@ -5,6 +5,7 @@ description: >-
   <p>A dominion affected by Pestilence will spread <strong>Lesser Pestilence</strong> to any dominion it invades or invaded by.</p>
   <p>If the invasion is successful, a malady known only as <strong>Great Fever</strong> will also befall the defender.</p>
   <p>Anyone invading the Afflicted will bring back with them a terrible disease called <strong>Festering Wounds</strong>.</p>
+  <p>See alsoo <a href="general#desecration">Desecration</a>.</p>
 home_land_type: hill
 home_terrain: hills
 skill_level: 3

@@ -12,6 +12,7 @@
                 <li><a class="btn btn-block" href="#community">Community</a></li>
                 <li><a class="btn btn-block" href="#conversions">Conversions</a></li>
                 <li><a class="btn btn-block" href="#crypt">Crypt</a></li>
+                <li><a class="btn btn-block" href="#desecration">Desecration</a></li>
                 <li><a class="btn btn-block" href="#expeditions">Expeditions</a></li>
                 <li><a class="btn btn-block" href="#governor">Governor</a></li>
                 <li><a class="btn btn-block" href="#morale">Morale</a></li>
@@ -213,6 +214,30 @@
 
                 <p>Bodies in the crypt decay at a rate of 1% per tick.</p>
 
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-12 col-md-12">
+        <a id="desecration"></a>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title">Desecration</h2>
+            </div>
+            <div class="box-body">
+                <p>During invasions, dead bodies are left or buried on the battlefield. Only convertible units count (see <a href="#conversions">Conversions</a>).</p>
+                <p>The number of bodies left behind from such units is:</p>
+                <p><b>Normal Invasions</b></p>
+                <p><code>[Defender Lost Units] + [Attacker Lost Units]</code></p>
+                <p>If the invasion was successful, <code>[Attacker Lost Units]</code> is reduced by 50%. If the invasion was not successful, <code>[Defender Lost Units]</code> is reduced by 50%.</p>
+                <p><b>Barbarian Invasions</b></p>
+                <p><code>([Barbarian Units Lost] / 10) + [Land Gained]</code></p>
+                <p>Units which were converted into other units, die into other units, or from whom certain resources (currently only applicable to conversions into bodies) are extracted through resource conversion do not leave a body behind.</p>
+                <p>To desecrate, click the Desecration menu item. From this page, select the battlefield you wish to desecrate, specify how many units to send, and click Desecrate.</p>
+                <p>Standard return from desecration takes 12 ticks. However, if the battle was an invasion won by or an invasion fended off by someone in the same realm as the desecrator, return is two ticks.</p>
+                <p>Battlefields as old as 384 ticks can be desecrated.</p>
+                <p>The same battlefield can be desecrated several times.</p>
+                <p>No range limits apply to desecration.</p>
             </div>
         </div>
     </div>
