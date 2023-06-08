@@ -85,7 +85,7 @@
                                                     $spanClass = ($currentAmount >= $protected ? 'text-red' : 'text-green');
                                                 @endphp
                                                 <span class="text-muted">
-                                                    <span class="{{ $spenClass }}" data-toggle="tooltip" data-placement="top" title="Amount protected from theft">{{ number_format($consumption) }}</span>
+                                                    <span class="{{ $spanClass }}" data-toggle="tooltip" data-placement="top" title="Amount protected from theft">{{ number_format($consumption) }}</span>
                                                 </span>
                                             @else
                                                 0
