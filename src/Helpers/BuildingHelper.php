@@ -135,7 +135,7 @@ class BuildingHelper
 
             'resource_conversion' => 'Converts %1$s %2$s into %3$s %4$s per tick.',
             'peasants_conversion' => 'Converts %1$s peasants into %2$s %3$s per tick.',
-            'peasants_conversions' => 'Converts %1$s of your peasants into %2$s each per tick.',
+            'peasants_conversions' => 'Converts %1$s of your peasants into %2$s per tick.',
 
             'gold_production_depleting_raw' => 'Produces %1$s gold per tick (reduced by %2$s per tick of the round down to 0).',
             'food_production_depleting_raw' => 'Produces %1$s food per tick (reduced by %2$s per tick of the round down to 0).',

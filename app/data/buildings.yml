@@ -217,7 +217,7 @@ pit:
   exclusive_races:
     - Afflicted
   perks:
-    afflicted_unit1_housing: 200
+    afflicted_unit_housing: 1,200 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
     housing: 0
 
 residence:
