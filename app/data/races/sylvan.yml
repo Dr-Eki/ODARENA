@@ -1,6 +1,6 @@
 name: Sylvan
 alignment: good
-description:
+description: Saplings can be stored in the forest. Each acre of forest can store up to 2 saplings. Additionally, saplings can be stored in Mana Trees in greater numbers.
 home_land_type: forest
 home_terrain: forest
 playable: 1
@@ -31,6 +31,8 @@ perks:
   cannot_train_wizards: 1
   cannot_train_archmages: 1
   unemployed_peasants_produce: 1
+  #sapling_decay: 0.1
+  saplings_per_forest: 2
 
 units:
   - name: Leshy

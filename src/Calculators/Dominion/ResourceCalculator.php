@@ -711,6 +711,12 @@ class ResourceCalculator
             $maxStorage += $dominion->getBuildingPerkValue('gunpowder_storage_raw');
         }
 
+        if($resourceKey == 'sapling')
+        {
+            $maxStorage = $dominion->terrain_forest * $dominion->race->getPerkValue('saplings_per_forest');
+            $maxStorage =+ $dominion->getBuildingPerkValue('sapling_storage_raw');
+        }
+
         $multiplier = 1;
 
         // Improvements
@@ -733,12 +739,10 @@ class ResourceCalculator
     # To be fixed later
     public function hasMaxStorage(Dominion $dominion, string $resourceKey): bool
     {
-        if($resourceKey == 'gunpowder')
-        {
-            return true;
-        }
 
-        return false;
+        $resourcesWithMaxStorage = ['gunpowder', 'sapling'];
+
+        return in_array($resourceKey, $resourcesWithMaxStorage);
     }
 
 }

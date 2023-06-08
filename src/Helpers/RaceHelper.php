@@ -119,6 +119,12 @@ class RaceHelper
                 $booleanValue = 'static';
                 $valueType = '%';
                 break;
+            case 'sapling_decay':
+                $negativeBenefit = false;
+                $description = 'Sapling decay per tick';
+                $booleanValue = 'static';
+                $valueType = '%';
+                break;
             case 'food_production_mod':
                 $negativeBenefit = false;
                 $description = 'Food production';
@@ -423,26 +429,6 @@ class RaceHelper
                 $description = 'Morale changes on invasion';
                 $valueType = '% (gains and losses)';
                 break;
-            case 'cannot_build_homes':
-                $negativeBenefit = true;
-                $description = 'Cannot build Homes';
-                $booleanValue = true;
-                break;
-            case 'cannot_build_barracks':
-                $negativeBenefit = true;
-                $description = 'Cannot build Barracks';
-                $booleanValue = true;
-                break;
-            case 'cannot_build_wizard_guilds':
-                $negativeBenefit = true;
-                $description = 'Cannot build Wizard Guilds';
-                $booleanValue = true;
-                break;
-            case 'cannot_build_forest_havens':
-                $negativeBenefit = true;
-                $description = 'Cannot build Forest Havens';
-                $booleanValue = true;
-                break;
             case 'improvements_max':
                 $negativeBenefit = false;
                 $description = 'Improvement bonuses max';
@@ -718,6 +704,11 @@ class RaceHelper
             case 'can_invade_at_any_morale':
                 $negativeBenefit = false;
                 $description = 'Can invade regardless of morale';
+                $booleanValue = true;
+                break;
+            case 'saplings_per_forest':
+                $negativeBenefit = false;
+                $description = 'Saplings stored per acre of forest';
                 $booleanValue = true;
                 break;
             default:

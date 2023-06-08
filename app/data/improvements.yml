@@ -120,6 +120,7 @@ nurture:
   perks:
     construction_cost: -40,4800
     land_discovered: 30,4800
+    sapling_max_storage: 20,4800
 
 rage:
   name: Rage
@@ -150,6 +151,7 @@ resilience:
 
 bashing:
   name: Bashing
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -157,6 +159,7 @@ bashing:
 
 building:
   name: Building
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -165,6 +168,7 @@ building:
 
 fighting:
   name: Fighting
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -173,6 +177,7 @@ fighting:
 
 glimmering:
   name: Glimmering
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -180,6 +185,7 @@ glimmering:
 
 hunting:
   name: Hunting
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -187,6 +193,7 @@ hunting:
 
 muttering:
   name: Muttering
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -197,6 +204,7 @@ muttering:
 
 nesting:
   name: Nesting
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -204,6 +212,7 @@ nesting:
 
 rock_throwing:
   name: Rock Throwing
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -211,6 +220,7 @@ rock_throwing:
 
 smashing:
   name: Smashing
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -218,6 +228,7 @@ smashing:
 
 sneaking:
   name: Sneaking
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -227,6 +238,7 @@ sneaking:
 
 trampling:
   name: Trampling
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -234,6 +246,7 @@ trampling:
 
 training:
   name: Training
+  enabled: 0
   exclusive_races:
     - Troll
   perks:
@@ -242,6 +255,7 @@ training:
 
 uprooting:
   name: Uprooting
+  enabled: 0
   exclusive_races:
     - Troll
   perks:

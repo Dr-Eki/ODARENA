@@ -792,6 +792,7 @@ class Dominion extends AbstractModel
                     'obsidian_production_raw',
                 
                     'gunpowder_storage_raw',
+                    'sapling_storage_raw',
                 
                     'gold_upkeep_raw',
                     'food_upkeep_raw',

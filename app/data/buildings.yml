@@ -433,6 +433,7 @@ mana_tree:
     - Sylvan
   perks:
     mana_production_raw: 30
+    sapling_storage_raw: 4
 
 meadow:
   name: Meadow

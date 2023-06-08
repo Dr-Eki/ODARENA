@@ -154,6 +154,7 @@ class BuildingHelper
             'thunderstone_production_raw_random' => '%1$s%% chance to discover a thunderstone.',
 
             'gunpowder_storage_raw' => '%g gunpowder storage.',
+            'sapling_storage_raw' => '%g sapling storage.',
 
             'ore_production_raw_from_prisoner' => 'Produces %1$s ore per tick per prisoner up to a maximum of %2$s prisoners.',
             'gold_production_raw_from_prisoner' => 'Produces %1$s gold per tick per prisoner up to a maximum of %2$s prisoners.',
