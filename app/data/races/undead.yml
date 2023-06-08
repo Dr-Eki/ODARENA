@@ -77,11 +77,11 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 2000
+      gold: 1500
       lumber: 1
       wizards: 1
     power:
       offense: 0
-      defense: 0
+      defense: 6
     perks:
       counts_as_wizard: 2
