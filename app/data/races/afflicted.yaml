@@ -60,7 +60,7 @@ units:
     cost:
       gold: 300
       food: 10
-      peasants: 1
+      peasant: 1
     power:
       offense: 0
       defense: 3
