@@ -31,7 +31,6 @@ perks:
   cannot_train_wizards: 1
   cannot_train_archmages: 1
   unemployed_peasants_produce: 1
-  #sapling_decay: 0.1
   saplings_per_forest: 2
 
 units:
