@@ -149,7 +149,7 @@
                     <div class="pull-right">
 
                       @if(!$selectedDominion->race->getPerkValue('no_drafting'))
-                          You have <strong>{{ number_format($selectedDominion->military_draftees) }}</strong> {{ ucwords(str_plural($raceHelper->getDrafteesTerm($selectedDominion->race), $selectedDominion->military_draftees)) }} available.
+                          {{ ucwords(str_plural($raceHelper->getDrafteesTerm($selectedDominion->race), $selectedDominion->military_draftees)) }}: <strong>{{ number_format($selectedDominion->military_draftees) }}</strong> 
                       @endif
 
                       @if ($dominionHelper->isEnraged($selectedDominion))
