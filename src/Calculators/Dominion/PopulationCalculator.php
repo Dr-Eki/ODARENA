@@ -485,9 +485,7 @@ class PopulationCalculator
     }
 
     /*
-    *   Calculate how many units live in Barracks.
-    *   Units start to live in barracks as soon as their military training begins.
-    *   Spy and wiz units prefer to live in FHs or WGs, and will only live in Barracks if FH/WG are full or unavailable.
+    *   Calculate how many units live in attribute specific housing.
     */
     public function getUnitsHousedInUnitAttributeSpecificBuildings(Dominion $dominion): int
     {
