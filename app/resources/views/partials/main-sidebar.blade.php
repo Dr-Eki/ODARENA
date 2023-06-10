@@ -146,7 +146,11 @@
                             <ul class="collapse" id="realms">
                                 <li>&nbsp;<a href="{{ route('dominion.realm.all') }}">All</a></li>
                                 @foreach($selectedDominion->round->realms()->get() as $realm)
-                                    <li>&nbsp;<a href="{{ route('dominion.realm', $realm->number) }}">{{ $realmHelper->getAlignmentNoun($realm->alignment) }} (# {{ $realm->number }})</a></li>
+                                    @if(in_array($selectedDominion->round->mode, ['packs','packs-duration']))
+                                        <li>&nbsp;<a href="{{ route('dominion.realm', $realm->number) }}">{{ $realmHelper->getRealmPackName($realm) }} (# {{ $realm->number }})</a></li>
+                                    @else
+                                        <li>&nbsp;<a href="{{ route('dominion.realm', $realm->number) }}">{{ $realmHelper->getAlignmentNoun($realm->alignment) }} (# {{ $realm->number }})</a></li>
+                                    @endif
                                 @endforeach
                             </ul>
                         </span>
@@ -170,7 +174,19 @@
                     {!! $councilUnreadCount > 0 ? ('<span class="pull-right-container"><small class="label pull-right bg-green">' . $councilUnreadCount . '</small></span>') : null !!}</a>
                 </li>
 
-                <li class="{{ Route::is('dominion.notes') ? 'active' : null }}"><a href="{{ route('dominion.notes') }}"><i class="ra ra-quill-ink ra-fw"></i> <span>Notes</span></a></li>
+                <li class="{{ Route::is('dominion.notes') ? 'active' : null }}">
+                    <a href="{{ route('dominion.notes') }}">
+                        <i class="ra ra-quill-ink ra-fw"></i>Notes
+                    </a>
+                </li>
+
+                @if($selectedDominion->pack)
+                    <li class="{{ Route::is('dominion.pack') ? 'active' : null }}">
+                        <a href="{{ route('dominion.pack') }}">
+                            <i class="ra ra-double-team ra-fw"></i>Pack
+                        </a>
+                    </li>
+                @endif
 
                 {{--
                 <li class="{{ Route::is('dominion.calculations') ? 'active' : null }}">

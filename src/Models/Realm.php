@@ -45,25 +45,6 @@ class Realm extends AbstractModel
         return $this->hasMany(Realm\History::class);
     }
 
-    public function infoOps()
-    {
-        return $this->hasMany(InfoOp::class, 'source_realm_id');
-    }
-
-    public function infoOpTargetDominions()
-    {
-        return $this->hasManyThrough(
-            Dominion::class,
-            InfoOp::class,
-            'source_realm_id',
-            'id',
-            null,
-            'target_dominion_id'
-        )
-            ->groupBy('target_dominion_id')
-            ->orderBy('info_ops.created_at', 'desc');
-    }
-
     public function monarch()
     {
         return $this->hasOne(Dominion::class, 'id', 'monarch_dominion_id');
@@ -79,14 +60,9 @@ class Realm extends AbstractModel
         return $this->belongsTo(Round::class);
     }
 
-    public function warRealm()
+    public function pack()
     {
-        return $this->belongsTo(self::class, 'war_realm_id');
-    }
-
-    public function warRealms()
-    {
-        return $this->hasMany(self::class, 'war_realm_id');
+        return $this->hasOne(Pack::class);
     }
 
     # Allies are realms with which this dominion has a RealmAlliance or other realms that have a RealmAlliance with this realm

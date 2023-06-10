@@ -179,6 +179,11 @@ class RoundOpenCommand extends Command implements CommandInterface
                     $this->realmFactory->create($round, $race->key);
                 }
             }
+            elseif($gameMode == 'packs' or $gameMode == 'packs-duration')
+            {
+                $this->info("Creating NPC realm...");
+                $this->realmFactory->create($round, 'npc');
+            }
 
             if($round->getSetting('barbarians'))
             {
@@ -199,7 +204,6 @@ class RoundOpenCommand extends Command implements CommandInterface
             else
             {
                 $this->info('Barbarians are disabled for this round.');
-                dd();
             }
 
             // Done!

@@ -26,21 +26,24 @@
                             @case('players')
                                 Players
                                 @break
+                            @case('pack')
+                                Pack
+                                @break
                             @default
                                 {{ ucwords($realm->alignment) }}
                                 @break
                         @endswitch
 
                         @if($realm->alignment == 'good')
-                        Commonwealth
+                            Commonwealth
                         @elseif($realm->alignment == 'evil')
-                        Empire
+                            Empire
                         @elseif($realm->alignment == 'independent')
-                        Independent Realm
+                            Independent Realm
                         @elseif($realm->alignment == 'npc')
-                        Barbarian Horde
+                            Barbarian Horde
                         @elseif($realm->alignment == 'npc')
-                        Barbarian Horde
+                            Barbarian Horde
                         @endif
 
                     @else

@@ -75,6 +75,12 @@
                                     <input type="checkbox" name="no_multis" required> <span class="label label-danger">Special rule:</span> This is deathmatch round and clause 3.2 of the Terms and Conditions does not apply. No multis are allowed this round.
                                 </label>
                             </div>
+                        @elseif($round->mode == 'packs' or $round->mode == 'packs-duration')
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="one_pack" required> <span class="label label-danger">Special rule:</span> This is packs round and clause 3.2 of the Terms and Conditions is slightly modified: you can play multis must they all be in the same pack.
+                                </label>
+                            </div>
                         @elseif($round->mode == 'artefacts')
                         <div class="checkbox">
                             <label>

@@ -72,6 +72,18 @@ class RealmHelper
         return 'Council';
     }
 
+    public function getRealmPackName($realm): string
+    {
+        if(!in_array($realm->round->mode,['packs', 'packs-duration']) or $realm->alignment == 'npc')
+        {
+            return $this->getAlignmentAdjective($realm->alignment);
+        }
+
+        $user = $realm->pack->user;
+
+        return $user->display_name . ($user->display_name[strlen($user->display_name) - 1] == 's' ? "'" : "'s" ) . ' Pack';
+    }
+
     public function getDominionHelpString(Dominion $dominion, Dominion $viewer): string
     {
         $isViewerFriendly = ($dominion->realm->id == $viewer->realm->id);

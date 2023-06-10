@@ -58,8 +58,7 @@
                                 <a href="/dominion/realm/2"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[2] }}">Players</span></a>
                             @endif
                         </div>
-                    @elseif($selectedDominion->round->mode == 'factions' or $selectedDominion->round->mode == 'factions-duration')
-
+                    @elseif(in_array($selectedDominion->round->mode, ['factions','factions-duration','packs','packs-duration']))
                         @foreach($selectedDominion->round->realms as $roundRealm)
                             <div class="col-sm-{{ round(12 / count($selectedDominion->round->realms)) }} text-center">
                                 @php

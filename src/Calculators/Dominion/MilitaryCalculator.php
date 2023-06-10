@@ -2581,16 +2581,16 @@ class MilitaryCalculator
             #$multiplier += $dominion->getSpellPerkMultiplier('offensive_power');
             
             # Retaliation spells (only vs. self in deathmatches)
-            if($dominion->round->mode == 'standard' or $dominion->round->mode == 'standard-duration' or $dominion->round->mode == 'artefacts')
+            if($dominion->round->mode == 'deathmatch' or $dominion->round->mode == 'deathmatch-duration')
             {
-                if ($this->isOwnRealmRecentlyInvadedByTarget($dominion, $target))
+                if ($this->isSelfRecentlyInvadedByTarget($dominion, $target))
                 {
                     $multiplier += $dominion->getSpellPerkMultiplier('offensive_power_on_retaliation');
                 }
             }
-            elseif($dominion->round->mode == 'deathmatch' or $dominion->round->mode == 'deathmatch-duration')
+            else
             {
-                if ($this->isSelfRecentlyInvadedByTarget($dominion, $target))
+                if ($this->isOwnRealmRecentlyInvadedByTarget($dominion, $target))
                 {
                     $multiplier += $dominion->getSpellPerkMultiplier('offensive_power_on_retaliation');
                 }

@@ -41,7 +41,7 @@ class RoundFactory
 
         $endTick = NULL;
 
-        if(in_array($gameMode, ['standard-duration', 'deathmatch-duration', 'factions-duration']))
+        if(in_array($gameMode, ['standard-duration', 'deathmatch-duration', 'factions-duration', 'packs-duration']))
         {
             $endTick = $goal;
         }
@@ -69,7 +69,6 @@ class RoundFactory
      */
     protected function getLastRoundNumber(): int
     {
-        $round = Round::query()->max('number');
-        return $round ? $round : 0;
+        return Round::query()->max('number') ?? 0;
     }
 }

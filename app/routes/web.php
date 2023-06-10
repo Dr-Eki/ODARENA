@@ -60,6 +60,10 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
     $router->get('round/{round}/register')->uses('RoundController@getRegister')->name('round.register');
     $router->post('round/{round}/register')->uses('RoundController@postRegister');
 
+    // Round Create Pack
+    $router->get('round/{round}/create-pack')->uses('RoundController@getCreatePack')->name('round.create-pack');
+    $router->post('round/{round}/create-pack')->uses('RoundController@postCreatePack');
+
 
     $router->get('round/{round}/quickstart')->uses('RoundController@getQuickstart')->name('round.quickstart');
     $router->post('round/{round}/quickstart')->uses('RoundController@postQuickstart');
@@ -230,6 +234,10 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             // Notes
             $router->get('notes')->uses('Dominion\NotesController@getNotes')->name('notes');
             $router->post('notes')->uses('Dominion\NotesController@postNotes');
+
+            // Notes
+            $router->get('pack')->uses('Dominion\PackController@getPack')->name('pack');
+            $router->post('pack')->uses('Dominion\PackController@postPack');
 
             // Quickstart
             $router->get('quickstart')->uses('Dominion\QuickstartController@getQuickstart')->name('quickstart');

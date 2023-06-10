@@ -2,10 +2,7 @@
 
 namespace OpenDominion\Calculators\Dominion;
 
-use OpenDominion\Helpers\BuildingHelper;
-use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RaceHelper;
-use OpenDominion\Helpers\UnitHelper;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\StatsService;
@@ -16,22 +13,38 @@ class PopulationCalculator
     /** @var bool */
     protected $forTick = false;
 
+    /** @var LandCalculator */
+    protected $landCalculator;
+
+    /** @var MilitaryCalculator */
+    protected $militaryCalculator;
+
+    /** @var PrestigeCalculator */
+    protected $prestigeCalculator;
+
+    /** @var QueueService */
+    protected $queueService;
+
+    /** @var RaceHelper */
+    protected $raceHelper;
+
+    /** @var SpellCalculator */
+    protected $spellCalculator;
+
+    /** @var StatsService */
+    protected $statsService;
+
     /*
      * PopulationCalculator constructor.
      */
     public function __construct() {
-          $this->buildingHelper = app(BuildingHelper::class);
-          $this->improvementCalculator = app(ImprovementCalculator::class);
           $this->landCalculator = app(LandCalculator::class);
-          $this->landHelper = app(LandHelper::class);
-          $this->landImprovementCalculator = app(LandImprovementCalculator::class);
           $this->militaryCalculator = app(MilitaryCalculator::class);
           $this->prestigeCalculator = app(PrestigeCalculator::class);
           $this->queueService = app(QueueService::class);
           $this->raceHelper = app(RaceHelper::class);
           $this->spellCalculator = app(SpellCalculator::class);
           $this->statsService = app(StatsService::class);
-          $this->unitHelper = app(UnitHelper::class);
     }
 
     /**

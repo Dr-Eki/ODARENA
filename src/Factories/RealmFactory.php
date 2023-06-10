@@ -5,6 +5,7 @@ namespace OpenDominion\Factories;
 #use Atrox\Haikunator;
 use DB;
 use LogicException;
+use OpenDominion\Models\Pack;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
@@ -20,7 +21,7 @@ class RealmFactory
      * @return Realm
      * @throws LogicException
      */
-    public function create(Round $round, ?string $alignment = null, ?Pack $pack = null): Realm
+    public function create(Round $round, ?string $alignment = null, Pack $pack = null): Realm
     {
         $results = DB::table('realms')
             ->select(DB::raw('MAX(realms.number) AS max_realm_number'))
@@ -40,6 +41,7 @@ class RealmFactory
             'evil' => 'The Empire',
             'independent' => 'The Independent',
             'players' => 'The Players',
+            'pack' => 'Pack',
         ];
 
         foreach(Race::where('playable',1)->get() as $race)
@@ -48,6 +50,7 @@ class RealmFactory
         }
 
         $realmName = $defaultRealmName[$alignment];
+
 
         $realm = Realm::create([
             'round_id' => $round->id,

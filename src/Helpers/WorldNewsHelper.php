@@ -350,7 +350,7 @@ class WorldNewsHelper
         $round = $countdown->round;
         $trigger = $countdown->source;
 
-        if(in_array($round->mode, ['standard-duration', 'deathmatch-duration', 'factions-duration']))
+        if(in_array($round->mode, ['standard-duration', 'deathmatch-duration', 'factions-duration', 'packs-duration']))
         {
             return sprintf(
                 '<span class="%s">%s</span> has reached %s %s and triggered the the countdown! The round ends in 48 ticks.',
@@ -361,7 +361,7 @@ class WorldNewsHelper
             );
         }
 
-        if(in_array($round->mode, ['standard', 'deathmatch','factions']))
+        if(in_array($round->mode, ['standard', 'deathmatch','factions','packs']))
         {
             return sprintf(
                 '<span class="%s">%s</span> has reached %s %s and triggered the the countdown! The round ends in 48 ticks, at tick %s.',

@@ -21,11 +21,8 @@ class PackService
      * @return Pack
      * @throws GameException
      */
-    public function createPack(Dominion $dominion, string $packName, string $packPassword, int $packSize): Pack
+    public function createPack(Dominion $dominion, string $packName, string $packPassword): Pack
     {
-        if (($packSize < 2) || ($packSize > $dominion->round->pack_size)) {
-            throw new GameException("Pack size must be between 2 and {$dominion->round->pack_size}.");
-        }
 
         // todo: check if pack already exists with same name and password, and
         // throw exception if that's the case
@@ -35,8 +32,7 @@ class PackService
             'realm_id' => $dominion->realm->id,
             'creator_dominion_id' => $dominion->id,
             'name' => $packName,
-            'password' => $packPassword,
-            'size' => $packSize,
+            'password' => $packPassword
         ]);
 
         // todo: set $dominion->pack_id = $pack->id here?
@@ -89,22 +85,6 @@ class PackService
 
         if (!$pack) {
             throw new GameException('Pack with specified name/password was not found.');
-        }
-
-        if ($pack->dominions_count >= $pack->size) {
-            throw new GameException('Pack is already full.');
-        }
-
-        if (((int)$round->players_per_race !== 0) && ($pack->players_with_race >= $round->players_per_race)) {
-            throw new GameException('Selected race has already been selected by the maximum amount of players.');
-        }
-
-        if (!$round->mixed_alignment && ($pack->realm->alignment !== $race->alignment)) {
-            throw new GameException(sprintf(
-                'Selected race has wrong alignment to the rest of pack. Pack requires %s %s aligned race.',
-                (($pack->realm->alignment === 'evil') ? 'an' : 'a'),
-                $pack->realm->alignment
-            ));
         }
 
         return $pack;

@@ -390,7 +390,7 @@ burrow:
   exclusive_races:
     - Swarm
   perks:
-    housing: 28
+    housing: 30
     jobs: 0
 
 nest:
@@ -398,7 +398,7 @@ nest:
   exclusive_races:
     - Swarm
   perks:
-    military_housing: 34
+    military_housing: 36
     housing: 0
     jobs: 0
 

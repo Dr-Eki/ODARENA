@@ -196,7 +196,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'peasants_production' => object_get($data, 'peasants_production', ['gold' => 3]),
                     'peasants_alias' => object_get($data, 'peasants_alias', null),
                     'draftees_alias' => object_get($data, 'draftees_alias', null),
-                    'round_modes' => object_get($data, 'round_modes', ['standard', 'standard-duration','deathmatch','deathmatch-duration','factions','factions-duration']),
+                    'round_modes' => object_get($data, 'round_modes', ['standard', 'standard-duration','deathmatch','deathmatch-duration','factions','factions-duration','packs','packs-duration']),
 
                     'spies_cost' => object_get($data, 'spies_cost', '500,gold'),
                     'wizards_cost' => object_get($data, 'wizards_cost', '500,gold'),

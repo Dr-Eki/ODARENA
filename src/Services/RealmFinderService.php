@@ -3,13 +3,14 @@
 namespace OpenDominion\Services;
 
 use OpenDominion\Factories\DominionFactory;
+use OpenDominion\Models\Pack;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 
 class RealmFinderService
 {
-    public function findRealm(Round $round, Race $race): Realm
+    public function findRealm(Round $round, Race $race, Pack $pack = null): Realm
     {
         if($round->mode == 'standard' or $round->mode == 'standard-duration' or $round->mode == 'artefacts')
         {
@@ -49,6 +50,19 @@ class RealmFinderService
                 ->where('round_id', '=', $round->id)
                 ->where('alignment', '=', $race->key)
                 ->first();
+        }
+
+        if($round->mode == 'packs' or $round->mode == 'packs-duration')
+        {
+            if($race->alignment == 'npc')
+            {
+                return Realm::query()
+                    ->where('round_id', '=', $round->id)
+                    ->where('alignment', '=', 'npc')
+                    ->first();
+            }
+
+            return $pack->realm;
         }
 
     }

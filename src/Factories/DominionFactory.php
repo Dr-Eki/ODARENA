@@ -90,7 +90,8 @@ class DominionFactory
         Race $race,
         Title $title,
         string $rulerName,
-        string $dominionName
+        string $dominionName,
+        Pack $pack = null
     ): Dominion {
         $this->guardAgainstCrossRoundRegistration($user, $realm->round);
         $this->guardAgainstMultipleDominionsInARound($user, $realm->round);
@@ -266,7 +267,7 @@ class DominionFactory
             'realm_id' => $realm->id,
             'race_id' => $race->id,
             'title_id' => $title->id,
-            'pack_id' => null,
+            'pack_id' => $pack ? $pack->id : null,
 
             'ruler_name' => $rulerName,
             'name' => $dominionName,
@@ -524,7 +525,8 @@ class DominionFactory
         Race $race,
         string $rulerName,
         string $dominionName,
-        Quickstart $quickstart
+        Quickstart $quickstart,
+        Pack $pack
     ): Dominion {
         $this->guardAgainstCrossRoundRegistration($user, $realm->round);
         $this->guardAgainstMultipleDominionsInARound($user, $realm->round);

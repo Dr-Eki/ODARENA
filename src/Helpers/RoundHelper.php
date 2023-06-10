@@ -22,7 +22,7 @@ class RoundHelper
 
     public function getRoundModes(): array
     {
-        return ['standard', 'standard-duration', 'deathmatch', 'deathmatch-duration', 'factions', 'factions-duration', 'artefacts'];
+        return ['standard', 'standard-duration', 'deathmatch', 'deathmatch-duration', 'factions', 'factions-duration', 'packs', 'packs-duration', 'artefacts'];
     }
 
     public function getRoundModeString(Round $round = null, string $roundModeKey = null, bool $detailed = false): string
@@ -49,6 +49,11 @@ class RoundHelper
                 $roundModeString = 'Deathmatch';
                 break;
 
+            case 'packs':
+            case 'packs-duration':
+                $roundModeString = 'Packs';
+                break;
+
             case 'artefacts':
                 $roundModeString = 'Artefacts';
                 break;
@@ -61,12 +66,14 @@ class RoundHelper
                 case 'standard':
                 case 'deathmatch':
                 case 'factions':
+                case 'packs':
                     $roundModeString .= ' (land target)';
                     break;
 
                 case 'standard-duration':
                 case 'deathmatch-duration':
                 case 'factions-duration':
+                case 'packs-duration':
                     $roundModeString .= ' (fixed duration)';
                     break;
         
@@ -90,11 +97,13 @@ class RoundHelper
             case 'standard':
             case 'deathmatch':
             case 'factions':
+            case 'packs':
                     return 'land';
 
             case 'deathmatch-duration':
             case 'standard-duration':
             case 'factions-duration':
+            case 'packs-duration':
                 return 'ticks';
 
             case 'artefacts':
@@ -127,6 +136,10 @@ class RoundHelper
             case 'factions-duration':
                 return 'Dominions of the same factions fight against all other dominions.';
 
+            case 'packs':
+            case 'packs-duration':
+                return 'Leaders form packs which can consist of any number of dominions of almost any combination of factions. These rounds are non-cannon.';
+
             case 'artefacts':
                 return 'Your dominion is in a realm with friendly dominions and the goal is to be the first realm to capture at least the required number of artefacts.';
         }
@@ -149,6 +162,10 @@ class RoundHelper
             case 'factions':
             case 'factions-duration':
                 return '<i class="ra ra-crossed-swords ra-fw text-purple"></i>';
+
+            case 'packs':
+            case 'packs-duration':
+                return '<i class="ra ra-double-team ra-fw text-blue"></i>';
 
             case 'artefacts':
                 return '<i class="ra ra-alien-fire text-orange"></i>';
@@ -245,7 +262,7 @@ class RoundHelper
     {
         $races = Race::all()->where('playable', true);
 
-        if(!in_array(request()->getHost(), ['sim.odarena.com', 'odarena.local', 'odarena.virtual']))
+        if(env('APP_ENV') !== 'local')
         {
             # For each race, check if round->mode is in race->round_modes, remove if not.
             foreach($races as $key => $race)

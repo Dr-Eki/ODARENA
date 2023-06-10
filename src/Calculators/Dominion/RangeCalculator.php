@@ -172,7 +172,7 @@ class RangeCalculator
                 return (
 
                     # Not in the same realm (unless deathmatch round); and
-                    (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','factions','factions-duration']) ? ($dominion->realm->id !== $self->realm->id) : true) and
+                    (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','factions','factions-duration','packs','packs-duration']) ? ($dominion->realm->id !== $self->realm->id) : true) and
 
                     # Not self
                     ($dominion->id !== $self->id) and
@@ -212,7 +212,7 @@ class RangeCalculator
                 return (
 
                     # In the same realm (unless deathmatch round); and
-                    (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','factions','factions-duration']) ? ($dominion->realm->id == $self->realm->id) : false) and
+                    (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','factions','factions-duration','packs','packs-duration']) ? ($dominion->realm->id == $self->realm->id) : false) and
 
                     # Not self
                     ($dominion->id !== $self->id) and

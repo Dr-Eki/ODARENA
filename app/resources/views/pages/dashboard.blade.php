@@ -138,9 +138,9 @@
                                             <span data-toggle="tooltip" data-placement="top" title="Start: {{ $round->start_date }}.">
                                                 <span class="label label-danger">Starting Soon</span>
                                             </span><br>
-                                            @if($round->mode == 'standard' or $round->mode == 'deathmatch' or $round->mode == 'factions')
+                                            @if(in_array($round->mode, ['standard','deathmatch','factions','packs']))
                                                 <small class="text-muted">The round starts at {{ $round->start_date }}.<br>The target land size is {{ number_format($round->goal) }}.</small>
-                                            @elseif($round->mode == 'standard-duration' or $round->mode == 'deathmatch-duration' or $round->mode == 'factions-duration')
+                                            @elseif(in_array($round->mode, ['standard-duration','deathmatch-duration','factions-duration','packs-duration']))
                                                 <small class="text-muted">The round starts at {{ $round->start_date }}.<br>The round lasts for {{ number_format($round->goal) }} ticks.</small>
                                             @elseif($round->mode == 'artefacts')
                                                 <small class="text-muted">The round starts at {{ $round->start_date }}.<br>The round lasts until a realm holds {{ number_format($round->goal) }} artefacts.</small>

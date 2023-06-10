@@ -154,6 +154,11 @@ class RealmController extends AbstractDominionController
             $alignmentNoun = $race->name;
             $alignmentAdjective = $raceHelper->getRaceAdjective($race);
         }
+        elseif($realm->pack)
+        {
+            $alignmentNoun = $realmHelper->getRealmPackName($realm);
+            $alignmentAdjective = $alignmentNoun;
+        }
         else
         {
             $alignmentNoun = 'Unknown';

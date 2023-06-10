@@ -15,6 +15,7 @@ use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\TitleHelper;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Quickstart;
+use OpenDominion\Models\Pack;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
@@ -100,6 +101,9 @@ class RoundController extends AbstractController
             ->orderBy('name')
             ->get();
 
+        # Get packs for this round
+        $packs = Pack::where('round_id', $round->id)->get();
+
         return view('pages.round.register', [
             'raceHelper' => app(RaceHelper::class),
             'roundHelper' => app(RoundHelper::class),
@@ -111,6 +115,7 @@ class RoundController extends AbstractController
             'countTitles' => $countTitles,
             'titles' => $titles,
             'roundsPlayed' => $roundsPlayed,
+            'packs' => $packs,
             #'countEmpire' => $countEmpire,
             #'countCommonwealth' => $countCommonwealth,
             #'alignmentCounter' => $alignmentCounter,
@@ -163,6 +168,32 @@ class RoundController extends AbstractController
             'quickstart' => 'required|exists:quickstarts,id',
         ]);
 
+        $pack = null;
+        if(in_array($round->mode, ['packs','packs-duration']))
+        {
+            $this->validate($request, [
+                'pack' => 'required|exists:packs,id',
+                'pack_password' => 'required',
+            ]);
+
+            $pack = Pack::where('id', $request['pack'])->where('round_id', $round->id)->first();
+
+            if(!$pack)
+            {
+                return redirect()->back()
+                    ->withInput($request->all())
+                    ->withErrors(['The pack you selected does not exist.']);
+            }
+
+            # Check that passwords match
+            if($pack->password != $request['pack_password'])
+            {
+                return redirect()->back()
+                    ->withInput($request->all())
+                    ->withErrors(['The password you entered for the pack is incorrect.']);
+            }
+        }
+
         $quickstart = Quickstart::where('id', $request['quickstart'])->first();
 
         $race = $quickstart->race;
@@ -194,7 +225,7 @@ class RoundController extends AbstractController
                 ];
         
                 try {
-                    DB::transaction(function () use ($request, $round, &$realm, &$dominion, &$dominionName, $roundsPlayed, $countRaces, $eventData, $quickstart) {
+                    DB::transaction(function () use ($request, $round, &$realm, &$dominion, &$dominionName, $roundsPlayed, $countRaces, $eventData, $quickstart, $pack) {
                         $realmFinderService = app(RealmFinderService::class);
                         $realmFactory = app(RealmFactory::class);
         
@@ -235,7 +266,7 @@ class RoundController extends AbstractController
                             }
                         }
         
-                        $realm = $realmFinderService->findRealm($round, $race);
+                        $realm = $realmFinderService->findRealm($round, $race, $pack);
         
                         if (!$realm)
                         {
@@ -255,7 +286,8 @@ class RoundController extends AbstractController
                             $race,
                             ($request->get('ruler_name') ?: $user->display_name),
                             $dominionName,
-                            $quickstart
+                            $quickstart,
+                            $pack
                         );
         
                         $this->newDominionEvent = GameEvent::create([
@@ -371,6 +403,32 @@ class RoundController extends AbstractController
             ]);
         }
 
+        $pack = null;
+        if(in_array($round->mode, ['packs','packs-duration']))
+        {
+            $this->validate($request, [
+                'pack' => 'required|exists:packs,id',
+                'pack_password' => 'required',
+            ]);
+
+            $pack = Pack::where('id', $request['pack'])->where('round_id', $round->id)->first();
+
+            if(!$pack)
+            {
+                return redirect()->back()
+                    ->withInput($request->all())
+                    ->withErrors(['The pack you selected does not exist.']);
+            }
+
+            # Check that passwords match
+            if($pack->password != $request['pack_password'])
+            {
+                return redirect()->back()
+                    ->withInput($request->all())
+                    ->withErrors(['The password you entered for the pack is incorrect.']);
+            }
+        }
+
         if($request['ruler_name'] == Auth::user()->display_name)
         {
             $eventData['real_ruler_name'] = true;
@@ -400,7 +458,7 @@ class RoundController extends AbstractController
         $dominionName = null;
 
         try {
-            DB::transaction(function () use ($request, $round, &$realm, &$dominion, &$dominionName, $roundsPlayed, $countRaces, $eventData) {
+            DB::transaction(function () use ($request, $round, &$realm, &$dominion, &$dominionName, $roundsPlayed, $countRaces, $eventData, $pack) {
                 $realmFinderService = app(RealmFinderService::class);
                 $realmFactory = app(RealmFactory::class);
 
@@ -408,7 +466,6 @@ class RoundController extends AbstractController
                 $user = Auth::user();
                 $race = Race::findOrFail($request->get('race'));
                 $title = Title::findOrFail($request->get('title'));
-                $pack = null;
 
                 if (!$race->playable and $race->alignment !== 'npc')
                 {
@@ -436,12 +493,12 @@ class RoundController extends AbstractController
                     }
                 }
 
-                $realm = $realmFinderService->findRealm($round, $race);
+                $realm = $realmFinderService->findRealm($round, $race, $pack);
 
-                if (!$realm)
-                {
-                    $realm = $realmFactory->create($round, $race->alignment);
-                }
+                #if (!$realm)
+                #{
+                #    $realm = $realmFactory->create($round, $race->alignment);
+                #}
 
                 $dominionName = $request->get('dominion_name');
 
@@ -456,7 +513,8 @@ class RoundController extends AbstractController
                     $race,
                     $title,
                     ($request->get('ruler_name') ?: $user->display_name),
-                    $dominionName
+                    $dominionName,
+                    $pack
                 );
 
                 $this->newDominionEvent = GameEvent::create([
@@ -513,6 +571,63 @@ class RoundController extends AbstractController
         return redirect()->route('dominion.status');
     }
 
+    public function getCreatePack(Round $round)
+    {
+        try {
+            $this->guardAgainstUserAlreadyHavingDominionInRound($round);
+            $this->guardAgainstUserAlreadyHavingCreatedAPack($round);
+        } catch (GameException $e) {
+            return redirect()
+                ->route('round.register', $round)
+                ->withErrors([$e->getMessage()]);
+        }
+
+        return view('pages.round.create-pack', [
+            'roundHelper' => app(RoundHelper::class),
+            'round' => $round,
+            'user' => Auth::user(),
+        ]);
+    }
+
+    public function postCreatePack(Request $request, Round $round)
+    {
+        try {
+            $this->guardAgainstUserAlreadyHavingDominionInRound($round);
+            $this->guardAgainstUserAlreadyHavingCreatedAPack($round);
+        } catch (GameException $e) {
+            return redirect()
+                ->route('dashboard')
+                ->withErrors([$e->getMessage()]);
+        }
+
+        $password = $request->get('pack_password');
+
+        $request->session()->flash(
+            'alert-success',
+            ('Your pack has been created.')
+        );
+
+        $realmFactory = app(RealmFactory::class);
+
+        $user = Auth::user();
+
+        $realm = $realmFactory->create($round, 'pack');
+
+        Pack::create([
+            'round_id' => $round->id,
+            'user_id' => $user->id,
+            'realm_id' => $realm->id,
+            'password' => $password,
+        ]);
+
+        $realmName = $user->display_name . ($user->display_name[strlen($user->display_name) - 1] == 's' ? "'" : "'s" ) . ' Pack';
+        $realm->update([
+            'name' => $realmName,
+        ]);
+
+        return redirect()->route('round.register', $round);
+    }
+
     /**
      * Throws exception if logged in user already has a dominion a round.
      *
@@ -530,6 +645,24 @@ class RoundController extends AbstractController
 
         if (!$dominions->isEmpty()) {
             throw new GameException("You already have a dominion in round {$round->number}");
+        }
+    }
+
+    /**
+     * Throws exception if logged in user already has a pack this round.
+     *
+     * @param Round $round
+     * @throws GameException
+     */
+    protected function guardAgainstUserAlreadyHavingCreatedAPack(Round $round): void
+    {
+        $dominions = Pack::where([
+            'user_id' => Auth::user()->id,
+            'round_id' => $round->id,
+        ])->get();
+
+        if (!$dominions->isEmpty()) {
+            throw new GameException("You have already created a pack in round {$round->number}");
         }
     }
 

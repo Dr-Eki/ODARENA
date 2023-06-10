@@ -142,11 +142,6 @@ class ArtefactActionService
                 throw new GameException('Nice try, but you cannot invade cross-round.');
             }
 
-            if ($dominion->realm->id === $target->realm->id and ($dominion->round->mode == 'standard' or $dominion->round->mode == 'standard-duration'))
-            {
-                throw new GameException('You can only invade other dominions in the same realm in deathmatch rounds.');
-            }
-
             if ($dominion->id == $target->id)
             {
                 throw new GameException('Nice try, but you cannot invade yourself.');
