@@ -413,6 +413,7 @@ class RoundController extends AbstractController
 
             $pack = Pack::where('id', $request['pack'])->where('round_id', $round->id)->first();
 
+            # If no pack
             if(!$pack)
             {
                 return redirect()->back()
@@ -427,6 +428,18 @@ class RoundController extends AbstractController
                     ->withInput($request->all())
                     ->withErrors(['The password you entered for the pack is incorrect.']);
             }
+
+            # Check if user has created a pack and is joining another pack
+            $packs = Pack::where('user_id', Auth::user()->id)->where('round_id', $round->id)->get();
+
+            # Check if $packs contains $pack
+            if(!$packs->contains('id', $pack->id))
+            {
+                return redirect()->back()
+                    ->withInput($request->all())
+                    ->withErrors(['You cannot join another pack after you have already created a pack. Create a dominion in your own pack. If you wish to delete your pack, you can do so by deleting the pack from the Dashboard page, once there are zero dominions registered in the pack.']);
+            }
+
         }
 
         if($request['ruler_name'] == Auth::user()->display_name)
@@ -434,7 +447,6 @@ class RoundController extends AbstractController
             $eventData['real_ruler_name'] = true;
         }
         
-
         $roundsPlayed = DB::table('dominions')
                             ->where('dominions.user_id', '=', Auth::user()->id)
                             ->where('dominions.protection_ticks', '=', 0)
@@ -655,6 +667,24 @@ class RoundController extends AbstractController
      * @throws GameException
      */
     protected function guardAgainstUserAlreadyHavingCreatedAPack(Round $round): void
+    {
+        $dominions = Pack::where([
+            'user_id' => Auth::user()->id,
+            'round_id' => $round->id,
+        ])->get();
+
+        if (!$dominions->isEmpty()) {
+            throw new GameException("You have already created a pack in round {$round->number}");
+        }
+    }
+
+    /**
+     * Throws exception if logged in user already has a pack this round.
+     *
+     * @param Round $round
+     * @throws GameException
+     */
+    protected function guardAgainstUserHavingCreatedAPackButJoiningAnother(Round $round): void
     {
         $dominions = Pack::where([
             'user_id' => Auth::user()->id,

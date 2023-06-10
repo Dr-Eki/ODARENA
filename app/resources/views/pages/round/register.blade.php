@@ -193,7 +193,7 @@
                     <div class="form-group">
                         <label for="faction" class="col-sm-3 control-label">Password</label>
                         <div class="col-sm-6">
-                            <input type="password" name="pack_password" class="form-control" placeholder="Password" required>
+                            <input type="password" name="pack_password" class="form-control" placeholder="Enter pack password" required>
                         </div>
                     </div>
 

@@ -19,12 +19,12 @@
                     <colgroup>
                         <col width="60">
                         <col>
-                        <col width="180">
-                        <col width="150">
-                        <col width="120">
-                        <col width="120">
-                        <col width="120">
-                        <col width="120">
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
                     </colgroup>
                     <thead>
                         <tr>
@@ -99,7 +99,7 @@
                                 @if($roundService->hasUserDominionInRound($round))
 
                                     @if($round->hasEnded())
-                                        <span data-toggle="tooltip" data-placement="top" title="Start: {{ $round->start_date }}.<br>Registration: {{ $dominion->created_at }}.<br>Ended: {{ $round->end_date }}.">
+                                        <span data-toggle="tooltip" data-placement="top" title="Start: {{ $round->start_date }}.<br>Registration: {{ $dominion->created_at }}.">
                                             <span class="label label-info">Finished</span>
                                         </span>
                                     @endif
@@ -125,11 +125,11 @@
 
                                 @else
                                     @if($round->hasEnded() and $user->created_at <= $round->start_date)
-                                        <span data-toggle="tooltip" data-placement="top" title="Start: {{ $round->start_date }}.<br>Ended: {{ $round->end_date }}.">
+                                        <span data-toggle="tooltip" data-placement="top" title="Start: {{ $round->start_date }}.">
                                             <span class="label label-primary">Ended</span>
                                         </span>
                                     @elseif($round->hasEnded() and $user->created_at > $round->start_date)
-                                        <span data-toggle="tooltip" data-placement="top" title="Start: {{ $round->start_date }}.<br>Ended: {{ $round->end_date }}.<br>User registration date: {{ $user->created_at }}.">
+                                        <span data-toggle="tooltip" data-placement="top" title="Start: {{ $round->start_date }}.<br>User registration date: {{ $user->created_at }}.">
                                             <span class="label label-primary">User was not registered</span>
                                         </span>
                                     @elseif(!$round->hasEnded())
@@ -164,9 +164,41 @@
 
                             <td>
                                 @if($round->number >= 62 or in_array(request()->getHost(), ['sim.odarena.com', 'odarena.local', 'odarena.virtual']))
-                                <span data-toggle="tooltip" data-placement="top" title="{{ $roundHelper->getRoundModeDescription($round) }}">
-                                    {!! $roundHelper->getRoundModeIcon($round) !!} {{ $roundHelper->getRoundModeString($round) }}
-                                </span>
+                                    <span data-toggle="tooltip" data-placement="top" title="{{ $roundHelper->getRoundModeDescription($round) }}">
+                                        {!! $roundHelper->getRoundModeIcon($round) !!} {{ $roundHelper->getRoundModeString($round) }}
+                                    </span>
+
+                                    @if(in_array($round->mode, ['packs','packs-duration']))
+                                        @php
+                                            $userRoundPacks = $packService->getPacksCreatedByUserInRound($user, $round);
+                                        @endphp
+
+                                        @if(!$round->hasEnded() and $userRoundPacks->count() > 0)
+
+                                            <div class="col-sm-12">
+                                                @foreach($userRoundPacks as $pack)
+                                                    @php
+                                                        $canDelete = $packService->canDeletePack($user, $pack);
+                                                        $members = $pack->dominions->count();
+                                                    @endphp
+                                                        You are the Leader of a pack, which has {{ $members }} {{ str_plural('member', $members) }}.
+                                                        @if($canDelete)
+                                                            <form action="{{ route('dashboard.delete-pack', $pack) }}" method="post">
+                                                                @csrf
+                                                                <input type="hidden" name="pack_id" value="{{ $pack->id }}">
+                                                                <input type="hidden" name="action" value="delete">
+                                                                <button class="btn btn-xs btn-danger" type="submit"><i class="fa fa-trash"></i> Delete</button>
+                                                            </form>
+                                                        @else
+                                                            <span data-toggle="tooltip" data-placement="top" title="You cannot delete this pack because it has members.">
+                                                                <button class="btn btn-xs btn-danger" disabled><i class="fa fa-trash"></i> Delete</button>
+                                                            </span>
+                                                        @endif
+                                                    <br>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    @endif
                                 @else
                                     <span data-toggle="tooltip" data-placement="top" title="Game modes were introduced in Round 62.">
                                         &mdash;

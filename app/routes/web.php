@@ -47,6 +47,7 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
 
     // Dashboard
     $router->get('dashboard')->uses('DashboardController@getIndex')->name('dashboard');
+    $router->post('dashboard/delete-pack/{pack}')->uses('DashboardController@postDeletePack')->name('dashboard.delete-pack');
 
     // Settings
     $router->get('settings')->uses('SettingsController@getIndex')->name('settings');

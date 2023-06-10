@@ -6,7 +6,9 @@ use Auth;
 use Illuminate\Database\Eloquent\Collection;
 use LogicException;
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Pack;
 use OpenDominion\Models\Round;
+use OpenDominion\Models\User;
 use RuntimeException;
 use Session;
 
@@ -24,6 +26,11 @@ class RoundService
         $user = Auth::user();
 
         return Dominion::where('user_id', $user->id)->where('round_id', $round->id)->first();
+    }
+
+    public function getUserPackFromRound(User $user, Round $round)
+    {
+        return Dominion::where('round_id', $round->id)->get();
     }
 
 }

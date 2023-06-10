@@ -4,12 +4,12 @@ namespace OpenDominion\Http\Controllers;
 
 use Auth;
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Pack;
 use OpenDominion\Models\Round;
 use OpenDominion\Services\Dominion\RoundService;
 use OpenDominion\Services\Dominion\SelectorService;
+use OpenDominion\Services\PackService;
 
-#ODA
-use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Helpers\RoundHelper;
 
@@ -20,7 +20,6 @@ class DashboardController extends AbstractController
         $selectorService = app(SelectorService::class);
         $selectorService->tryAutoSelectDominionForAuthUser();
 
-        $landCalculator = app(LandCalculator::class);
         $networthCalculator = app(NetworthCalculator::class);
 
         $dominions = Dominion::with(['round', 'realm', 'race'])
@@ -35,8 +34,8 @@ class DashboardController extends AbstractController
         return view('pages.dashboard', [
             'dominions' => $dominions,
             'rounds' => $rounds,
-            'landCalculator' => $landCalculator,
             'networthCalculator' => $networthCalculator,
+            'packService' => app(PackService::class),
             'roundHelper' => app(RoundHelper::class),
             'user' => Auth::user(),
 
@@ -48,5 +47,18 @@ class DashboardController extends AbstractController
             'url_instagram' => 'https://instagram.com/OD_Arena',
             'url_twitter' => 'https://twitter.com/OD_Arena',
         ]);
+    }
+
+    public function postDeletePack(Pack $pack)
+    {
+        $packService = app(PackService::class);
+
+        if (!$packService->canDeletePack(Auth::user(), $pack)) {
+            return redirect()->back();
+        }
+
+        $pack->delete();
+
+        return redirect()->back();
     }
 }

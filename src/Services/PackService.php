@@ -2,15 +2,29 @@
 
 namespace OpenDominion\Services;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Pack;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Round;
+use OpenDominion\Models\User;
 
 class PackService
 {
+
+
+    public function canDeletePack(User $user, Pack $pack): bool
+    {
+        return ($user->id === $pack->user->id and $pack->dominions->count() === 0);
+    }
+
+    public function getPacksCreatedByUserInRound(User $user, Round $round): Collection
+    {
+        return $user->packs()->where('round_id', $round->id)->get();
+    }
+
     /**
      * Creates a new pack for a Dominion.
      *
