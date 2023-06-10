@@ -6,7 +6,6 @@ home_terrain: forest
 playable: 1
 skill_level: 2
 magic_level: 3
-experimental: 1
 
 resources:
   - gold
