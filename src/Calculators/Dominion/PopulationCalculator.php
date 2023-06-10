@@ -85,8 +85,9 @@ class PopulationCalculator
       $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_archmages');
 
       # Check each Unit for does_not_count_as_population perk.
-      for ($unitSlot = 1; $unitSlot <= $dominion->race->units->count(); $unitSlot++)
+      foreach($dominion->race->units as $unit)
       {
+            $unitSlot = $unit->slot;
           if (!$dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'does_not_count_as_population'))
           {
               $unitAmount = $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unitSlot);
@@ -294,6 +295,7 @@ class PopulationCalculator
             }
         }
 
+
         $multiplier = 1;
         $multiplier += $dominion->getImprovementPerkMultiplier('unit_specific_housing');
         $multiplier += $dominion->getDeityPerkMultiplier('unit_specific_housing');
@@ -447,23 +449,28 @@ class PopulationCalculator
             $slotUnits = 0;
             if($unitSpecificBuildingHousing = $dominion->getBuildingPerkValue($dominion->race->key . '_unit_housing'))
             {
-                if(!$dominion->race->getUnitPerkValueForUnitSlot($housedSlot, 'does_not_count_as_population'))
+                $perkUnitSlot = (int)key($unitSpecificBuildingHousing);
+                if(!$dominion->race->getUnitPerkValueForUnitSlot($housedSlot, 'does_not_count_as_population') and $housedSlot == $perkUnitSlot)
                 {
                     $slotUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $housedSlot);
                     $slotUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$housedSlot}");
                 }
 
-                $units += min($slotUnits, $this->getAvailableHousingFromUnitSpecificBuildings($dominion));
+                $units += min($slotUnits, $this->getAvailableHousingFromUnitSpecificBuildings($dominion, $housedSlot));
+
             }
         }
         else
         {
-            for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
+            foreach($dominion->race->units as $unit)
             {
+                $slot = $unit->slot;
                 $slotUnits = 0;
-                if($dominion->getBuildingPerkValue($dominion->race->key . '_unit_housing'))
+                if($unitSpecificBuildingHousing = $dominion->getBuildingPerkValue($dominion->race->key . '_unit_housing'))
                 {
-                    if(!$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population'))
+                    $perkUnitSlot = (int)key($unitSpecificBuildingHousing);
+
+                    if(!$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population') and $perkUnitSlot == $slot)
                     {
                         $slotUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
                         $slotUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
@@ -640,8 +647,9 @@ class PopulationCalculator
         // Racial Bonus
         $multiplier += $dominion->race->getPerkMultiplier('population_growth');
 
-        // Temples
+        // Buildings
         $multiplier += $dominion->getBuildingPerkMultiplier('population_growth');
+        $multiplier += $dominion->getBuildingPerkMultiplier('population_growth_capped');
 
         // Spells
         $multiplier += $dominion->getSpellPerkMultiplier('population_growth');
