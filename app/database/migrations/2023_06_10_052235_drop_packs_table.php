@@ -13,6 +13,10 @@ class DropPacksTable extends Migration
      */
     public function up()
     {
+        Schema::table('dominions', function (Blueprint $table) {
+            $table->dropForeign(['pack_id']);
+        });
+
         Schema::table('packs', function (Blueprint $table) {
             // Drop table if it exists
             Schema::dropIfExists('packs');
