@@ -14,7 +14,7 @@ class RemovePackIdFromDominions extends Migration
     public function up()
     {
         Schema::table('dominions', function (Blueprint $table) {
-            $table->dropForeign(['pack_id']);
+            #$table->dropForeign(['pack_id']);
             $table->dropColumn('pack_id');
         });
     }
