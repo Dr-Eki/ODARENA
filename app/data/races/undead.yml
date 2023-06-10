@@ -56,12 +56,12 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1000
-      mana: 560
+      gold: 985
+      mana: 460
       body: 1
     power:
       offense: 6
-      defense: 6
+      defense: 3
     perks:
       dies_into: 3
       increases_enemy_casualties_on_offense: 1
