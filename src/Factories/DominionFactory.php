@@ -149,6 +149,11 @@ class DominionFactory
 
         if($race->name !== 'Barbarian')
         {
+            foreach($race->resources as $resourceKey)
+            {
+                #$startingResources[$resourceKey] = 0;
+            }
+
             # Override rulername choice
             $rulerName = Auth::user()->display_name;
 
@@ -208,7 +213,7 @@ class DominionFactory
 
             if($race->name == 'Undead')
             {
-                $startingResources['body'] += 4000;
+                $startingResources['body'] = 4000;
             }
         }
         else
