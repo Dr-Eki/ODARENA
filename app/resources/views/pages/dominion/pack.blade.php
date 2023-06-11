@@ -23,7 +23,7 @@
                             <tr>
                                 <td>{{ $packDominion->name }}</td>
                                 <td>{{ $packDominion->user->display_name }}</td>
-                                <td>{{ ($packDominion->user_id == $selectedDominion->user->id) ? 'Leader' : 'Member' }}</td>
+                                <td>{{ ($packDominion->user_id == $packDominion->pack->user->id) ? 'Leader' : 'Member' }}</td>
                                 <td>{{ $packDominion->race->name }}</td>
                             </tr>
                         @endforeach
