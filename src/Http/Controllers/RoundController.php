@@ -433,7 +433,7 @@ class RoundController extends AbstractController
             $packs = Pack::where('user_id', Auth::user()->id)->where('round_id', $round->id)->get();
 
             # Check if $packs contains $pack
-            if(!$packs->contains('id', $pack->id))
+            if($packs->count() > 0 and !$packs->contains('id', $pack->id))
             {
                 return redirect()->back()
                     ->withInput($request->all())
