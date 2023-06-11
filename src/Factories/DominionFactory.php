@@ -205,6 +205,11 @@ class DominionFactory
                 $startingParameters['unit1'] = 4000;
                 $startingResources['food'] += 40000;
             }
+
+            if($race->name == 'Undead')
+            {
+                $startingResources['body'] += 4000;
+            }
         }
         else
         {
