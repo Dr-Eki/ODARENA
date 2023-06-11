@@ -47,6 +47,7 @@ class MilitaryController extends AbstractDominionController
             $returningResources[$resourceKey] += $queueService->getExpeditionQueueTotalByResource($self, 'resource_' . $resourceKey);
             $returningResources[$resourceKey] += $queueService->getTheftQueueTotalByResource($self, 'resource_' . $resourceKey);
             $returningResources[$resourceKey] += $queueService->getSabotageQueueTotalByResource($self, 'resource_' . $resourceKey);
+            $returningResources[$resourceKey] += $queueService->getDesecrationQueueTotalByResource($self, 'resource_' . $resourceKey);
         }
 
         $returningResources['prestige'] = $queueService->getInvasionQueueTotalByResource($self, 'prestige');

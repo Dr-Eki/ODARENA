@@ -141,6 +141,14 @@ class DesecrationService
                 );    
             }
 
+            $data = $battlefield->data;
+            $data['result']['bodies']['desecrated'] += $this->desecration['bodies']['desecrated'];
+            $data['result']['bodies']['available'] -= $this->desecration['bodies']['desecrated'];
+            $data['result']['bodies']['available'] = max(0, $data['result']['bodies']['available']);
+            $battlefield->data = $data;
+            
+            $battlefield->save();
+
             $this->desecrationEvent = GameEvent::create([
                 'round_id' => $desecrator->round_id,
                 'source_type' => Dominion::class,

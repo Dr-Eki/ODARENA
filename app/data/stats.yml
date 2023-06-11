@@ -642,6 +642,29 @@ light_plundered:
 crypt_body_training:
   name: Crypt bodies training
 
+body_production:
+  name: Body production
+body_sold:
+  name: Body sold
+body_bought:
+  name: Body bought
+body_building:
+  name: Body building
+body_rezoning:
+  name: Body rezoning
+body_training:
+  name: Body training
+body_improvements:
+  name: Body improvements
+body_exploring:
+  name: Body exploring
+body_lost:
+  name: Body lost
+body_salvaged:
+  name: Body salvaged
+body_plundered:
+  name: Body plundered
+
 # Land
 
 land_conquered:

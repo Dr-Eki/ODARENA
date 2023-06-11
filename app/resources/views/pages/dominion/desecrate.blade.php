@@ -26,7 +26,7 @@
                                             $bodies = $battlefield->data['result']['bodies']['available'];
                                         }
 
-                                        $isDesecrated = ($battlefield->data['result']['bodies']['desecrated'] > 0);
+                                        $isDesecrated = ($battlefield->data['result']['bodies']['desecrated'] > 0) ? 1 : 0;
                                     @endphp
 
                                     <option value="{{ $battlefield->id }}"
@@ -126,7 +126,7 @@
 
                         <div class="box box-danger">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><i class="ra ra-sword"></i> Invasion force</h3>
+                                <h3 class="box-title"><i class="ra ra-sword"></i> Desecration force</h3>
                             </div>
                             <div class="box-body table-responsive no-padding">
                                 <table class="table">
@@ -311,23 +311,43 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                                <tr>
-                                    <td>
-                                        Bodies
-                                    </td>
-                                    @for ($i = 1; $i <= 12; $i++)
-                                        <td class="text-center">
-                                            @if ($queueService->getDesecrationQueueAmount($selectedDominion, "resource_body", $i) === 0)
-                                                -
-                                            @else
-                                                {{ number_format($queueService->getDesecrationQueueAmount($selectedDominion, "resource_body", $i)) }}
-                                            @endif
+                                @if($selectedDominion->race->name == 'Undead')
+                                    <tr>
+                                        <td>
+                                            Bodies
                                         </td>
-                                    @endfor
-                                    <td class="text-center">
-                                        {{ number_format($queueService->getDesecrationQueueTotalByResource($selectedDominion, "resource_body")) }}
-                                    </td>
-                                </tr>
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <td class="text-center">
+                                                @if ($queueService->getDesecrationQueueAmount($selectedDominion, "resource_body", $i) === 0)
+                                                    -
+                                                @else
+                                                    {{ number_format($queueService->getDesecrationQueueAmount($selectedDominion, "resource_body", $i)) }}
+                                                @endif
+                                            </td>
+                                        @endfor
+                                        <td class="text-center">
+                                            {{ number_format($queueService->getDesecrationQueueTotalByResource($selectedDominion, "resource_body")) }}
+                                        </td>
+                                    </tr>
+                                @elseif($selectedDominion->race->name == 'Afflicted')
+                                    <tr>
+                                        <td>
+                                            Miasma
+                                        </td>
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <td class="text-center">
+                                                @if ($queueService->getDesecrationQueueAmount($selectedDominion, "resource_miasma", $i) === 0)
+                                                    -
+                                                @else
+                                                    {{ number_format($queueService->getDesecrationQueueAmount($selectedDominion, "resource_miasma", $i)) }}
+                                                @endif
+                                            </td>
+                                        @endfor
+                                        <td class="text-center">
+                                            {{ number_format($queueService->getDesecrationQueueTotalByResource($selectedDominion, "resource_miasma")) }}
+                                        </td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -521,7 +541,7 @@
 
             desecratedStatus = '';
             if (desecrated == 1) {
-                desecrated = '&nbsp;<div class="pull-left">&nbsp;<span class="label label-warning">Previously desecrated</span></div>';
+                desecratedStatus = '&nbsp;<div class="pull-left">&nbsp;<span class="label label-warning">Previously desecrated</span></div>';
             }
 
             return $(`
