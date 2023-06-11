@@ -2,28 +2,50 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
-use OpenDominion\Http\Requests\Dominion\Actions\NotesActionRequest;
-use OpenDominion\Services\Dominion\HistoryService;
+use Auth;
+use DB;
+
+use Illuminate\Http\Request;
+use LogicException;
+use OpenDominion\Services\PackService;
+
+use OpenDominion\Models\Pack;
 
 class PackController extends AbstractDominionController
 {
     public function getPack()
     {
-        $dominion = $this->getSelectedDominion();
-        return view('pages.dominion.pack');
+        return view('pages.dominion.pack', 
+            [
+                'packService' => app(PackService::class),
+            ]);
     }
 
-    public function postNotes(NotesActionRequest $request)
+    public function changeStatus(Request $request)
     {
-        $dominion = $this->getSelectedDominion();
-        $notes = $request->get('notes');
+        $status = $request->input('status');
 
-        $dominion->fill([
-          'notes' => $notes,
-        ])->save(['event' => HistoryService::EVENT_ACTION_NOTE]);
+        $packService = app(PackService::class);
 
-        return view('pages.dominion.notes', [
-            'notes' => $dominion->notes,
-        ]);
+        $user = Auth::user();
+
+        $pack = Pack::findOrFail($request->input('pack_id'));
+
+        DB::transaction(function () use ($user, $pack, $packService, $status) {
+            
+            if(!$packService->canEditPack($user, $pack))
+            {
+                throw new LogicException('You cannot edit this pack.');
+            }
+
+            if(!in_array($status,[0,1,2]))
+            {
+                throw new LogicException('Invalid pack status.');
+            }
+
+            $packService->changePackStatus($pack, $status);
+        });
+
+        return redirect()->route('dominion.pack');
     }
 }

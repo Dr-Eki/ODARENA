@@ -32,6 +32,7 @@ class Pack extends AbstractModel
 
     protected $casts = [
         'password' => 'string',
+        'status' => 'integer',
     ];
 
     public function user()
