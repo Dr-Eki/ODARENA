@@ -58,21 +58,21 @@
                                 <a href="/dominion/realm/2"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[2] }}">Players</span></a>
                             @endif
                         </div>
-                    @elseif(in_array($selectedDominion->round->mode, ['factions','factions-duration','packs','packs-duration']))
+                    @elseif(in_array($selectedDominion->round->mode, ['factions','factions-duration']))
                         @foreach($selectedDominion->round->realms as $roundRealm)
-                            <div class="col-sm-{{ round(12 / count($selectedDominion->round->realms)) }} text-center">
-                                @php
-                                    $realmRace = ($roundRealm->alignment == 'npc' ? OpenDominion\Models\Race::where('alignment', $roundRealm->alignment)->first() : OpenDominion\Models\Race::where('key', $roundRealm->alignment)->first());
-                                @endphp
+                        <div class="col-sm-{{ round(12 / count($selectedDominion->round->realms)) }} text-center">
+                            @php
+                                $realmRace = ($roundRealm->alignment == 'npc' ? OpenDominion\Models\Race::where('alignment', $roundRealm->alignment)->first() : OpenDominion\Models\Race::where('key', $roundRealm->alignment)->first());
+                            @endphp
 
-                                @if($realm->number === $roundRealm->number)
-                                    <span style="font-weight: bold;">{{ $realmRace->name }}</span>
-                                @else
-                                    <a href="/dominion/realm/{{ $roundRealm->number }}"><span data-toggle="tooltip" data-placement="top" title="{{ $realmNames[$roundRealm->number] }}">{{ $realmRace->name }}</span></a>
-                                @endif
-                                <small class="text-muted" data-toggle="tooltip" data-placement="top" title="Number of dominions in this realm">({{ $roundRealm->dominions->count() }})</small>
-                            </div>
-                        @endforeach
+                            @if($realm->number === $roundRealm->number)
+                                <span style="font-weight: bold;">{{ $realmRace->name }}</span>
+                            @else
+                                <a href="/dominion/realm/{{ $roundRealm->number }}"><span data-toggle="tooltip" data-placement="top" title="{{ $realmNames[$roundRealm->number] }}">{{ $realmRace->name }}</span></a>
+                            @endif
+                            <small class="text-muted" data-toggle="tooltip" data-placement="top" title="Number of dominions in this realm">({{ $roundRealm->dominions->count() }})</small>
+                        </div>
+                    @endforeach
                     @endif
                   </div>
             </div>
