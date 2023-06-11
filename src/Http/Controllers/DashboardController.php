@@ -3,6 +3,7 @@
 namespace OpenDominion\Http\Controllers;
 
 use Auth;
+use DB;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Pack;
 use OpenDominion\Models\Round;
@@ -57,7 +58,12 @@ class DashboardController extends AbstractController
             return redirect()->back();
         }
 
-        $pack->delete();
+        DB::transaction(function () use ($pack)
+        {
+            $pack->delete();
+            DB::table('realm_history')->where('realm_id', '=', $pack->realm->id)->delete();
+            DB::table('realms')->where('id', '=', $pack->realm->id)->delete();
+        });
 
         return redirect()->back();
     }
