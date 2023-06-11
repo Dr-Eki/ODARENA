@@ -61,7 +61,7 @@ elskas:
   perks:
     spy_strength: 10
     target_defensive_power_mod: -5
-    casualties: 10
+    casualties: 2.5
 
 glimj:
   name: Glimj
