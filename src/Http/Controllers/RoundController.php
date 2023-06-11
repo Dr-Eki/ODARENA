@@ -419,13 +419,12 @@ class RoundController extends AbstractController
         if(in_array($round->mode, ['packs','packs-duration']))
         {
             $this->validate($request, [
-                'pack' => 'required|exists:packs,id',
-                'pack_password' => 'required',
+                'pack' => 'required|exists:packs,id'
             ]);
 
             $pack = Pack::where('id', $request['pack'])->where('round_id', $round->id)->first();
 
-            # If no pack
+            # No pack found
             if(!$pack)
             {
                 return redirect()->back()
@@ -433,25 +432,25 @@ class RoundController extends AbstractController
                     ->withErrors(['The pack you selected does not exist.']);
             }
 
-            # Check that passwords match
-            if($pack->password != $request['pack_password'])
+            # Pack closed
+            if($pack->status === 2)
             {
+                return redirect()->back()
+                    ->withInput($request->all())
+                    ->withErrors(['The pack you selected is closed.']);
+            }
+
+            # Pack is private, so password must match
+            if($pack->status === 0 and $pack->password != $request['pack_password'])
+            {
+                $this->validate($request, [
+                    'pack_password' => 'required'
+                ]);
+
                 return redirect()->back()
                     ->withInput($request->all())
                     ->withErrors(['The password you entered for the pack is incorrect.']);
             }
-
-            # Check if user has created a pack and is joining another pack
-            $packs = Pack::where('user_id', Auth::user()->id)->where('round_id', $round->id)->get();
-
-            # Check if $packs contains $pack
-            if($packs->count() > 0 and !$packs->contains('id', $pack->id))
-            {
-                return redirect()->back()
-                    ->withInput($request->all())
-                    ->withErrors(['You cannot join another pack after you have already created a pack. Create a dominion in your own pack. If you wish to delete your pack, you can do so by deleting the pack from the Dashboard page, once there are zero dominions registered in the pack.']);
-            }
-
         }
 
         if($request['ruler_name'] == Auth::user()->display_name)
