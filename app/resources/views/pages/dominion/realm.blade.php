@@ -7,7 +7,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <div class="row">
-                    @if($selectedDominion->round->mode == 'standard' or $selectedDominion->round->mode == 'standard-duration' or $selectedDominion->round->mode == 'artefacts')
+                    @if(in_array($selectedDominion->round->mode, ['standard','standard-duration','artefacts']))
                         <div class="col-sm-3 text-center">
                             @if($realm->number === 1)
                                 <span style="display:block; font-weight: bold;">Barbarians</span>
@@ -36,7 +36,7 @@
                                 <a href="/dominion/realm/4"><span style="display:block;" data-toggle="tooltip" data-placement="top" title="{{ $realmNames[4] }}">Independent</span></a>
                             @endif
                         </div>
-                    @elseif($selectedDominion->round->mode == 'deathmatch' or $selectedDominion->round->mode == 'deathmatch-duration')
+                    @elseif(in_array($selectedDominion->round->mode, ['deathmatch','deathmatch-duration']))
                         <div class="col-sm-6 text-center">
                             @if($realm->number === 1)
                                 <span style="display:block; font-weight: bold;">Barbarians</span>
@@ -62,6 +62,21 @@
                                     <span style="font-weight: bold;">{{ $realmRace->name }}</span>
                                 @else
                                     <a href="/dominion/realm/{{ $roundRealm->number }}"><span data-toggle="tooltip" data-placement="top" title="{{ $realmNames[$roundRealm->number] }}">{{ $realmRace->name }}</span></a>
+                                @endif
+                                <small class="text-muted" data-toggle="tooltip" data-placement="top" title="Number of dominions in this realm">({{ $roundRealm->dominions->count() }})</small>
+                            </div>
+                        @endforeach
+                    @elseif(in_array($selectedDominion->round->mode, ['packs','packs-duration']))
+                        @foreach($selectedDominion->round->realms as $roundRealm)
+                            <div class="col-sm-{{ round(12 / count($selectedDominion->round->realms)) }} text-center">
+                                @php
+                                    $realmName = $roundRealm->alignment == 'npc' ? 'Barbarian' : $realmHelper->getRealmPackName($roundRealm);
+                                @endphp
+
+                                @if($realm->number === $roundRealm->number)
+                                    <span style="font-weight: bold;">{{ $realmName }}</span>
+                                @else
+                                    <a href="/dominion/realm/{{ $roundRealm->number }}"><span data-toggle="tooltip" data-placement="top" title="{{ $roundRealm->name }}">{{ $realmName }}</span></a>
                                 @endif
                                 <small class="text-muted" data-toggle="tooltip" data-placement="top" title="Number of dominions in this realm">({{ $roundRealm->dominions->count() }})</small>
                             </div>

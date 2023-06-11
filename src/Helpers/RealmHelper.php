@@ -4,16 +4,21 @@ namespace OpenDominion\Helpers;
 
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
+use OpenDominion\Models\Realm;
 
 use OpenDominion\Services\Dominion\StatsService;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 
 class RealmHelper
 {
+
+    protected $statsService;
+    protected $militaryCalculator;
+
     public function __construct()
     {
-        $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->statsService = app(StatsService::class);
+        $this->militaryCalculator = app(MilitaryCalculator::class);
     }
 
     public function getAlignmentNoun(string $alignment): string
@@ -72,7 +77,7 @@ class RealmHelper
         return 'Council';
     }
 
-    public function getRealmPackName($realm): string
+    public function getRealmPackName(Realm $realm): string
     {
         if(!in_array($realm->round->mode,['packs', 'packs-duration']) or $realm->alignment == 'npc')
         {

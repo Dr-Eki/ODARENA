@@ -62,7 +62,7 @@
                         @foreach($selectedDominion->round->realms as $roundRealm)
                         <div class="col-sm-{{ round(12 / count($selectedDominion->round->realms)) }} text-center">
                             @php
-                                $realmRace = ($roundRealm->alignment == 'npc' ? OpenDominion\Models\Race::where('alignment', $roundRealm->alignment)->first() : OpenDominion\Models\Race::where('key', $roundRealm->alignment)->first());
+                                $realmRace = ($roundRealm->alignment == 'npc' ? 'Barbarian' : $realmHelper->getRealmPackName($roundRealm));
                             @endphp
 
                             @if($realm->number === $roundRealm->number)
