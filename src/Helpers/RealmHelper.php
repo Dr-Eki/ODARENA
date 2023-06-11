@@ -74,10 +74,10 @@ class RealmHelper
 
     public function getRealmPackName($realm): string
     {
-        #if(!in_array($realm->round->mode,['packs', 'packs-duration']) or $realm->alignment == 'npc')
-        #{
+        if(!in_array($realm->round->mode,['packs', 'packs-duration']) or $realm->alignment == 'npc')
+        {
             return $this->getAlignmentAdjective($realm->alignment);
-        #}
+        }
 
         $user = $realm->pack->user;
 
