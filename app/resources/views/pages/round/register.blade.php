@@ -181,6 +181,11 @@
                                             {{ $pack->status == 2 ? '(Closed)' : null }}
                                         </option>
                                     @endforeach
+
+                                    @if($packs->where('status', 1)->count())
+                                        <option value="random_public">Random public pack</option>
+                                    @endif
+
                                 </select>
                             @else
                                 <select name="pack" id="pack" class="form-control select2" data-placeholder="No packs available" disabled>
@@ -196,7 +201,7 @@
                     <div class="form-group">
                         <label for="faction" class="col-sm-3 control-label">Password</label>
                         <div class="col-sm-6">
-                            <input type="password" name="pack_password" class="form-control" placeholder="Enter pack password" required>
+                            <input type="password" name="pack_password" class="form-control" placeholder="Enter pack password">
                         </div>
                     </div>
 

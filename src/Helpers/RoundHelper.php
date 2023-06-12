@@ -138,7 +138,7 @@ class RoundHelper
 
             case 'packs':
             case 'packs-duration':
-                return 'Leaders form packs which can consist of any number of dominions of almost any combination of factions. These rounds are non-cannon.';
+                return 'Leaders form packs which can consist of any number of dominions of almost any combination of factions. These rounds are non-canon.';
 
             case 'artefacts':
                 return 'Your dominion is in a realm with friendly dominions and the goal is to be the first realm to capture at least the required number of artefacts.';

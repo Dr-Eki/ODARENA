@@ -171,11 +171,22 @@ class RoundController extends AbstractController
         $pack = null;
         if(in_array($round->mode, ['packs','packs-duration']))
         {
-            $this->validate($request, [
-                'pack' => 'required|exists:packs,id'
-            ]);
-
-            $pack = Pack::where('id', $request['pack'])->where('round_id', $round->id)->first();
+            # If pack is "random", get a random pack
+            if($request['pack'] == 'random_public')
+            {
+                $pack = Pack::where('round_id', $round->id)
+                    ->where('status', 1)
+                    ->inRandomOrder()
+                    ->first();
+            }
+            else
+            {
+                $this->validate($request, [
+                    'pack' => 'required|exists:packs,id'
+                ]);
+    
+                $pack = Pack::where('id', $request['pack'])->where('round_id', $round->id)->first();
+            }
 
             # No pack found
             if(!$pack)
@@ -418,11 +429,22 @@ class RoundController extends AbstractController
         $pack = null;
         if(in_array($round->mode, ['packs','packs-duration']))
         {
-            $this->validate($request, [
-                'pack' => 'required|exists:packs,id'
-            ]);
-
-            $pack = Pack::where('id', $request['pack'])->where('round_id', $round->id)->first();
+            # If pack is "random", get a random pack
+            if($request['pack'] == 'random_public')
+            {
+                $pack = Pack::where('round_id', $round->id)
+                    ->where('status', 1)
+                    ->inRandomOrder()
+                    ->first();
+            }
+            else
+            {
+                $this->validate($request, [
+                    'pack' => 'required|exists:packs,id'
+                ]);
+    
+                $pack = Pack::where('id', $request['pack'])->where('round_id', $round->id)->first();
+            }
 
             # No pack found
             if(!$pack)
