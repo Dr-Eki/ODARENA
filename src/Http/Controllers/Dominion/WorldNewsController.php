@@ -8,7 +8,7 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\WorldNewsService;
 use OpenDominion\Helpers\WorldNewsHelper;
 #use OpenDominion\Helpers\RaceHelper;
-#use OpenDominion\Helpers\RoundHelper;
+use OpenDominion\Helpers\EventHelper;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\NetworthCalculator;
@@ -42,6 +42,7 @@ class WorldNewsController extends AbstractDominionController
         $realmCount = Realm::where('round_id', $dominion->round_id)->count();
 
         return view('pages.dominion.world-news', [
+            'eventHelper' => app(EventHelper::class),
             'worldNewsHelper' => app(WorldNewsHelper::class),
             'gameEvents' => $worldNewsData,
             'realm' => $realm,

@@ -483,6 +483,8 @@ class WorldNewsHelper
 
         $viewerInvolved = ($desecrator->realm->id == $viewer->realm->id);
 
+        #dump($desecrator->realm->id, $viewer->realm->id, $viewerInvolved, $desecrator->name, $viewer->name, $desecrator->realm->id == $viewer->realm->id);
+
         if($viewerInvolved)
         {
             $string = sprintf(
@@ -1148,6 +1150,28 @@ class WorldNewsHelper
         }
 
         return $defaultSettings;
+    }
+
+    public function getWorldNewsEventIcon(string $eventType): string
+    {
+        # Switch cases for $eventType
+       
+        switch ($eventType) {
+            case 'invasion':
+                return 'ra ra-crossed-swords ra-fw';
+            case 'expedition':
+                return 'fas fa-drafting-compass fa-fw';
+            case 'theft':
+                return 'fas fa-hand-lizard fa-fw';
+            case 'sorcery':
+                return 'fas fa-hat-wizard fa-fw';
+            case 'sabotage':
+                return 'fa fa-user-secret fa-fw';
+            case 'desecration':
+                return 'ra ra-tombstone ra-fw';
+            default:
+                return '';
+        }
     }
 
 }

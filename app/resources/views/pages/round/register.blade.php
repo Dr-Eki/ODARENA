@@ -185,6 +185,8 @@
 
                                     @if($packs->where('status', 1)->count())
                                         <option value="random_public">Random public pack</option>
+                                    @else
+                                        <option value="random_public" disabled>No public packs available</option>
                                     @endif
 
                                 </select>

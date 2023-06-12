@@ -397,6 +397,14 @@
                                         <td>None</td>
                                     </tr>
                                 @endif
+
+                                @if(in_array($realm->round->mode, ['packs', 'packs-duration']))
+                                    <tr>
+                                        <td>Pack status:</td>
+                                        <td>{{ $packHelper->getPackStatusString($realm->pack) }}</td>
+                                    </tr>
+                                @endif
+
                                 @if($realm->alignment === 'evil')
                                     <tr>
                                         <td>Imperial Crypt:</td>

@@ -72,23 +72,8 @@
                                     </td>
                                     <td>{!! $worldNewsHelper->getWorldNewsString($selectedDominion, $gameEvent) !!}</td>
                                     <td class="text-center">
-                                        @if ($gameEvent->type == 'invasion' and ($gameEvent->source->realm_id == $selectedDominion->realm->id or $gameEvent->target->realm_id == $selectedDominion->realm->id))
-                                            <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="ra ra-crossed-swords ra-fw"></i></a>
-                                        @endif
-                                        @if ($gameEvent->type == 'expedition' and ($gameEvent->source->realm_id == $selectedDominion->realm->id))
-                                            <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="fas fa-drafting-compass fa-fw"></i></a>
-                                        @endif
-                                        @if ($gameEvent->type == 'theft' and ($gameEvent->source->realm_id == $selectedDominion->realm->id or $gameEvent->target->realm_id == $selectedDominion->realm->id))
-                                            <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="fas fa-hand-lizard fa-fw"></i></a>
-                                        @endif
-                                        @if ($gameEvent->type == 'sorcery' and ($gameEvent->source->realm_id == $selectedDominion->realm->id or $gameEvent->target->realm_id == $selectedDominion->realm->id))
-                                            <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="fas fa-hat-wizard fa-fw"></i></a>
-                                        @endif
-                                        @if ($gameEvent->type == 'sabotage' and ($gameEvent->source->realm_id == $selectedDominion->realm->id or $gameEvent->target->realm_id == $selectedDominion->realm->id))
-                                            <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="fa fa-user-secret fa-fw"></i></a>
-                                        @endif
-                                        @if ($gameEvent->type == 'desecration')
-                                            <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="ra ra-tombstone ra-fw"></i></a>
+                                        @if($eventHelper->canViewEvent($gameEvent, $selectedDominion))
+                                            <a href="{{ route('dominion.event', [$gameEvent->id]) }}"><i class="{{ $worldNewsHelper->getWorldNewsEventIcon($gameEvent->type) }}"></i></a>
                                         @endif
                                     </td>
                                 </tr>
