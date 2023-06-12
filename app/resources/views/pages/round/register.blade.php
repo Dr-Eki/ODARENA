@@ -70,11 +70,12 @@
                 </div>
 
                 <!-- Faction -->
-                @if(in_array($round->mode, ['factions','factions-duration']))
+                @if(in_array($round->mode, ['factions','factions-duration','packs','packs-duration']))
                     <div class="form-group">
                         <label for="faction" class="col-sm-3 control-label">Faction</label>
                         <div class="col-sm-6">
                             <select name="race" id="faction" class="form-control select2" data-placeholder="Select a faction" required>
+                                <option></option>
                                 @foreach ($races->filter(function ($race) { return $race->playable === 1; }) as $race)
                                     <option value="{{ $race->id }}"
                                         data-current="{{ isset($countRaces[$race->name]) ? number_format($countRaces[$race->name]) : 0 }}"
