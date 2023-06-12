@@ -90,7 +90,7 @@
                                         data-maxPerRound="{{ null }}"
                                         data-experimental="{{ null }}"
                                         data-minRoundsPlayed="0">
-                                        Random (any)
+                                        Random
                                     </option>
                             </select>
                         </div>
