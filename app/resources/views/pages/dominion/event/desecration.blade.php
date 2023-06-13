@@ -106,6 +106,7 @@
                                                 </td>
                                             </tr>
                                         @elseif($originalEvent->type == 'invasion')
+
                                             <tr>
                                                 <td>Battle</td>
                                                 <td>
@@ -122,6 +123,7 @@
         
                                                     {{ $battlefield->target->name }} (# {{ $battlefield->target->realm->number }}) 
         
+
                                                     @if($battlefield->data['result']['success'])
                                                         conquering {{ $battlefield->data['result']['land'] }} acres
                                                     @endif

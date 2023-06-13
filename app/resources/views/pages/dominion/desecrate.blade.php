@@ -15,6 +15,8 @@
                     </div>
                     <div class="box-body">
                         <div class="form-group">
+
+
                             <label for="battlefield">Select a battlefield</label>
                             <select name="battlefield" id="battlefield" class="form-control select2" required style="width: 100%" data-placeholder="Select a battlefield" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
                                 <option></option>
@@ -28,6 +30,7 @@
 
                                         $isDesecrated = ($battlefield->data['result']['bodies']['desecrated'] > 0) ? 1 : 0;
                                     @endphp
+                                    
 
                                     <option value="{{ $battlefield->id }}"
                                             data-bodies="{{ $bodies }}"
@@ -45,10 +48,12 @@
                                                 ambushed
                                             @endif
 
+
+
                                             {{ $battlefield->target->name }} (# {{ $battlefield->target->realm->number }}) 
 
                                             @if($battlefield->data['result']['success'])
-                                                conquering {{ $battlefield->data['result']['land'] }} acres
+                                                conquering {{ $battlefield->data['attacker']['land_conquered'] }} acres
                                             @endif
 
                                         @elseif($battlefield->type == 'barbarian_invasion')
