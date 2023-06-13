@@ -53,7 +53,6 @@ class ConversionCalculator
         $conversions['attacker'] = array_fill(1, $attacker->race->units->count(), 0);
         $conversions['defender'] = array_fill(1, $defender->race->units->count(), 0);
 
-
         $bodiesTaken['attacker'] = 0;
         $bodiesTaken['defender'] = 0;
 

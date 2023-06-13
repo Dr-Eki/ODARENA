@@ -328,8 +328,7 @@ tiranthaels_purification:
 # BEGIN INVASION SPELLS
 
 ## AFFLICTED
-festering_wounds:  
-  enabled: 0
+festering_wounds:
   name: Festering Wounds
   scope: hostile
   class: invasion
@@ -342,8 +341,7 @@ festering_wounds:
     casualties: 15
     food_consumption_mod: 20
 
-great_fever:  
-  enabled: 0
+great_fever:
   name: Great Fever
   scope: hostile
   class: invasion
@@ -357,8 +355,7 @@ great_fever:
     production_from_peasants_mod: -10
     food_production_mod: -20
 
-pestilence:  
-  enabled: 0
+pestilence: 
   name: Pestilence
   scope: hostile
   class: invasion
@@ -371,8 +368,7 @@ pestilence:
     kill_peasants_and_converts_for_caster_unit: 0.25,1 # 0.25% die and become unit1
     spreads_spell: lesser_pestilence
 
-lesser_pestilence:  
-  enabled: 0
+lesser_pestilence:
   name: Lesser Pestilence
   scope: hostile
   class: invasion

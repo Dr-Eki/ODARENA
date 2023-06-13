@@ -90,7 +90,7 @@ class ResourceConversionCalculator
             return $resourceConversions;
         }
 
-        $resourceConversions['bodies_taken'] = 0;
+        $bodiesSpent = 0;
 
         if($mode == 'offense')
         {
@@ -186,7 +186,7 @@ class ResourceConversionCalculator
 
                                 if(in_array($resourceKey, $resourcesThatUseEntireBodies))
                                 {
-                                    $resourceConversions['bodies_spent'] += $enemyUnitKilledAmount;
+                                    $bodiesSpent += $enemyUnitKilledAmount;
                                 }
                             }
                         }
@@ -213,7 +213,7 @@ class ResourceConversionCalculator
 
                                     if(in_array($resourceKey, $resourcesThatUseEntireBodies))
                                     {
-                                        $resourceConversions['bodies_spent'] += $enemyUnitKilledAmount;
+                                        $bodiesSpent += $enemyUnitKilledAmount;
                                     }
                                 }
                             }
@@ -250,7 +250,7 @@ class ResourceConversionCalculator
 
                                 if(in_array($resourceKey, $resourcesThatUseEntireBodies))
                                 {
-                                    $resourceConversions['bodies_spent'] += $enemyUnitKilledAmount;
+                                    $bodiesSpent += $enemyUnitKilledAmount;
                                 }
                             }
                         }
@@ -285,7 +285,7 @@ class ResourceConversionCalculator
 
                                     if(in_array($resourceKey, $resourcesThatUseEntireBodies))
                                     {
-                                        $resourceConversions['bodies_spent'] += $enemyUnitKilledAmount;
+                                        $bodiesSpent += $enemyUnitKilledAmount;
                                     }
                                 }
                             }
@@ -342,12 +342,14 @@ class ResourceConversionCalculator
 
                         if(in_array($resourceKey, $resourcesThatUseEntireBodies))
                         {
-                            $resourceConversions['bodies_spent'] += $converterUnitsLost[$converterUnitSlot];
+                            $bodiesSpent += $enemyUnitKilledAmount;
                         }
                     }
                 }
             }
         }
+
+        $resourceConversions['bodies_spent'] = $bodiesSpent;
 
         $resourceConversions = array_map('intval', $resourceConversions);
 
