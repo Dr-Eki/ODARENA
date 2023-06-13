@@ -41,7 +41,7 @@
                                                 successfully
                                             @endif
 
-                                            @if($battlefield->data['result']['isAmbush'])
+                                            @if($battlefield->isAmbush)
                                                 ambushed
                                             @endif
 
