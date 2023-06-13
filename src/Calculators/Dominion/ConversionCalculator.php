@@ -54,8 +54,8 @@ class ConversionCalculator
         $conversions['defender'] = array_fill(1, $defender->race->units->count(), 0);
 
 
-        $conversions['attacker']['bodies_taken'] = 0;
-        $conversions['defender']['bodies_taken'] = 0;
+        $bodiesTaken['attacker'] = 0;
+        $bodiesTaken['defender'] = 0;
 
         # Land ratio: float
         $landRatio = $invasion['attacker']['land_size'] / $invasion['defender']['land_size'];
@@ -159,7 +159,7 @@ class ConversionCalculator
             $conversions['attacker'][$slot] += $strengthBasedConversionsOnOffense[$slot];
             #$conversions['attacker'][$slot] += $vampiricConversionsOnOffense[$slot];
 
-            $conversions['attacker']['bodies_taken'] += $conversions['attacker'][$slot];
+            $bodiesTaken['attacker'] += $conversions['attacker'][$slot];
         }
 
         if($attacker->getSpellPerkValue('no_conversions'))
@@ -174,13 +174,16 @@ class ConversionCalculator
             $conversions['defender'][$slot] += $strengthBasedConversionsOnDefense[$slot];
             #$conversions['defender'][$slot] += $vampiricConversionsOnDefense[$slot];
 
-            $conversions['defender']['bodies_taken'] += $conversions['defender'][$slot];
+            $bodiesTaken['attacker'] += $conversions['defender'][$slot];
         }
 
         if($defender->getSpellPerkValue('no_conversions'))
         {
             $conversions['defender'] = array_fill(1, $defender->race->units->count(), 0);
         }
+
+        $conversions['attacker']['bodies_taken'] = $bodiesTaken['attacker'];
+        $conversions['defender']['bodies_taken'] = $bodiesTaken['defender'];
 
         return $conversions;
     }
