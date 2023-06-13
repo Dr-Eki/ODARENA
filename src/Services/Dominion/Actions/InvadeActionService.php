@@ -718,7 +718,7 @@ class InvadeActionService
             ]);
 
             # Debug before saving:
-            #ldd($this->invasion);
+            ldd($this->invasion);
 
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
@@ -1346,10 +1346,16 @@ class InvadeActionService
 
         $this->invasion['attacker']['terrain_gained'] = $summedQueueData;
 
+        $queueData = []; 
         foreach($summedQueueData as $terrainKey => $amount)
         {
             $queueData[('terrain_' . $terrainKey)] = abs($amount);
         }
+
+        if(empty($queueData))
+        {
+            Log::info('[MISSING TERRAIN] No terrain gained from invasion. Attacker: ' . $attacker->id . ' Target: ' . $target->id . ' Land conquered: ' . $landConquered . ' Land discovered: ' . $landDiscovered . ' Extra land discovered: ' . $extraLandDiscovered);
+        }   
 
         $this->queueService->queueResources(
             'invasion',
