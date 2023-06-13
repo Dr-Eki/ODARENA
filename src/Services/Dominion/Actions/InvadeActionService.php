@@ -601,7 +601,7 @@ class InvadeActionService
             $this->handleSalvagingAndPlundering($attacker, $defender);
 
             # Imperial Crypt
-            $this->handleCrypt($attacker, $defender, $this->invasion['attacker']['units_surviving'], $this->invasion['attacker']['conversions'], $this->invasion['defender']['conversions']);
+            #$this->handleCrypt($attacker, $defender, $this->invasion['attacker']['units_surviving'], $this->invasion['attacker']['conversions'], $this->invasion['defender']['conversions']);
 
             # Calculate bodies left behind
             $this->handleTheDead($attacker, $defender, $this->invasion['attacker']['units_lost'], $this->invasion['defender']['units_lost']);

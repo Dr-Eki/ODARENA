@@ -756,7 +756,7 @@ class SpellActionService
             if ($this->spellCalculator->isSpellActive($caster, $spell->key))
             {
                 DominionSpell::where('dominion_id', $caster->id)->where('spell_id', $spell->id)
-                ->update(['duration' => $spell->duration]);
+                ->update(['duration' => $spell->duration, 'caster_id' => $caster->id]);
             }
             else
             {
