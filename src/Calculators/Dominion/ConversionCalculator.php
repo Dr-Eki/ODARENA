@@ -181,8 +181,8 @@ class ConversionCalculator
             $conversions['defender'] = array_fill(1, $defender->race->units->count(), 0);
         }
 
-        $conversions['attacker']['bodies_taken'] = $bodiesTaken['attacker'];
-        $conversions['defender']['bodies_taken'] = $bodiesTaken['defender'];
+        $conversions['attacker']['bodies_spent'] = $bodiesTaken['attacker'];
+        $conversions['defender']['bodies_spent'] = $bodiesTaken['defender'];
 
         return $conversions;
     }

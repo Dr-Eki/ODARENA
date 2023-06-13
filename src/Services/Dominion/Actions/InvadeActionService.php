@@ -535,13 +535,20 @@ class InvadeActionService
             # Conversions
             $offensiveConversions = array_fill(1, $attacker->race->units->count(), 0);
             $defensiveConversions = array_fill(1, $defender->race->units->count(), 0);
+            $offensiveConversions['bodies_spent'] = 0;
+            $defensiveConversions['bodies_spent'] = 0;
 
             $conversions = $this->conversionCalculator->getConversions($attacker, $defender, $this->invasion, $landRatio);
 
+            $offensiveConversions = $conversions['attacker'];
+            $defensiveConversions = $conversions['defender'];
+
+            
             if(array_sum($conversions['attacker']) > 0)
             {
                 $offensiveConversions = $conversions['attacker'];
                 $this->invasion['attacker']['conversions'] = $offensiveConversions;
+
                 $this->statsService->updateStat($attacker, 'units_converted', array_sum($conversions['attacker']));
             }
             if(array_sum($conversions['defender']) > 0)
@@ -2969,12 +2976,15 @@ class InvadeActionService
     protected function handleTheDead(Dominion $attacker, Dominion $defender, array $attackerUnitsLost, array $defenderUnitsLost): void
     {
         $bodies = 0;
-
         $bodiesRemovedFromConversion = 0;
-        $bodiesRemovedFromConversion += $this->invasion['attacker']['conversions']['bodies_spent'];
-        $bodiesRemovedFromConversion += $this->invasion['defender']['conversions']['bodies_spent'];
-        $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversions']['bodies_spent'];
-        $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversions']['bodies_spent'];
+
+        if((array_sum($this->invasion['attacker']['conversions']) + array_sum($this->invasion['defender']['conversions'])) > 0)
+        {
+            $bodiesRemovedFromConversion += $this->invasion['attacker']['conversions']['bodies_spent'] ?: 0;
+            $bodiesRemovedFromConversion += $this->invasion['defender']['conversions']['bodies_spent'] ?: 0;
+            $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversions']['bodies_spent'] ?: 0;
+            $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversions']['bodies_spent'] ?: 0;
+        }
 
         $bodies -= $bodiesRemovedFromConversion;
 
