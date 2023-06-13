@@ -85,12 +85,13 @@ class ResourceConversionCalculator
             }
         }
 
+        $bodiesSpent = 0;
+        $resourceConversions['bodies_spent'] = 0;
+
         if(!array_sum($convertingUnits))
         {
             return $resourceConversions;
         }
-
-        $bodiesSpent = 0;
 
         if($mode == 'offense')
         {

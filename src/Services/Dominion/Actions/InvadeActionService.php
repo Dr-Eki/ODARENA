@@ -575,15 +575,16 @@ class InvadeActionService
             $this->invasion['attacker']['resource_conversions'] = $resourceConversions['attacker'];
             $this->invasion['defender']['resource_conversions'] = $resourceConversions['defender'];
 
+
             if(array_sum($resourceConversions['attacker']) > 0)
             {
-                $this->invasion['attacker']['resource_conversions'] = $resourceConversions['attacker'];
+                #$this->invasion['attacker']['resource_conversions'] = $resourceConversions['attacker'];
                 $this->handleResourceConversions($attacker, 'offense');
             }
 
             if(array_sum($resourceConversions['defender']) > 0)
             {
-                $this->invasion['defender']['resource_conversions'] = $resourceConversions['defender'];
+                #$this->invasion['defender']['resource_conversions'] = $resourceConversions['defender'];
                 $this->handleResourceConversions($defender, 'defense');
             }
 
