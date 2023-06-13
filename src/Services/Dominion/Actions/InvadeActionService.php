@@ -2872,15 +2872,15 @@ class InvadeActionService
             }
 
             # Remove defensive conversions (defender's conversions) from offensive bodies (they are spent)
-            if(isset($this->invasion['defender']['conversion']))
+            if(isset($this->invasion['defender']['conversions']))
             {
-                $offensiveBodies -= array_sum($this->invasion['defender']['conversion']);
+                $offensiveBodies -= array_sum($this->invasion['defender']['conversions']);
             }
 
             # Remove offensive conversions (attacker's conversions) from defensive bodies (they are spent)
-            if(isset($this->invasion['attacker']['conversion']))
+            if(isset($this->invasion['attacker']['conversions']))
             {
-                $defensiveBodies -= array_sum($this->invasion['attacker']['conversion']);
+                $defensiveBodies -= array_sum($this->invasion['attacker']['conversions']);
             }
 
             $this->invasion['defender']['crypt']['bodies_available_net'] = $defensiveBodies;
@@ -2971,10 +2971,10 @@ class InvadeActionService
         $bodies = 0;
 
         $bodiesRemovedFromConversion = 0;
-        $bodiesRemovedFromConversion += $this->invasion['attacker']['conversion']['bodies_spent'];
-        $bodiesRemovedFromConversion += $this->invasion['defender']['conversion']['bodies_spent'];
-        $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversion']['bodies_spent'];
-        $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversion']['bodies_spent'];
+        $bodiesRemovedFromConversion += $this->invasion['attacker']['conversions']['bodies_spent'];
+        $bodiesRemovedFromConversion += $this->invasion['defender']['conversions']['bodies_spent'];
+        $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversions']['bodies_spent'];
+        $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversions']['bodies_spent'];
 
         $bodies -= $bodiesRemovedFromConversion;
 
