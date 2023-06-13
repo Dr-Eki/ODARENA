@@ -111,21 +111,23 @@
                                                 <td>Battle</td>
                                                 <td>
                                                     <em>
-                                                    {{ $battlefield->source->name }}
+                                                    {{ $originalEvent->source->name }}
 
-                                                    @if($battlefield->data['result']['success'])
+                                                    @if($originalEvent->data['result']['success'])
                                                         successfully
                                                     @endif
         
-                                                    @if($battlefield->isAmbush)
+                                                    @if($originalEvent->isAmbush)
                                                         ambushed
+                                                    @else
+                                                        invaded
                                                     @endif
         
-                                                    {{ $battlefield->target->name }} (# {{ $battlefield->target->realm->number }}) 
+                                                    {{ $originalEvent->target->name }} (# {{ $originalEvent->target->realm->number }}) 
         
 
-                                                    @if($battlefield->data['result']['success'])
-                                                        conquering {{ $battlefield->data['result']['land'] }} acres
+                                                    @if($originalEvent->data['result']['success'])
+                                                        conquering {{ $originalEvent->data['attacker']['land_conquered'] }} acres
                                                     @endif
                                                     </em>
                                                 </td>
