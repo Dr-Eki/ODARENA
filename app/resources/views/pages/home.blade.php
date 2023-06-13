@@ -100,8 +100,6 @@
                                             {{ number_format($currentRound->goal) }} ticks
                                         </td>
                                     @endif
-
-
                                 </tr>
                                 <tr>
                                     <td class="text-center">Largest dominion:</td>

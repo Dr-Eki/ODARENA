@@ -398,7 +398,7 @@
                                     </tr>
                                 @endif
 
-                                @if(in_array($realm->round->mode, ['packs', 'packs-duration']))
+                                @if(in_array($realm->round->mode, ['packs', 'packs-duration']) and $realm->alignment !== 'npc')
                                     <tr>
                                         <td>Pack status:</td>
                                         <td>{{ $packHelper->getPackStatusString($realm->pack) }}</td>
