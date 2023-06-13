@@ -567,6 +567,11 @@ class NotificationHelper
                     'Units return home from theft.',
                 );
 
+            case 'hourly_dominion.desecration_completed':
+                return sprintf(
+                    'Units return home from theft.',
+                );
+
             case 'hourly_dominion.repelled_invasion':
                 $attackerDominion = Dominion::with('realm')->findOrFail($data['attackerDominionId']);
 
