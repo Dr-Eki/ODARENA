@@ -2681,7 +2681,10 @@ class InvadeActionService
         {
             foreach($this->invasion['defender']['resource_conversions'] as $resourceKey => $resourceAmount)
             {
-                $this->resourceService->updateResources($converter, [$resourceKey => max(0, $resourceAmount)]);
+                if($resourceKey !== 'bodies_spent')
+                {
+                    $this->resourceService->updateResources($converter, [$resourceKey => max(0, $resourceAmount)]);
+                }
             }
         }
     }
