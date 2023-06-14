@@ -86,7 +86,7 @@ class NotificationHelper
                 'label' => 'Units returned from desecration',
                 'defaults' => ['email' => false, 'ingame' => true],
                 'route' => route('dominion.desecrate'),
-                'iconClass' => 'fas fa-hand-lizard text-green',
+                'iconClass' => 'ra ra-tombstone text-green',
             ],
             'theft_completed' => [
                 'label' => 'Units returned from theft',
@@ -569,7 +569,7 @@ class NotificationHelper
 
             case 'hourly_dominion.desecration_completed':
                 return sprintf(
-                    'Units return home from theft.',
+                    'Units return home from desecration.',
                 );
 
             case 'hourly_dominion.repelled_invasion':
