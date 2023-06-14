@@ -212,7 +212,7 @@ class MilitaryCalculator
         }
 
         # Retaliation perk
-        if($attacker->round->mode == 'standard' or $attacker->round->mode == 'standard-duration' or $attacker->round->mode == 'artefacts')
+        if(in_array($attacker->round->mode, ['standard','standard-duration','packs','packs-duration','artefacts']))
         {
             if ($this->isOwnRealmRecentlyInvadedByTarget($attacker, $defender))
             {
