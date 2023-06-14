@@ -380,7 +380,7 @@
                               @elseif (!$selectedDominion->round->hasStarted())
                               <p><strong><em>You cannot invade until the round has started.</em></strong></p>
 
-                              @elseif ($selectedDominion->morale < 50)
+                              @elseif ($selectedDominion->morale < 50 and !$selectedDominion->race->getPerkValue('can_invade_at_any_morale'))
                               <p><strong><em>Your military needs at least 50 morale to invade others. Your military currently has {{ $selectedDominion->morale }} morale.</em></strong></p>
 
                               @else
