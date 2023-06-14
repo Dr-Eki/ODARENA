@@ -212,16 +212,16 @@ class MilitaryCalculator
         }
 
         # Retaliation perk
-        if(in_array($attacker->round->mode, ['standard','standard-duration','packs','packs-duration','artefacts']))
+        if(in_array($attacker->round->mode,['deathmatch','deathmatch-duration']))
         {
-            if ($this->isOwnRealmRecentlyInvadedByTarget($attacker, $defender))
+            if ($this->isSelfRecentlyInvadedByTarget($attacker, $defender))
             {
                 $multiplier += $attacker->getDeityPerkMultiplier('offensive_power_on_retaliation');
             }
         }
-        elseif($attacker->round->mode == 'deathmatch' or $attacker->round->mode == 'deathmatch-duration')
+        else
         {
-            if ($this->isSelfRecentlyInvadedByTarget($attacker, $defender))
+            if ($this->isOwnRealmRecentlyInvadedByTarget($attacker, $defender))
             {
                 $multiplier += $attacker->getDeityPerkMultiplier('offensive_power_on_retaliation');
             }
@@ -2581,7 +2581,7 @@ class MilitaryCalculator
             #$multiplier += $dominion->getSpellPerkMultiplier('offensive_power');
             
             # Retaliation spells (only vs. self in deathmatches)
-            if($dominion->round->mode == 'deathmatch' or $dominion->round->mode == 'deathmatch-duration')
+            if(in_array($dominion->round->mode,['deathmatch','deathmatch-duration']))
             {
                 if ($this->isSelfRecentlyInvadedByTarget($dominion, $target))
                 {
