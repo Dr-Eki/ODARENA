@@ -508,14 +508,16 @@
                                     <td colspan="2"><small class="text-muted">The invading units extract resources from the battle field.</small></td>
                                 </tr>
                                     @foreach($event->data['attacker']['resource_conversions'] as $resourceKey => $amount)
-                                        @php
-                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
-                                        @endphp
-                                        @if($amount > 0)
-                                            <tr>
-                                                <td>{{ ucwords($resource->name) }}:</td>
-                                                <td><span class="text-green">+{{ number_format($amount) }}</span></td>
-                                            </tr>
+                                        @if($resourceKey !== 'bodies_spent')
+                                            @php
+                                                $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                            @endphp
+                                            @if($amount > 0)
+                                                <tr>
+                                                    <td>{{ ucwords($resource->name) }}:</td>
+                                                    <td><span class="text-green">+{{ number_format($amount) }}</span></td>
+                                                </tr>
+                                            @endif
                                         @endif
                                     @endforeach
                                 @endif
@@ -910,14 +912,16 @@
                                     <td colspan="2"><small class="text-muted">The defending units extract resources from the battle field.</small></td>
                                 </tr>
                                     @foreach($event->data['defender']['resource_conversions'] as $resourceKey => $amount)
-                                        @php
-                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
-                                        @endphp
-                                        @if($amount > 0)
-                                            <tr>
-                                                <td>{{ ucwords($resource->name) }}:</td>
-                                                <td><span class="text-green">+{{ number_format($amount) }}</span></td>
-                                            </tr>
+                                        @if($resourceKey !== 'bodies_spent')
+                                            @php
+                                                $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                            @endphp
+                                            @if($amount > 0)
+                                                <tr>
+                                                    <td>{{ ucwords($resource->name) }}:</td>
+                                                    <td><span class="text-green">+{{ number_format($amount) }}</span></td>
+                                                </tr>
+                                            @endif
                                         @endif
                                     @endforeach
                                 @endif
