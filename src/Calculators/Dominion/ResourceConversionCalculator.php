@@ -158,8 +158,9 @@ class ResourceConversionCalculator
                     }
                     else
                     {
-                        $unitsRawDp = $this->militaryCalculator->getDefensivePowerRaw($converter, $enemy, null, [$converterUnitSlot => $converterUnitAmount]);
-                        $totalSurvivingRawDp = $this->militaryCalculator->getDefensivePowerRaw($converter, $enemy, null, $invasion['defender']['units_surviving']);
+                        $unitsRawDp = $this->militaryCalculator->getDefensivePowerRaw($converter, $enemy, null, [$converterUnitSlot => $converterUnitAmount], 0, false, true, null, true, true);
+
+                        $totalSurvivingRawDp = $this->militaryCalculator->getDefensivePowerRaw($converter, $enemy, null, $invasion['defender']['units_surviving'], 0, false, true, null, true, true);
 
                         $convertingUnits[$converterUnitSlot] = [
                             'amount' => $converterUnitAmount,
@@ -236,16 +237,20 @@ class ResourceConversionCalculator
                             {
                                 if($mode == 'offense')
                                 {
-                                    $killedUnitsRawPower = $this->militaryCalculator->getDefensivePowerRaw($enemy, $converter, null, [$enemyUnitKilledSlot => $enemyUnitKilledAmount]);
+                                    $killedUnitsRawPower = $this->militaryCalculator->getDefensivePowerRaw($enemy, $converter, null, [$enemyUnitKilledSlot => $enemyUnitKilledAmount], 0, false, true, null, true, true);
                                 }
                                 else
                                 {
                                     $killedUnitsRawPower = $this->militaryCalculator->getOffensivePowerRaw($enemy, $converter, null, [$enemyUnitKilledSlot => $enemyUnitKilledAmount]);
                                 }
 
+                                ldump($killedUnitsRawPower . ' raw power from the ' . number_format($enemyUnitKilledAmount) . ' ' . $enemy->race->units->where('slot', $enemyUnitKilledSlot)->first()->name);
+
                                 $resourceGained = $killedUnitsRawPower * $resourceAmountPerValue * $convertingUnits[$converterUnitSlot]['power_proportion'];
+
                                 #$resourceConversions[$resourceKey] *= $this->conversionCalculator->getConversionReductionMultiplier($enemy);
                                 $resourceGained *= $this->getInvasionResultMultiplier($invasion, $mode);
+                                
 
                                 $resourceConversions[$resourceKey] += $resourceGained;
 
@@ -274,7 +279,7 @@ class ResourceConversionCalculator
                                 {
                                     if($mode == 'offense')
                                     {
-                                        $killedUnitsRawPower = $this->militaryCalculator->getDefensivePowerRaw($enemy, $converter, null, [$enemyUnitKilledSlot => $enemyUnitKilledAmount]);
+                                        $killedUnitsRawPower = $this->militaryCalculator->getDefensivePowerRaw($enemy, $converter, null, [$enemyUnitKilledSlot => $enemyUnitKilledAmount], 0, false, true, null, true, true);
                                     }
                                     else
                                     {
