@@ -402,7 +402,7 @@ class MilitaryCalculator
             if ($numberOfUnits !== 0)
             {
                 $bonusDefense = $this->getBonusPowerFromPairingPerk($defender, $unit, 'defense', $units);
-                $bonusDefense = $this->getBonusPowerFromPairingsPerk($defender, $unit, 'defense', $units);
+                $bonusDefense += $this->getBonusPowerFromPairingsPerk($defender, $unit, 'defense', $units);
                 $powerDefense += $bonusDefense / $numberOfUnits;
             }
 
