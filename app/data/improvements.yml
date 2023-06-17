@@ -50,7 +50,6 @@ markets:
 mining:
   name: Mining
   excluded_races:
-    - Demon
     - Reptilians
     - Swarm
     - Sylvan
