@@ -258,7 +258,7 @@
                                             $unitTickAmount += $queueService->getDesecrationQueueAmount($selectedDominion, "military_{$unitType}", $i);
                                         @endphp
                                         <td class="text-center">
-                                            {{ ($unitTickAmount > 0) ? $unitTickAmount : '-' }}
+                                            {{ ($unitTickAmount > 0) ? number_format($unitTickAmount) : '-' }}
                                         </td>
                                     @endfor
                                     <td class="text-center">
@@ -278,7 +278,7 @@
                                             $spiesTickAmount += $queueService->getDesecrationQueueAmount($selectedDominion, "military_spies", $i);
                                         @endphp
                                         <td class="text-center">
-                                            {{ ($spiesTickAmount > 0) ? $spiesTickAmount : '-' }}
+                                            {{ ($spiesTickAmount > 0) ? number_format($spiesTickAmount) : '-' }}
                                         </td>
                                     @endfor
                                     <td class="text-center">
@@ -298,7 +298,7 @@
                                             $wizardsTickAmount += $queueService->getDesecrationQueueAmount($selectedDominion, "military_wizards", $i);
                                         @endphp
                                         <td class="text-center">
-                                            {{ ($wizardsTickAmount > 0) ? $wizardsTickAmount : '-' }}
+                                            {{ ($wizardsTickAmount > 0) ? number_format($wizardsTickAmount) : '-' }}
                                         </td>
                                     @endfor
                                     <td class="text-center">
@@ -318,7 +318,7 @@
                                             $archmagesTickAmount += $queueService->getDesecrationQueueAmount($selectedDominion, "military_archmages", $i);
                                         @endphp
                                         <td class="text-center">
-                                            {{ ($archmagesTickAmount > 0) ? $archmagesTickAmount : '-' }}
+                                            {{ ($archmagesTickAmount > 0) ? number_format($archmagesTickAmount) : '-' }}
                                         </td>
                                     @endfor
                                     <td class="text-center">
