@@ -363,7 +363,7 @@
                                                     $resourceTickAmount += $queueService->getDesecrationQueueAmount($selectedDominion, $key, $i);
                                                 @endphp
                                                 <td class="text-center">
-                                                    {{ ($resourceTickAmount > 0) ? $resourceTickAmount : '-' }}
+                                                    {{ ($resourceTickAmount > 0) ? number_format($resourceTickAmount) : '-' }}
                                                 </td>
                                             @endfor
                                             <td class="text-center">
