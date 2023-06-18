@@ -33,7 +33,7 @@
                         <tbody>
                             @foreach ($unitHelper->getUnitTypes($selectedDominion->race) as $unitType)
                                 @if(($selectedDominion->race->getPerkValue('cannot_train_spies') and $unitType == 'spies') or ($selectedDominion->race->getPerkValue('cannot_train_wizards') and $unitType == 'wizards') or ($selectedDominion->race->getPerkValue('cannot_train_archmages') and $unitType == 'archmages'))
-                                    {{-- Do nothing --}}
+                                    @continue
                                 @else
                                     <tr>
                                         <td>
@@ -94,16 +94,6 @@
                                                   @endif
                                               </td>
                                           @endif
-                                        <!-- Train -->
-                                        {{--
-                                        <td class="text-center">  
-                                            @if (!$unitHelper->isUnitTrainableByDominion($unit, $selectedDominion))
-                                                &mdash;
-                                            @else
-                                                <input type="number" name="train[military_{{ $unitType }}]" class="form-control text-center" placeholder="{{ number_format($trainingCalculator->getMaxTrainable($selectedDominion)[$unitType]) }}" min="0" max="{{ $trainingCalculator->getMaxTrainable($selectedDominion)[$unitType] }}" size="8" style="min-width:5em;" value="{{ old('train.' . $unitType) }}" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
-                                            @endif
-                                        </td>
-                                        --}}
 
                                         <td class="text-center" style="min-width: 150px">
                                             @if (!$unitHelper->isUnitTrainableByDominion($unit, $selectedDominion))
