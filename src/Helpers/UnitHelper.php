@@ -465,6 +465,7 @@ class UnitHelper
 
             'unit_production' => 'Produces %2$s %1$s per tick.',
             'attrition' => '%1$s%% attrition rate per tick.',
+            'attrition_if_capacity_limit_exceeded' => '%1$s%% attrition rate per tick if capacity limit exceeded.',
             'cannot_be_released' => 'Cannot be released',
             'reduces_unit_costs' => 'Reduces training costs by %1$s%% for every 1%% of population consisting of this unit. Max %2$s%% reduction.',
 
@@ -1329,6 +1330,7 @@ class UnitHelper
         $currentlyTrained += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
         $currentlyTrained += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
         $currentlyTrained += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
+        $currentlyTrained += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
 
         $totalWithAmountToTrain = $currentlyTrained + $amountToTrain;
 

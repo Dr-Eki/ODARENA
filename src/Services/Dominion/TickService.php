@@ -1014,7 +1014,24 @@ class TickService
 
                 # Look for static attrition protection.
 
-                ${'attritionUnit' . $slot} += $unitAttritionAmount;
+                ${'attritionUnit' . $slot} += round($unitAttritionAmount);
+            }
+
+            // Unit attrition if building limit exceeded
+            if($unitBuildingLimitAttritionPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'attrition_if_capacity_limit_exceeded') and $this->unitHelper->unitHasCapacityLimit($dominion, $slot))
+            {
+                $unitMaxCapacity = $this->unitHelper->getUnitMaxCapacity($dominion, $slot);
+
+                $unitAmount = $dominion->{'military_unit'.$slot};
+                #$unitAmount = $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
+
+                $unitsSubjectToAttrition = $unitAmount - $unitMaxCapacity;
+
+                $unitAttritionAmount = $unitsSubjectToAttrition * ($unitBuildingLimitAttritionPerk / 100);
+
+                $unitAttritionAmount = max(0, min($unitAttritionAmount, $dominion->{'military_unit'.$slot})); # Sanity caps (greater than 0, and cannot exceed units at home)
+
+                ${'attritionUnit' . $slot} += round($unitAttritionAmount);
 
             }
         }

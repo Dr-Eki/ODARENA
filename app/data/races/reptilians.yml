@@ -93,6 +93,7 @@ units:
     perks:
       building_limit: monument,1 # building, buildings per unit, imp to increased
       casualties: -90
+      attrition_if_capacity_limit_exceeded: 2.5 # Decays at a rate of 2.5% per tick of units exceeding building_limit
 
   # - name: Eternal One
   #   training_time: 12

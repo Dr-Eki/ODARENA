@@ -22,6 +22,8 @@ perks:
   rezone_cost: -20
   salvaging: 50
 
+# Gargoyles?
+
 units:
   - name: Slave Soldier
     training_time: 3

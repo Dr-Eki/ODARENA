@@ -114,7 +114,8 @@ class ResourceConversionCalculator
         {
             if(!in_array($converterUnitSlot, ['draftees','peasants','spies','wizards','archmages']))
             {    
-                $unit = $this->unitHelper->getRaceUnitFromSlot($converter->race, $converterUnitSlot);
+                #$unit = $this->unitHelper->getRaceUnitFromSlot($converter->race, $converterUnitSlot);
+                $unit = $converter->race->units->where('slot', $converterUnitSlot)->first();
 
                 if(
                     # Single

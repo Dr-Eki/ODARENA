@@ -23,7 +23,7 @@
                                 @foreach ($desecrationCalculator->getAvailableBattlefields($selectedDominion) as $battlefield)
                                     @php
                                         $bodies = 'Unknown number of bodies';
-                                        if($selectedDominion->getSpellPerkValue('can_see_battlefield_bodies'))
+                                        if($selectedDominion->getSpellPerkValue('can_see_battlefield_bodies') or ($selectedDominion->round->ticks - $battlefield->tick) > 6)
                                         {
                                             $bodies = $battlefield->data['result']['bodies']['available'];
                                         }
@@ -46,9 +46,9 @@
 
                                             @if($battlefield->isAmbush)
                                                 ambushed
+                                            @else
+                                                invaded
                                             @endif
-
-
 
                                             {{ $battlefield->target->name }} (# {{ $battlefield->target->realm->number }}) 
 
