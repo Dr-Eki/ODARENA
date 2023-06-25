@@ -310,6 +310,31 @@ class ResourceCalculator
 
                 $production += $producingUnits * $amountProduced;
             }
+
+            # Check for peasants_conversions
+            if($unitPeasantsConversionPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'peasants_conversions'))
+            {
+                $resourcePairs = $unitPeasantsConversionPerkData;
+                array_shift($resourcePairs); // Remove the first element
+                $peasantsConvertedPerUnit = (float)$unitPeasantsConversionPerkData[0];
+                $amountPerPeasant = 0;
+
+                foreach ($resourcePairs as $resourcePair)
+                {
+                    if ($resourcePair[1] == $resourceKey)
+                    {
+                        $amountPerPeasant += (float)$resourcePair[0];
+                        break;
+                    }
+                }
+
+                $multiplier = 1;
+                $multiplier += $dominion->getSpellPerkMultiplier('peasants_converted');
+                $multiplier += $dominion->getBuildingPerkMultiplier('peasants_converted');
+                $multiplier += $dominion->getImprovementPerkMultiplier('peasants_converted');
+
+                $production += min($dominion->{'military_unit' . $slot} * $multiplier * $peasantsConvertedPerUnit, $dominion->peasants) * $amountPerPeasant;
+            }
         }
 
         # Check for RESOURCE_production_raw_random
