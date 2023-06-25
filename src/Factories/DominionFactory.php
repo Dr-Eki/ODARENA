@@ -166,7 +166,8 @@ class DominionFactory
 
             if($race->name == 'Demon')
             {
-                $startingParameters['unit5'] = 1;
+                $maxUnitSlot = $race->units->max('slot');
+                $startingParameters['unit' . $maxUnitSlot] = 1;
             }
 
             if($race->name == 'Growth')
