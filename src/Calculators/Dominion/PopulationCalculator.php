@@ -678,11 +678,11 @@ class PopulationCalculator
         $multiplier += $dominion->getDecreePerkMultiplier('population_growth');
 
         # Look for population_growth in units
-        for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
+        foreach($dominion->race->units as $unit)
         {
-            if($unitPopulationGrowthPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'population_growth'))
+            if($unitPopulationGrowthPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'population_growth'))
             {
-                $multiplier += ($dominion->{"military_unit".$slot} / $this->getMaxPopulation($dominion)) * $unitPopulationGrowthPerk;
+                $multiplier += ($dominion->{"military_unit".$unit->slot} / $this->getMaxPopulation($dominion)) * $unitPopulationGrowthPerk;
             }
         }
 

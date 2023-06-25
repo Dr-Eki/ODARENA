@@ -181,6 +181,11 @@ class TitleHelper
                 $negativeBenefit = false;
                 $description = 'Defensive power:';
                 break;
+            case 'training_time_raw':
+                $negativeBenefit = true;
+                $description = 'Training time:';
+                $valueType = ' tick(s)';
+                break;
             default:
                 $negativeBenefit = false;
                 $description = 'Missing description for perk type: ' . $perkType->key;

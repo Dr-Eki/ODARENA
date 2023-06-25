@@ -94,7 +94,7 @@
                                     @endphp
                                     <tr data-toggle="tooltip" data-placement="top" title='<small class="text-muted">{{ $resource->name }}:</small> {{ number_format($resourceCalculator->getProduction($selectedDominion, $resourceKey) - $resourceCalculator->getConsumption($selectedDominion, $resourceKey)) }}/tick'>
                                         <td>{{ $resource->name }}:</td>
-                                        <td>{{ number_format($resourceCalculator->getAmount($selectedDominion, $resourceKey)) }}</td>
+                                        <td>{{ number_format($selectedDominion->{'resource_' . $resourceKey}) }}</td>
                                     </tr>
                                 @endforeach
                                 <tr data-toggle="tooltip" data-placement="top" title='<small class="text-muted">XP:</small> {{ number_format($productionCalculator->getXpGeneration($selectedDominion)) }}/tick'>

@@ -37,6 +37,8 @@ units:
   power:
     offense: 0
     defense: 3
+  perks:
+    lumber_production_raw: 1
 
 - name: Sentinel
   training_time: 9
@@ -70,8 +72,8 @@ units:
     - living
     - intelligent
   cost:
-    gold: 1350
-    lumber: 80
+    gold: 1250
+    lumber: 120
     draftees: 1
   power:
     offense: 6

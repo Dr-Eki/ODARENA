@@ -118,6 +118,7 @@ saw_mill:
   name: Saw Mill
   exclusive_races:
     - Kobold
+    - Troll
   perks:
     lumber_production_raw: 35
 
@@ -433,7 +434,7 @@ mana_tree:
     - Sylvan
   perks:
     mana_production_raw: 30
-    sapling_storage_raw: 4
+    sapling_storage_raw: 5
 
 meadow:
   name: Meadow

@@ -284,14 +284,13 @@ class Dominion extends AbstractModel
 
     public function resources()
     {
-        return $this->hasManyThrough(
+        return $this->belongsToMany(
             Resource::class,
-            DominionResource::class,
+            'dominion_resources',
             'dominion_id',
-            'id',
-            'id',
             'resource_id'
-        );
+        )
+            ->withPivot('amount');
     }
 
     public function deity()
@@ -348,12 +347,16 @@ class Dominion extends AbstractModel
     }
 
     # This code enables the following syntax:
-    # $dominion->get{$terrain}Terrain(), such as getForestTerrain()
+    # $dominion->{'terrain_' . $terrainKey}
 
     public function __get($key)
     {
         if (preg_match('/^terrain_(\w+)$/', $key, $matches)) {
             return $this->getTerrainAmount($matches[1]);
+        }
+    
+        if (preg_match('/^resource_(\w+)$/', $key, $matches)) {
+            return $this->getResourceAmount($matches[1]);
         }
     
         return parent::__get($key);
@@ -374,6 +377,21 @@ class Dominion extends AbstractModel
         return 0;
     }
 
+    protected function getResourceAmount($resourceKey)
+    {
+        $resourceKey = strtolower($resourceKey);
+    
+        $resource = $this->resources()
+            ->where('resources.key', $resourceKey)
+            ->first();
+    
+        if ($resource) {
+            return $resource->pivot->amount;
+        }
+    
+        return 0;
+    }
+    
     # Cool, huh?
 
     public function states()
@@ -1719,7 +1737,6 @@ class Dominion extends AbstractModel
         {
             if(isset($this->race->land_improvements[$landType][$perkKey]))
             {
-                #dd($this->race->land_improvements, $landType, $perkKey, $this->race->land_improvements[$landType][$perkKey]);
                 $perk += $this->race->land_improvements[$landType][$perkKey] * ($this->{'land_' . $landType} / $this->land);
             }
         }

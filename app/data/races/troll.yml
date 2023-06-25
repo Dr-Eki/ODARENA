@@ -39,7 +39,8 @@ perks:
 
 units:
 - name: Skullcrusher Maul
-  training_time: 12
+  training_time: 9
+  static_networth: 3
   type:
     - equipment
   cost:
@@ -52,7 +53,8 @@ units:
     does_not_count_as_population: 1
 
 - name: Thornwood Cudgel
-  training_time: 12
+  training_time: 6
+  static_networth: 2
   type:
     - equipment
   cost:
@@ -65,8 +67,8 @@ units:
     does_not_count_as_population: 1
 
 - name: Ironskin
-  training_time: 12
-  static_networth: 4
+  training_time: 9
+  static_networth: 3
   type:
     - equipment
   cost:
