@@ -819,7 +819,7 @@ class TickService
             $populationPeasantGrowth -= $amountToDie;
         }
 
-        # Check for resource_conversion
+        # Check for peasants_conversion
         if($peasantConversionData = $dominion->getBuildingPerkValue('peasants_conversion'))
         {
             $multiplier = 1;
@@ -829,7 +829,7 @@ class TickService
 
             $populationPeasantGrowth -= $peasantConversionData['from']['peasants'];
         }
-        # Check for resource_conversion
+        # Check for peasants_conversions
         if($peasantConversionsData = $dominion->getBuildingPerkValue('peasants_conversions'))
         {
             $multiplier = 1;
@@ -838,6 +838,26 @@ class TickService
             $multiplier += $dominion->getImprovementPerkMultiplier('peasants_converted');
 
             $populationPeasantGrowth -= $peasantConversionsData['from']['peasants'];
+        }
+        # Check for units with peasants_conversions
+        foreach($dominion->race->units as $unit)
+        {
+            $peasantsConvertedByUnits = 0;
+
+            if($unitPeasantsConversionPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'peasants_conversions'))
+            {
+                $multiplier = 1;
+                $multiplier += $dominion->getSpellPerkMultiplier('peasants_converted');
+                $multiplier += $dominion->getBuildingPerkMultiplier('peasants_converted');
+                $multiplier += $dominion->getImprovementPerkMultiplier('peasants_converted');
+
+                $peasantsConvertedByUnits += $unitPeasantsConversionPerk[0] * $dominion->{'military_units' . $unit->slot} * $multiplier;
+                dump($peasantsConvertedByUnits);
+
+            }
+            dd($peasantsConvertedByUnits);
+
+            $populationPeasantGrowth -= $peasantsConvertedByUnits;
         }
 
         if(($dominion->peasants + $tick->peasants) <= 0)

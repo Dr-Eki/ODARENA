@@ -38,6 +38,18 @@ perks:
   gems_production_mod: 50
 
 units:
+- name: Ogre
+  training_time: 9
+  type:
+    - living
+    - sentient
+  cost:
+    gold: 700
+    ore: 100
+  power:
+    offense: 0
+    defense: 5
+
 - name: Skullcrusher Maul
   training_time: 9
   static_networth: 3
@@ -47,10 +59,7 @@ units:
     ore: 420
   power:
     offense: 0
-    defense: 0
-  perks:
-    sendable_with_zero_op: 1
-    does_not_count_as_population: 1
+    defense: 6
 
 - name: Thornwood Cudgel
   training_time: 6
@@ -93,6 +102,6 @@ units:
     defense: 9
   perks:
       offense_from_pairings: 1;3,2;2 # slot;amount
-      defense_from_pairing: 3,2 # slot,amount
+      defense_from_pairing: 3,3 # slot,amount
       plunders: food;20,ore;10,gems;5
-      #only_dies_vs_raw_power: 6 # >=
+      only_dies_vs_raw_power: 6 # >=

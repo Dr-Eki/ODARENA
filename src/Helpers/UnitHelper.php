@@ -464,8 +464,8 @@ class UnitHelper
             'no_draftee_on_release' => 'No draftee returned if released.',
 
             'unit_production' => 'Produces %2$s %1$s per tick.',
-            'attrition' => '%1$s%% attrition rate per tick.',
-            'attrition_if_capacity_limit_exceeded' => '%1$s%% attrition rate per tick if capacity limit exceeded.',
+            'attrition' => '%1$s%% attrition per tick.',
+            'attrition_if_capacity_limit_exceeded' => '%1$s%% attrition per tick if capacity limit exceeded.',
             'cannot_be_released' => 'Cannot be released',
             'reduces_unit_costs' => 'Reduces training costs by %1$s%% for every 1%% of population consisting of this unit. Max %2$s%% reduction.',
 
@@ -492,7 +492,7 @@ class UnitHelper
             'amount_limit' => 'You can at most have %1$s of this unit.',
 
             // Population
-            'does_not_count_as_population' => 'Does not count towards population. No housing required.',
+            'does_not_count_as_population' => 'No housing required.',
             'population_growth' => 'Increases population growth by 2%% for every 1%% of population.',
 
             'houses_military_units' => 'Houses %1$s military units.',
