@@ -166,7 +166,7 @@ class DominionFactory
 
             if($race->name == 'Demon')
             {
-                $startingParameters['unit4'] = 1;
+                $startingParameters['unit5'] = 1;
             }
 
             if($race->name == 'Growth')
