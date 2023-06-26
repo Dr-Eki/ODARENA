@@ -1,6 +1,11 @@
 @extends('layouts.master')
 @section('title', 'Military')
 
+@php
+    $start = microtime(true);
+@endphp
+
+
 @section('content')
 <div class="row">
 
@@ -12,7 +17,7 @@
             </div>
             <form action="{{ route('dominion.military.train') }}" method="post" role="form">
                 @csrf
-                <div class="box-body table-responsive no-padding">
+                <div class="box-body table-responsive no-padding" id="units_overview_and_training">
                     <table class="table">
                         <colgroup>
                             <col>
@@ -149,9 +154,10 @@
                 </div>
             </form>
         </div>
+        {{ dump(microtime(true) - $start) }}
 
         <!-- Stacked boxes -->
-        <div class="col-sm-12 col-md-12">
+        <div class="col-sm-12 col-md-12" id="units_in_training_and_home">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="ra ra-sword"></i> Units in training and home</h3>
@@ -203,8 +209,9 @@
                 </div>
             </div>
         </div>
+        {{ dump(microtime(true) - $start) }}
 
-        <div class="col-sm-12 col-md-12">
+        <div class="col-sm-12 col-md-12" id="units_returning">
             <div class="box box-warning">
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="ra ra-boot-stomp"></i> Units returning</h3>
@@ -368,11 +375,10 @@
                 </div>
             </div>
         </div>
-        
-
+        {{ dump(microtime(true) - $start) }}
     </div>
 
-    <div class="col-sm-12 col-md-3">
+    <div class="col-sm-12 col-md-3" id="units_release_and_draft_rate">
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Housing</h3>
@@ -432,10 +438,14 @@
                 </div>
                 @endif
         </div>
+        {{ dump(microtime(true) - $start) }}
 
         @include('partials.dominion.military-cost-modifiers')
+        {{ dump(microtime(true) - $start) }}
         @include('partials.dominion.military-power-modifiers')
+        {{ dump(microtime(true) - $start) }}
         @include('partials.dominion.watched-dominions')
+        {{ dump(microtime(true) - $start) }}
     </div>
 
 </div>
