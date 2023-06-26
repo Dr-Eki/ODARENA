@@ -334,6 +334,11 @@ class ResourceCalculator
                 $multiplier += $dominion->getBuildingPerkMultiplier('peasants_converted');
                 $multiplier += $dominion->getImprovementPerkMultiplier('peasants_converted');
 
+                #if(in_array($resourceKey, ['blood','soul']))
+                #{
+                #    dd($dominion->{'military_unit' . $slot} * $multiplier * $peasantsConvertedPerUnit, $dominion->peasants);
+                #}
+
                 $production += min($dominion->{'military_unit' . $slot} * $multiplier * $peasantsConvertedPerUnit, $dominion->peasants) * $amountPerPeasant;
             }
         }
