@@ -1359,6 +1359,30 @@ class Dominion extends AbstractModel
 
     # SPELLS
 
+    public function isSpellActive(string $spellKey): bool
+    {
+        return $this->spells()
+            ->where('key', $spellKey)
+            ->where('duration', '>', 0)
+            ->exists();
+    }
+    
+    public function hasSpellCast(string $spellKey): bool
+    {
+        $spell = Spell::where('key', $spellKey)->firstOrFail();
+
+        return $this->spellsCast()
+            ->where('spell_id', $spell->id)
+            ->where('dominion_id', '!=', $this->id)
+            ->exists();
+    }
+
+    public function spellsCast()
+    {
+        return $this->hasMany(DominionSpell::class, 'caster_id');
+    }
+
+
     protected function getSpellPerks()
     {
       return $this->spells->flatMap(

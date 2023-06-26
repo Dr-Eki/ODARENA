@@ -157,13 +157,13 @@
                             </div>
                             <div class="box-footer">
     
-                              @if ($spellCalculator->isSpellActive($selectedDominion, 'rainy_season'))
+                              @if ($selectedDominion->isSpellActive('rainy_season'))
                                   <p><strong><em>You cannot attack during the Rainy Season.</em></strong></p>
     
-                              @elseif ($spellCalculator->isSpellActive($selectedDominion, 'stasis'))
+                              @elseif ($selectedDominion->isSpellActive('stasis'))
                                   <p><strong><em>You cannot attack while you are in stasis.</em></strong></p>
     
-                              @elseif ($spellCalculator->isSpellActive($selectedDominion, 'flood_the_caverns'))
+                              @elseif ($selectedDominion->isSpellActive('flood_the_caverns'))
                                   <p><strong><em>You cannot attack while the caverns are flooded.</em></strong></p>
     
                               @elseif ($protectionService->isUnderProtection($selectedDominion))

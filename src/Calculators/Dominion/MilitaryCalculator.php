@@ -252,7 +252,7 @@ class MilitaryCalculator
         // Advancements
         $multiplier += $attacker->getAdvancementPerkMultiplier('offensive_power');
 
-        // Spellss
+        // Spells
         $multiplier += $this->getSpellMultiplier($attacker, $defender, 'offense');
         $multiplier += $attacker->getSpellPerkMultiplier('offensive_power');
 
@@ -1638,7 +1638,7 @@ class MilitaryCalculator
           $powerFromSpell = (float)$spellPerkData[1];
           $spellKey = (string)$spellPerkData[0];
 
-          if ($this->spellCalculator->isSpellActive($dominion, $spellKey))
+          if ($dominion->isSpellActive($spellKey))
           {
               $powerFromPerk = $powerFromSpell;
           }
@@ -1663,19 +1663,19 @@ class MilitaryCalculator
           }
 
           $powerVersusSpell = (float)$spellPerkData[1];
-          $spell = $spellPerkData[0];
+          $spellKey = $spellPerkData[0];
 
           if (!empty($calc))
           {
               # Override resource amount for invasion calculator
-              if (isset($calc[$spell]))
+              if (isset($calc[$spellKey]))
               {
                   $powerFromPerk = $powerVersusSpell;
               }
           }
           elseif ($target !== null)
           {
-              if($targetSpellActive = $this->spellCalculator->isSpellActive($target, $spell));
+              if($target->isSpellActive($spellKey))
               {
                   $powerFromPerk = $powerVersusSpell;
               }
@@ -2600,16 +2600,6 @@ class MilitaryCalculator
         elseif($power == 'defense')
         {
             #$multiplier += $dominion->getSpellPerkMultiplier('defensive_power');# $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'defensive_power');
-
-            // Spell: Chitin
-            if(isset($target))
-            {
-                if ($dominion->getSpellPerkValue('defensive_power_vs_blight') and $this->spellCalculator->isSpellActive($target, 'blight'))
-                {
-                    $multiplier += $dominion->getSpellPerkValue('defensive_power_vs_blight');
-                }
-            }
-
         }
 
         return $multiplier;
