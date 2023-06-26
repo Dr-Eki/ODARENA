@@ -37,7 +37,7 @@
                         </thead>
                         <tbody>
                             @foreach ($unitHelper->getUnitTypes($selectedDominion->race) as $unitType)
-                                @if(($selectedDominion->race->getPerkValue('cannot_train_spies') and $unitType == 'spies') or ($selectedDominion->race->getPerkValue('cannot_train_wizards') and $unitType == 'wizards') or ($selectedDominion->race->getPerkValue('cannot_train_archmages') and $unitType == 'archmages'))
+                                @if($selectedDominion->race->getPerkValue('cannot_train_' . $unitType))
                                     @continue
                                 @else
                                     <tr>

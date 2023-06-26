@@ -1401,87 +1401,94 @@ class Dominion extends AbstractModel
         $deityKey = $this->hasDeity() ? $this->deity->key : null;
         $perk = 0;
 
+        $dominionSpells = DominionSpell::where('caster_id', '=', $this->id)
+                  ->orWhere('dominion_id', '=', $this->id)
+                  ->get()
+                  ->keyBy('spell_id');
+
+
         # Check each spell
         foreach ($this->spells as $spell)
         {
-            # Get the dominion spell object
-
-            $dominionSpell = DominionSpell::where('spell_id',$spell->id)->where(function($query) {
-                    $query->where('caster_id','=',$this->id)
-                          ->orWhere('dominion_id','=',$this->id);
-            })
-            ->first();
-
+            $dominionSpell = $dominionSpells->get($spell->id);
             $perkValueString = $spell->getPerkValue($perkKey);
 
-            if($dominionSpell and $spell->perks->filter(static function (SpellPerkType $spellPerkType) use ($perkKey) { return ($spellPerkType->key === $perkKey); }) and $dominionSpell->duration > 0 and $perkValueString !== 0)
+            # Only check spells that have the perk we're looking for
+            if(!$spell->perks->filter(static function (SpellPerkType $spellPerkType) use ($perkKey) { return ($spellPerkType->key === $perkKey); }))
             {
-                if(is_numeric($perkValueString))
-                {
-                    $perk += (float)$perkValueString;
-                }
-                # Deity spells (no max): deityKey, perk, max
-                elseif(in_array($perkKey, ['offensive_power_from_devotion', 'defense_from_devotion']))
-                {
-                    $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
-
-                    $deityKey = $perkValueArray[0];
-                    $perTick = (float)$perkValueArray[1];
-                    $max = (int)$perkValueArray[2];
-
-                    if($this->hasDeity() and $this->deity->key == $deityKey)
-                    {
-                        $perk += min($this->devotion->duration * $perTick, $max);
-                    }
-                }
-                elseif($perkKey == 'defense_from_resource')
-                {
-                    $resourceCalculator = app(ResourceCalculator::class);
-
-                    $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
-
-                    $dpPerResource = (float)$perkValueArray[0];
-                    $resourceKey = (string)$perkValueArray[1];
-
-                    $perk = $resourceCalculator->getAmount($this, $resourceKey) * $dpPerResource;
-                }
-                elseif($perkKey == 'resource_lost_on_invasion')
-                {
-                    return True;
-                }
-                elseif($perkKey == 'elk_production_raw_from_land')
-                {
-                    $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
-
-                    $perAcre = (float)$perkValueArray[0];
-                    $landType = (string)$perkValueArray[1];
-
-                    $perk += floor($perAcre * $this->{'land_' . $landType});
-                }
-                elseif($perkKey == 'training_time_raw_from_morale')
-                {
-                    $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
-
-                    $perMoraleChunk = (float)$perkValueArray[0];
-                    $moraleChunk = (int)$perkValueArray[1];
-                    $max = (int)$perkValueArray[2];
-
-                    $reduction = floor($this->morale / $moraleChunk) * $perMoraleChunk;
-
-                    $perk += max($reduction, $max);
-                }
-                else
-                {
-                    dd("[Error] Undefined spell perk type:", $perkKey, $perkValueString);
-                }
+                continue;
             }
 
-            if(isset($spell->deity))
+            # Ignore spells that are not active or have perk value equal to 0
+            if($dominionSpell->duration <= 0 or $perkValueString === 0)
             {
-                if(!$this->hasDeity() or $spell->deity->id !== $this->deity->id)
+                continue;
+            }
+
+            # Ignore spells that require a deity unless the dominion has a deity
+            if(isset($spell->deity) && (!$this->hasDeity() || $spell->deity->id !== $this->deity->id))
+            {
+                $perk = 0;
+            }
+
+            # Basic spells with just a numeric value
+            if(is_numeric($perkValueString))
+            {
+                $perk += (float)$perkValueString;
+            }
+            # Deity spells (no max): deityKey, perk, max
+            elseif(in_array($perkKey, ['offensive_power_from_devotion', 'defense_from_devotion']))
+            {
+                $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
+
+                $deityKey = $perkValueArray[0];
+                $perTick = (float)$perkValueArray[1];
+                $max = (int)$perkValueArray[2];
+
+                if($this->hasDeity() and $this->deity->key == $deityKey)
                 {
-                    $perk = 0;
+                    $perk += min($this->devotion->duration * $perTick, $max);
                 }
+            }
+            elseif($perkKey == 'defense_from_resource')
+            {
+                $resourceCalculator = app(ResourceCalculator::class);
+
+                $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
+
+                $dpPerResource = (float)$perkValueArray[0];
+                $resourceKey = (string)$perkValueArray[1];
+
+                $perk = $resourceCalculator->getAmount($this, $resourceKey) * $dpPerResource;
+            }
+            elseif($perkKey == 'resource_lost_on_invasion')
+            {
+                return True;
+            }
+            elseif($perkKey == 'elk_production_raw_from_land')
+            {
+                $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
+
+                $perAcre = (float)$perkValueArray[0];
+                $landType = (string)$perkValueArray[1];
+
+                $perk += floor($perAcre * $this->{'land_' . $landType});
+            }
+            elseif($perkKey == 'training_time_raw_from_morale')
+            {
+                $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
+
+                $perMoraleChunk = (float)$perkValueArray[0];
+                $moraleChunk = (int)$perkValueArray[1];
+                $max = (int)$perkValueArray[2];
+
+                $reduction = floor($this->morale / $moraleChunk) * $perMoraleChunk;
+
+                $perk += max($reduction, $max);
+            }
+            else
+            {
+                dd("[Error] Undefined spell perk type:", $perkKey, $perkValueString);
             }
 
             if(($spellDamageSufferedPerk = $this->getTechPerkMultiplier($spell->key . '_spell_damage_suffered')))

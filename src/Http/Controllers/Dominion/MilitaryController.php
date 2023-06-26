@@ -5,7 +5,6 @@ namespace OpenDominion\Http\Controllers\Dominion;
 use OpenDominion\Models\Resource;
 
 use OpenDominion\Exceptions\GameException;
-
 use OpenDominion\Helpers\DominionHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\UnitHelper;
