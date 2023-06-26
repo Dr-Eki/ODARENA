@@ -745,7 +745,7 @@ class ResourceCalculator
         if($resourceKey == 'sapling')
         {
             $maxStorage = $dominion->terrain_forest * $dominion->race->getPerkValue('saplings_per_forest');
-            $maxStorage =+ $dominion->getBuildingPerkValue('sapling_storage_raw');
+            $maxStorage += $dominion->getBuildingPerkValue('sapling_storage_raw');
         }
 
         $multiplier = 1;
