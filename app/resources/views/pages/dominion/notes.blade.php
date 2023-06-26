@@ -2,6 +2,12 @@
 @section('title', 'Notes')
 
 @section('content')
+    @php
+        Cache::put('test-key', 'test-value', 60);
+        $value = Cache::get('test-key');
+        dump($value);
+    @endphp
+
     <div class="row">
 
         <div class="col-sm-12 col-md-9">

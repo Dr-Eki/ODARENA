@@ -2,6 +2,8 @@
 
 namespace OpenDominion\Calculators\Dominion\Actions;
 
+use Illuminate\Support\Facades\Cache;
+
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Helpers\UnitHelper;
 use OpenDominion\Models\Dominion;
@@ -72,98 +74,100 @@ class TrainingCalculator
      */
     public function getTrainingCostsPerUnit(Dominion $dominion): array
     {
-        $costsPerUnit = [];
 
-        $spyCostMultiplier = $this->getSpyCostMultiplier($dominion);
-        $wizardCostMultiplier = $this->getWizardCostMultiplier($dominion);
+        return Cache::remember("dominion.{$dominion->id}.trainingCostsPerUnit", 5, function () use ($dominion)
+        {
+            $costsPerUnit = [];
 
-        // Values
-        #$units = $dominion->race->units;
-
-        $spyCost = $this->raceHelper->getSpyCost($dominion->race);
-        $wizardCost = $this->raceHelper->getWizardCost($dominion->race);
-        $archmageCost = $this->raceHelper->getArchmageCost($dominion->race);
-
-        $spyCost['trainedFrom'] = $dominion->race->getPerkValue('no_draftee_for_spies') ? 'peasant' : 'draftees';
-        $wizardCost['trainedFrom'] = $dominion->race->getPerkValue('no_draftee_for_wizards') ? 'peasant' : 'draftees';
-
-        # Generally, do not mess with this one.
-        $archmageCost['trainedFrom'] = 'wizards';
-
-        foreach ($this->unitHelper->getUnitTypes($dominion->race) as $unitType) {
-            $cost = [];
-
-            switch ($unitType) {
-                case 'spies':
-                    $cost[$spyCost['trainedFrom']] = 1;
-                    $cost[$spyCost['resource']] = round($spyCost['amount'] * $spyCostMultiplier);
-                    break;
-
-                case 'wizards':
-                    $cost[$spyCost['trainedFrom']] = 1;
-                    $cost[$wizardCost['resource']] = round($wizardCost['amount'] * $wizardCostMultiplier);
-                    break;
-
-                case 'archmages':
-                    $cost[$archmageCost['trainedFrom']] = 1;
-                    $cost[$archmageCost['resource']] = round($archmageCost['amount'] * $wizardCostMultiplier);
-                    break;
-
-                default:
-                    $unitSlot = (((int)str_replace('unit', '', $unitType)) - 1);
-
-                    $slot = $unitSlot+1;
-                    $unit = $dominion->race->units->filter(function ($unit) use ($slot) {
-                        return ($unit->slot === $slot);
-                    })->first();
-
-                foreach($unit->cost as $costResourceKey => $amount)
-                {
-                    $multiplier = 1;
-                    $multiplier += $this->getSpecialistEliteCostMultiplier($dominion, $costResourceKey);
-                    $multiplier += $this->getAttributeCostMultiplier($dominion, $unit);
-
-                    $multiplier += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot) * ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'cost_increase_to_train_per_unit') / 100);
-
-                    $multiplier = max(0.10, $multiplier); # Max possible reduction is -90%.
-
-                    $cost[$costResourceKey] = ceil($amount * $multiplier);
-                }
-
-                if(($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot(intval(str_replace('unit','',$unitType)), 'housing_count')))
-                {
-                    if(isset($cost['peasants'])) 
+            $spyCostMultiplier = $this->getSpyCostMultiplier($dominion);
+            $wizardCostMultiplier = $this->getWizardCostMultiplier($dominion);
+        
+            $spyCost = $this->raceHelper->getSpyCost($dominion->race);
+            $wizardCost = $this->raceHelper->getWizardCost($dominion->race);
+            $archmageCost = $this->raceHelper->getArchmageCost($dominion->race);
+    
+            $spyCost['trainedFrom'] = $dominion->race->getPerkValue('no_draftee_for_spies') ? 'peasant' : 'draftees';
+            $wizardCost['trainedFrom'] = $dominion->race->getPerkValue('no_draftee_for_wizards') ? 'peasant' : 'draftees';
+    
+            # Generally, do not mess with this one.
+            $archmageCost['trainedFrom'] = 'wizards';
+    
+            foreach ($this->unitHelper->getUnitTypes($dominion->race) as $unitType) {
+                $cost = [];
+    
+                switch ($unitType) {
+                    case 'spies':
+                        $cost[$spyCost['trainedFrom']] = 1;
+                        $cost[$spyCost['resource']] = round($spyCost['amount'] * $spyCostMultiplier);
+                        break;
+    
+                    case 'wizards':
+                        $cost[$spyCost['trainedFrom']] = 1;
+                        $cost[$wizardCost['resource']] = round($wizardCost['amount'] * $wizardCostMultiplier);
+                        break;
+    
+                    case 'archmages':
+                        $cost[$archmageCost['trainedFrom']] = 1;
+                        $cost[$archmageCost['resource']] = round($archmageCost['amount'] * $wizardCostMultiplier);
+                        break;
+    
+                    default:
+                        $unitSlot = (((int)str_replace('unit', '', $unitType)) - 1);
+    
+                        $slot = $unitSlot+1;
+                        $unit = $dominion->race->units->filter(function ($unit) use ($slot) {
+                            return ($unit->slot === $slot);
+                        })->first();
+    
+                    foreach($unit->cost as $costResourceKey => $amount)
                     {
-                        $cost['peasants'] = min($nonStandardHousing, 1);
+                        $multiplier = 1;
+                        $multiplier += $this->getSpecialistEliteCostMultiplier($dominion, $costResourceKey);
+                        $multiplier += $this->getAttributeCostMultiplier($dominion, $unit);
+    
+                        $multiplier += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot) * ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'cost_increase_to_train_per_unit') / 100);
+    
+                        $multiplier = max(0.10, $multiplier); # Max possible reduction is -90%.
+    
+                        $cost[$costResourceKey] = ceil($amount * $multiplier);
                     }
-                    if(isset($cost['draftees']))
+    
+                    if(($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot(intval(str_replace('unit','',$unitType)), 'housing_count')))
                     {
-                        $cost['draftees'] = min($nonStandardHousing, 1);
+                        if(isset($cost['peasants'])) 
+                        {
+                            $cost['peasants'] = min($nonStandardHousing, 1);
+                        }
+                        if(isset($cost['draftees']))
+                        {
+                            $cost['draftees'] = min($nonStandardHousing, 1);
+                        }
                     }
+    
+                    break;
                 }
-
-                break;
+    
+                $costsPerUnit[$unitType] = $cost;
             }
-
-            $costsPerUnit[$unitType] = $cost;
-        }
-
-        if($dominion->race->getPerkValue('cannot_train_spies'))
-        {
-            unset($costsPerUnit['spies']);
-        }
-
-        if($dominion->race->getPerkValue('cannot_train_wizards'))
-        {
-            unset($costsPerUnit['wizards']);
-        }
-
-        if($dominion->race->getPerkValue('cannot_train_archmages'))
-        {
-            unset($costsPerUnit['archmages']);
-        }
-
-        return $costsPerUnit;
+    
+            if($dominion->race->getPerkValue('cannot_train_spies'))
+            {
+                unset($costsPerUnit['spies']);
+            }
+    
+            if($dominion->race->getPerkValue('cannot_train_wizards'))
+            {
+                unset($costsPerUnit['wizards']);
+            }
+    
+            if($dominion->race->getPerkValue('cannot_train_archmages'))
+            {
+                unset($costsPerUnit['archmages']);
+            }
+    
+            return $costsPerUnit;
+        });
+        
     }
 
     /**

@@ -66,6 +66,12 @@ services:
       UPLOAD_LIMIT: 300M
     networks:
       - odarena-network
+
+  memcached:
+    image: memcached:latest
+    ports:
+      - "11211:11211"
+
 networks:
   odarena-network:
     driver: bridge

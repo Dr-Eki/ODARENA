@@ -5,6 +5,8 @@ namespace OpenDominion\Services\Dominion\Actions\Military;
 use DB;
 use Throwable;
 
+use Illuminate\Support\Facades\Cache;
+
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\UnitHelper;
@@ -99,6 +101,8 @@ class TrainActionService
     {
         $this->guardLockedDominion($dominion);
         $this->guardActionsDuringTick($dominion);
+
+        Cache::forget("dominion.{$dominion->id}.trainingCostsPerUnit");
 
         // Qur: Statis
         if($dominion->getSpellPerkValue('stasis'))

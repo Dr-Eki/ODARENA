@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Calculators\Dominion;
 
+
 use DB;
 use Illuminate\Support\Collection;
 
