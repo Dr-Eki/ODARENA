@@ -8,10 +8,10 @@ azk_hurum:
   perks:
     offensive_power_on_retaliation: 5
     increases_enemy_casualties: 10
-    prestige_gains: -30
-    max_population: 15
-    population_growth: 20
-    food_consumption_mod: 20
+    prestige_gains: -15
+    max_population: 5
+    #population_growth: 20
+    food_consumption_mod: 10
 
 barathu_bint:
   name: Barathu Bint
