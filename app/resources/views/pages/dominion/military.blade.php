@@ -154,7 +154,7 @@
                 </div>
             </form>
         </div>
-        {{ dump(microtime(true) - $start) }}
+        {{ ldump(microtime(true) - $start) }}
 
         <!-- Stacked boxes -->
         <div class="col-sm-12 col-md-12" id="units_in_training_and_home">
@@ -209,7 +209,7 @@
                 </div>
             </div>
         </div>
-        {{ dump(microtime(true) - $start) }}
+        {{ ldump(microtime(true) - $start) }}
 
         <div class="col-sm-12 col-md-12" id="units_returning">
             <div class="box box-warning">
@@ -375,7 +375,7 @@
                 </div>
             </div>
         </div>
-        {{ dump(microtime(true) - $start) }}
+        {{ ldump(microtime(true) - $start) }}
     </div>
 
     <div class="col-sm-12 col-md-3" id="units_release_and_draft_rate">
@@ -438,14 +438,14 @@
                 </div>
                 @endif
         </div>
-        {{ dump(microtime(true) - $start) }}
+        {{ ldump(microtime(true) - $start) }}
 
         @include('partials.dominion.military-cost-modifiers')
-        {{ dump(microtime(true) - $start) }}
+        {{ ldump(microtime(true) - $start) }}
         @include('partials.dominion.military-power-modifiers')
-        {{ dump(microtime(true) - $start) }}
+        {{ ldump(microtime(true) - $start) }}
         @include('partials.dominion.watched-dominions')
-        {{ dump(microtime(true) - $start) }}
+        {{ ldump(microtime(true) - $start) }}
     </div>
 
 </div>
