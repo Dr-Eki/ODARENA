@@ -1364,7 +1364,7 @@ class Dominion extends AbstractModel
     {
         return $this->spells()
             ->where('key', $spellKey)
-            ->where('duration', '>', 0)
+            ->where('dominion_spells.duration', '>', 0)
             ->exists();
     }
     
