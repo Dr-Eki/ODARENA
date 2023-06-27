@@ -203,7 +203,6 @@ mining_equipment:
     - Simian
     - Sylvan
     - Swarm
-    - Troll
     - Undead
     - Void
     - Wood Elf
@@ -337,7 +336,6 @@ stoneworks:
     - Spirit
     - Sylvan
     - Swarm
-    - Troll
     - Undead
     - Void
     - Wood Elf
