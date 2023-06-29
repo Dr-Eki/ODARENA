@@ -84,38 +84,39 @@ class PopulationCalculator
     public function getPopulationMilitary(Dominion $dominion): int
     {
 
-        $military = 0;
+      $military = 0;
 
-        # Draftees, Spies, Wizards, and Arch Mages
-        $military += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'draftees');
-        $military += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'spies');
-        $military += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'wizards');
-        $military += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'archmages');
+      # Draftees, Spies, Wizards, and Arch Mages
+      $military += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'draftees');
+      $military += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'spies');
+      $military += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'wizards');
+      $military += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'archmages');
 
-        # Units in training
-        $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_spies');
-        $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_wizards');
-        $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_archmages');
+      # Units in training
+      $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_spies');
+      $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_wizards');
+      $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_archmages');
 
-        # Check each Unit for does_not_count_as_population perk.
-        foreach($dominion->race->units as $unit)
-        {
-            if (!$dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'does_not_count_as_population'))
-            {
-                $unitAmount = $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot);
-                $unitAmount += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+      # Check each Unit for does_not_count_as_population perk.
+      foreach($dominion->race->units as $unit)
+      {
+            $unitSlot = $unit->slot;
+          if (!$dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'does_not_count_as_population'))
+          {
+              $unitAmount = $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unitSlot);
+              $unitAmount += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unitSlot}");
 
-                # Check for housing_count
-                if($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'housing_count'))
-                {
-                    $unitAmount = ceil($unitAmount * $nonStandardHousing);
-                }
+              # Check for housing_count
+              if($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'housing_count'))
+              {
+                  $unitAmount = ceil($unitAmount * $nonStandardHousing);
+              }
 
-                $military += $unitAmount;
-            }
-        }
+              $military += $unitAmount;
+          }
+      }
 
-        return $military;
+      return $military;
     }
 
     /**
@@ -229,6 +230,9 @@ class PopulationCalculator
     public function getAvailableHousingFromMilitaryHousing(Dominion $dominion): int
     {
         $militaryHousingMultiplier = 1;
+        $militaryHousingMultiplier += $dominion->race->getPerkMultiplier('extra_barracks_housing');
+        $militaryHousingMultiplier += $dominion->getAdvancementPerkMultiplier('barracks_housing');
+
         $militaryHousingMultiplier += $dominion->race->getPerkMultiplier('military_housing');
         $militaryHousingMultiplier += $dominion->getAdvancementPerkMultiplier('military_housing');
         $militaryHousingMultiplier += $dominion->getDecreePerkMultiplier('military_housing');

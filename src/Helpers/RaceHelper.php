@@ -404,11 +404,6 @@ class RaceHelper
                 $description = 'Increased construction speed';
                 $valueType = ' ticks';
                 break;
-            case 'extra_barracks_housing':
-                $negativeBenefit = false;
-                $description = 'Military housing in buildings that provide military housing';
-                $valueType = '%';
-                break;
             case 'drafting':
                 $negativeBenefit = false;
                 $description = 'Peasants drafted per tick:';

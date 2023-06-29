@@ -1042,11 +1042,20 @@ class WorldNewsHelper
         if(in_array($realm->round->mode, ['packs', 'packs-duration']))
         {
 
+            if($realm->alignment === 'npc')
+            {
+                $realmString = 'Barbarians';
+            }
+            else
+            {
+                $realmString = Dominion::where('user_id', $realm->pack->leader->user_id)->where('round_id',$realm->round->id)->first()->ruler_name . "'s pack";
+            }
+
             $string = sprintf(
                 '<a href="%s"><span class="%s">%s</span> (# %s)</a>',
                 route('dominion.realm', [$realm->number]),
                 $this->getSpanClass($mode),
-                Dominion::where('user_id', $realm->pack->leader->user_id)->where('round_id',$realm->round->id)->first()->ruler_name . "'s pack",
+                $realmString,
                 $realm->number
               );
         }

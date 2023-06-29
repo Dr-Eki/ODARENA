@@ -65,7 +65,6 @@ class TechHelper
             'prestige_gains' => '%+d%% higher prestige gains',
             'improvements' => '%+d%% higher improvement bonus',
             'conversions' => '%+d%% more conversions (only applicable to Afflicted, Cult, and Sacred Order)',
-            'barracks_housing' => '%+d%% higher military housing in buildings that provide military housing',
             'military_housing' => '%+d%% more military housing in buildings that provide military housing',
             'gold_interest' => '%+d%% interest on your gold stockpile per tick',
             'exchange_rate' => '%+d%% exchange rates',

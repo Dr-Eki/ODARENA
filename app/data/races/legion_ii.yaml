@@ -13,7 +13,6 @@ skill_level: 2
 perks:
   max_population: 20
   guard_tax_exemption: 1
-  extra_barracks_housing: 100
   prestige_gains: 20
   food_consumption_mod: -25
   boat_capacity: 10
