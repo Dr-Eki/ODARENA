@@ -31,7 +31,7 @@ class ShareSelectedDominion
             } catch (ModelNotFoundException $e) {
                 $this->dominionSelectorService->unsetUserSelectedDominion();
 
-                $request->session()->flash('alert-danger', 'The database has been reset for development purposes since your last visit. Please re-register a new account. You can use the same credentials you\'ve used before.');
+                $request->session()->flash('alert-danger', 'Action not possible. Please refresh the page and try again.');
 
                 return redirect()->route('home');
             }
