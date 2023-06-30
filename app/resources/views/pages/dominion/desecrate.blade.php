@@ -245,11 +245,12 @@
                                         @if($selectedDominion->getSpellPerkValue('fog_of_war'))
                                             @php
                                                 $spell = OpenDominion\Models\Spell::where('key', 'sazals_fog')->firstOrFail();
+                                                $duration = $spellCalculator->getSpellDuration($selectedDominion, $spell->key);
                                             @endphp
                                             <tr>
                                                 <td>Sazal's Fog:</td>
                                                 <td>
-                                                    {{ number_format($spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }} {{ str_plural('tick', $spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }}
+                                                    {{ number_format($duration) }} {{ str_plural('tick', $duration) }}
                                                 </td>
                                             </tr>
                                         @endif

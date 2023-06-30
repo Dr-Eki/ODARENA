@@ -4,6 +4,7 @@ namespace OpenDominion\Http\Controllers\Dominion;
 
 use OpenDominion\Calculators\Dominion\DesecrationCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\UnitHelper;
 use OpenDominion\Http\Requests\Dominion\Actions\DesecrateActionRequest;
@@ -19,6 +20,7 @@ class DesecrationController extends AbstractDominionController
         return view('pages.dominion.desecrate', [
             'desecrationCalculator' => app(DesecrationCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
+            'spellCalculator' => app(SpellCalculator::class),
 
             'unitHelper' => app(UnitHelper::class),
 
