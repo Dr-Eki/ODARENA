@@ -111,6 +111,8 @@ class DesecrationService
 
             $desecrationResult = $this->desecrationCalculator->getDesecrationResult($desecrator, $this->desecration['units_sent'], $this->desecration['bodies']['desecrated']);
 
+            $isSuccessful = (array_sum($desecrationResult) === 0) ? false : true;
+
             $this->desecration['result']['resource_key'] = key($desecrationResult);
             $this->desecration['result']['resource_name'] = Resource::where('key', $this->desecration['result']['resource_key'])->firstOrFail()->name;
             $this->desecration['result']['amount'] = $desecrationResult[key($desecrationResult)];

@@ -43,6 +43,8 @@ class DesecrationCalculator
 
         $bodiesDesecrated = min($maxDesecrated, $availableBodies);
 
+        $bodiesDesecrated = max(0, $bodiesDesecrated);
+
         return $bodiesDesecrated;
     }
 
@@ -54,10 +56,10 @@ class DesecrationCalculator
 
         foreach($desecratingUnits as $slot => $amount)
         {
-            if($bodiesRemaining <= 0)
-            {
-                break;
-            }
+            #if($bodiesRemaining <= 0)
+            #{
+            #    break;
+            #}
 
             $desecrationPerk = $desecrator->race->getUnitPerkValueForUnitSlot($slot, 'desecration');
 
