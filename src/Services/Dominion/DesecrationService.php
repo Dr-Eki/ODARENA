@@ -48,6 +48,7 @@ class DesecrationService
     {
 
         $this->guardLockedDominion($desecrator);
+        $this->guardActionsDuringTick($desecrator);
 
         DB::transaction(function () use ($desecrator, $desecratingUnits, $battlefield) {
 
