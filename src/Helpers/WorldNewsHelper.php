@@ -1042,13 +1042,20 @@ class WorldNewsHelper
         if(in_array($realm->round->mode, ['packs', 'packs-duration']))
         {
 
-            if($realm->alignment === 'npc')
+            if($realm->alignment == 'npc')
             {
                 $realmString = 'Barbarians';
             }
             else
             {
-                $realmString = $realm->pack->leader->ruler_name . "'s pack";
+                if(isset($realm->pack->leader->ruler_name))
+                {
+                    $realmString = $realm->pack->leader->ruler_name . "'s pack";
+                }
+                else
+                {
+                    $realmString = 'Pack #' . $realm->pack->number;
+                }
             }
 
             $string = sprintf(
