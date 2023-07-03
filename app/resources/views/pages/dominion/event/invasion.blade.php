@@ -321,8 +321,7 @@
                                     <td colspan="2"><small class="text-muted">The {{ $raceHelper->getRaceAdjective($event->source->race) }} forces recall some of the dead.</small></td>
                                 </tr>
                                     @foreach($event->data['attacker']['conversions'] as $slot => $amount)
-                                        {{ dd($event->data['attacker']['conversions']) }}
-                                        @if($amount > 0)
+                                        @if($amount > 0 and $slot !== 'bodies_spent')
                                             <tr>
                                                 <td>{{ $event->source->race->units->where('slot', $slot)->first()->name }}:</td>
                                                 <td><span class="text-green">+{{ number_format($amount) }}</span></td>
@@ -790,7 +789,7 @@
                                         <td colspan="2"><small class="text-muted">The {{ $raceHelper->getRaceAdjective($event->target->race) }} forces recall some of the dead.</small></td>
                                     </tr>
                                     @foreach($event->data['defender']['conversions'] as $slot => $amount)
-                                        @if($amount > 0)
+                                        @if($amount > 0 and $slot !== 'bodies_spent')
                                             <tr>
                                                 <td>{{ $event->target->race->units->where('slot', $slot)->first()->name }}:</td>
                                                 <td><span class="text-green">+{{ number_format($amount) }}</span></td>
