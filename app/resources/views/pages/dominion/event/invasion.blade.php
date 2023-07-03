@@ -323,6 +323,7 @@
                                     @foreach($event->data['attacker']['conversions'] as $slot => $amount)
                                         @if($amount > 0)
                                             <tr>
+                                                {{ dd('$slot: '. $slot . '/ $amount: ' . $amount, $event->source->race->units->where('slot', $slot)->first()) }}
                                                 <td>{{ $event->source->race->units->where('slot', $slot)->first()->name }}:</td>
                                                 <td><span class="text-green">+{{ number_format($amount) }}</span></td>
                                             </tr>
