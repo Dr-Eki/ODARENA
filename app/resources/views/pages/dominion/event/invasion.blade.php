@@ -100,49 +100,50 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for ($slot = 1; $slot <= $event->source->race->units->count(); $slot++)
-                                @if((isset($event->data['attacker']['units_sent'][$slot]) and $event->data['attacker']['units_sent'][$slot] > 0) or
-                                    (isset($event->data['attacker']['units_lost'][$slot]) and $event->data['attacker']['units_lost'][$slot] > 0) or
-                                    (isset($event->data['attacker']['units_returning'][$slot]) and $event->data['attacker']['units_returning'][$slot] > 0)
-                                    )
-
+                                @foreach ($event->source->race->units as $unit)
                                     @php
+                                        $slot = $unit->slot;
                                         $unitType = "unit{$slot}";
                                     @endphp
-                                    <tr>
-                                        <td>
-                                            <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $event->source->race, [$militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(($slot-1)), 'defense'), ]) }}">
-                                                {{ $event->source->race->units->where('slot', $slot)->first()->name }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            @if (isset($event->data['attacker']['units_sent'][$slot]))
-                                                {{ number_format($event->data['attacker']['units_sent'][$slot]) }}
-                                            @else
-                                                0
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if (isset($event->data['attacker']['units_lost'][$slot]))
-                                                {{ number_format($event->data['attacker']['units_lost'][$slot]) }}
-                                            @else
-                                                0
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($event->source->realm->id === $selectedDominion->realm->id)
-                                                @if (isset($event->data['attacker']['units_returning'][$slot]))
-                                                {{ number_format($event->data['attacker']['units_returning'][$slot]) }}
+
+                                    @if((isset($event->data['attacker']['units_sent'][$slot]) and $event->data['attacker']['units_sent'][$slot] > 0) or
+                                        (isset($event->data['attacker']['units_lost'][$slot]) and $event->data['attacker']['units_lost'][$slot] > 0) or
+                                        (isset($event->data['attacker']['units_returning'][$slot]) and $event->data['attacker']['units_returning'][$slot] > 0)
+                                        )
+                                        <tr>
+                                            <td>
+                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $event->source->race, [$militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(($slot-1)), 'defense'), ]) }}">
+                                                    {{ $event->source->race->units->where('slot', $slot)->first()->name }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @if (isset($event->data['attacker']['units_sent'][$slot]))
+                                                    {{ number_format($event->data['attacker']['units_sent'][$slot]) }}
                                                 @else
-                                                0
+                                                    0
                                                 @endif
-                                            @else
-                                                <span class="text-muted">?</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endif
-                                @endfor
+                                            </td>
+                                            <td>
+                                                @if (isset($event->data['attacker']['units_lost'][$slot]))
+                                                    {{ number_format($event->data['attacker']['units_lost'][$slot]) }}
+                                                @else
+                                                    0
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($event->source->realm->id === $selectedDominion->realm->id)
+                                                    @if (isset($event->data['attacker']['units_returning'][$slot]))
+                                                    {{ number_format($event->data['attacker']['units_returning'][$slot]) }}
+                                                    @else
+                                                    0
+                                                    @endif
+                                                @else
+                                                    <span class="text-muted">?</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endforeach
                             </tbody>
                         </table>
 
@@ -170,49 +171,50 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @for ($slot = 1; $slot <= $annexedDominion->race->units->count(); $slot++)
-                                        @if((isset($annexedDominionData['units_sent'][$slot]) and $annexedDominionData['units_sent'][$slot] > 0) or
-                                            (isset($annexedDominionData['units_lost'][$slot]) and $annexedDominionData['units_lost'][$slot] > 0) or
-                                            (isset($annexedDominionData['units_returning'][$slot]) and $annexedDominionData['units_returning'][$slot] > 0)
-                                            )
-
+                                        @foreach ($annexedDominion->units as $unit)
                                             @php
+                                                $slot = $unit->slot;
                                                 $unitType = "unit{$slot}";
                                             @endphp
-                                            <tr>
-                                                <td>
-                                                    <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $annexedDominion->race, [$militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'defense'), ]) }}">
-                                                        {{ $annexedDominion->race->units->where('slot', $slot)->first()->name }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    @if (isset($annexedDominionData['units_sent'][$slot]))
-                                                        {{ number_format($annexedDominionData['units_sent'][$slot]) }}
-                                                    @else
-                                                        0
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if (isset($annexedDominionData['units_lost'][$slot]))
-                                                        {{ number_format($annexedDominionData['units_lost'][$slot]) }}
-                                                    @else
-                                                        0
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($event->source->realm->id === $selectedDominion->realm->id)
-                                                        @if (isset($annexedDominionData['units_returning'][$slot]))
-                                                        {{ number_format($annexedDominionData['units_returning'][$slot]) }}
+
+                                            @if((isset($annexedDominionData['units_sent'][$slot]) and $annexedDominionData['units_sent'][$slot] > 0) or
+                                                (isset($annexedDominionData['units_lost'][$slot]) and $annexedDominionData['units_lost'][$slot] > 0) or
+                                                (isset($annexedDominionData['units_returning'][$slot]) and $annexedDominionData['units_returning'][$slot] > 0)
+                                                )
+                                                <tr>
+                                                    <td>
+                                                        <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $annexedDominion->race, [$militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'defense'), ]) }}">
+                                                            {{ $annexedDominion->race->units->where('slot', $slot)->first()->name }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        @if (isset($annexedDominionData['units_sent'][$slot]))
+                                                            {{ number_format($annexedDominionData['units_sent'][$slot]) }}
                                                         @else
-                                                        0
+                                                            0
                                                         @endif
-                                                    @else
-                                                        <span class="text-muted">?</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endif
-                                        @endfor
+                                                    </td>
+                                                    <td>
+                                                        @if (isset($annexedDominionData['units_lost'][$slot]))
+                                                            {{ number_format($annexedDominionData['units_lost'][$slot]) }}
+                                                        @else
+                                                            0
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($event->source->realm->id === $selectedDominion->realm->id)
+                                                            @if (isset($annexedDominionData['units_returning'][$slot]))
+                                                            {{ number_format($annexedDominionData['units_returning'][$slot]) }}
+                                                            @else
+                                                            0
+                                                            @endif
+                                                        @else
+                                                            <span class="text-muted">?</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
                                     </tbody>
                                 </table>
                             @endforeach
@@ -600,42 +602,43 @@
                                     </tr>
 
                                 @endif
-                                @for ($slot = 1; $slot <= $defender->race->units->count(); $slot++)
-                                @if((isset($event->data['defender']['units_defending'][$slot]) and $event->data['defender']['units_defending'][$slot] > 0) or
-                                    (isset($event->data['defender']['units_lost'][$slot]) and $event->data['defender']['units_lost'][$slot] > 0)
-                                    )
+                                @foreach ($defender->race->units as $unit)
                                     @php
+                                        $slot = $unit->slot;
                                         $unitType = "unit{$slot}";
                                     @endphp
-                                    <tr>
-                                        <td>
-                                            <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $defender->race, [$militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'defense'), ]) }}">
-                                                {{ $defender->race->units->where('slot', $slot)->first()->name }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $defender->race, [$militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'defense'), ]) }}">
-                                                    @if ($event->target->realm->id === $selectedDominion->realm->id)
-                                                        @if (isset($event->data['defender']['units_defending'][$slot]))
-                                                            {{ number_format($event->data['defender']['units_defending'][$slot]) }}
+                                    @if((isset($event->data['defender']['units_defending'][$slot]) and $event->data['defender']['units_defending'][$slot] > 0) or
+                                        (isset($event->data['defender']['units_lost'][$slot]) and $event->data['defender']['units_lost'][$slot] > 0)
+                                        )
+                                        <tr>
+                                            <td>
+                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $defender->race, [$militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'defense'), ]) }}">
+                                                    {{ $defender->race->units->where('slot', $slot)->first()->name }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $defender->race, [$militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'defense'), ]) }}">
+                                                        @if ($event->target->realm->id === $selectedDominion->realm->id)
+                                                            @if (isset($event->data['defender']['units_defending'][$slot]))
+                                                                {{ number_format($event->data['defender']['units_defending'][$slot]) }}
+                                                            @else
+                                                                0
+                                                            @endif
                                                         @else
-                                                            0
+                                                            <span class="text-muted">?</span>
                                                         @endif
-                                                    @else
-                                                        <span class="text-muted">?</span>
-                                                    @endif
-                                            </span>
-                                        </td>
-                                        <td>
-                                            @if (isset($event->data['defender']['units_lost'][$slot]))
-                                                {{ number_format($event->data['defender']['units_lost'][$slot]) }}
-                                            @else
-                                                0
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endif
-                                @endfor
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @if (isset($event->data['defender']['units_lost'][$slot]))
+                                                    {{ number_format($event->data['defender']['units_lost'][$slot]) }}
+                                                @else
+                                                    0
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endforeach
                             </tbody>
                         </table>
 
@@ -661,38 +664,39 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @for ($slot = 1; $slot <= $annexedDominion->race->units->count(); $slot++)
-                                        @if((isset($annexedDominionData['units_sent'][$slot]) and $annexedDominionData['units_sent'][$slot] > 0) or
-                                            (isset($annexedDominionData['units_lost'][$slot]) and $annexedDominionData['units_lost'][$slot] > 0) or
-                                            (isset($annexedDominionData['units_returning'][$slot]) and $annexedDominionData['units_returning'][$slot] > 0)
-                                            )
-
+                                        @foreach ($annexedDominion->race->units as $unit)
                                             @php
+                                                $slot = $unit->slot;
                                                 $unitType = "unit{$slot}";
                                             @endphp
-                                            <tr>
-                                                <td>
-                                                    <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $annexedDominion->race, [$militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'defense'), ]) }}">
-                                                        {{ $annexedDominion->race->units->where('slot', $slot)->first()->name }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    @if (isset($annexedDominionData['units_sent'][$slot]))
-                                                        {{ number_format($annexedDominionData['units_sent'][$slot]) }}
-                                                    @else
-                                                        0
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if (isset($annexedDominionData['units_lost'][$slot]))
-                                                        {{ number_format($annexedDominionData['units_lost'][$slot]) }}
-                                                    @else
-                                                        0
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endif
-                                        @endfor
+                                            @if((isset($annexedDominionData['units_sent'][$slot]) and $annexedDominionData['units_sent'][$slot] > 0) or
+                                                (isset($annexedDominionData['units_lost'][$slot]) and $annexedDominionData['units_lost'][$slot] > 0) or
+                                                (isset($annexedDominionData['units_returning'][$slot]) and $annexedDominionData['units_returning'][$slot] > 0)
+                                                )
+
+                                                <tr>
+                                                    <td>
+                                                        <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $annexedDominion->race, [$militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'defense'), ]) }}">
+                                                            {{ $annexedDominion->race->units->where('slot', $slot)->first()->name }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        @if (isset($annexedDominionData['units_sent'][$slot]))
+                                                            {{ number_format($annexedDominionData['units_sent'][$slot]) }}
+                                                        @else
+                                                            0
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if (isset($annexedDominionData['units_lost'][$slot]))
+                                                            {{ number_format($annexedDominionData['units_lost'][$slot]) }}
+                                                        @else
+                                                            0
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
                                 </table>
                             @endforeach
                         @endif

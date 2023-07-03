@@ -2,7 +2,7 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
-use Illuminate\Database\Eloquent\Builder;
+use Log;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 
 use OpenDominion\Helpers\BuildingHelper;
@@ -50,20 +50,25 @@ class EventController extends AbstractDominionController
             abort(403);
         }
 
-        return view("pages.dominion.event.{$event->type}", [
-            'event' => $event,
-            'unitHelper' => app(UnitHelper::class),
-            'militaryCalculator' => app(MilitaryCalculator::class),
-            'desecrationHelper' => app(DesecrationHelper::class),
-            'buildingHelper' => app(BuildingHelper::class),
-            'landHelper' => app(LandHelper::class),
-            'raceHelper' => app(RaceHelper::class),
-            'sabotageHelper' => app(SabotageHelper::class),
-            'sorceryHelper' => app(SorceryHelper::class),
-            'unitHelper' => app(UnitHelper::class),
-            'canViewSource' => $eventHelper->canViewEventDetails($event, $viewer, 'source'),
-            'canViewTarget' => $eventHelper->canViewEventDetails($event, $viewer, 'target'),
-        ]);
+        try {
+            return view("pages.dominion.event.{$event->type}", [
+                'event' => $event,
+                'unitHelper' => app(UnitHelper::class),
+                'militaryCalculator' => app(MilitaryCalculator::class),
+                'desecrationHelper' => app(DesecrationHelper::class),
+                'buildingHelper' => app(BuildingHelper::class),
+                'landHelper' => app(LandHelper::class),
+                'raceHelper' => app(RaceHelper::class),
+                'sabotageHelper' => app(SabotageHelper::class),
+                'sorceryHelper' => app(SorceryHelper::class),
+                'unitHelper' => app(UnitHelper::class),
+                'canViewSource' => $eventHelper->canViewEventDetails($event, $viewer, 'source'),
+                'canViewTarget' => $eventHelper->canViewEventDetails($event, $viewer, 'target'),
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e);
+            throw $e; // Re-throw the exception so it can be handled by the framework
+        }
     }
 
 
