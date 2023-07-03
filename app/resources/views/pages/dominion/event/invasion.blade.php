@@ -17,7 +17,7 @@
     if ($isProtectorate)
     {
         $target = $event->target;
-        $defender = OpenDominion\Models\Dominion::where('id', $event->data['protectorate']['protector_id'])->firstOrFail();
+        $defender = OpenDominion\Models\Dominion::where('id', $event->data['protectorate']['protector_id'])->first();
     }
 
 @endphp
@@ -112,7 +112,7 @@
                                     <tr>
                                         <td>
                                             <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $event->source->race, [$militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($event->source, null, null, $event->source->race->units->get(($slot-1)), 'defense'), ]) }}">
-                                                {{ $event->source->race->units->where('slot', $slot)->firstOrFail()->name }}
+                                                {{ $event->source->race->units->where('slot', $slot)->first()->name }}
                                             </span>
                                         </td>
                                         <td>
@@ -182,7 +182,7 @@
                                             <tr>
                                                 <td>
                                                     <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $annexedDominion->race, [$militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'defense'), ]) }}">
-                                                        {{ $annexedDominion->race->units->where('slot', $slot)->firstOrFail()->name }}
+                                                        {{ $annexedDominion->race->units->where('slot', $slot)->first()->name }}
                                                     </span>
                                                 </td>
                                                 <td>
@@ -321,7 +321,7 @@
                                     @foreach($event->data['attacker']['conversions'] as $slot => $amount)
                                         @if($amount > 0)
                                             <tr>
-                                                <td>{{ $event->source->race->units->where('slot', $slot)->firstOrFail()->name }}:</td>
+                                                <td>{{ $event->source->race->units->where('slot', $slot)->first()->name }}:</td>
                                                 <td><span class="text-green">+{{ number_format($amount) }}</span></td>
                                             </tr>
                                         @endif
@@ -429,7 +429,7 @@
                                                     @if($slot === 'draftees')
                                                         {{ $raceHelper->getDrafteesTerm($event->target->race) }}:
                                                     @else
-                                                        {{ $event->target->race->units->where('slot', $slot)->firstOrFail()->name }}:
+                                                        {{ $event->target->race->units->where('slot', $slot)->first()->name }}:
                                                     @endif
                                                 </td>
                                                 <td><span class="text-red">{{ number_format($amount) }}</span></td>
@@ -510,7 +510,7 @@
                                     @foreach($event->data['attacker']['resource_conversions'] as $resourceKey => $amount)
                                         @if($resourceKey !== 'bodies_spent')
                                             @php
-                                                $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->firstOrFail();
+                                                $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
                                             @endphp
                                             @if($amount > 0)
                                                 <tr>
@@ -610,7 +610,7 @@
                                     <tr>
                                         <td>
                                             <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $defender->race, [$militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($defender, null, null, $defender->race->units->get(($slot-1)), 'defense'), ]) }}">
-                                                {{ $defender->race->units->where('slot', $slot)->firstOrFail()->name }}
+                                                {{ $defender->race->units->where('slot', $slot)->first()->name }}
                                             </span>
                                         </td>
                                         <td>
@@ -673,7 +673,7 @@
                                             <tr>
                                                 <td>
                                                     <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $annexedDominion->race, [$militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'offense'), $militaryCalculator->getUnitPowerWithPerks($annexedDominion, null, null, $annexedDominion->race->units->get(($slot-1)), 'defense'), ]) }}">
-                                                        {{ $annexedDominion->race->units->where('slot', $slot)->firstOrFail()->name }}
+                                                        {{ $annexedDominion->race->units->where('slot', $slot)->first()->name }}
                                                     </span>
                                                 </td>
                                                 <td>
@@ -787,7 +787,7 @@
                                     @foreach($event->data['defender']['conversions'] as $slot => $amount)
                                         @if($amount > 0)
                                             <tr>
-                                                <td>{{ $event->target->race->units->where('slot', $slot)->firstOrFail()->name }}:</td>
+                                                <td>{{ $event->target->race->units->where('slot', $slot)->first()->name }}:</td>
                                                 <td><span class="text-green">+{{ number_format($amount) }}</span></td>
                                             </tr>
                                         @endif
@@ -882,7 +882,7 @@
                                                     @if($slot === 'draftees')
                                                         {{ $raceHelper->getDrafteesTerm($event->target->race) }}:
                                                     @else
-                                                        {{ $event->target->race->units->where('slot', $slot)->firstOrFail()->name }}:
+                                                        {{ $event->target->race->units->where('slot', $slot)->first()->name }}:
                                                     @endif
                                                 </td>
                                                 <td><span class="text-red">{{ number_format($amount) }}</span></td>
@@ -914,7 +914,7 @@
                                     @foreach($event->data['defender']['resource_conversions'] as $resourceKey => $amount)
                                         @if($resourceKey !== 'bodies_spent')
                                             @php
-                                                $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->firstOrFail();
+                                                $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
                                             @endphp
                                             @if($amount > 0)
                                                 <tr>
@@ -935,7 +935,7 @@
                                     </tr>
                                     @foreach($event->data['defender']['resources_lost'] as $resourceKey => $amount)
                                         @php
-                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->firstOrFail();
+                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
                                         @endphp
                                         @if($amount != 0)
                                             <tr>
@@ -975,7 +975,7 @@
                                     </tr>
                                     @foreach($event->data['defender']['resources_spent'] as $resourceKey => $amount)
                                         @php
-                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->firstOrFail();
+                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
                                         @endphp
                                         @if($amount > 0)
                                             <tr>
@@ -1042,7 +1042,7 @@
                                     @foreach($event->data['attacker']['terrain_gained'] as $terrainKey => $amount)
                                         @php
                                             $terrainKey = str_replace('terrain_', '', $terrainKey);
-                                            $terrain = OpenDominion\Models\Terrain::where('key', $terrainKey)->firstOrFail();
+                                            $terrain = OpenDominion\Models\Terrain::where('key', $terrainKey)->first();
 
                                             $conqueredAmount = abs($event->data['attacker']['terrain_conquered']['available'][$terrainKey] ?? 0);
                                             $conqueredAmount += abs($event->data['attacker']['terrain_conquered']['queued'][$terrainKey] ?? 0);
@@ -1087,7 +1087,7 @@
                                 @if(isset($event->data['defender']['buildings_lost_total']))
                                     @foreach($event->data['defender']['buildings_lost_total'] as $buildingKey => $amount)
                                         @php
-                                            $building = OpenDominion\Models\Building::where('key', $buildingKey)->firstOrFail();
+                                            $building = OpenDominion\Models\Building::where('key', $buildingKey)->first();
                                         @endphp
                                     <tr>
                                         <td>{{ $building->name }}</td>
