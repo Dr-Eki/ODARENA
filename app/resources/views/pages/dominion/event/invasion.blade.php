@@ -323,7 +323,11 @@
                                     @foreach($event->data['attacker']['conversions'] as $slot => $amount)
                                         @if($amount > 0)
                                             <tr>
-                                                {{ dump('$slot: '. $slot . '/ $amount: ' . $amount, $event->source->race->units->where('slot', $slot)->first()) }}
+                                                {!! dump('$slot: '. $slot . '/ $amount: ' . $amount, $event->source->race->units->where('slot', $slot)->first()) !!}
+
+                                                @if($event->source->race->units->where('slot', $slot)->first() == null)
+                                                    {!! dd('die') !!}
+                                                @endif
 
                                                 <td>{{ $event->source->race->units->where('slot', $slot)->first()->name }}:</td>
                                                 <td><span class="text-green">+{{ number_format($amount) }}</span></td>
