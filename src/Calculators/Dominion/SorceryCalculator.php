@@ -94,7 +94,7 @@ class SorceryCalculator
 
     public function getWizardRatioMultiplier(Dominion $caster, Dominion $target): float
     {
-        $multiplier = 1;
+        $multiplier = 0;
         $casterWpa = $this->militaryCalculator->getWizardRatio($caster, 'offense');
         $targetWpa = $this->militaryCalculator->getWizardRatio($target, 'defense');
 
