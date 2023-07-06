@@ -94,7 +94,6 @@ class SorceryCalculator
 
     public function getWizardRatioMultiplier(Dominion $caster, Dominion $target): float
     {
-        $multiplier = 0;
         $casterWpa = $this->militaryCalculator->getWizardRatio($caster, 'offense');
         $targetWpa = $this->militaryCalculator->getWizardRatio($target, 'defense');
 
@@ -107,11 +106,7 @@ class SorceryCalculator
             return min($casterWpa, 1.50);
         }
 
-        $multiplier += max(min((($casterWpa - $targetWpa) / $casterWpa), 1.5), 0);
-
-        #dump("getWizardRatioMultiplier: $multiplier (casterWpa: $casterWpa / targetWpa: $targetWpa)");
-
-        return $multiplier;
+        return max(min((($casterWpa - $targetWpa) / $casterWpa), 1.5), 0);
     }
 
     public function getDamageDealtMultiplier(Dominion $caster): float
