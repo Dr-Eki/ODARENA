@@ -26,6 +26,7 @@ logging:
   excluded_races:
     - Beastfolk
     - Demon
+    - Swarm
     - Sylvan
   perks:
     lumber_production_mod: 30,5600
