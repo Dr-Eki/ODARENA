@@ -93,9 +93,9 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 600
-      ore: 40
-      mana: 70
+      gold: 740
+      ore: 60
+      mana: 80
       draftees: 1
     power:
       offense: 4

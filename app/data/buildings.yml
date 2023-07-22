@@ -312,8 +312,8 @@ slave_mine:
   exclusive_races:
     - Dark Elf
   perks:
-    ore_production_raw_from_prisoner: 8,10 #20,10 # per prisoner, max prisoners
-    gems_production_raw_from_prisoner: 4,10 #10,10 # per prisoner, max prisoners
+    ore_production_raw_from_prisoner: 4,10 #20,10 # per prisoner, max prisoners
+    gems_production_raw_from_prisoner: 2,10 #10,10 # per prisoner, max prisoners
     prisoner_upkeep_raw: 0.08 #0.15
     jobs: 0
     housing: 0
