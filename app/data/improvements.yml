@@ -26,6 +26,8 @@ defenses:
 
 education:
   name: Education
+  excluded_races:
+    - Troll
   perks:
     improvement_points: 20,3000
 
