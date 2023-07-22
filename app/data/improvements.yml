@@ -825,14 +825,6 @@ readiness:
     unit_gold_costs: -35,5500
     unit_ore_costs: -35,5500
 
-science:  
-  enabled: 0
-  name: Science
-  exclusive_races:
-    - Kerranad
-  perks:
-    advancement_costs: -35,6000
-
 stonecutting_kerranad:  
   enabled: 0
   name: Stonecutting
