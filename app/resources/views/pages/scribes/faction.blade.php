@@ -204,12 +204,11 @@
                                             $x++;
                                         @endphp
 
-
                                         <span class="text-green">
                                             @if($x < $peasantProductions)
-                                                {{ number_format($amount,2) }}&nbsp;{{ $resource->name }},
+                                                {{ sprintf('%g', $amount) }}&nbsp;{{ $resource->name }},
                                             @else
-                                                {{ number_format($amount,2) }}&nbsp;{{ $resource->name }}
+                                                {{ sprintf('%g', $amount) }}&nbsp;{{ $resource->name }}
                                             @endif
                                         </span>
                                     @endforeach

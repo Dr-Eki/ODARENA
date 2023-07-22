@@ -16,7 +16,7 @@ resources:
   - elk
 
 improvement_resources:
-  lumber: 1
+  lumber: 1.2
 
 perks:
   wizard_strength: 20
