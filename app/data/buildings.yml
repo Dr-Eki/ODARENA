@@ -491,7 +491,7 @@ lumbershop:
   exclusive_races:
     - Wood Elf
   perks:
-    lumber_production_raw: 20
+    lumber_production_raw: 25
     lumber_production_mod: 1,1,80 # Every 1% gives +0.40% lumber production, max +40%
 
 hollow_trunk:

@@ -41,7 +41,7 @@ units:
       draftees: 1
     power:
       offense: 0
-      defense: 5
+      defense: 5.5
 
   - name: Sentinel
     training_time: 12
@@ -54,7 +54,7 @@ units:
       lumber: 100
       draftees: 1
     power:
-      offense: 5
+      offense: 5.5
       defense: 3
 
   - name: Elk Cavalry
@@ -67,7 +67,7 @@ units:
       - mounted
       - divine
     cost:
-      gold: 4000
+      gold: 2000
       mana: 100
       elk: 1
     power:
