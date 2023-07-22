@@ -3,8 +3,9 @@ alignment: evil
 description:
 home_land_type: mountain
 home_terrain: mountains
-playable: 0 # Round 88
+playable: 1 # Round 88
 skill_level: 2
+magic_level: 4
 
 
 resources:
@@ -18,8 +19,6 @@ resources:
 
 perks:
   food_consumption_mod: -20
-  construction_cost: -20
-  rezone_cost: -20
   salvaging: 50
 
 # Gargoyles?
@@ -33,37 +32,38 @@ units:
       - intelligent
     cost:
       prisoner: 1
-      ore: 10
-      food: 10
-      mana: 2
+      gold: 100
+      ore: 25
     power:
-      offense: 4
-      defense: 2
+      offense: 3
+      defense: 1.5
     perks:
-      no_draftee: 1
       fixed_casualties: 20
       reduces_casualties: 1
       does_not_count_as_population: 1
       kills_into_resource_per_casualty: 0.25,prisoner
       releases_into_resource: 1,prisoner
 
-  - name: Acolyte
-    training_time: 9
+  - name: Shadow Archer
+    training_time: 12
     type:
       - living
       - sentient
       - intelligent
+      - wise
     cost:
-      gold: 800
-      mana: 10
+      gold: 600
+      ore: 40
+      mana: 20
+      draftees: 1
     power:
       offense: 0
-      defense: 6
+      defense: 4
     perks:
-      counts_as_wizard: 0.20
+      counts_as_wizard_defense: 0.333
       kills_into_resource_per_casualty: 0.5,prisoner
 
-  - name: Adept
+  - name: Nightblade
     training_time: 12
     type:
       - living
@@ -71,20 +71,21 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1200
+      gold: 600
+      ore: 80
+      mana: 40
+      draftees: 1
     power:
       offense: 3
-      defense: 5
+      defense: 3
     perks:
-      counts_as_wizard_offense: 0.10
-      counts_as_wizard_defense: 0.25
-      offense_from_building: wizard_guild,10,5 # building type, ratio%, max
-      defense_from_building: wizard_guild,10,5 # building type, ratio%, max
-      offense_from_deity: sazal,2
-      xp_generation_raw: 0.025
-      kills_into_resource_per_casualty: 0.5,prisoner
+      counts_as_wizard_offense: 0.1666
+      counts_as_wizard_defense: 0.1666
+      kills_into_resource_per_casualty: 0.75,prisoner
+      offense_from_advancements: wizardry_tradition;6;0.5,magical_weapons;6;0.5,concentration;6;0.5,invocations;6;0.5
+      defense_from_advancements: wizardry_tradition;6;0.5,magical_weapons;6;0.5,concentration;6;0.5,invocations;6;0.5
 
-  - name: Blade Master
+  - name: Warweaver
     training_time: 12
     type:
       - living
@@ -92,13 +93,14 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1200
-      mana: 30
+      gold: 600
+      ore: 40
+      mana: 70
+      draftees: 1
     power:
-      offense: 5
-      defense: 6
+      offense: 4
+      defense: 2
     perks:
-      offense_from_advancements: wizardry_tradition;8;1,magical_weapons;8;1,concentration;8;1,invocations;8;1
-      offense_from_deity: mirnon,2
+      offense_from_active_self_spells: 0.15
       kills_into_resource_per_casualty: 1,prisoner
       displaced_peasants_conversion: 1

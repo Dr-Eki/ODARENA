@@ -27,7 +27,7 @@ class ResearchHelper
             'gems_production_raw_mod' => '%+g%% raw gem production',
             'gold_production_raw_mod' => '%+g%% raw gold production',
 
-            'elk_production_raw_from_land' => 'Grants one elk per %1$s acres of %2$s each tick.',
+            'elk_production_raw_from_terrain' => 'Grants one elk per %1$s acres of %2$s each tick.',
 
             'ore_production_mod' => '%+g%% ore production',
             'mana_production_mod' => '%+g%% mana production',
@@ -760,13 +760,13 @@ class ResearchHelper
                 $perkValue = [$firstValue, $resource->name];
             }
 
-            // Special case for elk_production_raw_from_land
-            if($perk->key === 'elk_production_raw_from_land')
+            // Special case for elk_production_raw_from_terrain
+            if($perk->key === 'elk_production_raw_from_terrain')
             {
                 $unitsPerAcre = (float)$perkValue[0];
-                $landType = (string)$perkValue[1];
+                $terrainType = (string)$perkValue[1];
 
-                $perkValue = [number_format(intval(1/$unitsPerAcre)), ucwords($landType)];
+                $perkValue = [number_format(intval(1/$unitsPerAcre)), ucwords($terrainType)];
                 #$nestedArrays = false;
             }
 

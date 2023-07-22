@@ -3,15 +3,17 @@
 namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
-use Log;
+#use Log;
 use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\Building;
+#use OpenDominion\Models\Building;
 use OpenDominion\Models\GameEvent;
-use OpenDominion\Models\Improvement;
+#use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Resource;
-use OpenDominion\Models\Unit;
+#use OpenDominion\Models\Unit;
+
+use OpenDominion\Traits\DominionGuardsTrait;
 
 use OpenDominion\Helpers\TheftHelper;
 use OpenDominion\Helpers\UnitHelper;
@@ -30,6 +32,7 @@ use OpenDominion\Services\Dominion\StatsService;
 
 class TheftActionService
 {
+    use DominionGuardsTrait;
 
     public function __construct()
     {

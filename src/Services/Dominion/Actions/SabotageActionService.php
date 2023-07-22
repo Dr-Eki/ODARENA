@@ -12,7 +12,9 @@ use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spyop;
-use OpenDominion\Models\Unit;
+#use OpenDominion\Models\Unit;
+
+use OpenDominion\Traits\DominionGuardsTrait;
 
 use OpenDominion\Helpers\UnitHelper;
 
@@ -32,6 +34,8 @@ use OpenDominion\Services\Dominion\StatsService;
 
 class SabotageActionService
 {
+
+    use DominionGuardsTrait;
 
     public function __construct()
     {

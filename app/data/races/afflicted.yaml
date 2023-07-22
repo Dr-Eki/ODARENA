@@ -30,7 +30,6 @@ improvement_resources:
 
 perks:
   can_desecrate: 1
-  max_population: 10
   population_growth: 30
   can_invade_at_any_morale: 1
 
@@ -42,7 +41,7 @@ units:
       - living
       - mindless
     cost:
-      food: 250
+      food: 400
       draftees: 1
     power:
       offense: 2
@@ -59,7 +58,7 @@ units:
       - living
       - sentient
     cost:
-      gold: 300
+      gold: 330
       food: 10
       peasant: 1
     power:

@@ -3,8 +3,9 @@ alignment: good
 description:
 home_land_type: forest
 home_terrain: forest
-playable: 0 # Round 88
+playable: 1
 skill_level: 2
+magic_level: 4
 
 
 resources:
@@ -15,21 +16,44 @@ resources:
   - elk
 
 improvement_resources:
-  lumber: 2
+  lumber: 1
 
 perks:
   wizard_strength: 20
   spy_strength: 20
-  extra_barren_forest_max_population: 10
-  extra_barren_forest_jobs: 20
-  xp_generation_mod: 100
-  salvaging: 35
-
-land_improvements:
-  forest:
-    lumber_production_raw: 25
+  xp_generation_mod: 50
+  salvaging: 25
+  improvements: 50
 
 units:
+  - name: Warden
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 700
+      lumber: 100
+      draftees: 1
+    power:
+      offense: 0
+      defense: 5
+
+  - name: Sentinel
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 940
+      lumber: 100
+      draftees: 1
+    power:
+      offense: 5
+      defense: 3
+
   - name: Elk Cavalry
     training_time: 12
     deity: druva
@@ -40,47 +64,11 @@ units:
       - mounted
       - divine
     cost:
-      gold: 6000
+      gold: 4000
+      mana: 100
       elk: 1
     power:
-      offense: 24
-      defense: 18
-
-  - name: Ranger
-    training_time: 12
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      gold: 750
-      lumber: 200
-    power:
-      offense: 0
+      offense: 12
       defense: 8
-
-  - name: Warden
-    training_time: 12
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      gold: 1000
-      lumber: 100
-    power:
-      offense: 0
-      defense: 8
-
-  - name: Sentinel
-    training_time: 12
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      gold: 1200
-      lumber: 150
-    power:
-      offense: 8
-      defense: 5
+    perks:
+      dies_into_resource: 1,elk

@@ -2,6 +2,7 @@ agriculture:
   name: Agriculture
   excluded_races:
     - Sylvan
+    - Troll
   perks:
     food_production_mod: 40,5600
 
@@ -9,6 +10,7 @@ construction:
   name: Construction
   excluded_races:
     - Sylvan
+    - Troll
   perks:
     construction_cost: -20,4800
     rezone_cost: -20,4800
@@ -18,8 +20,19 @@ defenses:
   excluded_races:
     - Beastfolk
     - Sylvan
+    - Troll
   perks:
     defensive_power: 30,6800
+
+education:
+  name: Education
+  perks:
+    improvement_points: 20,3000
+
+leadership:
+  name: Leadership
+  perks:
+    title_bonus: 40,1000
 
 logging:
   name: Logging
@@ -27,6 +40,8 @@ logging:
     - Beastfolk
     - Demon
     - Sylvan
+    - Troll
+    - Wood Elf
   perks:
     lumber_production_mod: 30,5600
 
@@ -35,6 +50,7 @@ housing:
   excluded_races:
     - Beastfolk
     - Sylvan
+    - Troll
   perks:
     population: 20,4800
 
@@ -43,6 +59,7 @@ markets:
   excluded_races:
     - Beastfolk
     - Sylvan
+    - Troll
   perks:
     gold_production_mod: 20,4800
     exchange_rate: 20,6400
@@ -53,16 +70,41 @@ mining:
     - Reptilians
     - Swarm
     - Sylvan
+    - Troll
   perks:
     ore_production_mod: 30,5600
+
+science:
+  name: Science
+  excluded_races:
+    - Troll
+  perks:
+    advancement_costs: -30,6000
+
+sorcery:
+  name: Sorcery
+  perks:
+    sorcery_damage_dealt: 40,5500
+    sorcery_damage_suffered: 20,5500
 
 tactics:  
   name: Tactics
   excluded_races:
     - Beastfolk
     - Sylvan
+    - Troll
   perks:
     offensive_power: 30,6800
+
+warding:
+  name: Warding
+  perks:
+    sorcery_damage_suffered: -40,5500
+
+warfare:
+  name: Warfare
+  perks:
+    prestige_gains: 50,4000
 
 # BEGIN BEASTFOLK #
 
@@ -151,115 +193,91 @@ resilience:
 
 bashing:
   name: Bashing
-  enabled: 0
   exclusive_races:
     - Troll
   perks:
-    defensive_power: 65,8500
+    defensive_power: 60,9000
 
 building:
   name: Building
-  enabled: 0
   exclusive_races:
     - Troll
   perks:
-    construction_cost: -65,4500
-    rezone_cost: -65,4500
+    construction_cost: -60,5000
 
 fighting:
   name: Fighting
-  enabled: 0
   exclusive_races:
     - Troll
   perks:
-    casualties_on_offense: -40,5000
-    casualties_on_defense: -60,5000
+    casualties_on_offense: -40,6000
+    casualties_on_defense: -60,6000
 
 glimmering:
   name: Glimmering
-  enabled: 0
   exclusive_races:
     - Troll
   perks:
-    gold_production_mod: 65,6500
+    gold_production_mod: 60,7000
 
 hunting:
   name: Hunting
-  enabled: 0
   exclusive_races:
     - Troll
   perks:
-    food_production_mod: 115,5500
+    food_production_mod: 120,6500
 
 muttering:
   name: Muttering
-  enabled: 0
   exclusive_races:
     - Troll
   perks:
     wizard_strength: 65,5500
     mana_production_mod: 65,5500
     sorcery_damage_suffered: -65,5500
-    wizard_housing: 65,5500
 
 nesting:
   name: Nesting
-  enabled: 0
   exclusive_races:
     - Troll
   perks:
-    population: 60,5000
+    population: 60,6000
 
-rock_throwing:
-  name: Rock Throwing
-  enabled: 0
+rock_breaking:
+  name: Rock Breaking
   exclusive_races:
     - Troll
   perks:
-    ore_production_mod: 50,4500
+    ore_production_mod: 50,5000
 
 smashing:
   name: Smashing
-  enabled: 0
   exclusive_races:
     - Troll
   perks:
-    offensive_power: 50,8500
+    offensive_power: 80,10000
 
 sneaking:
   name: Sneaking
-  enabled: 0
   exclusive_races:
     - Troll
   perks:
-    spy_strength: 115,5500
+    spy_strength: 100,5500
     spy_losses: -100,5500
-    spy_housing: 115,5500
 
 trampling:
   name: Trampling
-  enabled: 0
   exclusive_races:
     - Troll
   perks:
-    land_discovered: 70,4800
-
-training:
-  name: Training
-  enabled: 0
-  exclusive_races:
-    - Troll
-  perks:
-    unit_gold_costs: -50,4500
-    unit_ore_costs: -50,4500
+    land_discovered: 75,5000
 
 uprooting:
   name: Uprooting
-  enabled: 0
   exclusive_races:
     - Troll
   perks:
-    lumber_production_mod: 65,4500
+    lumber_production_mod: 60,5000
 # END TROLL #
 
 ### DISABLED
@@ -524,17 +542,6 @@ wizardry:
     mana_production_mod: 45,5000
     wizard_housing: 45,5000
 
-warding:  
-  enabled: 0
-  name: Warding
-  excluded_races:
-    - Growth
-    - Kerranad
-    - Void
-    - Wood Elf
-  perks:
-    sorcery_damage_suffered: -40,5500
-
 # Nox variant
 wizardry_nox:  
   enabled: 0
@@ -739,14 +746,6 @@ city_guard:
   perks:
     defensive_power: 50,10000
 
-education:  
-  enabled: 0
-  name: Education
-  exclusive_races:
-    - Kerranad
-  perks:
-    improvement_points: 25,3000
-
 espionage_kerranad:  
   enabled: 0
   name: Espionage
@@ -841,15 +840,6 @@ stonecutting_kerranad:
     - Kerranad
   perks:
     ore_production_mod: 35,5000
-
-warfare:  
-  enabled: 0
-  name: Warfare
-  exclusive_races:
-    - Kerranad
-  perks:
-    offensive_power: 40,10000
-    prestige_gains: 50,10000
 
 warding_kerranad:  
   enabled: 0

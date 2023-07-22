@@ -161,15 +161,6 @@ school:
   perks:
     improvements: 1,1 # Every 1% gives 0.8% higher imps
 
-stronghold:
-  name: Stronghold
-  exclusive_races:
-    - Troll
-  perks:
-    improvements: 1,1.5 # Every 1% gives 1% higher imps
-    gem_theft_reduction: 1,2,100  # Every 1% reduces plat stolen by 8%, max 100% reduction
-    improvements_damage_reduction: 1,0.50 # Every 1% reduces damage to improvements by 0.75%
-
 ## Anti-Theft
 
 vault:  
@@ -177,6 +168,7 @@ vault:
   excluded_races:
     - Reptilians
     - Sylvan
+    - Wood Elf
   perks:
     gold_theft_protection: 25000
     gems_theft_protection: 2500
@@ -193,6 +185,14 @@ cave:
   name: Cave
   exclusive_races:
     - Yeti
+  perks:
+    housing: 30
+    jobs: 0
+
+chamber:
+  name: Chamber
+  exclusive_races:
+    - Dark Elf
   perks:
     housing: 30
     jobs: 0
@@ -283,7 +283,6 @@ camp:
   name: Camp
   exclusive_races:
     - Beastfolk
-  land_type: forest
   perks:
     # unit_gold_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
     # unit_ore_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
@@ -295,13 +294,27 @@ bloodstone:
   name: Bloodstone
   exclusive_races:
     - Beastfolk
-  land_type: mountain
   perks:
     blood_invest_bonus: 1,5,100 # Every 1% gives 5% improvement points, max +100% improvements from blood
     blood_resource_conversion_mod: 1,2.5,50 # Every 1% gives 4% conversion, max +100% conversion
     blood_theft_protection: 8000
 
 # END BEASTFOLK
+
+# BEGIN DARK ELF
+
+slave_mine:
+  name: Slave Mine
+  exclusive_races:
+    - Dark Elf
+  perks:
+    ore_production_raw_from_prisoner: 8,10 #20,10 # per prisoner, max prisoners
+    gems_production_raw_from_prisoner: 4,10 #10,10 # per prisoner, max prisoners
+    prisoner_upkeep_raw: 0.08 #0.15
+    jobs: 0
+    housing: 0
+
+# END DARK ELF
 
 # BEGIN DEMON
 
@@ -413,14 +426,6 @@ tunnel:
 # END SWARM
 
 # BEGIN SYLVAN
-forest_haven:
-  name: Forest Haven
-  enabled: 0
-  exclusive_races:
-    - Sylvan
-  perks:
-    gold_theft_protection: 25000
-
 garden:
   name: Garden
   exclusive_races:
@@ -452,6 +457,48 @@ orchard:
     improvements: 1,1.5 # Every 1% gives 1.5% higher imps
 
 # END SYLVAN
+
+# BEGIN TROLL
+
+stronghold:
+  name: Stronghold
+  exclusive_races:
+    - Troll
+  perks:
+    improvements: 1,1.5 # Every 1% gives 1% higher imps
+    gem_theft_reduction: 1,2,100  # Every 1% reduces plat stolen by 8%, max 100% reduction
+    improvements_damage_reduction: 1,0.50 # Every 1% reduces damage to improvements by 0.75%
+
+# END TROLL
+
+# BEGIN WOOD ELF
+forest_haven:
+  name: Forest Haven
+  exclusive_races:
+    - Wood Elf
+  perks:
+    lumber_production_raw: 10
+    housing: 30
+    spy_housing: 5
+    jobs: 0
+
+hollow_trunk:
+  name: Hollow Trunk
+  exclusive_races:
+    - Wood Elf
+  land_type: forest
+  perks:
+    gold_theft_protection: 25000
+
+institute:
+  name: Institute
+  exclusive_races:
+    - Wood Elf
+  land_type: forest
+  perks:
+    improvements: 1,1.5 # Every 1% gives 1.5% higher imps
+
+# END WOOD ELF
 
 # Pre Round 88
 
@@ -494,19 +541,6 @@ dwargen_mine:
     ore_production_raw: 60
     thunderstone_production_raw_random: 0.5
     dwarg_unit1_housing: 20
-    housing: 0
-
-slave_mine:  
-  enabled: 0
-  name: Slave Mine
-  exclusive_races:
-    - Dark Elf
-  land_type: mountain
-  perks:
-    ore_production_raw_from_prisoner: 20,10 # per prisoner, max prisoners
-    gems_production_raw_from_prisoner: 10,10 # per prisoner, max prisoners
-    prisoner_upkeep_raw: 0.15
-    jobs: 0
     housing: 0
 
 automated_mine:  
@@ -1247,74 +1281,6 @@ gill:
 
 # END GROWTH
 
-# BEGIN WOOD ELF AND SYLVAN
-rootforge:  
-  enabled: 0
-  name: Rootforge
-  exclusive_races:
-    - Wood Elf
-  land_type: forest
-  perks:
-    unit_gold_costs: 1,-2,40 # ratio, perk, max
-    unit_lumber_costs: 1,-1,20 # ratio, perk, max
-
-institute:  
-  enabled: 0
-  name: Institute
-  exclusive_races:
-    - Wood Elf
-  land_type: forest
-  perks:
-    improvements: 1,2
-
-plantation:  
-  enabled: 0
-  name: Plantation
-  exclusive_races:
-    - Sylvan
-  land_type: forest
-  perks:
-    lumber_production_raw: 0.24
-
-spring:  
-  enabled: 0
-  name: Spring
-  exclusive_races:
-    - Sylvan
-  land_type: forest
-  perks:
-    improvements_interest: 1,20,120 # ratio, perk, max
-
-thicket:  
-  enabled: 0
-  name: Thicket
-  exclusive_races:
-    - Sylvan
-  land_type: forest
-  perks:
-    improvements_capped: 1,2.75,110 # Every 1% gives 2.75% higher imps
-
-hollow_trunk:  
-  enabled: 0
-  name: Hollow Trunk
-  exclusive_races:
-    - Wood Elf
-  land_type: forest
-  perks:
-    gold_theft_protection: 25000
-    food_theft_protection: 25000
-
-wood_elf_lumberyard:  
-  enabled: 0
-  name: Lumberyard
-  exclusive_races:
-    - Wood Elf
-  land_type: forest
-  perks:
-    lumber_production_raw: 50
-    lumber_theft_protection: 1000
-
-# END WOOD ELF AND SYLVAN
 
 # ICEKIN
 glacier:  
@@ -1562,19 +1528,6 @@ plateau:
     troll_unit4_housing: 30
     jobs: 0
     housing: 0
-
-chamber:  
-  enabled: 0
-  name: Chamber
-  exclusive_races:
-    - Dark Elf
-    - Dwarg
-    - Gnome
-    - Imperial Gnome
-  land_type: mountain
-  perks:
-    housing: 30
-    jobs: 0
 
 colony:  
   enabled: 0

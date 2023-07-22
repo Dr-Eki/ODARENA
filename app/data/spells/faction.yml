@@ -14,46 +14,6 @@ ambush:
   perks:
     reduces_target_raw_defense_from_terrain: 0.2,1,forest,10 # -1% raw DP, per 5% forest, max -10%
 
-## Demon
-
-feast:
-  name: Feast
-  level: 1
-  scope: self
-  class: passive
-  cost: 9
-  duration: 48
-  exclusive_races:
-    - Demon
-  perks:
-    population_growth: 50
-    food_consumption_mod: 25
-
-fury:
-  name: Fury
-  level: 1
-  scope: self
-  class: passive
-  cost: 7
-  duration: 12
-  cooldown: 96
-  exclusive_races:
-    - Demon
-  perks:
-    increases_enemy_casualties_on_offense: 25
-    increases_enemy_casualties_on_defense: 25
-    food_consumption_mod: 20
-
-sacrifice:
-  name: Sacrifice
-  level: 1
-  scope: self
-  class: active
-  cost: 9
-  exclusive_races:
-    - Demon
-  perks:
-    peasant_to_resources_conversion: 50,1;soul,10;blood
 
 ## Kobold
 

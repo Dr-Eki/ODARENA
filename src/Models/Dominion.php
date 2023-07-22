@@ -453,35 +453,20 @@ class Dominion extends AbstractModel
     public function protectorshipOffers()
     {
         return $this->hasMany(ProtectorshipOffer::class, 'protected_id', 'id');
-        /*
-        return $this->hasManyThrough(
-            Dominion::class,
-            ProtectorshipOffer::class,
-            'protected_id',
-            'id',
-            'id',
-            'protector_id'
-        );
-        */
     }
 
     public function protectorshipOffered()
     {
         return $this->hasMany(ProtectorshipOffer::class, 'protector_id', 'id');
-
-        /*
-        return $this->hasOneThrough(
-            Dominion::class,
-            ProtectorshipOffer::class,
-            'protector_id',
-            'id',
-            'id',
-            'protected_id'
-        );
-        */
     }
 
     // END PROTECTORSHIP STUFF
+
+    public function activeSpells()
+    {
+        return $this->hasMany(DominionSpell::class)
+            ->where('duration', '>', 0);
+    }
 
     // Eloquent Query Scopes
 
@@ -1471,14 +1456,14 @@ class Dominion extends AbstractModel
                 {
                     return True;
                 }
-                elseif($perkKey == 'elk_production_raw_from_land')
+                elseif($perkKey == 'elk_production_raw_from_terrain')
                 {
                     $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
 
                     $perAcre = (float)$perkValueArray[0];
                     $landType = (string)$perkValueArray[1];
 
-                    $perk += floor($perAcre * $this->{'land_' . $landType});
+                    $perk += floor($perAcre * $this->{'terrain_' . $landType});
                 }
                 elseif($perkKey == 'training_time_raw_from_morale')
                 {
@@ -1580,7 +1565,7 @@ class Dominion extends AbstractModel
         $multiplier += $this->getAdvancementPerkMultiplier('improvements');
         $multiplier += $this->getTechPerkMultiplier('improvements');
         #$multiplier += $this->getDeityPerkMultiplier('improvements'); # Breaks
-        $multiplier += $this->race->getPerkMultiplier('improvements_max');
+        $multiplier += $this->race->getPerkMultiplier('improvements');
         $multiplier += $this->realm->getArtefactPerkMultiplier('improvements');
         $multiplier += $this->getDecreePerkMultiplier('improvements'); 
 

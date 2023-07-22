@@ -99,11 +99,11 @@ units:
     - living
     - sentient
   cost:
-    gold: 3600
+    gold: 2600
     draftees: 1
   power:
     offense: 6
-    defense: 9
+    defense: 8
   perks:
       offense_from_pairings: 2;3,3;2 # slot;amount
       defense_from_pairing: 4,3 # slot,amount

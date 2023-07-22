@@ -229,7 +229,6 @@ solar_rays:
 
 ## REPTILIANS
 elskas_blur:
-  enabled: 0
   name: Elskas' Blur
   scope: hostile
   class: passive
@@ -365,7 +364,7 @@ pestilence:
   exclusive_races:
     - Afflicted
   perks:
-    kill_peasants_and_converts_for_caster_unit: 0.10,1 # 0.10% die and become unit1
+    kill_peasants_and_converts_for_caster_unit: 0.05,1 # 0.10% die and become unit1
     spreads_spell: lesser_pestilence
 
 lesser_pestilence:
@@ -378,7 +377,7 @@ lesser_pestilence:
   exclusive_races:
     - Afflicted
   perks:
-    kill_peasants_and_converts_for_caster_unit: 0.05,1
+    kill_peasants_and_converts_for_caster_unit: 0.025,1
 
 ## LEGION
 annexation:  

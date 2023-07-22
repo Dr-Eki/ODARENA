@@ -1,6 +1,6 @@
-blessing_of_azk_hurum:  
-  enabled: 0
+blessing_of_azk_hurum:
   name: Blessing of Azk'Hurum
+  level: 1
   scope: friendly
   class: passive
   cost: 7
@@ -9,45 +9,48 @@ blessing_of_azk_hurum:
   perks:
     offensive_power_on_retaliation: 2.5
 
-feast_of_azk_hurum:  
-  enabled: 0
+feast_of_azk_hurum:
   name: Feast of Azk'Hurum
+  level: 1
   scope: self
   class: passive
   cost: 9
   duration: 48
-  deity: azk_hurum
+  exclusive_races:
+    - Demon
   perks:
-    population_growth: 100
-    food_consumption_mod: 20
+    population_growth: 50
+    food_consumption_mod: 25
 
-fury_of_azk_hurum:  
-  enabled: 0
+fury_of_azk_hurum:
   name: Fury of Azk'Hurum
+  level: 1
   scope: self
   class: passive
   cost: 7
   duration: 12
   cooldown: 96
-  deity: azk_hurum
+  exclusive_races:
+    - Demon
   perks:
     increases_enemy_casualties_on_offense: 25
     increases_enemy_casualties_on_defense: 25
-    food_consumption_mod: 20
+    food_consumption_mod: 25
 
 sacrifice_to_azk_hurum:
-  enabled: 0
   name: Sacrifice to Azk'Hurum
+  level: 1
   scope: self
   class: active
   cost: 9
-  deity: azk_hurum
+  exclusive_races:
+    - Demon
   perks:
-    peasant_to_resources_conversion: 50,1;soul,6;blood
+    peasant_to_resources_conversion: 50,1;soul,10;blood
 
-bregons_muster:  
-  enabled: 0
+bregons_muster:
   name: Bregon's Muster
+  level: 1
   scope: self
   class: passive
   cost: 12
@@ -55,54 +58,41 @@ bregons_muster:
   cooldown: 96
   deity: bregon
   perks:
-    unit_gold_costs: -15
-    unit_ore_costs: -15
-    unit_lumber_costs: -5
+    unit_gold_costs: -10
+    unit_ore_costs: -10
+    unit_lumber_costs: -10
     training_time_raw: -6
 
-druvas_blessing:  
-  enabled: 0
+druvas_blessing:
   name: Druva's Blessing
+  level: 2
   scope: self
   class: passive
-  cost: 4
-  duration: 48
-  cooldown: 0
+  cost: 6
+  duration: 12
+  cooldown: 96
   deity: druva
   perks:
-    food_production_mod: 30
-    lumber_production_mod: 10
+    food_production_mod: 15
+    lumber_production_mod: 15
 
-druvas_granaries:  
-  enabled: 0
-  name: Druva's Granaries
-  scope: self
-  class: passive
-  cost: 5
-  duration: 36
-  cooldown: 72
-  deity: druva
-  perks:
-    lumber_theft: -100
-    food_theft: -100
-
-druvas_guard:  
-  enabled: 0
+druvas_guard:
   name: Druva's Guard
+  level: 1
   deity: druva
   scope: self
   class: passive
   cost: 12
-  duration: 48
+  duration: 24
   cooldown: 0
   exclusive_races:
     - Wood Elf
   perks:
-    elk_production_raw_from_land: 0.01,forest
+    elk_production_raw_from_terrain: 0.01,forest
 
-elskas_anointment:  
-  enabled: 0
+elskas_anointment:
   name: Elskas' Anointment
+  level: 1
   scope: self
   class: passive
   cost: 10
@@ -112,10 +102,9 @@ elskas_anointment:
   perks:
     casualties: -25
 
-
-elskas_vision:  
-  enabled: 0
+elskas_vision:
   name: Elskas' Vision
+  level: 1
   scope: self
   class: passive
   cost: 4
@@ -141,48 +130,34 @@ glimjs_treasures:
     kelp_theft: -100
     pearls_theft: -100
 
-mirnons_fortitude:  
-  enabled: 0
+mirnons_fortitude:
   name: Mirnon's Fortitude
   scope: self
   class: passive
-  cost: 4
-  duration: 48
-  cooldown: 0
+  cost: 6
+  duration: 12
+  cooldown: 96
   deity: mirnon
   perks:
-    ore_production_mod: 20
-    gems_production_mod: 10
+    ore_production_mod: 15
+    gems_production_mod: 15
 
-mirnons_greed:  
-  enabled: 0
+mirnons_greed:
   name: Mirnon's Greed
+  level: 1
   scope: self
   class: passive
-  cost: 4
-  duration: 48
-  cooldown: 0
+  cost: 6
+  duration: 12
+  cooldown: 192
   deity: mirnon
   excluded_races:
     - Dragon
     - Lux
   perks:
-    building_gold_mine_production_mod: 10
-    building_gold_quarry_production_mod: 10
-    food_consumption_mod: 20
-
-mirnons_secrets:  
-  enabled: 0
-  name: Mirnon's Secrets
-  scope: self
-  class: passive
-  cost: 5
-  duration: 36
-  cooldown: 72
-  deity: mirnon
-  perks:
-    ore_theft: -100
-    gems_theft: -100
+    building_gold_mine_production_mod: 20
+    building_gold_quarry_production_mod: 20
+    food_consumption_mod: 25
 
 sazals_ward:  
   enabled: 0

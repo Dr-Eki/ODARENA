@@ -578,6 +578,7 @@ class MilitaryCalculator
         $unitPower += $this->getUnitPowerFromResourceExhaustingPerk($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromTimePerk($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromSpell($dominion, $unit, $powerType);
+        $unitPower += $this->getUnitPowerFromActiveSelfSpells($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromAdvancement($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromRulerTitle($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromDeity($dominion, $unit, $powerType);
@@ -1646,6 +1647,36 @@ class MilitaryCalculator
           return $powerFromPerk;
 
       }
+
+        protected function getUnitPowerFromActiveSelfSpells(Dominion $dominion, Unit $unit, string $powerType): float
+        {
+
+            $spellPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_active_self_spells", null);
+            $powerFromPerk = 0;
+
+            if (!$spellPerkData)
+            {
+                return 0;
+            }
+
+            $activeSpells = 0;
+
+            # Get all spells from dominion where scope is self and class is passive
+            foreach($dominion->activeSpells as $index => $dominionSpell)
+            {
+                if($dominionSpell->spell->scope == 'self' and $dominionSpell->spell->class == 'passive')
+                {
+                    $activeSpells += 1;
+                }
+            }
+
+            $powerPerSpell = (float)$spellPerkData;
+
+            $powerFromPerk = $powerPerSpell * $activeSpells;
+
+            return $powerFromPerk;
+
+        }
 
       # Untested/unused
       protected function getUnitPowerFromVersusSpellPerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = []): float
