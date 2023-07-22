@@ -195,7 +195,7 @@ class UnitHelper
             'defense_from_wizard_ratio' => 'Defense increased by %1$s * Wizard Ratio (defensive).',
 
             'offense_from_active_self_spells' => '%+g offensive power per active aura (passive self-spell).',
-            'offense_from_active_self_spells' => '%+g defensive power per active aura (passive self-spell).',
+            'defense_from_active_self_spells' => '%+g defensive power per active aura (passive self-spell).',
 
             'fixed_offense_from_wizard_ratio' => 'Offense increased by %1$s if Wizard Ratio on offense is at least %2$s.',
             'fixed_defense_from_wizard_ratio' => 'Defense increased by %1$s if Wizard Ratio on defense is at least %2$s.',

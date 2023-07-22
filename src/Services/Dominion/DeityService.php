@@ -112,6 +112,15 @@ class DeityService
 
         DB::transaction(function () use ($dominion, $deity)
         {
+
+            foreach($dominion->activeSpells as $dominionSpell)
+            {
+                if($dominionSpell->spell->deity == $deity->key and $dominionSpell->spell->scope == 'self')
+                {
+                    $dominionSpell->delete();
+                }
+            }
+
             DB::table('dominion_deity')
                 ->where('dominion_id', $dominion->id)
                 ->where('deity_id', $deity->id)
