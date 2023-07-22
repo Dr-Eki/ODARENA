@@ -15,6 +15,10 @@ resources:
   - mana
   - elk
 
+peasants_production:
+  gold: 2.6
+  lumber: 0.4
+
 improvement_resources:
   lumber: 1.2
 

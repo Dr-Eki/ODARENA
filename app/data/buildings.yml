@@ -87,6 +87,7 @@ gem_mine:
     - Reptilians
     - Swarm
     - Sylvan
+    - Wood Elf
   terrain: mountain
   perks:
     gems_production_raw: 6
@@ -111,6 +112,7 @@ ore_mine:
     - Sylvan
     - Swarm
     - Undead
+    - Wood Elf
   perks:
     ore_production_raw: 35
 
@@ -146,6 +148,7 @@ watermill:
     - Reptilians
     - Swarm
     - Sylvan
+    - Wood Elf
   perks:
     gems_production_mod: 1,4,20 # Every 1% gives +4% gem production, max +20%
     ore_production_mod: 1,4,20 # Every 1% gives +4% ore production, max +20%

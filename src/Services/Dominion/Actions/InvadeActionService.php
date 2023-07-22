@@ -442,6 +442,12 @@ class InvadeActionService
                     throw new GameException('You cannot invade this target because your land gained plus current total land exceeds 133% of your protector\'s land.');
                 }
             }
+
+            # Sending more than 22,000 OP in the first 12 ticks
+            if($attacker->round->ticks <= 12 and $this->invasion['attacker']['op'] > 22000)
+            {
+                throw new GameException('You cannot send more than 22,000 OP in a single invasion during the first 12 ticks of the round.');
+            }
         
             $this->invasion['defender']['recently_invaded_count'] = $this->militaryCalculator->getRecentlyInvadedCount($defender);
             $this->invasion['attacker']['units_sent'] = $units;
