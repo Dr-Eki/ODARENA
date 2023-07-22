@@ -1461,9 +1461,9 @@ class Dominion extends AbstractModel
                     $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
 
                     $perAcre = (float)$perkValueArray[0];
-                    $landType = (string)$perkValueArray[1];
+                    $terrainKey = (string)$perkValueArray[1];
 
-                    $perk += floor($perAcre * $this->{'terrain_' . $landType});
+                    $perk += floor($perAcre * $this->{'terrain_' . $terrainKey});
                 }
                 elseif($perkKey == 'training_time_raw_from_morale')
                 {

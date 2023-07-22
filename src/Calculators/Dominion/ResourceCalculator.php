@@ -240,7 +240,7 @@ class ResourceCalculator
 
         }
 
-        # Check for RESOURCE_production_raw_from_land tech perk
+        # Check for RESOURCE_production_raw_from_land tech perk <-- This is land (not terrain)
         $production += $dominion->getTechPerkValue($resourceKey . '_production_raw_from_land') * $dominion->land;   
 
         # Unit specific perks
@@ -350,8 +350,8 @@ class ResourceCalculator
             #dump($randomProductionPerkValue);
         }
 
-        # Check for RESOURCE_production_raw_from_land (spell)
-        if($productionFromLand = $dominion->getSpellPerkValue($resourceKey . '_production_raw_from_land'))
+        # Check for RESOURCE_production_raw_from_terrain (spell)
+        if($productionFromLand = $dominion->getSpellPerkValue($resourceKey . '_production_raw_from_terrain'))
         {
             $production += $productionFromLand;
         }

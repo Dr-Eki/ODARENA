@@ -82,7 +82,7 @@ druvas_guard:
   deity: druva
   scope: self
   class: passive
-  cost: 12
+  cost: 8
   duration: 24
   cooldown: 0
   exclusive_races:

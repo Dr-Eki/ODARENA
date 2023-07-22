@@ -492,7 +492,7 @@ lumbershop:
     - Wood Elf
   perks:
     lumber_production_raw: 20
-    lumber_production_mod: 1,2,80 # Every 1% gives +0.40% lumber production, max +40%
+    lumber_production_mod: 1,1,40 # Every 1% gives +0.40% lumber production, max +40%
 
 hollow_trunk:
   name: Hollow Trunk
