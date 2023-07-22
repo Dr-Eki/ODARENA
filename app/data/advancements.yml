@@ -362,7 +362,6 @@ woodworks:
     - Sylvan
     - Swarm
     - Void
-    - Wood Elf # for balance reasons
   perks:
     lumber_improvement_points: 5
 
