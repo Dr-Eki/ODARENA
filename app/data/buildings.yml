@@ -161,6 +161,7 @@ school:
     - Swarm
     - Sylvan
     - Troll
+    - Wood Elf
   perks:
     improvements: 1,1 # Every 1% gives 0.8% higher imps
 
@@ -484,6 +485,14 @@ forest_haven:
     housing: 30
     spy_housing: 5
     jobs: 0
+
+lumbershop:
+  name: Lumbershop
+  exclusive_races:
+    - Wood Elf
+  perks:
+    lumber_production_raw: 20
+    lumber_production_mod: 1,2,80 # Every 1% gives +0.40% lumber production, max +40%
 
 hollow_trunk:
   name: Hollow Trunk

@@ -39,7 +39,7 @@ class MagicCalculator
     public function getLevelSpells(Dominion $dominion, int $level = 0)
     {
 
-        return Spell::where('enabled', 1)
+        $spells = Spell::where('enabled', 1)
         ->where('scope', 'self')
         ->where('magic_level', $level)
         ->get()
@@ -56,9 +56,17 @@ class MagicCalculator
                 return false;
             }
     
+            // Check deity
+            if ($spell->deity && (!$dominion->hasDeity() or $spell->deity->key !== $dominion->deity->key))
+            {
+                return false;
+            }
+    
             return true;
         })
         ->sortBy('name');
+
+        return $spells;
 
     }
 

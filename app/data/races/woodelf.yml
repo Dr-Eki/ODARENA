@@ -7,7 +7,6 @@ playable: 1
 skill_level: 2
 magic_level: 4
 
-
 resources:
   - gold
   - food
