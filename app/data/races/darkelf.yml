@@ -45,7 +45,7 @@ units:
       releases_into_resource: 1,prisoner
 
   - name: Shadow Archer
-    training_time: 12
+    training_time: 9
     type:
       - living
       - sentient
