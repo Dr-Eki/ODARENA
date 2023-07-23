@@ -537,7 +537,7 @@ class DominionFactory
         string $rulerName,
         string $dominionName,
         Quickstart $quickstart,
-        Pack $pack
+        ?Pack $pack
     ): Dominion {
         $this->guardAgainstCrossRoundRegistration($user, $realm->round);
         $this->guardAgainstMultipleDominionsInARound($user, $realm->round);
