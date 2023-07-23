@@ -73,6 +73,7 @@ mining:
     - Swarm
     - Sylvan
     - Troll
+    - Wood Elf
   perks:
     ore_production_mod: 30,5600
 
