@@ -42,7 +42,7 @@
                     </tr>
                     <tr>
                         <td class="text-left">Land</td>
-                        <td class="text-left">{{ number_format(array_sum($quickstart->land)) }}</td>
+                        <td class="text-left">{{ number_format($quickstart->land) }}</td>
                     </tr>
                     <tr>
                         <td class="text-left">Peasants</td>
@@ -169,7 +169,7 @@
     <div class="col-md-12 col-md-6">
         <div class="box">
             <div class="box-header with-border">
-                <h4 class="box-title">Land</h4>
+                <h4 class="box-title">Terrain</h4>
             </div>
             <table class="table table-striped" style="margin-bottom: 0">
                 <colgroup>
@@ -177,17 +177,20 @@
                     <col>
                 </colgroup>
                 <tbody>
-                    @foreach($quickstart->land as $landType => $amount)
+                    @foreach($quickstart->terrains as $terrainKey => $amount)
                         @if($amount > 0)
+                            @php
+                                $terrain = OpenDominion\Models\Terrain::where('key', $terrainKey)->first();
+                            @endphp
                             <tr>
-                                <td>{{ ucwords($landType) }}:</td>
+                                <td>{{ $terrain->name }}:</td>
                                 <td>{{ number_format($amount) }}</td>
                             </tr>
                         @endif
                     @endforeach
                     <tr>
                         <td><strong>Total:</strong></td>
-                        <td>{{ number_format(array_sum($quickstart->land)) }}</td>
+                        <td>{{ number_format($quickstart->land) }}</td>
                     </tr>
                 </tbody>
             </table>
