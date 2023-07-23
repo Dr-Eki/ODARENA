@@ -7,11 +7,9 @@ playable: 1 # Round 88
 skill_level: 2
 magic_level: 4
 
-
 resources:
   - gold
   - ore
-  - lumber
   - food
   - mana
   - gems
@@ -20,6 +18,10 @@ resources:
 perks:
   food_consumption_mod: -20
   salvaging: 50
+
+construction_materials:
+  - gold
+  - ore
 
 # Gargoyles?
 
