@@ -5,7 +5,7 @@ gameplay_notes: >-
 home_land_type: forest
 home_terrain: forest
 skill_level: 1
-playable: 1
+playable: 0
 magic_level: 3
 
 resources:
