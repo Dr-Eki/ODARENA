@@ -199,7 +199,7 @@ bashing:
   exclusive_races:
     - Troll
   perks:
-    defensive_power: 60,9000
+    defensive_power: 50,9000
 
 building:
   name: Building
@@ -221,7 +221,7 @@ glimmering:
   exclusive_races:
     - Troll
   perks:
-    gold_production_mod: 60,7000
+    gold_production_mod: 50,7000
 
 hunting:
   name: Hunting
@@ -244,7 +244,7 @@ nesting:
   exclusive_races:
     - Troll
   perks:
-    population: 60,6000
+    population: 50,6000
 
 rock_breaking:
   name: Rock Breaking
@@ -258,7 +258,7 @@ smashing:
   exclusive_races:
     - Troll
   perks:
-    offensive_power: 80,10000
+    offensive_power: 60,10000
 
 sneaking:
   name: Sneaking
