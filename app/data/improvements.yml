@@ -101,6 +101,8 @@ tactics:
 
 warding:
   name: Warding
+  excluded_races:
+    - Troll
   perks:
     sorcery_damage_suffered: -40,5500
 
