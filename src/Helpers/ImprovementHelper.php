@@ -31,6 +31,8 @@ class ImprovementHelper
             'thunderstone_production_mod' => 'thunderstone discovery',
             'yak_production_mod' => 'yak taming',
 
+            'sapling_max_storage' => 'sapling max storage',
+
             'food_consumption_mod' => 'food consumption',
 
             'xp_generation_mod' => 'XP generation',
