@@ -444,7 +444,7 @@ class InvadeActionService
             }
 
             # Sending more than 22,000 OP in the first 12 ticks
-            if($attacker->round->ticks <= 12 and $this->invasion['attacker']['op'] > 22000)
+            if($attacker->round->ticks <= 12 and $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $units, [], true) > 22000)
             {
                 throw new GameException('You cannot send more than 22,000 OP in a single invasion during the first 12 ticks of the round.');
             }
