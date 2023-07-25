@@ -3,6 +3,7 @@
 namespace OpenDominion\Exceptions;
 
 #use Exception;
+use Log;
 use Throwable;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -51,6 +52,8 @@ class Handler extends ExceptionHandler
     #public function render($request, Exception $exception)
     public function render($request, Throwable $exception)
     {
+        Log::error($exception);
+
         return parent::render($request, $exception);
     }
 
