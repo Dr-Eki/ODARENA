@@ -312,14 +312,14 @@
                                 </tr>
 
                                 @if (isset($event->data['attacker']['conversions']) and array_sum($event->data['attacker']['conversions']) > 0)
-                                <tr>
-                                    <th colspan="2">Conversion</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="2"><small class="text-muted">The {{ $raceHelper->getRaceAdjective($event->source->race) }} forces recall some of the dead.</small></td>
-                                </tr>
+                                    <tr>
+                                        <th colspan="2">Conversion</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><small class="text-muted">The {{ $raceHelper->getRaceAdjective($event->source->race) }} forces recall some of the dead.</small></td>
+                                    </tr>
                                     @foreach($event->data['attacker']['conversions'] as $slot => $amount)
-                                        @if($amount > 0)
+                                        @if($amount > 0 and is_numeric($slot))
                                             <tr>
                                                 <td>{{ $event->source->race->units->where('slot', $slot)->first()->name }}:</td>
                                                 <td><span class="text-green">+{{ number_format($amount) }}</span></td>
