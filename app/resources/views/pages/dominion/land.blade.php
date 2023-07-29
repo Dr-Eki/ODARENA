@@ -112,9 +112,8 @@
                                     $totalLandIncoming += $queueService->getInvasionQueueTotalByResource($selectedDominion, 'land');
                                     $totalLandIncoming += $queueService->getInvasionQueueTotalByResource($selectedDominion, 'land');
                                     $totalLandIncoming += $queueService->getInvasionQueueTotalByResource($selectedDominion, 'land');
-
                                 @endphp
-                                <td class="text-center"><em>{{ number_format(array_sum($totalLandIncoming)) }}</em></td>
+                                <td class="text-center"><em>{{ number_format($totalLandIncoming) }}</em></td>
                             </tr>
                         </tbody>
                     </table>
