@@ -107,7 +107,14 @@
                                         </em>
                                     </td>
                                 @endfor
-                                <td class="text-center"><em>{{ number_format(array_sum($incomingTerrainPerTick)) }}</em></td>
+                                @php
+                                    $totalLandIncoming = 0;
+                                    $totalLandIncoming += $queueService->getInvasionQueueTotalByResource($selectedDominion, 'land');
+                                    $totalLandIncoming += $queueService->getInvasionQueueTotalByResource($selectedDominion, 'land');
+                                    $totalLandIncoming += $queueService->getInvasionQueueTotalByResource($selectedDominion, 'land');
+
+                                @endphp
+                                <td class="text-center"><em>{{ number_format(array_sum($totalLandIncoming)) }}</em></td>
                             </tr>
                         </tbody>
                     </table>

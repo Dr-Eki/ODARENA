@@ -2006,9 +2006,6 @@ class MilitaryCalculator
         $multiplier += $dominion->getBuildingPerkMultiplier('spy_strength');
         $multiplier += $dominion->getBuildingPerkMultiplier('spy_strength_on_' . $type);
 
-        // Deity
-        $multiplier += $dominion->getDeityPerkMultiplier('spy_strength');
-
         // Title
         if(isset($dominion->title))
         {
