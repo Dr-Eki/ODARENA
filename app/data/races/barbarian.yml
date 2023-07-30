@@ -14,7 +14,7 @@ perks:
   mana_production_mod: -100
   ore_production_mod: -100
   gems_production_mod: -100
-  max_population: 12.5
+  #max_population: 12.5
 units:
   - name: Marauder
     training_time: 6
