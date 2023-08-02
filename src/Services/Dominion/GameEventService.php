@@ -94,7 +94,8 @@ class GameEventService
         $storyteller .= 'Summarize unit numbers into "hundreds" for amounts less than 1000. '; 
         $storyteller .= 'Summarize unit numbers into "thousands" for amounts 1000-50000. ';
         $storyteller .= 'Summarize unit numbers into "tens of thousands" for amounts 50000 or greater. ';
-        $storyteller .= 'The audience for this is 18 and older, so feel free to use graphic details (blood, gore), but do so in a tasteful manner. ';
+        $storyteller .= 'For numbers greater than 100, refraind from stating specifics. For example, 128 could be referred to as "over a hundred". ';
+        $storyteller .= 'The audience for this is 18 and older, so feel free to use graphic, vivid details (blood, gore), but do so in a tasteful and creative manner. ';
 
         $invasionSummary = vsprintf(
             "An army from the %s dominion of %s led by %s (the attacker) has invaded the %s dominion of %s commaneded by %s (the defender). The battle is %s won by %s.The attacker's units were {%s} and the defender's units were {%s}.",
@@ -111,8 +112,6 @@ class GameEventService
                 json_encode($data['defender']['units'])
             ]
             );
-
-
 
         if($invasion->data['result']['success'])
         {

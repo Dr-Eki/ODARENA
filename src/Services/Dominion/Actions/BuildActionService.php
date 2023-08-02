@@ -148,8 +148,8 @@ class BuildActionService
             $primaryCost = $this->constructionCalculator->getConstructionCostPrimary($dominion);# * $totalBuildingsToConstruct;
             $secondaryCost = $this->constructionCalculator->getConstructionCostSecondary($dominion);# * $totalBuildingsToConstruct;
 
-            $primaryCostTotal =+ $amount * $primaryCost;
-            $secondaryCostTotal =+ $amount * $secondaryCost;
+            $primaryCostTotal += $amount * $primaryCost;
+            $secondaryCostTotal += $amount * $secondaryCost;
         }
 
         # Get construction materials
