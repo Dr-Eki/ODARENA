@@ -422,7 +422,7 @@ class SettingHelper
                 );
 
             case 'hourly_dominion.starvation_occurred':
-                return 'You are starving and morale is decreasing.';
+                return 'You do not have enough food! Morale is decreasing.';
 
             # CULT
 
