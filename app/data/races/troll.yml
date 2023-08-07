@@ -24,8 +24,6 @@ construction_materials:
   - ore
 
 improvement_resources:
-  gold: 1
-  ore: 2
   gems: 9
 
 perks:
@@ -36,6 +34,7 @@ perks:
   max_advancements_level: 4
   advancement_costs: 25
   gems_production_mod: 50
+  exchange_rate: -20
 
 units:
 - name: Ogre
@@ -108,4 +107,5 @@ units:
       offense_from_pairings: 2;3,3;2 # slot;amount
       defense_from_pairing: 4,3 # slot,amount
       plunders: food;20,ore;10,gems;5
-      only_dies_vs_raw_power: 6 # >=
+      #only_dies_vs_raw_power: 6 # >=
+      casualties: -25

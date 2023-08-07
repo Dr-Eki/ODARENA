@@ -215,8 +215,8 @@ fighting:
   exclusive_races:
     - Troll
   perks:
-    casualties_on_offense: -40,6000
-    casualties_on_defense: -60,6000
+    casualties_on_offense: -20,6000
+    casualties_on_defense: -30,6000
 
 glimmering:
   name: Glimmering

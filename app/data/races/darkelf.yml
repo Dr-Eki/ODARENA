@@ -73,9 +73,9 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 600
-      ore: 80
-      mana: 40
+      gold: 720
+      ore: 100
+      mana: 50
       draftees: 1
     power:
       offense: 3
@@ -84,8 +84,8 @@ units:
       counts_as_wizard_offense: 0.1666
       counts_as_wizard_defense: 0.1666
       kills_into_resource_per_casualty: 0.75,prisoner
-      offense_from_advancements: wizardry_tradition;6;0.5,magical_weapons;6;0.5,concentration;6;0.5,invocations;6;0.5
-      defense_from_advancements: wizardry_tradition;6;0.5,magical_weapons;6;0.5,concentration;6;0.5,invocations;6;0.5
+      offense_from_advancements: wizardry_tradition;6;0.75,magical_weapons;6;0.75,concentration;6;0.75,invocations;6;0.75
+      defense_from_advancements: wizardry_tradition;6;0.75,magical_weapons;6;0.75,concentration;6;0.75,invocations;6;0.75
 
   - name: Warweaver
     training_time: 12
@@ -103,6 +103,25 @@ units:
       offense: 4
       defense: 2
     perks:
-      offense_from_active_self_spells: 0.15
+      offense_from_active_self_spells: 0.20
       kills_into_resource_per_casualty: 1,prisoner
       displaced_peasants_conversion: 1
+
+  - name: Gargoyle
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+    cost:
+      mana: 20000
+    power:
+      offense: 200
+      defense: 200
+    perks:
+      kills_into_resource_per_casualty: 1,prisoner
+      pairing_limit: 4,1000 # Unit slot, amount
+      increases_enemy_casualties_on_offense: 1
+      increases_enemy_casualties_on_defense: 1
+      casualties: -50

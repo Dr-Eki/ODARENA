@@ -1323,6 +1323,11 @@ class InvadeActionService
             if($target->race->name === 'Barbarian')
             {
                 $landDiscovered /= 3;
+
+                if($landRatio < 75)
+                {
+                    $landDiscovered = 0;
+                }
             }
             $landDiscovered = intval(floor($landDiscovered));
 
