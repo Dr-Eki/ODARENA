@@ -76,7 +76,7 @@ gold_mine:
     - Swarm
     - Yeti
   perks:
-    gold_production_raw: 20
+    gold_production_raw: 40
 
 gem_mine:
   name: Gem Mine

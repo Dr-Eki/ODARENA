@@ -23,8 +23,6 @@ construction_materials:
   - gold
   - ore
 
-# Gargoyles?
-
 units:
   - name: Slave Soldier
     training_time: 3
@@ -121,7 +119,7 @@ units:
       defense: 200
     perks:
       kills_into_resource_per_casualty: 1,prisoner
-      pairing_limit: 4,1000 # Unit slot, amount
+      pairing_limit: 4,0.001 # Unit slot, amount
       increases_enemy_casualties_on_offense: 1
       increases_enemy_casualties_on_defense: 1
       casualties: -50
