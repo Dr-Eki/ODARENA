@@ -39,7 +39,7 @@
                     <label for="dominion_name" class="col-sm-3 control-label">Password</label>
                     <div class="col-sm-6">
                         <input type="text" name="pack_password" id="pack_password" class="form-control" placeholder="Pack password" value="{{ old('pack_password') }}" maxlength="100" required autofocus>
-                        <p class="help-block">Other players must know this password to join your pack.</p>
+                        <p class="help-block">Other players must know this password to join your pack, unless you change your pack status to Public later. Unlike the password you use to log in, this password is not encrypted.</p>
                     </div>
                 </div>
 
