@@ -5,6 +5,7 @@ home_land_type: hill
 home_terrain: hills
 playable: 1
 skill_level: 2
+magic_level: 1
 
 perks:
   max_population: 20
