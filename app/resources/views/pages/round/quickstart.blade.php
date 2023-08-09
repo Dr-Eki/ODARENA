@@ -61,6 +61,52 @@
                     </div>
                 </div>
 
+                @if(in_array($round->mode, ['packs','packs-duration']))
+                    <div class="form-group">
+                        <label for="faction" class="col-sm-3 control-label">Join Pack</label>
+                        <div class="col-sm-4">
+                            @if($packs->count())
+                                <select name="pack" id="pack" class="form-control select2" data-placeholder="Select a pack" required>
+                                    @foreach ($packs as $pack)
+                                        @php
+                                            $isSelected = ($pack->id == old('pack') or $pack->user->id ==  Auth::user()->id) ? 'selected' : '';
+                                        @endphp
+
+                                        <option value="{{ $pack->id }}" {{ $isSelected }} {{ $pack->status == 2 ? 'disabled' : null }}>
+                                            {{ $pack->user->display_name }}{{ $pack->user->display_name[strlen($pack->user->display_name) - 1] == 's' ? "'" : "'s" }} Pack
+                                            ({{ number_format($pack->dominions->count()) }} {{ str_plural('member', $pack->dominions->count()) }})
+                                            {{ $pack->status == 1 ? '(Public - No Password Needed)' : null }}
+                                            {{ $pack->status == 2 ? '(Closed)' : null }}
+                                        </option>
+                                    @endforeach
+
+                                    @if($packs->where('status', 1)->count())
+                                        <option value="random_public">Random public pack</option>
+                                    @else
+                                        <option value="random_public" disabled>No public packs available</option>
+                                    @endif
+
+                                </select>
+                            @else
+                                <select name="pack" id="pack" class="form-control select2" data-placeholder="No packs available" disabled>
+                                    <option selected>No packs created yet</option>
+                                </select>
+                            @endif
+                        </div>
+                        <div class="col-sm-2">
+                            <a href="{{ route('round.create-pack', $round) }}" class="btn btn-primary btn-block">Create New Pack</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="faction" class="col-sm-3 control-label">Password</label>
+                        <div class="col-sm-6">
+                            <input type="password" name="pack_password" class="form-control" placeholder="Enter pack password">
+                        </div>
+                    </div>
+
+                @endif
+
                 {{-- Terms and Conditions --}}
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-6">
