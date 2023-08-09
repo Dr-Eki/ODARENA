@@ -77,7 +77,7 @@ class DominionHelper
 
     public function canChangeName(Dominion $dominion): bool
     {
-        return ($dominion->round->hasStarted() or $dominion->protection_ticks > 0);
+        return (!$dominion->round->hasStarted() or $dominion->protection_ticks > 0);
     }
 
     public function isAllowedDominionName(string $dominionName, bool $isNameChange = false, ?Dominion $dominion = null): bool
