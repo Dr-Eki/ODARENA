@@ -3,7 +3,7 @@
 namespace OpenDominion\Helpers;
 
 use DB;
-use User;
+use OpenDominion\Models\User;
 
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
@@ -80,7 +80,7 @@ class DominionHelper
         return (!$dominion->round->hasStarted() or $dominion->protection_ticks > 0);
     }
 
-    public function isAllowedDominionName(string $dominionName, bool $isNameChange = false, ?Dominion $dominion = null): bool
+    public function isAllowedDominionName(string $dominionName): bool
     {
         $barbarianUsers = DB::table('users')
             ->where('users.email', 'like', 'barbarian%@odarena.com')
