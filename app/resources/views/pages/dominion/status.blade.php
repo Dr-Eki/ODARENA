@@ -474,7 +474,7 @@
                     <h3 class="box-title"><i class="fa fa-exchange-alt fa-fw text-red"></i> Change Dominion Name</h3>
                 </div>
                 <div class="box-body">
-                    <p><strong class="text-red">You can only change ruler title before you have taken an action.</strong> As soon as you take any action, this option goes away.</p>
+                    <p>You can change the name of your dominion only if the round has not started yet or if you have protection ticks remaining.</p>
                     <form action="{{ route('dominion.status.change-name') }}" method="post" role="form" id="tick_form">
                         @csrf
                         <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
