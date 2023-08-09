@@ -2,9 +2,11 @@
 
 namespace OpenDominion\Helpers;
 
+use DB;
+use User;
+
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
-#use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\ProductionCalculator;
 
 class DominionHelper
@@ -72,5 +74,47 @@ class DominionHelper
         return $string;
     }
 
+
+    public function canChangeName(Dominion $dominion): bool
+    {
+        return ($dominion->round->hasStarted() or $dominion->protection_ticks > 0);
+    }
+
+    public function isAllowedDominionName(string $dominionName, bool $isNameChange = false, ?Dominion $dominion = null): bool
+    {
+        $barbarianUsers = DB::table('users')
+            ->where('users.email', 'like', 'barbarian%@odarena.com')
+            ->pluck('users.id')
+            ->toArray();
+
+        foreach($barbarianUsers as $barbarianUserId)
+        {
+            $barbarianUser = User::findorfail($barbarianUserId);
+
+            if(stristr($dominionName, $barbarianUser->display_name))
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    public function isNameUnique(Dominion $dominion, string $name): bool
+    {
+        # Dominion name must be unique for the round
+        $dominions = $dominion->round->dominions;
+    
+        # Check if $name is in any $dominions->name
+        foreach ($dominions as $existingDominion)
+        {
+            if ($existingDominion->id != $dominion->id && $existingDominion->name == $name) {
+                return false; // The name already exists within this round
+            }
+        }
+    
+        return true; // The name is unique within this round
+    }
+    
 
 }

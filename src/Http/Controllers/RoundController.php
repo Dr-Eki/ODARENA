@@ -10,7 +10,6 @@ use LogicException;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Factories\DominionFactory;
 use OpenDominion\Factories\RealmFactory;
-#use OpenDominion\Helpers\DecreeHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\TitleHelper;
 use OpenDominion\Models\Dominion;
@@ -21,9 +20,8 @@ use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\Title;
 use OpenDominion\Models\User;
+use OpenDominion\Helpers\DominionHelper;
 use OpenDominion\Helpers\RoundHelper;
-use OpenDominion\Services\Analytics\AnalyticsEvent;
-use OpenDominion\Services\Analytics\AnalyticsService;
 use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\SelectorService;
 use OpenDominion\Services\RealmFinderService;
@@ -37,6 +35,9 @@ class RoundController extends AbstractController
     /** @var DominionFactory */
     protected $dominionFactory;
 
+    /** @var DominionHelper */
+    protected $dominionHelper;
+
     /** @var RoundHelper */
     protected $roundHelper;
 
@@ -49,6 +50,7 @@ class RoundController extends AbstractController
     public function __construct()
     {
         $this->dominionFactory = app(DominionFactory::class);
+        $this->dominionHelper = app(DominionHelper::class);
         $this->roundHelper = app(RoundHelper::class);
     }
 
@@ -298,7 +300,7 @@ class RoundController extends AbstractController
         
                         $dominionName = $request->get('dominion_name');
         
-                        if(!$this->isAllowedDominionName($dominionName))
+                        if(!$this->dominionHelper->isAllowedDominionName($dominionName))
                         {
                             throw new GameException($dominionName . ' is not a permitted dominion name.');
                         }
@@ -347,14 +349,6 @@ class RoundController extends AbstractController
                     $dominionSelectorService = app(SelectorService::class);
                     $dominionSelectorService->selectUserDominion($dominion);
                 }
-        
-                // todo: fire laravel event
-                $analyticsService = app(AnalyticsService::class);
-                $analyticsService->queueFlashEvent(new AnalyticsEvent(
-                    'round',
-                    'register',
-                    (string)$round->number
-                ));
         
                 $request->session()->flash(
                     'alert-success',
@@ -553,7 +547,7 @@ class RoundController extends AbstractController
 
                 $dominionName = $request->get('dominion_name');
 
-                if(!$this->isAllowedDominionName($dominionName))
+                if(!$this->dominionHelper->isAllowedDominionName($dominionName))
                 {
                     throw new GameException($dominionName . ' is not a permitted dominion name.');
                 }
@@ -602,14 +596,6 @@ class RoundController extends AbstractController
             $dominionSelectorService = app(SelectorService::class);
             $dominionSelectorService->selectUserDominion($dominion);
         }
-
-        // todo: fire laravel event
-        $analyticsService = app(AnalyticsService::class);
-        $analyticsService->queueFlashEvent(new AnalyticsEvent(
-            'round',
-            'register',
-            (string)$round->number
-        ));
 
         $request->session()->flash(
             'alert-success',
@@ -735,25 +721,6 @@ class RoundController extends AbstractController
         }
     }
 
-    protected function isAllowedDominionName(string $dominionName): bool
-    {
-        $barbarianUsers = DB::table('users')
-            ->where('users.email', 'like', 'barbarian%@odarena.com')
-            ->pluck('users.id')
-            ->toArray();
-
-        foreach($barbarianUsers as $barbarianUserId)
-        {
-            $barbarianUser = User::findorfail($barbarianUserId);
-
-            if(stristr($dominionName, $barbarianUser->display_name))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
 
     protected function checkRaceRoundModes(Race $race, Round $round): bool
     {

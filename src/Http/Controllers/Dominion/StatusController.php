@@ -6,6 +6,7 @@ use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Http\Requests\Dominion\Actions\TickActionRequest;
 use OpenDominion\Http\Requests\Dominion\Actions\TitleChangeActionRequest;
+use OpenDominion\Http\Requests\Dominion\Actions\NameChangeActionRequest;
 
 use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Calculators\Dominion\DominionCalculator;
@@ -128,4 +129,57 @@ class StatusController extends AbstractDominionController
 
     }
 
+    public function postChangeName(NameChangeActionRequest $request)
+    {
+        $dominionHelper = app(DominionHelper::class);
+
+        $name = $request->input('dominion_name');
+        $dominion = $this->getSelectedDominion();
+
+        if(!$dominionHelper->isAllowedDominionName($name))
+        {
+
+            return redirect()
+                ->to(route('dominion.status'))
+                ->with(
+                    'alert-danger',
+                    $name . ' is not a permitted dominion name.'
+                );
+        }
+
+        if(!$dominionHelper->isNameUnique($dominion, $name))
+        {
+
+            return redirect()
+                ->to(route('dominion.status'))
+                ->with(
+                    'alert-danger',
+                    $name . ' is already in use.'
+                );
+        }
+
+        if($dominionHelper->canChangeName($dominion))
+        {
+            $name = $request->input('dominion_name');
+            $dominion->name = $name;
+            $dominion->save();
+            return redirect()
+                ->to(route('dominion.status'))
+                ->with(
+                    'alert-success',
+                    'Your name has been changed.'
+                );
+        }
+        else
+        {
+            return redirect()
+                ->to(route('dominion.status'))
+                ->with(
+                    'alert-danger',
+                    'You cannot change your name anymore.'
+                );
+        }
+
+
+    }
 }

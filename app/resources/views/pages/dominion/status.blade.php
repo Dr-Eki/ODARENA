@@ -308,7 +308,7 @@
         </div>
     </div>
 
-    @if ($selectedDominion->realm->motd && ($selectedDominion->realm->motd_updated_at > now()->subDays(3)))
+    @if ($selectedDominion->realm->motd)
         <div class="col-sm-12 col-md-9">
             <div class="panel panel-warning">
                 <div class="panel-body">
@@ -460,6 +460,31 @@
                     <a href="{{ route('dominion.quickstart') }}" class="btn btn-warning">
                         <i class="fas fa-fast-forward fa-fw"></i> Generate Quickstart
                     </a>
+                </div>
+            </div>
+        </div>
+    @endif
+
+
+
+    @if($dominionHelper->canChangeName($selectedDominion))
+        <div class="col-sm-12 col-md-9">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-exchange-alt fa-fw text-red"></i> Change Dominion Name</h3>
+                </div>
+                <div class="box-body">
+                    <p><strong class="text-red">You can only change ruler title before you have taken an action.</strong> As soon as you take any action, this option goes away.</p>
+                    <form action="{{ route('dominion.status.change-name') }}" method="post" role="form" id="tick_form">
+                        @csrf
+                        <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
+                        <div class="input-group">
+                            <input type="text" name="dominion_name" class="form-control" placeholder="New name" value="{{ old('dominion_name') }}" required>
+                            <span class="input-group-append">
+                                <button type="submit" class="btn btn-block btn-warning">Change name</button>
+                            </span>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

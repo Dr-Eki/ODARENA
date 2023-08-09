@@ -2,6 +2,8 @@
 
 namespace OpenDominion\Calculators\Dominion;
 
+use DB;
+
 use OpenDominion\Models\Dominion;
 
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
@@ -14,6 +16,10 @@ use OpenDominion\Services\Dominion\QueueService;
 
 class DominionCalculator
 {
+
+    protected $militaryCalculator;
+    
+
     public function __construct()
     {
         #$this->landCalculator = app(LandCalculator::class);
@@ -90,5 +96,6 @@ class DominionCalculator
     {
         return $dominion->land - $this->getTotalBuildings($dominion);
     }
+
 
 }
