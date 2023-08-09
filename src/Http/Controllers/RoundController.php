@@ -144,13 +144,17 @@ class RoundController extends AbstractController
             ->orderBy('name')
             ->get();
 
+        # Get packs for this round
+        $packs = Pack::where('round_id', $round->id)->get();
+
 
         return view('pages.round.quickstart', [
             'raceHelper' => app(RaceHelper::class),
             'titleHelper' => app(TitleHelper::class),
             'round' => $round,
             'quickstarts' => $quickstarts,
-            'titles' => $titles
+            #'titles' => $titles,
+            'packs' => $packs
         ]);
     }
 
@@ -257,7 +261,6 @@ class RoundController extends AbstractController
                         /** @var User $user */
                         $user = Auth::user();
                         $race = $quickstart->race;
-                        $pack = null;
         
                         if (!$race->playable and $race->alignment !== 'npc')
                         {

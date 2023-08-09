@@ -181,7 +181,6 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -194,11 +193,11 @@
                 <a href="{{ route('dominion.advisors.statistics') }}" class="pull-right"><span>Statistics Advisor</span></a>
             </div>
             <div class="box-body">
-                    <table class="table">
-                        <colgroup>
-                            <col width="50%">
-                            <col width="50%">
-                        </colgroup>
+                <table class="table">
+                    <colgroup>
+                        <col width="50%">
+                        <col width="50%">
+                    </colgroup>
                     <tbody>
                         <tr>
                             <td colspan="2" class="text-center"><strong>Military</strong></td>
@@ -296,14 +295,14 @@
                         </tr>
 
                         @if($selectedDominion->race->name == 'Cult')
-                        <tr>
-                            <td><i class="ra ra-brain-freeze ra-fw"></i><span data-toggle="tooltip" data-placement="top" title="A measurement of the mental fortitude of your dominion"> Psionic Strength:</td>
-                            <td>{{ number_format($dominionCalculator->getPsionicStrength($selectedDominion),6) }}</td>
-                        </tr>
+                            <tr>
+                                <td><i class="ra ra-brain-freeze ra-fw"></i><span data-toggle="tooltip" data-placement="top" title="A measurement of the mental fortitude of your dominion"> Psionic Strength:</td>
+                                <td>{{ number_format($dominionCalculator->getPsionicStrength($selectedDominion),6) }}</td>
+                            </tr>
                         @endif
                         @include('partials.dominion.housing') 
                     </tbody>
-                    </table>
+                </table>
             </div>
         </div>
     </div>
@@ -318,178 +317,181 @@
             </div>
         </div>
     @endif
-
-    @if($titleCalculator->canChangeTitle($selectedDominion))
-        <div class="col-sm-12 col-md-9">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa fa-exchange-alt fa-fw text-red"></i> Change Ruler Title</h3>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-9 no-padding">
+        @if($titleCalculator->canChangeTitle($selectedDominion))
+            <div class="col-sm-12 col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-exchange-alt fa-fw text-red"></i> Change Ruler Title</h3>
+                    </div>
+                    <div class="box-body">
+                        <p><strong class="text-red">You can only change ruler title before you have taken an action.</strong> As soon as you take any action, this option goes away.</p>
+                        <form action="{{ route('dominion.status.change-title') }}" method="post" role="form" id="tick_form">
+                            @csrf
+                            <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
+                            <div class="input-group">
+                                <select name="title_id" id="title" class="form-control select2" data-placeholder="Select a title" required>
+                                <option></option>
+                                    @foreach ($titles as $title)
+                                        <option value="{{ $title->id }}">
+                                            {{ $title->name }}
+                                            (@foreach ($title->perks as $perk)
+                                                @php
+                                                    $perkDescription = $titleHelper->getPerkDescriptionHtmlWithValue($perk);
+                                                @endphp
+                                                    {!! $perkDescription['description'] !!} {!! $perkDescription['value']  !!}
+                                            @endforeach)
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <span class="input-group-append">
+                                    <button type="submit" class="btn btn-block btn-warning">Change ruler title</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="box-body">
-                    <p><strong class="text-red">You can only change ruler title before you have taken an action.</strong> As soon as you take any action, this option goes away.</p>
-                    <form action="{{ route('dominion.status.change-title') }}" method="post" role="form" id="tick_form">
+            </div>
+        @endif
+
+        @if ($dominionProtectionService->canTick($selectedDominion))
+            <div class="col-sm-12 col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="ra ra-shield text-aqua"></i> Protection</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>You are under a magical state of protection. You have <b>{{ $selectedDominion->protection_ticks }}</b> protection {{ str_plural('tick', $selectedDominion->protection_ticks) }} left.</p>
+                        <p>During protection you cannot be attacked or attack other dominions. You can neither cast any offensive spells or engage in espionage.</p>
+                        <p>Regularly scheduled ticks do not count towards your dominion while you are in protection.</p>
+                        <p>Select number of ticks and click the button below to proceed that many ticks. <em>There is no undo or Go Back option so make sure you are ready to proceed.</em> </p>
+                        <form action="{{ route('dominion.status') }}" method="post" role="form" id="tick_form">
                         @csrf
                         <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
-                        <div class="input-group">
-                            <select name="title_id" id="title" class="form-control select2" data-placeholder="Select a title" required>
-                            <option></option>
-                                @foreach ($titles as $title)
-                                    <option value="{{ $title->id }}">
-                                        {{ $title->name }}
-                                        (@foreach ($title->perks as $perk)
-                                            @php
-                                                $perkDescription = $titleHelper->getPerkDescriptionHtmlWithValue($perk);
-                                            @endphp
-                                                {!! $perkDescription['description'] !!} {!! $perkDescription['value']  !!}
-                                        @endforeach)
-                                    </option>
-                                @endforeach
-                            </select>
-                            <span class="input-group-append">
-                                <button type="submit" class="btn btn-block btn-warning">Change ruler title</button>
-                            </span>
-                        </div>
+                        <select class="btn btn-warning" name="ticks">
+                            @for ($i = 1; $i <= min(24, $selectedDominion->protection_ticks); $i++)
+                            <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+
+                        <button type="submit"
+                                class="btn btn-info"
+                                {{ $selectedDominion->isLocked() ? 'disabled' : null }}
+                                id="tick-button">
+                            <i class="ra ra-shield"></i>
+                            Proceed tick(s) ({{ $selectedDominion->protection_ticks }} {{ str_plural('tick', $selectedDominion->protection_ticks) }} left)
                     </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    @endif
+        @endif
 
-    @if ($dominionProtectionService->canTick($selectedDominion))
-        <div class="col-sm-12 col-md-9">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="ra ra-shield text-aqua"></i> Protection</h3>
-                </div>
-                <div class="box-body">
-                    <p>You are under a magical state of protection. You have <b>{{ $selectedDominion->protection_ticks }}</b> protection {{ str_plural('tick', $selectedDominion->protection_ticks) }} left.</p>
-                    <p>During protection you cannot be attacked or attack other dominions. You can neither cast any offensive spells or engage in espionage.</p>
-                    <p>Regularly scheduled ticks do not count towards your dominion while you are in protection.</p>
-                    <p>Select number of ticks and click the button below to proceed that many ticks. <em>There is no undo or Go Back option so make sure you are ready to proceed.</em> </p>
-                    <form action="{{ route('dominion.status') }}" method="post" role="form" id="tick_form">
-                    @csrf
-                    <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
-                    <select class="btn btn-warning" name="ticks">
-                        @for ($i = 1; $i <= min(24, $selectedDominion->protection_ticks); $i++)
-                        <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
-
-                    <button type="submit"
-                            class="btn btn-info"
-                            {{ $selectedDominion->isLocked() ? 'disabled' : null }}
-                            id="tick-button">
-                        <i class="ra ra-shield"></i>
-                        Proceed tick(s) ({{ $selectedDominion->protection_ticks }} {{ str_plural('tick', $selectedDominion->protection_ticks) }} left)
-                </form>
+        @if ($dominionProtectionService->canDelete($selectedDominion))
+            <div class="col-sm-12 col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="ra ra-broken-shield text-red"></i> Delete Dominion</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>You can delete your dominion and create a new one.</p>
+                        <p><strong>This is instant and cannot be undone.</strong></p>
+                        <form id="delete-dominion" class="form-inline" action="{{ route('dominion.misc.delete') }}" method="post">
+                            @csrf
+                            <div class="input-group">
+                                <select class="form-control">
+                                    <option value="0">Delete?</option>
+                                    <option value="1">Confirm Delete</option>
+                                </select>
+                                <span class="input-group-append">
+                                    <button type="submit" class="btn btn-block btn-danger" disabled>Delete my dominion</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    @endif
+        @endif
 
-    @if ($dominionProtectionService->canDelete($selectedDominion))
-        <div class="col-sm-12 col-md-9">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="ra ra-broken-shield text-red"></i> Delete Dominion</h3>
-                </div>
-                <div class="box-body">
-                    <p>You can delete your dominion and create a new one.</p>
-                    <p><strong>This is instant and cannot be undone.</strong></p>
-                    <form id="delete-dominion" class="form-inline" action="{{ route('dominion.misc.delete') }}" method="post">
-                        @csrf
-                        <div class="input-group">
-                            <select class="form-control">
-                                <option value="0">Delete?</option>
-                                <option value="1">Confirm Delete</option>
-                            </select>
-                            <span class="input-group-append">
-                                <button type="submit" class="btn btn-block btn-danger" disabled>Delete my dominion</button>
-                            </span>
-                        </div>
-                    </form>
+        @if(!$selectedDominion->round->hasStarted() or $dominionProtectionService->canTick($selectedDominion))
+            <div class="col-sm-12 col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fas fa-fast-forward fa-fw text-orange"></i> Quickstart</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>Click the button below to generate a quickstart based on the current state of your dominion.</p>
+                        <a href="{{ route('dominion.quickstart') }}" class="btn btn-warning">
+                            <i class="fas fa-fast-forward fa-fw"></i> Generate Quickstart
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    @endif
-    
-    @if ($dominionProtectionService->canDelete($selectedDominion) and $selectedDominion->states->count() > 0 and in_array(request()->getHost(), ['sim.odarena.com', 'odarena.local', 'odarena.virtual']))
-        <div class="col-sm-12 col-md-9">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fas fa-history text-purple"></i> Go Back To Previous Tick</h3>
-                    <span class="pull-right label label-danger">Experimental</span>
+        @endif
+
+        @if($dominionHelper->canChangeName($selectedDominion))
+            <div class="col-sm-12 col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-exchange-alt fa-fw text-red"></i> Change Dominion Name</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>You can change the name of your dominion only if the round has not started yet or if you have protection ticks remaining.</p>
+                        <form action="{{ route('dominion.status.change-name') }}" method="post" role="form" id="tick_form">
+                            @csrf
+                            <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
+                            <div class="input-group">
+                                <input type="text" name="dominion_name" class="form-control" placeholder="New name" value="{{ old('dominion_name') }}" required>
+                                <span class="input-group-append">
+                                    <button type="submit" class="btn btn-block btn-warning">Change name</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="box-body">
-                <p>Click a tick number below to restore your dominion to the state it was when that tick began.</p>
-                <p><span class="label label-danger">Warning</span> All ticks that happened after the point you go back to will be deleted.</p>
-                <p><span class="label label-success">Note</span> The green button is the current tick. Clicking it will undo all actions taken this tick.</p>
-                <div class="row">
-                    @foreach($selectedDominion->states->sortDesc() as $dominionState)
-                        <div class="col-md-1">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <form class="form-inline" action="{{ route('dominion.misc.restore-dominion-state') }}" method="post">
-                                        @csrf
-                                        <input type="hidden" name="dominion_state" id="dominion_state" value="{{ $dominionState->id }}">
-                                        <button class="btn btn-block {{ ($dominionState->dominion_protection_tick == $selectedDominion->protection_ticks) ? 'btn-success' : 'btn-info' }}">
-                                            {{ $dominionState->dominion_protection_tick }}
-                                        </button>
-                                    </form>
+            </div>
+        @endif
+        
+        @if ($dominionProtectionService->canDelete($selectedDominion) and $selectedDominion->states->count() > 0 and in_array(request()->getHost(), ['sim.odarena.com', 'odarena.local', 'odarena.virtual']))
+            <div class="col-sm-12 col-md-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fas fa-history text-purple"></i> Go Back To Previous Tick</h3>
+                        <span class="pull-right label label-danger">Experimental</span>
+                    </div>
+                    <div class="box-body">
+                    <p>Click a tick number below to restore your dominion to the state it was when that tick began.</p>
+                    <p><span class="label label-danger">Warning</span> All ticks that happened after the point you go back to will be deleted.</p>
+                    <p><span class="label label-success">Note</span> The green button is the current tick. Clicking it will undo all actions taken this tick.</p>
+                    <div class="row">
+                        @foreach($selectedDominion->states->sortDesc() as $dominionState)
+                            <div class="col-md-1">
+                                <div class="box">
+                                    <div class="box-header with-border">
+                                        <form class="form-inline" action="{{ route('dominion.misc.restore-dominion-state') }}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="dominion_state" id="dominion_state" value="{{ $dominionState->id }}">
+                                            <button class="btn btn-block {{ ($dominionState->dominion_protection_tick == $selectedDominion->protection_ticks) ? 'btn-success' : 'btn-info' }}">
+                                                {{ $dominionState->dominion_protection_tick }}
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
+                        @endforeach
+                    </div>
 
-                <div class="box-footer">
-                    <small class="text-muted">This is an experimental feature. Use at your own risk.</small>
-                </div>
-            </div>
-        </div>
-    @endif
-
-    @if(!$selectedDominion->round->hasStarted() or $dominionProtectionService->canTick($selectedDominion))
-        <div class="col-sm-12 col-md-9">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fas fa-fast-forward fa-fw text-orange"></i> Quickstart</h3>
-                </div>
-                <div class="box-body">
-                    <p>Click the button below to generate a quickstart based on the current state of your dominion.</p>
-                    <a href="{{ route('dominion.quickstart') }}" class="btn btn-warning">
-                        <i class="fas fa-fast-forward fa-fw"></i> Generate Quickstart
-                    </a>
+                    <div class="box-footer">
+                        <small class="text-muted">This is an experimental feature. Use at your own risk.</small>
+                    </div>
                 </div>
             </div>
-        </div>
-    @endif
+        @endif
+    </div>
+</div>
 
-
-
-    @if($dominionHelper->canChangeName($selectedDominion))
-        <div class="col-sm-12 col-md-9">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa fa-exchange-alt fa-fw text-red"></i> Change Dominion Name</h3>
-                </div>
-                <div class="box-body">
-                    <p>You can change the name of your dominion only if the round has not started yet or if you have protection ticks remaining.</p>
-                    <form action="{{ route('dominion.status.change-name') }}" method="post" role="form" id="tick_form">
-                        @csrf
-                        <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
-                        <div class="input-group">
-                            <input type="text" name="dominion_name" class="form-control" placeholder="New name" value="{{ old('dominion_name') }}" required>
-                            <span class="input-group-append">
-                                <button type="submit" class="btn btn-block btn-warning">Change name</button>
-                            </span>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    @endif
-
+<div class="row">
     <div class="col-sm-12 col-md-9">
         <div class="box box-primary">
             <div class="box-header with-border">
@@ -542,7 +544,6 @@
     <div class="col-md-12 col-md-3">
         @include('partials.dominion.watched-dominions')
     </div>
-
 </div>
 @endsection
 @push('inline-scripts')
