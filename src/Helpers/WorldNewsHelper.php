@@ -1048,11 +1048,6 @@ class WorldNewsHelper
             }
             else
             {
-                if(!$realm->getPackLeader())
-                {
-                    dd($realm->pack);
-                }
-
                 $realmString = $realm->getPackLeader()->name; #$realm->pack->leader->user_id;# Dominion::where('user_id', $realm->pack->leader->user_id)->where('round_id',$realm->round->id)->first()->ruler_name . "'s pack";
             }
 
