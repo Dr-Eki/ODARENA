@@ -1048,7 +1048,7 @@ class WorldNewsHelper
             }
             else
             {
-                $realmString = Dominion::where('user_id', $realm->pack->leader->user_id)->where('round_id',$realm->round->id)->first()->ruler_name . "'s pack";
+                $realmString = $realm->pack->leader->user_id;# Dominion::where('user_id', $realm->pack->leader->user_id)->where('round_id',$realm->round->id)->first()->ruler_name . "'s pack";
             }
 
             $string = sprintf(

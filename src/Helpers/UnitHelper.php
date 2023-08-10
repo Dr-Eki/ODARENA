@@ -246,8 +246,8 @@ class UnitHelper
             'offense_from_recent_victories' => '%1$+g offensive power for every victory in the last %2$s ticks.',
             'defense_from_recent_victories' => '%1$+g defensive power for every victory in the last %2$s ticks.',
 
-            'defense_mob' => '%1$+g offensive power if your troops at home (including units with no defensive power) outnumber the invading units.',
-            'offense_mob' => '%1$+g defensive power if the troops you send outnumber the target\'s entire military at home (including units with no defensive power).',
+            'offense_mob' => '%1$+g offensive power if the troops you send outnumber the target\'s entire military at home (including units with no defensive power).',
+            'defense_mob' => '%1$+g defensive power if your troops at home (including units with no defensive power) outnumber the invading units.',
 
             'offense_from_being_outnumbered' => '%+g offensive power if your sent units are outnumbered by the target\'s entire military at home (including draftees and units with no defensive power).',
             'defense_from_being_outnumbered' => '%+g defensive power if your defending units are outnumbered by the invader\'s units.',

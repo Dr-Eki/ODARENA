@@ -35,18 +35,25 @@ trait DominionGuardsTrait
      */
     public function guardActionsDuringTick(Dominion $dominion, int $seconds = 30): void
     {
+        if ($dominion->protection_ticks > 0 or $dominion->race->name == 'Barbarian' or config('app.env') == 'local')
+        {
+            return;
+        }
+    
         $requestTimestamp = request()->server('REQUEST_TIME');
         $requestTime = Carbon::createFromTimestamp($requestTimestamp);
-        $statsService = app(StatsService::class);
-
-        if ($dominion->protection_ticks === 0 and $dominion->race->name !== 'Barbarian')
+    
+        if (!in_array($requestTime->minute, [0, 15, 30, 45]))
         {
-            if (in_array($requestTime->minute,[0,15,30,45]) && $requestTime->second < $seconds and (env('APP_ENV') !== 'local'))
-            {
-                $statsService->updateStat($dominion, 'world_spinner_encounters', 1);
-                throw new GameException('The World Spinner is spinning the world. Your request was discarded. Try again soon, little one.');
-            }
+            return;
+        }
+    
+        if ($requestTime->second < $seconds)
+        {
+            app(StatsService::class)->updateStat($dominion, 'world_spinner_encounters', 1);
+            throw new GameException('The World Spinner is spinning the world. Your request was discarded. Try again soon, little one.');
         }
     }
+    
 
 }
