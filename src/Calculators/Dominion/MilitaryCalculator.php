@@ -2296,6 +2296,7 @@ class MilitaryCalculator
                 $this->queueService->getInvasionQueueTotalByResource($dominion, "military_unit{$slot}") +
                 $this->queueService->getExpeditionQueueTotalByResource($dominion, "military_unit{$slot}") +
                 $this->queueService->getTheftQueueTotalByResource($dominion, "military_unit{$slot}") +
+                $this->queueService->getDesecrationQueueTotalByResource($dominion, "military_unit{$slot}") +
                 $this->queueService->getSabotageQueueTotalByResource($dominion, "military_unit{$slot}")
             );
         }
@@ -2306,6 +2307,7 @@ class MilitaryCalculator
                 $this->queueService->getInvasionQueueTotalByResource($dominion, "military_{$slot}") +
                 $this->queueService->getExpeditionQueueTotalByResource($dominion, "military_{$slot}") +
                 $this->queueService->getTheftQueueTotalByResource($dominion, "military_{$slot}") +
+                $this->queueService->getDesecrationQueueTotalByResource($dominion, "military_{$slot}") +
                 $this->queueService->getSabotageQueueTotalByResource($dominion, "military_{$slot}")
             );
         }
