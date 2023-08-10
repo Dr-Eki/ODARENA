@@ -41,7 +41,7 @@ trait DominionGuardsTrait
 
         if ($dominion->protection_ticks === 0 and $dominion->race->name !== 'Barbarian')
         {
-            if (!in_array($requestTime->minute,[0,15,30,45]) && $requestTime->second < $seconds and (env('APP_ENV') !== 'local'))
+            if (in_array($requestTime->minute,[0,15,30,45]) && $requestTime->second < $seconds and (env('APP_ENV') !== 'local'))
             {
                 $statsService->updateStat($dominion, 'world_spinner_encounters', 1);
                 throw new GameException('The World Spinner is spinning the world. Your request was discarded. Try again soon, little one.');
