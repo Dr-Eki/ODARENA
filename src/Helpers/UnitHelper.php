@@ -218,20 +218,21 @@ class UnitHelper
 
             'offense_if_target_is_recently_victorious' => '%+g offense if target is recently victorious (in the last 12 ticks).',
 
-            'offense_per_tick' => 'Offense increased by %1$s for each tick of the round (no max).',
-            'defense_per_tick' => 'Defense increased by %1$s for each tick of the round (no max).',
+            'offense_per_tick' => '%1$+g offensive power for each tick of the round (no max).',
+            'defense_per_tick' => '%1$+g defensive power for each tick of the round (no max).',
 
-            'offense_from_time' => 'Offense increased by %3$s between %1$s:00 and %2$s:00.',
-            'defense_from_time' => 'Defense increased by %3$s between %1$s:00 and %2$s:00.',
+            'offense_from_time' => '%3$+g offensive power between %1$s:00 and %2$s:00.',
+            'defense_from_time' => '%3$+g defensive power between %1$s:00 and %2$s:00.',
 
-            'offense_vs_barren_land' => 'Offense increased by 1 against every %1$s%% barren land of target (max +%2$s).',
+            'offense_vs_barren_land' => '+1 offensive power against every %1$s%% barren land of target (max +%2$s).',
 
-            'offense_vs_resource' => 'Offense increased by 1 for every %2$s %1$s target has (max +%3$s).',
-            'defense_vs_resource' => 'Defense increased by 1 for every %2$s %1$s attacker has (max +%3$s).',
+            'offense_vs_resource' => '+1 offensive power for every %2$s %1$s target has (max +%3$s).',
+            'defense_vs_resource' => '+1 defensive power for every %2$s %1$s attacker has (max +%3$s).',
 
-            'offense_from_resource' => 'Offense increased by 1 for every %2$s %1$s (no max).',
+            'offense_from_resource' => '+1 offensive power for every %2$s %1$s (no max).',
+            'defense_from_resource' => '+1 defensive power for every %2$s %1$s (no max).',
+
             'offense_from_resource_exhausting' => 'Offense increased by 1 for every %2$s %1$s (no max). All %1$s is spent when the unit attacks.',
-            'defense_from_resource' => 'Defense increased by 1 for every %2$s %1$s (no max).',
             'offense_from_resource_capped_exhausting' => 'Offense increased by %1$s if you have %2$s %3$s, which is spent when the unit attacks.',
 
             'offense_from_military_percentage' => 'Gains +1x(Military / Total Population) OP, max +1 at 100%% military.',
@@ -239,40 +240,40 @@ class UnitHelper
             'offense_from_victories' => 'Offense increased by %1$s for every victory (max +%2$s). Only successful attacks over 75%% count as victories.',
             'defense_from_victories' => 'Defense increased by %1$s for every victory (max +%2$s). Only successful attacks over 75%% count as victories.',
 
-            'offense_from_net_victories' => 'Offense increased by %1$s for every net victory (max +%2$s, min 0).',
-            'defense_from_net_victories' => 'Defense increased by %1$s for every net victory (max +%2$s, min 0).',
+            'offense_from_net_victories' => '%1$+g offensive power for every net victory (max +%2$s, min 0).',
+            'defense_from_net_victories' => '%1$+g defensive power for every net victory (max +%2$s, min 0).',
 
-            'offense_from_recent_victories' => 'Offense increased by %1$s for every victory in the last %2$s ticks.',
-            'defense_from_recent_victories' => 'Defense increased by %1$s for every victory in the last %2$s ticks.',
+            'offense_from_recent_victories' => '%1$+g offensive power for every victory in the last %2$s ticks.',
+            'defense_from_recent_victories' => '%1$+g defensive power for every victory in the last %2$s ticks.',
 
-            'defense_mob' => 'Defense increased by +%1$s if your troops at home (including units with no defensive power) outnumber the invading units.',
-            'offense_mob' => 'Offense increased by +%1$s if the troops you send outnumber the target\'s entire military at home (including units with no defensive power).',
+            'defense_mob' => '%1$+g offensive power if your troops at home (including units with no defensive power) outnumber the invading units.',
+            'offense_mob' => '%1$+g defensive power if the troops you send outnumber the target\'s entire military at home (including units with no defensive power).',
 
             'offense_from_being_outnumbered' => '%+g offensive power if your sent units are outnumbered by the target\'s entire military at home (including draftees and units with no defensive power).',
             'defense_from_being_outnumbered' => '%+g defensive power if your defending units are outnumbered by the invader\'s units.',
 
-            'offense_from_spell' => 'Offense increased by %2$s if the spell %1$s is active.',
-            'defense_from_spell' => 'Defense increased by %2$s if the spell %1$s is active.',
+            'offense_from_spell' => '%2$+g offensive power if the spell %1$s is active.',
+            'defense_from_spell' => '%2$+g defensive power if the spell %1$s is active.',
 
             'offense_from_advancements' => '+%3$s offensive power from %1$s level %2$s.',
             'defense_from_advancements' => '+%3$s defensive power from %1$s level %2$s.',
 
-            'offense_from_title' => 'Offense increased by %2$s if ruled by a %1$s.',
-            'defense_from_title' => 'Defense increased by %2$s if ruled by a %1$s.',
+            'offense_from_title' => '%2$+g offensive power if ruled by a %1$s.',
+            'defense_from_title' => '%2$+g defensive power if ruled by a %1$s.',
 
-            'offense_from_deity' => 'Offense increased by %2$s if devoted to %1$s.',
-            'defense_from_deity' => 'Defense increased by %2$s if devoted to %1$s.',
+            'offense_from_deity' => '%2$+g offensive power if devoted to %1$s.',
+            'defense_from_deity' => '%2$+g defensive power if devoted to %1$s.',
 
-            'offense_vs_other_deity' => 'Offense increased by %1$s if target is devoted to no or another deity.',
+            'offense_vs_other_deity' => '%1$+g offensive power if target is devoted to no or another deity.',
 
-            'offense_from_devotion' => 'Offense increased by %2$s for every tick devoted to %1$s (max +%3$s).',
-            'defense_from_devotion' => 'Defense increased by %2$s for every tick devoted to %1$s (max +%3$s).',
+            'offense_from_devotion' => '%2$+g offensive power for every tick devoted to %1$s (max +%3$s).',
+            'defense_from_devotion' => '%2$+g defensive power for every tick devoted to %1$s (max +%3$s).',
 
-            'defense_from_per_improvement' => 'Defense increased by %1$s for every individual improvement you have with at least %2$s points invested.',
-            'offense_from_per_improvement' => 'Offense increased by %1$s for every individual improvement you have with at least %2$s points invested.',
+            'defense_from_per_improvement' => '%1$+g offensive power for every individual improvement you have with at least %2$s points invested.',
+            'offense_from_per_improvement' => '%1$+g defensive power for every individual improvement you have with at least %2$s points invested.',
 
-            'offense_from_improvement_points' => 'Offense increased by %1$s for %2$s points invested (max +%3$s).',
-            'defense_from_improvement_points' => 'Defense increased by %1$s for %2$s points invested (max +%3$s).',
+            'offense_from_improvement_points' => '%1$+g offensive power for %2$s points invested (max +%3$s).',
+            'defense_from_improvement_points' => '%1$+g defensive power for %2$s points invested (max +%3$s).',
 
             // Spy related
             'counts_as_spy' => 'Counts as %s spy.',

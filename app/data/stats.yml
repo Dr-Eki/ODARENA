@@ -1187,3 +1187,8 @@ day23_top_op:
   name: Day 23 Highest Offensive Power Seen
 day24_top_op:
   name: Day 24 Highest Offensive Power Seen
+
+# Specials
+
+world_spinner_encounters:
+  name: World Spinner encounters
