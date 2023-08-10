@@ -122,6 +122,11 @@ class Realm extends AbstractModel
         );
     }
 
+    public function getPackLeader()
+    {
+        return $this->pack->leader;
+    }
+
     /**
      * @param string $key
      * @return float
