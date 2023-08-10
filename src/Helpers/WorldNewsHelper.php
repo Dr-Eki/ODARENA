@@ -971,8 +971,9 @@ class WorldNewsHelper
 
         if(!$viewerInvolved)
         {
+
             return sprintf(
-                'Theft reported in the %s realm.',
+                'Theft reported in %s realm.',
                 $this->generateRealmOnlyString($target->realm)
               );
         }
@@ -1048,7 +1049,7 @@ class WorldNewsHelper
             }
             else
             {
-                $realmString = $realm->getPackLeader()->name; #$realm->pack->leader->user_id;# Dominion::where('user_id', $realm->pack->leader->user_id)->where('round_id',$realm->round->id)->first()->ruler_name . "'s pack";
+                $realmString = $realm->getPackLeader()->display_name . "'s Pack";
             }
 
             $string = sprintf(

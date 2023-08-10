@@ -54,4 +54,9 @@ class Pack extends AbstractModel
     {
         return $this->belongsTo(Round::class);
     }
+
+    public function leader()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }
