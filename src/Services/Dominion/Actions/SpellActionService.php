@@ -602,7 +602,7 @@ class SpellActionService
                 # Increase morale from net victories
                 if($perk->key === 'increase_morale_from_net_victories')
                 {
-                    $moralePerNetVictory = (int)$spellPerkValues[0];
+                    $moralePerNetVictory = (float)$spellPerkValues[0];
 
                     $caster->morale += max(0, $moralePerNetVictory * $this->militaryCalculator->getNetVictories($caster));
                 }

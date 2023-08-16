@@ -89,7 +89,10 @@
                                     $totalSabotaged = 0;
                                     foreach($queueService->getRestoreQueue($selectedDominion) as $restore)
                                     {
-                                        $totalSabotaged += $restore->amount;
+                                        if($sabotage->resource === 'improvements')
+                                        {
+                                            $totalSabotaged += $restore->amount;
+                                        }
                                     }
 
                                   @endphp

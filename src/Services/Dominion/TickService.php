@@ -1799,7 +1799,6 @@ class TickService
             $resourcesNetChange[$resourceKey] += $resourcesProduced[$resourceKey] - $resourcesConsumed[$resourceKey];
         }
 
-
         $this->resourceService->updateResources($dominion, $resourcesNetChange);
     }
 
