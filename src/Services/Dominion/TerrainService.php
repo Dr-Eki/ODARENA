@@ -88,6 +88,15 @@ class TerrainService
     {
         $unterrainedLand = $this->terrainCalculator->getUnterrainedLand($dominion);
         $terrainedLand = $this->terrainCalculator->getTotalTerrainedAmount($dominion);
+        $totalTerrainBeingRezoned = 0;
+        foreach($dominion->queues as $queue)
+        {
+            if($queue->resource == 'land' and $queue->source == 'rezoning')
+            {
+                $totalTerrainBeingRezoned += $queue->amount;
+            }
+        }
+
         if($unterrainedLand == 0)
         {
             return;
@@ -118,35 +127,24 @@ class TerrainService
             return;
         }
 
-        # Remove terrain being rezoned from $unterrainedLand
-        $totalTerrainBeingRezoned = 0;
-        foreach($dominion->queues as $queue)
-        {
-            if($queue->resource == 'land' and $queue->source == 'rezoning')
-            {
-                $totalTerrainBeingRezoned += $queue->amount;
-            }
-        }
-
         if(($unterrainedLand - $totalTerrainBeingRezoned) > 0 and $terrainedLand > 0)
         {
             /* Calculate how much terrain should be added (absolute value of $unterrainedLand)
             *   proportional to how much of that terrain is owned.
             */
 
-            $totalTerrainToAdd = abs($unterrainedLand - $totalTerrainBeingRezoned);
+            $totalTerrainToAdd = abs(abs($unterrainedLand) - abs($totalTerrainBeingRezoned));
 
-            foreach($dominion->terrains as $terrain)
+            foreach($dominion->terrains as $dominionTerrain)
             {
-                $terrainRatio = $terrain->amount / $terrainedLand;
-                $amountToAdd = round($totalTerrainToAdd * $terrainRatio);
+                $terrainRatio = $dominionTerrain->pivot->amount / $terrainedLand;
+                $amountToAdd = (int)round($totalTerrainToAdd * $terrainRatio);
 
-                if($totalTerrainToAdd <= 0)
+                if($totalTerrainToAdd > 0)
                 {
-                    $terrain->amount = max(0, $terrain->amount + $amountToAdd);
-                    $terrain->save();
+                    $this->update($dominion, [$dominionTerrain->key => $amountToAdd]);
 
-                    Log::info("[TERRAIN AUDIT] Added {$amountToAdd} {$terrain->key} terrain to {$dominion->name} ({$dominion->realm->number})");
+                    Log::info("[TERRAIN AUDIT] Added {$amountToAdd} {$dominionTerrain->key} terrain to {$dominion->name} (# {$dominion->realm->number})");
                 }
             }
 

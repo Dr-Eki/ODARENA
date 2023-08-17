@@ -36,9 +36,9 @@ class TerrainCalculator
     {
         $terrainedLand = 0;
 
-        foreach(Terrain::all() as $terrain)
+        foreach($dominion->terrains as $terrain)
         {
-            $terrainedLand += $dominion->{'terrain_' . $terrain->key};
+            $terrainedLand += $terrain->pivot->amount;
         }
 
         return $terrainedLand;

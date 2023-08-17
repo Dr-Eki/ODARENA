@@ -10,6 +10,7 @@ use OpenDominion\Helpers\RaceHelper;
 
 use OpenDominion\Calculators\Dominion\Actions\RezoningCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\TerrainCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Http\Requests\Dominion\Actions\RezoneActionRequest;
 use OpenDominion\Services\Dominion\Actions\RezoneActionService;
@@ -48,6 +49,7 @@ class LandController extends AbstractDominionController
 
         return view('pages.dominion.land', [
             'dominionCalculator' => app(DominionCalculator::class),
+            'terrainCalculator' => app(TerrainCalculator::class),
             'landCalculator' => app(LandCalculator::class),
             'rezoningCalculator' => app(RezoningCalculator::class),
             'landHelper' => app(LandHelper::class),
