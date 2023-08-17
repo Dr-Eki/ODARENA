@@ -134,7 +134,7 @@ class TerrainService
             *   proportional to how much of that terrain is owned.
             */
 
-            $totalTerrainToAdd = abs($unterrainedLand);
+            $totalTerrainToAdd = abs($unterrainedLand - $totalTerrainBeingRezoned);
 
             foreach($dominion->terrains as $terrain)
             {
