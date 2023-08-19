@@ -299,8 +299,8 @@ bloodstone:
   exclusive_races:
     - Beastfolk
   perks:
-    blood_invest_bonus: 1,5,100 # Every 1% gives 5% improvement points, max +100% improvements from blood
-    blood_resource_conversion_mod: 1,2.5,50 # Every 1% gives 4% conversion, max +100% conversion
+    blood_invest_bonus: 1,10,100 # Every 1% gives 5% improvement points, max +100% improvements from blood
+    blood_resource_conversion_mod: 1,5,50 # Every 1% gives 4% conversion, max +100% conversion
     blood_theft_protection: 8000
 
 # END BEASTFOLK

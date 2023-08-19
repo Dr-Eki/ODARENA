@@ -7,11 +7,6 @@ commander:
   name: Commander
   perks:
     training_time_raw: -1
-    #unit_gold_costs: -5
-    #unit_ore_costs: -5
-    #unit_lumber_costs: -2
-    #unit_mana_costs: -2
-    #unit_food_costs: -2
 
 conjurer:
   name: Conjurer

@@ -8,7 +8,7 @@ ambush:
   class: passive
   cost: 0
   duration: 1
-  cooldown: 24
+  cooldown: 36
   exclusive_races:
     - Beastfolk
   perks:

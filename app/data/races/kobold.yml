@@ -8,9 +8,9 @@ skill_level: 2
 magic_level: 1
 
 perks:
-  max_population: 20
+  max_population: 40
   population_growth: 20
-  food_consumption_mod: -10
+  food_consumption_mod: -20
   #morale_change_tick: -50
   morale_change_invasion: 100
   draftee_dp: 0.5

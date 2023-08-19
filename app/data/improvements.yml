@@ -6,6 +6,14 @@ agriculture:
   perks:
     food_production_mod: 40,5600
 
+conduit:
+  name: Conduit
+  excluded_races:
+    - Sylvan
+    - Troll
+  perks:
+    mana_production_mod: 30,5600
+
 construction:
   name: Construction
   excluded_races:
@@ -194,6 +202,18 @@ resilience:
 
 # END SYLVAN
 
+# BEGIN REPTILIANS #
+
+# Reptilians variant
+reliquary:
+  name: Reliquary
+  exclusive_races:
+    - Reptilians
+  perks:
+    unit_pairing: 40,6000
+
+# END REPTILIANS #
+
 # BEGIN TROLL #
 
 bashing:
@@ -284,6 +304,17 @@ uprooting:
   perks:
     lumber_production_mod: 60,5000
 # END TROLL #
+
+# BEGIN UNDEAD #
+
+necromancy:  
+  name: Necromancy
+  exclusive_races:
+    - Undead
+  perks:
+    unit_pairing: 40,6000
+
+# END UNDEAD #
 
 ### DISABLED
 

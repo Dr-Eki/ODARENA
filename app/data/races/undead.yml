@@ -49,7 +49,7 @@ units:
       defense: 2
     perks:
       kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
-      pairing_limit: 4,8 # Unit slot, amount
+      pairing_limit: 4,6 # Unit slot, amount
       does_not_count_as_population: 1
 
   - name: Wight
@@ -66,11 +66,10 @@ units:
       defense: 3
     perks:
       dies_into: 3
-      increases_enemy_casualties_on_offense: 1
+      #increases_enemy_casualties_on_offense: 1
       increases_enemy_casualties_on_defense: 1
       kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
-      counts_as_wizard: -0.02
-      pairing_limit: 4,6 # Unit slot, amount
+      pairing_limit: 4,46 # Unit slot, amount
       does_not_count_as_population: 1
 
   - name: Necromancer
