@@ -6,8 +6,8 @@ agriculture:
   perks:
     food_production_mod: 40,5600
 
-conduit:
-  name: Conduit
+conduits:
+  name: Conduits
   excluded_races:
     - Sylvan
     - Troll
@@ -675,26 +675,6 @@ hollowing:
   perks:
     population: 40,8000
     thunderstone_production_mod: 20,8000
-
-# BEGIN UNDEAD #
-
-invocation:  
-  enabled: 0
-  name: Invocations
-  exclusive_races:
-    - Undead
-  perks:
-      mana_production_mod: 45,5000
-
-necromancy:  
-  enabled: 0
-  name: Necromancy
-  exclusive_races:
-    - Undead
-  perks:
-      unit_pairing: 20,8000
-
-# END UNDEAD #
 
 # BEGIN VOID #
 coils:  
