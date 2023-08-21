@@ -34,7 +34,7 @@
                     <p>Pack password: <code>{{ $selectedDominion->pack->password }}</code></p>
 
                     @if ($packService->canEditPack($selectedDominion->user, $selectedDominion->pack))
-                    <p><strong>Pack status:</strong></p>
+                        <p><strong>Pack status:</strong></p>
                         <form action="{{ route('dominion.pack.change-status') }}" method="post">
                             @csrf
                             <input type="hidden" name="pack_id" value="{{ $selectedDominion->pack->id }}">

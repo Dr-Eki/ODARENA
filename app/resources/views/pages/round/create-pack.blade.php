@@ -34,12 +34,23 @@
                     </div>
                 </div>
 
+                <!-- Pack Status -->
+                <div class="form-group">
+                    <label for="dominion_name" class="col-sm-3 control-label">Pack Status</label>
+                    <div class="col-sm-6">
+                        <input type="radio" required id="private" name="status" value="0" checked>&nbsp;<label for="private">Private</label>: password required to join.<br>
+                        <input type="radio" required id="public" name="status" value="1">&nbsp;<label for="public">Public</label>: no password required.<br>
+                        <input type="radio" required id="closed" name="status" value="2">&nbsp;<label for="closed">Closed</label>: no new members accepted.<br>
+                        <p class="help-block">Required if pack status is Private or Closed. Unlike the password you use to log in, this password is not encrypted.</p>
+                    </div>
+                </div>
+
                 <!-- Password -->
                 <div class="form-group">
                     <label for="dominion_name" class="col-sm-3 control-label">Password</label>
                     <div class="col-sm-6">
-                        <input type="text" name="pack_password" id="pack_password" class="form-control" placeholder="Pack password" value="{{ old('pack_password') }}" maxlength="100" required autofocus>
-                        <p class="help-block">Other players must know this password to join your pack, unless you change your pack status to Public later. Unlike the password you use to log in, this password is not encrypted.</p>
+                        <input type="text" name="pack_password" id="pack_password" class="form-control" placeholder="Pack password" value="{{ old('pack_password') }}" maxlength="100" autofocus>
+                        <p class="help-block">Required if pack status is Private or Closed. Unlike the password you use to log in, this password is not encrypted.</p>
                     </div>
                 </div>
 

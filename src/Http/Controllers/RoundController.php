@@ -631,7 +631,21 @@ class RoundController extends AbstractController
 
     public function postCreatePack(Request $request, Round $round)
     {
+
+        $password = $request->get('pack_password');
+        $status = intval($request->get('status')) ?? 0;
+
         try {
+            if(empty($password) and $status !== 1)
+            {
+                throw new GameException("Password is required if pack status is not Public.");
+            }
+
+            if(!in_array($status, [0,1,2]))
+            {
+                throw new GameException("Invalid pack status.");
+            }
+
             $this->guardAgainstUserAlreadyHavingDominionInRound($round);
             $this->guardAgainstUserAlreadyHavingCreatedAPack($round);
         } catch (GameException $e) {
@@ -639,13 +653,6 @@ class RoundController extends AbstractController
                 ->route('dashboard')
                 ->withErrors([$e->getMessage()]);
         }
-
-        $password = $request->get('pack_password');
-
-        $request->session()->flash(
-            'alert-success',
-            ('Your pack has been created.')
-        );
 
         $realmFactory = app(RealmFactory::class);
 
@@ -658,12 +665,18 @@ class RoundController extends AbstractController
             'user_id' => $user->id,
             'realm_id' => $realm->id,
             'password' => $password,
+            'status' => $status,
         ]);
 
         $realmName = $user->display_name . ($user->display_name[strlen($user->display_name) - 1] == 's' ? "'" : "'s" ) . ' Pack';
         $realm->update([
             'name' => $realmName,
         ]);
+
+        $request->session()->flash(
+            'alert-success',
+            ('Your pack has been created.')
+        );
 
         return redirect()->route('round.register', $round);
     }
