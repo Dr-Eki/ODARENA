@@ -63,7 +63,7 @@ units:
       offense: 0
       defense: 2
     perks:
-      gems_production_raw: 1
+      gems_production_raw: 0.7
       #immortal_on_fending_off: 1
       #casualties_on_defense: -25
 

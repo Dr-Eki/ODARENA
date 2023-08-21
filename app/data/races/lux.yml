@@ -21,7 +21,7 @@ construction_materials:
   - gems
 
 improvement_resources:
-  gems: 12
+  gems: 18
   mana: 2
 
 peasants_alias: shimmerling

@@ -20,7 +20,7 @@ construction_materials:
 improvement_resources:
   gold: 1
   ore: 4
-  gems: 12
+  gems: 18
 
 perks:
   extra_barren_housing: 10

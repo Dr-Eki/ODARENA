@@ -22,7 +22,7 @@ construction_materials:
 improvement_resources:
   gold: 1
   ore: 3
-  gems: 12
+  gems: 18
 
 perks:
   salvaging: 50

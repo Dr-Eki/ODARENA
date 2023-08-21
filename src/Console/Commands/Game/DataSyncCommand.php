@@ -143,7 +143,7 @@ class DataSyncCommand extends Command implements CommandInterface
                 'gold' => 1,
                 'ore' => 2,
                 'lumber' => 2,
-                'gems' => 12
+                'gems' => 18
             ];
 
             $defaultResources = [

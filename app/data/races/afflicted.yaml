@@ -23,7 +23,7 @@ resources:
   - miasma
 
 improvement_resources:
-  gems: 12
+  gems: 18
   miasma: 32
   gold: 1
   lumber: 2

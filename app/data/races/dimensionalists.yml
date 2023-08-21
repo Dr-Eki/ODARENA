@@ -20,7 +20,7 @@ improvement_resources:
   gold: 1
   ore: 2
   lumber: 2
-  gems: 12
+  gems: 18
 
 perks:
   construction_cost: 15

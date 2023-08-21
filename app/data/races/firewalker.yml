@@ -26,7 +26,7 @@ construction_materials:
   - obsidian
 
 improvement_resources:
-  gems: 12
+  gems: 18
   obsidian: 4
 
 land_improvements:
