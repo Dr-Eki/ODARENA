@@ -472,7 +472,10 @@ class CasualtiesCalculator
             {
                 if($enemyMode == 'defense')
                 {
-                    $multiplier += ($dominion->{'military_unit' . $unit->slot} / array_sum($invasionData['defender']['units_defending'])) / 2;
+                    if(array_sum($invasionData['defender']['units_defending']) > 0)
+                    {
+                        $multiplier += ($dominion->{'military_unit' . $unit->slot} / array_sum($invasionData['defender']['units_defending'])) / 2;
+                    }
                 }
 
                 if($enemyMode == 'offense')
