@@ -44,6 +44,11 @@ class BuildingCalculator
             'available' => [],
             'queued' => []
         ];
+
+        if($dominion->race->getPerkValue('indestructible_buildings'))
+        {
+            return $buildingsLost;
+        }
     
         $totalBuildings = $dominion->buildings->map(function ($building) {
             return $building->pivot->owned;

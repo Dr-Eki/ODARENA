@@ -9,8 +9,8 @@ magic_level: 4
 
 resources:
   - gold
-  - ore
   - food
+  - ore
   - mana
   - gems
   - prisoner
