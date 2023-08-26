@@ -245,7 +245,7 @@ class ResourceConversionCalculator
                                     $killedUnitsRawPower = $this->militaryCalculator->getOffensivePowerRaw($enemy, $converter, null, [$enemyUnitKilledSlot => $enemyUnitKilledAmount]);
                                 }
 
-                                ldump($killedUnitsRawPower . ' raw power from the ' . number_format($enemyUnitKilledAmount) . ' ' . $enemy->race->units->where('slot', $enemyUnitKilledSlot)->first()->name);
+                                #ldump($killedUnitsRawPower . ' raw power from the ' . number_format($enemyUnitKilledAmount) . ' ' . $enemy->race->units->where('slot', $enemyUnitKilledSlot)->first()->name);
 
                                 $resourceGained = $killedUnitsRawPower * $resourceAmountPerValue * $convertingUnits[$converterUnitSlot]['power_proportion'];
 
