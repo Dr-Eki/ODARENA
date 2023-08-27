@@ -285,7 +285,7 @@ class InsightService
         $data['buildings']['constructed'] = [];
         $data['buildings']['constructing'] = [];
 
-        foreach ($this->buildingHelper->getBuildingsByRace($target->race) as $building)
+        foreach ($this->buildingCalculator->getDominionBuildingsAvailableAndOwned($target) as $building)
         {
             $data['buildings']['constructed'][$building->key] = $this->buildingCalculator->getBuildingAmountOwned($target, $building);
             $data['buildings']['constructing'][$building->key] = array_fill(1, 12, 0);

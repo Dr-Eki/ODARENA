@@ -3,7 +3,6 @@
 namespace OpenDominion\Helpers;
 use Illuminate\Support\Collection;
 use OpenDominion\Models\Building;
-use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Tech;
@@ -21,6 +20,11 @@ class BuildingHelper
     {
 
         $helpStrings[$building->name] = '';
+
+        if(isset($building->deity))
+        {
+            $helpStrings[$building->name] .= '<li>Must be devoted to ' . $building->deity->name . ' to build or use this building.</li>';
+        }
 
         $perkTypeStrings = [
             # Housing
@@ -170,6 +174,7 @@ class BuildingHelper
             'casualties_on_offense' => 'Offensive casualties decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
             'casualties_on_defense' => 'Defensive casualties decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
 
+            'increases_enemy_casualties' => '+%2$g%% enemy casualties for every %1$s%% (max %3$s%%).',
             'increases_enemy_casualties_on_defense' => 'Increases enemy casualties on offense by %2$s%% for every %1$s%% (max %3$s%%).',
             'increases_enemy_casualties_on_defense' => 'Increases enemy casualties on defense by %2$s%% for every %1$s%% (max %3$s%%).',
 
@@ -218,14 +223,16 @@ class BuildingHelper
             'improvements_capped' => 'Improvements increased by %2$s%% for every %1$s%% (max +%3$s%%).',
             'improvements_interest' => 'Improvements interest increased by %2$s%% for every %1$s%% (max +%3$s%%).',
 
-            'invest_bonus' => 'Improvement points worth increased by %2$s%% for every %1$s%% (max +%3$s%%)',
-            'gold_invest_bonus' => 'Gold improvement points worth increased by %2$s%% for every %1$s%% (max +%3$s%%)',
-            'food_invest_bonus' => 'Food improvement points worth increased by %2$s%% for every %1$s%% (max +%3$s%%)',
-            'ore_invest_bonus' => 'Ore improvement points worth increased by %2$s%% for every %1$s%% (max +%3$s%%)',
-            'lumber_invest_bonus' => 'Lumber improvement points worth increased by %2$s%% for every %1$s%% (max +%3$s%%)',
-            'mana_invest_bonus' => 'Mana improvement points worth increased by %2$s%% for every %1$s%% (max +%3$s%%)',
-            'blood_invest_bonus' => 'Blood improvement points worth increased by %2$s%% for every %1$s%% (max +%3$s%%)',
-            'soul_invest_bonus' => 'Soul improvement points worth increased by %2$s%% for every %1$s%% (max +%3$s%%)',
+            'invest_bonus' => '+%2$g%% investment bonus for every %1$s%% (max +%3$s%%)',
+            'gold_invest_bonus' => '+%2$g%% improvement points from gold for every %1$s%% (max +%3$s%%)',
+            'food_invest_bonus' => '+%2$g%% improvement points from food for every %1$s%% (max +%3$s%%)',
+            'lumber_invest_bonus' => '+%2$g%% improvement points from lumber for every %1$s%% (max +%3$s%%)',
+            'ore_invest_bonus' => '+%2$g%% improvement points from ore for every %1$s%% (max +%3$s%%)',
+            'mana_invest_bonus' => '+%2$g%% improvement points from mana for every %1$s%% (max +%3$s%%)',
+            'blood_invest_bonus' => '+%2$g%% improvement points from blood for every %1$s%% (max +%3$s%%)',
+            'soul_invest_bonus' => '+%2$g%% improvement points from souls for every %1$s%% (max +%3$s%%)',
+            'gems_invest_bonus' => '+%2$g%% improvement points from gems for every %1$s%% (max +%3$s%%)',
+            'miasma_invest_bonus' => '+%2$g%% improvement points from miasma for every %1$s%% (max +%3$s%%)',
 
             # Construction and Rezoning
             'construction_cost' => 'Construction costs decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
@@ -267,10 +274,13 @@ class BuildingHelper
             'wizard_strength_on_defense' => 'Wizard strength on defense increased by %2$s%% for every %1$s%%.',
             'wizard_strength_on_offense' => 'Wizard strength on offense increased by %2$s%% for every %1$s%%.',
 
+            'spell_duration_mod' => '+%2$g%% spell duration for every %1$s%% (max +%3$g%%).',
+
             # Other/special
             'deity_power' => 'Increases deity perks %2$s%% for every %1$s%% (max +%3$s%%)',
             'research_required_to_build' => 'Requires %s research to build.',
 
+            'pairing_limit' => 'You can at most have one per %2$s %1$s. Unpaired buildings are not effective.',
 
             'arwe_unit_housing' => 'Houses %1$s %2$s.',
             'gorm_unit_housing' => 'Houses %1$s %2$s.',
@@ -278,8 +288,6 @@ class BuildingHelper
             'afflicted_unit_housing' => 'Houses %1$s %2$s.',
 
         ];
-
-
 
         foreach ($building->perks as $perk)
         {
@@ -315,6 +323,19 @@ class BuildingHelper
             if (str_ends_with($perk->key, '_theft_protection'))
             {
                 #$perkValue = number_format($perkValue); # The , added here breaks the sprintf below
+            }
+
+            if($perk->key == 'pairing_limit')
+            {
+                $buildingKey = $perkValue[0];
+                $pairedBuilding = Building::where('key', $buildingKey)->firstOrFail();
+                $amount = (int)$perkValue[1];
+
+                $perkValue = [str_plural($pairedBuilding->name, $amount), $amount];
+
+                #$perkValue = [$amount, str_plural($building->name, $amount)];
+                
+                #$nestedArrays = false;
             }
 
             foreach(Race::where('playable', 1)->pluck('key')->toArray() as $raceKey)
@@ -414,11 +435,9 @@ class BuildingHelper
                 #$perkValue = number_format(1/$perkValue[0]);
             }
 
-            # END SPECIAL DESCRIPTION PERKS
-
-
             if (is_array($perkValue))
             {
+
                 if ($nestedArrays)
                 {
                     foreach ($perkValue as $nestedKey => $nestedValue)

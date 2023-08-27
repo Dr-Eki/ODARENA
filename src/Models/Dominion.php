@@ -754,6 +754,34 @@ class Dominion extends AbstractModel
 
         foreach ($this->buildings as $building)
         {
+
+            $buildingOwned = $building->pivot->owned;
+
+            # Ignore buildings that require a deity unless the dominion has a deity
+            if(isset($building->deity) && (!$this->hasDeity() || $this->deity->id !== $building->deity->id))
+            {
+                continue;
+            }
+
+            # Check if building has perk pairing_limit
+            if(($pairingLimit = $building->getPerkValue('pairing_limit')))
+            {
+                $pairingLimit = explode(',', $pairingLimit);
+
+                $buildingKey = $pairingLimit[0];
+                $pairedBuilding = Building::where('key', $buildingKey)->firstOrFail();
+                $chunkSize = (int)$pairingLimit[1];
+
+                # Get amount owned of $pairedBuilding
+                $pairedBuildingOwned = $this->buildings()->where('building_id', $pairedBuilding->id)->first()->pivot->owned;
+
+                # $buildingOwned is the minimum of the two
+                $buildingOwned = min($buildingOwned, floor($pairedBuildingOwned / $chunkSize));
+
+                $buildingOwned = intval($buildingOwned);
+
+            }
+
             $perkValueString = $building->getPerkValue($perkKey);
 
             $perkValueString = is_numeric($perkValueString) ? (float)$perkValueString : $perkValueString;
@@ -762,12 +790,12 @@ class Dominion extends AbstractModel
             {
                 if(is_numeric($perkValueString))
                 {
-                    $perk += $perkValueString * $building->pivot->owned;
+                    $perk += $perkValueString * $buildingOwned;
                 }
                 else
                 {
                     $defaultPerkValueString = ($perkKey == 'housing') ? 15 : 20;
-                    $perk += $defaultPerkValueString * $building->pivot->owned;
+                    $perk += $defaultPerkValueString * $buildingOwned;
                 }
             }
             elseif(!in_array($perkKey,['jobs','housing']) and $perkValueString)
@@ -868,11 +896,12 @@ class Dominion extends AbstractModel
                     'offensive_power',
                     'attacker_offensive_power_mod',
                     'target_defensive_power_mod',
+                    'casualties',
                     'casualties_on_offense',
                     'casualties_on_defense',
+                    'increases_enemy_casualties',
                     'increases_enemy_casualties_on_offense',
                     'increases_enemy_casualties_on_defense',
-                    'casualties',
                     'morale_gains',
                     'prestige_gains',
                     'base_morale',
@@ -924,6 +953,7 @@ class Dominion extends AbstractModel
                     'wizard_strength',
                     'wizard_strength_recovery',
                     'wizard_cost',
+                    'spell_duration_mod',
                 
                     // Construction/Rezoning and Land
                     'construction_cost',
@@ -948,21 +978,24 @@ class Dominion extends AbstractModel
                     'gold_invest_bonus',
                     'food_invest_bonus',
                     'ore_invest_bonus',
+                    'gems_invest_bonus',
                     'lumber_invest_bonus',
                     'mana_invest_bonus',
                     'blood_invest_bonus',
                     'soul_invest_bonus',
                     'obsidian_invest_bonus',
+                    'miasma_invest_bonus',
                 
                     // Other/special
                     'deity_power',
                     'population_capped',
                     'population_growth_capped',
+                    'unit_pairing'
                 ];
 
                 if(in_array($perkKey, $singleValuePerks))
                 {
-                    $perk += $perkValueString * $building->pivot->owned;
+                    $perk += $perkValueString * $buildingOwned;
                 }
 
                 # Mods with ratio, multiplier, and max
@@ -972,7 +1005,7 @@ class Dominion extends AbstractModel
                     $ratio = (float)$perkValues[0];
                     $multiplier = (float)$perkValues[1];
                     $max = (float)$perkValues[2] / 100;
-                    $owned = $building->pivot->owned;
+                    $owned = $buildingOwned;
 
                     if($multiplier < 0)
                     {
@@ -1010,7 +1043,7 @@ class Dominion extends AbstractModel
                     $perkValues = $this->extractBuildingPerkValues($perkValueString);
                     $ratio = (float)$perkValues[0];
                     $multiplier = (float)$perkValues[1];
-                    $owned = $building->pivot->owned;
+                    $owned = $buildingOwned;
 
                     $perk += ($owned / $landSize * $ratio * $multiplier) * 100;
                 }
@@ -1029,7 +1062,7 @@ class Dominion extends AbstractModel
                     $baseProduction = (float)$perkValues[0];
                     $ticklyReduction = (float)$perkValues[1];
                     $ticks = $this->round->ticks;
-                    $buildingOwned = $building->pivot->owned;
+                    $buildingOwned = $buildingOwned;
 
                     $perk += $buildingOwned * max(0, ($baseProduction - ($ticklyReduction * $ticks)));
                 }
@@ -1052,7 +1085,7 @@ class Dominion extends AbstractModel
                     $baseValue = (float)$perkValues[0];
                     $ticklyIncrease = (float)$perkValues[1];
                     $ticks = $this->round->ticks;
-                    $buildingOwned = $building->pivot->owned;
+                    $buildingOwned = $buildingOwned;
 
                     $perk += $buildingOwned * ($baseValue + ($ticklyIncrease * $ticks));
 
@@ -1068,7 +1101,7 @@ class Dominion extends AbstractModel
                     $sourceResourceKey = (string)$perkValues[1];
                     $targetAmount = (float)$perkValues[2];
                     $targetResourceKey = (string)$perkValues[3];
-                    $buildingOwned = $building->pivot->owned;
+                    $buildingOwned = $buildingOwned;
 
                     $maxAmountConverted = min($resourceCalculator->getAmount($this, $sourceResourceKey), $buildingOwned * $sourceAmount);
                     $amountCreated = $maxAmountConverted / ($sourceAmount / $targetAmount);
@@ -1089,7 +1122,7 @@ class Dominion extends AbstractModel
                     $sourceResourceAmount = $availablePeasants;
                     $targetAmount = (float)$perkValues[1];
                     $targetResourceKey = (string)$perkValues[2];
-                    $buildingOwned = $building->pivot->owned;
+                    $buildingOwned = $buildingOwned;
 
                     $maxAmountConverted = min($sourceResourceAmount, $buildingOwned * $sourceAmount);
                     $amountCreated = $maxAmountConverted / ($sourceAmount / $targetAmount);
@@ -1107,7 +1140,7 @@ class Dominion extends AbstractModel
 
                     $sourceAmount = (float)$perkValues[0];
                     $sourceResourceAmount = $availablePeasants;
-                    $buildingOwned = $building->pivot->owned;
+                    $buildingOwned = $buildingOwned;
                     $maxAmountConverted = min($sourceResourceAmount, $buildingOwned * $sourceAmount);
 
                     $result['from']['peasants'] = $maxAmountConverted;
@@ -1138,7 +1171,7 @@ class Dominion extends AbstractModel
                     $prisoners = $resourceCalculator->getAmount($this, 'prisoner');
                     $productionPerPrisoner = (float)$perkValues[0];
                     $maxResourcePerBuilding = (float)$perkValues[1];
-                    $buildingOwned = $building->pivot->owned;
+                    $buildingOwned = $buildingOwned;
 
                     $maxPrisonersWorking = $buildingOwned * $maxResourcePerBuilding;
 
@@ -1152,7 +1185,7 @@ class Dominion extends AbstractModel
                 {
                     $randomlyGenerated = 0;
                     $randomChance = (float)$perkValueString / 100;
-                    $buildingOwned = $building->pivot->owned;
+                    $buildingOwned = $buildingOwned;
 
                     for ($trials = 1; $trials <= $buildingOwned; $trials++)
                     {
@@ -1178,7 +1211,7 @@ class Dominion extends AbstractModel
                     $unitPerBuilding = (float)$perkValues[0];
                     $maxBuildingRatio = (float)$perkValues[1] / 100;
 
-                    $availableBuildings = min($building->pivot->owned, floor($landSize * $maxBuildingRatio));
+                    $availableBuildings = min($buildingOwned, floor($landSize * $maxBuildingRatio));
 
                     $perk += $availableBuildings * $unitPerBuilding;
                 }
@@ -1199,7 +1232,7 @@ class Dominion extends AbstractModel
 
                     if($this->race->name == $raceName)
                     {
-                        return [$building->pivot->owned * $amount, $slot];
+                        return [$buildingOwned * $amount, $slot];
                     }
                 }
 
@@ -1210,7 +1243,7 @@ class Dominion extends AbstractModel
 
                     $amountToDestroyPerBuilding = (float)$perkValues[0];
                     $landTypeToDestroy = (string)$perkValues[1];
-                    $buildingOwned = $building->pivot->owned;
+                    $buildingOwned = $buildingOwned;
 
                     $amountToDestroy = $buildingOwned * $amountToDestroyPerBuilding;
                     #$amountToDestroy = intval($amountToDestroy) + (rand()/getrandmax() < fmod($amountToDestroy, 1) ? 1 : 0);
@@ -1227,7 +1260,7 @@ class Dominion extends AbstractModel
                     $perkValues = (float)$perkValueString;#$this->extractBuildingPerkValues($perkValueString);
 
                     $amountToDestroyPerBuilding = $perkValues;
-                    $buildingOwned = $building->pivot->owned;
+                    $buildingOwned = $buildingOwned;
 
                     $amountToDestroy = $buildingOwned * $amountToDestroyPerBuilding;
                     $amountToDestroy = (int)floor($amountToDestroy);
@@ -1247,21 +1280,21 @@ class Dominion extends AbstractModel
     
                     if($this->isUnderProtection())
                     {
-                        $perk += ($amountProduced * $building->pivot->owned) / 2;
+                        $perk += ($amountProduced * $buildingOwned) / 2;
                     }
                     elseif (
                         (($hourFrom < $hourTo) and (now()->hour >= $hourFrom and now()->hour < $hourTo)) or
                         (($hourFrom > $hourTo) and (now()->hour >= $hourFrom or now()->hour < $hourTo))
                     )
                     {
-                        $perk += $amountProduced * $building->pivot->owned;
+                        $perk += $amountProduced * $buildingOwned;
                     }
                 }
 
                 elseif($perkKey == ($this->race->key . '_unit_housing'))
                 {
                     $perkValues = $this->extractBuildingPerkValues($perkValueString);
-                    $buildingsOwned = $building->pivot->owned;
+                    $buildingsOwned = $buildingOwned;
 
                     $result = [];
 

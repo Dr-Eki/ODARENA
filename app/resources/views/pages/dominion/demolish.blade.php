@@ -3,7 +3,8 @@
 
 @section('content')
 @php
-    $availableBuildings = $buildingHelper->getBuildingsByRace($selectedDominion->race)->sortBy('name');
+    $availableBuildings = $buildingCalculator->getDominionBuildingsAvailableAndOwned($selectedDominion)->sortBy('name');
+    #$availableBuildings = $buildingHelper->getBuildingsByRace($selectedDominion->race)->sortBy('name');
     $dominionBuildings = $buildingCalculator->getDominionBuildings($selectedDominion)->sortBy('name');
 @endphp
 

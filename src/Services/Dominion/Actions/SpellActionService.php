@@ -254,19 +254,27 @@ class SpellActionService
         # Self-spells self auras
         if($spell->scope == 'self')
         {
+
+            $duration = $spell->duration;
+
+            $durationMultiplier = 1;
+            $durationMultiplier += $caster->getBuildingPerkMultiplier('spell_duration_mod');
+
+            $duration = intval(floor($duration * $durationMultiplier));
+
             $this->statsService->updateStat($caster, 'magic_self_success', 1);
 
             if ($this->spellCalculator->isSpellActive($caster, $spell->key) or $this->spellCalculator->isSpellCooldownRecentlyReset($caster, $spell->key))
             {
-                if($this->spellCalculator->getSpellDuration($caster, $spell->key) == $spell->duration)
+                if($this->spellCalculator->getSpellDuration($caster, $spell->key) == $duration)
                 {
                     throw new GameException("{$spell->name} is already at maximum duration.");
                 }
 
-                DB::transaction(function () use ($caster, $spell, $cooldown)
+                DB::transaction(function () use ($caster, $spell, $cooldown, $duration)
                 {
                     $dominionSpell = DominionSpell::where('dominion_id', $caster->id)->where('spell_id', $spell->id)
-                    ->update(['duration' => $spell->duration, 'cooldown' => $cooldown]);
+                    ->update(['duration' => $duration, 'cooldown' => $cooldown]);
 
                     $caster->save([
                         'event' => HistoryService::EVENT_ACTION_CAST_SPELL,
@@ -276,13 +284,13 @@ class SpellActionService
             }
             else
             {
-                DB::transaction(function () use ($caster, $target, $spell, $cooldown)
+                DB::transaction(function () use ($caster, $spell, $cooldown, $duration)
                 {
                     DominionSpell::create([
                         'dominion_id' => $caster->id,
                         'caster_id' => $caster->id,
                         'spell_id' => $spell->id,
-                        'duration' => $spell->duration,
+                        'duration' => $duration,
                         'cooldown' => $cooldown
                     ]);
 

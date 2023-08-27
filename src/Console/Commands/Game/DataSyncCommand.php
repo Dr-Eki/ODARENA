@@ -519,6 +519,12 @@ class DataSyncCommand extends Command implements CommandInterface
         foreach ($data as $buildingKey => $buildingData)
         {
 
+            $deityId = null;
+            if($deityKey = object_get($buildingData, 'deity'))
+            {
+                $deityId = Deity::where('key', $deityKey)->first()->id;
+            }
+
             $buildingsToSync[] = $buildingKey;
 
             // Building
@@ -527,6 +533,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'name' => $buildingData->name,
                     'excluded_races' => object_get($buildingData, 'excluded_races', []),
                     'exclusive_races' => object_get($buildingData, 'exclusive_races', []),
+                    'deity_id' => $deityId,
                     'enabled' => (int)object_get($buildingData, 'enabled', 1)
                 ]);
 

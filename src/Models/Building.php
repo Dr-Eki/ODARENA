@@ -23,9 +23,12 @@ class Building extends AbstractModel
         'excluded_races' => 'array',
         'exclusive_races' => 'array',
         'enabled' => 'integer',
-        #'land_type' => 'string',
-        #'terrain' => 'string',
     ];
+
+    public function deity()
+    {
+        return $this->belongsTo(Deity::class);
+    }
 
     public function perks()
     {

@@ -670,6 +670,7 @@ class ResourceCalculator
         $multiplier += $dominion->getAdvancementPerkMultiplier('jobs_per_building');
         $multiplier += $dominion->getTechPerkMultiplier('jobs_per_building');
         $multiplier += $dominion->getImprovementPerkMultiplier('jobs_per_building');
+        $multiplier += $dominion->getBuildingPerkMultiplier('jobs_per_building');
 
         $jobs *= $multiplier;
 

@@ -255,13 +255,33 @@ class ConstructionCalculator
 
     public function canBuildBuilding(Dominion $dominion, Building $building): bool
     {
-        if($building->perks()->get()->contains('key', 'research_required_to_build'))
-        {
+        # Check if building requires a specific research/tech
+        if ($building->perks()->get()->contains('key', 'research_required_to_build')) {
             $techRequiredKey = $building->perks()->get()->where('key', 'research_required_to_build')->first()->pivot->value;
-
-            return $dominion->techs->contains('key', $techRequiredKey);
+    
+            if (!$dominion->techs->contains('key', $techRequiredKey)) {
+                return false;
+            }
         }
-
+    
+        # Check if building is divine
+        if (isset($building->deity)) {
+            if (!($dominion->hasDeity() && $dominion->deity->id === $building->deity->id)) {
+                return false;
+            }
+        }
+    
+        # Check if dominion race is permitted to build building
+    
+        if (isset($building->excluded_races) && in_array($dominion->race->name, $building->excluded_races)) {
+            return false;
+        }
+    
+        if (count($building->exclusive_races) > 0 && !in_array($dominion->race->name, $building->exclusive_races)) {
+            return false;
+        }
+    
         return true;
     }
+    
 }

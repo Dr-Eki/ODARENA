@@ -142,8 +142,35 @@ class BuildActionService
 
             if (!$this->constructionCalculator->canBuildBuilding($dominion, $building))
             {
-                throw new GameException('You do not have the necessary technological research to build ' . $building->name . '.');
+                throw new GameException('You cannot build ' . $building->name . '.');
             }
+
+            # Check pairing limit.
+            if(($pairingLimit = $building->getPerkValue('pairing_limit')))
+            {
+                $pairingLimit = explode(',', $pairingLimit);
+
+                $pairingBuilding = Building::where('key', $pairingLimit[0])->firstOrFail();
+                $chunkSize = (int)$pairingLimit[1];
+
+                # Get amount owned of $pairingBuilding
+                $pairingBuildingRecord = $dominion->buildings()->where('key', $pairingBuilding->key)->first();
+                $pairingBuildingOwned = $pairingBuildingRecord ? ($pairingBuildingRecord->pivot->owned ?? 0) : 0;
+
+                $maxCapacity = intval(floor($pairingBuildingOwned / $chunkSize));
+
+                # Get amount owned of $pairedBuilding
+                $pairedBuildingRecord = $dominion->buildings()->where('key', $building->key)->first();
+                $pairedBuildingOwned = $pairedBuildingRecord ? ($pairedBuildingRecord->pivot->owned ?? 0) : 0;
+
+                $availableCapacityForBuilding = $maxCapacity - $pairedBuildingOwned;
+
+                if($amount > $availableCapacityForBuilding)
+                {
+                    throw new GameException('You cannot build ' . number_format($amount) . ' more ' . str_plural($building->name, $amount) . ' because you only have enough ' . $pairingBuilding->name . ' for ' . number_format($availableCapacityForBuilding) . ' ' . str_plural($building->name, $availableCapacityForBuilding) . '.');
+                }
+            }
+
 
             $primaryCost = $this->constructionCalculator->getConstructionCostPrimary($dominion);# * $totalBuildingsToConstruct;
             $secondaryCost = $this->constructionCalculator->getConstructionCostSecondary($dominion);# * $totalBuildingsToConstruct;

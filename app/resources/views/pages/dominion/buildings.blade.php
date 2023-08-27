@@ -3,7 +3,7 @@
 
 @section('content')
 @php
-    $availableBuildings = $buildingHelper->getBuildingsByRace($selectedDominion->race)->sortBy('name');
+    $availableBuildings = $buildingCalculator->getDominionBuildingsAvailableAndOwned($selectedDominion)->sortBy('name');
 @endphp
 
 <div class="row">
@@ -18,7 +18,7 @@
                         <span data-toggle="tooltip" data-placement="top" title="
                         <small class='text-muted'>Buildings afforded:</small> {{ number_format($constructionCalculator->getMaxAfford($selectedDominion)) }}">Barren</span>: {{ number_format($landCalculator->getTotalBarrenLand($selectedDominion)) }}
                     </small>
-                </div>           
+                </div>
                 <div class="box-body">
                     @php
                         $numOfCols = 4;
@@ -26,15 +26,17 @@
                         $bootstrapColWidth = 12 / $numOfCols;
                     @endphp
                     <div class="row">
-                    @foreach($availableBuildings as $building)
+                    @foreach($availableBuildings->where('deity', null) as $building)
                         @php
                             $amountOwned = $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building);
                             $constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}");
+                            $canBuildBuilding = $constructionCalculator->canBuildBuilding($selectedDominion, $building);
                             $boxClass = '';
                             $titleClass = '';
 
-                            $amountOwned ? $boxClass = 'box-primary' : null;
-                            $constructionAmount ? $boxClass = 'box-warning' : null;
+                            $amountOwned ? $boxClass = 'box-primary' : '';
+                            $constructionAmount ? $boxClass = 'box-warning' : '';
+                            !$canBuildBuilding ? $boxClass = 'box-danger' : '';
                             (($amountOwned + $constructionAmount) == 0) ? $titleClass = 'text-muted' : null;
                         
                         @endphp
@@ -65,7 +67,7 @@
                                             @endif
                                         </div>
                                         <div class="col-md-8">                                                
-                                            <input type="number" name="build[building_{{ $building->key }}]" class="form-control text-center" placeholder="0" min="0" max="{{ $constructionCalculator->getMaxAfford($selectedDominion) }}" value="{{ old('build.' . $building->key) }}" {{ ($selectedDominion->isLocked() or !$constructionCalculator->canBuildBuilding($selectedDominion, $building)) ? 'disabled' : null }}>
+                                            <input type="number" name="build[building_{{ $building->key }}]" class="form-control text-center" placeholder="0" min="0" max="{{ $constructionCalculator->getMaxAfford($selectedDominion) }}" value="{{ old('build.' . $building->key) }}" {{ ($selectedDominion->isLocked() or !$canBuildBuilding) ? 'disabled' : null }}>
                                         </div>
                                     </div>
                                 </div>
@@ -82,6 +84,7 @@
 
                     @endforeach
                 </div>
+
                 <div class="box-footer">
                     <button type="submit" class="btn btn-primary pull-right" id="submit" {{ ($selectedDominion->race->getPerkValue('cannot_build') or $selectedDominion->race->getPerkValue('growth_cannot_build')) ? 'disabled' : '' }} >Begin Construction</button>
                 </div>
@@ -132,6 +135,111 @@
                 <p>You have {{ number_format($landCalculator->getTotalBarrenLand($selectedDominion)) . ' ' . str_plural('acre', $landCalculator->getTotalBarrenLand($selectedDominion)) }} of barren land
                 and can afford to construct <strong>{{ number_format($constructionCalculator->getMaxAfford($selectedDominion)) }} {{ str_plural('building', $constructionCalculator->getMaxAfford($selectedDominion)) }}</strong>.</p>
                 <p>You may also <a href="{{ route('dominion.demolish') }}">demolish buildings</a> if you wish.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-9">
+        <form action="{{ route('dominion.buildings') }}" method="post" role="form">
+        @csrf
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fas fa-pray"></i> <i class="fa fa-home"></i> Holy Buildings</h3>
+
+                    <small class="pull-right text-muted">
+                        <span data-toggle="tooltip" data-placement="top" title="
+                        <small class='text-muted'>Buildings afforded:</small> {{ number_format($constructionCalculator->getMaxAfford($selectedDominion)) }}">Barren</span>: {{ number_format($landCalculator->getTotalBarrenLand($selectedDominion)) }}
+                    </small>
+                </div>
+                <div class="box-body">
+                    @php
+                        $numOfCols = 4;
+                        $rowCount = 0;
+                        $bootstrapColWidth = 12 / $numOfCols;
+                    @endphp
+                    <div class="row">
+                    @foreach($availableBuildings->whereNotNull('deity') as $building)
+                        @php
+                            $amountOwned = $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building);
+                            $constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}");
+                            $canBuildBuilding = $constructionCalculator->canBuildBuilding($selectedDominion, $building);
+                            $boxClass = '';
+                            $titleClass = '';
+
+                            $amountOwned ? $boxClass = 'box-primary' : '';
+                            $constructionAmount ? $boxClass = 'box-warning' : '';
+                            !$canBuildBuilding ? $boxClass = 'box-danger' : '';
+                            (($amountOwned + $constructionAmount) == 0) ? $titleClass = 'text-muted' : null;
+                        
+                        @endphp
+                        <div class="col-md-{{ $bootstrapColWidth }}">
+                            <div class="box {{ $boxClass }}">
+                                <div class="box-header with-border">
+                                    <strong data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
+                                        <span class="{{ $titleClass }}">
+                                            {{ $building->name }} ({{ $building->deity->name }})
+                                        </span>
+                                    </strong>
+                                </div>
+
+                                <div class="box-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            @if($amountOwned)
+                                                {{ number_format($amountOwned) }}
+                                                <small class="text-muted">({{ number_format(($amountOwned / $selectedDominion->land)*100,2) }}%)</small>
+                                            @else
+                                                0 <small class="text-muted">(0%)</small>
+                                            @endif
+                                            
+                                            @if($constructionAmount)
+                                                <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($constructionAmount + $amountOwned) }} <small>({{ number_format((($constructionAmount + $amountOwned) / $selectedDominion->land)*100,2) }}%)</small>">
+                                                    <br>({{ number_format($constructionAmount) }})
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-8">                                                
+                                            <input type="number" name="build[building_{{ $building->key }}]" class="form-control text-center" placeholder="0" min="0" max="{{ $constructionCalculator->getMaxAfford($selectedDominion) }}" value="{{ old('build.' . $building->key) }}" {{ ($selectedDominion->isLocked() or !$canBuildBuilding) ? 'disabled' : null }}>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @php
+                            $rowCount++;
+                        @endphp
+
+                        @if($rowCount % $numOfCols == 0)
+                            </div><div class="row">
+                        @endif
+
+                    @endforeach
+                </div>
+
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary pull-right" id="submit" {{ ($selectedDominion->race->getPerkValue('cannot_build') or $selectedDominion->race->getPerkValue('growth_cannot_build')) ? 'disabled' : '' }} >Begin Construction</button>
+                </div>
+                </div>
+            </div>
+        </form>
+    </div>
+        
+    <div class="col-sm-12 col-md-3">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Information</h3>
+            </div>
+            <div class="box-body">
+
+                <p>These are holy buildings and require devotion to a specific deity to build.</p>
+                <p>If you are not devoted to the deity of a building, you do not gain any production, perks, or other effects from that building.</p>
+                <p>Construction costs and times are the same as regular buildings.</p>
+                <p>Land with holy buildings are considered holy lands.</p>
+                <p>You have {{ number_format($buildingCalculator->getHolyLandAmount($selectedDominion)) }} ({{ number_format($buildingCalculator->getHolyLandRatio($selectedDominion) * 100, 2) }}%) holy lands.</p>
+
             </div>
         </div>
     </div>

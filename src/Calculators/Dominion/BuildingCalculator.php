@@ -182,6 +182,24 @@ class BuildingCalculator
         return $dominionBuildings;#DominionBuilding::where('dominion_id',$dominion->id)->get();
     }
 
+    public function getDominionBuildingsAvailableAndOwned($dominion)
+    {
+        $buildings = $this->buildingHelper->getBuildingsByRace($dominion->race);
+    
+        foreach ($dominion->buildings as $dominionBuilding)
+        {
+            $building = Building::where('key', $dominionBuilding->key)->first();
+
+            if ($building && !$buildings->contains('id', $building->id)) {
+                $buildings->push($building);
+            }
+        }
+    
+        return $buildings;
+    }
+    
+    
+
     /*
     *   Returns an integer ($owned) of how many of this building the dominion has.
     *   Three arguments are permitted and evaluated in order:
@@ -262,6 +280,31 @@ class BuildingCalculator
         $owned += $this->queueService->getConstructionQueueTotalByResource($dominion, ('building_' . $building->key));
 
         return $maxCapacity - $owned;
+    }
+
+    public function getHolyLandAmount(Dominion $dominion): int
+    {
+        $holyLandCount = 0;
+
+        foreach($dominion->buildings as $dominionBuilding)
+        {
+            $building = Building::where('key', $dominionBuilding->key)->first();
+
+            if(isset($building->deity) and $dominion->hasDeity())
+            {
+                if($dominion->deity->id == $building->deity->id)
+                {
+                    $holyLandCount += $dominionBuilding->pivot->owned;
+                }
+            }
+        }
+
+        return $holyLandCount;
+    }
+
+    public function getHolyLandRatio(Dominion $dominion): float
+    {
+        return $this->getHolyLandAmount($dominion) / $dominion->land;
     }
 
 }

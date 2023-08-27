@@ -14,15 +14,42 @@ barracks:
     housing: 0
     jobs: 0
 
-shrine:  
-  enabled: 0 # Round 97 or 98
-  name: Shrine
+guard_tower:
+  name: Guard Tower
+  perks:
+    defensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
+
+infirmary:
+  name: Infirmary
+  perks:
+    casualties_on_defense: 1,-2.5,50 # Every 1% gives -2.5% max -50%
+    casualties_on_offense: 1,-2.5,50 # Every 1% gives -2.5%, max -50%
+
+military_academy:
+  name: Military Academy
+  perks:
+    prestige_gains: 1,10,100 # Every 1% gives 10% prestige, max +100%
+
+training_grounds:
+  name: Training Grounds
+  perks:
+    offensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
+
+wall:
+  name: Wall
   excluded_races:
+    - Barbarian
+    - Reptilians
+    - Sylvan
     - Swarm
   perks:
-    casualties_on_defense: 1,-2,20 # 1% gives -2% max -20%
-    casualties_on_offense: 1,-2,20 # 1% gives -2%, max -20%
-    prestige_gains: 1,2,20 # 1% gives +2%, max +20%
+    defensive_power: 1,1,100 # Every 1% gives 1% DP, max +100% DP
+    raw_defense: 6
+
+watch_tower:
+  name: Watch Tower
+  perks:
+    target_defensive_power_mod: 1,-1.5,30 # Every 1% gives -1.5% DP mods, max -30% DP mods
 
 turret:
   name: Turret
@@ -33,17 +60,6 @@ turret:
     defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
     building_capacity_limit: 1,2,wall # amount allowed, per x of, building
     arwe_unit_housing: 3,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
-
-wall:
-  name: Wall
-  excluded_races:
-    - Barbarian
-    - Reptilians
-    - Sylvan
-    - Swarm
-  perks:
-    defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
-    raw_defense: 6
 
 ## Production Buildings
 
@@ -236,7 +252,6 @@ residence:
 tomb:
   name: Tomb
   exclusive_races:
-    #- Revenants
     - Undead
   perks:
     housing: 30
@@ -250,25 +265,88 @@ warren:
     housing: 32
     jobs: 0
 
-## Other
-monument:  
-  name: Monument
-  perks:
-    deity_power: 1,5,100
+## Holy buildings
 
-obelisk:  
-  enabled: 0 # Round 97 or 98
-  name: Obelisk
+bazaar:
+  name: Bazaar
+  deity: barathu_bint
+  perks:
+    gold_production_mod: 1,4,20 # Every 1% gives +4% gold production, max +20%
+    exchange_rate: 1,4,20 # Every 1% gives +4% exchange rate, max +20%
+
+lapidary:
+  name: Lapidary
+  deity: mirnon
+  perks:
+    gems_invest_bonus: 1,3,30
+    ore_invest_bonus: 1,3,30
+
+necropolis:
+  name: necropolis
+  deity: zidur
   exclusive_races:
     - Afflicted
-    - Cult
-    - Demon
-    - Reptilians
-    - Sacred Order
-    - Revenants
     - Undead
   perks:
+    reduces_attrition: 1,0.5 # Every 1%, reduces 0.5%
+    unit_pairing: 1,1.75,35
+
+obelisk:
+  name: Obelisk
+  deity: elskas
+  exclusive_races:
+    - Reptilians
+  perks:
     deity_power: 1,10,100
+
+redoubt:
+  name: Redoubt
+  deity: bregon
+  perks:
+    defensive_power_mod: 1,0.5,50
+    military_housing: 36
+    housing: 0
+
+shrine:
+  name: Shrine
+  deity: azk_hurum
+  exclusive_races:
+    - Demon
+  perks:
+    deity_power: 1,10,100
+
+spire:
+  name: Spire
+  deity: sazal
+  perks:
+    mana_production_raw: 20
+    spell_duration_mod: 1,2,50 # Every 1% gives +2% spell duration, max +50%
+
+toxicarium:
+  name: Toxicarium
+  deity: kinthys
+  exclusive_races:
+    - Afflicted
+    - Undead
+  perks:
+    miasma_invest_bonus: 1,2,40
+    increases_enemy_casualties: 1,1,20
+
+university:
+  name: University
+  deity: ix
+  perks:
+    pairing_limit: school,100 # building, amount, max 1 per 100 Schools
+    xp_generation_raw: 100
+
+## Divine related
+monument:  
+  name: Monument
+  excluded_races:
+    - Demon
+    - Reptilians
+  perks:
+    deity_power: 1,5,100
 
 # BEGIN AFFLICTED
 
@@ -288,8 +366,6 @@ camp:
   exclusive_races:
     - Beastfolk
   perks:
-    # unit_gold_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
-    # unit_ore_costs: 1,-2,50 # Every 1% gives 2.5% reduction, max -50% plat and ore
     military_housing: 20
     housing: 20
     jobs: 0
@@ -753,51 +829,6 @@ naval_institute:
     damage_from_lightning_bolt: 1,-0.75 # Every 1% reduces damage from LBs by 0.75%
     draftee_housing: 30
     housing: 0
-
-military_academy:  
-  enabled: 0
-  name: Military Academy
-  excluded_races:
-    - Dragon
-    - Growth
-    - Icekin
-    - Marshling
-    - Glimjir
-    - Monster
-    - Myconid
-    - Nox
-    - Snow Elf
-    - Swarm
-    - Sylvan
-    - Void
-    - Wood Elf
-  land_type: hill
-  perks:
-    offensive_power: 1,1.8,36 # Every 1% gives 11.8% OP, max +40% OP
-
-guard_tower:  
-  enabled: 0
-  name: Guard Tower
-  excluded_races:
-    - Artillery
-    - Dragon
-    - Growth
-    - Cires
-    - Icekin
-    - Marshling
-    - Glimjir
-    - Monster
-    - Myconid
-    - Norse
-    - Nox
-    - Snow Elf
-    - Swarm
-    - Sylvan
-    - Void
-    - Wood Elf
-  land_type: hill
-  perks:
-    defensive_power: 1,1.8,36 # Every 1% gives 1.8% DP, max +36% DP
 
 # BEGIN SNOW ELF
 
@@ -1518,16 +1549,6 @@ beacon:
   perks:
     light_production_raw_from_time: 06,18,1 # Between the hours 18:00 and 06:00, gains +6 OP
     xp_generation_mod: 1,1,50 #Every 1% gives +5% XP production, max +25%
-
-sanctuary:  
-  enabled: 0
-  name: Sanctuary
-  exclusive_races:
-    - Lux
-  land_type: water
-  perks:
-    housing: 30
-    jobs: 0
 
 # END LUX
 plateau:  
