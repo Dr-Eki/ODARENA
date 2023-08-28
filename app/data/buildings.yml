@@ -282,7 +282,7 @@ lapidary:
     ore_invest_bonus: 1,3,30
 
 necropolis:
-  name: necropolis
+  name: Necropolis
   deity: zidur
   exclusive_races:
     - Afflicted

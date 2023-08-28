@@ -119,36 +119,6 @@ class ScribesController extends AbstractController
         ]);
     }
 
-    public function getConstruction()
-    {
-        $buildingHelper = app(BuildingHelper::class);
-
-        $buildingTypesPerLandType = $buildingHelper->getBuildingTypesByRace();
-        $buildingTypeWithLandType = [];
-        foreach ($buildingTypesPerLandType as $landType => $buildingTypes) {
-            foreach($buildingTypes as $buildingType) {
-                $buildingTypeWithLandType[$buildingType] = $landType;
-            }
-        }
-
-        $buildingTypeWithLandType['home'] = null;
-
-        ksort($buildingTypeWithLandType);
-
-        $races = collect(Race::where('playable', 1)->orderBy('name')->get())->groupBy('alignment')->toArray();
-        return view('pages.scribes.construction', [
-            'goodRaces' => $races['good'],
-            'evilRaces' => $races['evil'],
-            #'npcRaces' => $races['npc'],
-            #'independentRaces' => $races['independent'],
-            'buildingTypeWithLandType' => $buildingTypeWithLandType,
-            'buildingHelper' => $buildingHelper,
-            'landHelper' => app(LandHelper::class),
-            'spells' => Spell::all()->where('enabled',1)->keyBy('key')->sortBy('key'),
-            'spellHelper' => app(SpellHelper::class)
-        ]);
-    }
-
     public function getBuildings()
     {
         return view('pages.scribes.buildings', [

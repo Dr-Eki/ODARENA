@@ -3,12 +3,9 @@
 namespace OpenDominion\Calculators\Dominion;
 
 use DB;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use OpenDominion\Helpers\DeityHelper;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
-use OpenDominion\Models\DominionDeity;
 use OpenDominion\Models\Deity;
 
 class DeityCalculator
@@ -54,16 +51,6 @@ class DeityCalculator
         }
 
         return $isAvailable;
-    }
-
-    public function canSubmitToDeity(Dominion $dominion, Deity $deity): bool
-    {
-        if($this->hasDeity($dominion))
-        {
-            return false;
-        }
-
-        return true;
     }
 
 }
