@@ -606,7 +606,7 @@ class MilitaryCalculator
             $unitPower += $this->getUnitPowerFromVersusFixedMilitaryPercentagePerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromMob($dominion, $target, $unit, $powerType, $calc, $units, $invadingUnits);
             $unitPower += $this->getUnitPowerFromBeingOutnumbered($dominion, $target, $unit, $powerType, $calc, $units, $invadingUnits);
-            $unitPower += $this->getUnitPowerFromVersusSpellPerk($dominion, $target, $unit, $powerType, $calc);
+            $unitPower += $this->getUnitPowerFromVersusSorcerySpellsPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromTargetRecentlyInvadedPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromTargetRecentlyVictoriousPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromTargetIsLargerPerk($dominion, $target, $unit, $powerType, $calc);
@@ -1678,43 +1678,6 @@ class MilitaryCalculator
 
         }
 
-      # Untested/unused
-      protected function getUnitPowerFromVersusSpellPerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = []): float
-      {
-          if ($target === null && empty($calc))
-          {
-              return 0;
-          }
-
-          $spellPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_versus_spell", null);
-
-          if(!$spellPerkData)
-          {
-              return 0;
-          }
-
-          $powerVersusSpell = (float)$spellPerkData[1];
-          $spellKey = $spellPerkData[0];
-
-          if (!empty($calc))
-          {
-              # Override resource amount for invasion calculator
-              if (isset($calc[$spellKey]))
-              {
-                  $powerFromPerk = $powerVersusSpell;
-              }
-          }
-          elseif ($target !== null)
-          {
-              if($target->isSpellActive($spellKey))
-              {
-                  $powerFromPerk = $powerVersusSpell;
-              }
-          }
-
-          return $powerFromPerk;
-      }
-
     protected function getUnitPowerFromAdvancement(Dominion $dominion, Unit $unit, string $powerType): float
     {
         $advancementPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_advancements", null);
@@ -1891,6 +1854,37 @@ class MilitaryCalculator
           }
 
           return $researchPerk;
+      }
+
+      protected function getUnitPowerFromVersusSorcerySpellsPerk(Dominion $dominion, Dominion $target, Unit $unit, string $powerType, array $calc = []): float
+      {
+
+          $spellPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_target_active_offensive_spells", null);
+          $powerFromPerk = 0;
+
+          if (!$spellPerkData)
+          {
+              return 0;
+          }
+
+          $powerPerSpell = (float)$spellPerkData[0];
+          $max = (float)$spellPerkData[1];
+
+          $activeSpells = 0;
+
+          # Get all spells from dominion where scope is offensive and class is passive
+          foreach($dominion->activeSpells as $index => $dominionSpell)
+          {
+              if($dominionSpell->spell->scope == 'hostile' and $dominionSpell->spell->class == 'passive')
+              {
+                  $activeSpells++;
+              }
+          }
+
+          $powerFromPerk = min($powerPerSpell * $activeSpells, $max);
+
+          return $powerFromPerk;
+
       }
 
     /**

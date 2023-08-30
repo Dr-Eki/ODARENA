@@ -82,7 +82,7 @@ units:
       counts_as_wizard_offense: 0.1666
       counts_as_wizard_defense: 0.1666
       kills_into_resource_per_casualty: 0.75,prisoner
-      offense_from_advancements: wizardry_tradition;6;0.75,magical_weapons;6;0.75,concentration;6;0.75,invocations;6;0.75
+      offense_from_advancements: wizardry_tradition;6;0.375,magical_weapons;6;0.375,concentration;6;0.375,invocations;6;0.375
       defense_from_advancements: wizardry_tradition;6;0.75,magical_weapons;6;0.75,concentration;6;0.75,invocations;6;0.75
 
   - name: Warweaver
@@ -98,10 +98,11 @@ units:
       mana: 80
       draftees: 1
     power:
-      offense: 4
+      offense: 5
       defense: 2
     perks:
-      offense_from_active_self_spells: 0.20
+      offense_from_target_active_offensive_spells: 0.10,1 # per spell, max total
+      #offense_from_active_self_spells: 0.20
       kills_into_resource_per_casualty: 1,prisoner
       displaced_peasants_conversion: 1
 

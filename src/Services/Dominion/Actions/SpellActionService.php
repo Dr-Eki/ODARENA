@@ -174,7 +174,7 @@ class SpellActionService
 
         if ($this->resourceCalculator->getAmount($dominion, 'mana') < $manaCost)
         {
-            throw new GameException("You do not have enough mana to cast {$spell->name}. You need {$manaCost} mana to cast this spell.");
+            throw new GameException("You do not have enough mana to cast {$spell->name}. You need " . number_format($manaCost). " mana to cast this spell.");
         }
 
         if (!$this->spellCalculator->canCastSpell($dominion, $spell, $this->resourceCalculator->getAmount($dominion, 'mana')))
