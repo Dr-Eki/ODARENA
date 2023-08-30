@@ -2777,7 +2777,7 @@ class MilitaryCalculator
         $terrainKey = $spellPerkValues[2];
         $max = $spellPerkValues[3] / 100;
 
-        $landTypeRatio = $attacker->{'terrain_' . $terrainKey} / $attacker->land;
+        $landTypeRatio = min($attacker->{'terrain_' . $terrainKey}, $attacker->land) / $attacker->land;
 
         $ambushReductionRatio = min(($landTypeRatio / $ratio) * $reduction, $max);
 

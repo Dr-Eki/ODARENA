@@ -1496,7 +1496,7 @@ class Dominion extends AbstractModel
                     $perAcre = (float)$perkValueArray[0];
                     $terrainKey = (string)$perkValueArray[1];
 
-                    $perk += floor($perAcre * $this->{'terrain_' . $terrainKey});
+                    $perk += floor($perAcre * min($this->{'terrain_' . $terrainKey}, $this->land));
                 }
                 elseif($perkKey == 'training_time_raw_from_morale')
                 {
