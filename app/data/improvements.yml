@@ -117,7 +117,7 @@ warding:
 warfare:
   name: Warfare
   perks:
-    prestige_gains: 50,4000
+    prestige_gains: 25,3000
 
 # BEGIN BEASTFOLK #
 

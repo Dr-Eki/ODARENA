@@ -7,7 +7,7 @@ azk_hurum:
     - Demon
   perks:
     offensive_power_on_retaliation: 5
-    increases_enemy_casualties: 10
+    increases_enemy_casualties: 5
     prestige_gains: -15
     max_population: 5
     #population_growth: 20
@@ -24,8 +24,8 @@ barathu_bint:
   perks:
     gold_production_mod: 2.5
     exchange_rate: 5
-    ore_production_mod: -5
-    gems_production_mod: -5
+    #ore_production_mod: -5
+    #gems_production_mod: -5
 
 bregon:
   name: Bregon
@@ -36,8 +36,8 @@ bregon:
     - Void
   perks:
     offensive_power: 5
-    mana_production_mod: -20
-    gold_production_mod: -2.5
+    #mana_production_mod: -20
+    #gold_production_mod: -2.5
 
 druva:
   name: Druva
@@ -50,8 +50,8 @@ druva:
     food_production_mod: 5
     lumber_production_mod: 5
     population_growth: 10
-    ore_production_mod: -5
-    gems_production_mod: -5
+    #ore_production_mod: -5
+    #gems_production_mod: -5
 
 elskas:
   name: Elskas
@@ -61,7 +61,7 @@ elskas:
   perks:
     spy_strength: 10
     target_defensive_power_mod: -5
-    casualties: 2.5
+    #casualties: 2.5
 
 glimj:
   name: Glimj
@@ -72,7 +72,7 @@ glimj:
   perks:
     defensive_power: 5
     food_production_mod: 10
-    gold_production_mod: -2.5
+    #gold_production_mod: -2.5
 
 ib_tham:
   name: Ib-Tham
@@ -83,7 +83,7 @@ ib_tham:
   perks:
     amount_stolen: 20
     offensive_power_on_retaliation: 10
-    xp_generation_mod: -5
+    #xp_generation_mod: -5
 
 ix:
   name: Ix
@@ -93,8 +93,8 @@ ix:
   perks:
     xp_generation_mod: 5
     xp_gains: 50
-    construction_cost: 5
-    rezone_cost: 5
+    #construction_cost: 5
+    #rezone_cost: 5
 
 kinthys:
   name: Kinthys
@@ -107,7 +107,7 @@ kinthys:
     casualties: -10
     wizard_cost: -10
     defensive_power: 2.5
-    xp_generation_mod: -2.5
+    #xp_generation_mod: -2.5
 
 mirnon:
   name: Mirnon
@@ -120,7 +120,7 @@ mirnon:
   perks:
     gems_production_mod: 5
     ore_production_mod: 5
-    food_production_mod: -20
+    #food_production_mod: -20
 
 sazal:
   name: Sazal
@@ -131,7 +131,7 @@ sazal:
   perks:
     wizard_strength: 10
     unit_mana_costs: -2.5
-    gems_production_mod: -5
+    #gems_production_mod: -5
 
 tiranthael:
   name: Tiranthael
@@ -168,8 +168,8 @@ zidur:
     - Undead
   perks:
     increases_enemy_casualties: 10
-    population_growth: -10
     target_defensive_power_mod: -2.5
+    #population_growth: -10
 
 voiddeity1:
   name: ◮◬◭
@@ -180,8 +180,8 @@ voiddeity1:
   perks:
     offensive_power: 5
     target_defensive_power_mod: -5
-    rezone_cost: 20
-    construction_cost: 20
+    #rezone_cost: 20
+    #construction_cost: 20
 
 voiddeity2:
   name: ▽◬◿
@@ -192,4 +192,4 @@ voiddeity2:
   perks:
     improvements_interest: 10
     rezone_cost: -20
-    unit_mana_costs: 5
+    #unit_mana_costs: 5

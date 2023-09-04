@@ -8,7 +8,7 @@ skill_level: 2
 magic_level: 1
 
 perks:
-  max_population: 40
+  max_population: 30
   population_growth: 20
   food_consumption_mod: -20
   #morale_change_tick: -50
