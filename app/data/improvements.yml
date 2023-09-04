@@ -116,6 +116,8 @@ warding:
 
 warfare:
   name: Warfare
+  excluded_races:
+    - Demon
   perks:
     prestige_gains: 25,3000
 

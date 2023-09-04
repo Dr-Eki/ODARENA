@@ -303,7 +303,7 @@ redoubt:
   name: Redoubt
   deity: bregon
   perks:
-    defensive_power_mod: 1,0.5,50
+    defensive_power_mod: 1,0.15,15
     military_housing: 36
     housing: 0
 
