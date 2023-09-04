@@ -38,7 +38,7 @@ class UserHelper
     public function getUserDominions(User $user, bool $inclueActiveRounds = false, int $maxRoundsAgo = 20)
     {
         $dominions = Dominion::where('user_id', $user->id)
-                      ->where('is_locked','=',0)
+                      #->where('is_locked','=',0)
                       ->where('protection_ticks','=',0)
                       ->whereRaw(' round_id >= (SELECT max(number) FROM rounds) - ?', [$maxRoundsAgo])
                       ->get();
