@@ -24,11 +24,12 @@ infirmary:
   perks:
     casualties_on_defense: 1,-2.5,50 # Every 1% gives -2.5% max -50%
     casualties_on_offense: 1,-2.5,50 # Every 1% gives -2.5%, max -50%
+    population_growth: 1,1.25 # Every 1%, gives 6%
 
 military_academy:
   name: Military Academy
   perks:
-    prestige_gains: 1,10,100 # Every 1% gives 10% prestige, max +100%
+    prestige_gains: 1,5,50 # Every 1% gives 10% prestige, max +100%
 
 training_grounds:
   name: Training Grounds
