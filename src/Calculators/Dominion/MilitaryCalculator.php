@@ -1856,7 +1856,7 @@ class MilitaryCalculator
           return $researchPerk;
       }
 
-      protected function getUnitPowerFromVersusSorcerySpellsPerk(Dominion $dominion, Dominion $target, Unit $unit, string $powerType, ?array $calc = []): float
+      protected function getUnitPowerFromVersusSorcerySpellsPerk(Dominion $dominion, ?Dominion $target, Unit $unit, string $powerType, ?array $calc = []): float
       {
 
           $spellPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_target_active_offensive_spells", null);
