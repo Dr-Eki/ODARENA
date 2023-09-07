@@ -237,7 +237,7 @@
                 <p>These are holy buildings and require devotion to a specific deity to build.</p>
                 <p>If you are not devoted to the deity of a building, you do not gain any production, perks, or other effects from that building.</p>
                 <p>Construction costs and times are the same as regular buildings.</p>
-                <p>Land with holy buildings are considered holy lands.</p>
+                <p>Land with holy buildings is considered holy land.</p>
                 <p>You have {{ number_format($buildingCalculator->getHolyLandAmount($selectedDominion)) }} ({{ number_format($buildingCalculator->getHolyLandRatio($selectedDominion) * 100, 2) }}%) holy lands.</p>
 
             </div>
