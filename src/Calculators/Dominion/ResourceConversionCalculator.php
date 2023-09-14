@@ -227,6 +227,8 @@ class ResourceConversionCalculator
                     $resourcePerValueConversionPerk = $converter->race->getUnitPerkValueForUnitSlot($converterUnitSlot, 'kills_into_resource_per_value');
                     is_array($resourcePerValueConversionPerk) ?: $resourcePerValueConversionPerk = $converter->race->getUnitPerkValueForUnitSlot($converterUnitSlot, 'kills_into_resource_per_value_on_success');
 
+                    ldump($resourcePerValueConversionPerk);
+
                     if($resourcePerValueConversionPerk)
                     {
                         $resourceAmountPerValue = (float)$resourcePerValueConversionPerk[0];
@@ -239,6 +241,7 @@ class ResourceConversionCalculator
                                 if($mode == 'offense')
                                 {
                                     $killedUnitsRawPower = $this->militaryCalculator->getDefensivePowerRaw($enemy, $converter, null, [$enemyUnitKilledSlot => $enemyUnitKilledAmount], 0, false, true, null, true, true);
+                                    ldump($enemyUnitKilledSlot . ':' . $enemyUnitKilledAmount .  ':' . $killedUnitsRawPower);
                                 }
                                 else
                                 {
