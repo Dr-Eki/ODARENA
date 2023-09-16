@@ -45,7 +45,7 @@ stone_wall:
   land_type: mountain
   perks:
     defensive_power: 1,1.25,50 # Every 1% gives 1.5% DP, max +60% DP
-    raw_defense: 16
+    raw_defense: 12
 
 training_grounds:
   name: Training Grounds
