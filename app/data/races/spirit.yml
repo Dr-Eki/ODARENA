@@ -43,6 +43,7 @@ perks:
   construction_cost: -50
   no_draftee_for_spies: 1
   no_draftee_for_wizards: 1
+  unemployed_peasants_produce: 1
 
 units:
   - name: Wisp
