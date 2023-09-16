@@ -80,7 +80,7 @@ class MoraleCalculator
                     $building = Building::where('key',$buildingKey)->first();
 
                     # [Anti-abuse] Check if the pairing building provides morale bonus and, if so, cap morale perk from unit to the max of this building.
-                    if($buildingPerkValues = $dominion->extractBuildingPerkValues($building->getPerkValue('base_morale')))
+                    if($building->getPerkValue('base_morale') and ($buildingPerkValues = $dominion->extractBuildingPerkValues($building->getPerkValue('base_morale'))))
                     {
 
                         $ratio = (float)$buildingPerkValues[0];

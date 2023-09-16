@@ -3,9 +3,8 @@ alignment: good
 description:
 home_land_type: mountain
 home_terrain: mountains
-playable: 0 # Round 88
+playable: 1
 skill_level: 2
-
 
 resources:
   - gold
@@ -22,10 +21,11 @@ construction_materials:
 improvement_resources:
   gold: 1
   ore: 3
-  gems: 18
+  gems: 24
 
 perks:
   salvaging: 50
+  enemy_casualties: -20
 
 units:
   - name: Miner
@@ -35,13 +35,14 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 100
-      ore: 50
+      gold: 400
+      ore: 40
+      draftee: 1
     power:
       offense: 0
-      defense: 2
+      defense: 3
     perks:
-      ore_production_raw: 2
+      ore_production_raw: 1.2
 
   - name: Keeper
     training_time: 9
@@ -50,13 +51,13 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 750
-      ore: 150
+      gold: 800
+      ore: 200
+      draftee: 1
     power:
       offense: 0
-      defense: 8
+      defense: 5
     perks:
-      reduces_casualties: 1
       reduces_spell_damage: 0.05
 
   - name: Hammerer
@@ -66,16 +67,17 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1000
-      ore: 200
+      gold: 1200
+      ore: 250
+      draftee: 1
     power:
-      offense: 8
-      defense: 6
+      offense: 6
+      defense: 3.5
     perks:
-      stuns_units: 10,2 # Stuns units up to 10 DP for 2 ticks
+      stuns_units: 6,2 # Stuns units up to 6 DP for 2 ticks
 
   - name: Thunder Hammerer
-    training_time: 0
+    training_time: 6
     type:
       - living
       - sentient
@@ -84,10 +86,9 @@ units:
       unit3: 1
       thunderstone: 1
     power:
-      offense: 240
-      defense: 40
+      offense: 120
+      defense: 30
     perks:
-      stuns_units: 200,2 # Stuns units up to 200 DP for 2 ticks
+      stuns_units: 20,3 # Stuns units up to 20 DP for 3 ticks
       damages_improvements_on_attack: 1000
       destroy_resource_on_victory: mana,1000
-      no_draftee: 1

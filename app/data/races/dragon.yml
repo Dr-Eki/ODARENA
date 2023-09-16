@@ -1,100 +1,105 @@
-name: Dragon
+name: Dragons
 alignment: evil
-description:
+description: A once peaceful mountain village, now dominated by the majestic presence of dragons, drawn by the allure of gems hidden within the mountains. With enough experience fighting, some of these once poor farmers can become Dragon Knights.
 home_land_type: mountain
 home_terrain: mountains
-playable: 0 # Round 88
-skill_level: 1
+playable: 1
+skill_level: 3
+magic_level: 1
 
+draftees_alias: militia
 
 resources:
   - gold
   - food
-  - ore
-  - gems
+  - lumber
   - mana
-
-construction_materials:
-  - gold
-  - ore
+  - gems
 
 peasants_production:
-  gold: 2
-  gems: 0.10
+  gold: 2.5
+  food: 0.5
 
 perks:
-    max_population: -10
-    population_growth: -10
+  max_population: -10
+  population_growth: -10
 
 units:
-  - name: Farmer
-    training_time: 2
+  - name: Farmhand
+    training_time: 6
     type:
       - living
       - sentient
-      - intelligent
     cost:
       gold: 120
       ore: 10
     power:
       offense: 0
-      defense: 2
+      defense: 1.5
     perks:
-      food_production_raw: 6
+      food_production_raw: 0.4
 
   - name: Driller
-    training_time: 3
-    static_networth: 2
+    training_time: 6
     type:
       - living
       - sentient
-      - intelligent
     cost:
-      gold: 120
+      gold: 240
       ore: 20
     power:
       offense: 0
-      defense: 0
+      defense: 2
     perks:
       gems_production_raw: 1.2
       building_limit: gem_mine,20 # building, buildings per unit, imp to increase
 
   - name: Mercenary
-    training_time: 6
+    training_time: 3
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 450
+      gold: 600
     power:
       offense: 0
-      defense: 6
+      defense: 4
     perks:
-      gold_upkeep_raw: 5
-      no_draftee: 1
+      gold_upkeep_raw: 4
 
   - name: Dragon
     training_time: 12
     type:
       - living
       - sentient
-      - intelligent
       - massive
-      - wise
+      - flying
     cost:
       gems: 50000
     power:
       offense: 1000
       defense: 1000
     perks:
-      does_not_count_as_population: 1
-      no_draftee: 1
-      casualties_on_offense: -90
-      casualties_on_defense: -50
-      food_consumption_raw: 55
-      burns_peasants_on_attack: 20
-      plunders: food;50,gems;100
-      protects_resource_from_theft: gems,50000
-      immortal_on_victory: 1
-      immortal_on_fending_off: 1
+      burns_peasants_on_attack: 50
+      food_consumption_raw: 10
+      casualties: -60
+
+  - name: Dragon Knight
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - legendary
+    cost:
+      gold: 1000
+      gems: 1000
+      draftee: 1
+    power:
+      offense: 8
+      defense: 6
+    perks:
+      stat_pairing_limit: unit4_lost,100 # stat, max units
+      minimum_victories: 20
+      casualties: -30
+      burns_peasants_on_attack: 10

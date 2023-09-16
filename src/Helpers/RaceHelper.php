@@ -383,8 +383,18 @@ class RaceHelper
                 $description = 'Prestige gains';
                 break;
             case 'no_drafting':
-                $negativeBenefit = true;
+                $negativeBenefit = false;
                 $description = 'No drafting';
+                $booleanValue = true;
+                break;
+            case 'no_draftee_for_spies':
+                $negativeBenefit = false;
+                $description = 'No draftee required to train spies';
+                $booleanValue = true;
+                break;
+            case 'no_draftee_for_wizards':
+                $negativeBenefit = false;
+                $description = 'No draftee required to train spies';
                 $booleanValue = true;
                 break;
             case 'draftee_dp':
@@ -705,6 +715,11 @@ class RaceHelper
                 $negativeBenefit = false;
                 $description = 'Saplings stored per acre of forest';
                 $booleanValue = true;
+                break;
+            case 'enemy_casualties':
+                $negativeBenefit = false;
+                $description = 'Enemy casualties';
+                $valueType = '%';
                 break;
             default:
                 $negativeBenefit = false;

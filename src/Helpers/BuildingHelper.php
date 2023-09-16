@@ -282,12 +282,14 @@ class BuildingHelper
 
             'pairing_limit' => 'You can at most have one per %2$s %1$s. Unpaired buildings are not effective.',
 
+            'afflicted_unit_housing' => 'Houses %1$s %2$s.',
             'arwe_unit_housing' => 'Houses %1$s %2$s.',
+            'dwarg_unit_housing' => 'Houses %1$s %2$s.',
             'gorm_unit_housing' => 'Houses %1$s %2$s.',
             'therozou_unit_housing' => 'Houses %1$s %2$s.',
-            'afflicted_unit_housing' => 'Houses %1$s %2$s.',
 
         ];
+
 
         foreach ($building->perks as $perk)
         {

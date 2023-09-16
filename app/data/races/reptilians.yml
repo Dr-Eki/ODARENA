@@ -16,17 +16,17 @@ resources:
   - lumber
   - mana
   - gems
-  #- prayer
+  - prayer
 
 peasants_production:
   gold: 3
 
 perks:
-  #opulation_growth: 20
+  #population_growth: 20
   #extra_barren_housing: 5
   starts_devoted_to_elskas: 1
   cannot_renounce_deity: 1
-  #prayer_production_raw_from_population: 0.10
+  prayer_production_raw_from_population: 0.10
   #cannot_train_wizards: 1
   #cannot_train_archmages: 1
 
@@ -95,19 +95,19 @@ units:
       casualties: -90
       attrition_if_capacity_limit_exceeded: 2.5 # Decays at a rate of 2.5% per tick of units exceeding building_limit
 
-  # - name: Eternal One
-  #   training_time: 12
-  #   type:
-  #     - living
-  #     - sentient
-  #     - massive
-  #   cost:
-  #     prayer: 30000
-  #   power:
-  #     offense: 0
-  #     defense: 2200
-  #   perks:
-  #     no_draftee: 1
-  #     immortal: 1
-  #     offensive_power_mod: 0.10
-  #     cost_increase_to_train_per_unit: 2
+  - name: Eternal One
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - massive
+    cost:
+      prayer: 30000
+    power:
+      offense: 0
+      defense: 2200
+    perks:
+      no_draftee: 1
+      immortal: 1
+      offensive_power_mod: 0.10
+      cost_increase_to_train_per_unit: 2

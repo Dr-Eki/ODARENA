@@ -3,12 +3,14 @@ alignment: good
 description:
 home_land_type: plain
 home_terrain: plains
-playable: 0 # Round 88
 skill_level: 2
 round_modes:
   - deathmatch
   - deathmatch-duration
-
+  - packs
+  - packs-duration
+  - factions
+  - factions-duration
 
 peasants_alias: essence
 
@@ -18,7 +20,7 @@ resources:
   - soul
 
 peasants_production:
-  mana: 0.12
+  mana: 0.08
 
 improvement_resources:
   mana: 1
@@ -52,12 +54,11 @@ units:
       mana: 80
       peasant: 1
     power:
-      offense: 3
-      defense: 4
+      offense: 2
+      defense: 3
     perks:
       immortal: 1
       kills_into_resource_per_casualty: 1,soul
-      no_draftee: 1
 
   - name: Apparition
     training_time: 8
@@ -70,8 +71,8 @@ units:
       mana: 100
       peasant: 1
     power:
-      offense: 5
-      defense: 3
+      offense: 4
+      defense: 2
     perks:
       immortal: 1
       kills_into_resource_per_casualty: 1,soul
@@ -89,12 +90,11 @@ units:
       soul: 1
     power:
       offense: 0
-      defense: 8
+      defense: 5
     perks:
       immortal: 1
       does_not_count_as_population: 1
       kills_into_resource_per_casualty: 1,soul
-      no_draftee: 1
 
   - name: Spectre
     type:
@@ -107,12 +107,11 @@ units:
       mana: 180
       soul: 1
     power:
-      offense: 8
-      defense: 7
+      offense: 6
+      defense: 4
     perks:
       immortal: 1
       does_not_count_as_population: 1
       kills_into_resource_per_casualty: 1,soul
       plunder: soul,10
-      converts_displaced_peasants_into_resource: 0.20,soul
-      no_draftee: 1
+      converts_displaced_peasants_into_resource: 0.10,soul

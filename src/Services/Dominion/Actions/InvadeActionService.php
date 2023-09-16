@@ -1858,105 +1858,121 @@ class InvadeActionService
     protected function handleStun(Dominion $attacker, Dominion $defender, array $units, float $landRatio)
     {
 
-        $opDpRatio = $this->invasion['attacker']['op'] / $this->invasion['defender']['dp'];
+        $opDpRatio = $this->invasion['result']['op_dp_ratio_raw'];
 
         $rawOp = 0;
         $stunningOp = 0;
+        $stunningUnits = [];
+        $stunnedUnits = [];
+
+        $unstunnableAttributes = [
+            'ammunition',
+            'aspect',
+            'equipment',
+            'magical',
+            'massive',
+            'machine',
+            'ship',
+        ];
 
         # Calculate how much of raw OP came from stunning units
         foreach($units as $slot => $amount)
         {
+            if(!$attacker->race->getUnitPerkValueForUnitSlot($slot, 'stuns_units'))
+            {
+                continue;
+            }
+            
             $unit = $attacker->race->units->filter(function ($unit) use ($slot) {
                 return ($unit->slot == $slot);
             })->first();
 
-            $unitsOp = $this->militaryCalculator->getUnitPowerWithPerks($attacker, $defender, $landRatio, $unit, 'offense') * $amount;
+            $stunPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'stuns_units');
 
-            $rawOp += $unitsOp;
+            $rawOpFromThisUnit = $this->militaryCalculator->getUnitPowerWithPerks($attacker, $defender, $landRatio, $unit, 'offense') * $amount;
+            $rawOpRatioFromThisUnit = $rawOpFromThisUnit / $this->invasion['attacker']['op_raw'];
 
-            if($attacker->race->getUnitPerkValueForUnitSlot($slot, 'stuns_units'))
+            if($rawOpRatioFromThisUnit > 0)
             {
-                $stunningOp += $unitsOp;
+                $stunningUnits[$slot] = [
+                    'amount' => $amount,
+                    'unit_op_ratio' => $rawOpRatioFromThisUnit,
+                    'unit_raw_op_total' => $rawOpFromThisUnit,
+                    'unit_raw_op' => $rawOpFromThisUnit / $amount,
+                    'max_stun_power' => $stunPerk[0],
+                    'stun_duration' => $stunPerk[1],
+                ];
             }
         }
 
-        if($stunningOp > 0)
+        if(!count($stunningUnits))
         {
-            $stunningOpRatio = $stunningOp / $rawOp;
+            return;
+        }
 
-            $stunBaseDamage = 1;
-            $stunMaxDamage = 2.5;
 
-            $stunRatio = min((static::STUN_RATIO / 100) * $opDpRatio * min($stunningOpRatio, 1), 2.5);
+        dd($stunningUnits);
 
-            # Collect the stunnable units
-            $stunnableUnits = array_fill(1, $defender->race->units->count(), 0);
+        foreach($stunningUnits as $stunningUnitSlot => $stunningUnitData)
+        {
 
-            # Exclude certain attributes
-            $unconvertibleAttributes = [
-                'ammunition',
-                'aspect',
-                'equipment',
-                'magical',
-                'massive',
-                'machine',
-                'ship',
-              ];
-
-            foreach($this->invasion['defender']['units_defending'] as $slot => $amount)
+            foreach($this->invasion['defender']['units_surviving'] as $defendingUnitSlot => $defendingUnitAmount)
             {
-                if($slot !== 'draftees')
+                $stunRatio = 0.025 * $opDpRatio * $stunningUnitData['unit_op_ratio'];
+                $stunRatio = min($stunRatio, 0.050);
+
+                # Calculate number of stunned units
+
+                if($defendingUnitSlot == 'peasants')
                 {
-                    if(isset($this->invasion['defender']['units_lost'][$slot]) and $this->invasion['defender']['units_lost'][$slot] > 0)
-                    {
-                        $amount -= $this->invasion['defender']['units_lost'][$slot];
-                    }
-                    $unit = $defender->race->units->filter(function ($unit) use ($slot) {
-                        return ($unit->slot === $slot);
+                    $stunnedUnits[$defendingUnitSlot] = floor($defendingUnitAmount * $stunRatio);
+                    $stunnedUnits[$defendingUnitSlot] = min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
+
+                    $defender->peasants -= $stunnedUnits[$defendingUnitSlot];
+
+                    $this->queueService->queueResources(
+                        'stun',
+                        $defender,
+                        ['peasants' => $stunnedUnits[$defendingUnitSlot]],
+                        $stunningUnitData['stun_duration']
+                    );
+                }
+                elseif($defendingUnitSlot == 'draftees')
+                {
+                    $stunnedUnits[$defendingUnitSlot] = floor($defendingUnitAmount * $stunRatio);
+                    $stunnedUnits[$defendingUnitSlot] = min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
+
+                    $defender->military_draftees -= $stunnedUnits[$defendingUnitSlot];
+
+                    $this->queueService->queueResources(
+                        'stun',
+                        $defender,
+                        ['military_draftees' => $stunnedUnits[$defendingUnitSlot]],
+                        $stunningUnitData['stun_duration']
+                    );
+                }
+                else
+                {
+                    $defendingUnit = $defender->race->units->filter(function ($unit) use ($defendingUnitSlot) {
+                        return ($unit->slot == $defendingUnitSlot);
                     })->first();
 
-                    $unitRawDp = $this->militaryCalculator->getUnitPowerWithPerks($attacker, $defender, $landRatio, $unit, 'defense');
-                    $unitAttributes = $this->unitHelper->getUnitAttributes($unit);
+                    $unitDp = $this->militaryCalculator->getUnitPowerWithPerks($attacker, $defender, $landRatio, $defendingUnit, 'defense');
 
-                    # Only add unit to available casualties if it has none of the unconvertible unit attributes.
-                    if(count(array_intersect($unconvertibleAttributes, $unitAttributes)) === 0 and $unitRawDp < 10)
+                    if($unitDp <= $stunningUnitData['max_stun_power'] and !$this->unitHelper->unitSlotHasAttributes($defender->race, $defendingUnitSlot, $unstunnableAttributes) and $defendingUnitAmount > 0)
                     {
-                        $stunnableUnits[$slot] = (int)$amount;
+                        $stunnedUnits[$defendingUnitSlot] = floor($defendingUnitAmount * $stunRatio);
+                        $stunnedUnits[$defendingUnitSlot] = min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
+
+                        $this->queueService->queueResources(
+                            'stun',
+                            $defender,
+                            [('military_unit' . $defendingUnitSlot) => $stunnedUnits[$defendingUnitSlot]],
+                            $stunningUnitData['stun_duration']
+                        );
                     }
                 }
-                else
-                {
-                    if($amount > 0)
-                    {
-                        $amount -= $this->invasion['defender']['units_lost'][$slot];
-                    }
-                    $stunnableUnits['draftees'] = (int)$amount;
-                }
-             }
-
-             foreach($stunnableUnits as $slot => $amount)
-             {
-                $amount = (int)round($amount * $stunRatio);
-                $this->invasion['defender']['units_stunned'][$slot] = $amount;
-
-                # Stunned units take 2 ticks to return
-                if($slot !== 'draftees')
-                {
-                    $unitKey = 'military_unit'.$slot;
-                }
-                else
-                {
-                    $unitKey = 'military_draftees';
-                }
-
-                $defender->$unitKey -= $amount;
-                $this->queueService->queueResources(
-                    'invasion',
-                    $defender,
-                    [$unitKey => $amount],
-                    2
-                );
-             }
+            }
         }
     }
 

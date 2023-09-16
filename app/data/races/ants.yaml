@@ -1,10 +1,11 @@
 name: Ants
 alignment: good
-description:
+description: >-
 home_land_type: forest
 home_terrain: forest
-playable: 0
+playable: 1
 skill_level: 2
+magic_level: 2
 
 peasants_alias: ant
 draftees_alias: drone
@@ -16,12 +17,10 @@ resources:
   - mana
 
 peasants_production:
-  gold: 2.25
-
-improvement_resources:
-  lumber: 2.25
+  gold: 3
 
 perks:
+  spy_strength: 25
   construction_cost: -25
   food_consumption_mod: -50
   reduced_conversions: 35
@@ -32,10 +31,11 @@ perks:
 units:
   - name: Soldier Ant
     training_time: 6
-    cost:
-      draftees: 1
     type:
       - living
+      - sentient
+    cost:
+      draftees: 1
     power:
       offense: 1
       defense: 0
@@ -44,47 +44,54 @@ units:
     training_time: 6
     type:
       - living
+      - sentient
     cost:
-      gold: 200
+      gold: 260
       draftees: 1
     power:
       offense: 0
       defense: 1.5
     perks:
-      food_production_raw: 0.25
-      lumber_production_raw: 0.5
+      lumber_production_raw: 0.35
 
-  - name: Giant Ant
-    training_time: 12
+  - name: Armoured Ant
+    training_time: 9
     type:
       - living
+      - sentient
     cost:
-      gold: 500
+      gold: 400
+      lumber: 40
       draftees: 1
     power:
       offense: 0
       defense: 3
 
-  - name: Flying Ant
-    training_time: 12
+  - name: Fire Ant
+    training_time: 9
     type:
       - living
+      - sentient
     cost:
       gold: 600
-      draftees: 1
     power:
       offense: 3
       defense: 1.5
+    perks:
+      burns_peasants_on_attack: 8
 
-  - name: Fire Ant
+  - name: Queen Ant
     training_time: 12
     type:
       - living
+      - sentient
     cost:
-      gold: 760
-      draftees: 1
+      food: 2000
     power:
-      offense: 4
-      defense: 1
+      offense: 0
+      defense: 4
     perks:
-      burns_peasants_on_attack: 10
+      increases_morale_fixed: 0.01
+      building_limit: colony,1 # building, buildings per unit, imp to increased
+      attrition_if_capacity_limit_exceeded: 5 # Decays at a rate of 5% per tick of units exceeding building_limit
+      food_consumption_raw: 2

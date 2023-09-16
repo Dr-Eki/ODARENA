@@ -415,6 +415,10 @@ class CasualtiesCalculator
 
         #ldump('Mode for ' . $dominion->name . ': ' . $enemyMode);
 
+        # Faction perks
+        $multiplier += $dominion->race->getPerkMultiplier('enemy_casualties');
+        $multiplier += $dominion->race->getPerkMultiplier('enemy_casualties_on_' . $enemyMode);
+
         # Title perks
         $multiplier += $dominion->title->getPerkMultiplier('increases_enemy_casualties');
         $multiplier += $dominion->title->getPerkMultiplier('increases_enemy_casualties_on_' . $enemyMode);

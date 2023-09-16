@@ -10,6 +10,7 @@ use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Resource;
+use OpenDominion\Models\Stat;
 use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Unit;
 
@@ -492,9 +493,15 @@ class UnitHelper
             'victories_limit' => 'You can at most have %2$s of this unit per %1$s %2$s.',
             'net_victories_limit' => 'You can at most have %1$s of this unit per %2$s net victory.',
 
+            'victories_minimum' => 'You must have at least %1$s victories to train this unit.',
+
+            'stat_pairing_limit' => 'You can at most have %2$s of this unit per %1$s.',
+
             'archmage_limit' => 'You can at most have %1$s of this unit per Archmage.',
             'wizard_limit' => 'You can at most have %1$s of this unit per Wizard.',
             'spy_limit' => 'You can at most have %1$s of this unit per Spy.',
+
+            'minimum_victories' => 'You must have at least %1$s victories to train this unit.',
 
             'amount_limit' => 'You can at most have %1$s of this unit.',
 
@@ -521,7 +528,7 @@ class UnitHelper
 
             'increases_prestige_gains' => '%+g%% prestige gains for every 1%% of units sent.',
 
-            'stuns_units' => 'Stuns some units with up to %1$s DP for %2$s ticks, whereafter the units return unharmed.',
+            'stuns_units' => 'Stuns some units with up to %1$s DP for %2$s ticks.',
 
             'gold_improvements' => 'Increases improvement points from gold by (([Units]/[Land])/100)%%.',
 
@@ -533,7 +540,7 @@ class UnitHelper
             'decree_state_required_to_send' => '%1$s decree must be issued in %2$s state to send this unit.',
 
             // Damage
-            'burns_peasants_on_attack' => 'Burns up to (%s%% x ([Raw OP] / [Total Raw OP]) x [OP:DP Ratio]) peasants on attack, unless overwhelmed.',
+            'burns_peasants_on_attack' => 'Burns peasants on attack, unless overwhelmed; (%s%% x ([Total Raw OP From This Unit] / [Total Raw OP Sent]) x [OP:DP Ratio]).',
             'damages_improvements_on_attack' => 'Damages target\'s improvements by %s improvement points.',
             'eats_peasants_on_attack' => 'Eats %s peasants on invasion.',
             'eats_draftees_on_attack' => 'Eats %s draftees on invasion.',
@@ -641,6 +648,19 @@ class UnitHelper
                     $perkValue[1] = number_format($perkValue[1], 2);
 
                     #$perkValue = []
+                }
+
+                // Special case for stat_pairing_limit
+                if($perk->key === 'stat_pairing_limit')
+                {
+                    $statKey = (string)$perkValue[0];
+                    $perStat = (float)$perkValue[1];
+
+                    $stat = Stat::where('key', $statKey)->firstOrFail();
+
+                    $perkValue = [$stat->name, $perStat];
+
+
                 }
 
 
@@ -1210,6 +1230,7 @@ class UnitHelper
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'total_land_limit') or
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'archmage_limit') or
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'net_victories_limit') or
+            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'stat_pairing_limit') or
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'amount_limit')
           )
           {
@@ -1310,6 +1331,17 @@ class UnitHelper
             $netVictories = $this->statsService->getStat($dominion, 'invasion_victories') - $this->statsService->getStat($dominion, 'defense_failures');
 
             $maxCapacity = floor($perNetVictory * $netVictories);
+        }
+
+        # Unit:stat_pairing_limit limit
+        if($statPairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slotLimited, 'stat_pairing_limit'))
+        {
+            $statKey = (string)$statPairingLimit[0];
+            $perStat = (float)$statPairingLimit[1];
+
+            $statValue = $this->statsService->getStat($dominion, $statKey);
+
+            $maxCapacity = floor($statValue * $perStat);
         }
 
         # Unit limit

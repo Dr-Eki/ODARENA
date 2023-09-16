@@ -4,6 +4,7 @@ barracks:
   name: Barracks
   excluded_races:
     - Afflicted
+    - Ants
     - Beastfolk
     - Kobold
     - Reptilians
@@ -77,6 +78,17 @@ aqueduct:
     food_production_mod: 1,8,40 # Every 1% gives +8% food production, max +40%
     population_growth_capped: 1,8,40 # Every 1%, gives 6%, no max
 
+dwargen_mine:
+  name: Dwargen Mine
+  exclusive_races:
+    - Dwarg
+  land_type: mountain
+  perks:
+    ore_production_raw: 35
+    thunderstone_production_raw_random: 0.25
+    dwarg_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    housing: 0
+
 farm:  
   name: Farm
   excluded_races:
@@ -125,6 +137,8 @@ ore_mine:
   name: Ore Mine
   excluded_races:
     - Afflicted
+    - Ants
+    - Dwarg
     - Reptilians
     - Sylvan
     - Swarm
@@ -160,6 +174,7 @@ watermill:
   name: Watermill
   excluded_races:
     - Afflicted
+    - Ants
     - Demon
     - Elf
     - Reptilians
@@ -181,6 +196,15 @@ school:
     - Wood Elf
   perks:
     improvements: 1,1 # Every 1% gives 0.8% higher imps
+
+## Advancements, Research, Morale, Exchange Rate
+tavern:  
+  name: Tavern
+  exclusive_races:
+    - Dwarg
+    - Kobold
+  perks:
+    base_morale: 1,4,20 # Every 1% gives +8 morale, max +40
 
 ## Anti-Theft
 
@@ -218,6 +242,14 @@ chamber:
     housing: 30
     jobs: 0
 
+colony:
+  name: Colony
+  exclusive_races:
+    - Ants
+  perks:
+    housing: 120
+    jobs: 0
+
 den:  
   name: Den
   exclusive_races:
@@ -241,6 +273,16 @@ pit:
   perks:
     afflicted_unit_housing: 1,200 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
     housing: 0
+
+pylon:
+  name: Pylon
+  exclusive_races:
+    - Spirit
+  land_type: plain
+  perks:
+    housing: 30
+    mana_production_mod: 1,0.5,50
+    jobs: 0
 
 residence:
   name: Residence
@@ -620,18 +662,6 @@ deep_mine:
     mana_production_raw: 1
     housing: 0
 
-dwargen_mine:  
-  enabled: 0
-  name: Dwargen Mine
-  exclusive_races:
-    - Dwarg
-  land_type: mountain
-  perks:
-    ore_production_raw: 60
-    thunderstone_production_raw_random: 0.5
-    dwarg_unit1_housing: 20
-    housing: 0
-
 automated_mine:  
   enabled: 0
   name: Automated Mine
@@ -875,24 +905,6 @@ temple:
   land_type: swamp
   perks:
     #target_defensive_power_mod: 1,-1.8,36 # Every 1% gives -2% DP mods, max -40% DP mods
-
-tavern:  
-  enabled: 0
-  name: Tavern
-  exclusive_races:
-    - Dwarg
-    - Gnome
-    - Goblin
-    - Halfling
-    - Cires
-    - Kerranad
-    - Kobold
-    - Norse
-    - Orc
-    - Vampires
-  land_type: plain
-  perks:
-    base_morale: 1,8,40
 
 stone_wall:  
   enabled: 0
@@ -1563,16 +1575,6 @@ plateau:
     jobs: 0
     housing: 0
 
-colony:  
-  enabled: 0
-  name: Colony
-  exclusive_races:
-    - Ants
-  land_type: forest
-  perks:
-    housing: 180
-    jobs: 0
-
 dwelling:  
   enabled: 0
   name: Dwelling
@@ -1594,17 +1596,6 @@ estate:
   perks:
     housing: 30
     jobs: 10
-
-pylon:  
-  enabled: 0
-  name: Pylon
-  exclusive_races:
-    - Spirit
-  land_type: plain
-  perks:
-    housing: 30
-    mana_production_mod: 1,0.5,50
-    jobs: 0
 
 compound:  
   enabled: 0

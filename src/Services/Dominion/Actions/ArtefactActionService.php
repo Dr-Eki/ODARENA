@@ -334,9 +334,6 @@ class ArtefactActionService
             $this->handleMoraleChanges($dominion, $target, $landRatio, $units);
             $this->handleResearchPoints($dominion, $target, $units);
 
-            # Dwarg
-            #$this->handleStun($dominion, $target, $units, $landRatio);
-
             # Conversions
             $offensiveConversions = array_fill(1, $dominion->race->units->count(), 0);
             $defensiveConversions = array_fill(1, $target->race->units->count(), 0);
