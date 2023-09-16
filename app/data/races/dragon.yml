@@ -96,8 +96,8 @@ units:
       - sentient
       - legendary
     cost:
-      gold: 1000
-      gems: 1000
+      gold: 1800
+      gems: 100
       draftee: 1
     power:
       offense: 8
