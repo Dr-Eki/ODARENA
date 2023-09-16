@@ -98,7 +98,7 @@ units:
     cost:
       gold: 1800
       gems: 100
-      draftee: 1
+      draftees: 1
     power:
       offense: 8
       defense: 6

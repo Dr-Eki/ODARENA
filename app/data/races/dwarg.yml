@@ -38,7 +38,7 @@ units:
     cost:
       gold: 400
       ore: 40
-      draftee: 1
+      draftees: 1
     power:
       offense: 0
       defense: 3
@@ -54,7 +54,7 @@ units:
     cost:
       gold: 800
       ore: 200
-      draftee: 1
+      draftees: 1
     power:
       offense: 0
       defense: 5
@@ -70,7 +70,7 @@ units:
     cost:
       gold: 1200
       ore: 250
-      draftee: 1
+      draftees: 1
     power:
       offense: 6
       defense: 3.5
