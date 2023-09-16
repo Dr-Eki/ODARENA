@@ -183,29 +183,7 @@ class LandCalculator
     {
         return (int)floor($dominion->land * $landLossRatio);
     }
-
-    public function getTerrainLost(Dominion $dominion, int $landLost): array
-    {
-        $terrainLost = [];
-        foreach(Terrain::all() as $terrain)
-        {
-            $ratio = $dominion->{'terrain_' . $terrain->key} / $dominion->land;
-            $terrainLost['terrain_' . $terrain->key] = floor($landLost * $ratio);
-        }
-    
-        $difference = $landLost - array_sum($terrainLost);
-        if ($difference !== 0)
-        {
-            $terrainWithMaxLossKey = array_keys($terrainLost, max($terrainLost))[0];
-            $terrainLost[$terrainWithMaxLossKey] += $difference;
-        }
-    
-        $terrainLost = array_map('intval', $terrainLost);
-    
-        return $terrainLost;
-    }
-    
-
+  
     public function getLandLostByLandType(Dominion $dominion, float $landLossRatio): array
     {
         $targetLand = $this->getTotalLand($dominion);
