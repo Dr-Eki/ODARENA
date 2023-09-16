@@ -797,7 +797,6 @@ class ResearchHelper
                 }
                 else
                 {
-                    #var_dump($perkValue);
                     foreach($perkValue as $key => $value)
                     {
                         $perkValue[$key] = ucwords(str_replace('_', ' ',$value));

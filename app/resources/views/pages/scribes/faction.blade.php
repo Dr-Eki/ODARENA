@@ -781,7 +781,7 @@
                         @foreach ($raceTerrains as $raceTerrain)
                             <tr>
                                 <td>{{ $raceTerrain->terrain->name }}</td>
-                                <td>{{ dump($raceTerrain->perks) }}</td>
+                                <td>{{ ldump($raceTerrain->perks) }}</td>
                             </tr>
                         @endforeach
                     </tbody>

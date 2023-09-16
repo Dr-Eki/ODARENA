@@ -3,7 +3,6 @@
 namespace OpenDominion\Calculators\Dominion;
 
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\Spell;
 use OpenDominion\Models\Unit;
 
 use OpenDominion\Calculators\Dominion\LandCalculator;
@@ -566,22 +565,26 @@ class CasualtiesCalculator
             $units = $units_defending;
         }
 
-        foreach($units as $slot => $amount)
-        {
-            if(in_array($slot, [1,2,3,4,5,6,7,8,9,10]))
-            {
-                if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'reduces_casualties') or $dominion->race->getUnitPerkValueForUnitSlot($slot, ('reduces_casualties_on_' . $mode)))
-                {
-                    $multiplier -= ($amount / array_sum($units)) / 4; # was /2 before r92
-                }
+        $totalUnits = array_sum($units);
 
+        if ($totalUnits == 0)
+        {
+            return $multiplier;
+        }
+        
+        foreach($units as $slot => $amount) {
+            if(in_array($slot, [1,2,3,4,5,6,7,8,9,10])) {
+                if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'reduces_casualties') or $dominion->race->getUnitPerkValueForUnitSlot($slot, ('reduces_casualties_on_' . $mode))) {
+                    $multiplier -= ($amount / $totalUnits) / 4; # was /2 before r92
+                }
+        
                 # PERK: increases_own_casualties, increases_own_casualties_on_offense
-                if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'increases_own_casualties') or $dominion->race->getUnitPerkValueForUnitSlot($slot, ('increases_own_casualties_on_' . $mode)))
-                {
-                    $multiplier += ($amount / array_sum($units)) / 2;
+                if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'increases_own_casualties') or $dominion->race->getUnitPerkValueForUnitSlot($slot, ('increases_own_casualties_on_' . $mode))) {
+                    $multiplier += ($amount / $totalUnits) / 2;
                 }
             }
         }
+        
 
         # Look for reduces enemy casualties
         # On offense, look for perk among defending units

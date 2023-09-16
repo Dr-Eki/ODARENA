@@ -420,7 +420,7 @@
                                     <th colspan="2">Stunned</th>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><small class="text-muted">We stun some of the enemy units and they will not be able to fight for two ticks.</small></td>
+                                    <td colspan="2"><small class="text-muted">We stun some of the enemy units and they will not be able to fight for a while.</small></td>
                                 </tr>
                                     @foreach($event->data['defender']['units_stunned'] as $slot => $amount)
                                         @if($amount > 0)

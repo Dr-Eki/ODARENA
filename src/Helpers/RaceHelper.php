@@ -2,29 +2,26 @@
 
 namespace OpenDominion\Helpers;
 
-use LogicException;
-use OpenDominion\Models\Deity;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\RacePerkType;
 use OpenDominion\Models\Resource;
+use OpenDominion\Models\UnitPerk;
+use OpenDominion\Models\UnitPerkType;
 
 use OpenDominion\Models\Dominion;
 
-use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Services\Dominion\StatsService;
 
 class RaceHelper
 {
 
     protected $chroniclesHelper;
-    protected $landCalculator;
     protected $unitHelper;
     protected $statsService;
 
     public function __construct()
     {
         $this->chroniclesHelper = app(ChroniclesHelper::class);
-        $this->landCalculator = app(LandCalculator::class);
         $this->unitHelper = app(UnitHelper::class);
         $this->statsService = app(StatsService::class);
     }
@@ -1055,4 +1052,35 @@ class RaceHelper
         return array_unique($attributes);
     }
 
+    # Checks if any of the race's units have the given πerk
+    public function checkIfRaceUnitsHavePerks(Race $race, array $perkKeys): bool
+    {
+
+        foreach($perkKeys as $perkKey)
+        {
+            $unitPerkType = UnitPerkType::where('key', $perkKey)->first();    
+
+            if(!$unitPerkType)
+            {
+                return false;
+            }
+
+            $unitPerk = UnitPerk::where('unit_perk_type_id', $unitPerkType->id)->first();
+    
+            if(!$unitPerk)
+            {
+                return false;
+            }
+            
+            foreach($race->units as $unit)
+            {
+                if($unit->perks->contains($unitPerk))
+                {
+                    return true;
+                }
+            }    
+        }
+
+        return false;
+    }
 }

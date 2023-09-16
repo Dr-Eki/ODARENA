@@ -706,6 +706,9 @@ class InvadeActionService
             }
 
             $this->invasion['log']['finished_at'] = time();
+            $this->invasion['log']['execution_duration'] = $this->invasion['log']['finished_at'] - $this->invasion['log']['requested_at'];
+            $this->invasion['log']['request_duration'] = $this->invasion['log']['initiated_at'] - $this->invasion['log']['requested_at'];
+
             ksort($this->invasion);
             ksort($this->invasion['attacker']);
             ksort($this->invasion['defender']);
@@ -724,9 +727,8 @@ class InvadeActionService
             ]);
 
             # Debug before saving:
-            #ldd($this->invasion);
-            #dd('oops');
-
+            #ldd($this->invasion); dd('Safety!');
+            
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
 
@@ -1264,28 +1266,29 @@ class InvadeActionService
 
         $landRatio = $landRatio * 100;
 
-        # Returns an integer.
-        $landConquered = $this->militaryCalculator->getLandConquered($attacker, $target, $landRatio);
-        $discoverLand = $this->militaryCalculator->checkDiscoverLand($attacker, $target, $landConquered);
-        $extraLandDiscovered = $this->militaryCalculator->getExtraLandDiscovered($attacker, $target, $discoverLand, $landConquered);
+        # This is the amount of land conquered by attacker (and lost by target)
+        $landConquered = (int)$this->militaryCalculator->getLandConquered($attacker, $target, $landRatio);
 
-        $this->invasion['defender']['land_lost'] = intval($landConquered);
+        # Check whether the invasion qualifies for land being discovered.
+        $discoverLand = (bool)$this->militaryCalculator->checkDiscoverLand($attacker, $target, $landConquered);
+
+        # Check if the attacker has land discovered perks and, if so, how much land is discovered.
+        $extraLandDiscovered = (int)$this->militaryCalculator->getExtraLandDiscovered($attacker, $target, $discoverLand, $landConquered);
+
+        $this->invasion['defender']['land_lost'] = $landConquered;
         $this->invasion['defender']['terrain_lost'] = $this->terrainCalculator->getTerrainLost($target, $landConquered);
         $this->invasion['defender']['buildings_lost'] = $this->buildingCalculator->getBuildingsLost($target, $landConquered);
 
-        $this->invasion['attacker']['land_conquered'] = intval($this->invasion['defender']['land_lost']);
-        $this->invasion['attacker']['terrain_conquered'] = $this->invasion['defender']['terrain_lost'];
+        $this->invasion['attacker']['land_conquered'] = $landConquered;
+        $this->invasion['attacker']['terrain_conquered']['available'] = array_map('abs', $this->invasion['defender']['terrain_lost']['available']);
+        $this->invasion['attacker']['terrain_conquered']['queued'] = array_map('abs', $this->invasion['defender']['terrain_lost']['queued']);
 
         # Remove land
         $target->land -= $landConquered;
 
         # Remove terrain
-
         ## Start with available terrain
-        foreach($this->invasion['defender']['terrain_lost']['available'] as $terrainKey => $amount)
-        {
-            $this->terrainService->update($target, [$terrainKey => $amount]);
-        }
+        $this->terrainService->update($target, $this->invasion['defender']['terrain_lost']['available']);
 
         ## Then look through queued terrain to remove (dequeue)
         foreach($this->invasion['defender']['terrain_lost']['queued'] as $terrainKey => $amount)
@@ -1297,12 +1300,8 @@ class InvadeActionService
         }
 
         # Remove buildings
-
         ## Start with available buildings
-        foreach($this->invasion['defender']['buildings_lost']['available'] as $buildingKey => $amount)
-        {
-            $this->buildingCalculator->removeBuildings($target, [$buildingKey => $amount]);
-        }
+        $this->buildingCalculator->removeBuildings($target, $this->invasion['defender']['buildings_lost']['available']);
 
         ## Then look through queued buildings to remove (dequeue)
         foreach($this->invasion['defender']['buildings_lost']['queued'] as $buildingKey => $amount)
@@ -1330,36 +1329,41 @@ class InvadeActionService
                     $landDiscovered = 0;
                 }
             }
-            $landDiscovered = intval(floor($landDiscovered));
+            $landDiscovered = (int)floor($landDiscovered);
 
             $this->invasion['attacker']['land_discovered'] = $landDiscovered;
             $this->invasion['attacker']['terrain_discovered'] = $this->terrainCalculator->getTerrainDiscovered($attacker, $landDiscovered);
 
-            $this->invasion['attacker']['extra_land_discovered'] = intval($extraLandDiscovered);
+            $this->invasion['attacker']['extra_land_discovered'] = (int)$extraLandDiscovered;
         }
 
         $this->landLost = $landConquered;
 
-        $mergedArrays = array_merge_recursive($this->invasion['attacker']['terrain_conquered']['available'], $this->invasion['attacker']['terrain_conquered']['queued'], $this->invasion['attacker']['terrain_discovered']);
+        $mergedArrays = [];
 
-        $summedQueueData = [];
-
-        foreach ($mergedArrays as $terrainKey => $terrainValues) {
-            if (is_array($terrainValues)) {
-                $summedQueueData[$terrainKey] = array_sum($terrainValues);
-            } else {
-                $summedQueueData[$terrainKey] = $terrainValues;
+        $allArrays = [
+            $this->invasion['attacker']['terrain_conquered']['available'],
+            $this->invasion['attacker']['terrain_conquered']['queued'],
+            $this->invasion['attacker']['terrain_discovered']
+        ];
+        
+        foreach ($allArrays as $array) {
+            foreach ($array as $key => $value) {
+                if (!isset($mergedTerrainArrays[$key])) {
+                    $mergedTerrainArrays[$key] = 0;
+                }
+                $mergedTerrainArrays[$key] += $value;
             }
         }
-
-        $summedQueueData = array_filter($summedQueueData, function($value) {
+        
+        $mergedTerrainArrays = array_filter($mergedTerrainArrays, function($value) {
             return $value !== 0;
         });
 
-        $this->invasion['attacker']['terrain_gained'] = $summedQueueData;
+        $this->invasion['attacker']['terrain_gained'] = $mergedTerrainArrays;
 
         $queueData = []; 
-        foreach($summedQueueData as $terrainKey => $amount)
+        foreach($mergedTerrainArrays as $terrainKey => $amount)
         {
             $queueData[('terrain_' . $terrainKey)] = abs($amount);
         }
@@ -1907,7 +1911,7 @@ class InvadeActionService
             return;
         }
 
-        ldump($stunningUnits);
+        #ldump($stunningUnits);
 
         foreach($stunningUnits as $stunningUnitSlot => $stunningUnitData)
         {
@@ -1927,7 +1931,7 @@ class InvadeActionService
 
                 $stunRatio = 0.025 * $opDpRatio * $stunningUnitData['unit_op_ratio'];
 
-                ldump('0.025' . '*' . $opDpRatio . '*' . $stunningUnitData['unit_op_ratio'] . '=' . $stunRatio);
+                #ldump('0.025' . '*' . $opDpRatio . '*' . $stunningUnitData['unit_op_ratio'] . '=' . $stunRatio);
 
                 $stunRatio = min($stunRatio, 0.050);
 
@@ -1935,6 +1939,8 @@ class InvadeActionService
                 {
                     $stunnedUnits[$defendingUnitSlot] = floor($defendingUnitAmount * $stunRatio);
                     $stunnedUnits[$defendingUnitSlot] = (int)min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
+
+                    isset($this->invasion['defender']['units_stunned'][$defendingUnitSlot]) ? $this->invasion['defender']['units_stunned'][$defendingUnitSlot] += $stunnedUnits[$defendingUnitSlot] : $this->invasion['defender']['units_stunned'][$defendingUnitSlot] = $stunnedUnits[$defendingUnitSlot];
 
                     $defender->peasants -= $stunnedUnits[$defendingUnitSlot];
 
@@ -1949,6 +1955,8 @@ class InvadeActionService
                 {
                     $stunnedUnits[$defendingUnitSlot] = floor($defendingUnitAmount * $stunRatio);
                     $stunnedUnits[$defendingUnitSlot] = (int)min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
+
+                    isset($this->invasion['defender']['units_stunned'][$defendingUnitSlot]) ? $this->invasion['defender']['units_stunned'][$defendingUnitSlot] += $stunnedUnits[$defendingUnitSlot] : $this->invasion['defender']['units_stunned'][$defendingUnitSlot] = $stunnedUnits[$defendingUnitSlot];
 
                     $defender->military_draftees -= $stunnedUnits[$defendingUnitSlot];
 
@@ -1968,13 +1976,15 @@ class InvadeActionService
 
                     $unitDp = $this->militaryCalculator->getUnitPowerWithPerks($attacker, $defender, $landRatio, $defendingUnit, 'defense');
 
-                    ldump($defendingUnit->name . ' has ' . $unitDp . ' DP and max stun power of the stunning unit ('. $stunningUnit->name .') is ' . $stunningUnitData['max_stun_power']);
+                    #ldump($defendingUnit->name . ' has ' . $unitDp . ' DP and max stun power of the stunning unit ('. $stunningUnit->name .') is ' . $stunningUnitData['max_stun_power']);
 
                     if($unitDp <= $stunningUnitData['max_stun_power'] and !$this->unitHelper->unitSlotHasAttributes($defender->race, $defendingUnitSlot, $unstunnableAttributes) and $defendingUnitAmount > 0)
                     {
                         # Keep these here to properly evaluate for max stun power and stunnability
                         $stunnedUnits[$defendingUnitSlot] = floor($defendingUnitAmount * $stunRatio);
                         $stunnedUnits[$defendingUnitSlot] = (int)min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
+
+                        isset($this->invasion['defender']['units_stunned'][$defendingUnitSlot]) ? $this->invasion['defender']['units_stunned'][$defendingUnitSlot] += $stunnedUnits[$defendingUnitSlot] : $this->invasion['defender']['units_stunned'][$defendingUnitSlot] = $stunnedUnits[$defendingUnitSlot];
 
                         $defender->{'military_unit' . $defendingUnitSlot} -= $stunnedUnits[$defendingUnitSlot];
 
@@ -1988,13 +1998,45 @@ class InvadeActionService
                 }
             }
 
-            ldump($stunnedUnits);
+            #ldump($stunnedUnits);
         }
     }
 
     public function handlePeasantCapture(Dominion $attacker, Dominion $defender, array $units, float $landRatio): void
     {
-        if($attacker->race->name !== 'Demon' or !$this->invasion['result']['success'])
+        if (!$this->raceHelper->checkIfRaceUnitsHavePerks($attacker->race, ['captures_displaced_peasants']) || !$this->invasion['result']['success']) {
+            return;
+        }
+    
+        $rawOp = $this->invasion['attacker']['op_raw'];
+    
+        $landConquered = $this->invasion['attacker']['land_conquered'];
+        $displacedPeasants = intval(($defender->peasants / $this->invasion['defender']['land_size']) * $landConquered);
+    
+        $peasantsCaptured = array_reduce(array_keys($units), function ($carry, $slot) use ($attacker, $defender, $landRatio, $rawOp, $units, $displacedPeasants) {
+            if ($attacker->race->getUnitPerkValueForUnitSlot($slot, 'captures_displaced_peasants')) {
+                $opFromSlot = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, $landRatio, [$slot => $units[$slot]]);
+                return $carry + floor($displacedPeasants * ($opFromSlot / $rawOp));
+            }
+            return $carry;
+        }, 0);
+    
+        if ($peasantsCaptured > 0) {
+            $this->invasion['attacker']['peasants_captured'] = intval(max(0, $peasantsCaptured));
+            $this->queueService->queueResources('invasion', $attacker, ['peasants' => $this->invasion['attacker']['peasants_captured']], 12);
+        }
+    }
+    
+
+    /*
+    public function handlePeasantCapture(Dominion $attacker, Dominion $defender, array $units, float $landRatio): void
+    {
+        if(!$this->raceHelper->checkIfRaceUnitsHavePerks($attacker->race, ['captures_displaced_peasants']))
+        {
+            return;
+        }
+
+        if(!$this->invasion['result']['success'])
         {
             return;
         }
@@ -2052,6 +2094,7 @@ class InvadeActionService
             );
         }
     }
+    */
 
     public function handlePeasantKilling(Dominion $attacker, Dominion $defender, array $units, float $landRatio): void
     {

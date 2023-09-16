@@ -282,7 +282,7 @@ class RoundController extends AbstractController
                                 }
                             }
                 
-                            if(!$this->checkRaceRoundModes($race, $round))
+                            if(!$this->checkRaceRoundModes($race, $round) and )
                             {
                                 throw new GameException($race->name . ' is not available in this round.');
                             }
@@ -740,6 +740,11 @@ class RoundController extends AbstractController
 
     protected function checkRaceRoundModes(Race $race, Round $round): bool
     {
+        if(env('APP_ENV') == 'local' or request()->getHost() == 'sim.odarena.com')
+        {
+            return true;
+        }
+
         return in_array($round->mode, $race->round_modes);
     }
 

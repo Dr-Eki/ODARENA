@@ -41,6 +41,62 @@ class BuildingCalculator
     public function getBuildingsLost(Dominion $dominion, int $landLost): array
     {
         $buildingsLost = [
+            'available' => array_fill_keys(Building::pluck('key')->toArray(), 0),
+            'queued' => array_fill_keys(Building::pluck('key')->toArray(), 0)
+        ];
+    
+        if ($dominion->race->getPerkValue('indestructible_buildings'))
+        {
+            return $buildingsLost;
+        }
+    
+        $totalBuildings = $dominion->buildings->map(function ($building) {
+            return $building->pivot->owned;
+        })->sum();
+    
+        $barrenLand = $dominion->land - $this->getTotalBuildings($dominion);
+        $buildingsToDestroy = max(0, $landLost - $barrenLand);
+    
+        if ($buildingsToDestroy <= 0)
+        {
+            $buildingsLost['queued'] = array_filter($buildingsLost['queued']);
+            $buildingsLost['available'] = array_filter($buildingsLost['available']);
+            return $buildingsLost;
+        }
+    
+        // First, take into account the queued buildings
+        $buildingsLeftToLose = $buildingsToDestroy;
+        foreach ($buildingsLost['queued'] as $buildingKey => &$buildingAmount)
+        {
+            $queuedBuildingAmount = $this->queueService->getConstructionQueueTotalByResource($dominion, 'building_' . $buildingKey);
+            $buildingAmount = min($queuedBuildingAmount, $buildingsLeftToLose);
+            $buildingsLeftToLose -= $buildingAmount;
+        }
+    
+        // Then, take into account the available buildings
+        if ($buildingsLeftToLose > 0 && $totalBuildings > 0)
+        {
+            foreach ($dominion->buildings as $dominionBuilding)
+            {
+                if ($dominionBuilding->pivot->owned > 0)
+                {
+                    $buildingsLost['available'][$dominionBuilding->key] = intval(round($buildingsLeftToLose * ($dominionBuilding->pivot->owned / $totalBuildings)));
+                }
+            }
+        }
+    
+        // Filter out buildings with zero value
+        $buildingsLost['queued'] = array_filter($buildingsLost['queued']);
+        $buildingsLost['available'] = array_filter($buildingsLost['available']);
+    
+        return $buildingsLost;
+    }
+    
+
+    /*
+    public function getBuildingsLost(Dominion $dominion, int $landLost): array
+    {
+        $buildingsLost = [
             'available' => [],
             'queued' => []
         ];
@@ -93,6 +149,7 @@ class BuildingCalculator
    
         return $buildingsLost;
     }
+    */
     
     # BUILDINGS VERSION 2
     public function getTotalBuildings(Dominion $dominion): int
@@ -148,7 +205,6 @@ class BuildingCalculator
             {
                 $building = Building::where('key', $buildingKey)->first();
                 $amountToDestroy = intval($amountToDestroy);
-                $owned = $this->getBuildingAmountOwned($dominion, $building);
 
                 if($this->dominionHasBuilding($dominion, $buildingKey))
                 {

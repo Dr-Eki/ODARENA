@@ -2702,7 +2702,7 @@ class MilitaryCalculator
 
         $landConquered *= 0.75;
 
-        return round(max(10, $landConquered));
+        return floor(max(10, $landConquered));
     }
 
     public function checkDiscoverLand(Dominion $attacker, Dominion $defender): bool
@@ -2750,7 +2750,7 @@ class MilitaryCalculator
             $multiplier += min($attacker->xp, 2250000) / 2250000;
         }
 
-        return round($landConquered * $multiplier);
+        return floor($landConquered * $multiplier);
 
     }
 

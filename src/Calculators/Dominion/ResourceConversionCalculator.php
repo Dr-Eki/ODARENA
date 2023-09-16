@@ -112,9 +112,8 @@ class ResourceConversionCalculator
 
         foreach($converterUnits as $converterUnitSlot => $converterUnitAmount)
         {
-            if(!in_array($converterUnitSlot, ['draftees','peasants','spies','wizards','archmages']))
-            {    
-                #$unit = $this->unitHelper->getRaceUnitFromSlot($converter->race, $converterUnitSlot);
+            if(!in_array($converterUnitSlot, ['draftees','peasants','spies','wizards','archmages']) and $converterUnitAmount > 0)
+            {  
                 $unit = $converter->race->units->where('slot', $converterUnitSlot)->first();
 
                 if(
@@ -227,7 +226,7 @@ class ResourceConversionCalculator
                     $resourcePerValueConversionPerk = $converter->race->getUnitPerkValueForUnitSlot($converterUnitSlot, 'kills_into_resource_per_value');
                     is_array($resourcePerValueConversionPerk) ?: $resourcePerValueConversionPerk = $converter->race->getUnitPerkValueForUnitSlot($converterUnitSlot, 'kills_into_resource_per_value_on_success');
 
-                    ldump($resourcePerValueConversionPerk);
+                    #ldump($resourcePerValueConversionPerk);
 
                     if($resourcePerValueConversionPerk)
                     {
@@ -241,7 +240,7 @@ class ResourceConversionCalculator
                                 if($mode == 'offense')
                                 {
                                     $killedUnitsRawPower = $this->militaryCalculator->getDefensivePowerRaw($enemy, $converter, null, [$enemyUnitKilledSlot => $enemyUnitKilledAmount], 0, false, true, null, true, true);
-                                    ldump($enemyUnitKilledSlot . ':' . $enemyUnitKilledAmount .  ':' . $killedUnitsRawPower);
+                                    #ldump($enemyUnitKilledSlot . ':' . $enemyUnitKilledAmount .  ':' . $killedUnitsRawPower);
                                 }
                                 else
                                 {
@@ -306,7 +305,7 @@ class ResourceConversionCalculator
                         $resourceAmountPerDisplacedPeasant = $resourcePerDisplacedPeasantConversionPerk[0];
                         $resourceKey = $resourcePerDisplacedPeasantConversionPerk[1];
 
-                        $landConquered = array_sum($invasion['attacker']['land_conquered']);
+                        $landConquered = $invasion['attacker']['land_conquered'];
                         $displacedPeasants = intval(($enemy->peasants / $invasion['defender']['land_size']) * $landConquered);
     
                         $resourceConversions[$resourceKey] += $displacedPeasants * $resourceAmountPerDisplacedPeasant * $convertingUnits[$converterUnitSlot]['power_proportion'];
@@ -324,7 +323,7 @@ class ResourceConversionCalculator
                             $resourceAmount = $multiResourcePerDisplacedPeasantConversionPerk[0];
                             $resourceKey = $multiResourcePerDisplacedPeasantConversionPerk[1];
 
-                            $landConquered = array_sum($invasion['attacker']['land_conquered']);
+                            $landConquered = $invasion['attacker']['land_conquered'];
                             $displacedPeasants = intval(($enemy->peasants / $invasion['defender']['land_size']) * $landConquered);
         
                             $resourceConversions[$resourceKey] += $displacedPeasants * $resourceAmount * $convertingUnits[$converterUnitSlot]['power_proportion'];
