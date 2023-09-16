@@ -282,7 +282,7 @@ class RoundController extends AbstractController
                                 }
                             }
                 
-                            if(!$this->checkRaceRoundModes($race, $round) and )
+                            if(!$this->checkRaceRoundModes($race, $round))
                             {
                                 throw new GameException($race->name . ' is not available in this round.');
                             }
