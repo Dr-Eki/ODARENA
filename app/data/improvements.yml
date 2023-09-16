@@ -59,6 +59,7 @@ logging:
 housing:  
   name: Housing
   excluded_races:
+    - Dwarg
     - Beastfolk
     - Sylvan
     - Troll
@@ -148,6 +149,18 @@ tranquillity:
     increases_enemy_casualties: -50,6000
 
 # END BEASTFOLK #
+
+# BEGIN DWARG #
+
+hollowing:
+  name: Hollowing
+  exclusive_races:
+    - Dwarg
+  perks:
+    population: 20,4800
+    thunderstone_production_mod: 20,8000
+
+# END DWARG #
 
 # BEGIN SYLVAN
 
@@ -675,14 +688,6 @@ torment:
   perks:
     miasma_production_mod: 50,6000
 
-hollowing:  
-  enabled: 0
-  name: Hollowing
-  exclusive_races:
-    - Dwarg
-  perks:
-    population: 40,8000
-    thunderstone_production_mod: 20,8000
 
 # BEGIN VOID #
 coils:  
