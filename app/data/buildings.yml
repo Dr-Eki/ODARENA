@@ -17,15 +17,15 @@ barracks:
 
 guard_tower:
   name: Guard Tower
-  exclusive_races:
-    - Dragon
+  excluded_races:
+    - Dragons
   perks:
     defensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
 
 infirmary:
   name: Infirmary
-  exclusive_races:
-    - Dragon
+  excluded_races:
+    - Dragons
   perks:
     casualties_on_defense: 1,-2.5,50 # Every 1% gives -2.5% max -50%
     casualties_on_offense: 1,-2.5,50 # Every 1% gives -2.5%, max -50%
@@ -33,23 +33,23 @@ infirmary:
 
 military_academy:
   name: Military Academy
-  exclusive_races:
-    - Dragon
+  excluded_races:
+    - Dragons
   perks:
     prestige_gains: 1,5,50 # Every 1% gives 10% prestige, max +100%
 
 stone_wall:
   name: Stone Wall
   exclusive_races:
-    - Dragon
+    - Dragons
   perks:
     defensive_power: 1,1.25,50 # Every 1% gives 1.5% DP, max +60% DP
     raw_defense: 12
 
 training_grounds:
   name: Training Grounds
-  exclusive_races:
-    - Dragon
+  excluded_races:
+    - Dragons
   perks:
     offensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
 
@@ -57,7 +57,7 @@ wall:
   name: Wall
   excluded_races:
     - Barbarian
-    - Dragon
+    - Dragons
     - Reptilians
     - Sylvan
     - Swarm
@@ -68,7 +68,7 @@ wall:
 watch_tower:
   name: Watch Tower
   exclusive_races:
-    - Dragon
+    - Dragons
   perks:
     target_defensive_power_mod: 1,-1.5,30 # Every 1% gives -1.5% DP mods, max -30% DP mods
 
@@ -111,7 +111,7 @@ dwargen_mine:
 farm:  
   name: Farm
   excluded_races:
-    - Dragon
+    - Dragons
     - Reptilians
     - Sylvan
     - Swarm
@@ -121,7 +121,7 @@ farm:
 gold_mine:
   name: Gold Mine
   excluded_races:
-    - Dragon
+    - Dragons
     - Sylvan
     - Swarm
     - Yeti
@@ -282,7 +282,7 @@ den:
 farmstead:
   name: Farmstead
   exclusive_races:
-    - Dragon
+    - Dragons
   land_type: mountain
   perks:
     housing: 30
