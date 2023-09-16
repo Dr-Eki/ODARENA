@@ -12,9 +12,13 @@ draftees_alias: militia
 resources:
   - gold
   - food
-  - lumber
+  - ore
   - mana
   - gems
+
+construction_materials:
+  - gold
+  - ore
 
 peasants_production:
   gold: 2.5
