@@ -17,11 +17,15 @@ barracks:
 
 guard_tower:
   name: Guard Tower
+  exclusive_races:
+    - Dragon
   perks:
     defensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
 
 infirmary:
   name: Infirmary
+  exclusive_races:
+    - Dragon
   perks:
     casualties_on_defense: 1,-2.5,50 # Every 1% gives -2.5% max -50%
     casualties_on_offense: 1,-2.5,50 # Every 1% gives -2.5%, max -50%
@@ -29,11 +33,24 @@ infirmary:
 
 military_academy:
   name: Military Academy
+  exclusive_races:
+    - Dragon
   perks:
     prestige_gains: 1,5,50 # Every 1% gives 10% prestige, max +100%
 
+stone_wall:
+  name: Stone Wall
+  exclusive_races:
+    - Dragon
+  land_type: mountain
+  perks:
+    defensive_power: 1,1.25,50 # Every 1% gives 1.5% DP, max +60% DP
+    raw_defense: 16
+
 training_grounds:
   name: Training Grounds
+  exclusive_races:
+    - Dragon
   perks:
     offensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
 
@@ -41,6 +58,7 @@ wall:
   name: Wall
   excluded_races:
     - Barbarian
+    - Dragon
     - Reptilians
     - Sylvan
     - Swarm
@@ -50,6 +68,8 @@ wall:
 
 watch_tower:
   name: Watch Tower
+  exclusive_races:
+    - Dragon
   perks:
     target_defensive_power_mod: 1,-1.5,30 # Every 1% gives -1.5% DP mods, max -30% DP mods
 
@@ -905,16 +925,6 @@ temple:
   land_type: swamp
   perks:
     #target_defensive_power_mod: 1,-1.8,36 # Every 1% gives -2% DP mods, max -40% DP mods
-
-stone_wall:  
-  enabled: 0
-  name: Stone Wall
-  exclusive_races:
-    - Dragon
-  land_type: mountain
-  perks:
-    defensive_power: 1,1.5,60 # Every 1% gives 1.5% DP, max +60% DP
-    raw_defense: 25
 
 smithy:  
   enabled: 0
