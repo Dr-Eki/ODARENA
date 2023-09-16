@@ -3268,16 +3268,19 @@ class InvadeActionService
      */
     protected function checkOverwhelmed(): void
     {
+
+        $attackingForceOP = $this->invasion['attacker']['op'];
+        $targetDP = $this->invasion['defender']['dp'];
+        
         // Never overwhelm on successful invasions
         $this->invasion['result']['overwhelmed'] = false;
 
         if ($this->invasion['result']['success'])
         {
+            $this->invasion['result']['overwhelming_victory'] = ($attackingForceOP / $targetDP) >= (static::OVERWHELMED_PERCENTAGE / 100);
+
             return;
         }
-
-        $attackingForceOP = $this->invasion['attacker']['op'];
-        $targetDP = $this->invasion['defender']['dp'];
 
         $this->invasion['result']['overwhelmed'] = ((1 - $attackingForceOP / $targetDP) >= (static::OVERWHELMED_PERCENTAGE / 100));
     }

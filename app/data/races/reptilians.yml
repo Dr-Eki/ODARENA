@@ -91,7 +91,7 @@ units:
       offense: 100
       defense: 140
     perks:
-      building_limit: monument,1 # building, buildings per unit, imp to increased
+      building_limit: obelisk,1 # building, buildings per unit, imp to increased
       casualties: -90
       attrition_if_capacity_limit_exceeded: 2.5 # Decays at a rate of 2.5% per tick of units exceeding building_limit
 
@@ -105,9 +105,8 @@ units:
       prayer: 30000
     power:
       offense: 0
-      defense: 2200
+      defense: 2000
     perks:
-      no_draftee: 1
       immortal: 1
       offensive_power_mod: 0.10
       cost_increase_to_train_per_unit: 2
