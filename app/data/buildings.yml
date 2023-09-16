@@ -42,7 +42,6 @@ stone_wall:
   name: Stone Wall
   exclusive_races:
     - Dragon
-  land_type: mountain
   perks:
     defensive_power: 1,1.25,50 # Every 1% gives 1.5% DP, max +60% DP
     raw_defense: 12
@@ -112,6 +111,7 @@ dwargen_mine:
 farm:  
   name: Farm
   excluded_races:
+    - Dragon
     - Reptilians
     - Sylvan
     - Swarm
@@ -121,6 +121,7 @@ farm:
 gold_mine:
   name: Gold Mine
   excluded_races:
+    - Dragon
     - Sylvan
     - Swarm
     - Yeti
@@ -277,6 +278,16 @@ den:
   perks:
     housing: 30
     jobs: 0
+
+farmstead:
+  name: Farmstead
+  exclusive_races:
+    - Dragon
+  land_type: mountain
+  perks:
+    housing: 30
+    jobs: 30
+    food_production_raw: 50
 
 hut:
   name: Hut
@@ -826,16 +837,6 @@ water_temple:
 
 # END GLIMJIR
 
-mast:  
-  enabled: 0
-  name: Mast
-  exclusive_races:
-    - Dragon
-    - Icekin
-  land_type: mountain
-  perks:
-    mana_production_raw: 15
-
 dock:  
   enabled: 0
   name: Dock
@@ -904,27 +905,6 @@ gryphon_nest:
     attrition_protection: 2,4,Snow Elf # amount, slot, faction
 
 # END SNOW ELF
-
-temple:  
-  enabled: 0
-  name: Watch Tower
-  excluded_races:
-    - Artillery
-    - Dragon
-    - Growth
-    - Icekin
-    - Glimjir
-    - Monster
-    - Myconid
-    - Nox
-    - Sacred Order
-    - Swarm
-    - Sylvan
-    - Void
-    - Wood Elf
-  land_type: swamp
-  perks:
-    #target_defensive_power_mod: 1,-1.8,36 # Every 1% gives -2% DP mods, max -40% DP mods
 
 smithy:  
   enabled: 0
@@ -1618,17 +1598,6 @@ compound:
     jobs: 0
     reduces_attrition: 0.5,1 # Every 0.5%, reduces 1%
     food_production_raw: 5
-
-farmstead:  
-  enabled: 0
-  name: Farmstead
-  exclusive_races:
-    - Dragon
-  land_type: mountain
-  perks:
-    housing: 30
-    jobs: 30
-    food_production_raw: 80
 
 grove:  
   enabled: 0
