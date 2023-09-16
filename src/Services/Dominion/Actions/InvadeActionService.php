@@ -1921,8 +1921,6 @@ class InvadeActionService
                 $stunRatio = 0.025 * $opDpRatio * $stunningUnitData['unit_op_ratio'];
                 $stunRatio = min($stunRatio, 0.050);
 
-                # Calculate number of stunned units
-
                 if($defendingUnitSlot == 'peasants')
                 {
                     $stunnedUnits[$defendingUnitSlot] = floor($defendingUnitAmount * $stunRatio);

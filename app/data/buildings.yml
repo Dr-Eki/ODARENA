@@ -8,6 +8,7 @@ barracks:
     - Beastfolk
     - Kobold
     - Reptilians
+    - Spirit
     - Sylvan
     - Swarm
   perks:
@@ -26,6 +27,7 @@ infirmary:
   name: Infirmary
   excluded_races:
     - Dragons
+    - Spirit
   perks:
     casualties_on_defense: 1,-2.5,50 # Every 1% gives -2.5% max -50%
     casualties_on_offense: 1,-2.5,50 # Every 1% gives -2.5%, max -50%
@@ -90,6 +92,7 @@ aqueduct:
     - Demon
     - Swarm
     - Sylvan
+    - Spirit
     - Undead
     - Yeti
   land_type: water
@@ -113,6 +116,7 @@ farm:
   excluded_races:
     - Dragons
     - Reptilians
+    - Spirit
     - Sylvan
     - Swarm
   perks:
@@ -122,6 +126,7 @@ gold_mine:
   name: Gold Mine
   excluded_races:
     - Dragons
+    - Spirit
     - Sylvan
     - Swarm
     - Yeti
@@ -163,6 +168,7 @@ ore_mine:
     - Reptilians
     - Sylvan
     - Swarm
+    - Spirit
     - Undead
     - Wood Elf
   perks:
@@ -242,6 +248,8 @@ vault:
 
 granary:
   name: Granary
+  excluded_races:
+    - Spirit
   perks:
     food_theft_protection: 25000
     lumber_theft_protection: 12500
