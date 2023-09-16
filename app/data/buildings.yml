@@ -267,6 +267,7 @@ chamber:
   name: Chamber
   exclusive_races:
     - Dark Elf
+    - Dwarg
   perks:
     housing: 30
     jobs: 0

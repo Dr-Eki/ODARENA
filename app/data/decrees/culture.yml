@@ -1,5 +1,4 @@
 name: Culture
-enabled: 0 # Round 88
 cooldown: 768
 description: Decide what type of culture you want your dominion to have.
 excluded_races:

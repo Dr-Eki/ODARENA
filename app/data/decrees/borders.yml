@@ -2,10 +2,8 @@ name: Borders
 cooldown: 48
 enabled: 0
 description: Choose whether to maintain an open or closed borders policy. With open borders, trade flows more freely and your population can grow. Closing your borders means tighter security but a reduction in trade and growth.
-exclusive_races:
-  - Cires
-  - Kerranad
-  - Nomad
+excluded_races:
+  - Demon
 states:
   - name: Open
     perks:
@@ -14,7 +12,7 @@ states:
 
   - name: Closed
     perks:
-      exchange_rate: -10
       defensive_power: 1.25
+      exchange_rate: -10
       population_growth: -10
       cannot_send_expeditions: 1
