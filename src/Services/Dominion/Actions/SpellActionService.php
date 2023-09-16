@@ -306,7 +306,7 @@ class SpellActionService
                 'message' => sprintf(
                     'Your wizards cast %s successfully, and it will continue to affect your dominion for the next %s ticks.',
                     $spell->name,
-                    $spell->duration
+                    $duration
                 )
             ];
         }

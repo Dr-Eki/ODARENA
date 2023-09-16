@@ -53,7 +53,7 @@ units:
       - ethereal
       - intelligent
     cost:
-      mana: 80
+      mana: 60
       peasant: 1
     power:
       offense: 2
@@ -70,7 +70,7 @@ units:
       - ethereal
       - intelligent
     cost:
-      mana: 100
+      mana: 80
       peasant: 1
     power:
       offense: 4
@@ -88,7 +88,7 @@ units:
       - ethereal
       - intelligent
     cost:
-      mana: 120
+      mana: 100
       soul: 1
     power:
       offense: 0
@@ -106,7 +106,7 @@ units:
       - intelligent
       - wise
     cost:
-      mana: 180
+      mana: 165
       soul: 1
     power:
       offense: 6
