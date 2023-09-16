@@ -262,7 +262,11 @@ class RoundHelper
     {
         $races = Race::all()->where('playable', true);
 
-        if(env('APP_ENV') !== 'local')
+        if(env('APP_ENV') == 'local' or request()->getHost() == 'sim.odarena.com')
+        {
+            return $races;
+        }
+        else
         {
             # For each race, check if round->mode is in race->round_modes, remove if not.
             foreach($races as $key => $race)
