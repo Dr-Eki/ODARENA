@@ -3,6 +3,7 @@ alignment: good
 description:
 home_land_type: plain
 home_terrain: plains
+playable: 1
 skill_level: 2
 round_modes:
   - deathmatch
