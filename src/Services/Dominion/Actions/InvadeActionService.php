@@ -724,7 +724,8 @@ class InvadeActionService
             ]);
 
             # Debug before saving:
-            dd($this->invasion);
+            #ldd($this->invasion);
+            #dd('oops');
 
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
@@ -1858,12 +1859,8 @@ class InvadeActionService
     protected function handleStun(Dominion $attacker, Dominion $defender, array $units, float $landRatio)
     {
 
-        $opDpRatio = $this->invasion['result']['op_dp_ratio_raw'];
-
-        $rawOp = 0;
-        $stunningOp = 0;
+        $opDpRatio = $this->invasion['result']['op_dp_ratio'];
         $stunningUnits = [];
-        $stunnedUnits = [];
 
         $unstunnableAttributes = [
             'ammunition',
@@ -1899,8 +1896,8 @@ class InvadeActionService
                     'unit_op_ratio' => $rawOpRatioFromThisUnit,
                     'unit_raw_op_total' => $rawOpFromThisUnit,
                     'unit_raw_op' => $rawOpFromThisUnit / $amount,
-                    'max_stun_power' => $stunPerk[0],
-                    'stun_duration' => $stunPerk[1],
+                    'max_stun_power' => (float)$stunPerk[0],
+                    'stun_duration' => (int)$stunPerk[1],
                 ];
             }
         }
@@ -1910,21 +1907,34 @@ class InvadeActionService
             return;
         }
 
-
-        dd($stunningUnits);
+        ldump($stunningUnits);
 
         foreach($stunningUnits as $stunningUnitSlot => $stunningUnitData)
         {
 
+            $stunnedUnits = [];
+            
+            $stunningUnit = $attacker->race->units->filter(function ($unit) use ($stunningUnitSlot) {
+                return ($unit->slot == $stunningUnitSlot);
+            })->first();
+
             foreach($this->invasion['defender']['units_surviving'] as $defendingUnitSlot => $defendingUnitAmount)
             {
+                if($defendingUnitAmount <= 0)
+                {
+                    continue;
+                }
+
                 $stunRatio = 0.025 * $opDpRatio * $stunningUnitData['unit_op_ratio'];
+
+                ldump('0.025' . '*' . $opDpRatio . '*' . $stunningUnitData['unit_op_ratio'] . '=' . $stunRatio);
+
                 $stunRatio = min($stunRatio, 0.050);
 
-                if($defendingUnitSlot == 'peasants')
+                if($defendingUnitSlot == 'peasants' and $defendingUnitAmount > 0)
                 {
                     $stunnedUnits[$defendingUnitSlot] = floor($defendingUnitAmount * $stunRatio);
-                    $stunnedUnits[$defendingUnitSlot] = min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
+                    $stunnedUnits[$defendingUnitSlot] = (int)min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
 
                     $defender->peasants -= $stunnedUnits[$defendingUnitSlot];
 
@@ -1935,10 +1945,10 @@ class InvadeActionService
                         $stunningUnitData['stun_duration']
                     );
                 }
-                elseif($defendingUnitSlot == 'draftees')
+                elseif($defendingUnitSlot == 'draftees' and $defendingUnitAmount > 0)
                 {
                     $stunnedUnits[$defendingUnitSlot] = floor($defendingUnitAmount * $stunRatio);
-                    $stunnedUnits[$defendingUnitSlot] = min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
+                    $stunnedUnits[$defendingUnitSlot] = (int)min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
 
                     $defender->military_draftees -= $stunnedUnits[$defendingUnitSlot];
 
@@ -1951,16 +1961,22 @@ class InvadeActionService
                 }
                 else
                 {
+
                     $defendingUnit = $defender->race->units->filter(function ($unit) use ($defendingUnitSlot) {
                         return ($unit->slot == $defendingUnitSlot);
                     })->first();
 
                     $unitDp = $this->militaryCalculator->getUnitPowerWithPerks($attacker, $defender, $landRatio, $defendingUnit, 'defense');
 
+                    ldump($defendingUnit->name . ' has ' . $unitDp . ' DP and max stun power of the stunning unit ('. $stunningUnit->name .') is ' . $stunningUnitData['max_stun_power']);
+
                     if($unitDp <= $stunningUnitData['max_stun_power'] and !$this->unitHelper->unitSlotHasAttributes($defender->race, $defendingUnitSlot, $unstunnableAttributes) and $defendingUnitAmount > 0)
                     {
+                        # Keep these here to properly evaluate for max stun power and stunnability
                         $stunnedUnits[$defendingUnitSlot] = floor($defendingUnitAmount * $stunRatio);
-                        $stunnedUnits[$defendingUnitSlot] = min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
+                        $stunnedUnits[$defendingUnitSlot] = (int)min($stunnedUnits[$defendingUnitSlot], $defendingUnitAmount);
+
+                        $defender->{'military_unit' . $defendingUnitSlot} -= $stunnedUnits[$defendingUnitSlot];
 
                         $this->queueService->queueResources(
                             'stun',
@@ -1971,6 +1987,8 @@ class InvadeActionService
                     }
                 }
             }
+
+            ldump($stunnedUnits);
         }
     }
 

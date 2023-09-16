@@ -1370,6 +1370,7 @@ class UnitHelper
         $currentlyTrained += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
         $currentlyTrained += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
         $currentlyTrained += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
+        $currentlyTrained += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
 
         $totalWithAmountToTrain = $currentlyTrained + $amountToTrain;
 

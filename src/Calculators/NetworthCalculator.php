@@ -21,6 +21,9 @@ class NetworthCalculator
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
 
+    /** @var ResourceCalculator */
+    protected $resourceCalculator;
+
     /**
      * NetworthCalculator constructor.
      *
@@ -79,14 +82,14 @@ class NetworthCalculator
 
         if($dominion->race->name == 'Demon')
         {
-            $networth += $this->resourceCalculator->getAmount($dominion, 'soul') / 9;
+            $networth += $this->resourceCalculator->getAmount($dominion, 'soul') / 8;
         }
 
         $networth += $this->resourceCalculator->getAmount($dominion, 'marshling');
         
         if($dominion->race->name == 'Yeti')
         {
-            $networth += min($this->resourceCalculator->getAmount($dominion, 'ore') / 60, $this->militaryCalculator->getTotalUnitsForSlot($dominion, 4)) * 6;
+            $networth += min($dominion->resource_ore / 30, $this->militaryCalculator->getTotalUnitsForSlot($dominion, 4)) * 6;
         }
 
         return round($networth);
@@ -101,7 +104,7 @@ class NetworthCalculator
      */
      public function getUnitNetworth(Dominion $dominion, Unit $unit): float
      {
-        if ($unit->static_networth !== 0)
+        if ($unit->static_networth)
         {
             return $unit->static_networth;
         }
@@ -112,6 +115,5 @@ class NetworthCalculator
                       $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'defense')
                     );
           }
-
       }
 }

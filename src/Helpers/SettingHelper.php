@@ -86,6 +86,12 @@ class SettingHelper
                 'route' => route('dominion.military'),
                 'iconClass' => 'ra ra-muscle-up text-green',
             ],
+            'stun_completed' => [
+                'label' => 'Stunned units recovered',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.military'),
+                'iconClass' => 'ra ra-aware text-green',
+            ],
             'sabotage_completed' => [
                 'label' => 'Sabotage restored',
                 'defaults' => ['email' => false, 'ingame' => true],
@@ -361,6 +367,15 @@ class SettingHelper
 
                 return sprintf(
                     'Training of %s %s completed',
+                    number_format($units),
+                    str_plural('unit', $units)
+                );
+
+            case 'hourly_dominion.stun_completed':
+                $units = array_sum($data);
+
+                return sprintf(
+                    '%s %s have recovered from being stunned',
                     number_format($units),
                     str_plural('unit', $units)
                 );

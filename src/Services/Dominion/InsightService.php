@@ -43,6 +43,29 @@ use OpenDominion\Services\Dominion\StatsService;
 
 class InsightService
 {
+    protected $buildingHelper;
+    protected $improvementHelper;
+    protected $landHelper;
+    protected $landImprovementHelper;
+    protected $raceHelper;
+    protected $titleHelper;
+    protected $unitHelper;
+
+    protected $buildingCalculator;
+    protected $casualtiesCalculator;
+    protected $decreeCalculator;
+    protected $improvementCalculator;
+    protected $landCalculator;
+    protected $landImprovementCalculator;
+    protected $militaryCalculator;
+    protected $networthCalculator;
+    protected $populationCalculator;
+    protected $resourceCalculator;
+    protected $spellCalculator;
+    
+    protected $statsService;
+    protected $protectionService;
+    protected $queueService;
 
     public function __construct()
     {
@@ -252,6 +275,15 @@ class InsightService
 
         // Units returning from desecration
         $this->queueService->getDesecrationQueue($target)->each(static function ($row) use (&$data)
+        {
+            if (starts_with($row->resource, 'military_')) {
+                $unitType = str_replace('military_', '', $row->resource);
+                $data['units']['returning'][$unitType][$row->hours] += $row->amount;
+            }
+        });
+
+        // Units returning from desecration
+        $this->queueService->getStunQueue($target)->each(static function ($row) use (&$data)
         {
             if (starts_with($row->resource, 'military_')) {
                 $unitType = str_replace('military_', '', $row->resource);
