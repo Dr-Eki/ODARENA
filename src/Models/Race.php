@@ -27,7 +27,7 @@ class Race extends AbstractModel
         'key' => 'text',
         'resources' => 'array',
         'improvement_resources' => 'array',
-        'terrains' => 'array',
+        #'terrains' => 'array',
         #'land_improvements' => 'array',
         'peasants_production' => 'array',
         'home_land_type' => 'text',

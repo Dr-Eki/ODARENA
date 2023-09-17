@@ -151,6 +151,7 @@ class ResourceCalculator
         $production += $dominion->race->getPerkValue($resourceKey . '_production_raw');
         $production += $dominion->getUnitPerkProductionBonusFromTitle($resourceKey);
 
+
         if(isset($dominion->title))
         {
             $production += $dominion->title->getPerkValue($resourceKey . '_production_raw') * $dominion->getTitlePerkMultiplier();;
@@ -727,7 +728,6 @@ class ResourceCalculator
         if($resourceKey == 'gunpowder')
         {
             $maxStorage = $dominion->military_unit2 * $dominion->race->getPerkValue('max_gunpowder_per_cannon');
-
             $maxStorage += $dominion->getBuildingPerkValue('gunpowder_storage_raw');
         }
 

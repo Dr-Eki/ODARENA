@@ -1774,27 +1774,58 @@ class Dominion extends AbstractModel
         );
     }
 
+    /*
     public function getTerrainPerkValue(string $perkKey): float
     {
-        dd($this->getRaceTerrainPerks());
+
+        $totalPerkValue = 0;
+
+        foreach($this->race->raceTerrains as $raceTerrain)
+        {
+            $terrain = $raceTerrain->terrain;
+            if(($terrainPerk = $raceTerrain->perks()->where('key', $perkKey)->first()))
+            {
+                $totalPerkValue += $terrainPerk->pivot->value * $this->{'terrain_' . $terrain->key};
+            }
+        }
+
+        return $totalPerkValue;
     }
 
     public function getTerrainPerkMultiplier(string $perkKey): float
     {
-        $landCalculator = app(LandCalculator::class);
-        $landHelper = app(LandHelper::class);
 
-        $perk = 0;
+        $totalPerkMultiplier = 1;
 
-        foreach(RaceTerrain::where('race_id', $this->race->id)->get() as $raceTerrain)
+        foreach($this->race->raceTerrains as $raceTerrain)
         {
-            dump($raceTerrain->perks());
+            $terrain = $raceTerrain->terrain;
+            if(($terrainPerk = $raceTerrain->perks()->where('key', $perkKey)->first()))
+            {
+                $totalPerkMultiplier += (($terrainPerk->pivot->value * $this->{'terrain_' . $terrain->key}) / $this->land);
+            }
         }
 
-        return $perk;
+        return $totalPerkMultiplier;
     }
+    */
 
-
+    public function getTerrainPerkValue(string $perkKey): float
+    {
+        return $this->race->raceTerrains->sum(function ($raceTerrain) use ($perkKey) {
+            $terrainPerk = $raceTerrain->perks()->where('key', $perkKey)->first();
+            return $terrainPerk ? $terrainPerk->pivot->value * $this->{'terrain_' . $raceTerrain->terrain->key} : 0;
+        });
+    }
+    
+    public function getTerrainPerkMultiplier(string $perkKey): float
+    {
+        return 1 + $this->race->raceTerrains->sum(function ($raceTerrain) use ($perkKey) {
+            $terrainPerk = $raceTerrain->perks()->where('key', $perkKey)->first();
+            return $terrainPerk ? ($terrainPerk->pivot->value * $this->{'terrain_' . $raceTerrain->terrain->key}) / $this->land : 0;
+        });
+    }
+    
     # DECREES
 
     protected function getDecreeStatePerks()

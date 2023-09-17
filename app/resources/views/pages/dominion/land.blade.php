@@ -185,18 +185,6 @@
     </div>
 </div>
 
-@if(env('APP_ENV') == 'local')
-
-    <ul>
-        @foreach($selectedDominion->terrains as $terrain)
-
-            <li>{{ $terrain->name }}: {{ $selectedDominion->{'terrain_' . $terrain->key} }}</li>
-
-        @endforeach
-    </ul>
-
-@endif
-
 @endsection
 
 @push('page-scripts')

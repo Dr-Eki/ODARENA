@@ -20,7 +20,7 @@ use OpenDominion\Helpers\ResourceHelper;
 use OpenDominion\Helpers\TitleHelper;
 use OpenDominion\Helpers\ResearchHelper;
 use OpenDominion\Helpers\LandHelper;
-use OpenDominion\Helpers\LandImprovementHelper;
+use OpenDominion\Helpers\TerrainHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\RoundHelper;
 use OpenDominion\Helpers\SpellHelper;
@@ -106,7 +106,7 @@ class ScribesController extends AbstractController
             'buildings' => $buildings,
             'buildingHelper' => $buildingHelper,
             'landHelper' => app(LandHelper::class),
-            'LandImprovementHelper' => app(LandImprovementHelper::class),
+            'terrainHelper' => app(TerrainHelper::class),
             'improvements' => $improvements,
             'improvementHelper' => $improvementHelper,
             'espionageHelper' => app(EspionageHelper::class),
