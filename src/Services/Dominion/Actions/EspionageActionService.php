@@ -83,7 +83,6 @@ class EspionageActionService
         $this->resourceService = app(ResourceService::class);
         $this->spellCalculator = app(SpellCalculator::class);
         $this->statsService = app(StatsService::class);
-        $this->landImprovementCalculator = app(LandImprovementCalculator::class);
         $this->espionageCalculator = app(EspionageCalculator::class);
     }
 
@@ -493,16 +492,6 @@ class EspionageActionService
                         $this->landCalculator->getTotalBarrenLandByLandType($target, $landType));
 
                     $data['landtype_defense'][$landType] = 0;#$this->militaryCalculator->getDefensivePowerModifierFromLandType($target, $landType);
-                }
-
-                if($target->race->getPerkValue('land_improvements'))
-                {
-                    $data['land_improvements']['plain'] = $this->landImprovementCalculator->getOffensivePowerBonus($target);
-                    $data['land_improvements']['mountain'] = $this->landImprovementCalculator->getGoldProductionBonus($target);
-                    $data['land_improvements']['swamp'] = $this->landImprovementCalculator->getWizardPowerBonus($target);
-                    $data['land_improvements']['forest'] = $this->landImprovementCalculator->getPopulationBonus($target);
-                    $data['land_improvements']['hill'] = $this->landImprovementCalculator->getDefensivePowerBonus($target);
-                    $data['land_improvements']['water'] = $this->landImprovementCalculator->getFoodProductionBonus($target);
                 }
 
 

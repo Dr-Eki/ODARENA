@@ -25,19 +25,19 @@ perks:
   starts_devoted_to_urugdakh: 1
   draftee_dp: 3
 
-land_improvements:
-  plain:
-    yak_production_raw: 0.002
-  mountain:
-    yak_production_raw: 0.006
-  swamp:
-    yak_production_raw: 0.001
-  forest:
-    yak_production_raw: 0.002
-  hill:
-    yak_production_raw: 0.004
-  water:
-    yak_production_raw: 0.001
+#land_improvements:
+#  plain:
+#    yak_production_raw: 0.002
+#  mountain:
+#    yak_production_raw: 0.006
+#  swamp:
+#    yak_production_raw: 0.001
+#  forest:
+#    yak_production_raw: 0.002
+#  hill:
+#    yak_production_raw: 0.004
+#  water:
+#    yak_production_raw: 0.001
 
 
 units:

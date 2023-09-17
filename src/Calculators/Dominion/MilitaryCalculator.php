@@ -55,8 +55,6 @@ class MilitaryCalculator
     /** @var StatsService */
     protected $statsService;
 
-    /** @var LandImprovementCalculator */
-    protected $landImprovementCalculator;
 
     /** @var ImprovementHelper */
     protected $improvementHelper;
@@ -73,7 +71,6 @@ class MilitaryCalculator
         $this->resourceCalculator = app(ResourceCalculator::class);
         $this->spellCalculator = app(SpellCalculator::class);
         $this->statsService = app(StatsService::class);
-        $this->landImprovementCalculator = app(LandImprovementCalculator::class);
         $this->improvementHelper = app(ImprovementHelper::class);
     }
 
@@ -261,9 +258,6 @@ class MilitaryCalculator
 
         // Decree
         $multiplier += $attacker->getDecreePerkMultiplier('offensive_power');
-
-        // Land improvements
-        $multiplier += $attacker->getLandImprovementPerkMultiplier('offensive_power_mod');
 
         // Title
         $multiplier += $attacker->title->getPerkMultiplier('offensive_power') * $attacker->getTitlePerkMultiplier();
@@ -502,9 +496,6 @@ class MilitaryCalculator
 
         // Deity
         $multiplier += $dominion->getDecreePerkMultiplier('defensive_power');
-
-        // Land improvements
-        $multiplier += $dominion->getLandImprovementPerkMultiplier('defensive_power_mod');
 
         // Title
         $multiplier += $dominion->title->getPerkMultiplier('defensive_power') * $dominion->getTitlePerkMultiplier();
@@ -2152,9 +2143,6 @@ class MilitaryCalculator
         // Buildings
         $multiplier += $dominion->getBuildingPerkMultiplier('wizard_strength');
         $multiplier += $dominion->getBuildingPerkMultiplier('wizard_strength_on_' . $type);
-
-        // Land improvements
-        $multiplier += $dominion->getLandImprovementPerkMultiplier('wizard_strength');
 
         // Title
         if(isset($dominion->title))

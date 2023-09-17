@@ -276,11 +276,6 @@ class RaceHelper
                 $valueType = '% per net victory (min 0)';
                 $booleanValue = 'static';
                 break;
-            case 'land_improvements':
-                $negativeBenefit = false;
-                $description = 'Land based improvements';
-                $booleanValue = true;
-                break;
             case 'population_growth':
                 $negativeBenefit = false;
                 $description = 'Population growth rate';
@@ -913,11 +908,6 @@ class RaceHelper
         $archmageCost['resource'] = $cost[1];
 
         return $archmageCost;
-    }
-
-    public function hasLandImprovements(Race $race): bool
-    {
-        return isset($race->land_improvements);
     }
 
     #   *   *   *   *    *    *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   *   #

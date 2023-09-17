@@ -790,7 +790,7 @@
 </div>
 <div class="row">
 
-    <div class="col-sm-12 {{ $raceHelper->hasLandImprovements($dominion->race) ? 'col-md-5' : 'col-md-6' }} ">
+    <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Land')
@@ -824,7 +824,7 @@
         @endcomponent
     </div>
 
-    <div class="col-sm-12 {{ $raceHelper->hasLandImprovements($dominion->race) ? 'col-md-5' : 'col-md-6' }} ">
+    <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Incoming land breakdown')
@@ -873,29 +873,6 @@
             </table>
         @endcomponent
     </div>
-
-    @if($raceHelper->hasLandImprovements($dominion->race))
-        <div class="col-sm-12 col-md-2">
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fas fa-map-marked"></i> Land Perks</h3>
-                </div>
-                <div class="box-body">
-                    @foreach ($landImprovementPerks as $perkKey)
-                        <ul>
-                            @if($landImprovementHelper->getPerkType($perkKey) == 'mod')
-                                <li>{{ $landImprovementHelper->getPerkDescription($perkKey, $dominion->getLandImprovementPerkMultiplier($perkKey) * 100, false) }}</li>
-                            @elseif($landImprovementHelper->getPerkType($perkKey) == 'raw')
-                                <li>{{ $landImprovementHelper->getPerkDescription($perkKey, $dominion->getLandImprovementPerkValue($perkKey), false) }}</li>
-                            @else
-                                <li><pre>Error! Unknown perk type (getPerkType()) for $perkKey {{ $perkKey }}</pre></li>
-                            @endif
-                        </ul>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    @endif
 
 </div>
 <div class="row">

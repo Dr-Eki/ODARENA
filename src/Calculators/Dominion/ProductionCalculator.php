@@ -57,9 +57,6 @@ class ProductionCalculator
         // Deity
         $multiplier += $dominion->getDeityPerkMultiplier('xp_generation_mod');
 
-        // Land improvements
-        $multiplier += $dominion->getLandImprovementPerkMultiplier('xp_generation_mod');
-
         // Artefacts
         $multiplier += $dominion->realm->getArtefactPerkMultiplier('xp_generation_mod');
 

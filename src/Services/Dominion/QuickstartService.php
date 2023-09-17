@@ -45,8 +45,6 @@ class QuickstartService
     /** @var LandHelper */
     protected $landHelper;
 
-    /** @var LandImprovementHelper */
-    protected $landImprovementHelper;
 
     /** @var RaceHelper */
     protected $raceHelper;
@@ -63,8 +61,6 @@ class QuickstartService
     /** @var LandCalculator */
     protected $landCalculator;
 
-    /** @var LandImprovementCalculator */
-    protected $landImprovementCalculator;
 
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
@@ -98,14 +94,12 @@ class QuickstartService
         $this->buildingHelper = app(BuildingHelper::class);
         $this->improvementHelper = app(ImprovementHelper::class);
         $this->landHelper = app(LandHelper::class);
-        $this->landImprovementHelper = app(LandImprovementHelper::class);
         $this->raceHelper = app(RaceHelper::class);
         $this->titleHelper = app(TitleHelper::class);
 
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
-        $this->landImprovementCalculator = app(LandImprovementCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->networthCalculator = app(NetworthCalculator::class);
         $this->populationCalculator = app(PopulationCalculator::class);

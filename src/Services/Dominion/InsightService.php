@@ -46,7 +46,6 @@ class InsightService
     protected $buildingHelper;
     protected $improvementHelper;
     protected $landHelper;
-    protected $landImprovementHelper;
     protected $raceHelper;
     protected $titleHelper;
     protected $unitHelper;
@@ -56,7 +55,6 @@ class InsightService
     protected $decreeCalculator;
     protected $improvementCalculator;
     protected $landCalculator;
-    protected $landImprovementCalculator;
     protected $militaryCalculator;
     protected $networthCalculator;
     protected $populationCalculator;
@@ -72,7 +70,6 @@ class InsightService
         $this->buildingHelper = app(BuildingHelper::class);
         $this->improvementHelper = app(ImprovementHelper::class);
         $this->landHelper = app(LandHelper::class);
-        $this->landImprovementHelper = app(LandImprovementHelper::class);
         $this->raceHelper = app(RaceHelper::class);
         $this->titleHelper = app(TitleHelper::class);
         $this->unitHelper = app(UnitHelper::class);
@@ -82,7 +79,6 @@ class InsightService
         $this->decreeCalculator = app(DecreeCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
-        $this->landImprovementCalculator = app(LandImprovementCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->networthCalculator = app(NetworthCalculator::class);
         $this->populationCalculator = app(PopulationCalculator::class);
@@ -455,34 +451,6 @@ class InsightService
             $data['land']['incoming'][$landType] = array_fill(1, 12, 0);
         }
 
-        if($this->raceHelper->hasLandImprovements($target->race))
-        {
-            $landImprovementPerks = [];
-            $data['land']['land_improvements'] = [];
-
-            foreach($target->race->land_improvements as $landImprovements)
-            {
-                foreach($landImprovements as $perkKey => $value)
-                {
-                    $landImprovementPerks[] = $perkKey;
-                }
-            }
-
-            $landImprovementPerks = array_unique($landImprovementPerks, SORT_REGULAR);
-
-            foreach($landImprovementPerks as $perkKey)
-            {
-                if($this->landImprovementHelper->getPerkType($perkKey) == 'mod')
-                {
-                    $data['land']['land_improvements'][] = $this->landImprovementHelper->getPerkDescription($perkKey, $target->getLandImprovementPerkMultiplier($perkKey) * 100, false);
-                }
-                elseif($this->landImprovementHelper->getPerkType($perkKey) == 'raw')
-                {
-                    $data['land']['land_improvements'][] = $this->landImprovementHelper->getPerkDescription($perkKey, $target->getLandImprovementPerkValue($perkKey), false);
-
-                }
-            }
-        }
 
         $this->queueService->getExplorationQueue($target)->each(static function ($row) use (&$data)
         {

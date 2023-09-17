@@ -31,21 +31,6 @@ class LandController extends AbstractDominionController
     {
         $raceHelper = app(RaceHelper::class);
         $dominion = $this->getSelectedDominion();
-        $landImprovementPerks = [];
-
-        if($raceHelper->hasLandImprovements($dominion->race))
-        {
-            foreach($dominion->race->land_improvements as $landImprovements)
-            {
-                foreach($landImprovements as $perkKey => $value)
-                {
-                    $landImprovementPerks[] = $perkKey;
-                }
-            }
-
-            $landImprovementPerks = array_unique($landImprovementPerks, SORT_REGULAR);
-            sort($landImprovementPerks);
-        }
 
         return view('pages.dominion.land', [
             'dominionCalculator' => app(DominionCalculator::class),
@@ -58,8 +43,7 @@ class LandController extends AbstractDominionController
             'raceHelper' => app(RaceHelper::class),
             'spellCalculator' => app(SpellCalculator::class),
             'productionCalculator' => app(ProductionCalculator::class),
-            'landImprovementCalculator' => app(LandImprovementCalculator::class),
-            'landImprovementPerks' => $landImprovementPerks,
+            'landImprovementCalculator' => app(LandImprovementCalculator::class)
         ]);
     }
 

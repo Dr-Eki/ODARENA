@@ -1763,42 +1763,6 @@ class Dominion extends AbstractModel
         return $bonus;
     }
 
-    # Land improvements 2.0
-
-    public function getLandImprovementPerkValue(string $perkKey): float
-    {
-        $landHelper = app(LandHelper::class);
-
-        $perk = 0;
-
-        foreach($landHelper->getLandTypes($this->race) as $landType)
-        {
-            if(isset($this->race->land_improvements[$landType][$perkKey]))
-            {
-                #echo "<pre>$perkKey from $landType: " . $this->race->land_improvements[$landType][$perkKey] . " </pre>";
-                $perk += $this->race->land_improvements[$landType][$perkKey] * $this->{'land_' . $landType};
-            }
-        }
-        return $perk;
-    }
-
-    public function getLandImprovementPerkMultiplier(string $perkKey): float
-    {
-        $landCalculator = app(LandCalculator::class);
-        $landHelper = app(LandHelper::class);
-
-        $perk = 0;
-
-        foreach($landHelper->getLandTypes($this->race) as $landType)
-        {
-            if(isset($this->race->land_improvements[$landType][$perkKey]))
-            {
-                $perk += $this->race->land_improvements[$landType][$perkKey] * ($this->{'land_' . $landType} / $this->land);
-            }
-        }
-        return $perk;
-    }
-
     # Race Terrain Perks 2.0 - finish this with AI
     public function getRaceTerrainPerks()
     {
@@ -1824,7 +1788,7 @@ class Dominion extends AbstractModel
 
         foreach(RaceTerrain::where('race_id', $this->race->id)->get() as $raceTerrain)
         {
-            dd($raceTerrain->perks());
+            dump($raceTerrain->perks());
         }
 
         return $perk;

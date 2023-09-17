@@ -330,11 +330,9 @@ class UnitHelper
             'casualties_from_recent_invasions_sent' => '%+g%% casualties per invasion sent in the last 12 ticks.',
 
             'immortal' => 'Immortal in combat.',
-            'true_immortal' => 'Immortal in combat.',
-            'spirit_immortal' => 'Immortal on offense and on succesful defense. Dies if successfully invaded.',
             'immortal_on_victory' => 'Immortal on invasion if victorious.',
             'immortal_on_fending_off' => 'Immortal if successfully fending off invader.',
-            'immortal_on_overwhelming_victory' => 'Immortal on overwhelming victory (OP/DP ratio >= 1.10).',
+            'immortal_on_overwhelming_victory' => 'Immortal on overwhelming victory (OP/DP ratio >= %s).',
 
             'kills_immortal' => 'Kills immortal units.',
 
@@ -548,9 +546,6 @@ class UnitHelper
 
             // Demonic
             'kill_peasants' => 'Eats %s peasants per tick.',
-
-            // Myconid
-            'decreases_info_ops_accuracy' => 'Decreases accuracy of Clear Sights performed on the dominion by 0.50%% for every 1%% of total military made up of this unit.',
         ];
 
         // Get unit - same logic as military page

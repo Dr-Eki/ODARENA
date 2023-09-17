@@ -214,22 +214,6 @@ class ChroniclesController extends AbstractController
             return $response;
         }
 
-        $landImprovementPerks = [];
-
-        if($raceHelper->hasLandImprovements($dominion->race))
-        {
-            foreach($dominion->race->land_improvements as $landImprovements)
-            {
-                foreach($landImprovements as $perkKey => $value)
-                {
-                    $landImprovementPerks[] = $perkKey;
-                }
-            }
-
-            $landImprovementPerks = array_unique($landImprovementPerks, SORT_REGULAR);
-            sort($landImprovementPerks);
-        }
-
         $advancements = [];
         $techs = $dominion->techs->sortBy('key');
         $techs = $techs->sortBy(function ($tech, $key)
@@ -253,7 +237,6 @@ class ChroniclesController extends AbstractController
             'dominion' => $dominion,
 
             'advancements' => $advancements,
-            'landImprovementPerks' => $landImprovementPerks,
 
             'buildingCalculator' => app(BuildingCalculator::class),
             'improvementCalculator' => app(ImprovementCalculator::class),

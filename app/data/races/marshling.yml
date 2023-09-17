@@ -25,14 +25,14 @@ improvement_resources:
 
 spies_cost: 600,gold
 
-land_improvements:
-  swamp:
-    mud_production_raw: 0.5
-    swamp_gas_production_raw: 1
-  forest:
-    swamp_gas_production_mod: 0.5
-  water:
-    mud_production_mod: 0.5
+# land_improvements:
+#   swamp:
+#     mud_production_raw: 0.5
+#     swamp_gas_production_raw: 1
+#   forest:
+#     swamp_gas_production_mod: 0.5
+#   water:
+#     mud_production_mod: 0.5
 
 peasants_alias: apprentice
 

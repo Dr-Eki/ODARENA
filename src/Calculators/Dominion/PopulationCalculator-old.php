@@ -206,9 +206,6 @@ class PopulationCalculator
         // Buildings
         $multiplier += $dominion->getBuildingPerkMultiplier('population');
 
-        // Land improvements
-        $multiplier += $dominion->getLandImprovementPerkMultiplier('max_population');
-
         // Deity
         $multiplier += $dominion->getDeityPerkMultiplier('max_population');
 

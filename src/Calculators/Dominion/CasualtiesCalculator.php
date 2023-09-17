@@ -250,7 +250,11 @@ class CasualtiesCalculator
                 }
 
                 # PERK: immortal_on_overwhelming_victory
-                if ($dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_on_overwhelming_victory') and $invasionData['result']['op_dp_ratio'] >= 1.10)
+                if (
+                        $dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_on_overwhelming_victory') and
+                        $invasionData['result']['success'] and
+                        $invasionData['result']['op_dp_ratio'] >= $dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_on_overwhelming_victory')
+                    )
                 {
                     return True;
                 }

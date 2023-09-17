@@ -151,21 +151,6 @@ class InsightController extends AbstractDominionController
     public function getDominion(Dominion $dominion)
     {
         $raceHelper = app(RaceHelper::class);
-        $landImprovementPerks = [];
-
-        if($raceHelper->hasLandImprovements($dominion->race))
-        {
-            foreach($dominion->race->land_improvements as $landImprovements)
-            {
-                foreach($landImprovements as $perkKey => $value)
-                {
-                    $landImprovementPerks[] = $perkKey;
-                }
-            }
-
-            $landImprovementPerks = array_unique($landImprovementPerks, SORT_REGULAR);
-            sort($landImprovementPerks);
-        }
 
         $dominionAdvancements = $dominion->advancements()->get()->sortBy('name');
         $dominionTechs = $dominion->techs()->get()->sortBy('name');
@@ -174,7 +159,6 @@ class InsightController extends AbstractDominionController
             'dominion' => $dominion,
             'dominionAdvancements' => $dominionAdvancements,
             'dominionTechs' => $dominionTechs,
-            'landImprovementPerks' => $landImprovementPerks,
             'dominionDecreeStates' => DominionDecreeState::where('dominion_id', $dominion->id)->get(),
 
             'advancementHelper' => app(AdvancementHelper::class),

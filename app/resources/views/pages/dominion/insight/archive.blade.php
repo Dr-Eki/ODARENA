@@ -663,7 +663,7 @@
 </div>
 <div class="row">
 
-    <div class="col-sm-12 {{ $raceHelper->hasLandImprovements($dominion->race) ? 'col-md-5' : 'col-md-6' }} ">
+    <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Land')
@@ -695,7 +695,7 @@
         @endcomponent
     </div>
 
-    <div class="col-sm-12 {{ $raceHelper->hasLandImprovements($dominion->race) ? 'col-md-5' : 'col-md-6' }} ">
+    <div class="col-sm-12col-md-6">
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Incoming land breakdown')
@@ -742,23 +742,6 @@
             </table>
         @endcomponent
     </div>
-
-    @if($raceHelper->hasLandImprovements($dominion->race))
-        <div class="col-sm-12 col-md-2">
-            <div class="box box-success">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fas fa-map-marked"></i> Land Perks</h3>
-                </div>
-                <div class="box-body">
-                    @foreach ($data['land']['land_improvements'] as $landImprovement)
-                        <ul>
-                              <li>{{ $landImprovement }}</li>
-                        </ul>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    @endif
 
 
 </div>

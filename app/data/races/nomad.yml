@@ -19,31 +19,31 @@ resources:
   - gems
   - horse
 
-land_improvements:
-  plain:
-    offensive_power_mod: 0.10
-    horse_production_raw: 0.16
-    food_production_raw: 10
-    gold_production_raw: 20
-  forest:
-    lumber_production_raw: 50
-    food_production_raw: 20
-  mountain:
-    ore_production_raw: 30
-    gems_production_raw: 10
-    gold_production_raw: 4
-  hill:
-    defensive_power_mod: 0.10
-    horse_production_raw: 0.08
-    ore_production_raw: 10
-    gold_production_raw: 4
-  swamp:
-    mana_production_raw: 7
-    gold_production_raw: 4
-  water:
-    xp_generation_mod: 2
-    food_production_mod: 1
-    gold_production_raw: 4
+# land_improvements:
+#   plain:
+#     offensive_power_mod: 0.10
+#     horse_production_raw: 0.16
+#     food_production_raw: 10
+#     gold_production_raw: 20
+#   forest:
+#     lumber_production_raw: 50
+#     food_production_raw: 20
+#   mountain:
+#     ore_production_raw: 30
+#     gems_production_raw: 10
+#     gold_production_raw: 4
+#   hill:
+#     defensive_power_mod: 0.10
+#     horse_production_raw: 0.08
+#     ore_production_raw: 10
+#     gold_production_raw: 4
+#   swamp:
+#     mana_production_raw: 7
+#     gold_production_raw: 4
+#   water:
+#     xp_generation_mod: 2
+#     food_production_mod: 1
+#     gold_production_raw: 4
 
 perks:
   food_consumption_mod: -25

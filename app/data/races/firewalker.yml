@@ -29,13 +29,13 @@ improvement_resources:
   gems: 18
   obsidian: 4
 
-land_improvements:
-  mountain:
-    magma_production_raw: 1
-  hill:
-    magma_production_raw: 0.1
-  plain:
-    magma_production_raw: 0.01
+# land_improvements:
+#   mountain:
+#     magma_production_raw: 1
+#   hill:
+#     magma_production_raw: 0.1
+#   plain:
+#     magma_production_raw: 0.01
 
 perks:
   damage_from_fireball: -100

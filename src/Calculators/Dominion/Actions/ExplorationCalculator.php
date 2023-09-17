@@ -22,6 +22,9 @@ class ExplorationCalculator
     /** @var SpellCalculator */
     protected $spellCalculator;
 
+    /** @var ResourceCalculator */
+    
+
     /**
      * ExplorationCalculator constructor.
      *
@@ -31,7 +34,6 @@ class ExplorationCalculator
     {
           $this->landCalculator = app(LandCalculator::class);
           $this->spellCalculator = app(SpellCalculator::class);
-          $this->landImprovementCalculator = app(LandImprovementCalculator::class);
           $this->improvementCalculator = app(ImprovementCalculator::class);
           $this->resourceCalculator = app(ResourceCalculator::class);
     }

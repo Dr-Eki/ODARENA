@@ -30,10 +30,7 @@ class ResourceCalculator
 {
 
     protected $buildingCalculator;
-    protected $landHelper;
-    protected $unitHelper;
     protected $landCalculator;
-    protected $landImprovementsCalculator;
     protected $prestigeCalculator;
     protected $spellCalculator;
     protected $queueService;
@@ -41,12 +38,8 @@ class ResourceCalculator
 
     public function __construct(
 
-          LandHelper $landHelper,
-          UnitHelper $unitHelper,
-
           BuildingCalculator $buildingCalculator,
           LandCalculator $landCalculator,
-          LandImprovementCalculator $landImprovementCalculator,
           PrestigeCalculator $prestigeCalculator,
           SpellCalculator $spellCalculator,
 
@@ -59,7 +52,6 @@ class ResourceCalculator
 
         $this->buildingCalculator = $buildingCalculator;
         $this->landCalculator = $landCalculator;
-        $this->landImprovementCalculator = $landImprovementCalculator;
         $this->prestigeCalculator = $prestigeCalculator;
         $this->spellCalculator = $spellCalculator;
 
@@ -156,7 +148,6 @@ class ResourceCalculator
         $production += $dominion->getImprovementPerkValue($resourceKey . '_production_raw');
         $production += $dominion->getAdvancementPerkValue($resourceKey . '_production_raw');
         $production += $dominion->getUnitPerkProductionBonus($resourceKey . '_production_raw');
-        $production += $dominion->getLandImprovementPerkValue($resourceKey . '_production_raw');
         $production += $dominion->race->getPerkValue($resourceKey . '_production_raw');
         $production += $dominion->getUnitPerkProductionBonusFromTitle($resourceKey);
 
@@ -419,9 +410,6 @@ class ResourceCalculator
         }
 
         $multiplier += $dominion->race->getPerkMultiplier($resourceKey . '_production_mod');
-
-        # Production from Land Improvements
-        $multiplier += $dominion->getLandImprovementPerkMultiplier($resourceKey . '_production_mod');
 
         # Add prestige
         if($resourceKey == 'food')
