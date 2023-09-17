@@ -88,6 +88,7 @@ units:
       burns_peasants_on_attack: 50
       food_consumption_raw: 10
       casualties: -60
+      #immortal_on_overwhelming_victory: 1
 
   - name: Dragon Knight
     training_time: 12
@@ -107,3 +108,4 @@ units:
       minimum_victories: 20
       casualties: -30
       burns_peasants_on_attack: 10
+      #immortal_on_overwhelming_victory: 1
