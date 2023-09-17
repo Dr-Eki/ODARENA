@@ -185,6 +185,88 @@
     </div>
 </div>
 
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-map fa-fw"></i> Terrain Perks</h3>
+            </div>           
+            <div class="box-body table-responsive no-padding">
+                <table class="table">
+                    <colgroup>
+                        <col width="100">
+                        <col width="100">
+                        <col>
+                        <col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Terrain</th>
+                            <th>Current</th>
+                            <th>Current Total</th>
+                            <th>Base Perks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($selectedDominion->race->raceTerrains as $raceTerrain)
+                            <tr>
+                                <td>{{ $raceTerrain->terrain->name }}</td>
+                                <td class="text-center">
+                                    {{ number_format($selectedDominion->{'terrain_' . $raceTerrain->terrain->key}) }}
+                                    <small class="text-muted">({{ number_format(($selectedDominion->{'terrain_' . $raceTerrain->terrain->key} / $selectedDominion->land)*100,2) }}%)</small>
+                                </td>
+                                <td>
+                                    @if($raceTerrain->perks->count())
+                                        @foreach($raceTerrain->perks as $perk)
+                                            @php
+                                                $perkValue = $selectedDominion->getTerrainPerkValue($perk->key);
+                                                if($terrainHelper->getPerkType($perk->key) == 'mod')
+                                                {
+                                                    $perkValue /= 100;
+                                                }
+
+
+                                            @endphp
+                                            {!! $terrainHelper->getPerkDescription($perk->key, $perkValue, false) !!}
+                                            <br>
+                                        @endforeach
+                                    @else
+                                        <em class="text-muted">None</em>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($raceTerrain->perks->count())
+                                        @foreach($raceTerrain->perks as $perk)
+                                            {!! $terrainHelper->getPerkDescription($perk->key, $perk->pivot->value, true) !!}
+                                            <br>
+                                        @endforeach
+                                    @else
+                                        <em class="text-muted">None</em>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-3">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Information</h3>
+            </div>
+            <div class="box-body">
+                <p>If you have the same perk from multiple terrains, the sum of the perks will be used and will be shown here.</p>
+                <p>Terrain being rezoned does not provide any perks.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @endsection
 
 @push('page-scripts')

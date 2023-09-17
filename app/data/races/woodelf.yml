@@ -21,11 +21,11 @@ peasants_production:
 improvement_resources:
   lumber: 1.2
 
-terrain_perks:
-  forest:
-    lumber_production_raw: 2 # 8 lumber/tick per land of jungle
-  jungle:
-    lumber_production_raw: 1 # 6 lumber/tick per land of jungle
+# terrain_perks:
+#   forest:
+#     lumber_production_raw: 2 # 8 lumber/tick per land of jungle
+#   jungle:
+#     lumber_production_raw: 1 # 6 lumber/tick per land of jungle
 
 perks:
   wizard_strength: 20

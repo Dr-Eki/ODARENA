@@ -21,13 +21,13 @@ peasants_production:
 improvement_resources:
   blood: 6
 
-terrain_perks:
-  jungle:
-    population_mod: 0.10 # +0.10% population per 1% jungle
-  forest:
-    defensive_power_mod: 1 # +1% DP per 1% forest
-  volcanic:
-    defensive_power_mod: -0.50 # -0.50% DP per 1% volcanic
+# terrain_perks:
+#   jungle:
+#     population_mod: 0.10 # +0.10% population per 1% jungle
+#   forest:
+#     defensive_power_mod: 1 # +1% DP per 1% forest
+#   volcanic:
+#     defensive_power_mod: -0.50 # -0.50% DP per 1% volcanic
 
 perks:
   # None

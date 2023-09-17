@@ -775,13 +775,19 @@
                             <th>Perks</th>
                         </tr>
                     <tbody>
-                        @php
-                            $raceTerrains = OpenDominion\Models\RaceTerrain::all()->where('race_id', $race->id);
-                        @endphp
-                        @foreach ($raceTerrains as $raceTerrain)
+                        @foreach ($race->raceTerrains as $raceTerrain)
                             <tr>
                                 <td>{{ $raceTerrain->terrain->name }}</td>
-                                <td>{{ ldump($raceTerrain->perks) }}</td>
+                                <td>
+                                    @if($raceTerrain->perks->count())
+                                        @foreach($raceTerrain->perks as $perk)
+                                            {!! $terrainHelper->getPerkDescription($perk->key, $perk->pivot->value, true) !!}
+                                            <br>
+                                        @endforeach
+                                    @else
+                                        <em class="text-muted">None</em>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
