@@ -334,6 +334,7 @@ class UnitHelper
             'spirit_immortal' => 'Immortal on offense and on succesful defense. Dies if successfully invaded.',
             'immortal_on_victory' => 'Immortal on invasion if victorious.',
             'immortal_on_fending_off' => 'Immortal if successfully fending off invader.',
+            'immortal_on_overwhelming_victory' => 'Immortal on overwhelming victory (OP/DP ratio >= 1.10).',
 
             'kills_immortal' => 'Kills immortal units.',
 
