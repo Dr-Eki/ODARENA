@@ -474,28 +474,18 @@ class BuildingHelper
     *   Returns buildings available for the race.
     *   If $landType is present, only return buildings for the race for that land type.
     */
-    public function getBuildingsByRace(Race $race, string $landType = null): Collection
+    public function getBuildingsByRace(Race $race): Collection
     {
-        $buildings = collect(Building::all()->keyBy('key')->sortBy('land_type')->sortBy('name')->where('enabled',1));
-
-        if($landType)
-        {
-            $buildings = $buildings->where('land_type', $landType);
-        }
-
-        foreach($buildings as $building)
-        {
-          if(
-                (count($building->excluded_races) > 0 and in_array($race->name, $building->excluded_races)) or
-                (count($building->exclusive_races) > 0 and !in_array($race->name, $building->exclusive_races))
-            )
-          {
-              $buildings->forget($building->key);
-          }
-        }
-
-        return $buildings;
+        return Building::where('enabled', 1)
+            ->get()
+            ->reject(function ($building) use ($race) {
+                return (count($building->excluded_races) > 0 && in_array($race->name, $building->excluded_races))
+                    || (count($building->exclusive_races) > 0 && !in_array($race->name, $building->exclusive_races));
+            })
+            ->keyBy('key')
+            ->sortBy('name');
     }
+    
 
     public function getExclusivityString(Building $building): string
     {

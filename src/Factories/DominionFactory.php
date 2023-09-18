@@ -6,7 +6,6 @@ use Auth;
 use DB;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Models\Advancement;
-use OpenDominion\Models\Building;
 use OpenDominion\Models\Decree;
 use OpenDominion\Models\DecreeState;
 use OpenDominion\Models\Deity;
@@ -28,6 +27,7 @@ use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Title;
 use OpenDominion\Models\User;
 
+use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
@@ -43,6 +43,7 @@ use OpenDominion\Services\Dominion\TerrainService;
 class DominionFactory
 {
 
+    protected $buildingHelper;
     protected $landHelper;
     protected $raceHelper;
     protected $buildingCalculator;
@@ -495,16 +496,12 @@ class DominionFactory
         }
         elseif($race->name == 'Barbarian')
         {
-            $startingBuildings['farm'] = floor($landBase*0.10);
-            $startingBuildings['smithy'] = floor($landBase*0.10);
-            $startingBuildings['lumberyard'] = floor($landBase*0.06);
-            $startingBuildings['constabulary'] = floor($landBase*0.06);
-            $startingBuildings['ore_mine'] = floor($landBase*0.10);
-            $startingBuildings['gem_mine'] = floor($landBase*0.10);
-            $startingBuildings['barracks'] = floor($landBase*0.20);
-            $startingBuildings['tower'] = floor($landBase*0.06);
-            $startingBuildings['temple'] = floor($landBase*0.06);
-            $startingBuildings['dock'] = floor($landBase*0.10);
+            $availableBuildings = $this->buildingHelper->getBuildingsByRace($race);
+
+            foreach($availableBuildings as $building)
+            {
+                $startingBuildings[$building->key] = round($landBase / count($availableBuildings));
+            }
         }
 
         return $startingBuildings;

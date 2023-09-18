@@ -245,16 +245,14 @@ class BuildingCalculator
         foreach ($dominion->buildings as $dominionBuilding)
         {
             $building = Building::where('key', $dominionBuilding->key)->first();
-
+    
             if ($building && !$buildings->contains('id', $building->id)) {
                 $buildings->push($building);
             }
         }
     
-        return $buildings;
+        return $buildings->sortBy('name');
     }
-    
-    
 
     /*
     *   Returns an integer ($owned) of how many of this building the dominion has.
