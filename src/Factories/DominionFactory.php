@@ -33,7 +33,7 @@ use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\BarbarianCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
-use OpenDominion\Calculators\Dominion\SpellCalculator;
+#use OpenDominion\Calculators\Dominion\SpellCalculator;
 
 use OpenDominion\Services\Dominion\DeityService;
 use OpenDominion\Services\Dominion\QueueService;
@@ -49,7 +49,7 @@ class DominionFactory
     protected $buildingCalculator;
     protected $barbarianCalculator;
     protected $improvementCalculator;
-    protected $spellCalculator;
+    #protected $spellCalculator;
 
     protected $deityService;
     protected $resourceService;
@@ -58,13 +58,14 @@ class DominionFactory
 
     public function __construct()
     {
+        $this->buildingHelper = app(BuildingHelper::class);
         $this->landHelper = app(LandHelper::class);
         $this->raceHelper = app(RaceHelper::class);
 
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->barbarianCalculator = app(BarbarianCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
-        $this->spellCalculator = app(SpellCalculator::class);
+        #$this->spellCalculator = app(SpellCalculator::class);
 
         $this->deityService = app(DeityService::class);
         $this->resourceService = app(ResourceService::class);
