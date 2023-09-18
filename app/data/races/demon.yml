@@ -7,7 +7,6 @@ home_terrain: badlands
 playable: 1
 skill_level: 3
 magic_level: 4
-experimental: 1
 
 peasants_alias: sinner
 draftees_alias: minion

@@ -6,6 +6,7 @@ home_terrain: mountains
 playable: 1
 skill_level: 2
 magic_level: 2
+experimental: 1
 
 resources:
   - gold

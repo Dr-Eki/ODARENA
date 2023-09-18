@@ -6,6 +6,7 @@ home_terrain: mountains
 playable: 1
 skill_level: 3
 magic_level: 1
+experimental: 1
 
 draftees_alias: militia
 

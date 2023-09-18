@@ -6,7 +6,6 @@ home_terrain: hills
 skill_level: 1
 playable: 1
 magic_level: 1
-experimental: 1
 
 resources:
   - gold
