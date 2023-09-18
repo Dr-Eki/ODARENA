@@ -162,6 +162,12 @@ class BuildingCalculator
     public function dominionHasBuilding(Dominion $dominion, string $buildingKey): bool
     {
         $building = Building::where('key', $buildingKey)->first();
+
+        if(!$building)
+        {
+            return false;
+        }
+
         return DominionBuilding::where('building_id',$building->id)->where('dominion_id',$dominion->id)->first() ? true : false;
     }
 
