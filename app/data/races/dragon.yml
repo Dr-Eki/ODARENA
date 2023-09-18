@@ -38,7 +38,7 @@ units:
     cost:
       gold: 120
       ore: 10
-      peasants: 1
+      peasant: 1
     power:
       offense: 0
       defense: 1.5
@@ -53,7 +53,7 @@ units:
     cost:
       gold: 240
       ore: 20
-      peasants: 1
+      peasant: 1
     power:
       offense: 0
       defense: 2
