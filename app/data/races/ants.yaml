@@ -38,7 +38,7 @@ units:
     cost:
       peasant: 1
     power:
-      offense: 1
+      offense: 0.5
       defense: 0
 
   - name: Worker Ant
