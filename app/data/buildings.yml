@@ -137,6 +137,7 @@ gem_mine:
   name: Gem Mine
   excluded_races:
     - Afflicted
+    - Ants
     - Beastfolk
     - Demon
     - Reptilians
