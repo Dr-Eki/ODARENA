@@ -36,7 +36,7 @@ units:
       - living
       - sentient
     cost:
-      peasant: 1
+      draftees: 1
     power:
       offense: 0.5
       defense: 0
