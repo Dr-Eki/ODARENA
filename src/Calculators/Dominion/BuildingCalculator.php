@@ -80,7 +80,7 @@ class BuildingCalculator
             {
                 if ($dominionBuilding->pivot->owned > 0)
                 {
-                    $buildingsLost['available'][$dominionBuilding->key] = intval(round($buildingsLeftToLose * ($dominionBuilding->pivot->owned / $totalBuildings)));
+                    $buildingsLost['available'][$dominionBuilding->key] = (int)round($buildingsLeftToLose * ($dominionBuilding->pivot->owned / $totalBuildings));
                 }
             }
         }
@@ -178,7 +178,7 @@ class BuildingCalculator
             if($amount > 0)
             {
                 $building = Building::where('key', $buildingKey)->first();
-                $amount = intval(max(0, $amount));
+                $amount = (int)max(0, $amount);
 
                 if($this->dominionHasBuilding($dominion, $buildingKey))
                 {

@@ -17,6 +17,17 @@ use OpenDominion\Calculators\Dominion\SpellCalculator;
 class ConversionCalculator
 {
 
+
+    protected $casualtiesCalculator;
+    protected $landCalculator;
+    protected $militaryCalculator;
+    protected $populationCalculator;
+    protected $rangeCalculator;
+    protected $spellCalculator;
+
+    protected $conversionHelper;
+    protected $unitHelper;
+
     /*
     *   1/Fraction
     *   The amount of remaining casualties are available for conversion

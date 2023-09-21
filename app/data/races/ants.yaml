@@ -38,7 +38,7 @@ units:
     cost:
       draftees: 1
     power:
-      offense: 0.5
+      offense: 0.75
       defense: 0
 
   - name: Worker Ant
