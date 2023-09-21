@@ -9,7 +9,6 @@ use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\UnitHelper;
 
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\Terrain;
 
 use OpenDominion\Calculators\Dominion\LandCalculator;
 
@@ -95,6 +94,97 @@ class ExpeditionCalculator
         }
 
         return $landDiscovered;
+    }
+
+    public function getResourcesFound(Dominion $dominion, array $units): array
+    {
+        $resourcesFound = [];
+
+        $resourceFindingPerks = [
+            'finds_resource_on_expedition',
+            'finds_resources_on_expedition',
+            'finds_resource_on_expedition_random',
+            'finds_resources_on_expedition_random',
+        ];
+
+        foreach($units as $slot => $amount)
+        {
+            $unit = $dominion->race->units->filter(function ($unit) use ($slot) {
+                return ($unit->slot === $slot);
+            })->first();
+
+            if(!$this->unitHelper->checkUnitHasPerks($dominion, $unit, $resourceFindingPerks))
+            {
+                continue;
+            }
+
+            if(($findsResourceOnExpeditionPerk = $unit->getPerkValue('finds_resource_on_expedition')))
+            {
+                $amountFound = $findsResourceOnExpeditionPerk[0];
+                $resourceKey = $findsResourceOnExpeditionPerk[1];
+
+                $resourcesFound[$resourceKey] = ($resourcesFound[$resourceKey] ?? 0) + ($amount * $amountFound);
+            }
+
+            if(($findsResourcesOnExpeditionPerk = $unit->getPerkValue('finds_resources_on_expedition')))
+            {
+                foreach($findsResourcesOnExpeditionPerk as $findsResourceOnExpeditionPerk)
+                {
+                    $amountFound = $findsResourceOnExpeditionPerk[0];
+                    $resourceKey = $findsResourceOnExpeditionPerk[1];
+    
+                    $resourcesFound[$resourceKey] = ($resourcesFound[$resourceKey] ?? 0) + ($amount * $amountFound);    
+                }
+            }
+
+            if(($findsResourceOnExpeditionPerkRandom = $unit->getPerkValue('finds_resource_on_expedition_random')))
+            {
+                $amountFound = $findsResourceOnExpeditionPerkRandom[0];
+                $resourceKey = $findsResourceOnExpeditionPerkRandom[1];
+                $probability = $findsResourceOnExpeditionPerkRandom[2];
+
+                $randomChance = (float)$probability / 100;
+
+                $found = 0;
+
+                for ($trials = 1; $trials <= $amount; $trials++)
+                {
+                    if(random_chance($randomChance))
+                    {
+                        $found += 1;
+                    }
+                }
+
+                $resourcesFound[$resourceKey] = ($resourcesFound[$resourceKey] ?? 0) + $found;
+            }
+
+            if(($findsResourcesOnExpeditionPerkRandom = $unit->getPerkValue('finds_resources_on_expedition_random')))
+            {
+                foreach($findsResourcesOnExpeditionPerkRandom as $findsResourceOnExpeditionPerk)
+                {
+                    $amountFound = $findsResourceOnExpeditionPerk[0];
+                    $resourceKey = $findsResourceOnExpeditionPerk[1];
+                    $probability = $findsResourceOnExpeditionPerk[2];
+    
+                    $randomChance = (float)$probability / 100;
+    
+                    $found = 0;
+    
+                    for ($trials = 1; $trials <= $amount; $trials++)
+                    {
+                        if(random_chance($randomChance))
+                        {
+                            $found += 1;
+                        }
+                    }
+    
+                    $resourcesFound[$resourceKey] = ($resourcesFound[$resourceKey] ?? 0) + $found;
+                }
+            }
+
+        }
+
+        return $resourcesFound;
     }
 
 }

@@ -49,7 +49,7 @@
                                             })->first();
                                         @endphp
 
-                                        @if ($unit->power_offense == 0 and $unit->getPerkValue('sendable_with_zero_op') != 1)
+                                        @if ($unit->power_offense == 0 and !$unit->getPerkValue('sendable_with_zero_op') and !$unit->getPerkValue('sendable_on_expeditions_with_zero_op'))
                                             @continue
                                         @endif
 

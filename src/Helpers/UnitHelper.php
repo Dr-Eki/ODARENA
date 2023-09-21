@@ -452,6 +452,11 @@ class UnitHelper
 
             'gunpowder_max_storage' => 'Max %s gunpowder stored per Cannon.',
 
+            'finds_resource_on_expedition' => 'Finds %1$s %2$s on expeditions.',
+            'finds_resources_on_expedition' => 'Finds %1$s %2$s on expeditions.',
+            'finds_resource_on_expedition_random' => '%3$g%% chance to find %1$s %2$s on expeditions.',
+            'finds_resources_on_expedition_random' => '%3$g%% chance to find %1$s %2$s on expeditions.',
+
             // Return time
             'faster_return' => 'Returns %s ticks faster from battle.',
             'land_per_tick' => 'Discovers land each tick:<br><code>(%1$s * (1 - ([Land Size]/12,000)))</code>',

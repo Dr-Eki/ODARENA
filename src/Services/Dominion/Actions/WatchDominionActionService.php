@@ -32,7 +32,7 @@ class WatchDominionActionService
             throw new GameException('You are already watching ' . $dominion->name . '.');
         }
 
-        // Check if already watched
+        // Max 20
         if($watcher->watchedDominions()->count() >= 10)
         {
             throw new GameException('You cannot watch more than 10 dominions.');

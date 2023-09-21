@@ -45,6 +45,9 @@ units:
       defense: 3
     perks:
       ore_production_raw: 1.2
+      sendable_on_expeditions_with_zero_op: 1
+      finds_resource_on_expedition_random: 1,thunderstone,0.003 # resource, amount, probability%
+      finds_resources_on_expedition: 4;ore,1;gems # resource;amount,resource;amount
 
   - name: Keeper
     training_time: 9

@@ -423,6 +423,27 @@ class ExpeditionActionService
         }
     }
 
+    protected function handleResourceFinding($dominion, $units): void
+    {
+        $this->expedition['resources_found'] = [];
+
+        $resourcesFound = [];
+
+        $resourcesFound = $this->expeditionCalculator->getResourcesFound($dominion, $units);
+
+        foreach($resourcesFound as $resourceKey => $amount)
+        {
+            $this->queueService->queueResources(
+                'expedition',
+                $dominion,
+                [$resourceKey => $amount],
+                12
+            );
+
+            $this->expedition['resources_found'][$resourceKey] = $amount;
+        }
+    }
+
     # Unit Return 2.0
     protected function handleReturningUnits(Dominion $dominion, array $units): void
     {
@@ -643,7 +664,11 @@ class ExpeditionActionService
                 continue;
             }
 
-            if ($this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'offense', null, $units, null) === 0.0 and $unit->getPerkValue('sendable_with_zero_op') != 1)
+            if (
+                $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'offense', null, $units, null) === 0.0 and
+                !$unit->getPerkValue('sendable_with_zero_op') and
+                !$unit->getPerkValue('sendable_on_expeditions_with_zero_op')
+                )
             {
                 return false;
             }
