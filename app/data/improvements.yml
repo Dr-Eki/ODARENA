@@ -1,6 +1,7 @@
 agriculture:  
   name: Agriculture
   excluded_races:
+    - Barbarian
     - Spirit
     - Sylvan
     - Troll
@@ -10,6 +11,7 @@ agriculture:
 conduits:
   name: Conduits
   excluded_races:
+    - Barbarian
     - Sylvan
     - Troll
   perks:
@@ -18,6 +20,7 @@ conduits:
 construction:
   name: Construction
   excluded_races:
+    - Barbarian
     - Sylvan
     - Troll
   perks:
@@ -27,6 +30,7 @@ construction:
 defenses:  
   name: Defenses
   excluded_races:
+    - Barbarian
     - Beastfolk
     - Sylvan
     - Troll
@@ -36,18 +40,22 @@ defenses:
 education:
   name: Education
   excluded_races:
+    - Barbarian
     - Troll
   perks:
     improvement_points: 20,3000
 
 leadership:
   name: Leadership
+  excluded_races:
+    - Barbarian
   perks:
     title_bonus: 40,1000
 
 logging:
   name: Logging
   excluded_races:
+    - Barbarian
     - Beastfolk
     - Demon
     - Sylvan
@@ -59,6 +67,7 @@ logging:
 housing:  
   name: Housing
   excluded_races:
+    - Barbarian
     - Dwarg
     - Beastfolk
     - Sylvan
@@ -69,6 +78,7 @@ housing:
 markets:
   name: Markets
   excluded_races:
+    - Barbarian
     - Beastfolk
     - Sylvan
     - Troll
@@ -79,6 +89,7 @@ markets:
 mining:
   name: Mining
   excluded_races:
+    - Barbarian
     - Ants
     - Reptilians
     - Spirit
@@ -92,6 +103,7 @@ mining:
 science:
   name: Science
   excluded_races:
+    - Barbarian
     - Troll
   perks:
     advancement_costs: -30,6000
@@ -99,6 +111,7 @@ science:
 sorcery:
   name: Sorcery
   excluded_races:
+    - Barbarian
     - Dwarg
   perks:
     sorcery_damage_dealt: 40,5500
@@ -107,6 +120,7 @@ sorcery:
 tactics:  
   name: Tactics
   excluded_races:
+    - Barbarian
     - Beastfolk
     - Spirit
     - Sylvan
@@ -124,6 +138,7 @@ warding:
 warfare:
   name: Warfare
   excluded_races:
+    - Barbarian
     - Demon
   perks:
     prestige_gains: 25,3000
@@ -1248,8 +1263,7 @@ mustering:
 
 # END YETI #
 
-tribalism:  
-  enabled: 0
+tribalism:
   name: Tribalism
   exclusive_races:
     - Barbarian

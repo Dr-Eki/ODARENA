@@ -542,21 +542,21 @@
                             <td class="text-center">{{ number_format($improvementCalculator->getDominionImprovementAmountInvested($dominion, $improvement)) }}</td>
                         </tr>
                     @endforeach
-                        <tr>
-                            <td colspan="2" class="text-right"><strong>Total</strong></td>
-                            <td class="text-center">{{ number_format($improvementCalculator->getDominionImprovementTotalAmountInvested($dominion)) }}</td>
-                        </tr>
+                    <tr>
+                        <td colspan="2" class="text-right"><strong>Total</strong></td>
+                        <td class="text-center">{{ number_format($improvementCalculator->getDominionImprovementTotalAmountInvested($dominion)) }}</td>
+                    </tr>
 
-                        @php
-                        $totalSabotaged = 0;
-                            foreach($queueService->getSabotageQueue($dominion) as $sabotage)
+                    @php
+                    $totalSabotaged = 0;
+                        foreach($queueService->getSabotageQueue($dominion) as $sabotage)
+                        {
+                            if($sabotage->resource === 'improvements')
                             {
-                                if($sabotage->resource === 'improvements')
-                                {
-                                    $totalSabotaged += $sabotage->amount;
-                                }
+                                $totalSabotaged += $sabotage->amount;
                             }
-                        @endphp
+                        }
+                    @endphp
                     @if($totalSabotaged > 0)
                         <tr>
                             <td colspan="2" class="text-right"><strong>Sabotaged</strong><br><small class="text-muted">Will be restored automatically</small></td>
