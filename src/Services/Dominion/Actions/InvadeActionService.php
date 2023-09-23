@@ -727,7 +727,7 @@ class InvadeActionService
             ]);
 
             # Debug before saving:
-            #ldd($this->invasion); dd('Safety!');
+            ldd($this->invasion); dd('Safety!');
             
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);

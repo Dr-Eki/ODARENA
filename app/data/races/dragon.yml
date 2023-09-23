@@ -22,8 +22,8 @@ construction_materials:
   - ore
 
 peasants_production:
-  gold: 2.5
-  food: 0.5
+  gold: 2.50
+  food: 0.25
 
 perks:
   max_population: -10
@@ -90,9 +90,9 @@ units:
     perks:
       burns_peasants_on_attack: 20
       food_consumption_raw: 10
-      casualties: -60
+      casualties: -40
       protects_resource_from_theft: gems,50000
-      #immortal_on_overwhelming_victory: 1.20 # OP:DP ratio required to be immortal
+      immortal_on_overwhelming_victory: 1.10 # OP:DP ratio required to be immortal
 
   - name: Dragon Knight
     training_time: 12
@@ -108,8 +108,8 @@ units:
       offense: 8
       defense: 6
     perks:
-      stat_pairing_limit: unit4_lost,100 # stat, max units
+      stat_pairing_limit: unit4_lost,100 # stat, max units per value of the stat
       minimum_victories: 20
-      casualties: -30
+      casualties: -20
       burns_peasants_on_attack: 10
-      #immortal_on_overwhelming_victory: 1.20 # OP:DP ratio required to be immortal
+      immortal_on_overwhelming_victory: 1.10 # OP:DP ratio required to be immortal

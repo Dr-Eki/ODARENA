@@ -81,6 +81,9 @@ class MiscController extends AbstractDominionController
         */
 
         $dominion = $this->getSelectedDominion();
+        $dominionName = $dominion->name;
+        $dominionId = $dominion->id;
+        $dominionRaceName = $dominion->race->name;
 
         DB::transaction(function () use ($dominion) {
             
@@ -148,9 +151,10 @@ class MiscController extends AbstractDominionController
         $this->dominionSelectorService->unsetUserSelectedDominion();
 
         Log::info(sprintf(
-            'The dominion %s (ID %s) was deleted by user %s (ID %s).',
-            $dominion->name,
-            $dominion->id,
+            'The %s dominion %s (ID %s) was deleted by user %s (ID %s).',
+            $dominionRaceName,
+            $dominionName,
+            $dominionId,
             Auth::user()->display_name,
             Auth::user()->id
         ));
@@ -184,7 +188,7 @@ class MiscController extends AbstractDominionController
         # Can only delete your own dominion.
         if($dominion->isLocked())
         {
-            throw new LogicException('You cannot delete a dominion that is locked or after a round is over.');
+            throw new LogicException('You cannot abandon a dominion that is locked or after a round is over.');
         }
 
         # Can only delete your own dominion.

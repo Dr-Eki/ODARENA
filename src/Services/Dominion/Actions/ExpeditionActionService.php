@@ -10,14 +10,11 @@ use OpenDominion\Traits\DominionGuardsTrait;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\GameEvent;
-use OpenDominion\Models\Unit;
 
-use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\UnitHelper;
-
 
 use OpenDominion\Calculators\Dominion\ArtefactCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
@@ -103,6 +100,26 @@ class ExpeditionActionService
 
         DB::transaction(function () use ($dominion, $units)
         {
+            
+            // Check if this is a resource gathering expedition
+            $this->expedition['is_resource_gathering_expedition'] = false;
+            $resourceFindingPerks = [
+                'finds_resource_on_expedition',
+                'finds_resources_on_expedition',
+                'finds_resource_on_expedition_random',
+                'finds_resources_on_expedition_random',
+            ];
+        
+            foreach ($units as $slot => $amount) {
+                $unit = $dominion->race->units->filter(function ($unit) use ($slot) {
+                    return $unit->slot === $slot;
+                })->first();
+        
+                if ($this->unitHelper->checkUnitHasPerks($dominion, $unit, $resourceFindingPerks)) {
+                    $this->expedition['is_resource_gathering_expedition'] = true;
+                }
+            }
+
             if(!$dominion->round->getSetting('expeditions'))
             {
                 throw new GameException('Expeditions are disabled this round.');
@@ -116,12 +133,12 @@ class ExpeditionActionService
             // Sanitize input
             $units = array_map('intval', array_filter($units));
 
-            if (!$this->hasAnyOP($dominion, $units))
+            if (!$this->hasAnyOP($dominion, $units) and !$this->expedition['is_resource_gathering_expedition'])
             {
                 throw new GameException('You need to send at least some units with offensive power.');
             }
 
-            if (!$this->allUnitsHaveOP($dominion, $units))
+            if (!$this->allUnitsHaveOP($dominion, $units) and !$this->expedition['is_resource_gathering_expedition'])
             {
                 throw new GameException('You cannot send units that have no offensive power.');
             }
@@ -159,7 +176,7 @@ class ExpeditionActionService
 
                 if(!$this->unitHelper->isUnitSendableByDominion($unit, $dominion))
                 {
-                 throw new GameException('You cannot send ' . $unit->name . ' on expeditions.');
+                    throw new GameException('You cannot send ' . $unit->name . ' on expeditions.');
                 }
             }
 
@@ -260,31 +277,34 @@ class ExpeditionActionService
             $this->expedition['land_discovered'] = $this->expeditionCalculator->getLandDiscoveredAmount($dominion, $this->expedition['op_sent']);
             
 
-            if($this->expedition['land_discovered'] < 1)
+            if($this->expedition['land_discovered'] <= 0 and !$this->expedition['is_resource_gathering_expedition'])
             {
                 throw new GameException('Expeditions must discover at least some land.');
             }
-            
-            $this->queueService->queueResources(
-                'expedition',
-                $dominion,
-                ['land' => $this->expedition['land_discovered']]
-            );
 
-            foreach($this->terrainCalculator->getTerrainDiscovered($dominion, $this->expedition['land_discovered']) as $terrainKey => $amount)
+            if(!$this->expedition['is_resource_gathering_expedition'])
             {
-                $this->expedition['terrain_discovered']['terrain_' . $terrainKey] = $amount;
-            }
+                $this->queueService->queueResources(
+                    'expedition',
+                    $dominion,
+                    ['land' => $this->expedition['land_discovered']]
+                );
 
-            $this->queueService->queueResources(
-                'expedition',
-                $dominion,
-                $this->expedition['terrain_discovered']
-            );
+                foreach($this->terrainCalculator->getTerrainDiscovered($dominion, $this->expedition['land_discovered']) as $terrainKey => $amount)
+                {
+                    $this->expedition['terrain_discovered']['terrain_' . $terrainKey] = $amount;
+                }
+
+                $this->queueService->queueResources(
+                    'expedition',
+                    $dominion,
+                    $this->expedition['terrain_discovered']
+                );
+            }
 
             $this->handlePrestigeChanges($dominion, $this->expedition['land_discovered'], $this->expedition['land_size'], $units);
             $this->handleXp($dominion, $this->expedition['land_discovered']);
-            $this->handleAshFindings($dominion);
+            $this->handleResourceFinding($dominion, $units);
             $this->handleArtefactsDiscovery($dominion);
             $this->handleReturningUnits($dominion, $units);
 
@@ -292,7 +312,7 @@ class ExpeditionActionService
             $this->statsService->updateStat($dominion, 'expeditions', 1);
 
             # Debug before saving:
-            #ldd($this->expedition);
+            #ldd($this->expedition); dd('Safety!');
 
             $this->expedition = GameEvent::create([
                 'round_id' => $dominion->round_id,
@@ -377,25 +397,6 @@ class ExpeditionActionService
         $this->expedition['xp'] = $xpGained;
 
     }
-    protected function handleAshFindings(Dominion $dominion): void
-    {
-        if($dominion->race->name !== 'Black Orc')
-        {
-            return;
-        }
-
-        $ashFound = $this->expedition['op_raw'] * $dominion->race->getPerkValue('ash_per_raw_op_on_expeditions');
-
-        $this->queueService->queueResources(
-            'expedition',
-            $dominion,
-            ['resource_ash' => $ashFound],
-            12
-        );
-
-        $this->expedition['ash_found'] = $ashFound;
-
-    }
 
     protected function handleArtefactsDiscovery($dominion): void
     {
@@ -430,6 +431,7 @@ class ExpeditionActionService
         $resourcesFound = [];
 
         $resourcesFound = $this->expeditionCalculator->getResourcesFound($dominion, $units);
+        $this->expedition['resources_found'] = $resourcesFound;
 
         foreach($resourcesFound as $resourceKey => $amount)
         {
@@ -439,8 +441,6 @@ class ExpeditionActionService
                 [$resourceKey => $amount],
                 12
             );
-
-            $this->expedition['resources_found'][$resourceKey] = $amount;
         }
     }
 
@@ -645,7 +645,7 @@ class ExpeditionActionService
      */
     protected function hasAnyOP(Dominion $dominion, array $units): bool
     {
-        return ($this->militaryCalculator->getOffensivePower($dominion, null, null, $units) !== 0.0);
+        return ($this->militaryCalculator->getOffensivePower($dominion, null, null, $units) > 0);
     }
 
     /**

@@ -99,92 +99,98 @@ class ExpeditionCalculator
     public function getResourcesFound(Dominion $dominion, array $units): array
     {
         $resourcesFound = [];
-
+    
         $resourceFindingPerks = [
             'finds_resource_on_expedition',
             'finds_resources_on_expedition',
             'finds_resource_on_expedition_random',
             'finds_resources_on_expedition_random',
         ];
-
-        foreach($units as $slot => $amount)
+    
+        foreach ($units as $slot => $amount)
         {
             $unit = $dominion->race->units->filter(function ($unit) use ($slot) {
-                return ($unit->slot === $slot);
+                return $unit->slot === $slot;
             })->first();
-
-            if(!$this->unitHelper->checkUnitHasPerks($dominion, $unit, $resourceFindingPerks))
-            {
+    
+            if (!$this->unitHelper->checkUnitHasPerks($dominion, $unit, $resourceFindingPerks)) {
                 continue;
             }
-
-            if(($findsResourceOnExpeditionPerk = $unit->getPerkValue('finds_resource_on_expedition')))
-            {
-                $amountFound = $findsResourceOnExpeditionPerk[0];
-                $resourceKey = $findsResourceOnExpeditionPerk[1];
-
-                $resourcesFound[$resourceKey] = ($resourcesFound[$resourceKey] ?? 0) + ($amount * $amountFound);
-            }
-
-            if(($findsResourcesOnExpeditionPerk = $unit->getPerkValue('finds_resources_on_expedition')))
-            {
-                foreach($findsResourcesOnExpeditionPerk as $findsResourceOnExpeditionPerk)
-                {
-                    $amountFound = $findsResourceOnExpeditionPerk[0];
-                    $resourceKey = $findsResourceOnExpeditionPerk[1];
     
-                    $resourcesFound[$resourceKey] = ($resourcesFound[$resourceKey] ?? 0) + ($amount * $amountFound);    
-                }
-            }
-
-            if(($findsResourceOnExpeditionPerkRandom = $unit->getPerkValue('finds_resource_on_expedition_random')))
-            {
-                $amountFound = $findsResourceOnExpeditionPerkRandom[0];
-                $resourceKey = $findsResourceOnExpeditionPerkRandom[1];
-                $probability = $findsResourceOnExpeditionPerkRandom[2];
-
-                $randomChance = (float)$probability / 100;
-
-                $found = 0;
-
-                for ($trials = 1; $trials <= $amount; $trials++)
-                {
-                    if(random_chance($randomChance))
-                    {
-                        $found += 1;
-                    }
-                }
-
-                $resourcesFound[$resourceKey] = ($resourcesFound[$resourceKey] ?? 0) + $found;
-            }
-
-            if(($findsResourcesOnExpeditionPerkRandom = $unit->getPerkValue('finds_resources_on_expedition_random')))
-            {
-                foreach($findsResourcesOnExpeditionPerkRandom as $findsResourceOnExpeditionPerk)
-                {
-                    $amountFound = $findsResourceOnExpeditionPerk[0];
-                    $resourceKey = $findsResourceOnExpeditionPerk[1];
-                    $probability = $findsResourceOnExpeditionPerk[2];
-    
-                    $randomChance = (float)$probability / 100;
-    
-                    $found = 0;
-    
-                    for ($trials = 1; $trials <= $amount; $trials++)
-                    {
-                        if(random_chance($randomChance))
-                        {
-                            $found += 1;
-                        }
-                    }
-    
-                    $resourcesFound[$resourceKey] = ($resourcesFound[$resourceKey] ?? 0) + $found;
-                }
-            }
-
+            $this->processDeterministicResourceFind($resourcesFound, $unit, $amount);
+            $this->processRandomResourceFind($resourcesFound, $unit, $amount);
         }
-
+    
         return $resourcesFound;
     }
+    
+    private function processDeterministicResourceFind(array &$resourcesFound, $unit, $amount)
+    {
+
+        if ($findsResourceOnExpeditionPerk = $unit->getPerkValue('finds_resource_on_expedition'))
+        {
+            $amountFound = $findsResourceOnExpeditionPerk[0];
+            $resourceKey = $findsResourceOnExpeditionPerk[1];
+    
+            $resourcesFound[$resourceKey] = ($resourcesFound[$resourceKey] ?? 0) + ($amount * $amountFound);
+        }
+    
+        if ($findsResourcesOnExpeditionPerk = $unit->race->getUnitPerkValueForUnitSlot($unit->slot, 'finds_resources_on_expedition'))
+        {
+            foreach ($findsResourcesOnExpeditionPerk as $findsResourceOnExpeditionPerk) {
+                $amountFound = $findsResourceOnExpeditionPerk[0];
+                $resourceKey = $findsResourceOnExpeditionPerk[1];
+    
+                $resourcesFound[$resourceKey] = ($resourcesFound[$resourceKey] ?? 0) + ($amount * $amountFound);
+            }
+        }
+    }
+    
+    private function processRandomResourceFind(array &$resourcesFound, $unit, $amount)
+    {
+
+        $maxTrials = 25000;
+
+        // Extracts common logic into a helper method
+        $processPerk = function($perk) use (&$resourcesFound, $amount, $maxTrials) {
+            $amountFound = $perk[0];
+            $resourceKey = $perk[1];
+            $probability = $perk[2];
+            $randomChance = (float)$probability / 100;
+    
+            $found = $amount < $maxTrials ? $this->findResourceWithTrials($amount, $randomChance) : $amount * $randomChance;
+            $found *= $amountFound;
+            $found = (int)$found;
+    
+            $resourcesFound[$resourceKey] = ($resourcesFound[$resourceKey] ?? 0) + $found;
+        };
+    
+        if ($findsResourceOnExpeditionRandomPerk = $unit->race->getUnitPerkValueForUnitSlot($unit->slot, 'finds_resource_on_expedition_random')) {
+            $processPerk($findsResourceOnExpeditionRandomPerk);
+        }
+    
+        if ($findsResourcesOnExpeditionRandomPerk = $unit->race->getUnitPerkValueForUnitSlot($unit->slot, 'finds_resources_on_expedition_random')) {
+            foreach ($findsResourcesOnExpeditionRandomPerk as $perk) {
+                $processPerk($perk);
+            }
+        }
+    }
+    
+    private function findResourceWithTrials($amount, $randomChance)
+    {
+        if($amount < 0)
+        {
+            return 0;
+        }
+        
+        $found = 0;
+        for ($trials = 1; $trials <= $amount; $trials++) {
+            if (random_chance($randomChance)) {
+                $found += 1;
+            }
+        }
+        return $found;
+    }
+    
 
 }

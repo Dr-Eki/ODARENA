@@ -35,7 +35,6 @@ perks:
   gold_production_raw_from_draftees: 1
   ore_production_raw_from_draftees: 0.2
   ash_production_raw_from_draftees: 0.05
-  ash_per_raw_op_on_expeditions: 1
 
 units:
   - name: Ashmarked

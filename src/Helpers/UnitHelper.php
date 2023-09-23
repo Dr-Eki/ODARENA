@@ -544,7 +544,8 @@ class UnitHelper
             'decree_state_required_to_send' => '%1$s decree must be issued in %2$s state to send this unit.',
 
             // Damage
-            'burns_peasants_on_attack' => 'Burns peasants on attack, unless overwhelmed; (%s%% x ([Total Raw OP From This Unit] / [Total Raw OP Sent]) x [OP:DP Ratio]).',
+            #'burns_peasants_on_attack' => 'Burns peasants on attack, unless overwhelmed; (%s%% x ([Total Raw OP From This Unit] / [Total Raw OP Sent]) x [OP:DP Ratio]).',
+            'burns_peasants_on_attack' => 'Burns circa %s%% enemy peasants on attack (unless overwhelmed).',
             'damages_improvements_on_attack' => 'Damages target\'s improvements by %s improvement points.',
             'eats_peasants_on_attack' => 'Eats %s peasants on invasion.',
             'eats_draftees_on_attack' => 'Eats %s draftees on invasion.',

@@ -109,12 +109,6 @@
                                         <td>XP:</td>
                                         <td>{{ number_format($event->data['xp']) }}</td>
                                     </tr>
-                                    @if(isset($event->data['ash_found']) and $event->data['ash_found'] > 0)
-                                    <tr>
-                                        <td>Ash found:</td>
-                                        <td>{{ number_format($event->data['ash_found']) }}</td>
-                                    </tr>
-                                    @endif
                                 </tbody>
                             </table>
                             @endif
@@ -122,39 +116,72 @@
                         </div>
 
                         <div class="col-xs-12 col-sm-6">
-                            <div class="text-center">
-                            <h4>Land Discovered</h4>
-                            </div>
-                            <table class="table">
-                                <colgroup>
-                                    <col width="50%">
-                                    <col width="50%">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Land Type</th>
-                                        <th class="text-center">Discovered</th>
-                                    </tr>
-                                    @foreach($event->data['terrain_discovered'] as $terrainKey => $amount)
-                                        @if($amount > 0)
-                                            @php
-                                                $terrainKey = str_replace('terrain_', '', $terrainKey);
-                                                $terrain = OpenDominion\Models\Terrain::where('key', $terrainKey)->first();
-                                            @endphp
+                            @if(isset($event->data['terrain_discovered']))
+                                <div class="text-center">
+                                    <h4>Land Discovered</h4>
+                                </div>
+                                <table class="table">
+                                    <colgroup>
+                                        <col width="50%">
+                                        <col width="50%">
+                                    </colgroup>
+                                        <thead>
                                             <tr>
-                                                <td class="text-center">{{ $terrain->name }}</td>
-                                                <td class="text-center">{{ number_format($amount) }}</td>
+                                                <th class="text-center">Land Type</th>
+                                                <th class="text-center">Discovered</th>
                                             </tr>
-                                        @endif
-                                    @endforeach
-                                    <tr>
-                                        <td class="text-center"><b>Total</b></td>
-                                        <td class="text-center"><b>{{ number_format($event->data['land_discovered']) }}</b></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($event->data['terrain_discovered'] as $terrainKey => $amount)
+                                                @if($amount > 0)
+                                                    @php
+                                                        $terrainKey = str_replace('terrain_', '', $terrainKey);
+                                                        $terrain = OpenDominion\Models\Terrain::where('key', $terrainKey)->first();
+                                                    @endphp
+                                                    <tr>
+                                                        <td class="text-center">{{ $terrain->name }}</td>
+                                                        <td class="text-center">{{ number_format($amount) }}</td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                            <tr>
+                                                <td class="text-center"><b>Total</b></td>
+                                                <td class="text-center"><b>{{ number_format($event->data['land_discovered']) }}</b></td>
+                                            </tr>
+                                        </tbody>
+                                </table>
+                            @endif
+                            @if(isset($event->data['resources_found']))
+                                <div class="text-center">
+                                    <h4>Resources Discovered</h4>
+                                </div>
+                                <table class="table">
+                                    <colgroup>
+                                        <col width="50%">
+                                        <col width="50%">
+                                    </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th class="">Resource</th>
+                                                <th class="">Discovered</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($event->data['resources_found'] as $resourceKey => $amount)
+                                                @if($amount > 0)
+                                                    @php
+                                                        $resourceKey = str_replace('resource_', '', $resourceKey);
+                                                        $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                                    @endphp
+                                                    <tr>
+                                                        <td class="">{{ $resource->name }}</td>
+                                                        <td class="">{{ number_format($amount) }}</td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        </tbody>
+                                </table>
+                            @endif
                         </div>
 
                     </div>

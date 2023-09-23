@@ -122,7 +122,6 @@ tactics:
   excluded_races:
     - Barbarian
     - Beastfolk
-    - Spirit
     - Sylvan
     - Troll
   perks:
