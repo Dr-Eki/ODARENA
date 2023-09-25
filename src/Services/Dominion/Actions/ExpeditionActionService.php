@@ -438,7 +438,7 @@ class ExpeditionActionService
             $this->queueService->queueResources(
                 'expedition',
                 $dominion,
-                [$resourceKey => $amount],
+                [('resource_' . $resourceKey) => $amount],
                 12
             );
         }
@@ -665,9 +665,9 @@ class ExpeditionActionService
             }
 
             if (
-                $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'offense', null, $units, null) === 0.0 and
-                !$unit->getPerkValue('sendable_with_zero_op') and
-                !$unit->getPerkValue('sendable_on_expeditions_with_zero_op')
+                    $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'offense', null, $units, null) === 0.0 and
+                    !$unit->getPerkValue('sendable_with_zero_op') and
+                    !$unit->getPerkValue('sendable_on_expeditions_with_zero_op')
                 )
             {
                 return false;

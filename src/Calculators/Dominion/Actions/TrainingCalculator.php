@@ -18,6 +18,7 @@ use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\ResourceHelper;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
+use OpenDominion\Services\Dominion\StatsService;  
 
 class TrainingCalculator
 {
@@ -42,8 +43,22 @@ class TrainingCalculator
     /** @var RaceHelper */
     protected $raceHelper;
 
+    /** @var ResourceHelper */
+    protected $resourceHelper;
+
     /** @var PopulationCalculator */
     protected $populationCalculator;
+
+    /** @var BuildingCalculator */
+    protected $buildingCalculator;
+
+    /** @var ResourceCalculator */
+    protected $resourceCalculator;
+
+    /** @var StatsService */
+    protected $statsService;
+
+
 
     /**
      * TrainingCalculator constructor.
@@ -64,6 +79,7 @@ class TrainingCalculator
         $this->populationCalculator = app(PopulationCalculator::class);
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
+        $this->statsService = app(StatsService::class);
     }
 
     /**
@@ -293,6 +309,16 @@ class TrainingCalculator
                 $maxCapacity = $this->unitHelper->getUnitMaxCapacity($dominion, $slot);
                 $availableCapacity = $maxCapacity - ($this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot) + $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot));
                 $trainable[$unitType] = max(0, min($trainable[$unitType], $availableCapacity));
+            }
+
+
+            # Unit:minimum_victories limit
+            if($minimumVictoriesPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'minimum_victories'))
+            {
+                if($this->statsService->getStat($dominion, 'invasion_victories') < $minimumVictoriesPerk)
+                {
+                    $trainable[$unitType] = 0;
+                }
             }
 
             # Check for unit deity

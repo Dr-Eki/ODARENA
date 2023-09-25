@@ -727,7 +727,7 @@ class InvadeActionService
             ]);
 
             # Debug before saving:
-            ldd($this->invasion); dd('Safety!');
+            #ldd($this->invasion); dd('Safety!');
             
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
@@ -1306,6 +1306,7 @@ class InvadeActionService
         ## Then look through queued buildings to remove (dequeue)
         foreach($this->invasion['defender']['buildings_lost']['queued'] as $buildingKey => $amount)
         {
+            $amount = abs($amount);
             if($amount > 0)
             {
                 $this->queueService->dequeueResource('construction', $target, ('building_' . $buildingKey), $amount);

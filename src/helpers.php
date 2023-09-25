@@ -228,7 +228,7 @@ if(!function_exists('ldump'))
      * @return string
      */
 
-     function ldump($input)
+     function ldump($input = null)
     {
         if(env('APP_ENV') == 'local')
         {
@@ -247,7 +247,7 @@ if(!function_exists('ldd'))
      * @return string
      */
 
-     function ldd($input)
+     function ldd($input = null)
     {
         if(env('APP_ENV') == 'local')
         {

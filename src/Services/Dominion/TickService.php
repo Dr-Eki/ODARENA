@@ -1401,7 +1401,6 @@ class TickService
                     }
                 }
             }
-
         });
         
         # Run audit functions after tick transaction is completed.
@@ -1767,7 +1766,7 @@ class TickService
         $finishedResourcesInQueue = DB::table('dominion_queue')
                                         ->where('dominion_id',$dominion->id)
                                         ->where('resource', 'like', 'resource%')
-                                        ->whereIn('source', ['exploration','invasion','expedition','theft','desecration'])
+                                        ->whereIn('source', ['exploration', 'invasion', 'expedition', 'theft', 'desecration'])
                                         ->where('hours',1)
                                         ->get();
 

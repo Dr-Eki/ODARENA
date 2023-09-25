@@ -34,14 +34,7 @@ class TerrainCalculator
 
     public function getTotalTerrainedAmount(Dominion $dominion): int
     {
-        $terrainedLand = 0;
-
-        foreach($dominion->terrains as $terrain)
-        {
-            $terrainedLand += $terrain->pivot->amount;
-        }
-
-        return $terrainedLand;
+        return $dominion->terrains->sum('pivot.amount');
     }
 
     public function getTerrainLost(Dominion $dominion, int $landLost): array

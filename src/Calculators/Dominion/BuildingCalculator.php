@@ -50,13 +50,12 @@ class BuildingCalculator
             return $buildingsLost;
         }
     
-        $totalBuildings = $dominion->buildings->map(function ($building) {
-            return $building->pivot->owned;
-        })->sum();
-    
-        $barrenLand = $dominion->land - $this->getTotalBuildings($dominion);
-        $buildingsToDestroy = max(0, $landLost - $barrenLand);
-    
+        $builtLand = $this->getTotalBuildings($dominion);
+        $queuedBuildingsAmount = $this->queueService->getConstructionQueueTotal($dominion);
+        $unbuiltLand = $dominion->land - $builtLand - $queuedBuildingsAmount;
+        $buildingsToDestroy = min($landLost, $builtLand + $queuedBuildingsAmount);
+
+        // If there are no buildings to destroy, return empty array
         if ($buildingsToDestroy <= 0)
         {
             $buildingsLost['queued'] = array_filter($buildingsLost['queued']);
@@ -66,21 +65,30 @@ class BuildingCalculator
     
         // First, take into account the queued buildings
         $buildingsLeftToLose = $buildingsToDestroy;
-        foreach ($buildingsLost['queued'] as $buildingKey => &$buildingAmount)
+        foreach ($buildingsLost['queued'] as $buildingKey => $buildingAmount)
         {
+            if($buildingsLeftToLose <= 0)
+            {
+                break;
+            }
+
             $queuedBuildingAmount = $this->queueService->getConstructionQueueTotalByResource($dominion, 'building_' . $buildingKey);
-            $buildingAmount = min($queuedBuildingAmount, $buildingsLeftToLose);
-            $buildingsLeftToLose -= $buildingAmount;
+            $buildingAmountLost = min($queuedBuildingAmount, $buildingsLeftToLose);
+            
+            $buildingsLost['queued'][$buildingKey] += $buildingAmountLost;
+
+            $buildingsLeftToLose -= $buildingAmountLost;
+            $buildingsLeftToLose = max(0, $buildingsLeftToLose);
         }
     
         // Then, take into account the available buildings
-        if ($buildingsLeftToLose > 0 && $totalBuildings > 0)
+        if ($buildingsLeftToLose > 0 && $builtLand > 0)
         {
             foreach ($dominion->buildings as $dominionBuilding)
             {
                 if ($dominionBuilding->pivot->owned > 0)
                 {
-                    $buildingsLost['available'][$dominionBuilding->key] = (int)round($buildingsLeftToLose * ($dominionBuilding->pivot->owned / $totalBuildings));
+                    $buildingsLost['available'][$dominionBuilding->key] = (int)round($buildingsLeftToLose * ($dominionBuilding->pivot->owned / $builtLand));
                 }
             }
         }

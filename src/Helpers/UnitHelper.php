@@ -1233,7 +1233,8 @@ class UnitHelper
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'archmage_limit') or
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'net_victories_limit') or
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'stat_pairing_limit') or
-            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'amount_limit')
+            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'amount_limit') or
+            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'minimum_victories')
           )
           {
               return true;
@@ -1334,6 +1335,7 @@ class UnitHelper
 
             $maxCapacity = floor($perNetVictory * $netVictories);
         }
+
 
         # Unit:stat_pairing_limit limit
         if($statPairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slotLimited, 'stat_pairing_limit'))
