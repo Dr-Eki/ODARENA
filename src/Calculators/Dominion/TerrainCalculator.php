@@ -37,6 +37,11 @@ class TerrainCalculator
         return $dominion->terrains->sum('pivot.amount');
     }
 
+    public function getTotalTerrainedRezoning(Dominion $dominion): int
+    {
+        return $this->queueService->getRezoningQueueTotal($dominion);
+    }
+
     public function getTerrainLost(Dominion $dominion, int $landLost): array
     {
         
@@ -123,6 +128,35 @@ class TerrainCalculator
         });    
     
         return $terrainChanged;
+    }
+
+    # Audit support functions
+
+    function hasMoreTerrainThanLand(Dominion $dominion): bool
+    {
+        return ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) > $dominion->land;
+    }
+
+    function hasLessTerrainThanLand(Dominion $dominion): bool
+    {
+        return ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) < $dominion->land;
+    }
+
+    function hasTerrainAmountEqualToLand(Dominion $dominion): bool
+    {
+        return ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) == $dominion->land;
+    }
+
+    function getTerrainLandDifference(Dominion $dominion, bool $returnAbsolute): int
+    {
+        $difference = ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) - $dominion->land;
+
+        if($returnAbsolute)
+        {
+            return abs($difference);
+        }
+
+        return $difference;
     }
 
 }

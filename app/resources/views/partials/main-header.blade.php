@@ -21,7 +21,7 @@
                 @include('partials.staff-nav')
                 @include('partials.scribes-nav')
                 @include('partials.ticker-nav')
-                @include('partials.notification-nav')
+                {{-- @include('partials.notification-nav') --}}
                 @include('partials.auth-user-nav')
             </ul>
         </div>

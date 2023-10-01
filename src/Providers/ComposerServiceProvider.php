@@ -104,9 +104,9 @@ class ComposerServiceProvider extends AbstractServiceProvider
             $view->with('version', $version);
         });
 
-        view()->composer('partials.notification-nav', function (View $view) {
-            $view->with('notificationHelper', app(NotificationHelper::class));
-        });
+        #view()->composer('partials.notification-nav', function (View $view) {
+        #    $view->with('notificationHelper', app(NotificationHelper::class));
+        #});
 
         // todo: do we need this here in this class?
         view()->composer('partials.resources-overview', function (View $view)

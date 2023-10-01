@@ -1,3 +1,3 @@
 <li>
-    <a href="{{ route('scribes.factions') }}"><i class="ra ra-scroll-unfurled"></i> Scribes</a>
+    <a href="{{ route('scribes.factions') }}"><i class="fas fa-book"></i> Scribes</a>
 </li>

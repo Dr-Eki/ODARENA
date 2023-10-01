@@ -28,6 +28,18 @@ class MiscController extends AbstractDominionController
     /** @var SelectorService */
     protected $dominionSelectorService;
 
+    /** @var DominionStateService */
+    protected $dominionStateService;
+
+    /** @var MilitaryCalculator */
+    protected $militaryCalculator;
+
+    /** @var QueueService */
+    protected $queueService;
+
+    /** @var TickService */
+    protected $tickService;
+
     /**
      * MiscController constructor.
      *

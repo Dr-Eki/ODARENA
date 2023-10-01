@@ -123,7 +123,7 @@
                 <p>You can devote your dominion to a deity in exchange for some perks (good and bad). For every tick that you remain devoted to a deity, the perks are increased by 0.10% per tick to a maximum of +100%, when the perk values are doubled.</p>
                 <p>It takes 48 ticks for a devotion to take effect. Your dominion can only be submitted to one deity at a time. However, you can renounce your deity to select a new one (which resets the ticks counter).</p>
                 <p>The range multiplier is the maximum land size range the deity permits you to interact with, unless recently invaded, and takes effect immediately once you submit to a deity. A dominion with a wider range cannot take actions against a dominion with a more narrow range, unless the two ranges overlap.</p>
-                <p>For more information, see the <a href="{{ route('scribes.deities') }}" target="_blank"><i class="ra ra-scroll-unfurled"></i> Scribes</a>.<p>
+                <p>For more information, see the <a href="{{ route('scribes.deities') }}" target="_blank"><i class="fas fa-book"></i> Scribes</a>.<p>
             </div>
         </div>
     </div>

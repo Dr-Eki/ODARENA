@@ -99,7 +99,7 @@
                 <p><i class="fas fa-hourglass-end"></i> Cooldown: how many ticks you must wait until you can cast this spell again. Not all spells have a cooldown.</p>
                 <p>WS: this is the percentage of your wizard strength that will be used to cast the spell.</p>
 
-                <a href="{{ route('scribes.spells') }}"><span><i class="ra ra-scroll-unfurled"></i> Read more about Spells in the Scribes.</span></a>
+                <a href="{{ route('scribes.spells') }}"><span><i class="fas fa-book"></i> Read more about Spells in the Scribes.</span></a>
             </div>
         </div>
     </div>

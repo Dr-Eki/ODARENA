@@ -24,7 +24,7 @@
                             <th>Title</th>
                         </tr>
                         <tr>
-                            <td class="text-left">{{ $quickstart->race->name }} <a href="{{ route('scribes.faction', $quickstart->race->name) }}" target="_blank"><i class="ra ra-scroll-unfurled"></i></a></td>
+                            <td class="text-left">{{ $quickstart->race->name }} <a href="{{ route('scribes.faction', $quickstart->race->name) }}" target="_blank"><i class="fas fa-book"></i></a></td>
                             <td class="text-left">{{ $quickstart->title->name }}</td>
                         </tr>
 
@@ -114,7 +114,7 @@
                                     </ul>
                                 </td>
                                 <td class="text-left">
-                                    <a href="{{ route('scribes.quickstart', $quickstart->id) }}" target="_blank"><i class="ra ra-scroll-unfurled"></i> Scribes</a>
+                                    <a href="{{ route('scribes.quickstart', $quickstart->id) }}" target="_blank"><i class="fas fa-book"></i> Scribes</a>
                                 </td>
                             </tr>
                         @endif

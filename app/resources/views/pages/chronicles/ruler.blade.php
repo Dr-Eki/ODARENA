@@ -232,7 +232,7 @@
                             <td class="text-center"><a href="{{ route('chronicles.round', $dominion->round) }}">{{ $dominion->round->number }}</a></td>
                             <td><a href="{{ route('chronicles.dominion', $dominion) }}">{{ $dominion->name }}</a></td>
                             <td>
-                                <a href="{{ route('scribes.faction', str_slug($dominion->race->name)) }}" target="_blank"><i class="ra ra-scroll-unfurled"></i></a>&nbsp;
+                                <a href="{{ route('scribes.faction', str_slug($dominion->race->name)) }}" target="_blank"><i class="fas fa-book"></i></a>&nbsp;
                                 <a href="{{ route('chronicles.faction', $dominion->race->name) }}">{{ $dominion->race->name }}</a>
                             </td>
                             <td>{{ number_format($dominion->land) }}</td>

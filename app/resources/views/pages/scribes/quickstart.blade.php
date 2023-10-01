@@ -18,7 +18,7 @@
                 <tbody>
                     <tr>
                         <td class="text-left">Faction</td>
-                        <td class="text-left">{{ $quickstart->race->name }} <a href="{{ route('scribes.faction', $quickstart->race->name) }}"><i class="ra ra-scroll-unfurled"></i></a></td>
+                        <td class="text-left">{{ $quickstart->race->name }} <a href="{{ route('scribes.faction', $quickstart->race->name) }}"><i class="fas fa-book"></i></a></td>
                     </tr>
                     <tr>
                         <td class="text-left">Title</td>

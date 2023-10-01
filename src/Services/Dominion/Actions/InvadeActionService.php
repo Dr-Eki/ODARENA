@@ -63,14 +63,9 @@ class InvadeActionService
     protected const OVERWHELMED_PERCENTAGE = 20.0;
 
     /**
-     * @var float Percentage of units to be stunned
-     */
-    protected const STUN_RATIO = 1;
-
-    /**
      * @var float Lowest possible DPA.
      */
-    protected const MINIMUM_DPA = 1;
+    protected const MINIMUM_DPA = 10;
 
     /** @var array Invasion result array. todo: Should probably be refactored later to its own class */
     protected $invasion = [
@@ -727,7 +722,7 @@ class InvadeActionService
             ]);
 
             # Debug before saving:
-            #ldd($this->invasion); dd('Safety!');
+            ldd($this->invasion); dd('Safety!');
             
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);

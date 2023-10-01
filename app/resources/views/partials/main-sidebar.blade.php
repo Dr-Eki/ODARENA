@@ -15,7 +15,19 @@
 
         <ul class="sidebar-menu" data-widget="tree">
             @if (isset($selectedDominion))
-                <li class="{{ Route::is('dominion.status') ? 'active' : null }}"><a href="{{ route('dominion.status') }}"><i class="fas fa-map-pin fa-fw"></i> <span>Status</span></a></li>
+                <li class="{{ Route::is('dominion.status') ? 'active' : null }}">
+                    <a href="{{ route('dominion.status') }}">
+                        <i class="fas fa-map-pin fa-fw"></i>
+                        <span>Status</span>
+
+                        @if(($unreadNotificationsCount = $selectedDominion->unreadNotifications->count()))
+                            <span class="label label-warning pull-right"><i class="fas fa-scroll fa-fw"></i>&nbsp;{{ number_format($unreadNotificationsCount) }}</span>
+                        @endif
+                    </a>
+                
+                </li>
+
+                
 
 
                 <li class="{{ Route::is('dominion.resources') ? 'active' : null }}">

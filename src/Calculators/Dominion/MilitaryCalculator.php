@@ -2418,9 +2418,9 @@ class MilitaryCalculator
         }
 
         $invasionEvents = $invasionEvents->filter(function (GameEvent $event)
-        {
-            return !$event->data['result']['overwhelmed'];
-        });
+            {
+                return !$event->data['result']['overwhelmed'];
+            });
 
         return $invasionEvents->count();
     }
@@ -2661,7 +2661,6 @@ class MilitaryCalculator
 
         return $hasReturningUnits;
     }
-
 
     /*
     *   Land gains formula go here, because they break the game when they were in the Land Calculator.

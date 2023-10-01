@@ -57,7 +57,7 @@
                     <ul class="nav navbar-nav">
                         <li class="{{ Route::is('home') ? 'active' : null }}"><a href="{{ route('home') }}">Home</a></li>
                         <li class="{{ Route::is('chronicles.*') ? 'active' : null }}"><a href="{{ route('chronicles.index') }}">Chronicles</a></li>
-                        <li class="{{ Route::is('scribes.*') ? 'active' : null }}"><a href="{{ route('scribes.factions') }}"><i class="ra ra-scroll-unfurled"></i> Scribes</a></li>
+                        <li class="{{ Route::is('scribes.*') ? 'active' : null }}"><a href="{{ route('scribes.factions') }}"><i class="fas fa-book"></i> Scribes</a></li>
 
 
                         @auth

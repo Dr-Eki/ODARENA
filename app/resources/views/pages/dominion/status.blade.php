@@ -495,7 +495,16 @@
     <div class="col-sm-12 col-md-9">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-newspaper-o"></i> Recent News</h3>
+                <h3 class="box-title"><i class="fas fa-scroll"></i> News</h3>
+
+                <div class="pull-right">
+                    <form action="{{ route('dominion.misc.clear-notifications') }}" method="post" id="clear-notifications-form">
+                        @csrf
+                            <button type="submit" class="btn btn-primary">
+                                <i class="far fa-envelope-open"></i>&nbsp;Mark read
+                            </button>
+                    </form>
+                </div>
             </div>
 
             @if ($notifications->isEmpty())
@@ -505,8 +514,15 @@
             @else
                 <div class="box-body">
                     <table class="table table-condensed no-border">
+                        <colgroup>
+                            <col width="200">
+                            <col>
+                        </colgroup>
                         @foreach ($notifications as $notification)
                             @php
+                                $isRead = ($notification->read_at !== null);
+                                $spanClass = ($isRead ? 'text-muted' : 'text-bold');
+
                                 $route = array_get($notificationHelper->getNotificationCategories(), "{$notification->data['category']}.{$notification->data['type']}.route", '#');
 
                                 if (is_callable($route)) {
@@ -520,7 +536,7 @@
                             @endphp
                             <tr>
                                 <td>
-                                    <span class="text-muted">{{ $notification->created_at }}</span>
+                                    <span class="{{ $spanClass }}">{{ $notification->created_at }}</span>
                                 </td>
                                 <td>
                                     @if ($route !== '#')<a href="{{ $route }}">@endif
