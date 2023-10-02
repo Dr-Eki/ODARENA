@@ -27,6 +27,34 @@ spies_cost: 400,food
 wizards_cost: 200,food
 archmages_cost: 400,food
 
+terrain_perks:
+  badlands:
+    population_mod: -0.10
+  desert:
+    food_production_mod: -0.05
+  forest:
+    lumber_production_mod: 0.10
+  glacier:
+    defensive_power_mod: 0.08
+  hills:
+    population_mod: 0.08
+  jungle:
+    lumber_production_mod: 0.08
+    food_production_mod: 0.02
+  mountains:
+    ore_production_mod: 0.08
+  plains:
+    exchange_rate_mod: 0.05
+  swamps:
+    food_production_mod: 0.02
+    lumber_production_mod: 0.08
+  volcanic:
+    food_production_mod: -0.04
+  water:
+    food_production_mod: 0.04
+  wetlands:
+    food_production_mod: 0.04
+
 perks:
   draftee_dp: 1.5
   #cannot_train_wizards: 1

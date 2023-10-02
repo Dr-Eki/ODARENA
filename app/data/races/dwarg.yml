@@ -25,6 +25,35 @@ improvement_resources:
   ore: 3
   gems: 24
 
+terrain_perks:
+  badlands:
+    population_mod: -0.10
+  desert:
+    food_production_mod: -0.16
+  forest:
+    food_production_mod: 0.14
+  glacier:
+    thunderstone_production_mod: 0.10
+    food_production_mod: -0.05
+  hills:
+    construction_costs_mod: -0.20
+  jungle:
+    population_growth_mod: 0.10
+  mountains:
+    ore_production_mod: 0.12
+    gems_production_mod: 0.04
+  plains:
+    offensive_power_mod: 0.12
+  swamps:
+    mana_production_mod: 0.04
+  volcanic:
+    thunderstone_production_mod: 0.20
+    food_production_mod: -0.10
+  water:
+    food_production_mod: 0.04
+  wetlands:
+    food_production_mod: 0.08
+
 perks:
   salvaging: 50
   enemy_casualties: -20

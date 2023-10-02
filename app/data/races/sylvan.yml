@@ -23,6 +23,33 @@ peasants_alias: pixie
 improvement_resources:
   mana: 4
 
+terrain_perks:
+  badlands:
+    population_mod: -0.14
+  desert:
+    population_mod: -0.14
+  forest:
+    population_mod: 0.08
+  glacier:
+    sapling_production_mod: -0.10
+  hills:
+    defensive_power_mod: 0.1
+  jungle:
+    improvement_points_mod: 0.04
+  mountains:
+    spell_costs_mod: 0.08
+  plains:
+    enemy_casualties_on_defense_mod: 0.08
+  swamps:
+    population_growth_mod: 0.08
+  volcanic:
+    population_mod: -0.14
+  water:
+    food_production_mod: 0.12
+  wetlands:
+    food_production_mod: 0.04
+    sorcery_damage_suffered_mod: -0.12
+
 perks:
   no_drafting: 1
   cannot_exchange: 1

@@ -757,7 +757,7 @@
 </div>
 
 <div class="row">
-    <a id="sabotage"></a>
+    <a id="terrains"></a>
     <div class="col-sm-12 col-md-12">
         <div class="box">
             <div class="box-header with-border">

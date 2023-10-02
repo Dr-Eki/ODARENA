@@ -1406,6 +1406,7 @@ class TickService
         # Run audit functions after tick transaction is completed.
         DB::transaction(function () use ($dominion)
         {
+            if(static::EXTENDED_LOGGING) { Log::debug('** Audit and repair terrain'); }
             $this->terrainService->auditAndRepairTerrain($dominion);
         });
 

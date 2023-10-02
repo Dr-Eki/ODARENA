@@ -147,7 +147,7 @@ class TerrainCalculator
         return ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) == $dominion->land;
     }
 
-    function getTerrainLandDifference(Dominion $dominion, bool $returnAbsolute): int
+    function getTerrainLandAmountDifference(Dominion $dominion, bool $returnAbsolute): int
     {
         $difference = ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) - $dominion->land;
 

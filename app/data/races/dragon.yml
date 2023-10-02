@@ -25,42 +25,37 @@ peasants_production:
   gold: 2.50
   food: 0.25
 
+terrain_perks:
+  badlands:
+    population_mod: -0.20
+  desert:
+    food_production_mod: -0.20
+  forest:
+    population_growth_mod: -0.20
+  glacier:
+    gems_production_mod: 0.20
+  hills:
+    ore_production_mod: 0.20
+  jungle:
+    population_growth_mod: -0.20
+  mountains:
+    gems_production_mod: 0.20
+  plains:
+    exchange_rate_mod: 0.25
+  swamps:
+    population_growth_mod: -0.20
+  volcanic:
+    food_production_mod: -0.20
+  water:
+    food_production_mod: 0.10
+  wetlands:
+    food_production_mod: 0.10
+
 perks:
   max_population: -10
   population_growth: -10
 
 units:
-  - name: Farmhand
-    training_time: 6
-    type:
-      - living
-      - sentient
-    cost:
-      gold: 120
-      ore: 10
-      peasant: 1
-    power:
-      offense: 0
-      defense: 1.5
-    perks:
-      food_production_raw: 0.4
-
-  - name: Driller
-    training_time: 6
-    type:
-      - living
-      - sentient
-    cost:
-      gold: 240
-      ore: 20
-      peasant: 1
-    power:
-      offense: 0
-      defense: 2
-    perks:
-      gems_production_raw: 1.2
-      building_limit: gem_mine,20 # building, buildings per unit, imp to increase
-
   - name: Mercenary
     training_time: 3
     type:
@@ -68,31 +63,28 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 600
+      gold: 500
     power:
       offense: 0
-      defense: 4
+      defense: 4.5
     perks:
-      gold_upkeep_raw: 4
+      gold_upkeep_raw: 3
 
-  - name: Dragon
-    training_time: 12
+  - name: Driller
+    training_time: 6
     type:
       - living
       - sentient
-      - massive
-      - flying
+      - intelligent
     cost:
-      gems: 50000
+      gold: 200
+      ore: 20
+      peasant: 1
     power:
-      offense: 1000
-      defense: 1000
+      offense: 0
+      defense: 1.5
     perks:
-      burns_peasants_on_attack: 20
-      food_consumption_raw: 10
-      casualties: -40
-      protects_resource_from_theft: gems,50000
-      immortal_on_overwhelming_victory: 1.10 # OP:DP ratio required to be immortal
+      gold_production_raw_from_building_pairing: 0.05,gem_mine,0.8
 
   - name: Dragon Knight
     training_time: 12
@@ -113,3 +105,23 @@ units:
       casualties: -20
       burns_peasants_on_attack: 10
       immortal_on_overwhelming_victory: 1.10 # OP:DP ratio required to be immortal
+
+  - name: Dragon
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - massive
+      - flying
+      - legendary
+    cost:
+      gems: 50000
+    power:
+      offense: 1000
+      defense: 1000
+    perks:
+      burns_peasants_on_attack: 20
+      food_consumption_raw: 10
+      casualties: -40
+      protects_resource_from_theft: gems,10000
+      immortal_on_overwhelming_victory: 1.10 # OP:DP ratio required to be immortal

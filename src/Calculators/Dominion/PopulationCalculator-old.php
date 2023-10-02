@@ -309,6 +309,7 @@ class PopulationCalculator
         $multiplier = 1;
         $multiplier += $dominion->getImprovementPerkMultiplier('unit_specific_housing');
         $multiplier += $dominion->getDeityPerkMultiplier('unit_specific_housing');
+        $multiplier += $dominion->getTerrainPerkMultiplier('unit_specific_housing_mod');
 
         $unitSpecificBuildingHousing *= $multiplier;
 

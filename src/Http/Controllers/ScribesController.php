@@ -234,6 +234,8 @@ class ScribesController extends AbstractController
     {
         return view('pages.scribes.terrain', [
             'terrains' => Terrain::all()->sortBy('name'),
+            'races' => Race::orderBy('name')->where('playable',1)->get()->sortBy('name'),
+            'terrainHelper' => app(TerrainHelper::class),
         ]);
     }
 

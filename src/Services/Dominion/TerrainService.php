@@ -86,12 +86,15 @@ class TerrainService
 
     public function auditAndRepairTerrain(Dominion $dominion): void
     {
-
         /* These are the cases when repairing should be done cases that should be repaired:
         * 1. Dominion has more terrain than land: remove terrain
         * 2. Dominion has more terrain land plus terrain being rezoned than land: remove terrain (rezoned terrain first, then existing terrain)
         * 3. Dominion has less terrain than land and no terrain being rezoned: add terrain
         * 4. Dominion has less terrain than land and terrain being rezoned: add terrain but consider land+rezoned terrain as total land
+        *
+        * If the amount of terrain owned (meaning terrain attached and terrain rezoned) is equal to land, the audit is passed.
+        *
+        * Turn off logging in the future.
         */
 
         if($this->terrainCalculator->hasTerrainAmountEqualToLand($dominion))
@@ -126,7 +129,7 @@ class TerrainService
             Log::info("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
             #ldump("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
 
-            $difference = $this->terrainCalculator->getTerrainLandDifference($dominion, true);
+            $difference = $this->terrainCalculator->getTerrainLandAmountDifference($dominion, true);
             $amountLeftToRemove = $difference;
             $differenceMinusRezoning = $difference - $totalTerrainBeingRezoned;
 

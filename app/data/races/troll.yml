@@ -25,6 +25,35 @@ construction_materials:
 improvement_resources:
   gems: 13.5
 
+terrain_perks:
+  badlands:
+    gems_production_mod: -0.04
+  desert:
+    food_production_mod: -0.08
+  forest:
+    lumber_production_mod: 0.08
+  glacier:
+    casualties_on_defense_mod: -0.08
+  hills:
+    defensive_power_mod: 0.1
+  jungle:
+    food_production_mod: 0.02
+    lumber_production_mod: 0.06
+  mountains:
+    ore_production_mod: 0.09
+  plains:
+    casualties_on_offense_mod: -0.07
+  swamps:
+    food_production_mod: 0.04
+    mana_production_mod: 0.04
+  volcanic:
+    food_production_mod: -0.14
+  water:
+    food_production_mod: 0.12
+  wetlands:
+    food_production_mod: 0.04
+    sorcery_damage_suffered_mod: -0.12
+
 perks:
   draftee_dp: 1.5
   food_consumption_mod: 20

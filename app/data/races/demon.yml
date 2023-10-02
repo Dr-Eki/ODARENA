@@ -30,6 +30,32 @@ construction_materials:
 improvement_resources:
   blood: 6
 
+terrain_perks:
+  badlands:
+    population_mod: 0.10
+  desert:
+    population_growth_mod: -1
+  forest:
+    blood_production_mod: 0.20
+  glacier:
+    enemy_casualties_on_defense_mod: 0.10
+  hills:
+    defensive_power_mod: 0.12
+  jungle:
+    blood_production_mod: 0.20
+  mountains:
+    ore_production_mod: 0.08
+  plains:
+    enemy_casualties_on_offense_mod: 0.10
+  swamps:
+    mana_production_mod: 0.10
+  volcanic:
+    blood_production_mod: 0.10
+  water:
+    food_production_mod: 0.10
+  wetlands:
+    food_production_mod: 0.10
+
 perks:
   starts_devoted_to_azk_hurum: 1
   cannot_renounce_deity: 1
