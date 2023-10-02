@@ -8,7 +8,9 @@ use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\TerrainHelper;
 
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Race;
 use OpenDominion\Models\Terrain;
+
 use OpenDominion\Services\Dominion\QueueService;
 
 class TerrainCalculator
@@ -132,22 +134,22 @@ class TerrainCalculator
 
     # Audit support functions
 
-    function hasMoreTerrainThanLand(Dominion $dominion): bool
+    public function hasMoreTerrainThanLand(Dominion $dominion): bool
     {
         return ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) > $dominion->land;
     }
 
-    function hasLessTerrainThanLand(Dominion $dominion): bool
+    public function hasLessTerrainThanLand(Dominion $dominion): bool
     {
         return ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) < $dominion->land;
     }
 
-    function hasTerrainAmountEqualToLand(Dominion $dominion): bool
+    public function hasTerrainAmountEqualToLand(Dominion $dominion): bool
     {
         return ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) == $dominion->land;
     }
 
-    function getTerrainLandAmountDifference(Dominion $dominion, bool $returnAbsolute): int
+    public function getTerrainLandAmountDifference(Dominion $dominion, bool $returnAbsolute): int
     {
         $difference = ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) - $dominion->land;
 
@@ -157,6 +159,40 @@ class TerrainCalculator
         }
 
         return $difference;
+    }
+
+    public function getStartingTerrain(Race $race, int $startingLand = 1000): array
+    {
+        $terrains = Terrain::all();
+        $landLeftToDistribute = $startingLand;
+
+        foreach($terrains as $terrain)
+        {
+            $startingTerrain[$terrain->key] = 0;
+        }
+
+        if($race->getPerkValue('starting_land_only_home_terrain'))
+        {
+            $startingTerrain[$race->homeTerrain()->key] = $startingLand;
+
+            $startingTerrain = array_filter($startingTerrain, function($value) {
+                return $value !== 0;
+            });
+
+            return $terrain;
+        }
+
+        foreach($terrains->where('key', '!=', $race->homeTerrain()->key) as $terrain)
+        {
+            $startingTerrain[$terrain->key] = ($startingLand * (1/3)) * (1 / (count($terrains->where('key', '!=', $race->homeTerrain()->key)) - 0));
+            $startingTerrain[$terrain->key] = (int)round($startingTerrain[$terrain->key]);
+            $landLeftToDistribute -= $startingTerrain[$terrain->key];
+        }
+
+        $startingTerrain[$race->homeTerrain()->key] = max(0, $landLeftToDistribute);
+
+        return $startingTerrain;
+
     }
 
 }

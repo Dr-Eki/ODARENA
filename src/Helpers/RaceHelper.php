@@ -707,6 +707,11 @@ class RaceHelper
                 $description = 'Enemy casualties';
                 $valueType = '%';
                 break;
+            case 'starting_land_only_home_terrain':
+                $negativeBenefit = false;
+                $description = 'Starting land is only home terrain';
+                $booleanValue = true;
+                break;
             default:
                 $negativeBenefit = false;
                 $description = 'No description for perk: ' . $perkType->key;

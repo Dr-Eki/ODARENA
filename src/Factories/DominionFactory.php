@@ -33,7 +33,7 @@ use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\BarbarianCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
-#use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\TerrainCalculator;
 
 use OpenDominion\Services\Dominion\DeityService;
 use OpenDominion\Services\Dominion\QueueService;
@@ -49,7 +49,7 @@ class DominionFactory
     protected $buildingCalculator;
     protected $barbarianCalculator;
     protected $improvementCalculator;
-    #protected $spellCalculator;
+    protected $terrainCalculator;
 
     protected $deityService;
     protected $resourceService;
@@ -65,7 +65,7 @@ class DominionFactory
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->barbarianCalculator = app(BarbarianCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
-        #$this->spellCalculator = app(SpellCalculator::class);
+        $this->terrainCalculator = app(TerrainCalculator::class);
 
         $this->deityService = app(DeityService::class);
         $this->resourceService = app(ResourceService::class);
@@ -130,7 +130,9 @@ class DominionFactory
 
         $startingBuildings = $this->getStartingBuildings($race, $landBase);
 
-        $startingTerrain = $this->getStartingTerrain($race, $landBase);
+        $startingTerrain = $this->terrainCalculator->getStartingTerrain($race, $landBase);
+
+        dd($startingTerrain);
 
         # Late-joiner bonus:
         # Give +1.5% starting resources per hour late, max +150% (at 100 hours, mid-day 4).
@@ -506,13 +508,6 @@ class DominionFactory
         }
 
         return $startingBuildings;
-    }
-
-    public function getStartingTerrain(Race $race, int $landBase): array
-    {
-        $startingTerrain[$race->homeTerrain()->key] = $landBase;
-
-        return $startingTerrain;
     }
 
     /**

@@ -151,6 +151,7 @@ class ResourceCalculator
         $production += $dominion->getUnitPerkProductionBonus($resourceKey . '_production_raw');
         $production += $dominion->race->getPerkValue($resourceKey . '_production_raw');
         $production += $dominion->getUnitPerkProductionBonusFromTitle($resourceKey);
+        $production += $dominion->getTerrainPerkValue($resourceKey . '_production_raw');
 
 
         if(isset($dominion->title))

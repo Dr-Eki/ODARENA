@@ -59,6 +59,7 @@ perks:
   xp_generation_mod: 50
   salvaging: 25
   improvements: 50
+  starting_land_only_home_terrain: 1
 
 units:
   - name: Warden

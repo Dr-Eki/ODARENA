@@ -23,7 +23,7 @@ construction_materials:
 
 peasants_production:
   gold: 2.50
-  food: 0.25
+  food: 0.35
 
 terrain_perks:
   badlands:
@@ -54,6 +54,7 @@ terrain_perks:
 perks:
   max_population: -10
   population_growth: -10
+  starting_land_only_home_terrain: 1
 
 units:
   - name: Mercenary
