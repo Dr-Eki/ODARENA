@@ -670,32 +670,56 @@
             @slot('titleIconClass', 'ra ra-honeycomb')
             <table class="table">
                 <colgroup>
+                    <col width="100">
                     <col>
-                    <col width="100">
-                    <col width="100">
-                    <col width="100">
+                    <col>
                 </colgroup>
                 <thead>
                     <tr>
                         <th>Terrain</th>
-                        <th class="text-center">Number</th>
-                        <th class="text-center">% of total</th>
+                        <th class="text-center">Amount</th>
+                        <th>
+                            <span data-toggle="tooltip" data-placement="top" title="Perk value shown is total for each perk (sum of perk values across terrains)">
+                                Perks
+                            </span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
+                    @foreach($dominion->race->raceTerrains as $raceTerrain)
                         <tr>
-                            <td>{{ $terrain->name }}</td>
-                            <td class="text-center">{{ number_format($data['terrain'][$terrain->key]['amount']) }}</td>
-                            <td class="text-center">{{ number_format($data['terrain'][$terrain->key]['percentage'], 2) }}%</td>
+                            <td>{{ $raceTerrain->terrain->name }}</td>
+                            <td class="text-center">
+                                {{ number_format($data['terrain'][$raceTerrain->terrain->key]['amount']) }}
+                                <small class="text-muted">({{ number_format($data['terrain'][$raceTerrain->terrain->key]['percentage'], 2) }}%)</small>
+                            </td>
+                            <td>
+                                @if(count($data['terrain_perks']))
+                                    @foreach($data['terrain_perks'][$raceTerrain->terrain->key] as $terrainPerkKey => $terrainPerkValue)
+                                        {!! $terrainHelper->getPerkDescription($terrainPerkKey, $terrainPerkValue, false) !!}
+                                        <br>
+                                    @endforeach
+                                @else
+                                    <em class="text-muted">None</em>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
+                    {{-- 
+                        @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
+                            <tr>
+                                <td>{{ $terrain->name }}</td>
+                                <td class="text-center">{{ number_format($data['terrain'][$terrain->key]['amount']) }}</td>
+                                <td class="text-center">{{ number_format($data['terrain'][$terrain->key]['percentage'], 2) }}%</td>
+                            </tr>
+                        @endforeach
+                    --}}
                 </tbody>
             </table>
         @endcomponent
     </div>
 
-    <div class="col-sm-12col-md-6">
+    <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Incoming land breakdown')
@@ -742,7 +766,6 @@
             </table>
         @endcomponent
     </div>
-
 
 </div>
 <div class="row">

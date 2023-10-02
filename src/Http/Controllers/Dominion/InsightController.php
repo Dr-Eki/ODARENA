@@ -258,6 +258,7 @@ class InsightController extends AbstractDominionController
             'researchHelper' => app(ResearchHelper::class),
             'spellHelper' => app(SpellHelper::class),
             'techHelper' => app(TechHelper::class),
+            'terrainHelper' => app(TerrainHelper::class),
             'titleHelper' => app(TitleHelper::class),
             'unitHelper' => app(UnitHelper::class),
 

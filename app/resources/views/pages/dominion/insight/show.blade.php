@@ -805,11 +805,14 @@
                     <tr>
                         <th>Terrain</th>
                         <th class="text-center">Amount</th>
-                        <th>Perks</th>
+                        <th>
+                            <span data-toggle="tooltip" data-placement="top" title="Perk value shown is total for each perk (sum of perk values across terrains)">
+                                Perks
+                            </span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-
                     @foreach($dominion->race->raceTerrains as $raceTerrain)
                         <tr>
                             <td>{{ $raceTerrain->terrain->name }}</td>
