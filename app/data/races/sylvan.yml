@@ -30,7 +30,7 @@ terrain_perks:
     population_mod: -0.14
   forest:
     population_mod: 0.08
-    sapling_production_raw: 2
+    sapling_production_raw: 0.001
   glacier:
     sapling_production_mod: -0.10
   hills:
@@ -59,6 +59,7 @@ perks:
   cannot_train_wizards: 1
   cannot_train_archmages: 1
   unemployed_peasants_produce: 1
+  saplings_per_forest: 2
   starting_land_only_home_terrain: 1
 
 units:

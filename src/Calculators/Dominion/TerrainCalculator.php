@@ -179,7 +179,7 @@ class TerrainCalculator
                 return $value !== 0;
             });
 
-            return $terrain;
+            return $startingTerrain;
         }
 
         foreach($terrains->where('key', '!=', $race->homeTerrain()->key) as $terrain)
