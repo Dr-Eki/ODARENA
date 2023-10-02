@@ -41,6 +41,7 @@ use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\ResearchHelper;
 use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Helpers\TechHelper;
+use OpenDominion\Helpers\TerrainHelper;
 use OpenDominion\Helpers\TitleHelper;
 use OpenDominion\Helpers\UnitHelper;
 
@@ -150,7 +151,6 @@ class InsightController extends AbstractDominionController
 
     public function getDominion(Dominion $dominion)
     {
-        $raceHelper = app(RaceHelper::class);
 
         $dominionAdvancements = $dominion->advancements()->get()->sortBy('name');
         $dominionTechs = $dominion->techs()->get()->sortBy('name');
@@ -174,6 +174,7 @@ class InsightController extends AbstractDominionController
             'researchHelper' => app(ResearchHelper::class),
             'spellHelper' => app(SpellHelper::class),
             'techHelper' => app(TechHelper::class),
+            'terrainHelper' => app(TerrainHelper::class),
             'titleHelper' => app(TitleHelper::class),
             'unitHelper' => app(UnitHelper::class),
 

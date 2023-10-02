@@ -797,26 +797,43 @@
             @slot('titleIconClass', 'ra ra-honeycomb')
             <table class="table">
                 <colgroup>
+                    <col width="100">
                     <col>
-                    <col width="100">
-                    <col width="100">
+                    <col>
                 </colgroup>
                 <thead>
                     <tr>
                         <th>Terrain</th>
-                        <th class="text-center">Number</th>
-                        <th class="text-center">% of total</th>
+                        <th class="text-center">Amount</th>
+                        <th>Perks</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
-                        @php
-                            $amount = $dominion->{'terrain_' . $terrain->key};
-                        @endphp
+
+                    @foreach($dominion->race->raceTerrains as $raceTerrain)
                         <tr>
-                            <td>{{ ucfirst($terrain->name) }}</td>
-                            <td class="text-center">{{ number_format($amount) }}</td>
-                            <td class="text-center">{{ number_format(($amount / $dominion->land) * 100, 2) }}%</td>
+                            <td>{{ $raceTerrain->terrain->name }}</td>
+                            <td class="text-center">
+                                {{ number_format($dominion->{'terrain_' . $raceTerrain->terrain->key}) }}
+                                <small class="text-muted">({{ number_format(($dominion->{'terrain_' . $raceTerrain->terrain->key} / $dominion->land)*100,2) }}%)</small>
+                            </td>
+                            <td>
+                                @if($raceTerrain->perks->count())
+                                    @foreach($raceTerrain->perks as $perk)
+                                        @php
+                                            $perkValue = $dominion->getTerrainPerkValue($perk->key);
+                                            if($terrainHelper->getPerkType($perk->key) == 'mod')
+                                            {
+                                                $perkValue /= 10;
+                                            }
+                                        @endphp
+                                        {!! $terrainHelper->getPerkDescription($perk->key, $perkValue, false) !!}
+                                        <br>
+                                    @endforeach
+                                @else
+                                    <em class="text-muted">None</em>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -1018,7 +1035,7 @@
                             <td>{{ $tech->name }}</td>
                             <td>
                                 <ul style="list-style-type: none">
-                                    @foreach($researchHelper->getTechPerkDescription($tech, $selectedDominion->race) as $effect)
+                                    @foreach($researchHelper->getTechPerkDescription($tech, $dominion->race) as $effect)
                                         <li>{{ $effect }}</li>
                                     @endforeach
                                 </ul>

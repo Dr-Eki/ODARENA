@@ -21,6 +21,7 @@ use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\LandImprovementHelper;
 use OpenDominion\Helpers\RaceHelper;
+use OpenDominion\Helpers\TerrainHelper;
 use OpenDominion\Helpers\TitleHelper;
 use OpenDominion\Helpers\UnitHelper;
 
@@ -47,6 +48,7 @@ class InsightService
     protected $improvementHelper;
     protected $landHelper;
     protected $raceHelper;
+    protected $terrainHelper;
     protected $titleHelper;
     protected $unitHelper;
 
@@ -71,6 +73,7 @@ class InsightService
         $this->improvementHelper = app(ImprovementHelper::class);
         $this->landHelper = app(LandHelper::class);
         $this->raceHelper = app(RaceHelper::class);
+        $this->terrainHelper = app(TerrainHelper::class);
         $this->titleHelper = app(TitleHelper::class);
         $this->unitHelper = app(UnitHelper::class);
 
@@ -408,6 +411,25 @@ class InsightService
             $data['terrain'][$terrain->key]['amount'] = $amount;
             $data['terrain'][$terrain->key]['percentage'] = ($amount / $target->land) * 100;
             $data['terrain']['incoming'][$terrain->key] = array_fill(1, 12, 0);
+        }
+
+
+        $data['terrain_perks'] = [];
+        foreach($target->race->raceTerrains as $raceTerrain)
+        {
+            if($raceTerrain->perks->count())
+            {
+                foreach($raceTerrain->perks as $perk)
+                {
+                    $perkValue = $target->getTerrainPerkValue($perk->key);
+                    if($this->terrainHelper->getPerkType($perk->key) == 'mod')
+                    {
+                        $perkValue /= 10;
+                    }
+
+                    $data['terrain_perks'][$raceTerrain->terrain->key][$perk->key] = $perkValue;
+                }
+            }            
         }
 
         $this->queueService->getExplorationQueue($target)->each(static function ($row) use (&$data)
