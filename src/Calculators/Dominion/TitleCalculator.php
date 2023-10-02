@@ -17,7 +17,7 @@ class TitleCalculator
 
     public function canChangeTitle(Dominion $dominion): bool
     {
-        return ($dominion->history()->count() == 0 and $dominion->protection_ticks == 96);
+        return ($dominion->history()->count() == 0 and $dominion->protection_ticks >= 96);
     }
 
 }

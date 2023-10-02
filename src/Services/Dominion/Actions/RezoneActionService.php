@@ -143,7 +143,7 @@ class RezoneActionService
             }
 
             # Instant rezone in 96 protection ticks
-            if($dominion->protection_ticks === 96)
+            if($dominion->protection_ticks >= 96)
             {
                 # Queue the rezoning.
                 foreach($terrainAdd as $terrain => $amount)

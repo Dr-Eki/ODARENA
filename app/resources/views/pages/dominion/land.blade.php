@@ -137,7 +137,7 @@
 
                 <h4>Rezone</h4>
                 <p>You can rezone from one terrain to another. 
-                    @if($selectedDominion->protection_ticks == 96)
+                    @if($selectedDominion->protection_ticks >= 96)
                         Rezoning is instant during the first tick of protection, thereafter it takes <strong>12 ticks</strong> to complete.
                     @else
                         Rezoning takes <strong>12 ticks</strong> to complete.

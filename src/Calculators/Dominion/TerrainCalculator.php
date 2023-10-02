@@ -184,7 +184,7 @@ class TerrainCalculator
 
         foreach($terrains->where('key', '!=', $race->homeTerrain()->key) as $terrain)
         {
-            $startingTerrain[$terrain->key] = ($startingLand * (1/3)) * (1 / (count($terrains->where('key', '!=', $race->homeTerrain()->key)) - 0));
+            $startingTerrain[$terrain->key] = ($startingLand * (2/3)) * (1 / (count($terrains->where('key', '!=', $race->homeTerrain()->key)) - 0));
             $startingTerrain[$terrain->key] = (int)round($startingTerrain[$terrain->key]);
             $landLeftToDistribute -= $startingTerrain[$terrain->key];
         }

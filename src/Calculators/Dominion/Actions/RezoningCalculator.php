@@ -59,7 +59,7 @@ class RezoningCalculator
      */
     public function getRezoningCost(Dominion $dominion): int
     {
-        if($dominion->race->getPerkValue('no_rezone_costs') or $dominion->protection_ticks == 96)
+        if($dominion->race->getPerkValue('no_rezone_costs') or $dominion->protection_ticks >= 96)
         {
             return 0;
         }
@@ -88,7 +88,7 @@ class RezoningCalculator
      */
     public function getMaxAfford(Dominion $dominion): int
     {
-        if($dominion->race->getPerkValue('no_rezone_costs') or $dominion->protection_ticks == 96)
+        if($dominion->race->getPerkValue('no_rezone_costs') or $dominion->protection_ticks >= 96)
         {
             return $dominion->land;
         }

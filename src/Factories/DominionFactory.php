@@ -109,6 +109,11 @@ class DominionFactory
         $startingParameters['npc_modifier'] = 0;
         $startingParameters['protection_ticks'] = 96;
 
+        if($realm->round->ticks > $startingParameters['protection_ticks'])
+        {
+            $startingParameters['protection_ticks'] += ($realm->round->ticks - $startingParameters['protection_ticks']) / 4;
+        }
+
         foreach($race->units as $unit)
         {
             $startingParameters['unit' . $unit->slot] = 0;
@@ -132,12 +137,7 @@ class DominionFactory
 
         $startingTerrain = $this->terrainCalculator->getStartingTerrain($race, $landBase);
 
-        dd($startingTerrain);
-
         # Late-joiner bonus:
-        # Give +1.5% starting resources per hour late, max +150% (at 100 hours, mid-day 4).
-        # Fix this for zero-starts?
-        $lateJoinMultiplier = 1 + $realm->round->ticks * 0.004;
 
         $startingParameters['draftees'] = 0;
 
@@ -269,11 +269,6 @@ class DominionFactory
         if(!$race->getPerkValue('no_food_consumption'))
         {
             $startingResources['food'] += floor($startingParameters['peasants'] * 48 * 0.25 * (1 + $race->getPerkValue('food_consumption_raw')));
-        }
-
-        foreach($startingResources as $resourceKey => $amount)
-        {
-            $startingResources[$resourceKey] = $amount * $lateJoinMultiplier;
         }
 
         $dominion = Dominion::create([
