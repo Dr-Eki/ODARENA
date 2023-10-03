@@ -30,7 +30,7 @@ class TerrainHelper
             'unit_specific_housing_mod' => ['%+g%% unit specific housing', ' for every 1%% of this terrain.'],
             'military_housing_mod' => ['%+g%% military housing', ' for every 1%% of this terrain.'],
             'population_mod' => ['%+g%% population', ' for every 1%% of this terrain.'],
-            'population_growth_mod' => ['%+g%% population', ' for every 1%% of this terrain.'],
+            'population_growth_mod' => ['%+g%% population growth rate', ' for every 1%% of this terrain.'],
 
             # Resources and Production
             'gold_production_raw' => ['%s gold/tick', ' per acre of this terrain.'],
