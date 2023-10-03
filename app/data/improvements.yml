@@ -177,6 +177,18 @@ hollowing:
 
 # END DWARG #
 
+# BEGIN SNOW ELF #
+
+gryphonry:
+  name: Gryphonry
+  exclusive_races:
+    - Snow Elf
+  perks:
+    unit_pairing: 100,10000
+    attrition_protection: 100,10000
+
+# END SNOW ELF #
+
 # BEGIN SYLVAN
 
 affinity:
@@ -668,15 +680,6 @@ imperial_gnome_construction:
     construction_cost: -25,4000
     rezone_cost: -25,4000
     unit_pairing: 25,4000
-
-gryphonry:  
-  enabled: 0
-  name: Gryphonry
-  exclusive_races:
-    - Snow Elf
-  perks:
-    unit_pairing: 100,10000
-    attrition_protection: 100,10000
 
 armoury:  
   enabled: 0

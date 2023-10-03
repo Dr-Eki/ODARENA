@@ -547,6 +547,29 @@ trench:
 
 # END REPTILIANS
 
+
+# BEGIN SNOW ELF
+
+battlement:
+  name: Battlement
+  exclusive_races:
+    - Snow Elf
+  land_type: mountain
+  perks:
+    defensive_power: 1,0.5,50 # Every 1% gives 1.5% DP, max +60% DP
+    snow_elf_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+
+gryphon_nest:
+  name: Gryphon Nest
+  exclusive_races:
+    - Snow Elf
+  land_type: mountain
+  perks:
+    snow_elf_unit4_production_raw_capped: 0.02,20
+    attrition_protection: 2,4,Snow Elf # amount, slot, faction
+
+# END SNOW ELF
+
 # BEGIN SWARM
 
 aquifer:  
@@ -891,30 +914,6 @@ naval_institute:
     damage_from_lightning_bolt: 1,-0.75 # Every 1% reduces damage from LBs by 0.75%
     draftee_housing: 30
     housing: 0
-
-# BEGIN SNOW ELF
-
-battlement:  
-  enabled: 0
-  name: Battlement
-  exclusive_races:
-    - Snow Elf
-  land_type: mountain
-  perks:
-    defensive_power: 1,1.8,36 # Every 1% gives 1.5% DP, max +60% DP
-    snow_elf_unit1_housing: 20
-
-gryphon_nest:  
-  enabled: 0
-  name: Gryphon Nest
-  exclusive_races:
-    - Snow Elf
-  land_type: mountain
-  perks:
-    snow_elf_unit4_production_raw_capped: 0.03,20
-    attrition_protection: 2,4,Snow Elf # amount, slot, faction
-
-# END SNOW ELF
 
 smithy:  
   enabled: 0

@@ -7,10 +7,10 @@ playable: 1
 skill_level: 2
 
 improvement_resources:
-  gold: 1.3
-  ore: 2.6
-  lumber: 2.6
-  gems: 15.6
+  gold: 1.25
+  ore: 2.5
+  lumber: 2.5
+  gems: 24
   mana: 0.08
 
 terrain_perks:
@@ -47,12 +47,13 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 720
-      ore: 75
-      lumber: 25
+      gold: 1200
+      ore: 50
+      lumber: 150
+      draftees: 1
     power:
-      offense: 5
-      defense: 7
+      offense: 4
+      defense: 6
     perks:
       immortal_on_fending_off: 1
 
@@ -63,15 +64,15 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 720
-      ore: 25
-      gems: 2
+      gold: 1200
+      ore: 150
+      lumber: 50
+      draftees: 1
     power:
-      offense: 7
-      defense: 5
+      offense: 6
+      defense: 4
     perks:
-      casualties: -20
-      offense_from_pairing: 4,1,0.01 #,1 # slot, amount, num required
+      offense_from_pairing: 4,1,0.01 # slot, amount, num required
 
   - name: Hailstorm Cannon
     training_time: 12
@@ -87,7 +88,7 @@ units:
       offense: 0
       defense: 0
     perks:
-      offense_from_resource_exhausting: mana,5 # +1 OP per 5 mana, no max, exhausts mana upon firing
+      offense_from_resource_exhausting: mana,8 # +1 OP per 8 mana, no max, exhausts mana upon firing
       amount_limit: 1
       does_not_count_as_population: 1
       sendable_with_zero_op: 1
@@ -103,6 +104,8 @@ units:
       - intelligent
       - wild
       - massive
+    cost:
+      gold: 0
     power:
       offense: 100
       defense: 100
@@ -111,5 +114,5 @@ units:
       does_not_count_as_population: 1
       building_limit: gryphon_nest,2
       food_consumption_raw: 4
-      casualties: -75
+      casualties: -30
       attrition: 10
