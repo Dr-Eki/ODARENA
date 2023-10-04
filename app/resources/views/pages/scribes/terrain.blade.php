@@ -72,7 +72,10 @@
                         @foreach($races as $row => $race)
                             <tr>
                                 <td><strong>{{ $race->name }}</strong></td>
-                                @foreach($race->raceTerrains as $raceTerrain)
+                                @foreach($terrains as $terrain)
+                                    @php
+                                        $raceTerrain = OpenDominion\Models\RaceTerrain::where(['race_id' => $race->id, 'terrain_id' => $terrain->id])->first();
+                                    @endphp
                                     <td>
                                         @if($raceTerrain->perks->count())
                                             @foreach($raceTerrain->perks as $perk)
@@ -85,6 +88,8 @@
                                     </td>
                                 @endforeach
                             </tr>
+
+                            
                             @if (($row + 1) % 4 === 0)
                                 <tr class="header-row">
                                     <th>Faction</th>

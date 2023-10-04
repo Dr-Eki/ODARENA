@@ -22,7 +22,7 @@ peasants_production:
 
 terrain_perks:
   badlands:
-    population_mod: -0.10 # -0.25% population per 1% badlands
+    population_mod: -0.10 # -0.10% population per 1% badlands
   desert:
     population_mod: -0.25 # -0.25% population per 1% desert
     lumber_production_mod: -0.25 # -0.25% lumber per 1% desert
