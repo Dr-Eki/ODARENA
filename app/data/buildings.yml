@@ -148,7 +148,7 @@ gem_mine:
   perks:
     gems_production_raw: 6
 
-lumberyard:  
+lumberyard:
   name: Lumberyard
   exclusive_races:
     - Afflicted
@@ -179,6 +179,7 @@ saw_mill:
   name: Saw Mill
   exclusive_races:
     - Kobold
+    - Snow Elf
     - Troll
   perks:
     lumber_production_raw: 35
