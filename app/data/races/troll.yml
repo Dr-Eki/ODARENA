@@ -35,7 +35,7 @@ terrain_perks:
   glacier:
     casualties_on_defense_mod: -0.08
   hills:
-    defensive_power_mod: 0.1
+    defensive_power_mod: 0.04
   jungle:
     food_production_mod: 0.02
     lumber_production_mod: 0.06

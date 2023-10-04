@@ -33,14 +33,14 @@ terrain_perks:
     food_production_mod: -0.04
     population_mod: -0.04
   hills:
-    defensive_power_mod: 0.12
+    defensive_power_mod: 0.04
   jungle:
     lumber_production_mod: 0.12
     population_mod: 0.08
   mountains:
     gold_production_mod: 0.08
   plains:
-    offensive_power_mod: 0.14
+    offensive_power_mod: 0.05
   swamps:
     mana_production_mod: 0.10
   volcanic:

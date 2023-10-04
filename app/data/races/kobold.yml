@@ -15,16 +15,16 @@ terrain_perks:
   forest:
     casualties_on_defense_mod: 0.10
   glacier:
-    offensive_power_mod: -0.08
-    defensive_power_mod: -0.08
+    offensive_power_mod: -0.03
+    defensive_power_mod: -0.03
   hills:
-    defensive_power_mod: 0.12
+    defensive_power_mod: 0.05
   jungle:
     casualties_on_defense_mod: 0.14
   mountains:
     ore_production_mod: 0.10
   plains:
-    offensive_power_mod: 0.10
+    offensive_power_mod: 0.05
   swamps:
     mana_production_mod: 0.06
   volcanic:

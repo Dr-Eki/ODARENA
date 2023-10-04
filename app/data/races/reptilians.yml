@@ -45,9 +45,9 @@ terrain_perks:
     food_production_mod: -0.10
     population_growth_mod: 0.25
   water:
-    offensive_power_mod: 0.08
+    offensive_power_mod: 0.05
   wetlands:
-    defensive_power_mod: 0.12
+    defensive_power_mod: 0.04
 
 
 perks:

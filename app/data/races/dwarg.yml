@@ -43,7 +43,7 @@ terrain_perks:
     ore_production_mod: 0.12
     gems_production_mod: 0.04
   plains:
-    offensive_power_mod: 0.12
+    offensive_power_mod: 0.05
   swamps:
     mana_production_mod: 0.04
   volcanic:

@@ -23,7 +23,7 @@ terrain_perks:
   glacier:
     mana_production_mod: 0.18
   hills:
-    defensive_power_mod: 0.08
+    defensive_power_mod: 0.04
   jungle:
     lumber_production_mod: 0.12
   mountains:
@@ -35,9 +35,9 @@ terrain_perks:
   volcanic:
     food_production_mod: -0.10
   water:
-    offensive_power_mod: 0.08
+    food_production_mod: 0.04
   wetlands:
-    defensive_power_mod: 0.12
+    food_production_mod: 0.04
 
 units:
   - name: Arbalist

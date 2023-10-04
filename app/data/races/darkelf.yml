@@ -34,7 +34,7 @@ terrain_perks:
     food_production_mod: -0.04
     population_mod: -0.04
   hills:
-    defensive_power_mod: 0.15
+    defensive_power_mod: 0.04
   jungle:
     casualties_on_defense_mod: -0.10
   mountains:

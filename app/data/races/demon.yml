@@ -40,7 +40,7 @@ terrain_perks:
   glacier:
     enemy_casualties_on_defense_mod: 0.10
   hills:
-    defensive_power_mod: 0.12
+    defensive_power_mod: 0.05
   jungle:
     blood_production_mod: 0.20
   mountains:

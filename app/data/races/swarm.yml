@@ -24,13 +24,13 @@ construction_materials:
 
 terrain_perks:
   badlands:
-    defensive_power_mod: 0.06
+    defensive_power_mod: 0.02
   desert:
     food_production_mod: -0.08
   forest:
     food_production_mod: 0.10
   glacier:
-    defensive_power_mod: 0.08
+    defensive_power_mod: 0.02
   hills:
     population_mod: 0.11
   jungle:

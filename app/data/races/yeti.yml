@@ -35,7 +35,7 @@ terrain_perks:
   forest:
     lumber_production_mod: 0.10
   glacier:
-    defensive_power_mod: 0.08
+    defensive_power_mod: 0.04
   hills:
     population_mod: 0.08
   jungle:

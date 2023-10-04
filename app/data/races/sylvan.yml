@@ -34,7 +34,7 @@ terrain_perks:
   glacier:
     sapling_production_mod: -0.10
   hills:
-    defensive_power_mod: 0.1
+    defensive_power_mod: 0.04
   jungle:
     improvement_points_mod: 0.04
     sapling_production_mod: 0.04
