@@ -214,6 +214,9 @@ class PopulationCalculator
         // Tech
         $multiplier += $dominion->getTechPerkMultiplier('max_population');
 
+        // Terrain
+        $multiplier += $dominion->getTerrainPerkMultiplier('population_mod');
+
         // Prestige Bonus
         $prestigeMultiplier = $this->prestigeCalculator->getPrestigeMultiplier($dominion);
 
@@ -669,6 +672,9 @@ class PopulationCalculator
 
         // Deity
         $multiplier += $dominion->getDecreePerkMultiplier('population_growth');
+
+        // Terrain
+        $multiplier += $dominion->getTerrainPerkMultiplier('population_growth_mod');
 
         # Look for population_growth in units
         foreach($dominion->race->units as $unit)
