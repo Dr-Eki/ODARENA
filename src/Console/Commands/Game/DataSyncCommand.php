@@ -1845,20 +1845,28 @@ class DataSyncCommand extends Command implements CommandInterface
     protected function syncRaceTerrains()
     {
         $this->info('Syncing race terrains...');
-
-        DB::transaction( function ()
-        {
-            foreach(Race::all() as $race)
+    
+        $allRaceTerrains = RaceTerrain::all()->pluck('id')->toArray();
+        $updatedOrCreatedRaceTerrainIds = [];
+    
+        DB::transaction(function () use (&$updatedOrCreatedRaceTerrainIds) {
+            foreach (Race::all() as $race)
             {
-                foreach(Terrain::all() as $terrain)
+                foreach (Terrain::all() as $terrain)
                 {
-                    RaceTerrain::updateOrCreate(['race_id' => $race->id, 'terrain_id' => $terrain->id]);
+                    $raceTerrain = RaceTerrain::updateOrCreate(['race_id' => $race->id, 'terrain_id' => $terrain->id]);
+                    $updatedOrCreatedRaceTerrainIds[] = $raceTerrain->id; // add the id to our list
                 }
             }
         });
-
+    
+        // Determine which RaceTerrains to delete
+        $raceTerrainsToDelete = array_diff($allRaceTerrains, $updatedOrCreatedRaceTerrainIds);
+        RaceTerrain::destroy($raceTerrainsToDelete); // Delete the RaceTerrains
+    
         $this->info('Race terrains synced.');
     }
+    
     
 
 }
