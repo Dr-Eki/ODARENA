@@ -85,7 +85,7 @@ units:
       offense: 0
       defense: 1.5
     perks:
-      gems_production_raw_from_building_pairing: 0.05,gem_mine,0.6
+      gems_production_raw_from_building_pairing: 0.05,gem_mine,0.35
 
   - name: Dragon Knight
     training_time: 12
