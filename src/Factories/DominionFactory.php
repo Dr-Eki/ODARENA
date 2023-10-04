@@ -109,9 +109,9 @@ class DominionFactory
         $startingParameters['npc_modifier'] = 0;
         $startingParameters['protection_ticks'] = 96;
 
-        if($realm->round->ticks > $startingParameters['protection_ticks'])
+        if($realm->round->ticks > $startingParameters['protection_ticks'] and env('APP_ENV') !== 'local' and request()->getHost() !== 'sim.odarena.com')
         {
-            $startingParameters['protection_ticks'] += ($realm->round->ticks - $startingParameters['protection_ticks']) / 4;
+            $startingParameters['protection_ticks'] += (int)floor($realm->round->ticks - $startingParameters['protection_ticks'] / 4);
         }
 
         foreach($race->units as $unit)

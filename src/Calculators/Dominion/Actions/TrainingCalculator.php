@@ -297,7 +297,8 @@ class TrainingCalculator
 
             if(empty($trainableByCost))
             {
-                dd('$trainableByCost is empty.', $unitType, $trainableByCost);
+                $trainableByCost[$type] = 0;
+                #dd('$trainableByCost is empty.', $costsPerUnit, $unitType, $trainableByCost);
             }
 
             $trainable[$unitType] = min($trainableByCost);
