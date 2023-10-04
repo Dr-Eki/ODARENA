@@ -33,7 +33,7 @@ terrain_perks:
     population_mod: -0.25 # -0.25% population per 1% glacier
     lumber_production_mod: -0.25 # -0.25% lumber per 1% glacier
   hills:
-    population_mod: 0.25 # +0.25% population per 1% hills
+    population_mod: 0.075 # +0.075% population per 1% hills
   jungle:
     lumber_production_mod: 0.20 # +0.20% lumber per 1% jungle
     population_mod: 0.05 # +0.05% population per 1% jungle
