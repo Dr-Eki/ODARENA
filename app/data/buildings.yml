@@ -421,7 +421,7 @@ university:
   name: University
   deity: ix
   perks:
-    pairing_limit: school,100 # building, amount, max 1 per 100 Schools
+    multiple_pairing_limit: school;chrysalis;orchard;stronghold;institute,100 # building, amount, max 1 per 100 Schools
     xp_generation_raw: 100
 
 ## Divine related
