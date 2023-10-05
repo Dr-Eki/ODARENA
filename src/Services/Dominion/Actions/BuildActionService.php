@@ -161,13 +161,50 @@ class BuildActionService
 
                 # Get amount owned of $pairedBuilding
                 $pairedBuildingRecord = $dominion->buildings()->where('key', $building->key)->first();
-                $pairedBuildingOwned = $pairedBuildingRecord ? ($pairedBuildingRecord->pivot->owned ?? 0) : 0;
+                $pairedOwnedAndUnderConstruction = $pairedBuildingRecord ? ($pairedBuildingRecord->pivot->owned ?? 0) : 0;
+                $pairedOwnedAndUnderConstruction += $this->queueService->getTrainingQueueTotalByResource($dominion, "building_{$building->key}");
+                $pairedOwnedAndUnderConstruction += $this->queueService->getRepairQueueTotalByResource($dominion, "building_{$building->key}");
 
-                $availableCapacityForBuilding = $maxCapacity - $pairedBuildingOwned;
+                $availableCapacityForBuilding = max($maxCapacity - $buildingOwnedAndUnderConstruction, 0);
 
                 if($amount > $availableCapacityForBuilding)
                 {
-                    throw new GameException('You cannot build ' . number_format($amount) . ' more ' . str_plural($building->name, $amount) . ' because you only have enough ' . $pairingBuilding->name . ' for ' . number_format($availableCapacityForBuilding) . ' ' . str_plural($building->name, $availableCapacityForBuilding) . '.');
+                    throw new GameException('You cannot build ' . number_format($amount) . ' more ' . str_plural($building->name, $amount) . ' because you only have enough ' . $pairingBuilding->name . ' for ' . number_format($availableCapacityForBuilding) . ' new ' . str_plural($building->name, $availableCapacityForBuilding) . '.');
+                }
+            }
+            if(($multiplePairingLimit = $building->getPerkValue('multiple_pairing_limit')))
+            {
+                /*
+                *   $pairingBuildings are the building on which the $building we're building is limited by.
+                *   $building is the building we're building.
+                */
+
+                $multiplePairingLimit = explode(',', $multiplePairingLimit);
+                $chunkSize = (float)$multiplePairingLimit[0];
+                $buildingKeys = (array)explode(';', $multiplePairingLimit[1]);
+                $pairingBuildings = [];
+
+                $pairingBuildingsOwned = 0;
+
+                foreach($buildingKeys as $buildingKey)
+                {
+                    $pairingBuilding = Building::where('key', $buildingKey)->firstOrFail();
+                    $pairingBuildingRecord = $dominion->buildings()->where('key', $pairingBuilding->key)->first();
+                    $pairingBuildingsOwned += $pairingBuildingRecord->pivot->owned ?? 0;
+                    $pairingBuildings[] = $pairingBuilding->name;
+                }
+
+                $buildingOwnedAndUnderConstruction = $dominion->buildings()->where('key', $building->key)->first()->pivot->owned ?? 0;
+                $buildingOwnedAndUnderConstruction += $this->queueService->getConstructionQueueTotalByResource($dominion, "building_{$building->key}");
+                $buildingOwnedAndUnderConstruction += $this->queueService->getRepairQueueTotalByResource($dominion, "building_{$building->key}");
+
+                $maxCapacity = (int)floor($pairingBuildingsOwned / $chunkSize);
+
+                $availableCapacityForBuilding = max($maxCapacity - $buildingOwnedAndUnderConstruction, 0);
+
+                if($amount > $availableCapacityForBuilding)
+                {
+                    throw new GameException('You cannot build ' . number_format($amount) . ' more ' . str_plural($building->name, $amount) . ' because you only have enough ' . generate_sentence_from_array($pairingBuildings) . ' for ' . number_format($availableCapacityForBuilding) . ' more ' . str_plural($building->name, $availableCapacityForBuilding) . '.');
                 }
             }
 

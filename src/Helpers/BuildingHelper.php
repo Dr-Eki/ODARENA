@@ -281,6 +281,7 @@ class BuildingHelper
             'research_required_to_build' => 'Requires %s research to build.',
 
             'pairing_limit' => 'You can at most have one per %2$s %1$s. Unpaired buildings are not effective.',
+            'multiple_pairing_limit' => 'You can at most have one per %1$s %2$s. Unpaired buildings are not effective.',
 
             'afflicted_unit_housing' => 'Houses %1$s %2$s.',
             'arwe_unit_housing' => 'Houses %1$s %2$s.',
@@ -338,6 +339,25 @@ class BuildingHelper
                 #$perkValue = [$amount, str_plural($building->name, $amount)];
                 
                 #$nestedArrays = false;
+            }
+
+            if($perk->key == 'multiple_pairing_limit')
+            {
+                $perBuildings = (float)$perkValue[0];
+                $buildingKeys = (array)$perkValue[1];
+                $pairingBuildings = [];
+    
+                foreach ($buildingKeys as $index => $buildingKey)
+                {
+                    $pairingBuilding = Building::where('key', $buildingKey)->firstOrFail();
+                    $pairingBuildings[$index] = str_plural($pairingBuilding->name, $perBuildings);
+                }
+    
+                $buildingsString = generate_sentence_from_array($pairingBuildings);
+   
+                $perkValue = [$perBuildings, $buildingsString];
+
+                $nestedArrays = false;
             }
 
             foreach(Race::where('playable', 1)->pluck('key')->toArray() as $raceKey)
@@ -409,6 +429,9 @@ class BuildingHelper
                 #$resourcesString = str_replace(' And ', ' and ', $resourcesString);
 
                 $perkValue = [$ratio, $resourcesString];
+
+                #dd($perkValue);
+
                 $nestedArrays = false;
 
             }

@@ -779,7 +779,6 @@ class Dominion extends AbstractModel
                 $buildingOwned = min($buildingOwned, floor($pairedBuildingOwned / $chunkSize));
 
                 $buildingOwned = intval($buildingOwned);
-
             }
 
             $perkValueString = $building->getPerkValue($perkKey);
