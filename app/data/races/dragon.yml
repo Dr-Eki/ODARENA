@@ -85,7 +85,7 @@ units:
       offense: 0
       defense: 1.5
     perks:
-      gems_production_raw_from_building_pairing: 0.05,gem_mine,0.20
+      gems_production_raw_from_building_pairing: 0.05,gem_mine,1.2
 
   - name: Dragon Knight
     training_time: 12
@@ -116,7 +116,7 @@ units:
       - flying
       - legendary
     cost:
-      gems: 50000
+      gems: 120000
     power:
       offense: 1000
       defense: 1000
