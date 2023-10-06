@@ -578,7 +578,7 @@ aquifer:
   exclusive_races:
     - Swarm
   perks:
-    food_production_raw: 40
+    food_production_raw: 50
 
 chrysalis:
   name: Chrysalis
