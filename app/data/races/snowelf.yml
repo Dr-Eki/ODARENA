@@ -89,7 +89,7 @@ units:
       offense: 0
       defense: 0
     perks:
-      offense_from_resource_exhausting: mana,8 # +1 OP per 8 mana, no max, exhausts mana upon firing
+      offense_from_resource_exhausting: mana,12 # +1 OP per 8 mana, no max, exhausts mana upon firing
       amount_limit: 1
       does_not_count_as_population: 1
       sendable_with_zero_op: 1
@@ -115,5 +115,5 @@ units:
       does_not_count_as_population: 1
       building_limit: gryphon_nest,2
       food_consumption_raw: 4
-      casualties: -30
+      casualties: -20
       attrition: 10

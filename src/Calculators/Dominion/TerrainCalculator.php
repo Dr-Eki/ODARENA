@@ -171,7 +171,7 @@ class TerrainCalculator
             $startingTerrain[$terrain->key] = 0;
         }
 
-        if($race->getPerkValue('starting_land_only_home_terrain'))
+        if($race->getPerkValue('starting_land_only_home_terrain') or 1==1)
         {
             $startingTerrain[$race->homeTerrain()->key] = $startingLand;
 
