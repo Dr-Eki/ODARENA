@@ -300,6 +300,15 @@ farmstead:
     jobs: 30
     food_production_raw: 50
 
+hall: 
+  name: Hall
+  exclusive_races:
+    - Snow Elf
+  land_type: mountain
+  perks:
+    housing: 30
+    jobs: 0
+
 hut:
   name: Hut
   exclusive_races:
@@ -1622,17 +1631,7 @@ grove:
     housing: 30
     jobs: 0
 
-hall:  
-  enabled: 0
-  name: Hall
-  exclusive_races:
-    - Aurei
-    - Icekin
-    - Snow Elf
-  land_type: mountain
-  perks:
-    housing: 30
-    jobs: 0
+
 
 orcish_longhouse:  
   enabled: 0
