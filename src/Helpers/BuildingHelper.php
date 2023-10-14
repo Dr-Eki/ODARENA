@@ -549,9 +549,28 @@ class BuildingHelper
 
     }
 
-    public function getBuildingName(string $buildingKey): string
+    public function getBuildingCategoryIcon(string $buildingCategory): string
     {
-        return Building::where('key', $buildingKey)->first()->name;
+        switch ($buildingCategory)
+        {
+            case 'housing':
+                return '<i class="fa fa-home fa-fw text-blue"></i>';
+
+            case 'military':
+                return '<i class="ra ra-sword ra-fw text-red"></i>';
+
+            case 'other':
+                return '<i class="ra ra-gear-hammer ra-fw text-orange"></i>';
+
+            case 'production':
+                return '<i class="ra ra-mining-diamonds ra-fw text-green"></i>';
+
+            case 'holy':
+                return '<i class="fas fa-pray fa-fw text-purple"></i>';
+
+            default:
+                return '';
+        }
     }
 
 }

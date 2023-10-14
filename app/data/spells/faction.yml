@@ -1,5 +1,28 @@
 # FACTION SPECIFIC
 
+## Aurei
+chryson_phase:
+  name: Chryson Phase
+  level: 5
+  scope: self
+  class: active
+  cost: 5
+  exclusive_races:
+    - Aurei
+  perks:
+    aurei_unit_conversion: 3,4,1000 # from, to, amount
+
+halcyon_phase:
+  name: Halcyon Phase
+  level: 5
+  scope: self
+  class: active
+  cost: 5
+  exclusive_races:
+    - Aurei
+  perks:
+    aurei_unit_conversion: 4,3,1000 # from, to, amount
+
 ## Beastfolk
 ambush:
   name: Ambush
@@ -161,30 +184,6 @@ winds_of_fortune:
     - Armada
   perks:
     faster_return: 2
-
-chryson_phase:  
-  enabled: 0
-  name: Chryson Phase
-  scope: self
-  class: active
-  cost: 3
-  exclusive_races:
-    - Aurei
-  perks:
-    aurei_unit_conversion: 3,4,1000 # from, to, amount
-
-halcyon_phase:  
-  enabled: 0
-  name: Halcyon Phase
-  scope: self
-  class: active
-  cost: 3
-  exclusive_races:
-    - Aurei
-  perks:
-    aurei_unit_conversion: 4,3,1000 # from, to, amount
-
-
 
 enchanted_blades:  
   enabled: 0

@@ -504,6 +504,7 @@ class ResourceCalculator
                   {
                       $consumers += $amount;
                       $consumers += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+                      #$consumers += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$slot}"); # Specifically and intentionally excluded
                   }
             }
 

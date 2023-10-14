@@ -12,7 +12,6 @@ use OpenDominion\Models\Tech;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Traits\DominionGuardsTrait;
 
-
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 
 class TechActionService
@@ -80,7 +79,7 @@ class TechActionService
         $techCost = $this->techCalculator->getTechCost($dominion, $techToUnlock);
         if ($dominion->xp < $techCost) {
             throw new GameException(sprintf(
-                'You do not have the required %s experience points to level up this advancement.',
+                'You do not have the required %s XP to level up this advancement.',
                 number_format($techCost)
             ));
         }

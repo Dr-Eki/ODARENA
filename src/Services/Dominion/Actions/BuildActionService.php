@@ -162,10 +162,10 @@ class BuildActionService
                 # Get amount owned of $pairedBuilding
                 $pairedBuildingRecord = $dominion->buildings()->where('key', $building->key)->first();
                 $pairedOwnedAndUnderConstruction = $pairedBuildingRecord ? ($pairedBuildingRecord->pivot->owned ?? 0) : 0;
-                $pairedOwnedAndUnderConstruction += $this->queueService->getTrainingQueueTotalByResource($dominion, "building_{$building->key}");
+                $pairedOwnedAndUnderConstruction += $this->queueService->getConstructionQueueTotalByResource($dominion, "building_{$building->key}");
                 $pairedOwnedAndUnderConstruction += $this->queueService->getRepairQueueTotalByResource($dominion, "building_{$building->key}");
 
-                $availableCapacityForBuilding = max($maxCapacity - $buildingOwnedAndUnderConstruction, 0);
+                $availableCapacityForBuilding = max($maxCapacity - $pairedOwnedAndUnderConstruction, 0);
 
                 if($amount > $availableCapacityForBuilding)
                 {

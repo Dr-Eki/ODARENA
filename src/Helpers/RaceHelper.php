@@ -458,7 +458,7 @@ class RaceHelper
                 break;
             case 'experience_points_per_acre':
                 $negativeBenefit = false;
-                $description = 'Experience points gained per acre on successful invasions';
+                $description = 'XP gained per acre on successful invasions';
                 break;
             case 'xp_gains':
                 $negativeBenefit = false;
@@ -686,6 +686,11 @@ class RaceHelper
                 $description = 'Light drains';
                 $valueType = ' mana/tick';
                 $booleanValue = 'static';
+                break;
+            case 'can_capture_buildings':
+                $negativeBenefit = false;
+                $description = 'Can capture buildings on successful invasions';
+                $booleanValue = true;
                 break;
             case 'can_desecrate':
                 $negativeBenefit = false;

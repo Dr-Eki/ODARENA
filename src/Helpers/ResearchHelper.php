@@ -50,8 +50,8 @@ class ResearchHelper
             'acid_production_raw_from_land' => '%+g acid per tick per land',
 
             'strength_gain_mod' => '%+g%% strength gains',
-            'xp_generation_mod' => '%+g%% experience points generation',
-            'xp_gains' => '%+g%% experience points gains',
+            'xp_generation_mod' => '%+g%% XP generation',
+            'xp_gains' => '%+g%% XP gains',
 
             'building_gold_mine_production_mod' => '%+g%% Gold Mine production',
             'building_gold_quarry_production_mod' => '%+g%% Gold Quarry production',

@@ -3,14 +3,21 @@ alignment: good
 description:
 home_land_type: mountain
 home_terrain: mountains
-playable: 0 # Round 88
+playable: 1 # Round 88
 skill_level: 2
+magic_level: 5
+experimental: 1
 
+peasants_alias: finder #
+draftees_alias: devotee #
 
 resources:
   - gold
   - food
   - mana
+
+peasants_production:
+  gold: 4
 
 construction_materials:
   - gold
@@ -18,8 +25,47 @@ construction_materials:
 improvement_resources:
   gold: 1
 
+terrain_perks:
+  badlands:
+    gold_production_mod: 0.08
+    mana_production_mod: 0.02
+  desert:
+    gold_production_mod: 0.05
+    mana_production_mod: 0.05
+  forest:
+    gold_production_mod: 0.06
+    mana_production_mod: 0.04
+  glacier:
+    gold_production_mod: 0.02
+    mana_production_mod: 0.08
+  hills:
+    gold_production_mod: 0.04
+    mana_production_mod: 0.06
+  jungle:
+    gold_production_mod: 0.04
+    mana_production_mod: 0.06
+  mountains:
+    gold_production_mod: 0.04
+    mana_production_mod: 0.06
+  plains:
+    gold_production_mod: 0.08
+    mana_production_mod: 0.02
+  swamps:
+    gold_production_mod: 0.00
+    mana_production_mod: 0.10
+  volcanic:
+    gold_production_mod: 0.00
+    mana_production_mod: 0.10
+  water:
+    gold_production_mod: 0.05
+    mana_production_mod: 0.05
+  wetlands:
+    gold_production_mod: 0.05
+    mana_production_mod: 0.05
+
 perks:
-  draftee_dp: 3
+  draftee_dp: 1.25
+  food_consumption_mod: -20
 
 units:
   - name: Alchemist
@@ -29,16 +75,15 @@ units:
       - sentient
       - wise
     cost:
-      gold: 333
+      gold: 555
       peasant: 1
     power:
       offense: 0
       defense: 0
     perks:
-      gold_production_raw_from_building_pairing: 0.05,gold_quarry,5.4
+      gold_production_raw_from_building_pairing: 0.05,gold_quarry,6
       building_limit: gold_quarry,20 # building, units per building
       gold_improvements: 1
-      no_draftee: 1
 
   - name: Gold Wyrm
     training_time: 12
@@ -48,16 +93,15 @@ units:
       - intelligent
       - massive
     cost:
-      gold: 300000
+      gold: 333333
     power:
       offense: 0
-      defense: 1200
+      defense: 200
     perks:
       does_not_count_as_population: 1
       immortal_on_fending_off: 1
-      casualties: -50
       building_limit: gold_quarry,1 # building, buildings per unit
-      food_consumption_raw: 20
+      food_consumption_raw: 4
 
   - name: Halcyon
     training_time: 0
@@ -69,18 +113,18 @@ units:
       - wise
     cost:
       wizard: 1
-      gold: 360
-      mana: 20
+      gold: 444
+      mana: 111
     power:
       offense: 0
-      defense: 8
+      defense: 6
     perks:
-      no_draftee: 1
       dies_into_wizard: 1
       cannot_be_released: 1
       counts_as_wizard: 0.25
-      casualties_from_wizard_ratio: -30 # -30% casualties per 1 WPA
-      immortal_from_wpa: 5
+      casualties_from_wizard_ratio: -20 # -20% casualties per 1 WPA
+      immortal_from_wpa: 6
+      gold_production_raw: 0.10
 
   - name: Chryson
     training_time: 0
@@ -92,15 +136,15 @@ units:
       - wise
     cost:
       wizard: 1
-      gold: 360
-      mana: 20
+      gold: 444
+      mana: 111
     power:
-      offense: 8
-      defense: 5
+      offense: 6
+      defense: 4
     perks:
-      counts_as_wizard: 0.25
-      casualties_from_wizard_ratio: -30 # -30% casualties per 1 WPA
-      immortal_from_wpa: 5
-      no_draftee: 1
       dies_into_wizard: 1
       cannot_be_released: 1
+      counts_as_wizard: 0.25
+      casualties_from_wizard_ratio: -20 # -20% casualties per 1 WPA
+      immortal_from_wpa: 6
+      gold_production_raw: 0.10

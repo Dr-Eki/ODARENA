@@ -24,10 +24,10 @@ perks:
   gold_production_mod: 10
   ore_production_mod: 25
   cannot_rezone: 1
-  salvaging: 95
   cannot_train_archmages: 1
   max_population: 10
   extra_research_slots: 1
+  can_capture_buildings: 1
 
 units:
   - name: Assassin

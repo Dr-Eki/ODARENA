@@ -29,7 +29,9 @@
                                                 Level {{ $i }} Spells
                                             @endif
                                         </h3>
-                                        <span class="pull-right label label-info" data-toggle="tooltip" data-placement="top" title="Number of spells available at this level">{{ number_format($levelSpells->count()) }}</span>
+                                        {{--
+                                            <span class="pull-right label label-info" data-toggle="tooltip" data-placement="top" title="Number of spells available at this level">{{ number_format($levelSpells->count()) }}</span>
+                                        --}}
                                     </div>
                                     <div class="box-body" id="level{{ $i }}">
                                         {{-- //Columns must be a factor of 12 (1,2,3,4,6,12) --}}

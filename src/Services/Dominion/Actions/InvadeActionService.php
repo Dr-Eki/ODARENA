@@ -2796,6 +2796,13 @@ class InvadeActionService
         # Defender: Salvaging
         if($salvaging = $defender->race->getPerkMultiplier('salvaging'))
         {
+
+            $salvagingMultiplier = 1;
+            $salvagingMultiplier += $defender->getSpellPerkMultiplier('salvaging_mod');
+            $salvagingMultiplier += $defender->getImprovementPerkMultiplier('salvaging_mod');
+
+            $salvaging = min($salvaging * $salvagingMultiplier, 1);
+
             $unitCosts = $this->trainingCalculator->getTrainingCostsPerUnit($defender);
             foreach($this->invasion['defender']['units_lost'] as $slot => $amountLost)
             {
@@ -2827,6 +2834,13 @@ class InvadeActionService
         # Attacker: Salvaging
         if($salvaging = $attacker->race->getPerkMultiplier('salvaging'))
         {
+
+            $salvagingMultiplier = 1;
+            $salvagingMultiplier += $attacker->getSpellPerkMultiplier('salvaging_mod');
+            $salvagingMultiplier += $attacker->getImprovementPerkMultiplier('salvaging_mod');
+
+            $salvaging = min($salvaging * $salvagingMultiplier, 1);
+
             $unitCosts = $this->trainingCalculator->getTrainingCostsPerUnit($attacker);
             foreach($this->invasion['attacker']['units_lost'] as $slot => $amountLost)
             {

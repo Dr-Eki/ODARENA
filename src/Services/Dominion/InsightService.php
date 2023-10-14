@@ -299,6 +299,14 @@ class InsightService
                 $data['units']['training'][$unitType][$row->hours] += $row->amount;
             }
         });
+        $this->queueService->getSummoningQueue($target)->each(static function ($row) use (&$data)
+        {
+            if (starts_with($row->resource, 'military_'))
+            {
+                $unitType = str_replace('military_', '', $row->resource);
+                $data['units']['training'][$unitType][$row->hours] += $row->amount;
+            }
+        });
 
         // Spells
         $data['spells'] = [];

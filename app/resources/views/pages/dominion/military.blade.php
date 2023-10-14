@@ -25,7 +25,7 @@
                             <tr>
                                 <th>Unit</th>
                                 <th class="text-center">OP / DP</th>
-                                <th class="text-center">Trained<br>(Training)</th>
+                                <th class="text-center">Trained<br>(Incoming)</th>
                                 <th class="text-center">Train</th>
                                 <th class="text-center">Cost</th>
                             </tr>
@@ -71,12 +71,19 @@
                                                   @endif
                                               </td>
                                               <td class="text-center">  <!-- Trained -->
+                                                    @php
+                                                        $trained = $militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unit->slot);
+                                                        $incomingAmount = 0;
+                                                        $incomingAmount += $queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}");
+                                                        $incomingAmount += $queueService->getSummoningQueueTotalByResource($selectedDominion, "military_{$unitType}");
+                                                    @endphp
                                                   {{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unit->slot)) }}
-                                                  @if($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}") > 0)
-                                                  <br>
-                                                      <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}") + $militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unit->slot)) }}">
-                                                          ({{ number_format($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}")) }})
-                                                      </span>
+                                                  <!-- Incoming -->
+                                                  @if($incomingAmount > 0)
+                                                    <br>
+                                                    <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($incomingAmount + $trained) }}">
+                                                        ({{ number_format($incomingAmount) }})
+                                                    </span>
                                                   @endif
                                               </td>
                                           @else
@@ -85,11 +92,18 @@
                                               @endphp
                                               <td class="text-center">&mdash;</td>
                                               <td class="text-center">  <!-- If Spy/Wiz/AM -->
-                                                  {{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unitType)) }}
+                                                @php
+                                                    $trained = $militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unitType);
+                                                    $incomingAmount = 0;
+                                                    $incomingAmount += $queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}");
+                                                    $incomingAmount += $queueService->getSummoningQueueTotalByResource($selectedDominion, "military_{$unitType}");
+                                                @endphp
 
-                                                  @if($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}") > 0)
-                                                      <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}") + $militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unitType)) }}">
-                                                          <br>({{ number_format($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}")) }})
+                                                  {{ number_format($trained) }}
+
+                                                  @if($incomingAmount > 0)
+                                                      <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($trained + $incomingAmount) }}">
+                                                          <br>({{ number_format($incomingAmount) }})
                                                       </span>
                                                   @endif
                                               </td>
@@ -154,7 +168,7 @@
         <div class="col-sm-12 col-md-12" id="units_in_training_and_home">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="ra ra-sword"></i> Units in training and home</h3>
+                    <h3 class="box-title"><i class="ra ra-sword"></i> Units incoming and at home</h3>
                 </div>
                 <div class="box-body table-responsive no-padding">
                     <table class="table">
@@ -171,7 +185,7 @@
                                 @for ($i = 1; $i <= 12; $i++)
                                     <th class="text-center">{{ $i }}</th>
                                 @endfor
-                                <th class="text-center">Home<br>(Training)</th>
+                                <th class="text-center">Home<br>(Incoming)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -185,16 +199,21 @@
                                     </td>
                                     @for ($i = 1; $i <= 12; $i++)
                                         <td class="text-center">
-                                            @if ($queueService->getTrainingQueueAmount($selectedDominion, "military_{$unitType}", $i) === 0)
-                                                -
+                                            @php
+                                                $incomingAmount = 0;
+                                                $incomingAmount += $queueService->getTrainingQueueAmount($selectedDominion, "military_{$unitType}", $i);
+                                                $incomingAmount += $queueService->getSummoningQueueAmount($selectedDominion, "military_{$unitType}", $i);
+                                            @endphp
+                                            @if ($incomingAmount)
+                                                {{ number_format($incomingAmount) }}
                                             @else
-                                                {{ number_format($queueService->getTrainingQueueAmount($selectedDominion, "military_{$unitType}", $i)) }}
+                                                -
                                             @endif
                                         </td>
                                     @endfor
                                     <td class="text-center">
                                         {{ number_format($selectedDominion->{'military_' . $unitType}) }}
-                                        ({{ number_format($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}")) }})
+                                        ({{ number_format($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}") + $queueService->getSummoningQueueTotalByResource($selectedDominion, "military_{$unitType}")) }})
                                     </td>
                                 </tr>
                             @endforeach

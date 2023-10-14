@@ -221,7 +221,7 @@
                                 @endphp
                                 <tr>
                                     <td>
-                                        {!! $perkDescription['description'] !!}
+                                        {!! $perkDescription['description'] !!}:
                                     </td>
                                     <td>
                                         {!! $perkDescription['value'] !!}

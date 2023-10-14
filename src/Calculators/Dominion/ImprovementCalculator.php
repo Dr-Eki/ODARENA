@@ -107,11 +107,11 @@ class ImprovementCalculator
             }
 
             # Check units
-            for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
+            foreach($dominion->race->units as $unit)
             {
-                if($dominion->race->getUnitPerkValueForUnitSlot($slot, ($resourceKey . '_improvements')))
+                if($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ($resourceKey . '_improvements')))
                 {
-                    $multiplier += ($dominion->{'military_unit'.$slot} / $dominion->land) / 25;
+                    $multiplier += ($dominion->{'military_unit'.$unit->slot} / $dominion->land) / 25;
                 }
             }
 

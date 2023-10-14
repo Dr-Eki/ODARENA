@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-12 col-md-12">
                 <p>Every Dominion Ruler must select a Ruler Title, which comes with perks.</p>
-                <p>The perk is increased based on how many unspent Experience Points you have.</p>
+                <p>The perk is increased based on how many unspent XP you have.</p>
             </div>
         </div>
     </div>

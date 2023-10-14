@@ -1,7 +1,6 @@
 name: Human
 alignment: good
 description: >-
-  <p>With their spell, Human can achieve unit training cost reduction greater than 50% (up to 60%).</p>
 home_land_type: plain
 home_terrain: plains
 playable: 0 # Replaced with Cires

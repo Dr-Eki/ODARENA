@@ -285,8 +285,6 @@ class PopulationCalculator
             return (array)$availableHousingFromUnitSpecificBuildings;
         }
 
-        #dd($availableHousingFromUnitSpecificBuildings);
-
         if(!isset($availableHousingFromUnitSpecificBuildings[$slot]))
         {
             return (int)array_sum($availableHousingFromUnitSpecificBuildings);

@@ -357,6 +357,29 @@
                                             <td>Land conquered:</td>
                                             <td id="invasion-land-conquered" data-amount="0">0</td>
                                         </tr>
+                                        @if($selectedDominion->race->getPerkValue('can_capture_buildings'))
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" name="capture_buildings" id="capture_buildings" role="switch" aria-checked="false">
+                                                        <label class="form-check-label" for="capture_buildings">Capture buildings</label>
+                                                    </div>
+                                                    <label class="form-check-label" for="capture_buildings">
+                                                        <small class="text-muted" style="font-weight: normal;">
+                                                            You keep
+                                                                <span
+                                                                style="border-bottom: dotted 1px #777;"
+                                                                data-toggle="tooltip"
+                                                                data-placement="top"
+                                                                title="Certain very special buildings cannot be captured">
+                                                                    buildings
+                                                                </span>
+                                                            otherwise destroyed, but you gain no discovered land
+                                                        </small>
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -600,7 +623,7 @@
                 <p>Here you can invade other players to try to capture some of their land and to gain prestige. Invasions are successful if you send more OP than they have DP.</p>
                 <p>If you hit the same target within two hours, you will not discover additional land. You will only get the acres you conquer. Note that this is down to the <em>exact second</em> of your previous hit and includes failed invasions.</p>
                 <p>You will only gain prestige on targets 75% or greater relative to your own land size.</p>
-                <p>For every acre you gain, you receive 25 experience points.</p>
+                <p>For every acre you gain, you receive 25 XP.</p>
                 <p>Note that minimum raw DP a target can have is 10 DP per acre.</p>
 
                 @if ($militaryCalculator->getRecentlyInvadedCount($selectedDominion) and $selectedDominion->race->name == 'Sylvan')

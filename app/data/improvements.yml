@@ -100,6 +100,13 @@ mining:
   perks:
     ore_production_mod: 30,5600
 
+salvaging:
+  name: Salvaging
+  exclusive_races:
+    - Gnome
+  perks:
+    salvaging_mod: 50,5000
+
 science:
   name: Science
   excluded_races:
@@ -142,6 +149,15 @@ warfare:
     - Demon
   perks:
     prestige_gains: 25,3000
+
+wizardry:
+  name: Wizardry
+  excluded_races:
+    - Beastfolk
+    - Sylvan
+  perks:
+    wizard_strength: 40,6000
+    wizard_housing: 40,6000
 
 # BEGIN BEASTFOLK #
 
@@ -602,29 +618,6 @@ storage:
     - Void
   perks:
     theft_protection: 40,4000
-
-wizardry:  
-  enabled: 0
-  name: Wizardry
-  excluded_races:
-    - Barbarian
-    - Beastfolk
-    - Growth
-    - Kerranad
-    - Marshling
-    - Monster
-    - Nox
-    - Reptilians
-    - Revenants
-    - Sylvan
-    - Swarm
-    - Troll
-    - Void
-    - Wood Elf
-  perks:
-    wizard_strength: 45,5000
-    mana_production_mod: 45,5000
-    wizard_housing: 45,5000
 
 # Nox variant
 wizardry_nox:  

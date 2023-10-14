@@ -75,7 +75,7 @@ class SpellHelper
             'magma_production_mod' => '%+g%% magma collection',
             'obsidian_production_mod' => '%+g%% obsidian generation',
             'strength_gain_mod' => '%+g%% strength gains',
-            'xp_generation_mod' => '%+g%% experience points generation',
+            'xp_generation_mod' => '%+g%% XP generation',
 
             'building_gold_mine_production_mod' => '%+g%% Gold Mine production',
             'building_gold_quarry_production_mod' => '%+g%% Gold Quarry production',

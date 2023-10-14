@@ -2,9 +2,11 @@
 
 barracks:  
   name: Barracks
+  category: housing
   excluded_races:
     - Afflicted
     - Ants
+    - Aurei
     - Beastfolk
     - Kobold
     - Reptilians
@@ -18,6 +20,7 @@ barracks:
 
 guard_tower:
   name: Guard Tower
+  category: military
   excluded_races:
     - Dragons
   perks:
@@ -25,6 +28,7 @@ guard_tower:
 
 infirmary:
   name: Infirmary
+  category: military
   excluded_races:
     - Dragons
     - Spirit
@@ -35,6 +39,7 @@ infirmary:
 
 military_academy:
   name: Military Academy
+  category: military
   excluded_races:
     - Dragons
   perks:
@@ -42,6 +47,7 @@ military_academy:
 
 stone_wall:
   name: Stone Wall
+  category: military
   exclusive_races:
     - Dragons
   perks:
@@ -50,6 +56,7 @@ stone_wall:
 
 training_grounds:
   name: Training Grounds
+  category: military
   excluded_races:
     - Dragons
   perks:
@@ -57,6 +64,7 @@ training_grounds:
 
 wall:
   name: Wall
+  category: military
   excluded_races:
     - Barbarian
     - Dragons
@@ -69,6 +77,7 @@ wall:
 
 watch_tower:
   name: Watch Tower
+  category: military
   exclusive_races:
     - Dragons
   perks:
@@ -76,6 +85,7 @@ watch_tower:
 
 turret:
   name: Turret
+  category: military
   enabled: 0
   exclusive_races:
     - Arwe
@@ -86,8 +96,18 @@ turret:
 
 ## Production Buildings
 
+alchemy:
+  name: Alchemy
+  category: production
+  exclusive_races:
+    - Aurei
+    - Dark Elf
+  perks:
+    gold_production_mod: 1,4,20 # Every 1% gives +4% gold production, max +20%
+
 aqueduct:
   name: Aqueduct
+  category: production
   excluded_races:
     - Demon
     - Swarm
@@ -102,6 +122,7 @@ aqueduct:
 
 dwargen_mine:
   name: Dwargen Mine
+  category: production
   exclusive_races:
     - Dwarg
   land_type: mountain
@@ -113,6 +134,7 @@ dwargen_mine:
 
 farm:  
   name: Farm
+  category: production
   excluded_races:
     - Dragons
     - Reptilians
@@ -124,7 +146,9 @@ farm:
 
 gold_mine:
   name: Gold Mine
+  category: production
   excluded_races:
+    - Aurei
     - Dragons
     - Spirit
     - Sylvan
@@ -135,9 +159,11 @@ gold_mine:
 
 gem_mine:
   name: Gem Mine
+  category: production
   excluded_races:
     - Afflicted
     - Ants
+    - Aurei
     - Beastfolk
     - Demon
     - Reptilians
@@ -150,6 +176,7 @@ gem_mine:
 
 lumberyard:
   name: Lumberyard
+  category: production
   exclusive_races:
     - Afflicted
     - Beastfolk
@@ -162,21 +189,22 @@ lumberyard:
 
 ore_mine:  
   name: Ore Mine
-  excluded_races:
-    - Afflicted
-    - Ants
+  category: production
+  exclusive_races:
+    - Beastfolk
+    - Dark Elf
+    - Demon
     - Dwarg
-    - Reptilians
-    - Sylvan
-    - Swarm
-    - Spirit
-    - Undead
-    - Wood Elf
+    - Kobold
+    - Snow Elf
+    - Troll
+    - Yeti
   perks:
     ore_production_raw: 35
 
 saw_mill:  
   name: Saw Mill
+  category: production
   exclusive_races:
     - Kobold
     - Snow Elf
@@ -186,6 +214,7 @@ saw_mill:
 
 stable:  
   name: Stable
+  category: production
   exclusive_races:
     - Arwe
   perks:
@@ -194,22 +223,25 @@ stable:
 
 tower:
   name: Tower
+  category: production
   excluded_races:
+    - Aurei
     - Sylvan
   perks:
     mana_production_raw: 20
 
 watermill:
   name: Watermill
-  excluded_races:
-    - Afflicted
-    - Ants
+  category: production
+  exclusive_races:
+    - Beastfolk
+    - Dark Elf
     - Demon
-    - Elf
-    - Reptilians
-    - Swarm
-    - Sylvan
-    - Wood Elf
+    - Dwarg
+    - Kobold
+    - Snow Elf
+    - Troll
+    - Yeti
   perks:
     gems_production_mod: 1,4,20 # Every 1% gives +4% gem production, max +20%
     ore_production_mod: 1,4,20 # Every 1% gives +4% ore production, max +20%
@@ -217,6 +249,7 @@ watermill:
 ## Improvements
 school:
   name: School
+  category: other
   excluded_races:
     - Beastfolk
     - Swarm
@@ -229,6 +262,7 @@ school:
 ## Advancements, Research, Morale, Exchange Rate
 tavern:  
   name: Tavern
+  category: other
   exclusive_races:
     - Dwarg
     - Kobold
@@ -239,6 +273,7 @@ tavern:
 
 vault:  
   name: Vault
+  category: other
   excluded_races:
     - Reptilians
     - Sylvan
@@ -250,6 +285,7 @@ vault:
 
 granary:
   name: Granary
+  category: other
   excluded_races:
     - Spirit
   perks:
@@ -259,6 +295,7 @@ granary:
 ## Homes
 cave:  
   name: Cave
+  category: housing
   exclusive_races:
     - Yeti
   perks:
@@ -267,6 +304,7 @@ cave:
 
 chamber:
   name: Chamber
+  category: housing
   exclusive_races:
     - Dark Elf
     - Dwarg
@@ -276,6 +314,7 @@ chamber:
 
 colony:
   name: Colony
+  category: housing
   exclusive_races:
     - Ants
   perks:
@@ -284,6 +323,7 @@ colony:
 
 den:  
   name: Den
+  category: housing
   exclusive_races:
     - Kobold
   perks:
@@ -292,6 +332,7 @@ den:
 
 farmstead:
   name: Farmstead
+  category: housing
   exclusive_races:
     - Dragons
   land_type: mountain
@@ -302,6 +343,7 @@ farmstead:
 
 hall: 
   name: Hall
+  category: housing
   exclusive_races:
     - Snow Elf
   land_type: mountain
@@ -311,6 +353,7 @@ hall:
 
 hut:
   name: Hut
+  category: housing
   exclusive_races:
     - Troll
   perks:
@@ -319,6 +362,7 @@ hut:
 
 pit:
   name: Pit
+  category: housing
   exclusive_races:
     - Afflicted
   perks:
@@ -327,6 +371,7 @@ pit:
 
 pylon:
   name: Pylon
+  category: housing
   exclusive_races:
     - Spirit
   land_type: plain
@@ -337,6 +382,7 @@ pylon:
 
 residence:
   name: Residence
+  category: housing
   exclusive_races:
     - Elf
   perks:
@@ -345,6 +391,7 @@ residence:
 
 tomb:
   name: Tomb
+  category: housing
   exclusive_races:
     - Undead
   perks:
@@ -353,6 +400,7 @@ tomb:
 
 warren:  
   name: Warren
+  category: housing
   exclusive_races:
     - Afflicted
   perks:
@@ -363,6 +411,7 @@ warren:
 
 bazaar:
   name: Bazaar
+  category: holy
   deity: barathu_bint
   perks:
     gold_production_mod: 1,4,20 # Every 1% gives +4% gold production, max +20%
@@ -370,6 +419,7 @@ bazaar:
 
 lapidary:
   name: Lapidary
+  category: holy
   deity: mirnon
   perks:
     gems_invest_bonus: 1,3,30
@@ -387,6 +437,7 @@ necropolis:
 
 obelisk:
   name: Obelisk
+  category: holy
   deity: elskas
   exclusive_races:
     - Reptilians
@@ -395,6 +446,7 @@ obelisk:
 
 redoubt:
   name: Redoubt
+  category: holy
   deity: bregon
   perks:
     defensive_power: 1,0.15,15
@@ -403,6 +455,7 @@ redoubt:
 
 shrine:
   name: Shrine
+  category: holy
   deity: azk_hurum
   exclusive_races:
     - Demon
@@ -411,6 +464,7 @@ shrine:
 
 spire:
   name: Spire
+  category: holy
   deity: sazal
   perks:
     mana_production_raw: 20
@@ -418,6 +472,7 @@ spire:
 
 toxicarium:
   name: Toxicarium
+  category: holy
   deity: kinthys
   exclusive_races:
     - Afflicted
@@ -428,6 +483,7 @@ toxicarium:
 
 university:
   name: University
+  category: holy
   deity: ix
   perks:
     multiple_pairing_limit: 100,school;chrysalis;orchard;institute # amount, buildings;buildings
@@ -436,6 +492,7 @@ university:
 ## Divine related
 monument:  
   name: Monument
+  category: other
   excluded_races:
     - Demon
     - Reptilians
@@ -446,6 +503,7 @@ monument:
 
 mass_grave:
   name: Mass Grave
+  category: other
   exclusive_races:
     - Afflicted
   perks:
@@ -453,10 +511,53 @@ mass_grave:
 
 # END AFFLICTED
 
+# BEGIN AUREI
+
+atrium: 
+  name: Atrium
+  category: housing
+  exclusive_races:
+    - Aurei
+  perks:
+    housing: 28
+    jobs: 0
+
+wizard_dome: 
+  name: Wizard Dome
+  category: housing
+  exclusive_races:
+    - Aurei
+  perks:
+    wizard_strength_recovery: 1,0.1,5 # Every 1% gives +0.1% WS recovery per tick, max +2%/tick
+    wizard_housing: 36
+    housing: 0
+    
+gold_quarry:
+  name: Gold Quarry
+  category: production
+  exclusive_races:
+    - Aurei
+  perks:
+    gold_production_increasing_raw: 50,0.05 # Produces 50 gold, increased  by 0.4 per tick of the round
+    housing: 0
+    aurei_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    aurei_unit2_production_raw_capped: 0.001,20
+
+mana_extractor:
+  name: Mana Extractor
+  category: production
+  exclusive_races:
+    - Aurei
+  perks:
+    resource_conversion: 100,gold,50,mana # amountFrom, resourceFrom, amountTo, resourceTo
+
+# END AUREI
+
 # BEGIN BEASTFOLK
 
 camp:
   name: Camp
+  category: housing
   exclusive_races:
     - Beastfolk
   perks:
@@ -466,6 +567,7 @@ camp:
 
 bloodstone:
   name: Bloodstone
+  category: other
   exclusive_races:
     - Beastfolk
   perks:
@@ -479,6 +581,7 @@ bloodstone:
 
 slave_mine:
   name: Slave Mine
+  category: production
   exclusive_races:
     - Dark Elf
   perks:
@@ -494,6 +597,7 @@ slave_mine:
 
 altar:
   name: Altar
+  category: other
   exclusive_races:
     - Demon
   land_type: mountain
@@ -504,6 +608,7 @@ altar:
 
 dungeon:
   name: Dungeon
+  category: housing
   exclusive_races:
     - Demon
   land_type: mountain
@@ -517,6 +622,7 @@ dungeon:
 
 bog:  
   name: Bog
+  category: production
   exclusive_races:
     - Reptilians
   perks:
@@ -524,6 +630,7 @@ bog:
 
 mire:  
   name: Mire
+  category: housing
   exclusive_races:
     - Reptilians
   perks:
@@ -532,6 +639,7 @@ mire:
 
 swamp_vault:
   name: Vault
+  category: other
   exclusive_races:
     - Reptilians
   perks:
@@ -541,6 +649,7 @@ swamp_vault:
 
 siftery:
   name: Siftery
+  category: production
   exclusive_races:
     - Reptilians
   perks:
@@ -549,6 +658,7 @@ siftery:
 
 trench:
   name: Trench
+  category: military
   exclusive_races:
     - Reptilians
   perks:
@@ -562,6 +672,7 @@ trench:
 
 battlement:
   name: Battlement
+  category: military
   exclusive_races:
     - Snow Elf
   land_type: mountain
@@ -571,6 +682,7 @@ battlement:
 
 gryphon_nest:
   name: Gryphon Nest
+  category: military
   exclusive_races:
     - Snow Elf
   land_type: mountain
@@ -584,6 +696,7 @@ gryphon_nest:
 
 aquifer:  
   name: Aquifer
+  category: production
   exclusive_races:
     - Swarm
   perks:
@@ -591,6 +704,7 @@ aquifer:
 
 chrysalis:
   name: Chrysalis
+  category: other
   exclusive_races:
     - Swarm
   perks:
@@ -598,6 +712,7 @@ chrysalis:
 
 burrow:
   name: Burrow
+  category: housing
   exclusive_races:
     - Swarm
   perks:
@@ -606,6 +721,7 @@ burrow:
 
 nest:
   name: Nest
+  category: housing
   exclusive_races:
     - Swarm
   perks:
@@ -615,6 +731,7 @@ nest:
 
 tunnel:  
   name: Tunnel
+  category: other
   exclusive_races:
     - Swarm
   perks:
@@ -625,6 +742,7 @@ tunnel:
 # BEGIN SYLVAN
 garden:
   name: Garden
+  category: production
   exclusive_races:
     - Sylvan
   perks:
@@ -632,6 +750,7 @@ garden:
 
 mana_tree:
   name: Mana Tree
+  category: production
   exclusive_races:
     - Sylvan
   perks:
@@ -640,6 +759,7 @@ mana_tree:
 
 meadow:
   name: Meadow
+  category: housing
   exclusive_races:
     - Sylvan
   perks:
@@ -648,6 +768,7 @@ meadow:
 
 orchard:
   name: Orchard
+  category: other
   exclusive_races:
     - Sylvan
   perks:
@@ -659,6 +780,7 @@ orchard:
 
 stronghold:
   name: Stronghold
+  category: other
   exclusive_races:
     - Troll
   perks:
@@ -671,6 +793,7 @@ stronghold:
 # BEGIN WOOD ELF
 forest_haven:
   name: Forest Haven
+  category: housing
   exclusive_races:
     - Wood Elf
   perks:
@@ -681,6 +804,7 @@ forest_haven:
 
 lumbershop:
   name: Lumbershop
+  category: production
   exclusive_races:
     - Wood Elf
   perks:
@@ -689,6 +813,7 @@ lumbershop:
 
 hollow_trunk:
   name: Hollow Trunk
+  category: other
   exclusive_races:
     - Wood Elf
   land_type: forest
@@ -697,6 +822,7 @@ hollow_trunk:
 
 institute:
   name: Institute
+  category: other
   exclusive_races:
     - Wood Elf
   land_type: forest
@@ -710,18 +836,6 @@ institute:
 # Standard Buildings
 
 ## Production Buildings
-
-alchemy:  
-  enabled: 0
-  name: Alchemy
-  exclusive_races:
-    - Aurei
-    - Cult
-    - Dark Elf
-    - Cires
-  land_type: plain
-  perks:
-    gold_production_mod: 1,4,20 # Every 1% gives +4% gold production, max +20%
 
 deep_mine:  
   enabled: 0
@@ -1524,21 +1638,6 @@ spawning_pool:
 
 # END MARSHLING
 
-# BEGIN AUREI
-
-gold_quarry:  
-  enabled: 0
-  name: Gold Quarry
-  exclusive_races:
-    - Aurei
-  land_type: mountain
-  perks:
-    gold_production_increasing_raw: 50,0.05 # Produces 50 gold, increased  by 0.4 per tick of the round
-    housing: 0
-    aurei_unit1_housing: 20
-    aurei_unit2_production_raw_capped: 0.005,20
-
-# END AUREI
 
 # HOME ALTERNATIVES
 
@@ -1754,17 +1853,6 @@ mansion:
     vampires_unit1_housing: 60
 
 ###
-
-wizard_dome:  
-  enabled: 0
-  name: Wizard Dome
-  exclusive_races:
-    - Aurei
-  land_type: mountain
-  perks:
-    wizard_strength_recovery: 1,0.1,5 # Every 1% gives +0.1% WS recovery per tick, max +2%/tick
-    wizard_housing: 50
-    housing: 0
 
 enclosure:  
   enabled: 0

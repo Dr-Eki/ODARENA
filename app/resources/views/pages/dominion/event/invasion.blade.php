@@ -270,7 +270,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Experience Points:</td>
+                                    <td>XP:</td>
                                     <td>
                                     @if (isset($event->data['attacker']['xp']))
                                         <span class="text-green">

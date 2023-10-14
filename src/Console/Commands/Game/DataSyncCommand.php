@@ -533,6 +533,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'name' => $buildingData->name,
                     'excluded_races' => object_get($buildingData, 'excluded_races', []),
                     'exclusive_races' => object_get($buildingData, 'exclusive_races', []),
+                    'category' => object_get($buildingData, 'category', 'production'),
                     'deity_id' => $deityId,
                     'enabled' => (int)object_get($buildingData, 'enabled', 1)
                 ]);

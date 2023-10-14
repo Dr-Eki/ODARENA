@@ -202,7 +202,7 @@ class ExploreActionService
 
         return [
             'message' => sprintf(
-                'Exploration begun at a cost of %s gold and %s %s. When exploration is completed, you will earn %s experience points. Your orders for exploration disheartens the military, and morale drops by %d%%.',
+                'Exploration begun at a cost of %s gold and %s %s. When exploration is completed, you will earn %s XP. Your orders for exploration disheartens the military, and morale drops by %d%%.',
                 number_format($goldCost),
                 number_format($drafteeCost),
                 str_plural('draftee', $drafteeCost),

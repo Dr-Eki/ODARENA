@@ -423,7 +423,7 @@ class UnitHelper
             'gems_production_raw_from_building_pairing' => '%3$s gems/tick (up to %1$s units per %2$s).',
             'gunpowder_production_raw_from_building_pairing' => '%3$s gunpowder/tick (up to %1$s units per %2$s).',
 
-            'xp_generation_raw' => 'Each unit generates %s experience points per tick.',
+            'xp_generation_raw' => 'Each unit generates %s XP per tick.',
 
             'food_consumption_raw' => 'Eats %s extra food.',
 

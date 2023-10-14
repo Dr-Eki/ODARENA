@@ -123,7 +123,7 @@
                                 </tr>
                             @endforeach
                             <tr>
-                                <td>Experience points:</td>
+                                <td>XP:</td>
                                 <td>{{ number_format($data['xp']) }}</td>
                             </tr>
                         </tbody>

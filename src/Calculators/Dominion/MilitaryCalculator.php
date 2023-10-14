@@ -1218,11 +1218,15 @@ class MilitaryCalculator
         $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_spies');
         $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_wizards');
         $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_archmages');
+        $military += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_spies');
+        $military += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_wizards');
+        $military += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_archmages');
 
         for ($unitSlot = 1; $unitSlot <= $dominion->race->units->count(); $unitSlot++)
         {
             $military += $this->getTotalUnitsForSlot($dominion, $unitSlot);
             $military += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unitSlot}");
+            $military += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$unitSlot}");
         }
 
         $militaryPercentage = min(1, $military / ($military + $dominion->peasants));
@@ -1478,11 +1482,15 @@ class MilitaryCalculator
             $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_spies');
             $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_wizards');
             $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_archmages');
+            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_spies');
+            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_wizards');
+            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_archmages');
 
             foreach($target->race->units as $unit)
             {
                 $military += $this->getTotalUnitsForSlot($dominion, $unit->slot);
                 $military += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                $military += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$unit->slot}");
             }
 
             $militaryPercentage = min(1, $military / ($military + $dominion->peasants));
@@ -1516,11 +1524,15 @@ class MilitaryCalculator
             $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_spies');
             $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_wizards');
             $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_archmages');
+            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_spies');
+            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_wizards');
+            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_archmages');
 
             foreach($target->race->units as $unit)
             {
                 $military += $this->getTotalUnitsForSlot($dominion, $unit->slot);
                 $military += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                $military += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$unit->slot}");
             }
 
             $militaryPercentage = min(1, $military / ($military + $dominion->peasants));
@@ -3026,6 +3038,7 @@ class MilitaryCalculator
             if($includeUnitsInTraining)
             {
                 $units += $this->queueService->getTrainingQueueTotalByResource($dominion, ('military_unit' . $unit->slot));
+                $units += $this->queueService->getSummonigQueueTotalByResource($dominion, ('military_unit' . $unit->slot));
             }
         }
         
@@ -3045,6 +3058,9 @@ class MilitaryCalculator
                 $units += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_spies');
                 $units += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_wizards');
                 $units += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_archmages');
+                $units += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_spies');
+                $units += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_wizards');
+                $units += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_archmages');
             }
         }
         

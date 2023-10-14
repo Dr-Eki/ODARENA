@@ -207,6 +207,8 @@ class BarbarianCalculator
         $dp = $this->getDpCurrent($dominion);
         $dp += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit2') * static::UNIT2_DP;
         $dp += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit3') * static::UNIT3_DP;
+        $dp += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit2') * static::UNIT2_DP;
+        $dp += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit3') * static::UNIT3_DP;
 
         return $dp;
     }
@@ -216,6 +218,8 @@ class BarbarianCalculator
         $op = $this->getOpCurrent($dominion);
         $op += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit1') * static::UNIT1_OP;
         $op += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit4') * static::UNIT4_OP;
+        $op += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit1') * static::UNIT1_OP;
+        $op += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit4') * static::UNIT4_OP;
 
         return $op;
     }

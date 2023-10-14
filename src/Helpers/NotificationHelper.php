@@ -112,6 +112,12 @@ class NotificationHelper
                 'route' => route('dominion.military'),
                 'iconClass' => 'ra ra-muscle-up text-green',
             ],
+            'summoning_completed' => [
+                'label' => 'Unit summoning/generation completed',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.military'),
+                'iconClass' => 'ra ra-muscle-up text-green',
+            ],
             'stun_completed' => [
                 'label' => 'Stunned units recovered',
                 'defaults' => ['email' => false, 'ingame' => true],
@@ -471,6 +477,16 @@ class NotificationHelper
                     'Training of %s %s completed',
                     number_format($units),
                     str_plural('unit', $units)
+                );
+
+            case 'hourly_dominion.summoning_completed':
+                $units = array_sum($data);
+
+                return sprintf(
+                    '%s %s %s',
+                    number_format($units),
+                    str_plural('unit', $units),
+                    'summoned'
                 );
 
             case 'hourly_dominion.stun_completed':

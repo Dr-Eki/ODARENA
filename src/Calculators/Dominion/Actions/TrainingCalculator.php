@@ -308,7 +308,7 @@ class TrainingCalculator
             if($this->unitHelper->unitHasCapacityLimit($dominion, $slot))
             {
                 $maxCapacity = $this->unitHelper->getUnitMaxCapacity($dominion, $slot);
-                $availableCapacity = $maxCapacity - ($this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot) + $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot));
+                $availableCapacity = $maxCapacity - ($this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot) + $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot) + $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slot));
                 $trainable[$unitType] = max(0, min($trainable[$unitType], $availableCapacity));
             }
 
