@@ -683,8 +683,6 @@ class PopulationCalculator
                 $multiplier += ($dominion->{"military_unit".$unit->slot} / $this->getMaxPopulation($dominion)) * $unitPopulationGrowthPerk;
             }
         }
-
-        dd($multiplier);
         
         return (1 + $multiplier);
     }
