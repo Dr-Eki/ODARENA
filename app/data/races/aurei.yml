@@ -81,8 +81,8 @@ units:
       offense: 0
       defense: 0
     perks:
-      gold_production_raw_from_building_pairing: 0.05,gold_quarry,6
-      building_limit: gold_quarry,20 # building, units per building
+      gold_production_raw_from_building_pairing: 0.05,alchemy,6
+      building_limit: alchemy,20 # building, units per building
       gold_improvements: 1
 
   - name: Gold Wyrm
@@ -136,7 +136,7 @@ units:
       - wise
     cost:
       wizard: 1
-      gold: 444
+      gold: 777
       mana: 111
     power:
       offense: 6

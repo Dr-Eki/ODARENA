@@ -34,7 +34,7 @@ terrain_perks:
   badlands:
     population_mod: 0.10
   desert:
-    population_growth_mod: -1
+    population_growth_mod: -0.10
   forest:
     blood_production_mod: 0.20
   glacier:
@@ -79,25 +79,25 @@ units:
       kills_into_resource_per_casualty: 1,soul # each 1 unit killed becomes
       kills_into_resources_per_value: 25;blood,8;food # each 1 OP/DP killed becomes
 
-#  - name: Succubus
-#    training_time: 9
-#    type:
-#      - living
-#      - sentient
-#      - intelligent
-#    cost:
-#      gold: 320
-#      blood: 32
-#      soul: 1
-#      draftees: 1
-#    power:
-#      offense: 0
-#      defense: 2
-#    perks:
-#      kills_into_resource_per_casualty: 1,soul # each 1 unit killed becomes
-#      kills_into_resources_per_value: 25;blood,8;food # each 1 OP/DP killed becomes
-#      peasants_conversions: 0.04,25;blood,1;soul # amountFrom, amountTo;resourceTo, amountTo;resourceTo
-#      population_growth: 2.5 # Population growth increased by 2.5% for every 1% of population made up of Succubus.
+  - name: Succubus
+    training_time: 9
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 320
+      blood: 32
+      soul: 1
+      draftees: 1
+    power:
+      offense: 0
+      defense: 2
+    perks:
+      kills_into_resource_per_casualty: 1,soul # each 1 unit killed becomes
+      kills_into_resources_per_value: 25;blood,8;food # each 1 OP/DP killed becomes
+      peasants_conversions: 0.04,25;blood,1;soul # amountFrom, amountTo;resourceTo, amountTo;resourceTo
+      population_growth: 2.5 # Population growth increased by 2.5% for every 1% of population made up of Succubus.
 
   - name: Congregant
     training_time: 9
@@ -119,7 +119,7 @@ units:
       cannot_be_released: 1
       dies_into_resource: 1,soul
       blood_production_raw: 0.225
-      blood_production_raw_from_pairing: 4,0.225
+      blood_production_raw_from_pairing: 5,0.225
 
   - name: Adjudicator
     training_time: 12
@@ -136,7 +136,7 @@ units:
       offense: 0
       defense: 4
     perks:
-      defense_from_pairing: 4,4,0.0000001 # slot, amount, num required
+      defense_from_pairing: 5,4,0.0000001 # slot, amount, num required
       kills_into_resource_per_casualty: 1,soul # each 1 OP/DP killed becomes
       kills_into_resources_per_value: 25;blood,8;food # each 1 OP/DP killed becomes
       cannot_be_released: 1

@@ -15,6 +15,16 @@ use OpenDominion\Models\GameEvent;
 
 class DeityService
 {
+
+    /** @var DeityHelper */
+    protected $deityHelper;
+
+    /** @var DeityCalculator */
+    protected $deityCalculator;
+
+    /** @var QueueService */
+    protected $queueService;
+
     public function __construct()
     {
         $this->deityHelper = app(DeityHelper::class);

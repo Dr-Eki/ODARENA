@@ -66,6 +66,7 @@ class TerrainHelper
             'thunderstone_production_mod' => ['%+g%% thunderstone production', ' for every 1%% of this terrain.'],
             'miasma_production_mod' => ['%+g%% miasma production', ' for every 1%% of this terrain.'],
             'sapling_production_mod' => ['%+g%% sapling production', ' for every 1%% of this terrain.'],
+            'gunpowder_production_mod' => ['%+g%% gunpowder production', ' for every 1%% of this terrain.'],
 
             'prisoner_upkeep_mod' => ['%+g%% prisoner upkeep', ' for every 1%% of this terrain.'],
 

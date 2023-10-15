@@ -360,6 +360,10 @@ class Dominion extends AbstractModel
             return $this->getResourceAmount($matches[1]);
         }
     
+        if (preg_match('/^building_(\w+)$/', $key, $matches)) {
+            return $this->getBuildingAmount($matches[1]);
+        }
+    
         return parent::__get($key);
     }
     
@@ -388,6 +392,21 @@ class Dominion extends AbstractModel
     
         if ($resource) {
             return $resource->pivot->amount;
+        }
+    
+        return 0;
+    }
+
+    protected function getBuildingAmount($buildingKey)
+    {
+        $buildingKey = strtolower($buildingKey);
+    
+        $building = $this->buildings()
+            ->where('buildings.key', $buildingKey)
+            ->first();
+    
+        if ($building) {
+            return $building->pivot->amount;
         }
     
         return 0;

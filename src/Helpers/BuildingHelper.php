@@ -185,6 +185,8 @@ class BuildingHelper
             'unit_blood_costs' => 'Unit blood costs %2$s%% for every %1$s%% (max %3$s%% reduction).',
             'unit_food_costs' => 'Unit food costs %2$s%% for every %1$s%% (max %3$s%% reduction).',
 
+            'machine_unit_costs' => '%2$s%% cost of machine units for every %1$s%% (max %3$s%% reduction).',
+
             'extra_units_trained' => '%2$s%% additional units trained for free for every %1$s%% (max %3$s%% extra units).',
 
             'faster_return' =>  '%2$s%% of units sent on invasion return %4$s ticks faster for every %1$s%% (max %3$s%% of all units).',
@@ -235,9 +237,9 @@ class BuildingHelper
             'miasma_invest_bonus' => '+%2$g%% improvement points from miasma for every %1$s%% (max +%3$s%%)',
 
             # Construction and Rezoning
-            'construction_cost' => 'Construction costs decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
-            'rezone_cost' => 'Rezoning costs decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
-            'construction_time' => 'Construction time decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
+            'construction_cost' => '%2$g%% construction costs for every %1$s%% (max %3$s%% reduction).',
+            'rezone_cost' => '%2$g%% rezoning costs for every %1$s%% (max %3$s%% reduction).',
+            'construction_time' => '%2$g%% construction time for every %1$s%% (max %3$s%% reduction).',
             
             'destroys_itself_and_land' => '%g collapse per tick and the land is lost.',
             'destroys_itself' => '%g collapse per tick, leaving barren land.',

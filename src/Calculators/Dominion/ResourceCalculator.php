@@ -739,15 +739,21 @@ class ResourceCalculator
             return 0;
         }
 
+        $maxStorage = 0;
+
         if($resourceKey == 'gunpowder')
         {
-            $maxStorage = $dominion->military_unit2 * $dominion->race->getPerkValue('max_gunpowder_per_cannon');
+            if($dominion->race->name == 'Artillery')
+            {
+                $maxStorage += $dominion->military_unit2 * $dominion->race->getPerkValue('max_gunpowder_per_cannon');
+            }
+
             $maxStorage += $dominion->getBuildingPerkValue('gunpowder_storage_raw');
         }
 
         if($resourceKey == 'sapling')
         {
-            $maxStorage = $dominion->terrain_forest * $dominion->race->getPerkValue('saplings_per_forest');
+            $maxStorage += $dominion->terrain_forest * $dominion->race->getPerkValue('saplings_per_forest');
             $maxStorage += $dominion->getBuildingPerkValue('sapling_storage_raw');
         }
 

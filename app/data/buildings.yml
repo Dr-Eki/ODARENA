@@ -78,32 +78,26 @@ wall:
 watch_tower:
   name: Watch Tower
   category: military
-  exclusive_races:
+  excluded_races:
     - Dragons
   perks:
     target_defensive_power_mod: 1,-1.5,30 # Every 1% gives -1.5% DP mods, max -30% DP mods
 
 turret:
   name: Turret
+  enabled: 0 # meh
   category: military
-  enabled: 0
-  exclusive_races:
-    - Arwe
+  excluded_races:
+    - Barbarian
+    - Reptilians
+    - Sylvan
+    - Swarm
   perks:
-    defensive_power: 1,1,100 # Every 1% gives 1.5% DP, max +60% DP
-    building_capacity_limit: 1,2,wall # amount allowed, per x of, building
-    arwe_unit_housing: 3,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    multiple_pairing_limit: 10,wall;stone_wall # amount, buildings;buildings
+    defensive_power: 1,2,10 # Every 1% gives 2% DP, max +10% DP
+    #arwe_unit_housing: 3,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 ## Production Buildings
-
-alchemy:
-  name: Alchemy
-  category: production
-  exclusive_races:
-    - Aurei
-    - Dark Elf
-  perks:
-    gold_production_mod: 1,4,20 # Every 1% gives +4% gold production, max +20%
 
 aqueduct:
   name: Aqueduct
@@ -120,12 +114,22 @@ aqueduct:
     food_production_mod: 1,8,40 # Every 1% gives +8% food production, max +40%
     population_growth_capped: 1,8,40 # Every 1%, gives 6%, no max
 
+deep_mine:
+  name: Deep Mine
+  category: production
+  exclusive_races:
+    - Gnome
+  perks:
+    ore_production_raw: 60
+    gems_production_raw: 15
+    mana_production_raw: 1
+    housing: 0
+
 dwargen_mine:
   name: Dwargen Mine
   category: production
   exclusive_races:
     - Dwarg
-  land_type: mountain
   perks:
     ore_production_raw: 35
     thunderstone_production_raw_random: 0.25
@@ -187,6 +191,17 @@ lumberyard:
   perks:
     lumber_production_raw: 35
 
+powder_mill:  
+  name: Powder Mill
+  category: production
+  exclusive_races:
+    #- Cires
+    -  Gnome
+  land_type: hill
+  perks:
+    gunpowder_production_raw: 4
+    gunpowder_storage_raw: 200
+
 ore_mine:  
   name: Ore Mine
   category: production
@@ -246,7 +261,33 @@ watermill:
     gems_production_mod: 1,4,20 # Every 1% gives +4% gem production, max +20%
     ore_production_mod: 1,4,20 # Every 1% gives +4% ore production, max +20%
 
-## Improvements
+## Other: Advancements, Improvements, Research, Morale, Exchange Rate
+
+harbour:
+  name: Harbour
+  category: other
+  excluded_races:
+    - Dragon
+    - Reptilians
+    - Swarm
+  perks:
+    food_production_raw: 20
+    xp_generation_mod: 1,5,25 #Every 1% gives +5% XP production, max +25%
+    exchange_rate: 1,4,20 # Every 1% gives +4% exchange rate, max +20%
+
+factory:  
+  name: Factory
+  category: other
+  excluded_races:
+    - Barbarian
+    - Swarm
+    - Sylvan
+    - Wood Elf
+  perks:
+    construction_cost: 1,-2,30 # 1% gives -2% construction cost, max -30%
+    construction_time: 1,-1.3,20 # 1% gives -1% construction time, max -30%
+    machine_unit_costs: 1,-0.5,7.5 # Every 1% gives -0.5% unit cost, max -50%
+
 school:
   name: School
   category: other
@@ -259,7 +300,19 @@ school:
   perks:
     improvements: 1,1 # Every 1% gives 0.8% higher imps
 
-## Advancements, Research, Morale, Exchange Rate
+syndicate_quarters:
+  name: Syndicate Quarters
+  category: other
+  excluded_races:
+    - Swarm
+    - Sylvan
+  perks:
+    spy_strength_recovery: 1,0.15,3 # Every 1% gives +0.15% SS recovery per tick, max +3%/tick
+    amount_stolen: 1,2,40 # Every 1% gives +2% amount stolen, max 40% reduction
+    spy_cost: 1,-2,40 # Every 1% gives 2% cost reduction, max 40% reduction
+    spy_housing: 40
+    housing: 0
+
 tavern:  
   name: Tavern
   category: other
@@ -268,6 +321,33 @@ tavern:
     - Kobold
   perks:
     base_morale: 1,4,20 # Every 1% gives +8 morale, max +40
+
+wizard_guild:
+  name: Wizard Guild
+  category: other
+  excluded_races:
+    - Swarm
+    - Sylvan
+  perks:
+    wizard_strength_recovery: 1,0.15,3 # Every 1% gives +0.15% WS recovery per tick, max +3%/tick
+    wizard_cost: 1,-2,40 # Every 1% gives 2% cost reduction, max 40% reduction
+    spell_cost: 1,-2,40 # Every 1% gives 2% cost reduction, max 40% reduction
+    wizard_housing: 40
+    housing: 0
+
+## Espionage
+
+constabulary:
+  name: Constabulary
+  category: other
+  excluded_races:
+    - Sylvan
+  land_type: hill
+  perks:
+    spy_strength_on_defense: 1,10 # +10% defensive SPA per 1%, no max
+    spy_housing: 40
+    sabotage_damage_suffered: 1,-2,50 # Every 1% reduces sabotage damage by 0.5%, max 50%
+    housing: 0
 
 ## Anti-Theft
 
@@ -318,7 +398,7 @@ colony:
   exclusive_races:
     - Ants
   perks:
-    housing: 120
+    housing: 80
     jobs: 0
 
 den:  
@@ -427,6 +507,7 @@ lapidary:
 
 necropolis:
   name: Necropolis
+  category: holy
   deity: zidur
   exclusive_races:
     - Afflicted
@@ -513,6 +594,16 @@ mass_grave:
 
 # BEGIN AUREI
 
+alchemy:
+  name: Alchemy
+  category: production
+  exclusive_races:
+    - Aurei
+    - Dark Elf
+  perks:
+    gold_production_mod: 1,1.5,60 # Every 1% gives +4% gold production, max +20%
+    aurei_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+
 atrium: 
   name: Atrium
   category: housing
@@ -521,6 +612,23 @@ atrium:
   perks:
     housing: 28
     jobs: 0
+    
+gold_quarry:
+  name: Gold Quarry
+  category: production
+  exclusive_races:
+    - Aurei
+  perks:
+    gold_production_increasing_raw: 50,0.05 # Produces 50 gold, increased  by 0.4 per tick of the round
+    aurei_unit2_production_raw_capped: 0.0025,20
+
+mana_extractor:
+  name: Mana Extractor
+  category: production
+  exclusive_races:
+    - Aurei
+  perks:
+    resource_conversion: 100,gold,50,mana # amountFrom, resourceFrom, amountTo, resourceTo
 
 wizard_dome: 
   name: Wizard Dome
@@ -531,25 +639,6 @@ wizard_dome:
     wizard_strength_recovery: 1,0.1,5 # Every 1% gives +0.1% WS recovery per tick, max +2%/tick
     wizard_housing: 36
     housing: 0
-    
-gold_quarry:
-  name: Gold Quarry
-  category: production
-  exclusive_races:
-    - Aurei
-  perks:
-    gold_production_increasing_raw: 50,0.05 # Produces 50 gold, increased  by 0.4 per tick of the round
-    housing: 0
-    aurei_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
-    aurei_unit2_production_raw_capped: 0.001,20
-
-mana_extractor:
-  name: Mana Extractor
-  category: production
-  exclusive_races:
-    - Aurei
-  perks:
-    resource_conversion: 100,gold,50,mana # amountFrom, resourceFrom, amountTo, resourceTo
 
 # END AUREI
 
@@ -837,19 +926,6 @@ institute:
 
 ## Production Buildings
 
-deep_mine:  
-  enabled: 0
-  name: Deep Mine
-  exclusive_races:
-    - Gnome
-    - Imperial Gnome
-  land_type: mountain
-  perks:
-    ore_production_raw: 60
-    gems_production_raw: 15
-    mana_production_raw: 1
-    housing: 0
-
 automated_mine:  
   enabled: 0
   name: Automated Mine
@@ -994,27 +1070,6 @@ water_temple:
 
 # END GLIMJIR
 
-dock:  
-  enabled: 0
-  name: Dock
-  excluded_races:
-    - Dragon
-    - Firewalker
-    - Glimjir
-    - Growth
-    - Lux
-    - Monster
-    - Myconid
-    - Reptilians
-    - Troll
-    - Void
-    - Swarm
-  land_type: water
-  perks:
-    food_production_raw: 40
-    xp_generation_mod: 1,5,25 #Every 1% gives +5% XP production, max +25%
-    exchange_rate: 1,4,20 # Every 1% gives +4% exchange rate, max +20%
-
 shipyard:  
   enabled: 0
   name: Shipyard
@@ -1039,68 +1094,6 @@ naval_institute:
     draftee_housing: 30
     housing: 0
 
-smithy:  
-  enabled: 0
-  name: Smithy
-  excluded_races:
-    - Armada
-    - Aurei
-    - Beastfolk
-    - Cult
-    - Dimensionalists
-    - Dragon
-    - Glimjir
-    - Gnome
-    - Growth
-    - Imperial Gnome
-    - Icekin
-    - Lux
-    - Marshling
-    - Monster
-    - Myconid
-    - Nox
-    - Spirit
-    - Swarm
-    - Sylvan
-    - Void
-    - Wood Elf
-  land_type: plain
-  perks:
-    unit_gold_costs: 1,-2,40 # ratio, perk, max
-    unit_ore_costs: 1,-2,40 # ratio, perk, max
-
-ore_mill:  
-  enabled: 0
-  name: Gnomish Smithy
-  exclusive_races:
-    - Gnome
-    - Imperial Gnome
-  land_type: plain
-  perks:
-    unit_gold_costs: 1,-2,50 # ratio, perk, max
-    unit_ore_costs: 1,-2,50 # ratio, perk, max
-
-factory:  
-  enabled: 0
-  name: Factory
-  excluded_races:
-    - Dragon
-    - Growth
-    - Icekin
-    - Glimjir
-    - Lux
-    - Monster
-    - Myconid
-    - Void
-    - Swarm
-    - Sylvan
-    - Wood Elf
-  land_type: hill
-  perks:
-    construction_cost: 1,5,50 # 1% gives -5% construction cost, max -50%
-    rezone_cost: 1,5,50 # 1% gives -5% rezone cost, max -50%
-    construction_time: 1,-2.5,25
-
 refiner:  
   enabled: 0
   name: Refinery
@@ -1111,23 +1104,6 @@ refiner:
     resource_conversion: 50,ore,60,brimmer # amountFrom, resourceFrom, amountTo, resourceTo
 
 ## Other Buildings
-
-constabulary:  
-  enabled: 0
-  name: Constabulary
-  excluded_races:
-    - Growth
-    - Glimjir
-    - Monster
-    - Myconid
-    - Void
-    - Sylvan
-    - Wood Elf
-  land_type: hill
-  perks:
-    spy_strength_on_defense: 1,20 # +20% defensive SPA per 1%, no max
-    spy_housing: 40
-    housing: 0
 
 wizard_academy:  
   enabled: 0
@@ -1146,31 +1122,6 @@ wizard_academy:
   land_type: forest
   perks:
     wizard_strength_on_defense: 1,20 # +20% defensive WPA per 1%, no max
-    wizard_housing: 40
-    housing: 0
-
-wizard_guild:  
-  enabled: 0
-  name: Wizard Guild
-  excluded_races:
-    - Aurei
-    - Dimensionalists
-    - Dragon
-    - Growth
-    - Icekin
-    - Glimjir
-    - Lux
-    - Monster
-    - Myconid
-    - Void
-    - Swarm
-    - Sylvan
-    - Wood Elf
-  land_type: swamp
-  perks:
-    wizard_strength_recovery: 1,0.1,2 # Every 1% gives +0.1% WS recovery per tick, max +2%/tick
-    wizard_cost: 1,-2,40 # Every 1% gives 2% cost reduction, max 40% reduction
-    spell_cost: 1,-2,40 # Every 1% gives 2% cost reduction, max 40% reduction
     wizard_housing: 40
     housing: 0
 
@@ -1210,16 +1161,6 @@ yak_breeder:
 # END ONE-OFF/FEW-OFF FACTION BUILDINGS
 
 # CIRES BUILDINGS
-
-powder_mill:  
-  enabled: 0
-  name: Powder Mill
-  exclusive_races:
-    - Cires
-  land_type: hill
-  perks:
-    gunpowder_production_raw: 10
-    gunpowder_storage_raw: 2000
 
 strip_mine:  
   enabled: 0
@@ -1717,7 +1658,7 @@ compound:
     reduces_attrition: 0.5,1 # Every 0.5%, reduces 1%
     food_production_raw: 5
 
-grove:  
+grove:
   enabled: 0
   name: Grove
   exclusive_races:
@@ -1729,8 +1670,6 @@ grove:
   perks:
     housing: 30
     jobs: 0
-
-
 
 orcish_longhouse:  
   enabled: 0
@@ -1869,56 +1808,11 @@ enclosure:
 
 # BARBARIAN
 
-shed:
-  name: Shed
-  exclusive_races:
-    - Barbarian
-  land_type: plain
-  perks:
-    housing: 48
-    jobs: 0
-
-shack:
-  name: Shack
-  exclusive_races:
-    - Barbarian
-  land_type: hill
-  perks:
-    housing: 48
-    jobs: 0
-
-shelter:
-  name: Shelter
-  exclusive_races:
-    - Barbarian
-  land_type: mountain
-  perks:
-    housing: 48
-    jobs: 0
-
 cabin:
   name: Cabin
   exclusive_races:
     - Barbarian
   land_type: forest
-  perks:
-    housing: 48
-    jobs: 0
-
-hovel:
-  name: Hovel
-  exclusive_races:
-    - Barbarian
-  land_type: swamp
-  perks:
-    housing: 48
-    jobs: 0
-
-shanty:
-  name: Shanty
-  exclusive_races:
-    - Barbarian
-  land_type: water
   perks:
     housing: 48
     jobs: 0

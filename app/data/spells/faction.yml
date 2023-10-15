@@ -6,7 +6,7 @@ chryson_phase:
   level: 5
   scope: self
   class: active
-  cost: 5
+  cost: 33
   exclusive_races:
     - Aurei
   perks:
@@ -17,7 +17,7 @@ halcyon_phase:
   level: 5
   scope: self
   class: active
-  cost: 5
+  cost: 11
   exclusive_races:
     - Aurei
   perks:

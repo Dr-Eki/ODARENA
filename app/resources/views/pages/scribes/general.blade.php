@@ -11,19 +11,22 @@
                 <li><a class="btn btn-block" href="#casualties">Casualties</a></li>
                 <li><a class="btn btn-block" href="#community">Community</a></li>
                 <li><a class="btn btn-block" href="#conversions">Conversions</a></li>
+                {{--
                 <li><a class="btn btn-block" href="#crypt">Crypt</a></li>
+                --}}
                 <li><a class="btn btn-block" href="#desecration">Desecration</a></li>
                 <li><a class="btn btn-block" href="#expeditions">Expeditions</a></li>
                 <li><a class="btn btn-block" href="#governor">Governor</a></li>
                 <li><a class="btn btn-block" href="#morale">Morale</a></li>
                 <li><a class="btn btn-block" href="#prestige">Prestige</a></li>
                 <li><a class="btn btn-block" href="#protectorship">Protectorship</a></li>
+                {{--
                 <li><a class="btn btn-block" href="#psionics">Psionics</a></li>
                 <li><a class="btn btn-block" href="#psionic_conversion">Psionic Conversion</a></li>
-                <li><a class="btn btn-block" href="#rounds">Rounds</a></li>
-                {{--
-                <li><a class="btn btn-block" href="#sabotage">Sabotage</a></li>
                 --}}
+                <li><a class="btn btn-block" href="#rounds">Rounds</a></li>
+                <li><a class="btn btn-block" href="#sabotage">Sabotage</a></li>
+                <li><a class="btn btn-block" href="#salvaging">Salvaging</a></li>
                 <li><a class="btn btn-block" href="#sorcery">Sorcery</a></li>
                 <li><a class="btn btn-block" href="#theft">Theft</a></li>
                 <li><a class="btn btn-block" href="#ticks">Ticks</a></li>
@@ -147,9 +150,11 @@
                 </div>
             </div>
 
-            <div class="box-footer">
-                <p class="text-muted">See also <a href="#crypt">Crypt</a> and <a href="#psionic_conversion">Psionic Conversion</a></p>
-            </div>
+            {{-- 
+                <div class="box-footer">
+                    <p class="text-muted">See also <a href="#crypt">Crypt</a> and <a href="#psionic_conversion">Psionic Conversion</a></p>
+                </div>
+            --}}
         </div>
     </div>
     
@@ -296,17 +301,17 @@
                     <li>75% and up: <code>10 * ([Land Ratio] / 75) * (1 + [Land Ratio] / 100)</code></li>
                 </ul>
                 <p>Defender's morale change is <code>[Attacker Morale Change]*-1</code> for under 60% land ratio and <code>[Attacker Morale Change]*-0.60</code> for other. This calculation is done before attacker's morale modifiers (i.e. perks that increases attacker's morale gains) are applied.</p>
-
                 <h4>Morale Perks</h4>
                 <p>Morale is calculated in two steps: Base Morale and Morale Multipliers.</p>
-                <p>When a perk increases base morale, it’s an additive bonus added to the 100% standard. For example, one Legate gives <code>100% + 5% = 105%</code> base morale.</p>
-                <p>Multipliers are for example Taverns. 5% bonus from Taverns and no base morale modifiers yields <code>(100% + 0%) * (1.05) = 105%</code> morale.</p>
-                <p>A dominion with 20% bonus from Taverns and 10 units that provide 0.50% morale would have <code>(100% + 10*0.50%) * (1.20) = 126%</code> morale.</p>
+                <p>When a perk increases base morale, it’s an additive bonus added to the 100 standard. For example, one Legate gives <code>100 + 5 = 105</code> base morale.</p>
+                <p>Multipliers are for example Taverns. 5% bonus from Taverns and no base morale modifiers yields <code>(100 + 0) * (1.05) = 105</code> morale.</p>
+                <p>A dominion with 20% bonus from Taverns and 10 units that provide 0.50% morale would have <code>(100 + 10*0.50) * (1.20) = 126</code> morale.</p>
 
             </div>
         </div>
     </div>
     
+    {{-- 
     <div class="col-sm-12 col-md-12">
         <a id="psionics"></a>
         <div class="box box-primary">
@@ -358,6 +363,7 @@
             </div>
         </div>
     </div>
+    --}}
     
     <div class="col-sm-12 col-md-12">
         <a id="prestige"></a>
@@ -506,7 +512,6 @@
         </div>
     </div>
 
-    {{--
     <div class="col-sm-12 col-md-12">
         <a id="sabotage"></a>
         <div class="box box-primary">
@@ -526,7 +531,23 @@
             </div>
         </div>
     </div>
-    --}}
+
+    <div class="col-sm-12 col-md-12">
+        <a id="salvaging"></a>
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h2 class="box-title">Salvaging</h2>
+            </div>
+
+            <div class="box-body">
+                <p>Some <a href="{{ route('scribes.factions') }}">factions</a> can salvage resources lost in battle.</p>
+                <p>For each unit lost and using the cost of units at the moment of invasion, the amount salvage is calculated as follows:</p>
+                <p><code>[Amount Salvaged] = [Amount Lost] * [Unit Cost] * [Salvage Multiplier]</code></p>
+                <p>Only lumber, ore, and gems can be salvaged.</p>
+                <p>Salvage cannot exceed 100% of the unit cost.</p>
+            </div>
+        </div>
+    </div>
 
     <div class="col-sm-12 col-md-12">
         <a id="sorcery"></a>

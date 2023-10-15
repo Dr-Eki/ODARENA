@@ -11,16 +11,50 @@ resources:
   - food
   - ore
   - gems
+  - gunpowder
   - mana
 
 construction_materials:
   - gold
   - ore
 
+peasants_production:
+  gold: 2.50
+  ore: 0.35
+
+terrain_perks:
+  badlands:
+    food_production_mod: -0.10
+  desert:
+    food_production_mod: -0.20
+  forest:
+    population_growth_mod: 0.20
+  glacier:
+    gems_production_mod: 0.10
+  hills:
+    ore_production_mod: 0.10
+  jungle:
+    population_growth_mod: 0.20
+  mountains:
+    ore_production_mod: 0.15
+    gems_production_mod: 0.05
+  plains:
+    defensive_power_mod: 0.025
+  swamps:
+    mana_production_mod: 0.08
+    population_growth_mod: -0.05
+  volcanic:
+    gunpowder_production_mod: 0.12
+    food_production_mod: -0.08
+  water:
+    food_production_mod: 0.10
+  wetlands:
+    food_production_mod: 0.10
+
 perks:
-  food_consumption_mod: -25
-  construction_cost: -25
-  increased_construction_speed: 6
+  food_consumption_mod: -20
+  construction_cost: -20
+  increased_construction_speed: 3
   salvaging: 50
 
 units:
@@ -30,13 +64,16 @@ units:
       - machine
       - immobile
     cost:
-      gold: 100
+      gold: 400
       ore: 200
     power:
-      offense: 6
+      offense: 0
       defense: 0
     perks:
-      faster_return: 8
+      offense_from_resource_capped_exhausting: 6,12,ore # +6 OP if paired with 1 ore (which is spent on attack)
+      spends_resource_on_offense: gunpowder,1
+      faster_return: 6
+      sendable_with_zero_op: 1
 
   - name: Oreguard
     training_time: 12
@@ -45,20 +82,22 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 100
-      ore: 350
+      gold: 600
+      ore: 200
+      draftees: 1
     power:
       offense: 0
-      defense: 8
+      defense: 5
 
   - name: Automaton
     training_time: 12
-    static_networth: 20
+    static_networth: 22
     type:
       - machine
     cost:
-      gold: 1800
-      ore: 1800
+      gold: 3000
+      ore: 2000
+      draftees: 1
     power:
       offense: 0
       defense: 2
@@ -67,15 +106,16 @@ units:
 
   - name: Juggernaut
     training_time: 12
-    static_networth: 30
+    static_networth: 34
     type:
       - machine
     cost:
-      gold: 1800
-      ore: 1800
+      gold: 3000
+      ore: 2000
+      draftees: 1
     power:
       offense: 2
-      defense: 1
+      defense: 2
     perks:
       offense_from_advancements: anvils;6;2,architecture;6;2,minting;6;2,drills;6;2,fortifications;6;2,gemcutting;6;2,infrastructure;6;2,mining_equipment;6;2,strategy;6;2,tactics;6;2
       defense_from_advancements: anvils;6;1,architecture;6;1,minting;6;1,drills;6;1,fortifications;6;1,gemcutting;6;1,infrastructure;6;1,mining_equipment;6;1,strategy;6;1,tactics;6;1

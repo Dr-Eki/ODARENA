@@ -3,12 +3,16 @@ alignment: independent
 description: >-
   <p>The City-state of Kerranad starts with buildings:</p>
   <ul>
-  <li>Plains: 50 farms, 200 smithies</li>
-  <li>Forest: 50 lumberyards</li>
-  <li>Mountain: 100 ore mines, 300 gem mines</li>
-  <li>Hill: 100 residences, 25 constabularies</li>
-  <li>Swamp: 50 towers, 50 temples, 25 wizard guilds</li>
-  <li>Water: 50 docks</li>
+  <li>50 farms</li>
+  <li>50 lumberyards</li>
+  <li>100 ore mines</li>
+  <li>300 gem mines</li>
+  <li>100 residences</li>
+  <li>50 constabularies</li>
+  <li>50 towers</li>
+  <li>50 infirmares</li>
+  <li>25 wizard guilds</li>
+  <li>50 harbours</li>
   </ul>
   <p>It also starts with 400,000 gems.</p>
   </ul>
@@ -17,17 +21,15 @@ home_terrain: plains
 playable: 0 # Round 88
 skill_level: 2
 max_per_round: 1
-minimum_rounds: 10
+minimum_rounds: 20
 
 
 perks:
   gold_production_mod: 10
-  ore_production_mod: 25
-  cannot_rezone: 1
-  cannot_train_archmages: 1
-  max_population: 10
   extra_research_slots: 1
   can_capture_buildings: 1
+  cannot_submit_to_deity: 1
+  increased_rezoning_speed: 4
 
 units:
   - name: Assassin

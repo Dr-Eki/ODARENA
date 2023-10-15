@@ -120,11 +120,13 @@ class TheftCalculator
         $thiefModifier += $thief->getAdvancementPerkMultiplier('amount_stolen');
         $thiefModifier += $thief->getDeityPerkMultiplier('amount_stolen');
         $thiefModifier += $thief->getImprovementPerkMultiplier('amount_stolen');
+        $thiefModifier += $thief->getBuildingPerkMultiplier('amount_stolen');
         $thiefModifier += $thief->race->getPerkMultiplier('amount_stolen');
 
         $thiefModifier += $thief->getAdvancementPerkMultiplier($resource->key . '_amount_stolen');
         $thiefModifier += $thief->getDeityPerkMultiplier($resource->key . '_amount_stolen');
         $thiefModifier += $thief->getImprovementPerkMultiplier($resource->key . '_amount_stolen');
+        $thiefModifier += $thief->getBuildingPerkMultiplier($resource->key . '_amount_stolen');
 
         return $max * $thiefModifier;
     }

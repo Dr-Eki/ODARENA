@@ -35,7 +35,7 @@
                                 <h4 class="box-title">{!! $buildingHelper->getBuildingCategoryIcon($categoryKey) !!} {{ ucwords($categoryKey) }} </h4>
                             </div>
                             <div class="row">
-                                @foreach($availableBuildings->where('category', $categoryKey) as $building)
+                                @foreach($availableBuildings->where('category', $categoryKey)->sortBy('name') as $building)
                                     @php
                                         $amountOwned = $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building);
                                         $constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}");

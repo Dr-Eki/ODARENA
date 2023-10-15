@@ -45,6 +45,15 @@ education:
   perks:
     improvement_points: 20,3000
 
+espionage:
+  name: Espionage
+  excluded_races:
+    - Barbarian
+    - Troll
+  perks:
+    spy_strength: 40,6000
+    spy_housing: 30,4500
+
 leadership:
   name: Leadership
   excluded_races:
@@ -54,13 +63,15 @@ leadership:
 
 logging:
   name: Logging
-  excluded_races:
-    - Barbarian
+  exclusive_races:
+    - Afflicted
+    - Ants
     - Beastfolk
-    - Demon
-    - Sylvan
-    - Troll
-    - Wood Elf
+    - Kobold
+    - Reptilians
+    - Snow Elf
+    - Undead
+    - Yeti
   perks:
     lumber_production_mod: 30,5600
 
@@ -100,10 +111,23 @@ mining:
   perks:
     ore_production_mod: 30,5600
 
+sabotage:  
+  name: Sabotage
+  excluded_races:
+    - Barbarian
+    - Sylvan
+  perks:
+    spy_losses: -40,6400
+    sabotage_damage_dealt: 25,4000
+
 salvaging:
   name: Salvaging
   exclusive_races:
+    - Dark Elf
+    - Dwarg
     - Gnome
+    - Kobold
+    - Wood Elf
   perks:
     salvaging_mod: 50,5000
 
@@ -157,7 +181,7 @@ wizardry:
     - Sylvan
   perks:
     wizard_strength: 40,6000
-    wizard_housing: 40,6000
+    wizard_housing: 30,4500
 
 # BEGIN BEASTFOLK #
 
@@ -481,26 +505,6 @@ defense:
     - Wood Elf
   perks:
     defensive_power: 25,7500
-
-espionage:  
-  enabled: 0
-  name: Espionage
-  excluded_races:
-    - Barbarian
-    - Beastfolk
-    - Growth
-    - Kerranad
-    - Marshling
-    - Monster
-    - Sylvan
-    - Swarm
-    - Troll
-    - Void
-    - Wood Elf
-  perks:
-    spy_strength: 45,5000
-    spy_losses: -45,5000
-    spy_housing: 45,5000
 
 irrigation:  
   enabled: 0
