@@ -141,8 +141,6 @@ class Race extends AbstractModel
         return (float)$perks->first()->pivot->value;
     }
 
-
-
     /**
      * Try to get a unit perk value with provided key for a specific slot.
      *

@@ -653,8 +653,8 @@ class PopulationCalculator
         $multiplier += $dominion->race->getPerkMultiplier('population_growth');
 
         // Buildings
-        $multiplier += $dominion->getBuildingPerkMultiplier('population_growth');
-        $multiplier += $dominion->getBuildingPerkMultiplier('population_growth_capped');
+        #$multiplier += $dominion->getBuildingPerkMultiplier('population_growth');
+        #$multiplier += $dominion->getBuildingPerkMultiplier('population_growth_capped');
 
         // Spells
         $multiplier += $dominion->getSpellPerkMultiplier('population_growth');
@@ -677,12 +677,15 @@ class PopulationCalculator
         # Look for population_growth in units
         foreach($dominion->race->units as $unit)
         {
-            if($unitPopulationGrowthPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'population_growth'))
+            if($unitPopulationGrowthPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'population_growth') and $dominion->{"military_unit".$unit->slot} > 0)
             {
+                $unitPopulationGrowthPerk = (float)$unitPopulationGrowthPerk;
                 $multiplier += ($dominion->{"military_unit".$unit->slot} / $this->getMaxPopulation($dominion)) * $unitPopulationGrowthPerk;
             }
         }
 
+        dd($multiplier);
+        
         return (1 + $multiplier);
     }
 

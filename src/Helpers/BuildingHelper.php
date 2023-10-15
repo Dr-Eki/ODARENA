@@ -250,6 +250,7 @@ class BuildingHelper
             'lightning_bolt_damage' => 'Damage from lightning bolts reduced by %2$s%% for every %1$s%%.',
             'wizard_cost' => 'Wizard and arch mage training costs decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
             'spell_cost' => 'Spell mana costs decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
+            'spy_cost' => '%2$+g%% cost of spies for every %1$s%% (max %3$s%% reduction).',
 
             'gold_theft_reduction' => 'Gold stolen from you reduced by %2$s%% for every %1$s%%.',
             'gems_theft_reduction' => 'Gems stolen from you reduced by %2$s%% for every %1$s%%.',
@@ -258,6 +259,8 @@ class BuildingHelper
             'food_theft_reduction' => 'Food stolen from you reduced by %2$s%% for every %1$s%%.',
             'mana_theft_reduction' => 'Mana stolen from you reduced by %2$s%% for every %1$s%%.',
             'horse_theft_reduction' => 'Horses stolen from you reduced by %2$s%% for every %1$s%%.',
+
+            'amount_stolen' => '%2$+g%% resources stolen for every %1$s%% (max +%3$s%%).',
 
             'gold_theft_protection' => 'Protects %g gold from theft.',
             'gems_theft_protection' => 'Protects %g gems from theft.',
