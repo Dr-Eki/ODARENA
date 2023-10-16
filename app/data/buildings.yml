@@ -209,6 +209,7 @@ ore_mine:
     - Beastfolk
     - Dark Elf
     - Demon
+    - Dragon
     - Dwarg
     - Kobold
     - Snow Elf
@@ -253,6 +254,7 @@ watermill:
     - Dark Elf
     - Demon
     - Dwarg
+    - Dragon
     - Kobold
     - Snow Elf
     - Troll

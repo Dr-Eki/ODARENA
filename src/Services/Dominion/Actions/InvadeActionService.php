@@ -156,7 +156,7 @@ class InvadeActionService
      * @return array
      * @throws GameException
      */
-    public function invade(Dominion $attacker, Dominion $target, array $units): array
+    public function invade(Dominion $attacker, Dominion $target, array $units, bool $captureBuildings): array
     {
         $this->guardLockedDominion($attacker);
         $this->guardActionsDuringTick($attacker);
@@ -188,12 +188,24 @@ class InvadeActionService
 
         $now = time();
 
-        DB::transaction(function () use ($attacker, $target, $defender, $units, $now) {
+        DB::transaction(function () use ($attacker, $target, $defender, $units, $now, $captureBuildings) {
 
             // Checks
             if(!$attacker->round->getSetting('invasions'))
             {
                 throw new GameException('Invasions are disabled this round.');
+            }
+
+            if($captureBuildings)
+            {
+                if($attacker->race->getPerkValue('can_capture_buildings'))
+                {
+                    $this->invasion['result']['capture_buildings'] = true;
+                }
+                else
+                {
+                    throw new GameException($attacker->race->name . ' cannot capture buildings. Nice try.');
+                }
             }
 
             if ($attacker->protection_ticks > 0)
