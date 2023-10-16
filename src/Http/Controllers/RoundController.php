@@ -20,8 +20,10 @@ use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\Title;
 use OpenDominion\Models\User;
+
 use OpenDominion\Helpers\DominionHelper;
 use OpenDominion\Helpers\RoundHelper;
+use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\SelectorService;
 use OpenDominion\Services\RealmFinderService;
@@ -564,6 +566,14 @@ class RoundController extends AbstractController
                     $dominionName,
                     $pack
                 );
+
+                # Get max pop
+                $populationCalculator = app(PopulationCalculator::class);
+                $startingPeasants = $populationCalculator->getMaxPopulation($dominion) - $populationCalculator->getPopulationMilitary($dominion);
+
+                $dominion->save([
+                    'peasants' => $startingPeasants,
+                ]);
 
                 $this->newDominionEvent = GameEvent::create([
                     'round_id' => $dominion->round_id,

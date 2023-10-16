@@ -971,6 +971,7 @@ class Dominion extends AbstractModel
                     'wizard_strength',
                     'wizard_strength_recovery',
                     'wizard_cost',
+                    'spy_cost',
                     'spell_duration_mod',
                 
                     // Construction/Rezoning and Land
@@ -1231,7 +1232,11 @@ class Dominion extends AbstractModel
 
                     $availableBuildings = min($buildingOwned, floor($landSize * $maxBuildingRatio));
 
-                    $perk += $availableBuildings * $unitPerBuilding;
+                    $unitsGenerated = $availableBuildings * $unitPerBuilding;
+                    $unitsGeneratedInt = intval($unitsGenerated);
+                    $unitsGeneratedFloat = $unitsGenerated - $unitsGeneratedInt;
+
+                    $perk += $unitsGeneratedInt + (random_chance($unitsGeneratedFloat) ? 1 : 0);
                 }
                 # Buildings where we only ever want a single value
                 elseif(

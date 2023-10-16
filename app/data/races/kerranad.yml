@@ -11,7 +11,7 @@ description: >-
   <li>50 constabularies</li>
   <li>50 towers</li>
   <li>50 infirmares</li>
-  <li>25 wizard guilds</li>
+  <li>50 wizard guilds</li>
   <li>50 harbours</li>
   </ul>
   <p>It also starts with 400,000 gems.</p>
@@ -20,6 +20,7 @@ home_land_type: plain
 home_terrain: plains
 playable: 0 # Round 88
 skill_level: 2
+magic_level: 4
 max_per_round: 1
 minimum_rounds: 20
 

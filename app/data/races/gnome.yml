@@ -66,6 +66,7 @@ units:
     cost:
       gold: 400
       ore: 200
+      draftees: 1
     power:
       offense: 0
       defense: 0
@@ -110,8 +111,8 @@ units:
     type:
       - machine
     cost:
-      gold: 3000
-      ore: 2000
+      gold: 5000
+      ore: 3000
       draftees: 1
     power:
       offense: 2

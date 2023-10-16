@@ -49,7 +49,7 @@ class DeityService
 
         if($dominion->race->getPerkValue('cannot_submit_to_deity'))
         {
-            throw new GameException('You cannot submit to a deity for a dominion that is locked or abandoned, or after a round has ended.');
+            throw new GameException($dominion->race->name . ' cannot submit to a deity.');
         }
 
         if($dominion->isAbandoned() or $dominion->round->hasEnded() or $dominion->isLocked())

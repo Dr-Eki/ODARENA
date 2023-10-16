@@ -33,6 +33,7 @@ use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\BarbarianCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
+use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\TerrainCalculator;
 
 use OpenDominion\Services\Dominion\DeityService;
@@ -49,6 +50,7 @@ class DominionFactory
     protected $buildingCalculator;
     protected $barbarianCalculator;
     protected $improvementCalculator;
+    protected $populationCalculator;
     protected $terrainCalculator;
 
     protected $deityService;
@@ -65,6 +67,7 @@ class DominionFactory
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->barbarianCalculator = app(BarbarianCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
+        $this->populationCalculator = app(PopulationCalculator::class);
         $this->terrainCalculator = app(TerrainCalculator::class);
 
         $this->deityService = app(DeityService::class);
@@ -387,6 +390,7 @@ class DominionFactory
             ]);
         });
 
+
         return $dominion;
 
     }
@@ -472,17 +476,20 @@ class DominionFactory
 
         if($race->name == 'Kerranad')
         {
-            $startingBuildings['farm'] = 50;
-            $startingBuildings['smithy'] = 200;
-            $startingBuildings['residence'] = 100;
+            $startingBuildings['aqueduct'] = 25;
             $startingBuildings['constabulary'] = 25;
-            $startingBuildings['lumberyard'] = 50;
+            $startingBuildings['farm'] = 50;
+            $startingBuildings['gold_mine'] = 100;
+            $startingBuildings['harbour'] = 50;
+            $startingBuildings['infirmary'] = 50;
             $startingBuildings['ore_mine'] = 100;
-            $startingBuildings['gem_mine'] = 300;
+            $startingBuildings['residence'] = 50;
+            $startingBuildings['saw_mill'] = 50;
+            $startingBuildings['tavern'] = 50;
             $startingBuildings['tower'] = 50;
-            $startingBuildings['wizard_guild'] = 25;
-            $startingBuildings['temple'] = 50;
-            $startingBuildings['dock'] = 50;
+            $startingBuildings['wizard_guild'] = 50;
+            $startingBuildings['syndicate_quarters'] = 50;
+            $startingBuildings['gem_mine'] = 300;
         }
         elseif($race->name == 'Growth')
         {

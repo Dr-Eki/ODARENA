@@ -433,7 +433,7 @@ class TrainingCalculator
         $multiplier += $dominion->getAdvancementPerkMultiplier('spy_costs');
 
         // Buildings
-        $multiplier -= $dominion->getBuildingPerkMultiplier('spy_cost');
+        $multiplier += $dominion->getBuildingPerkMultiplier('spy_cost');
 
         // Cap $multiplier at -50%
         $multiplier = max($multiplier, -0.50);

@@ -120,9 +120,9 @@ deep_mine:
   exclusive_races:
     - Gnome
   perks:
-    ore_production_raw: 60
-    gems_production_raw: 15
-    mana_production_raw: 1
+    ore_production_raw: 40
+    gems_production_raw: 7
+    mana_production_raw: 0.5
     housing: 0
 
 dwargen_mine:
