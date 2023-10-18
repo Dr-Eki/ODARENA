@@ -8,7 +8,7 @@ use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Models\Dominion;
 #use OpenDominion\Models\DominionSpell;
-#use OpenDominion\Models\Building;
+use OpenDominion\Models\Building;
 use OpenDominion\Models\GameEvent;
 #use OpenDominion\Models\GameEventStory;
 use OpenDominion\Models\Improvement;
@@ -156,8 +156,9 @@ class InvadeActionService
      * @return array
      * @throws GameException
      */
-    public function invade(Dominion $attacker, Dominion $target, array $units, bool $captureBuildings): array
+    public function invade(Dominion $attacker, Dominion $target, array $units, bool $captureBuildings = false): array
     {
+
         $this->guardLockedDominion($attacker);
         $this->guardActionsDuringTick($attacker);
         $this->guardLockedDominion($target);
@@ -230,7 +231,7 @@ class InvadeActionService
 
             if ($attacker->realm->id === $target->realm->id and !(in_array($attacker->round->mode, ['deathmatch','deathmatch-duration'])))
             {
-                throw new GameException('You can only invade other dominions in the same realm in deathmatch rounds.');
+                throw new GameException('You can only invade other dominions in the same realm as you in deathmatch rounds.');
             }
 
             if ($attacker->realm->getAllies()->contains($target->realm))
@@ -529,7 +530,7 @@ class InvadeActionService
             $this->handleDuringInvasionUnitPerks($attacker, $defender, $units);
 
             $this->handleMoraleChanges($attacker, $defender, $landRatio, $units);
-            $this->handleLandGrabs($attacker, $target, $landRatio);
+            $this->handleLandGrabs($attacker, $target, $landRatio, $captureBuildings);
             $this->handleDeathmatchGovernorshipChanges($attacker, $defender);
             $this->handleXp($attacker, $defender, $units);
 
@@ -1263,13 +1264,14 @@ class InvadeActionService
      * @param Dominion $attacker
      * @param Dominion $target
      */
-    protected function handleLandGrabs(Dominion $attacker, Dominion $target, float $landRatio): void
+    protected function handleLandGrabs(Dominion $attacker, Dominion $target, float $landRatio, bool $captureBuildings = false): void
     {
         // Nothing to grab if invasion isn't successful :^) — or if it's a show of force
         if (!$this->invasion['result']['success'] or (isset($this->invasion['attacker']['show_of_force']) and $this->invasion['attacker']['show_of_force']))
         {
             return;
         }
+        $queueData = []; 
 
         $landRatio = $landRatio * 100;
 
@@ -1277,7 +1279,7 @@ class InvadeActionService
         $landConquered = (int)$this->militaryCalculator->getLandConquered($attacker, $target, $landRatio);
 
         # Check whether the invasion qualifies for land being discovered.
-        $discoverLand = (bool)$this->militaryCalculator->checkDiscoverLand($attacker, $target, $landConquered);
+        $discoverLand = (bool)$this->militaryCalculator->checkDiscoverLand($attacker, $target, $landConquered, $captureBuildings);
 
         # Check if the attacker has land discovered perks and, if so, how much land is discovered.
         $extraLandDiscovered = (int)$this->militaryCalculator->getExtraLandDiscovered($attacker, $target, $discoverLand, $landConquered);
@@ -1289,6 +1291,20 @@ class InvadeActionService
         $this->invasion['attacker']['land_conquered'] = $landConquered;
         $this->invasion['attacker']['terrain_conquered']['available'] = array_map('abs', $this->invasion['defender']['terrain_lost']['available']);
         $this->invasion['attacker']['terrain_conquered']['queued'] = array_map('abs', $this->invasion['defender']['terrain_lost']['queued']);
+
+        if($captureBuildings)
+        {
+            $this->invasion['attacker']['buildings_captured'] = $this->invasion['defender']['buildings_lost']['available'];
+
+            foreach($this->invasion['attacker']['buildings_captured'] as $buildingKey => $amount)
+            {
+                $building = Building::where('key', $buildingKey)->first();
+                if($amount > 0 and !$building->getPerkValue('cannot_be_captured'))
+                {
+                    $queueData[('building_' . $buildingKey)] = $amount;
+                }
+            }
+        }
 
         # Remove land
         $target->land -= $landConquered;
@@ -1346,8 +1362,7 @@ class InvadeActionService
         }
 
         $this->landLost = $landConquered;
-
-        $mergedArrays = [];
+        $queueData['land'] = ($this->invasion['attacker']['land_conquered'] + $this->invasion['attacker']['land_discovered'] + $this->invasion['attacker']['extra_land_discovered']);
 
         $allArrays = [
             $this->invasion['attacker']['terrain_conquered']['available'],
@@ -1370,7 +1385,6 @@ class InvadeActionService
 
         $this->invasion['attacker']['terrain_gained'] = $mergedTerrainArrays;
 
-        $queueData = []; 
         foreach($mergedTerrainArrays as $terrainKey => $amount)
         {
             $queueData[('terrain_' . $terrainKey)] = abs($amount);
@@ -1387,11 +1401,11 @@ class InvadeActionService
             $queueData
         );
 
-        $this->queueService->queueResources(
-            'invasion',
-            $attacker,
-            ['land' => ($this->invasion['attacker']['land_conquered'] + $this->invasion['attacker']['land_discovered'] + $this->invasion['attacker']['extra_land_discovered'])]
-        );
+        #$this->queueService->queueResources(
+        #    'invasion',
+        #    $attacker,
+        #    ['land' => ($this->invasion['attacker']['land_conquered'] + $this->invasion['attacker']['land_discovered'] + $this->invasion['attacker']['extra_land_discovered'])]
+        #);
 
         # Populate buildings_lost_total (for display purposes)
 
