@@ -602,7 +602,7 @@ alchemy:
   category: production
   exclusive_races:
     - Aurei
-    - Dark Elf
+    #- Dark Elf
   perks:
     gold_production_mod: 1,1.5,60 # Every 1% gives +4% gold production, max +20%
     aurei_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
