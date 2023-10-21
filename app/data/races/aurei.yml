@@ -122,8 +122,8 @@ units:
       dies_into_wizard: 1
       cannot_be_released: 1
       counts_as_wizard: 0.25
-      casualties_from_wizard_ratio: -20 # -20% casualties per 1 WPA
-      immortal_from_wpa: 6
+      casualties_from_wizard_ratio: -15 # -20% casualties per 1 WPA
+      immortal_from_wpa: 8
       gold_production_raw: 0.10
 
   - name: Chryson
@@ -145,6 +145,6 @@ units:
       dies_into_wizard: 1
       cannot_be_released: 1
       counts_as_wizard: 0.25
-      casualties_from_wizard_ratio: -20 # -20% casualties per 1 WPA
-      immortal_from_wpa: 6
+      casualties_from_wizard_ratio: -15 # -20% casualties per 1 WPA
+      immortal_from_wpa: 8
       gold_production_raw: 0.10

@@ -1835,7 +1835,8 @@ class Dominion extends AbstractModel
 
     public function getTerrainPerkValue(string $perkKey): float
     {
-        return $this->race->raceTerrains->sum(function ($raceTerrain) use ($perkKey) {
+        return $this->race->raceTerrains->sum(function ($raceTerrain) use ($perkKey)
+        {
             $terrainPerk = $raceTerrain->perks()->where('key', $perkKey)->first();
             return $terrainPerk ? $terrainPerk->pivot->value * $this->{'terrain_' . $raceTerrain->terrain->key} : 0;
         });
@@ -1843,7 +1844,8 @@ class Dominion extends AbstractModel
     
     public function getTerrainPerkMultiplier(string $perkKey): float
     {
-        return $this->race->raceTerrains->sum(function ($raceTerrain) use ($perkKey) {
+        return $this->race->raceTerrains->sum(function ($raceTerrain) use ($perkKey)
+        {
             $terrainPerk = $raceTerrain->perks()->where('key', $perkKey)->first();
             return $terrainPerk ? ($terrainPerk->pivot->value * $this->{'terrain_' . $raceTerrain->terrain->key}) / $this->land : 0;
         });

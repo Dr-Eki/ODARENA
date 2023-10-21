@@ -209,7 +209,7 @@ ore_mine:
     - Beastfolk
     - Dark Elf
     - Demon
-    - Dragon
+    - Dragons
     - Dwarg
     - Kobold
     - Snow Elf
@@ -254,7 +254,7 @@ watermill:
     - Dark Elf
     - Demon
     - Dwarg
-    - Dragon
+    - Dragons
     - Kobold
     - Snow Elf
     - Troll
@@ -269,7 +269,7 @@ harbour:
   name: Harbour
   category: other
   excluded_races:
-    - Dragon
+    - Dragons
     - Reptilians
     - Swarm
   perks:
@@ -328,6 +328,7 @@ wizard_guild:
   name: Wizard Guild
   category: other
   excluded_races:
+    - Aurei
     - Swarm
     - Sylvan
   perks:
