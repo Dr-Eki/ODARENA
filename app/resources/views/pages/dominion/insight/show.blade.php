@@ -828,7 +828,7 @@
                                             $perkValue = $dominion->getTerrainPerkValue($perk->key);
                                             if($terrainHelper->getPerkType($perk->key) == 'mod')
                                             {
-                                                $perkValue /= 10;
+                                            $perkValue = $dominion->getTerrainPerkMultiplier($perk->key);
                                             }
                                         @endphp
                                         {!! $terrainHelper->getPerkDescription($perk->key, $perkValue, false) !!}

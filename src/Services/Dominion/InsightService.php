@@ -432,7 +432,7 @@ class InsightService
                     $perkValue = $target->getTerrainPerkValue($perk->key);
                     if($this->terrainHelper->getPerkType($perk->key) == 'mod')
                     {
-                        $perkValue /= 10;
+                        $perkValue = $target->getTerrainPerkMultiplier($perk->key);
                     }
 
                     $data['terrain_perks'][$raceTerrain->terrain->key][$perk->key] = $perkValue;
