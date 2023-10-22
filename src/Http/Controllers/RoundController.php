@@ -66,7 +66,7 @@ class RoundController extends AbstractController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $races =$this->roundHelper->getRoundRaces($round);
+        $races =$this->roundHelper->getRoundRaces($round)->sortBy('name');
         
         $countAlignment = DB::table('dominions')
                             ->join('races', 'dominions.race_id', '=', 'races.id')
