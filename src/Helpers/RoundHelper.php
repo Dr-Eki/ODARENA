@@ -278,6 +278,11 @@ class RoundHelper
             }
         }
 
+        if(!in_array($round->mode, ['standard','standard-duration','artefacts']))
+        {
+            $races = $races->sortBy('name');
+        }
+
         return $races;
     }
 
