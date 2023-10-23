@@ -113,7 +113,7 @@ units:
       - wise
     cost:
       wizard: 1
-      gold: 444
+      gold: 555
       mana: 111
     power:
       offense: 0
@@ -136,7 +136,7 @@ units:
       - wise
     cost:
       wizard: 1
-      gold: 777
+      gold: 888
       mana: 111
     power:
       offense: 6

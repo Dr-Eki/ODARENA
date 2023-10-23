@@ -1232,7 +1232,7 @@ class Dominion extends AbstractModel
                     $unitPerBuilding = (float)$perkValues[0];
                     $maxBuildingRatio = (float)$perkValues[1] / 100;
 
-                    $availableBuildings = min($buildingOwned, floor($landSize * $maxBuildingRatio));
+                    $availableBuildings = (int)min($buildingOwned, floor($landSize * $maxBuildingRatio));
 
                     $unitsGenerated = $availableBuildings * $unitPerBuilding;
                     $unitsGeneratedInt = (int)$unitsGenerated;
