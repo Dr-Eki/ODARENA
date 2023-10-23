@@ -2610,7 +2610,7 @@ class MilitaryCalculator
 
         if($power == 'offense')
         {
-            #$multiplier += $dominion->getSpellPerkMultiplier('offensive_power');
+            $multiplier += $dominion->getSpellPerkMultiplier('offensive_power');
             
             # Retaliation spells (only vs. self in deathmatches)
             if(in_array($dominion->round->mode,['deathmatch','deathmatch-duration']))
@@ -2631,7 +2631,7 @@ class MilitaryCalculator
         }
         elseif($power == 'defense')
         {
-            #$multiplier += $dominion->getSpellPerkMultiplier('defensive_power');# $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'defensive_power');
+            $multiplier += $dominion->getSpellPerkMultiplier('defensive_power');# $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'defensive_power');
         }
 
         return $multiplier;

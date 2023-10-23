@@ -989,6 +989,8 @@ class Dominion extends AbstractModel
                     'horse_theft_reduction',
                     'magma_theft_reduction',
                     'obsidian_theft_reduction',
+
+                    'amount_stolen',
                 
                     // Improvements
                     'improvements_capped',
