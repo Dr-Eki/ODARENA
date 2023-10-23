@@ -391,6 +391,7 @@ chamber:
   exclusive_races:
     - Dark Elf
     - Dwarg
+    - Gnome
   perks:
     housing: 30
     jobs: 0
