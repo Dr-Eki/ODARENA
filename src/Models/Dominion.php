@@ -1237,7 +1237,7 @@ class Dominion extends AbstractModel
                     $unitsGenerated = $availableBuildings * $unitPerBuilding;
                     $unitsGeneratedInt = (int)$unitsGenerated;
                     $unitsGeneratedFloat = $unitsGenerated - $unitsGeneratedInt;
-                    $unitsGeneratedInt += $unitsGeneratedInt + (random_chance($unitsGeneratedFloat) ? 1 : 0);
+                    $unitsGeneratedInt = $unitsGeneratedInt + (random_chance($unitsGeneratedFloat) ? 1 : 0);
 
                     $perk += (int)$unitsGeneratedInt;
                 }
