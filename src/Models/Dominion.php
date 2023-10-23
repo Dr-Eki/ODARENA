@@ -1235,10 +1235,11 @@ class Dominion extends AbstractModel
                     $availableBuildings = min($buildingOwned, floor($landSize * $maxBuildingRatio));
 
                     $unitsGenerated = $availableBuildings * $unitPerBuilding;
-                    $unitsGeneratedInt = intval($unitsGenerated);
+                    $unitsGeneratedInt = (int)$unitsGenerated;
                     $unitsGeneratedFloat = $unitsGenerated - $unitsGeneratedInt;
+                    $unitsGeneratedInt += $unitsGeneratedInt + (random_chance($unitsGeneratedFloat) ? 1 : 0);
 
-                    $perk += $unitsGeneratedInt + (random_chance($unitsGeneratedFloat) ? 1 : 0);
+                    $perk += (int)$unitsGeneratedInt;
                 }
                 # Buildings where we only ever want a single value
                 elseif(
