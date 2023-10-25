@@ -2716,7 +2716,7 @@ class MilitaryCalculator
                 $this->getRecentlyInvadedCountByAttacker($defender, $attacker, 8) == 0
                 and !$defender->isAbandoned()
                 and !$attacker->getSpellPerkValue('no_land_discovered')
-                and $captureBuildings !== true
+                and $captureBuildings != true
             )
         {
             return true;

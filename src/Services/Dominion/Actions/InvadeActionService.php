@@ -187,6 +187,10 @@ class InvadeActionService
             $defender = $target;
         }
 
+
+        $captureBuildings = (bool)$captureBuildings;
+        $this->invasion['attacker']['capture_buildings'] = $captureBuildings;
+
         $now = time();
 
         DB::transaction(function () use ($attacker, $target, $defender, $units, $now, $captureBuildings) {
@@ -201,7 +205,7 @@ class InvadeActionService
             {
                 if($attacker->race->getPerkValue('can_capture_buildings'))
                 {
-                    $this->invasion['result']['capture_buildings'] = true;
+                    $this->invasion['attacker']['capture_buildings'] = true;
                 }
                 else
                 {
@@ -432,7 +436,7 @@ class InvadeActionService
 
                 $data['land_conquered'] = $this->militaryCalculator->getLandConquered($attacker, $target, $landRatio);
                 $data['land_discovered'] = 0;
-                if($this->militaryCalculator->checkDiscoverLand($attacker, $target, $data['land_conquered']))
+                if($this->militaryCalculator->checkDiscoverLand($attacker, $target, $data['land_conquered'], $this->invasion['attacker']['capture_buildings']))
                 {
                     $this->invasion['data']['land_discovered'] = $data['land_conquered'] / ($target->race->name == 'Barbarian' ? 3 : 1);
                 }
@@ -735,7 +739,7 @@ class InvadeActionService
             ]);
 
             # Debug before saving:
-            #ldd($this->invasion); dd('Safety!');
+            ldd($this->invasion); dd('Safety!');
             
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
@@ -1279,7 +1283,7 @@ class InvadeActionService
         $landConquered = (int)$this->militaryCalculator->getLandConquered($attacker, $target, $landRatio);
 
         # Check whether the invasion qualifies for land being discovered.
-        $discoverLand = (bool)$this->militaryCalculator->checkDiscoverLand($attacker, $target, $landConquered, $captureBuildings);
+        $discoverLand = (bool)$this->militaryCalculator->checkDiscoverLand($attacker, $target, $captureBuildings);
 
         # Check if the attacker has land discovered perks and, if so, how much land is discovered.
         $extraLandDiscovered = (int)$this->militaryCalculator->getExtraLandDiscovered($attacker, $target, $discoverLand, $landConquered);
