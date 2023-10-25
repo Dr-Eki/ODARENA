@@ -110,6 +110,11 @@ class ImprovementHelper
             'title_bonus' => 'ruler title bonus',
 
             'expedition_land_gains' => 'expedition land gains',
+
+            'salvaging_mod' => 'salvaging',
+
+            'sabotage_damage_dealt' => 'sabotage damage dealt',
+            'sabotage_damage_suffered' => 'sabotage damage suffered',
         ];
 
         return isset($improvementPerkDescriptions[$improvementPerk]) ? $improvementPerkDescriptions[$improvementPerk] : 'Missing description';
