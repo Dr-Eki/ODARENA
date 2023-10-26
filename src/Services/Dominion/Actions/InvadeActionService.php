@@ -3125,7 +3125,7 @@ class InvadeActionService
         if((array_sum($this->invasion['attacker']['resource_conversions']) + array_sum($this->invasion['defender']['resource_conversions'])) > 0)
         {
             $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversions']['bodies_spent'] ?: 0;
-            $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversions']['bodies_spent'] ?: 0;
+            $bodiesRemovedFromConversion += $this->invasion['attacker']['resource_conversions']['bodies_spent'] ?: 0;
         }
 
         $bodies -= $bodiesRemovedFromConversion;
