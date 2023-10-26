@@ -30,7 +30,7 @@
 
                                         $isDesecrated = ($battlefield->data['result']['bodies']['desecrated'] > 0) ? 1 : 0;
 
-                                        if($bodies == 0)
+                                        if($bodies === 0)
                                         {
                                             continue;
                                         }
