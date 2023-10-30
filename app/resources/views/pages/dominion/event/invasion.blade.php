@@ -475,29 +475,46 @@
                                 @endif
 
                                 @if (isset($event->data['attacker']['mana_exhausted']) and $event->data['attacker']['mana_exhausted'] > 0)
-                                <tr>
-                                    <th colspan="2">Mana Exhaustion</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="2"><small class="text-muted">Firing the Hailstorm Cannon depletes our mana supplies.</small></td>
-                                </tr>
-                                <tr>
-                                    <td>Mana:</td>
-                                    <td><span class="text-red">-{{ number_format($event->data['attacker']['mana_exhausted']) }}</span></td>
-                                </tr>
+                                    <tr>
+                                        <th colspan="2">Mana Exhaustion</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><small class="text-muted">Firing the Hailstorm Cannon depletes our mana supplies.</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mana:</td>
+                                        <td><span class="text-red">-{{ number_format($event->data['attacker']['mana_exhausted']) }}</span></td>
+                                    </tr>
                                 @endif
 
                                 @if (isset($event->data['attacker']['ore_exhausted']) and $event->data['attacker']['ore_exhausted'] > 0)
-                                <tr>
-                                    <th colspan="2">Ore Exhaustion</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="2"><small class="text-muted">Stonethrowers darken the sky with boulders.</small></td>
-                                </tr>
-                                <tr>
-                                    <td>Ore:</td>
-                                    <td><span class="text-red">-{{ number_format($event->data['attacker']['ore_exhausted']) }}</span></td>
-                                </tr>
+                                    <tr>
+                                        <th colspan="2">Ore Exhaustion</th>
+                                    </tr>
+                                    <tr>
+                                        @if($target->race->name == 'Yeti')
+                                            <td colspan="2"><small class="text-muted">Stonethrowers darken the sky with boulders.</small></td>
+                                        @elseif($target->race->name == 'Gnome')
+                                            <td colspan="2"><small class="text-muted">After a loud blasts of gunpowder, projectiles of ore rain down on the enemy.</small></td>
+                                        @endif
+                                    </tr>
+                                    <tr>
+                                        <td>Ore:</td>
+                                        <td><span class="text-red">-{{ number_format($event->data['attacker']['ore_exhausted']) }}</span></td>
+                                    </tr>
+                                @endif
+
+                                @if (isset($event->data['attacker']['gunpowder_exhausted']) and $event->data['attacker']['gunpowder_exhausted'] > 0)
+                                    <tr>
+                                        <th colspan="2">Ore Exhaustion</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><small class="text-muted">The air fills with smoke and the distinct smell of gunpowder.</small></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gunpowder:</td>
+                                        <td><span class="text-red">-{{ number_format($event->data['attacker']['gunpowder_exhausted']) }}</span></td>
+                                    </tr>
                                 @endif
 
                                 @if (isset($event->data['attacker']['resource_conversions']) and array_sum($event->data['attacker']['resource_conversions']) > 0)
