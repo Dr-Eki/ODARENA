@@ -492,9 +492,9 @@
                                         <th colspan="2">Ore Exhaustion</th>
                                     </tr>
                                     <tr>
-                                        @if($source->race->name == 'Yeti')
+                                        @if($even->source->race->name == 'Yeti')
                                             <td colspan="2"><small class="text-muted">Stonethrowers darken the sky with boulders.</small></td>
-                                        @elseif($source->race->name == 'Gnome')
+                                        @elseif($even->source->race->name == 'Gnome')
                                             <td colspan="2"><small class="text-muted">As blasts of gunpowder are heard across the battlefield, projectiles of ore rain down on the enemy.</small></td>
                                         @endif
                                     </tr>
