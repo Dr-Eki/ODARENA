@@ -492,10 +492,10 @@
                                         <th colspan="2">Ore Exhaustion</th>
                                     </tr>
                                     <tr>
-                                        @if($target->race->name == 'Yeti')
+                                        @if($attacker->race->name == 'Yeti')
                                             <td colspan="2"><small class="text-muted">Stonethrowers darken the sky with boulders.</small></td>
-                                        @elseif($target->race->name == 'Gnome')
-                                            <td colspan="2"><small class="text-muted">After a loud blasts of gunpowder, projectiles of ore rain down on the enemy.</small></td>
+                                        @elseif($attacker->race->name == 'Gnome')
+                                            <td colspan="2"><small class="text-muted">As blasts of gunpowder are heard across the battlefield, projectiles of ore rain down on the enemy.</small></td>
                                         @endif
                                     </tr>
                                     <tr>
@@ -506,7 +506,7 @@
 
                                 @if (isset($event->data['attacker']['gunpowder_exhausted']) and $event->data['attacker']['gunpowder_exhausted'] > 0)
                                     <tr>
-                                        <th colspan="2">Ore Exhaustion</th>
+                                        <th colspan="2">Gunpowder Exhaustion</th>
                                     </tr>
                                     <tr>
                                         <td colspan="2"><small class="text-muted">The air fills with smoke and the distinct smell of gunpowder.</small></td>
