@@ -11,6 +11,7 @@
 
     $isProtectorate = ($event->data['is_protectorate'] ?? false);
 
+    $attacker = $event->source;
     $defender = $event->target;
     $target = $event->target;
 
@@ -492,9 +493,9 @@
                                         <th colspan="2">Ore Exhaustion</th>
                                     </tr>
                                     <tr>
-                                        @if($even->source->race->key == 'yeti')
+                                        @if($attacker->race->key == 'yeti')
                                             <td colspan="2"><small class="text-muted">Stonethrowers darken the sky with boulders.</small></td>
-                                        @elseif($even->source->race->key == 'gnome')
+                                        @elseif($attacker->race->key == 'gnome')
                                             <td colspan="2"><small class="text-muted">As blasts of gunpowder are heard across the battlefield, projectiles of ore rain down on the enemy.</small></td>
                                         @endif
                                     </tr>
