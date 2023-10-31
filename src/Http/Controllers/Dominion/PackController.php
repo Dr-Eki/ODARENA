@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use LogicException;
 use OpenDominion\Services\PackService;
 
+use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+
 use OpenDominion\Models\Pack;
 
 class PackController extends AbstractDominionController
@@ -17,6 +19,7 @@ class PackController extends AbstractDominionController
     {
         return view('pages.dominion.pack', 
             [
+                'militaryCalculator' => app(MilitaryCalculator::class),
                 'packService' => app(PackService::class),
             ]);
     }
