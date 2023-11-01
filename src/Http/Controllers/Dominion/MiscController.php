@@ -144,6 +144,17 @@ class MiscController extends AbstractDominionController
             DB::table('dominion_states')->where('dominion_id', '=', $dominion->id)->delete();
             DB::table('realm_history')->where('dominion_id', '=', $dominion->id)->delete();
 
+            // Get all game event IDs related to the dominion
+            $gameEventIds = DB::table('game_events')
+                                ->where('source_id', $dominion->id)
+                                ->orWhere('target_id', $dominion->id)
+                                ->pluck('id');
+
+            // Delete all related game_event_stories
+            DB::table('game_event_stories')
+                ->whereIn('game_event_id', $gameEventIds)
+                ->delete();
+
             DB::table('game_events')->where('source_id', '=', $dominion->id)->delete();
             DB::table('game_events')->where('target_id', '=', $dominion->id)->delete();
 
