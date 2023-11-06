@@ -9,6 +9,8 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 
+use OpenDominion\Services\Dominion\StatsService;
+
 class CasualtiesCalculator
 {
 
@@ -32,6 +34,8 @@ class CasualtiesCalculator
      */
     protected $sorceryCalculator;
 
+    protected $statsService;
+
     /*
      * CasualtiesCalculator constructor.
      */
@@ -41,6 +45,7 @@ class CasualtiesCalculator
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->populationCalculator = app(PopulationCalculator::class);
         $this->sorceryCalculator = app(SorceryCalculator::class);
+        $this->statsService = app(StatsService::class);
     }
 
     private function getInvasionCasualtiesRatioForUnit(Dominion $dominion, Unit $unit, Dominion $enemy = null, array $invasionData = [], string $mode = 'offense'): float
@@ -374,10 +379,12 @@ class CasualtiesCalculator
         $multiplier = 0;
 
         $multiplier += $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties') / 100;
-
-        $multiplier += ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties_from_recent_invasions_sent') / 100) * $this->militaryCalculator->getRecentInvasionsSent($dominion, 12);
-
         $multiplier += $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ('casualties_on_' . $mode)) / 100;
+
+        $multiplier += ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ('casualties_' . $mode)) * $this->statsService->getStat($dominion, 'invasion_victories')) / 100;
+        $multiplier += ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ('casualties_' . $mode . '_from_victories')) * $this->statsService->getStat($dominion, 'invasion_victories')) / 100;
+
+        $multiplier += ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties_from_recent_invasions_sent') * $this->militaryCalculator->getRecentInvasionsSent($dominion, 12)) / 100;
 
         $multiplier += $this->getCasualtiesPerkMultipliersFromLand($dominion, $enemy, $unit, $invasionData, $mode);
 

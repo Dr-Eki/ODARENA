@@ -60,7 +60,8 @@ perks:
 
 units:
   - name: Mortar
-    training_time: 12
+    training_time: 6
+    static_networth: 6
     type:
       - machine
       - immobile
@@ -93,7 +94,7 @@ units:
 
   - name: Automaton
     training_time: 12
-    static_networth: 22
+    static_networth: 26
     type:
       - machine
     cost:
@@ -104,11 +105,11 @@ units:
       offense: 0
       defense: 2
     perks:
-      defense_from_advancements: anvils;6;2,architecture;6;2,minting;6;2,drills;6;2,fortifications;6;2,gemcutting;6;2,infrastructure;6;2,mining_equipment;6;2,strategy;6;2,tactics;6;2
+      defense_from_advancements: anvils;6;2,architecture;6;2,drills;6;2,fortifications;6;2,foundations;6;2,gemcutting;6;2,infrastructure;6;2,minting;6;2,mining_equipment;6;2,stoneworks;6;2,strategy;6;2,tactics;6;2
 
   - name: Juggernaut
     training_time: 12
-    static_networth: 34
+    static_networth: 3443
     type:
       - machine
     cost:
@@ -119,5 +120,5 @@ units:
       offense: 2
       defense: 2
     perks:
-      offense_from_advancements: anvils;6;2,architecture;6;2,minting;6;2,drills;6;2,fortifications;6;2,gemcutting;6;2,infrastructure;6;2,mining_equipment;6;2,strategy;6;2,tactics;6;2
-      defense_from_advancements: anvils;6;1,architecture;6;1,minting;6;1,drills;6;1,fortifications;6;1,gemcutting;6;1,infrastructure;6;1,mining_equipment;6;1,strategy;6;1,tactics;6;1
+      offense_from_advancements: anvils;6;2,architecture;6;2,drills;6;2,fortifications;6;2,foundations;6;2,gemcutting;6;2,infrastructure;6;2,minting;6;2,mining_equipment;6;2,stoneworks;6;2,strategy;6;2,tactics;6;2
+      defense_from_advancements: anvils;6;1.25,architecture;6;1.25,drills;6;1.25,fortifications;6;1.25,foundations;6;1.25,gemcutting;6;1.25,infrastructure;6;1.25,minting;6;1.25,mining_equipment;6;1.25,stoneworks;6;1.25,strategy;6;1.25,tactics;6;1.25
