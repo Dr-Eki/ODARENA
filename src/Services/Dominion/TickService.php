@@ -852,8 +852,8 @@ class TickService
 
                 $peasantsConvertedByUnits += $unitPeasantsConversionPerk[0] * $dominion->{'military_unit' . $unit->slot} * $multiplier;
             }
-            $populationPeasantGrowth -= (int)round($peasantsConvertedByUnits);
         }
+        $populationPeasantGrowth -= (int)round($peasantsConvertedByUnits);
 
         if(($dominion->peasants + $tick->peasants) <= 0)
         {
