@@ -192,6 +192,10 @@
                             @endif
                         </td>
                     </tr>
+                    <tr>
+                        <td>Population growth:</td>
+                        <td><code>{{ $populationCalculator->getPopulationBirthRaw($selectedDominion) }} * {{$populationCalculator->getPopulationBirthMultiplier($selectedDominion) }} = {{ number_format($populationCalculator->getPopulationBirth($selectedDominion)) }}</code></td>
+                    </tr>
                     @include('partials.dominion.housing')
                     <tr>
                         <td>Military:</td>

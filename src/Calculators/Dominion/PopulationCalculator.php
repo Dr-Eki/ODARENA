@@ -653,8 +653,8 @@ class PopulationCalculator
         $multiplier += $dominion->race->getPerkMultiplier('population_growth');
 
         // Buildings
-        #$multiplier += $dominion->getBuildingPerkMultiplier('population_growth');
-        #$multiplier += $dominion->getBuildingPerkMultiplier('population_growth_capped');
+        $multiplier += $dominion->getBuildingPerkMultiplier('population_growth');
+        $multiplier += $dominion->getBuildingPerkMultiplier('population_growth_capped');
 
         // Spells
         $multiplier += $dominion->getSpellPerkMultiplier('population_growth');
