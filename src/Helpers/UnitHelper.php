@@ -153,7 +153,7 @@ class UnitHelper
 
             'passive_conversion' => 'Converts %3$s %1$s into %2$s each tick.',
 
-            'peasants_to_units_conversion' => 'Converts %1$s peasants into %2$s per tick.',
+            'peasants_to_unit_conversion' => 'Converts %1$s peasants into %2$s per tick.',
 
             'captures_displaced_peasants' => 'Captures enemy displaced enemy peasants.',
             'kills_displaced_peasants' => 'Kills own displaced peasants.',
@@ -780,8 +780,8 @@ class UnitHelper
                     $perkValue = [$strengthMultiplier, $unitToConvertTo->name];
                 }
 
-                // Special case for peasants_to_units_conversion
-                if ($perk->key === 'peasants_to_units_conversion')
+                // Special case for peasants_to_unit_conversion
+                if ($perk->key === 'peasants_to_unit_conversion')
                 {
                     $conversionRatio = (float)$perkValue[0];
                     $slotConvertedTo = (int)$perkValue[1];
