@@ -139,6 +139,33 @@ visions_of_death:
   perks:
     can_see_battlefield_bodies: 1
 
+## Werewolves
+
+feral_shift:
+  name: Feral Shift
+  level: 2
+  scope: self
+  class: active
+  cost: 10
+  #cooldown: 1
+  exclusive_races:
+    - Werewolves
+  perks:
+    peasants_to_unit_conversion: 100,1,100,werewolves # peasants sacrificied, slot generated, units generated, race key
+
+restraint:
+  name: Restraint
+  level: 1
+  scope: self
+  class: passive
+  cost: 6
+  duration: 24
+  #cooldown: 1
+  exclusive_races:
+    - Werewolves
+  perks:
+    pause_peasants_to_unit_conversion: 1
+
 # BEGIN DISABLED
 
 # BEGIN FACTION SPECIFIC (SINGLE OR MULTI, NON-SORCERY)

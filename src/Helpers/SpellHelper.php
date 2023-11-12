@@ -176,6 +176,8 @@ class SpellHelper
             'resource_conversion_capped' => 'Converts %3$s%% of your %1$s (up to %5$s %1$s) to %2$s at a rate of %4$s:1.',
 
             'peasant_to_resources_conversion' => 'Sacrifice %1$s%% of your sinners for %2$s each.',
+            'peasants_to_unit_conversion' => 'Convert %1$g peasants to %2$g %3$s.',
+            'pause_peasants_to_unit_conversion' => 'Pauses passive conversion.',
 
             // Magic
             'damage_from_spells' => '%+g%% damage from spells',
@@ -335,90 +337,7 @@ class SpellHelper
                     $perkValue[$key] = explode(';', $value);
                 }
             }
-
-            // Special case for conversions
-            if ($perk->key === 'conversion' or $perk->key === 'displaced_peasants_conversion' or $perk->key === 'casualties_conversion')
-            {
-                $unitSlotsToConvertTo = array_map('intval', str_split($perkValue));
-                $unitNamesToConvertTo = [];
-
-                foreach ($unitSlotsToConvertTo as $slot) {
-                    $unitToConvertTo = $race->units->filter(static function ($unit) use ($slot) {
-                        return ($unit->slot === $slot);
-                    })->first();
-
-                    $unitNamesToConvertTo[] = str_plural($unitToConvertTo->name);
-                }
-
-                $perkValue = generate_sentence_from_array($unitNamesToConvertTo);
-            }
-            if($perk->key === 'staggered_conversion')
-            {
-                foreach ($perkValue as $index => $conversion) {
-                    [$convertAboveLandRatio, $slots] = $conversion;
-
-                    $unitSlotsToConvertTo = array_map('intval', str_split($slots));
-                    $unitNamesToConvertTo = [];
-
-                    foreach ($unitSlotsToConvertTo as $slot) {
-                        $unitToConvertTo = $race->units->filter(static function ($unit) use ($slot) {
-                            return ($unit->slot === $slot);
-                        })->first();
-
-                        $unitNamesToConvertTo[] = str_plural($unitToConvertTo->name);
-                    }
-
-                    $perkValue[$index][1] = generate_sentence_from_array($unitNamesToConvertTo);
-                }
-            }
-            if($perk->key === 'strength_conversion')
-            {
-                $limit = (float)$perkValue[0];
-                $under = (int)$perkValue[1];
-                $over = (int)$perkValue[2];
-
-                $underLimitUnit = $race->units->filter(static function ($unit) use ($under)
-                    {
-                        return ($unit->slot === $under);
-                    })->first();
-
-                $overLimitUnit = $race->units->filter(static function ($unit) use ($over)
-                    {
-                        return ($unit->slot === $over);
-                    })->first();
-
-                $perkValue = [$limit, str_plural($underLimitUnit->name), str_plural($overLimitUnit->name)];
-            }
-            if($perk->key === 'passive_conversion')
-            {
-                $slotFrom = (int)$perkValue[0];
-                $slotTo = (int)$perkValue[1];
-                $rate = (float)$perkValue[2];
-
-                $unitFrom = $race->units->filter(static function ($unit) use ($slotFrom)
-                    {
-                        return ($unit->slot === $slotFrom);
-                    })->first();
-
-                $unitTo = $race->units->filter(static function ($unit) use ($slotTo)
-                    {
-                        return ($unit->slot === $slotTo);
-                    })->first();
-
-                $perkValue = [$unitFrom->name, $unitTo->name, $rate, $building];
-            }
-            if($perk->key === 'value_conversion')
-            {
-                $multiplier = (float)$perkValue[0];
-                $convertToSlot = (int)$perkValue[1];
-
-                $unitToConvertTo = $race->units->filter(static function ($unit) use ($convertToSlot)
-                    {
-                        return ($unit->slot === $convertToSlot);
-                    })->first();
-
-                $perkValue = [$multiplier, str_plural($unitToConvertTo->name)];
-            }
+            
             if($perk->key == 'resource_conversion_capped')
             {
                 $fromResourceKey = (string)$perkValue[0];
@@ -444,22 +363,6 @@ class SpellHelper
                 }
             }
 
-            // Special case for dies_into, wins_into ("change_into"), fends_off_into
-            if ($perk->key === 'dies_into' or $perk->key === 'wins_into' or $perk->key === 'fends_off_into')
-            {
-                $unitSlotsToConvertTo = array_map('intval', str_split($perkValue));
-                $unitNamesToConvertTo = [];
-
-                foreach ($unitSlotsToConvertTo as $slot) {
-                    $unitToConvertTo = $race->units->filter(static function ($unit) use ($slot) {
-                        return ($unit->slot === $slot);
-                    })->first();
-
-                    $unitNamesToConvertTo[] = $unitToConvertTo->name;
-                }
-
-                $perkValue = generate_sentence_from_array($unitNamesToConvertTo);
-            }
 
             // Special case for dies_into, wins_into ("change_into"), fends_off_into
             if ($perk->key === 'offensive_power_from_devotion' or $perk->key === 'defense_from_devotion')
@@ -478,40 +381,6 @@ class SpellHelper
                 $perkValue = [$deity->name, $perTick, $max];
             }
 
-            // Special case for returns faster if pairings
-            if ($perk->key === 'dies_into_multiple')
-            {
-                $slot = (int)$perkValue[0];
-                $pairedUnit = $race->units->filter(static function ($unit) use ($slot) {
-                    return ($unit->slot === $slot);
-                })->first();
-
-                $amount = (int)$perkValue[1];
-
-                $perkValue[0] = $pairedUnit->name;
-                if (isset($perkValue[1]) && $perkValue[1] > 0)
-                {
-                    $perkValue[0] = str_plural($perkValue[0]);
-                }
-                else
-                {
-                    $perkValue[1] = 1;
-                }
-            }
-
-            // Special case for unit_production
-            if ($perk->key === 'unit_production')
-            {
-                $unitSlotToProduce = intval($perkValue[0]);
-
-                $unitToProduce = $race->units->filter(static function ($unit) use ($unitSlotToProduce) {
-                    return ($unit->slot === $unitSlotToProduce);
-                })->first();
-
-                $unitNameToProduce[] = str_plural($unitToProduce->name);
-
-                $perkValue = generate_sentence_from_array($unitNameToProduce);
-            }
 
             /*****/
 
@@ -684,6 +553,23 @@ class SpellHelper
                 $nestedArrays = false;
 
             }
+
+            if($perk->key === 'peasants_to_unit_conversion')
+            {
+                $peasantsConverted = (float)$perkValue[0];
+                $slotConvertedTo = (int)$perkValue[1];
+                $unitsConvertedTo = (float)$perkValue[2];
+                $race = Race::where('key', (string)$perkValue[3])->firstOrFail();
+
+                $unitToConvertTo = $race->units->filter(static function ($unit) use ($slotConvertedTo) {
+                    return ($unit->slot === $slotConvertedTo);
+                })->first();
+
+                $perkValue = [$peasantsConverted, $unitsConvertedTo, str_plural($unitToConvertTo->name, $unitsConvertedTo)];
+                $nestedArrays = false;
+
+            }
+
 
             if($perk->key === 'converts_crypt_bodies')
             {

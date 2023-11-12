@@ -256,9 +256,14 @@ class PopulationCalculator
             $building = Building::where('key', $buildingKey)->first();
 
             # Check if 'housing' is in $building->perks
-            if(($buildingHousingPerk = $building->perks->where('key', 'housing')->first()->pivot->value))
+
+            #dd($building->perks->where('key', 'housing')->first());
+
+            $constructionHousingFromThisBuilding = 0;
+
+            if(($buildingHousingPerk = $building->perks->where('key', 'housing')->first()))
             {
-                $buildingHousingPerk = (float)$buildingHousingPerk;
+                $buildingHousingPerk = (float)$buildingHousingPerk->pivot->value;
 
                 if($buildingHousingPerk === 0.0)
                 {

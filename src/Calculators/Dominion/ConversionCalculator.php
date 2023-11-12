@@ -961,23 +961,42 @@ class ConversionCalculator
         #$availablePopulation = $this->populationCalculator->getMaxPopulation($dominion) - $this->populationCalculator->getPopulationMilitary($dominion);
 
         # Check each unit slot for passive conversion
-        for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
+
+        foreach($dominion->race->units as $unit)
         {
-            if($passiveConversion = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'passive_conversion'))
+            if($passiveConversion = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'passive_conversion'))
             {
                 $fromSlot = (int)$passiveConversion[0];
                 $toSlot = (int)$passiveConversion[1];
                 $perConverter = (float)$passiveConversion[2];
-
-                $convertingUnits = $dominion->{'military_unit' . $slot};
-
+    
+                $convertingUnits = $dominion->{'military_unit' . $unit->slot};
+    
                 $amountConverted = (int)floor(min($convertingUnits * $perConverter, $dominion->{'military_unit' . $fromSlot}));
-
+    
                 $convertedUnits[$toSlot] += $amountConverted;
                 $removedUnits[$fromSlot] += $amountConverted;
-
+    
                 $convertedUnits[$toSlot] = min($convertedUnits[$toSlot], $dominion->{'military_unit' . $fromSlot});
                 $removedUnits[$fromSlot] = min($removedUnits[$fromSlot], $dominion->{'military_unit' . $fromSlot});
+            }
+
+            if($peasantsToUnitConversion = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'peasants_to_unit_conversion'))
+            {
+                if($dominion->getSpellPerkMultiplier('pause_peasants_to_unit_conversion'))
+                {
+                    continue;
+                }
+                
+                $perConverter = (float)$peasantsToUnitConversion[0];
+                $toSlot = (int)$peasantsToUnitConversion[1];
+    
+                $convertingUnits = $dominion->{'military_unit' . $unit->slot};
+    
+                $amountConverted = $convertingUnits * $perConverter;
+                $amountConverted = min($amountConverted, ($dominion->peasants - 1000));
+    
+                $convertedUnits[$toSlot] += $amountConverted;
             }
         }
 

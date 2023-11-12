@@ -153,6 +153,8 @@ class UnitHelper
 
             'passive_conversion' => 'Converts %3$s %1$s into %2$s each tick.',
 
+            'peasants_to_units_conversion' => 'Converts %1$s peasants into %2$s per tick.',
+
             'captures_displaced_peasants' => 'Captures enemy displaced enemy peasants.',
             'kills_displaced_peasants' => 'Kills own displaced peasants.',
 
@@ -313,6 +315,7 @@ class UnitHelper
             'casualties' => '%+g%% casualties.',
             'casualties_on_defense' => '%+g%% casualties on defense.',
             'casualties_on_offense' => '%+g%% casualties on offense.',
+            'casualties_from_victories' => '%+g%% casualties per victory.',
 
             'casualties_from_wizard_ratio' => '%+g%% * Wizard Ratio casualties.',
             'immortal_from_wpa' => 'Immortal if Wizard Ratio is at least %s on offense (if invading) or on defense (if defending).',
@@ -775,6 +778,19 @@ class UnitHelper
                     })->first();
 
                     $perkValue = [$strengthMultiplier, $unitToConvertTo->name];
+                }
+
+                // Special case for peasants_to_units_conversion
+                if ($perk->key === 'peasants_to_units_conversion')
+                {
+                    $conversionRatio = (float)$perkValue[0];
+                    $slotConvertedTo = (int)$perkValue[1];
+                    
+                    $unitToConvertTo = $race->units->filter(static function ($unit) use ($slotConvertedTo) {
+                        return ($unit->slot === $slotConvertedTo);
+                    })->first();
+
+                    $perkValue = [$conversionRatio, $unitToConvertTo->name];
                 }
 
                 // Special case for displaced_peasants_random_split_conversion

@@ -149,6 +149,7 @@ farm:
   excluded_races:
     - Dragons
     - Glimjir
+    - Icekin
     - Reptilians
     - Spirit
     - Sylvan
@@ -197,6 +198,7 @@ lumberyard:
     - Elf
     - Reptilians
     - Undead
+    - Werewolves
     - Yeti
   perks:
     lumber_production_raw: 35
@@ -252,6 +254,7 @@ tower:
   category: production
   excluded_races:
     - Aurei
+    - Glimjir
     - Sylvan
   perks:
     mana_production_raw: 20
@@ -344,6 +347,7 @@ wizard_guild:
   excluded_races:
     - Aurei
     - Glimjir
+    - Icekin
     - Swarm
     - Sylvan
   perks:
@@ -486,7 +490,7 @@ residence:
   name: Residence
   category: housing
   exclusive_races:
-    - Elf
+    - Werewolves
   perks:
     housing: 30
     jobs: 0

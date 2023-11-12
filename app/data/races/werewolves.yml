@@ -1,0 +1,50 @@
+name: Werewolves
+alignment: evil
+description:
+home_land_type: forest
+home_terrain: forest
+playable: 1
+magic_level: 2
+skill_level: 2
+
+peasants_production:
+  gold: 1
+  lumber: 0.1
+
+resources:
+  - gold
+  - food
+  - lumber
+  - gems
+  - mana
+
+improvement_resources:
+  gold: 0.8
+  lumber: 1.25
+  gems: 12
+
+perks:
+  spy_strength: -20
+  wizard_strength: -20
+  no_drafting: 1
+  no_draftee_for_spies: 1
+  no_draftee_for_wizards: 1
+  cannot_train_archmages: 1
+
+units:
+  - name: Werewolf
+    training_time: 0
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 0
+    power:
+      offense: 5
+      defense: 5
+    perks:
+      cannot_be_trained: 1
+      conversion: 1
+      displaced_peasants_conversion: 1
+      peasants_to_unit_conversion: 0.025,1 # ratio,slot # every four Werewolves convert 1 Peasant to 1 Werewolf

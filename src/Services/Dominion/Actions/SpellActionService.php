@@ -497,6 +497,25 @@ class SpellActionService
                     $this->resourceService->updateResources($caster, $newResources);
                 }
 
+                # Resource conversion
+                if($perk->key === 'peasants_to_unit_conversion')
+                {
+                    $peasantsConverted = (float)$spellPerkValues[0];
+                    $slotConvertedTo = (int)$spellPerkValues[1];
+                    $unitsConvertedTo = (float)$spellPerkValues[2];
+
+                    $actualPeasantsConverted = min($peasantsConverted, ($caster->peasants - 1000));
+                    $actualUnitsConvertedTo = min($unitsConvertedTo * min(1, ($actualPeasantsConverted / $peasantsConverted)), ($this->populationCalculator->getMaxPopulation($caster) - $this->populationCalculator->getPopulationMilitary($caster)));
+
+                    $caster->peasants -= $actualPeasantsConverted;
+                    $caster->{'military_unit' . $slotConvertedTo} += $actualUnitsConvertedTo;
+
+                    $unitConvertedTo = $caster->race->units->where('slot', $slotConvertedTo)->first();
+
+                    $extraLine = ', converting ' . number_format($actualPeasantsConverted) . ' peasants into ' . number_format($actualUnitsConvertedTo) . ' ' . str_plural($unitConvertedTo->name, $unitsConvertedTo) . '.';
+
+                }
+
                 # Peasants to prestige conversion
                 if($perk->key === 'convert_peasants_to_prestige')
                 {
