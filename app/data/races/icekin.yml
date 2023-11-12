@@ -22,13 +22,15 @@ archmages_cost: 650,gold
 
 terrain_perks:
   badlands:
-    food_production_mod: -0.20
-    population_mod: -0.20
-    population_growth_mod: -0.20
+    food_production_mod: -0.50
+    population_mod: -0.50
+    population_growth_mod: -0.50
+    fixed_barren_housing_raw: 3
   desert:
-    food_production_mod: -0.20
-    population_mod: -0.20
-    population_growth_mod: -0.20
+    food_production_mod: -0.50
+    population_mod: -0.50
+    population_growth_mod: -0.50
+    fixed_barren_housing_raw: 3
   forest:
     food_production_mod: 0.15
   glacier:
@@ -42,15 +44,19 @@ terrain_perks:
     food_production_mod: 0.05
   mountains:
     gems_production_mod: 0.12
-    mana_production_mod: 0.06
+    mana_production_mod: 0.08
   plains:
-    population_mod: -0.08
+    food_production_mod: -0.10
+    population_mod: -0.10
+    population_growth_mod: -0.10
+    fixed_barren_housing_raw: 3
   swamps:
     mana_production_mod: 0.04
   volcanic:
-    food_production_mod: -0.20
-    population_mod: -0.20
-    population_growth_mod: -0.20
+    food_production_mod: -0.50
+    population_mod: -0.50
+    population_growth_mod: -0.50
+    fixed_barren_housing_raw: 3
   water:
     food_production_mod: 0.10
   wetlands:

@@ -110,6 +110,7 @@ aqueduct:
   category: production
   excluded_races:
     - Demon
+    - Glimjir
     - Swarm
     - Sylvan
     - Spirit
@@ -161,6 +162,7 @@ gold_mine:
   excluded_races:
     - Aurei
     - Dragons
+    - Glimjir
     - Spirit
     - Sylvan
     - Swarm
@@ -177,6 +179,7 @@ gem_mine:
     - Aurei
     - Beastfolk
     - Demon
+    - Glimjir
     - Reptilians
     - Swarm
     - Sylvan
@@ -516,6 +519,15 @@ bazaar:
     gold_production_mod: 1,4,20 # Every 1% gives +4% gold production, max +20%
     exchange_rate: 1,4,20 # Every 1% gives +4% exchange rate, max +20%
 
+edifice:
+  name: Edifice
+  category: holy
+  deity: glimj
+  exclusive_races:
+    - Glimjir 
+  perks:
+    deity_power: 1,10,100
+
 lapidary:
   name: Lapidary
   category: holy
@@ -816,8 +828,38 @@ wharf:
     xp_generation_mod: 1,7,35 #Every 1% gives +5% XP production, max +25%
     exchange_rate: 1,6,30 # Every 1% gives +5% exchange rate, max +25%
 
-
 # END GLIMJIR
+
+# BEGIN ICEKIN
+
+ice_cave:
+  name: Ice Cave
+  category: military
+  exclusive_races:
+    - Icekin
+  perks:
+    military_housing: 32
+    attacker_offensive_power_mod: 1,1.25,25 # Every 1% gives -1.5% OP mods, max -15% OP mods
+    jobs: 0
+
+gold_vein:
+  name: Gold Vein
+  category: production
+  exclusive_races:
+    - Icekin
+  perks:
+    gold_production_depleting_raw: 80,0.1 # Produces 100 gold, reduced by 0.1 per tick of the round (min 0)
+
+terrace:
+  name: Terrace
+  category: production
+  exclusive_races:
+    - Icekin
+  perks:
+    food_production_raw: 50
+    casualties_on_defense: 1,-5,25 # 1% gives -5%, max -50%
+
+# END ICEKIN
 
 # BEGIN REPTILIANS
 
@@ -1408,40 +1450,6 @@ gill:
     jobs: 0
 
 # END GROWTH
-
-
-# ICEKIN
-glacier:  
-  enabled: 0
-  name: Glacier
-  exclusive_races:
-    - Icekin
-  land_type: mountain
-  perks:
-    military_housing: 30
-    jobs: 0
-    attacker_offensive_power_mod: 1,1.5,15
-
-gold_vein:  
-  enabled: 0
-  name: Gold Vein
-  exclusive_races:
-    - Icekin
-  land_type: mountain
-  perks:
-    gold_production_depleting_raw: 100,0.1 # Produces 100 gold, reduced by 0.4 per tick of the round (min 0)
-
-terrace:  
-  enabled: 0
-  name: Terrace
-  exclusive_races:
-    - Icekin
-  land_type: mountain
-  perks:
-    food_production_raw: 50
-    jobs: 30
-
-# END ICEKIN
 
 # DIMENSIONALISTS
 portal:  

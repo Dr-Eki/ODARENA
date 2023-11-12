@@ -67,6 +67,8 @@ logging:
     - Afflicted
     - Ants
     - Beastfolk
+    - Glimjir
+    - Icekin
     - Kobold
     - Reptilians
     - Snow Elf
@@ -102,6 +104,8 @@ mining:
   excluded_races:
     - Barbarian
     - Ants
+    - Glimjir
+    - Icekin
     - Reptilians
     - Spirit
     - Swarm

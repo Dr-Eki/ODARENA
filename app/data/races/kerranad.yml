@@ -27,7 +27,7 @@ minimum_rounds: 20
 perks:
   #extra_research_slots: 1
   cannot_submit_to_deity: 1
-  increased_rezoning_speed: 4
+  #increased_rezoning_speed: 4
   wizards_training_time: 6
   spies_training_time: 6
   can_capture_buildings: 1

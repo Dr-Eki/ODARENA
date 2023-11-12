@@ -25,7 +25,7 @@ construction_materials:
 improvement_resources:
   gold: 1
   kelp: 2
-  pearls: 16
+  pearls: 20
 
 terrain_perks:
   badlands:
@@ -87,6 +87,7 @@ perks:
   cannot_train_archmages: 1
   sabotage_damage_suffered: -50
   sabotage_damage_dealt: -25
+  increased_rezoning_speed: 6
 
 units:
   - name: Weaver
@@ -134,7 +135,7 @@ units:
       defense: 1200
     perks:
       does_not_count_as_population: 1
-      food_consumption_raw: 40
+      food_consumption_raw: 20
       building_limit: abyss,1
       immortal_on_fending_off: 1
       casualties: -50

@@ -37,6 +37,19 @@ ambush:
   perks:
     reduces_target_raw_defense_from_terrain: 0.2,1,forest,10 # -1% raw DP, per 5% forest, max -10%
 
+## Glimjir
+
+maelstrom:
+  name: Maelstrom
+  level: 0
+  scope: self
+  class: passive
+  cost: 8
+  duration: 24
+  exclusive_races:
+    - Glimjir
+  perks:
+    increases_enemy_casualties_on_defense: 50
 
 ## Kobold
 
@@ -313,19 +326,6 @@ pyromancy:
     no_attrition: 1
     unit_gold_costs: 2
     unit_magma_costs: 2
-
-maelstrom:  
-  enabled: 0
-  name: Maelstrom
-  scope: self
-  class: passive
-  cost: 6
-  duration: 48
-  cooldown: 0
-  exclusive_races:
-    - Glimjir
-  perks:
-    increases_enemy_casualties_on_defense: 50
 
 metabolism:  
   enabled: 0

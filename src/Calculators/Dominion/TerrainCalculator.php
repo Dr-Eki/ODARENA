@@ -171,28 +171,27 @@ class TerrainCalculator
             $startingTerrain[$terrain->key] = 0;
         }
 
-        if($race->getPerkValue('starting_land_only_home_terrain') or 1==1)
+        if($race->key == 'barbarian')
+        {
+            foreach($terrains->where('key', '!=', $race->homeTerrain()->key) as $terrain)
+            {
+                $startingTerrain[$terrain->key] = ($startingLand * (2/3)) * (1 / (count($terrains->where('key', '!=', $race->homeTerrain()->key)) - 0));
+                $startingTerrain[$terrain->key] = (int)round($startingTerrain[$terrain->key]);
+                $landLeftToDistribute -= $startingTerrain[$terrain->key];
+            }
+    
+            $startingTerrain[$race->homeTerrain()->key] = max(0, $landLeftToDistribute);
+        }
+        else
         {
             $startingTerrain[$race->homeTerrain()->key] = $startingLand;
 
             $startingTerrain = array_filter($startingTerrain, function($value) {
                 return $value !== 0;
             });
-
-            return $startingTerrain;
         }
-
-        foreach($terrains->where('key', '!=', $race->homeTerrain()->key) as $terrain)
-        {
-            $startingTerrain[$terrain->key] = ($startingLand * (2/3)) * (1 / (count($terrains->where('key', '!=', $race->homeTerrain()->key)) - 0));
-            $startingTerrain[$terrain->key] = (int)round($startingTerrain[$terrain->key]);
-            $landLeftToDistribute -= $startingTerrain[$terrain->key];
-        }
-
-        $startingTerrain[$race->homeTerrain()->key] = max(0, $landLeftToDistribute);
 
         return $startingTerrain;
-
     }
 
 }

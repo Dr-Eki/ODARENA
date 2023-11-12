@@ -30,6 +30,7 @@ class ImprovementCalculator
                     'lumber' => 2,
                     'ore' => 2,
                     'gems' => 18,
+                    'pearls' => 20,
                 ];
 
         if($dominion)

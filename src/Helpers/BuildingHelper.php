@@ -171,8 +171,9 @@ class BuildingHelper
             'exchange_rate' => 'Resource exchange rates improved by %2$s%% for every %1$s%% (max +%3$s%%).',
 
             # Military
-            'casualties_on_offense' => 'Offensive casualties decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
-            'casualties_on_defense' => 'Defensive casualties decreased by %2$s%% for every %1$s%% (max %3$s%% reduction).',
+            'casualties' => '%2$+g%% casualties for every %1$s%% (max %3$s%% reduction).',
+            'casualties_on_offense' => '%2$+g%% ofensive casualties for every %1$s%% (max %3$s%% reduction).',
+            'casualties_on_defense' => '%2$+g%% defensive casualties for every %1$s%% (max %3$s%% reduction).',
 
             'increases_enemy_casualties' => '+%2$g%% enemy casualties for every %1$s%% (max %3$s%%).',
             'increases_enemy_casualties_on_defense' => 'Increases enemy casualties on offense by %2$s%% for every %1$s%% (max %3$s%%).',
@@ -216,9 +217,10 @@ class BuildingHelper
             'raw_defense' => 'Provides %g raw defensive power.',
             'offensive_power' => 'Offensive power increased by %2$s%% for every %1$s%% (max +%3$s%% OP)',
             'defensive_power' => 'Defensive power increased by %2$s%% for every %1$s%% (max +%3$s%% DP).',
-            'target_defensive_power_mod' => '%2$s%% target defensive modifiers for every %1$s%% (max -%3$s%% or 0%% defensive modifiers).',
 
-            'attacker_offensive_power_mod' => 'Invading force\'s total offensive power reduced by %2$s%% for every %1$s%% (max -%3$s%% OP).',
+            'target_defensive_power_mod' => '%2$+g%% defensive modifiers for enemy dominions for every %1$s%% (max -%3$s%% or 0%% defensive modifiers).',
+
+            'attacker_offensive_power_mod' => '%2$+g%% offensive power for enemies invading you for every %1$s%% (max -%3$g%% OP).',
 
             # Improvements
             'improvements' => 'Improvements increased by %2$s%% for every %1$s%%.',

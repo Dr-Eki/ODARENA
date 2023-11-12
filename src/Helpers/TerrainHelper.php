@@ -32,6 +32,9 @@ class TerrainHelper
             'population_mod' => ['%+g%% population', ' for every 1%% of this terrain.'],
             'population_growth_mod' => ['%+g%% population growth rate', ' for every 1%% of this terrain.'],
 
+            'fixed_barren_housing_raw' => ['%s fixed barren housing', ' per acre of this terrain.'],
+            'extra_barren_housing_raw' => ['%g extra barren housing', ' per acre of this terrain.'],
+
             # Resources and Production
             'gold_production_raw' => ['%s gold/tick', ' per acre of this terrain.'],
             'food_production_raw' => ['%s food/tick', ' per acre of this terrain.'],
@@ -49,6 +52,8 @@ class TerrainHelper
             'thunderstone_production_raw' => ['%s blood/tick', ' per acre of this terrain.'],
             'miasma_production_raw' => ['%s miasma/tick', ' per acre of this terrain.'],
             'sapling_production_raw' => ['%s sapling/tick', ' per acre of this terrain.'],
+            'kelp_production_raw' => ['%s kelp/tick', ' per acre of this terrain.'],
+            'pearlms_production_raw' => ['%s pearlms/tick', ' per acre of this terrain.'],
 
             'gold_production_mod' => ['%+g%% gold production', ' for every 1%% of this terrain.'],
             'food_production_mod' => ['%+g%% food production', ' for every 1%% of this terrain.'],
@@ -67,6 +72,8 @@ class TerrainHelper
             'miasma_production_mod' => ['%+g%% miasma production', ' for every 1%% of this terrain.'],
             'sapling_production_mod' => ['%+g%% sapling production', ' for every 1%% of this terrain.'],
             'gunpowder_production_mod' => ['%+g%% gunpowder production', ' for every 1%% of this terrain.'],
+            'kelp_production_mod' => ['%+g%% kelp production', ' for every 1%% of this terrain.'],
+            'pearlms_production_mod' => ['%+g%% pearls production', ' for every 1%% of this terrain.'],
 
             'prisoner_upkeep_mod' => ['%+g%% prisoner upkeep', ' for every 1%% of this terrain.'],
 
