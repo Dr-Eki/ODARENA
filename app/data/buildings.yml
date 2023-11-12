@@ -8,6 +8,7 @@ barracks:
     - Ants
     - Aurei
     - Beastfolk
+    - Glimjir
     - Kobold
     - Reptilians
     - Spirit
@@ -23,14 +24,16 @@ guard_tower:
   category: military
   excluded_races:
     - Dragons
+    - Glimjir
   perks:
-    defensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
+    defensive_power: 1,1.5,30 # Every 1% gives 1.5% DP, max +30% DP
 
 infirmary:
   name: Infirmary
   category: military
   excluded_races:
     - Dragons
+    - Glimjir
     - Spirit
   perks:
     casualties_on_defense: 1,-2.5,50 # Every 1% gives -2.5% max -50%
@@ -42,6 +45,7 @@ military_academy:
   category: military
   excluded_races:
     - Dragons
+    - Glimjir
   perks:
     prestige_gains: 1,5,50 # Every 1% gives 10% prestige, max +100%
 
@@ -59,6 +63,7 @@ training_grounds:
   category: military
   excluded_races:
     - Dragons
+    - Glimjir
   perks:
     offensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
 
@@ -80,6 +85,7 @@ watch_tower:
   category: military
   excluded_races:
     - Dragons
+    - Glimjir
   perks:
     target_defensive_power_mod: 1,-1.5,30 # Every 1% gives -1.5% DP mods, max -30% DP mods
 
@@ -141,6 +147,7 @@ farm:
   category: production
   excluded_races:
     - Dragons
+    - Glimjir
     - Reptilians
     - Spirit
     - Sylvan
@@ -271,6 +278,7 @@ harbour:
   category: other
   excluded_races:
     - Dragons
+    - Glimjir
     - Reptilians
     - Swarm
   perks:
@@ -283,6 +291,7 @@ factory:
   category: other
   excluded_races:
     - Barbarian
+    - Glimjir
     - Swarm
     - Sylvan
     - Wood Elf
@@ -307,6 +316,7 @@ syndicate_quarters:
   name: Syndicate Quarters
   category: other
   excluded_races:
+    - Glimjir
     - Swarm
     - Sylvan
   perks:
@@ -330,6 +340,7 @@ wizard_guild:
   category: other
   excluded_races:
     - Aurei
+    - Glimjir
     - Swarm
     - Sylvan
   perks:
@@ -345,6 +356,7 @@ constabulary:
   name: Constabulary
   category: other
   excluded_races:
+    - Glimjir
     - Sylvan
   land_type: hill
   perks:
@@ -359,6 +371,7 @@ vault:
   name: Vault
   category: other
   excluded_races:
+    - Glimjir
     - Reptilians
     - Sylvan
     - Wood Elf
@@ -371,6 +384,7 @@ granary:
   name: Granary
   category: other
   excluded_races:
+    - Glimjir
     - Spirit
   perks:
     food_theft_protection: 25000
@@ -625,7 +639,6 @@ gold_quarry:
     - Aurei
   perks:
     gold_production_increasing_raw: 50,0.05 # Produces 50 gold, increased  by 0.4 per tick of the round
-    aurei_unit2_production_raw_capped: 0.0025,20
 
 mana_extractor:
   name: Mana Extractor
@@ -711,6 +724,100 @@ dungeon:
     jobs: 0
 
 # END DEMON
+
+# BEGIN GLIMJIR
+
+abyss:  
+  name: Abyss
+  category: housing
+  exclusive_races:
+    - Glimjir
+  perks:
+    housing: 26
+    jobs: 0
+
+algae_bloom:
+  name: Algae Bloom
+  category: production
+  exclusive_races:
+    - Glimjir
+  perks:
+    food_production_raw: 50
+
+bulwark:  
+  name: Bulwark
+  category: military
+  exclusive_races:
+    - Glimjir
+  perks:
+    defensive_power: 1,1.5,30
+    increases_enemy_casualties_on_defense: 1,1,20
+    housing: 0
+
+coral_reef:
+  name: Coral Reef
+  category: production
+  exclusive_races:
+    - Glimjir
+  perks:
+    kelp_production_raw: 40
+
+giant_shell:
+  name: Giant Shell
+  category: other
+  exclusive_races:
+    - Glimjir
+  perks:
+    gold_theft_protection: 50000 # protects 50,000 gold from theft
+    food_theft_protection: 20000 # protects 20,000 food from theft
+    pearls_theft_protection: 5000 # protects 5,000 pearls from theft
+
+mana_spring:
+  name: Mana Spring
+  category: production
+  exclusive_races:
+    - Glimjir
+  perks:
+    mana_production_raw: 16
+
+nacre_farm:
+  name: Nacre Farm
+  category: production
+  exclusive_races:
+    - Glimjir
+  perks:
+    pearls_production_raw: 7
+
+sunken_shrine:
+  name: Sunken Shrine
+  category: military
+  exclusive_races:
+    - Glimjir
+  perks:
+    casualties_on_defense: 1,-3,60 # 1% gives -3%, max -0%
+    casualties_on_offense: 1,-3,60 # 1% gives -3%, max -60%
+    prestige_gains: 1,2.5,25 # 1% gives +2.5%, max +25%
+
+water_temple:
+  name: Water Temple
+  category: military
+  exclusive_races:
+    - Glimjir
+  perks:
+    target_defensive_power_mod: 1,-1.5,30 # Every 1% gives -2% DP mods, max -40% DP mods
+    population_growth: 1,6 # Every 1%, gives 6%
+
+wharf:  
+  name: Wharf
+  category: other
+  exclusive_races:
+    - Glimjir
+  perks:
+    xp_generation_mod: 1,7,35 #Every 1% gives +5% XP production, max +25%
+    exchange_rate: 1,6,30 # Every 1% gives +5% exchange rate, max +25%
+
+
+# END GLIMJIR
 
 # BEGIN REPTILIANS
 
@@ -970,110 +1077,6 @@ automated_mine:
     jobs: 0
     housing: 0
     research_required_to_build: automated_mining
-
-# BEGIN GLIMJIR
-
-bulwark:  
-  enabled: 0
-  name: Bulwark
-  exclusive_races:
-    - Glimjir
-  land_type: plain
-  perks:
-    defensive_power: 1,1.8,36
-    increases_enemy_casualties_on_defense: 1,1,20
-    housing: 0
-
-wharf:  
-  enabled: 0
-  name: Wharf
-  exclusive_races:
-    - Glimjir
-  land_type: plain
-  perks:
-    xp_generation_mod: 1,10,50 #Every 1% gives +5% XP production, max +25%
-    exchange_rate: 1,6,30 # Every 1% gives +5% exchange rate, max +25%
-    housing: 0
-
-## GLIMJIR WATER
-abyss:  
-  enabled: 0
-  name: Abyss
-  exclusive_races:
-    - Glimjir
-  land_type: water
-  perks:
-    housing: 26
-    jobs: 0
-
-algae_bloom:  
-  enabled: 0
-  name: Algae Bloom
-  exclusive_races:
-    - Glimjir
-  land_type: water
-  perks:
-    food_production_raw: 80
-
-coral_reef:  
-  enabled: 0
-  name: Coral Reef
-  exclusive_races:
-    - Glimjir
-  land_type: water
-  perks:
-    kelp_production_raw: 80
-
-giant_shell:  
-  enabled: 0
-  name: Giant Shell
-  exclusive_races:
-    - Glimjir
-  land_type: water
-  perks:
-    gold_theft_protection: 50000 # protects 50,000 gold from theft
-    food_theft_protection: 10000 # protects 50,000 gold from theft
-
-mana_spring:  
-  enabled: 0
-  name: Mana Spring
-  exclusive_races:
-    - Glimjir
-  land_type: water
-  perks:
-    mana_production_raw: 18
-
-pearl_farm:  
-  enabled: 0
-  name: Pearl Farm
-  exclusive_races:
-    - Glimjir
-  land_type: water
-  perks:
-    pearls_production_raw: 16
-
-sunken_shrine:  
-  enabled: 0
-  name: Sunken Shrine
-  exclusive_races:
-    - Glimjir
-  land_type: water
-  perks:
-    casualties_on_defense: 1,-5,50 # 1% gives -5%, max -50%
-    casualties_on_offense: 1,-5,50 # 1% gives -5%, max -50%
-    prestige_gains: 1,2.5,25 # 1% gives +2.5%, max +25%
-
-water_temple:  
-  enabled: 0
-  name: Water Temple
-  exclusive_races:
-    - Glimjir
-  land_type: water
-  perks:
-    target_defensive_power_mod: 1,-1.8,36 # Every 1% gives -2% DP mods, max -40% DP mods
-    population_growth: 1,6 # Every 1%, gives 6%
-
-# END GLIMJIR
 
 shipyard:  
   enabled: 0

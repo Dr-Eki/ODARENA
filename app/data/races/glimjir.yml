@@ -3,7 +3,8 @@ alignment: independent
 description:
 home_land_type: water
 home_terrain: water
-playable: 0 # Round 88
+playable: 1 # Round 88
+magic_level: 4
 skill_level: 1
 
 
@@ -21,6 +22,63 @@ construction_materials:
   - gold
   - kelp
 
+improvement_resources:
+  gold: 1
+  kelp: 2
+  pearls: 16
+
+terrain_perks:
+  badlands:
+    food_production_mod: -1
+    kelp_production_mod: -1
+    fixed_barren_housing_raw: 0
+  desert:
+    food_production_mod: -1
+    kelp_production_mod: -1
+    fixed_barren_housing_raw: 0
+  forest:
+    food_production_mod: -1
+    kelp_production_mod: -1
+    fixed_barren_housing_raw: 0
+  glacier:
+    food_production_mod: -1
+    kelp_production_mod: -1
+    fixed_barren_housing_raw: 0
+  hills:
+    food_production_mod: -1
+    kelp_production_mod: -1
+    fixed_barren_housing_raw: 0
+  jungle:
+    food_production_mod: -1
+    kelp_production_mod: -1
+    fixed_barren_housing_raw: 0
+  mountains:
+    food_production_mod: -1
+    kelp_production_mod: -1
+    fixed_barren_housing_raw: 0
+  plains:
+    food_production_mod: -1
+    kelp_production_mod: -1
+    fixed_barren_housing_raw: 0
+  swamps:
+    defensive_power_mod: 0.08
+    casualties_mod: -0.08
+    mana_production_mod: 0.12
+    fixed_barren_housing_raw: 7
+  volcanic:
+    food_production_mod: -1
+    kelp_production_mod: -1
+    fixed_barren_housing_raw: 0
+  water:
+    population_mod: 0.10
+    population_growth_mod: 0.10
+    fixed_barren_housing_raw: 10
+  wetlands:
+    defensive_power_mod: 0.08
+    casualties_mod: -0.08
+    food_production_mod: 0.08
+    fixed_barren_housing_raw: 7
+
 perks:
   starts_devoted_to_glimj: 1
   cannot_renounce_deity: 1
@@ -29,12 +87,6 @@ perks:
   cannot_train_archmages: 1
   sabotage_damage_suffered: -50
   sabotage_damage_dealt: -25
-  barren_housing_only_on_water: 1
-
-improvement_resources:
-  gold: 1
-  kelp: 2
-  pearls: 16
 
 units:
   - name: Weaver
@@ -44,13 +96,14 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 2000
+      gold: 1200
+      draftees: 1
     power:
       offense: 0
-      defense: 14
+      defense: 7
     perks:
-      counts_as_wizard_on_defense_from_land: 0.004,1,water # Counts as 0.004 wizard on defense per 1% water
-      counts_as_wizard_on_offense_from_land: 0.001,1,water # Counts as 0.001 wizard on offense per 1% water
+      counts_as_wizard_on_defense_from_terrain: 0.004,1,water # Counts as 0.004 wizard on defense per 1% water
+      counts_as_wizard_on_offense_from_terrain: 0.002,1,water # Counts as 0.002 wizard on offense per 1% water
 
   - name: Reaver
     training_time: 12
@@ -59,10 +112,13 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 2000
+      gold: 1700
+      draftees: 1
     power:
-      offense: 14
-      defense: 10
+      offense: 7
+      defense: 5
+    perks:
+      casualties_from_victories: -1
 
   - name: Kraken
     training_time: 12
@@ -75,12 +131,10 @@ units:
       gold: 400000
     power:
       offense: 0
-      defense: 2000
+      defense: 1200
     perks:
-      no_draftee: 1
       does_not_count_as_population: 1
       food_consumption_raw: 40
-      increases_enemy_casualties_on_defense: 1
       building_limit: abyss,1
       immortal_on_fending_off: 1
       casualties: -50

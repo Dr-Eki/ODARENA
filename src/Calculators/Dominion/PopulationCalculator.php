@@ -3,7 +3,9 @@
 namespace OpenDominion\Calculators\Dominion;
 
 use OpenDominion\Helpers\RaceHelper;
+use OpenDominion\Models\Building;
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\RaceTerrain;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\StatsService;
 
@@ -166,18 +168,114 @@ class PopulationCalculator
         $population += $dominion->getBuildingPerkValue('housing_increasing');
 
         // Constructing buildings
-        $population += ($this->queueService->getConstructionQueueTotal($dominion) * 15);
+        $population += $this->getConstructionHousing($dominion);
 
-        // Barren land
-        $housingPerBarrenAcre = 5;
-        $housingPerBarrenAcre += $dominion->race->getPerkValue('extra_barren_housing');
-        $housingPerBarrenAcre += $dominion->race->getPerkValue('extra_barren_housing_per_victory') * $this->statsService->getStat($dominion, 'invasion_victories');
-        $housingPerBarrenAcre += $dominion->race->getPerkValue('extra_barren_housing_per_net_victory') * max(($this->statsService->getStat($dominion, 'invasion_victories') - $this->statsService->getStat($dominion, 'defense_failures')), 0);
 
         # Multiply $housingPerBarrenAcre by total barren land from LandCalculator
-        $population += ($housingPerBarrenAcre * $this->landCalculator->getTotalBarrenLand($dominion));
-
+        $population += $this->getBarrenHousing($dominion);
+        
         return $population;
+    }
+
+    public function getBarrenHousing(Dominion $dominion): int
+    {
+        $barrenHousing = 0;
+        $barrenLand = $this->landCalculator->getTotalBarrenLand($dominion);
+
+        if(!$barrenLand)
+        {
+            return $barrenHousing;
+        }
+
+        $barrenLandRatio = $barrenLand / $dominion->land;
+
+        foreach($dominion->race->raceTerrains as $raceTerrain)
+        {
+            $barrenHousing += $this->getBarrenHousingOnTerrain($dominion, $raceTerrain) * $barrenLandRatio * $dominion->{'terrain_' . $raceTerrain->terrain->key};
+        }
+
+        $multiplier = 1;
+        $multiplier += $dominion->getImprovementPerkMultiplier('barren_housing');
+        $multiplier += $dominion->getDeityPerkMultiplier('barren_housing');
+        $multiplier += $dominion->getAdvancementPerkMultiplier('barren_housing');
+
+        $barrenHousing *= $multiplier;
+        $barrenHousing = (int)round($barrenHousing);
+
+        return $barrenHousing;
+    }
+
+    # Gets the amount of barren housing on a specific terrain type PER LAND
+    public function getBarrenHousingOnTerrain(Dominion $dominion, RaceTerrain $raceTerrain): int
+    {
+        $barrenHousing = 0;
+        $default = 5;
+
+        $default += $dominion->race->getPerkValue('extra_barren_housing');
+        $default += $dominion->race->getPerkValue('extra_barren_housing_per_victory') * $this->statsService->getStat($dominion, 'invasion_victories');
+        $default += $dominion->race->getPerkValue('extra_barren_housing_per_net_victory') * max(($this->statsService->getStat($dominion, 'invasion_victories') - $this->statsService->getStat($dominion, 'defense_failures')), 0);
+
+        $terrainKey = $raceTerrain->terrain->key;
+
+        if($dominion->{'terrain_' . $terrainKey} > 0)
+        {
+            # Check if $raceTerrain->perks contains fixed_barren_housing_raw
+            if($raceTerrain->perks->contains('key', 'fixed_barren_housing_raw'))
+            {
+                $barrenHousing = $raceTerrain->perks->where('key', 'fixed_barren_housing_raw')->first()->pivot->value;
+            }
+            else
+            {
+                $barrenHousing += $default;
+            }
+
+            # Check if $raceTerrain->perks contains extra_barren_housing_raw
+            if($raceTerrain->perks->contains('key', 'extra_barren_housing_raw'))
+            {
+                $barrenHousing += $raceTerrain->perks->where('key', 'extra_barren_housing_raw')->first()->pivot->value;
+            }
+        }
+        
+        return $barrenHousing;
+    }
+
+    public function getConstructionHousing(Dominion $dominion): int
+    {
+        $constructionHousing = 0;
+
+        if(!$this->queueService->getConstructionQueueTotal($dominion))
+        {
+            return $constructionHousing;
+        }
+
+        $default = 15;
+
+        foreach($this->queueService->getConstructionQueue($dominion) as $queueItem)
+        {
+            $buildingKey = str_replace('building_', '', $queueItem['resource']);
+            $building = Building::where('key', $buildingKey)->first();
+
+            # Check if 'housing' is in $building->perks
+            if(($buildingHousingPerk = $building->perks->where('key', 'housing')->first()->pivot->value))
+            {
+                $buildingHousingPerk = (float)$buildingHousingPerk;
+
+                if($buildingHousingPerk === 0.0)
+                {
+                    $constructionHousingFromThisBuilding = 0;
+                }
+                else
+                {
+                    $constructionHousingFromThisBuilding = min($default, $buildingHousingPerk);
+                }
+            }
+
+            $constructionHousing += $constructionHousingFromThisBuilding * $queueItem['amount'];
+        }
+        
+        $constructionHousing = (int)round($constructionHousing);
+
+        return $constructionHousing;
     }
 
     /**
@@ -612,7 +710,8 @@ class PopulationCalculator
      */
     public function getPopulationBirth(Dominion $dominion): int
     {
-        return round($this->getPopulationBirthRaw($dominion) * $this->getPopulationBirthMultiplier($dominion));
+        return round($this->getPopulationBirthRaw
+        ($dominion) * $this->getPopulationBirthMultiplier($dominion));
     }
     /**
      * Returns the Dominions raw population birth.

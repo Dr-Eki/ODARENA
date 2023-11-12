@@ -1,3 +1,13 @@
+<tr>
+    <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by barren land:">Barren housing:</span></td>
+    <td>{{ number_format($populationCalculator->getBarrenHousing($selectedDominion)) }}</td>
+</tr>
+
+<tr>
+    <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by buildings under construction:">Construction housing:</span></td>
+    <td>{{ number_format($populationCalculator->getConstructionHousing($selectedDominion)) }}</td>
+</tr>
+
 @if($populationCalculator->getAvailableHousingFromWizardHousing($selectedDominion) > 0)
 <tr>
     <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by Wizard Guilds or other buildings that house wizard units:<br>Filled / Available">Wizard housing:</span></td>

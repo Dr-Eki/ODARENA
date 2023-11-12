@@ -160,6 +160,9 @@ class RezoneActionService
             else
             {
                 $ticks = 12;
+                $ticks -= $dominion->race->getPerkValue('increased_rezoning_speed');
+
+                $ticks = max($ticks, 1);
     
                 DB::transaction(function () use ($dominion, $terrainAdd, $terrainRemove, $resource, $cost, $ticks)
                 {

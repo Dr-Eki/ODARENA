@@ -3,7 +3,8 @@ alignment: evil
 description:
 home_land_type: mountain
 home_terrain: glacier
-playable: 0 # Round 88
+playable: 1
+magic_level: 4
 skill_level: 2
 
 
@@ -17,7 +18,43 @@ construction_materials:
   - gold
   - mana
 
-archmages_cost: 500,gold
+archmages_cost: 650,gold
+
+terrain_perks:
+  badlands:
+    food_production_mod: -0.20
+    population_mod: -0.20
+    population_growth_mod: -0.20
+  desert:
+    food_production_mod: -0.20
+    population_mod: -0.20
+    population_growth_mod: -0.20
+  forest:
+    food_production_mod: 0.15
+  glacier:
+    population_mod: 0.20
+    population_growth_mod: 0.20
+  hills:
+    food_production_mod: 0.06
+    gems_production_mod: 0.06
+    mana_production_mod: 0.06
+  jungle:
+    food_production_mod: 0.05
+  mountains:
+    gems_production_mod: 0.12
+    mana_production_mod: 0.06
+  plains:
+    population_mod: -0.08
+  swamps:
+    mana_production_mod: 0.04
+  volcanic:
+    food_production_mod: -0.20
+    population_mod: -0.20
+    population_growth_mod: -0.20
+  water:
+    food_production_mod: 0.10
+  wetlands:
+    food_production_mod: 0.10
 
 perks:
   food_consumption_mod: -50
@@ -34,12 +71,11 @@ units:
       mana: 60
       food: 200
     power:
-      offense: 4
+      offense: 3
       defense: 0
     perks:
       offense_from_title: commander,1 # title, op
-      casualties_from_title: conjurer,-50 # title, reduction
-      no_draftee: 1
+      casualties_from_title: conjurer,-30 #-50 # title, reduction
 
   - name: Snow Witch
     training_time: 6
@@ -53,14 +89,13 @@ units:
       wizard: 1
     power:
       offense: 0
-      defense: 6
+      defense: 4
     perks:
-      counts_as_wizard_offense: 0.50
-      immortal_wizard: 1
+      counts_as_wizard_offense: 0.25
+      #immortal_wizard: 1
       production_from_title: conjurer,mana,0.5 # title, resource, amount
-      casualties_from_title: conjurer,-75 # title, reduction
-      defense_from_title: commander,1.5 # title, dp
-      no_draftee: 1
+      casualties_from_title: conjurer,-40 #-75 # title, reduction
+      defense_from_title: commander,1 #1.5 # title, dp
 
   - name: Frost Mage
     training_time: 6
@@ -74,15 +109,14 @@ units:
       wizard: 1
     power:
       offense: 0
-      defense: 8
+      defense: 5
     perks:
-      counts_as_wizard_offense: 0.167
-      counts_as_wizard_defense: 0.5
-      immortal_wizard: 1
+      counts_as_wizard_offense: 0.08333
+      counts_as_wizard_defense: 0.25
+      #immortal_wizard: 1
       wizard_from_title: conjurer,0.125 # wizard power, title
-      casualties_from_title: conjurer,-75 # title, reduction
-      defense_from_title: commander,1.5 # title, dp
-      no_draftee: 1
+      casualties_from_title: conjurer,-40 #-75 # title, reduction
+      defense_from_title: commander,1 #1.5 # title, dp
 
   - name: Ice Drake
     training_time: 12
@@ -96,12 +130,11 @@ units:
       gems: 200
       mana: 100
     power:
-      offense: 6
-      defense: 6
+      offense: 4
+      defense: 4
     perks:
-      offense_from_title: commander,2 # title, op
-      offense_from_wizard_ratio: 2
-      defense_from_wizard_ratio: 0.85
-      plunder: mana,20
+      offense_from_title: commander,1.5 # ,2 # title, op
       casualties_from_title: conjurer,-50 # title, reduction
-      no_draftee: 1
+      offense_from_wizard_ratio: 1 #2
+      defense_from_wizard_ratio: 0.4 #0.85
+      plunder: mana,20

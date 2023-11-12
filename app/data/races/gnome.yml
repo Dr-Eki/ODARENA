@@ -60,7 +60,7 @@ perks:
 
 units:
   - name: Mortar
-    training_time: 6
+    training_time: 8
     static_networth: 6
     type:
       - machine
@@ -79,7 +79,7 @@ units:
       sendable_with_zero_op: 1
 
   - name: Oreguard
-    training_time: 12
+    training_time: 10
     type:
       - living
       - sentient
@@ -113,7 +113,7 @@ units:
     type:
       - machine
     cost:
-      gold: 5000
+      gold: 6000
       ore: 3000
       draftees: 1
     power:

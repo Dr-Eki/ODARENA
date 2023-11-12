@@ -24,13 +24,13 @@ magic_level: 4
 max_per_round: 1
 minimum_rounds: 20
 
-
 perks:
-  gold_production_mod: 10
-  extra_research_slots: 1
-  can_capture_buildings: 1
+  #extra_research_slots: 1
   cannot_submit_to_deity: 1
   increased_rezoning_speed: 4
+  wizards_training_time: 6
+  spies_training_time: 6
+  can_capture_buildings: 1
 
 units:
   - name: Assassin
@@ -53,22 +53,6 @@ units:
       no_draftee: 1
       offense_from_spy_ratio_capped: 0.2,1 # ratio%, max
 
-  - name: Immortal Guard
-    training_time: 6
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      gold: 400
-      ore: 100
-      gems: 10
-    power:
-      offense: 0
-      defense: 4
-    perks:
-      increases_morale_by_population: 1 #Morale increased by 1% for every 1% of population made up of Immortal Guards.
-
   - name: Battlemage
     training_time: 6
     type:
@@ -89,6 +73,22 @@ units:
       counts_as_wizard_defense: 0.25
       immortal_wizard: 1
       no_draftee: 1
+
+  - name: Immortal Guard
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 400
+      ore: 100
+      gems: 10
+    power:
+      offense: 0
+      defense: 4
+    perks:
+      increases_morale_by_population: 1 #Morale increased by 1% for every 1% of population made up of Immortal Guards.
 
   - name: Immortal Knight
     training_time: 9

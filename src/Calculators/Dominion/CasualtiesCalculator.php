@@ -381,7 +381,7 @@ class CasualtiesCalculator
         $multiplier += $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties') / 100;
         $multiplier += $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ('casualties_on_' . $mode)) / 100;
 
-        $multiplier += ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ('casualties_' . $mode)) * $this->statsService->getStat($dominion, 'invasion_victories')) / 100;
+        $multiplier += ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties_from_victories') * $this->statsService->getStat($dominion, 'invasion_victories')) / 100;
         $multiplier += ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ('casualties_' . $mode . '_from_victories')) * $this->statsService->getStat($dominion, 'invasion_victories')) / 100;
 
         $multiplier += ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties_from_recent_invasions_sent') * $this->militaryCalculator->getRecentInvasionsSent($dominion, 12)) / 100;
