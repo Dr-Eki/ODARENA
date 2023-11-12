@@ -809,6 +809,7 @@ class RaceHelper
             'Sylvan' => 'Sylvan',
             'Vampires' => 'Vampiric',
             'Weres' => 'Weren',
+            'Werewolves' => 'Werewolven',
             'Wood Elf' => 'Wood Elven',
 
             'Gorm' => 'Gormish',
