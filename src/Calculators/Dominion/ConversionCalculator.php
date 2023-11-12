@@ -987,7 +987,7 @@ class ConversionCalculator
                 {
                     continue;
                 }
-                
+
                 $perConverter = (float)$peasantsToUnitConversion[0];
                 $toSlot = (int)$peasantsToUnitConversion[1];
     
@@ -995,6 +995,7 @@ class ConversionCalculator
     
                 $amountConverted = $convertingUnits * $perConverter;
                 $amountConverted = min($amountConverted, ($dominion->peasants - 1000));
+                $amountConverted = (int)floor($amountConverted);
     
                 $convertedUnits[$toSlot] += $amountConverted;
             }

@@ -388,6 +388,17 @@ class DominionFactory
                 'duration' => 0,
                 'cooldown' => 192,
             ]);
+
+            if($dominion->race->key == 'werewolves')
+            {
+                DominionSpell::create([
+                    'dominion_id' => $dominion->id,
+                    'caster_id' => $dominion->id,
+                    'spell_id' => Spell::where('key','feral_shift')->first()->id,
+                    'duration' => 0,
+                    'cooldown' => 192,
+                ]);
+            }
         });
 
 

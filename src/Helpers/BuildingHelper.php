@@ -218,7 +218,7 @@ class BuildingHelper
             'offensive_power' => 'Offensive power increased by %2$s%% for every %1$s%% (max +%3$s%% OP)',
             'defensive_power' => 'Defensive power increased by %2$s%% for every %1$s%% (max +%3$s%% DP).',
 
-            'target_defensive_power_mod' => '%2$+g%% defensive modifiers for enemy dominions for every %1$s%% (max -%3$s%% or 0%% defensive modifiers).',
+            'target_defensive_power_mod' => '%2$+g%% defensive modifiers for enemy dominions for every %1$s%% (max -%3$g%% or 0%% defensive modifiers).',
 
             'attacker_offensive_power_mod' => '%2$+g%% offensive power for enemies invading you for every %1$s%% (max -%3$g%% OP).',
 
