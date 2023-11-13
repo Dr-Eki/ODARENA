@@ -142,7 +142,6 @@ visions_of_death:
 ## Werewolves
 
 feral_shift:
-  enabled: 0
   name: Feral Shift
   level: 2
   scope: self

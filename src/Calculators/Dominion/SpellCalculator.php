@@ -95,12 +95,13 @@ class SpellCalculator
      * Returns whether spell $type for $dominion is on cooldown.
      *
      * @param Dominion $dominion
-     * @param string $spell
+     * @param Spell $spell
+     * @param bool $isInvasionSpell
      * @return bool
      */
-    public function isOnCooldown(Dominion $dominion, Spell $spell, bool $isInvasionSpell = false): bool
+    public function isOnCooldown(Dominion $dominion, Spell $spell): bool
     {
-        if ($this->getSpellCooldown($dominion, $spell, $isInvasionSpell) > 0)
+        if ($this->getSpellCooldown($dominion, $spell) > 0)
         {
             return true;
         }
@@ -111,20 +112,16 @@ class SpellCalculator
      * Returns the number of hours before spell $type for $dominion can be cast.
      *
      * @param Dominion $dominion
-     * @param string $spell
+     * @param Spell $spell
+     * @param bool $isInvasionSpell
      * @return bool
      */
-    public function getSpellCooldown(Dominion $dominion, Spell $spell, bool $isInvasionSpell = false): int
+    public function getSpellCooldown(Dominion $dominion, Spell $spell): int
     {
-        if ($spell->cooldown > 0)
+       if($dominionSpell = DominionSpell::where('dominion_id', $dominion->id)->where('spell_id', $spell->id)->first())
         {
-            if($dominionSpell = DominionSpell::where('dominion_id', $dominion->id)->where('spell_id', $spell->id)->first())
-            {
-                return $dominionSpell->cooldown;
-            }
+            return $dominionSpell->cooldown;
         }
-
-        return 0;
     }
 
     /**

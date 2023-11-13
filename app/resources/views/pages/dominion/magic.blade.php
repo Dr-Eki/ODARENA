@@ -43,7 +43,7 @@
                                         <div class="row">
                                             @foreach($levelSpells as $spell)
                                                 @php
-                                                    $canCast = $spellCalculator->canCastSpell($selectedDominion, $spell, $resourceCalculator->getAmount($selectedDominion, 'mana'));
+                                                    $canCast = $spellCalculator->canCastSpell($selectedDominion, $spell, $selectedDominion->resource_mana);
                                                     $isActive = $spellCalculator->isSpellActive($selectedDominion, $spell->key);
                                                     $style = ($isActive ? 'success' : 'primary');
                                                 @endphp

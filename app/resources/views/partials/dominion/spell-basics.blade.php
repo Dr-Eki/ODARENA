@@ -3,7 +3,7 @@
 @endphp
 
 @if($spell->magic_level > 0)
-    <span class="{{ $manaAfforded }}"  data-toggle="tooltip" data-placement="top" title="Mana cost to cast spell">{{ number_format($spellCalculator->getManaCost($selectedDominion, $spell->key)) }}</span> /
+    M: <span class="{{ $manaAfforded }}"  data-toggle="tooltip" data-placement="top" title="Mana cost to cast spell">{{ number_format($spellCalculator->getManaCost($selectedDominion, $spell->key)) }}</span> 
 @endif
 
 @if($spell->duration > 0)
@@ -28,4 +28,4 @@
         ticks
     </span>
 @endif
-  <span data-toggle="tooltip" data-placement="top" title="Wizard strength required to cast spell">WS</span>: {{ $spellCalculator->getWizardStrengthCost($spell) }}%
+<span data-toggle="tooltip" data-placement="top" title="Wizard strength required to cast spell">WS</span>: {{ $spellCalculator->getWizardStrengthCost($spell) }}%

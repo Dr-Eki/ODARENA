@@ -223,6 +223,11 @@ class DominionFactory
             {
                 $startingResources['body'] = 4000;
             }
+
+            if($race->name == 'Werewolves')
+            {
+                $startingParameters['unit1'] += 2600;
+            }
         }
         else
         {
@@ -389,7 +394,7 @@ class DominionFactory
                 'cooldown' => 192,
             ]);
 
-            if($dominion->race->key == 'werewolves')
+            if($dominion->race->name == 'Werewolves')
             {
                 DominionSpell::create([
                     'dominion_id' => $dominion->id,
