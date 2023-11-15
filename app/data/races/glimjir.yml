@@ -6,6 +6,7 @@ home_terrain: water
 playable: 1 # Round 88
 magic_level: 4
 skill_level: 1
+experimental: 1
 
 
 peasants_alias: serf

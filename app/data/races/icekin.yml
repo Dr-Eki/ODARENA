@@ -6,6 +6,7 @@ home_terrain: glacier
 playable: 1
 magic_level: 4
 skill_level: 2
+experimental: 1
 
 
 resources:

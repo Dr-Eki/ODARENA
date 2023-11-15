@@ -24,6 +24,41 @@ improvement_resources:
   lumber: 1.25
   gems: 12
 
+terrain_perks:
+  badlands:
+    offensive_power_mod: 0.10
+  desert:
+    food_production_mod: -0.20
+  forest:
+    population_mod: 0.12
+    food_production_mod: 0.06
+  glacier:
+    food_production_mod: -0.20
+    defensive_power_mod: 0.06
+  hills:
+    gold_production_mod: 0.06
+    defensive_power_mod: 0.06
+  jungle:
+    population_mod: 0.10
+    food_production_mod: 0.10
+  mountains:
+    gold_production_mod: 0.04
+    defensive_power_mod: 0.08
+  plains:
+    offensive_power_mod: 0.10
+  swamps:
+    casualties_mod: -0.08
+    mana_production_mod: 0.12
+  volcanic:
+    food_production_mod: -0.2
+  water:
+    food_production_mod: 0.10
+    population_growth_mod: 0.11
+  wetlands:
+    food_production_mod: 0.12
+    population_growth_mod: 0.08
+    defensive_power_mod: 0.08
+
 perks:
   spy_strength: -20
   wizard_strength: -20
