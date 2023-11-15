@@ -73,6 +73,7 @@ wall:
   excluded_races:
     - Barbarian
     - Dragons
+    - Glimjir
     - Reptilians
     - Sylvan
     - Swarm

@@ -28,6 +28,9 @@ class TheftHelper
             case 'gems':
                 return 64;
 
+            case 'pearls':
+                return 64;
+
             case 'blood':
                 return 2;
 
