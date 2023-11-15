@@ -118,10 +118,12 @@ class SpellCalculator
      */
     public function getSpellCooldown(Dominion $dominion, Spell $spell): int
     {
-       if($dominionSpell = DominionSpell::where('dominion_id', $dominion->id)->where('spell_id', $spell->id)->first())
+        if($dominionSpell = DominionSpell::where('dominion_id', $dominion->id)->where('spell_id', $spell->id)->first())
         {
             return $dominionSpell->cooldown;
         }
+
+        return 0;
     }
 
     /**

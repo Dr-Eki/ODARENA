@@ -226,7 +226,7 @@ class DominionFactory
 
             if($race->name == 'Werewolves')
             {
-                $startingParameters['unit1'] += 2600;
+                $startingParameters['unit1'] += 2500;
             }
         }
         else
@@ -394,6 +394,7 @@ class DominionFactory
                 'cooldown' => 192,
             ]);
 
+            /*
             if($dominion->race->name == 'Werewolves')
             {
                 DominionSpell::create([
@@ -401,11 +402,11 @@ class DominionFactory
                     'caster_id' => $dominion->id,
                     'spell_id' => Spell::where('key','feral_shift')->first()->id,
                     'duration' => 0,
-                    'cooldown' => 192,
+                    'cooldown' => 48,
                 ]);
             }
+            */
         });
-
 
         return $dominion;
 

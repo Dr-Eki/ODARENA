@@ -142,6 +142,7 @@ visions_of_death:
 ## Werewolves
 
 feral_shift:
+  enabled: 0
   name: Feral Shift
   level: 2
   scope: self
@@ -151,7 +152,7 @@ feral_shift:
   exclusive_races:
     - Werewolves
   perks:
-    peasants_to_unit_conversion: 1000,1,1000,werewolves # peasants sacrificied, slot generated, units generated, race key
+    peasants_ratio_to_unit_conversion: 20,1,werewolves # peasants ratio, slot generated, race key
 
 restraint:
   name: Restraint

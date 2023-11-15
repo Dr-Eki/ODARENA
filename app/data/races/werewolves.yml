@@ -1,11 +1,12 @@
 name: Werewolves
 alignment: evil
-description:
+description: Starts with 2,500 Werewolves.
 home_land_type: forest
 home_terrain: forest
 playable: 1
 magic_level: 2
 skill_level: 2
+experimental: 1
 
 peasants_production:
   gold: 1
@@ -47,4 +48,4 @@ units:
       cannot_be_trained: 1
       conversion: 1
       displaced_peasants_conversion: 1
-      peasants_to_unit_conversion: 0.011,1 # ratio,slot # every four Werewolves convert 1 Peasant to 1 Werewolf
+      peasants_to_unit_conversion: 0.01,1 # ratio,slot # every four Werewolves convert 1 Peasant to 1 Werewolf
