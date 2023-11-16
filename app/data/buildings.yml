@@ -452,6 +452,7 @@ hall:
   name: Hall
   category: housing
   exclusive_races:
+    - Icekin
     - Snow Elf
   land_type: mountain
   perks:
