@@ -153,7 +153,7 @@ class UnitHelper
 
             'passive_conversion' => 'Converts %3$s %1$s into %2$s each tick.',
 
-            'peasants_to_unit_conversion' => 'Converts %1$s peasants into %2$s per tick.',
+            'peasants_to_unit_conversion' => 'Converts %1$s peasants into %2$s per tick (up to %3$s%% military ratio).',
 
             'captures_displaced_peasants' => 'Captures enemy displaced enemy peasants.',
             'kills_displaced_peasants' => 'Kills own displaced peasants.',
@@ -785,12 +785,13 @@ class UnitHelper
                 {
                     $conversionRatio = (float)$perkValue[0];
                     $slotConvertedTo = (int)$perkValue[1];
+                    $maxMilitaryRatio = (float)$perkValue[2];
                     
                     $unitToConvertTo = $race->units->filter(static function ($unit) use ($slotConvertedTo) {
                         return ($unit->slot === $slotConvertedTo);
                     })->first();
 
-                    $perkValue = [$conversionRatio, $unitToConvertTo->name];
+                    $perkValue = [$conversionRatio, $unitToConvertTo->name, $maxMilitaryRatio];
                 }
 
                 // Special case for displaced_peasants_random_split_conversion

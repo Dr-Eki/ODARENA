@@ -990,11 +990,19 @@ class ConversionCalculator
 
                 $perConverter = (float)$peasantsToUnitConversion[0];
                 $toSlot = (int)$peasantsToUnitConversion[1];
+                $maxMilitaryRatio = (float)$peasantsToUnitConversion[2] / 100;
     
                 $convertingUnits = $dominion->{'military_unit' . $unit->slot};
     
+                $maxPop = $this->populationCalculator->getMaxPopulation($dominion);
+                $military = $this->populationCalculator->getPopulationMilitary($dominion);
+
+                $militaryRatio = $military / $maxPop;
+                $militaryRatioAvailable = $maxMilitaryRatio - $militaryRatio;
+                $militaryRatioAvailable = max(0, $militaryRatioAvailable);
+
                 $amountConverted = $convertingUnits * $perConverter;
-                $amountConverted = min($amountConverted, ($dominion->peasants - 1000));
+                $amountConverted = min($amountConverted, ($dominion->peasants * $militaryRatioAvailable));
                 $amountConverted = (int)floor($amountConverted);
     
                 $convertedUnits[$toSlot] += $amountConverted;

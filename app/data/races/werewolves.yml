@@ -83,4 +83,4 @@ units:
       cannot_be_trained: 1
       conversion: 1
       displaced_peasants_conversion: 1
-      peasants_to_unit_conversion: 0.01,1 # ratio,slot # every four Werewolves convert 1 Peasant to 1 Werewolf
+      peasants_to_unit_conversion: 0.01,1,66 # ratio,slot,max military% # every four Werewolves convert 1 Peasant to 1 Werewolf
