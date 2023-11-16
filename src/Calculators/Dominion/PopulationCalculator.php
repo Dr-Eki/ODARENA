@@ -241,6 +241,9 @@ class PopulationCalculator
 
     public function getConstructionHousing(Dominion $dominion): int
     {
+
+        return $this->queueService->getConstructionQueueTotal($dominion) * 15;
+
         $constructionHousing = 0;
 
         if(!$this->queueService->getConstructionQueueTotal($dominion))
