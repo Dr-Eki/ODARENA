@@ -847,6 +847,7 @@ ice_cave:
     military_housing: 32
     attacker_offensive_power_mod: 1,-1.25,25 # Every 1% gives -1.5% OP mods, max -15% OP mods
     jobs: 0
+    housing: 0
 
 gold_vein:
   name: Gold Vein
