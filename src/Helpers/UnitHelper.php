@@ -992,6 +992,11 @@ class UnitHelper
 
                     $building = Building::where('key', $buildingKey)->first();
 
+                    if (!$building) {
+                        // Throw an exception if the building is not found
+                        throw new \Exception("Building not found for key: {$buildingKey}");
+                    }
+
                     $perkValue = [$building->name, $unitsPerBuilding];
                 }
 

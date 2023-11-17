@@ -983,7 +983,9 @@ class ConversionCalculator
 
             if($peasantsToUnitConversion = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'peasants_to_unit_conversion'))
             {
-                if($dominion->getSpellPerkMultiplier('pause_peasants_to_unit_conversion'))
+                $maxPop = $this->populationCalculator->getMaxPopulation($dominion);
+
+                if($dominion->getSpellPerkMultiplier('pause_peasants_to_unit_conversion') or $maxPop <= 0)
                 {
                     continue;
                 }
@@ -994,7 +996,7 @@ class ConversionCalculator
     
                 $convertingUnits = $dominion->{'military_unit' . $unit->slot};
     
-                $maxPop = $this->populationCalculator->getMaxPopulation($dominion);
+                
                 $military = $this->populationCalculator->getPopulationMilitary($dominion);
 
                 $militaryRatio = $military / $maxPop;
