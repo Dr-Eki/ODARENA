@@ -273,7 +273,7 @@ class BuildingHelper
             'mana_theft_protection' => 'Protects %g mana from theft.',
             'horse_theft_protection' => 'Protects %g horses from theft.',
             'blood_theft_protection' => 'Protects %g blood from theft.',
-            'pearls_theft_protection' => 'Protects %g blood from theft.',
+            'pearls_theft_protection' => 'Protects %g pearls from theft.',
 
             'wizard_strength_recovery' => 'Wizard strength recovery increased by %2$s%% for every %1$s%% (max +%3$s%%).',
             'spy_strength' => 'Spy strength increased by %2$s%% for every %1$s%% (max +%3$s%%).',
