@@ -261,6 +261,7 @@ class BuildingHelper
             'food_theft_reduction' => 'Food stolen from you reduced by %2$s%% for every %1$s%%.',
             'mana_theft_reduction' => 'Mana stolen from you reduced by %2$s%% for every %1$s%%.',
             'horse_theft_reduction' => 'Horses stolen from you reduced by %2$s%% for every %1$s%%.',
+            'pearls_theft_reduction' => 'Horses stolen from you reduced by %2$s%% for every %1$s%%.',
 
             'amount_stolen' => '%2$+g%% resources stolen for every %1$s%% (max +%3$s%%).',
 
@@ -272,6 +273,7 @@ class BuildingHelper
             'mana_theft_protection' => 'Protects %g mana from theft.',
             'horse_theft_protection' => 'Protects %g horses from theft.',
             'blood_theft_protection' => 'Protects %g blood from theft.',
+            'pearls_theft_protection' => 'Protects %g blood from theft.',
 
             'wizard_strength_recovery' => 'Wizard strength recovery increased by %2$s%% for every %1$s%% (max +%3$s%%).',
             'spy_strength' => 'Spy strength increased by %2$s%% for every %1$s%% (max +%3$s%%).',

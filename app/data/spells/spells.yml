@@ -45,12 +45,13 @@ magical_disguise:
   duration: 36
   cooldown: 72
   perks:
-    gold_theft: -100
-    food_theft: -100
-    lumber_theft: -100
-    ore_theft: -100
-    gems_theft: -100
-    horse_theft: -100
+    all_theft: -100
+    #gold_theft: -100
+    #food_theft: -100
+    #lumber_theft: -100
+    #ore_theft: -100
+    #gems_theft: -100
+    #horse_theft: -100
 
 magical_shield:
   name: Magical Shield
