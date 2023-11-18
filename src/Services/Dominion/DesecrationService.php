@@ -115,7 +115,7 @@ class DesecrationService
 
             if(!$resource)
             {
-                dd($resource, $this->desecration['result']['resource_key'], $desecrationResult);
+                dd($resource, $this->desecration, $desecrationResult);
             }
 
             $this->desecration['result']['resource_key'] = key($desecrationResult);
