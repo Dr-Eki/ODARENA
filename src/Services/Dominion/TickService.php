@@ -555,10 +555,8 @@ class TickService
 
              $round->fill([
                  'ticks' => ($round->ticks + 1),
+                 'is_ticking' => 0
              ])->save();
-
-            $round->is_ticking = 0;
-            $round->save();
         }
     }
 
