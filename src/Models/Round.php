@@ -47,6 +47,7 @@ class Round extends AbstractModel
         'settings' => 'array',
         'mode' => 'string',
         'goal' => 'integer',
+        'is_ticking' => 'boolean',
     ];
 
     // Eloquent Relations

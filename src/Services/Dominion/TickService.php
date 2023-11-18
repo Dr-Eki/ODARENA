@@ -153,6 +153,9 @@ class TickService
 
         foreach ($activeRounds as $round)
         {
+
+            $round->is_ticking = 1;
+
             DB::transaction(function () use ($round, $tickTime)
             {
                 Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
@@ -552,6 +555,8 @@ class TickService
              $round->fill([
                  'ticks' => ($round->ticks + 1),
              ])->save();
+
+            $round->is_ticking = 0;
         }
     }
 
