@@ -115,7 +115,7 @@ class DesecrationService
 
             if(!isset($this->desecration['result']['resource_key']))
             {
-                dd("Sacré bleu! Zere are no bôdies to desecrate. Zis is a bug. Please report it to ze admins. Merci. (DesecrationService.php)")
+                dd("Sacré bleu! A bug!")
                 #dd($this->desecration, $desecrationResult);
             }
 
