@@ -155,6 +155,7 @@ class TickService
         {
 
             $round->is_ticking = 1;
+            $round->save();
 
             DB::transaction(function () use ($round, $tickTime)
             {
@@ -557,6 +558,7 @@ class TickService
              ])->save();
 
             $round->is_ticking = 0;
+            $round->save();
         }
     }
 
