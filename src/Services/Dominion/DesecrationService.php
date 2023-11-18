@@ -111,12 +111,14 @@ class DesecrationService
 
             $desecrationResult = $this->desecrationCalculator->getDesecrationResult($desecrator, $this->desecration['units_sent'], $this->desecration['bodies']['desecrated']);
 
-            $resource = Resource::where('key', $this->desecration['result']['resource_key'])->first();
+            
 
-            if(!$resource)
+            if(!isset($this->desecration['result']['resource_key']))
             {
-                dd($resource, $this->desecration, $desecrationResult);
+                dd($this->desecration, $desecrationResult);
             }
+
+            $resource = Resource::where('key', $this->desecration['result']['resource_key'])->first();
 
             $this->desecration['result']['resource_key'] = key($desecrationResult);
             $this->desecration['result']['resource_name'] = $resource->name; #Resource::where('key', $this->desecration['result']['resource_key'])->firstOrFail()->name;
