@@ -115,7 +115,7 @@ class DesecrationService
 
             if(!isset($this->desecration['result']['resource_key']))
             {
-                dd("Sacré bleu! A bug! Don't desecrate this battlefield again.")
+                dd("Sacré bleu! A bug! Don't desecrate this battlefield again.");
                 #dd($this->desecration, $desecrationResult);
             }
 
