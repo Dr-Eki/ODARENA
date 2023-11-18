@@ -115,7 +115,8 @@ class DesecrationService
 
             if(!isset($this->desecration['result']['resource_key']))
             {
-                dd($this->desecration, $desecrationResult);
+                dd("Sacré bleu! Zere are no bôdies to desecrate. Zis is a bug. Please report it to ze admins. Merci. (DesecrationService.php)")
+                #dd($this->desecration, $desecrationResult);
             }
 
             $resource = Resource::where('key', $this->desecration['result']['resource_key'])->first();
