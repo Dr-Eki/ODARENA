@@ -109,7 +109,7 @@ units:
 
   - name: Juggernaut
     training_time: 12
-    static_networth: 3443
+    static_networth: 43
     type:
       - machine
     cost:
