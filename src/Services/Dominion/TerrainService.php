@@ -203,6 +203,12 @@ class TerrainService
 
                 foreach($dominion->terrains as $dominionTerrain)
                 {
+                    # Craghack bug 
+                    if($terrainedLand == 0 and $dominionTerrain->key !== $dominion->race->home_terrain)
+                    {
+                        continue;
+                    }
+
                     $terrainRatio = $dominionTerrain->pivot->amount / $terrainedLand;
                     $amountToAdd = (int)round($totalTerrainToAdd * $terrainRatio);
     
