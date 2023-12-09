@@ -441,6 +441,7 @@ den:
 
 dwelling:
   name: Dwelling
+  category: housing
   exclusive_races:
     - Goblin
   perks:
