@@ -10,6 +10,7 @@ resources:
   - gold
   - food
   - ore
+  - lumber
   - gems
   - gunpowder
   - mana
