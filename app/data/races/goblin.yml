@@ -45,6 +45,7 @@ perks:
   max_population: 25
   population_growth: 50
   drafting: 2
+  improvement_points: 30
 
 units:
   - name: Kaboom

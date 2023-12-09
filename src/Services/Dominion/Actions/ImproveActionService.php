@@ -25,6 +25,21 @@ class ImproveActionService
     /** @var SpellCalculator */
     protected $spellCalculator;
 
+    /** @var ImprovementHelper */
+    protected $improvementHelper;
+
+    /** @var LandCalculator */
+    protected $landCalculator;
+
+    /** @var ResourceCalculator */
+    protected $resourceCalculator;
+
+    /** @var ResourceService */
+    protected $resourceService;
+
+    /** @var StatsService */
+    protected $statsService;
+
     public function __construct()
     {
         $this->improvementCalculator = app(ImprovementCalculator::class);
@@ -45,8 +60,6 @@ class ImproveActionService
      */
     protected function getReturnMessageString(string $resource, array $data, int $totalResourcesToInvest, Dominion $dominion): string
     {
-        $worth = $this->improvementCalculator->getResourceWorth($resource, $dominion);
-
         $investmentStringParts = [];
 
         foreach ($data as $improvementType => $amount) {
@@ -54,7 +67,6 @@ class ImproveActionService
                 continue;
             }
 
-            #$points = ($amount * $worth);
             $investmentStringParts[] = (number_format($amount) . ' ' . $improvementType);
         }
 

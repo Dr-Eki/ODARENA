@@ -99,7 +99,7 @@ class ImprovementCalculator
             $multiplier += $dominion->getTerrainPerkMultiplier($resourceKey . '_improvement_points');
 
             # Faction
-            $multiplier += $dominion->race->getPerkMultiplier('invest_bonus');
+            $multiplier += $dominion->race->getPerkMultiplier('improvement_points');
 
             # Title: improvements (Engineer)
             if(isset($dominion->title) and $dominion->title->getPerkMultiplier('improvements'))

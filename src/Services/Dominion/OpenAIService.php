@@ -23,10 +23,11 @@ class OpenAIService
         ]);
     }
 
-    public function sendMessageAndGetCompletion(string $storyteller, string $message, int $maxTokens = 500)
+    public function sendMessageAndGetCompletion(string $storyteller, string $message, int $maxTokens = 1000)
     {
         $payload = [
-            'model' => 'gpt-3.5-turbo',
+            'model' => 'gpt-4',
+            'created' => time(),
             'messages' => [
                 [
                     'role' => 'system',
@@ -38,6 +39,7 @@ class OpenAIService
                 ],
             ],
             'max_tokens' => $maxTokens,
+            'n' => 1,
         ];
 
         try {

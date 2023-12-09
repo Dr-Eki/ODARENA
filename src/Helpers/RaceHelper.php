@@ -276,6 +276,12 @@ class RaceHelper
                 $valueType = '% per net victory (min 0)';
                 $booleanValue = 'static';
                 break;
+            case 'improvement_points':
+                $negativeBenefit = false;
+                $description = 'Improvement points';
+                $valueType = '%';
+                $booleanValue = 'static';
+                break;
             case 'population_growth':
                 $negativeBenefit = false;
                 $description = 'Population growth rate';
