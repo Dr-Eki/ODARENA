@@ -6,6 +6,14 @@ playable: 1
 skill_level: 2
 magic_level: 3
 
+resources:
+  - gold
+  - food
+  - ore
+  - gems
+  - gunpowder
+  - mana
+
 terrain_perks:
   badlands:
     food_production_mod: -0.15
