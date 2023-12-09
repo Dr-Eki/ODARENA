@@ -1,7 +1,6 @@
 name: Black Orc
 alignment: evil
 description:
-home_land_type: forest
 home_terrain: forest
 playable: 0 # Round 88
 skill_level: 3

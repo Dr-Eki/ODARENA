@@ -1,7 +1,6 @@
 name: Therozou
 alignment: independent
 description: >-
-home_land_type: forest
 home_terrain: forest
 skill_level: 1
 playable: 0 # Extinct as of round 91

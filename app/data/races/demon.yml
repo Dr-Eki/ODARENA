@@ -2,7 +2,6 @@ name: Demon
 alignment: evil
 description: >-
   <p>Demon starts with 1 Archdemon.</p>
-home_land_type: mountain
 home_terrain: badlands
 playable: 1
 skill_level: 3

@@ -1,7 +1,6 @@
 name: Goblin
 alignment: evil
 description:
-home_land_type: hill
 home_terrain: hills
 playable: 1
 skill_level: 2
@@ -11,7 +10,7 @@ terrain_perks:
     food_production_mod: -0.15
   desert:
     food_production_mod: -0.30
-    lumber_production_mid: -0.20
+    lumber_production_mod: -0.20
   forest:
     population_growth_mod: 0.20
     lumber_production_mod: 0.20

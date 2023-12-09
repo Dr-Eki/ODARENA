@@ -1,7 +1,6 @@
 name: Troll
 alignment: evil
 description: >-
-home_land_type: hill
 home_terrain: hills
 skill_level: 1
 playable: 1

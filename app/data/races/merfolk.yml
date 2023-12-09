@@ -1,7 +1,6 @@
 name: Merfolk
 alignment: independent
 description:
-home_land_type: water
 home_terrain: water
 playable: 0 # Replaced with Glimjir
 skill_level: 1

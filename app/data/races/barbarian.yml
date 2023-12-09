@@ -1,7 +1,6 @@
 name: Barbarian
 alignment: npc
 description:
-home_land_type: hill
 home_terrain: hills
 playable: 0 # NPC only
 skill_level: 3

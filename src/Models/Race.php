@@ -8,7 +8,6 @@ namespace OpenDominion\Models;
  * @property int $id
  * @property string $name
  * @property string $alignment
- * @property string $home_land_type
  * @property int $playable
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -30,7 +29,7 @@ class Race extends AbstractModel
         #'terrains' => 'array',
         #'land_improvements' => 'array',
         'peasants_production' => 'array',
-        'home_land_type' => 'text',
+        #'home_land_type' => 'text',
         'home_terrain' => 'text',
         'peasants_alias' => 'text',
         'draftees_alias' => 'text',

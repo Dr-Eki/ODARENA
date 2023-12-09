@@ -12,7 +12,6 @@ description: >-
     <li>Failed fending off (successfully invaded): <code>-7.5% * [OP:DP Ratio]</code> of invader's raw OP.</li>
   </ul>
   <p>Starts with 2 Heads, 100 Limbs, 200 Claws, and 10 Carapaces, and 25,000 strength. No protection.</p>
-home_land_type: plain
 home_terrain: plains
 playable: 0 # ugh
 experimental: 1

@@ -1,7 +1,6 @@
 name: Glimjir
 alignment: independent
 description:
-home_land_type: water
 home_terrain: water
 playable: 1 # Round 88
 magic_level: 4

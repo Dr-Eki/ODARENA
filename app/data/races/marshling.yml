@@ -1,7 +1,6 @@
 name: Marshling
 alignment: independent
 description:
-home_land_type: swamp
 home_terrain: swamps
 playable: 0 # Round 88
 experimental: 1

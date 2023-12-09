@@ -1,7 +1,6 @@
 name: Wood Elf
 alignment: good
 description:
-home_land_type: forest
 home_terrain: forest
 playable: 1
 skill_level: 2

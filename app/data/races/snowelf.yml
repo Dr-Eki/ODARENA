@@ -1,7 +1,6 @@
 name: Snow Elf
 alignment: good
 description:
-home_land_type: mountain
 home_terrain: mountains
 playable: 1 
 skill_level: 2

@@ -1,7 +1,6 @@
 name: Kobold
 alignment: independent
 description:
-home_land_type: hill
 home_terrain: hills
 playable: 1
 skill_level: 2

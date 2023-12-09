@@ -1,7 +1,6 @@
 name: Dragons
 alignment: evil
 description: A once peaceful mountain village, now dominated by the majestic presence of dragons, drawn by the allure of gems hidden within the mountains. With enough experience fighting, some of these once poor farmers can become Dragon Knights.
-home_land_type: mountain
 home_terrain: mountains
 playable: 1
 skill_level: 3

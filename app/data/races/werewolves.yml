@@ -1,7 +1,6 @@
 name: Werewolves
 alignment: evil
 description: Starts with 2,500 Werewolves.
-home_land_type: forest
 home_terrain: forest
 playable: 0
 magic_level: 2

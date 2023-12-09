@@ -1,7 +1,6 @@
 name: Yeti
 alignment: independent
 description: >-
-home_land_type: mountain
 home_terrain: mountains
 playable: 1
 skill_level: 3

@@ -1,7 +1,6 @@
 name: Undead
 alignment: evil
 description: See <a href="general#desecration">Desecration</a>. Starts with 4,000 bodies.
-home_land_type: swamp
 home_terrain: swamps
 playable: 1
 skill_level: 2

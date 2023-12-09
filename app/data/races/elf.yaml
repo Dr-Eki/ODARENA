@@ -2,7 +2,6 @@ name: Elf
 alignment: good
 description: >-
 gameplay_notes: >-
-home_land_type: forest
 home_terrain: forest
 skill_level: 1
 playable: 0

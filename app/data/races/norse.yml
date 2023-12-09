@@ -1,7 +1,6 @@
 name: Norse
 alignment: good
 description:
-home_land_type: water
 home_terrain: water
 playable: 0 # Round 88
 skill_level: 2

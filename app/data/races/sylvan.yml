@@ -1,7 +1,6 @@
 name: Sylvan
 alignment: good
 description: Saplings can be stored in the forest. Each acre of forest can store up to 2 saplings. Additionally, saplings can be stored in Mana Trees in greater numbers.
-home_land_type: forest
 home_terrain: forest
 playable: 1
 skill_level: 2

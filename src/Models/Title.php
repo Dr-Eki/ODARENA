@@ -8,7 +8,6 @@ namespace OpenDominion\Models;
  * @property int $id
  * @property string $name
  * @property string $alignment
- * @property string $home_land_type
  * @property int $playable
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at

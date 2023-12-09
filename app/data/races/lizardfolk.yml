@@ -1,7 +1,6 @@
 name: Lizardfolk
 alignment: evil
 description:
-home_land_type: water
 home_terrain: water
 playable: 0 # Replaced with Reptilians
 skill_level: 1
