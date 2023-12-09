@@ -19,7 +19,7 @@ construction_materials:
   - gold
   - mana
 
-archmages_cost: 650,gold
+#archmages_cost: 650,gold
 
 terrain_perks:
   badlands:
@@ -67,6 +67,7 @@ perks:
   food_consumption_mod: -50
   title_bonus: 50
   wizards_training_time: 6
+  cannot_train_archmages: 1
 
 units:
   - name: Ice Beast
@@ -133,9 +134,9 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 500
-      gems: 80
-      mana: 100
+      gold: 1000
+      gems: 100
+      mana: 120
     power:
       offense: 4
       defense: 4

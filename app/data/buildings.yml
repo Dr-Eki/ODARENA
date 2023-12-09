@@ -208,9 +208,8 @@ powder_mill:
   name: Powder Mill
   category: production
   exclusive_races:
-    #- Cires
-    -  Gnome
-  land_type: hill
+    - Goblin
+    - Gnome
   perks:
     gunpowder_production_raw: 4
     gunpowder_storage_raw: 200
@@ -235,6 +234,7 @@ saw_mill:
   name: Saw Mill
   category: production
   exclusive_races:
+    - Goblin
     - Kobold
     - Snow Elf
     - Troll
@@ -338,6 +338,7 @@ tavern:
   category: other
   exclusive_races:
     - Dwarg
+    - Goblin
     - Kobold
   perks:
     base_morale: 1,4,20 # Every 1% gives +8 morale, max +40
@@ -435,6 +436,15 @@ den:
     - Kobold
   perks:
     housing: 30
+    jobs: 0
+
+
+dwelling:
+  name: Dwelling
+  exclusive_races:
+    - Goblin
+  perks:
+    housing: 38
     jobs: 0
 
 farmstead:
@@ -845,7 +855,7 @@ ice_cave:
     - Icekin
   perks:
     military_housing: 32
-    attacker_offensive_power_mod: 1,-1.25,25 # Every 1% gives -1.5% OP mods, max -15% OP mods
+    attacker_offensive_power_mod: 1,-0.625,25 # Every 1% gives -1.5% OP mods, max -15% OP mods
     jobs: 0
     housing: 0
 
@@ -1646,18 +1656,6 @@ plateau:
     troll_unit4_housing: 30
     jobs: 0
     housing: 0
-
-dwelling:  
-  enabled: 0
-  name: Dwelling
-  exclusive_races:
-    - Goblin
-    - Halfling
-    - Kobold
-  land_type: hill
-  perks:
-    housing: 38
-    jobs: 0
 
 estate:  
   enabled: 0

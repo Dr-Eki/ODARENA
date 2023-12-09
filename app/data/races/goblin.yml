@@ -3,21 +3,47 @@ alignment: evil
 description:
 home_land_type: hill
 home_terrain: hills
-playable: 0 # Round 88
+playable: 1
 skill_level: 2
 
-
-improvement_resources:
-  gold: 1.2
-  ore: 2.4
-  lumber: 2.4
-  gems: 14.4
+terrain_perks:
+  badlands:
+    food_production_mod: -0.15
+  desert:
+    food_production_mod: -0.30
+    lumber_production_mid: -0.20
+  forest:
+    population_growth_mod: 0.20
+    lumber_production_mod: 0.20
+    lumber_improvement_points_mod: 0.125
+  glacier:
+    defensive_power_mod: 0.10
+  hills:
+    improvement_points_mod: 0.20
+  jungle:
+    population_growth_mod: 0.20
+    lumber_production_mod: 0.20
+    lumber_improvement_points_mod: 0.125
+  mountains:
+    defensive_power_mod: 0.05
+    ore_production_mod: 0.20
+    gems_production_mod: 0.20
+  plains:
+    offensive_power_mod: 0.05
+  swamps:
+    mana_production_mod: 0.20
+  volcanic:
+    gunpowder_production_mod: 0.20
+  water:
+    food_production_mod: 0.20
+    gunpowder_production_mod: -0.06
+  wetlands:
+    food_production_mod: 0.20
+    gunpowder_production_mod: -0.04
 
 perks:
-  max_population: 100
-  population_growth: 100
-  extra_barren_housing: 5
-  gems_production_mod: 20
+  max_population: 25
+  population_growth: 50
   drafting: 2
 
 units:
@@ -28,12 +54,13 @@ units:
       - sentient
     cost:
       gold: 80
+      ore: 20
+      gunpowder: 1
       peasant: 1
     power:
       offense: 2
       defense: 0
     perks:
-      no_draftee: 1
       fixed_casualties: 100
 
   - name: Shaman
@@ -43,15 +70,15 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 425
-      lumber: 10
+      gold: 420
+      lumber: 20
+      draftees: 1
     power:
       offense: 0
-      defense: 4
+      defense: 3
     perks:
       reduces_casualties: 1
-      counts_as_wizard_offense: 0.025
-      counts_as_wizard_defense: 0.025
+      counts_as_wizard: 0.025
 
   - name: Warmonger
     training_time: 12
@@ -60,15 +87,16 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 800
-      ore: 100
+      gold: 1000
+      ore: 120
+      draftees: 1
     power:
-      offense: 3
-      defense: 4
+      offense: 2
+      defense: 3
     perks:
-      plunders: gold;1,gems;2
-      offense_from_improvement_points: 0.25,20000000,5 # +0.25 for every improvement with at least 20,000,000 imp points
-      defense_from_improvement_points: 0.125,20000000,2.5 # +0.125 for every improvement with at least 20,000,000 imp points
+      plunders: gold;1,gems;3
+      offense_from_improvement_points: 0.1000,10000000,3 #0.25,20000000,5 # +0.25 for every improvement with at least 20,000,000 imp points
+      defense_from_improvement_points: 0.0333,10000000,1 #0.125,20000000,2.5 # +0.125 for every improvement with at least 20,000,000 imp points
 
   - name: Wolf Rider
     training_time: 12
@@ -80,7 +108,9 @@ units:
       gold: 700
       ore: 100
     power:
-      offense: 5
+      offense: 4
       defense: 2
+      draftees: 1
     perks:
       faster_return: 3
+      plunders: gold;4,gems;1
