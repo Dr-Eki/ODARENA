@@ -4,6 +4,7 @@ description:
 home_terrain: hills
 playable: 1
 skill_level: 2
+magic_level: 3
 
 terrain_perks:
   badlands:

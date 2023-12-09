@@ -414,7 +414,7 @@ class RaceHelper
                 break;
             case 'drafting':
                 $negativeBenefit = false;
-                $description = 'Peasants drafted per tick:';
+                $description = 'Peasants drafted per tick';
                 $valueType = '%';
                 break;
             case 'amount_stolen':
