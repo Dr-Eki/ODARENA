@@ -13,15 +13,22 @@ class DropPacksTable extends Migration
      */
     public function up()
     {
-        Schema::table('dominions', function (Blueprint $table) {
-            $table->dropForeign(['pack_id']);
-        });
-
-        Schema::table('packs', function (Blueprint $table) {
-            // Drop table if it exists
+        // Check if the 'dominions' table exists
+        if (Schema::hasTable('dominions')) {
+            Schema::table('dominions', function (Blueprint $table) {
+                // Drop foreign key if it exists
+                if (Schema::hasColumn('dominions', 'pack_id')) {
+                    $table->dropForeign(['pack_id']);
+                }
+            });
+        }
+    
+        // Check if the 'packs' table exists
+        if (Schema::hasTable('packs')) {
             Schema::dropIfExists('packs');
-        });
+        }
     }
+    
 
     /**
      * Reverse the migrations.
