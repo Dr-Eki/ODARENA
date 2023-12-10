@@ -283,9 +283,9 @@
                               <tr>
                                   <td>{{ $resource->name }}</td>
                                   <td>{{ in_array($resourceKey, $race->construction_materials) ? 'Yes' : '' }}</td>
-                                  <td>{{ $resource->buy ? number_format($resource->buy, 2) : 'N/A' }}</td>
-                                  <td>{{ $resource->sell ? number_format($resource->sell, 2) : 'N/A' }}</td>
-                                  <td>{{ isset($race->improvement_resources[$resourceKey]) ? number_format($race->improvement_resources[$resourceKey],2) : 'N/A' }}</td>
+                                  <td>{{ $resource->buy ? number_format($resource->buy, 2) : '&mdash;' }}</td>
+                                  <td>{{ $resource->sell ? number_format($resource->sell, 2) : '&mdash;' }}</td>
+                                  <td>{{ isset($race->improvement_resources[$resourceKey]) ? number_format($race->improvement_resources[$resourceKey],2) : '&mdash;' }}</td>
                               </tr>
                           @endforeach
                       </table>
