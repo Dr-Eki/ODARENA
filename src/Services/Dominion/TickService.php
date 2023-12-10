@@ -449,8 +449,7 @@ class TickService
                     // Myconid: Land generation
                     if(!empty($dominion->tick->generated_land) and $dominion->protection_ticks == 0)
                     {
-                        $homeLandType = 'land_' . $dominion->race->home_land_type;
-                        $this->queueService->queueResources('exploration', $dominion, [$homeLandType => $dominion->tick->generated_land], 12);
+                        $this->queueService->queueResources('exploration', $dominion, ['land' => $dominion->tick->generated_land], 12);
                     }
 
                     if(static::EXTENDED_LOGGING) { Log::debug('** Handle unit generation'); }
@@ -1405,8 +1404,7 @@ class TickService
             // Myconid: Land generation
             if(!empty($dominion->tick->generated_land) and $dominion->protection_ticks > 0)
             {
-                $homeLandType = 'land_' . $dominion->race->home_land_type;
-                $this->queueService->queueResources('exploration', $dominion, [$homeLandType => $dominion->tick->generated_land], 12);
+                $this->queueService->queueResources('exploration', $dominion, ['land' => $dominion->tick->generated_land], 12);
             }
 
             // Unit generation

@@ -2,7 +2,7 @@
 
 namespace OpenDominion\Helpers;
 
-use DB;
+#use DB;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\User;
 
@@ -13,6 +13,18 @@ use OpenDominion\Services\Dominion\StatsService;
 class UserHelper
 {
 
+    /** @var ChroniclesHelper */
+    protected $chroniclesHelper;
+
+    /** @var RoundHelper */
+    protected $roundHelper;
+
+    /** @var LandCalculator */
+    protected $landCalculator;
+
+    /** @var StatsService */
+    protected $statsService;
+
     public function __construct()
     {
         $this->chroniclesHelper = app(ChroniclesHelper::class);
@@ -22,7 +34,6 @@ class UserHelper
 
         $this->statsService = app(StatsService::class);
     }
-
 
     public function getRoundsPlayed(User $user, bool $lifetime = true)
     {
