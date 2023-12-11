@@ -3,6 +3,7 @@ alignment: evil
 description:
 home_terrain: hills
 playable: 1
+experimental: 1
 skill_level: 2
 magic_level: 3
 
@@ -117,6 +118,7 @@ units:
     cost:
       gold: 700
       ore: 100
+      draftees: 1
     power:
       offense: 4
       defense: 2
