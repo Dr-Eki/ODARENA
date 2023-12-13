@@ -52,7 +52,7 @@ terrain_perks:
     gunpowder_production_mod: -0.04
 
 perks:
-  max_population: 25
+  max_population: 40
   population_growth: 50
   drafting: 2
   improvement_points: 30
