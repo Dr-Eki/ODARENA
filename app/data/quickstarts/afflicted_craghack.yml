@@ -1,0 +1,118 @@
+name: Afflicted (Surveyor) Quickstart by Craghack
+description: 
+race: Afflicted
+title: Surveyor
+deity: Kinthys
+land: 1000
+offensive_power: 0
+defensive_power: 0
+draft_rate: 100
+morale: 100
+prestige: 600
+peasants: 13791
+protection_ticks: 0
+devotion_ticks: 49
+spy_strength: 100
+wizard_strength: 100
+xp: 2850
+
+buildings:
+    aqueduct: 0
+    bazaar: 0
+    constabulary: 0
+    factory: 0
+    farm: 68
+    gold_mine: 95
+    granary: 0
+    guard_tower: 100
+    harbour: 50
+    infirmary: 0
+    lapidary: 0
+    lumberyard: 25
+    mass_grave: 47
+    military_academy: 0
+    monument: 0
+    necropolis: 0
+    pit: 5
+    redoubt: 0
+    school: 0
+    spire: 0
+    syndicate_quarters: 0
+    tower: 25
+    toxicarium: 0
+    training_grounds: 200
+    university: 0
+    vault: 0
+    wall: 0
+    warren: 285
+    watch_tower: 100
+    wizard_guild: 0
+
+improvements:
+    agriculture: 0
+    conduits: 0
+    construction: 0
+    defenses: 0
+    education: 0
+    espionage: 0
+    housing: 0
+    leadership: 0
+    logging: 0
+    markets: 0
+    mining: 0
+    sabotage: 0
+    science: 0
+    sorcery: 0
+    tactics: 0
+    warding: 0
+    warfare: 0
+    wizardry: 0
+
+resources:
+    gold: 163329
+    food: 140819
+    lumber: 14500
+    mana: 35000
+    miasma: 8900
+
+spells:
+    sazals_charge: 0,96
+    sazals_fog: 0,96
+
+advancements:
+    anvils: 5
+    fortifications: 1
+    minting: 2
+
+techs:
+
+terrains:
+   hills: 0
+   jungle: 1000
+
+decree_states:
+
+units:
+    draftees: 958
+    unit1: 0
+    unit2: 0
+    unit3: 3600
+    unit4: 2202
+    unit5: 0
+    unit6: 0
+    unit7: 0
+    unit8: 0
+    unit9: 0
+    unit10: 0
+    spies: 0
+    wizards: 0
+    archmages: 0
+
+queues:
+    - training,military_unit3,6,33
+    - training,military_unit3,7,34
+    - training,military_unit4,1,65
+    - training,military_unit4,2,66
+    - training,military_unit4,3,68
+    - training,military_unit4,4,68
+    - training,military_unit4,5,52
