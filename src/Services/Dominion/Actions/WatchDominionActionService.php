@@ -33,9 +33,9 @@ class WatchDominionActionService
         }
 
         // Max 20
-        if($watcher->watchedDominions()->count() >= 10)
+        if($watcher->watchedDominions()->count() >= 20)
         {
-            throw new GameException('You cannot watch more than 10 dominions.');
+            throw new GameException('You cannot watch more than 20 dominions.');
         }
 
         DB::transaction(function () use ($watcher, $dominion) {
