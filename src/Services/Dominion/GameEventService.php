@@ -47,7 +47,7 @@ class GameEventService
             foreach ($gameEvents as $gameEvent)
             {
 
-                if($gameEvent->story == null and $gameEvent->story !== 'Story is being written...')
+                if(($gameEvent->story == null or $gameEvent->story == '') and $gameEvent->story !== 'Story is being written...')
                 {
 
                     $gameEvent->story()->create([
