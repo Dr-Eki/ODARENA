@@ -47,10 +47,12 @@ class GameEventService
             foreach ($gameEvents as $gameEvent)
             {
 
-                Log::info('Generating story for invasion event ' . $gameEvent->id);
+                Log::info('Checking story for invasion event ' . $gameEvent->id);
 
                 if(($gameEvent->story == null or $gameEvent->story == '') and $gameEvent->story !== 'Story is being written...')
                 {
+
+                    Log::info('* Story does not exist for invasion event ' . $gameEvent->id);
 
                     $gameEvent->story()->create([
                         'game_event_id' => $gameEvent->id,
@@ -79,6 +81,10 @@ class GameEventService
                             ]);
                         }
                     });
+                }
+                else
+                {
+                    Log::info('* Story already exists for invasion event ' . $gameEvent->id);
                 }
             }
         }
