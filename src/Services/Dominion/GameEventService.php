@@ -47,6 +47,8 @@ class GameEventService
             foreach ($gameEvents as $gameEvent)
             {
 
+                Log::info('Generating story for invasion event ' . $gameEvent->id);
+
                 if(($gameEvent->story == null or $gameEvent->story == '') and $gameEvent->story !== 'Story is being written...')
                 {
 
