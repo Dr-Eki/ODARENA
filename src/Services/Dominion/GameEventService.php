@@ -37,6 +37,9 @@ class GameEventService
 
     public function generateStories(): void
     {
+
+        dump(Round::active()->get());
+
         foreach (Round::active()->get() as $round)
         {
 
