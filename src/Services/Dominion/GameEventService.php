@@ -39,6 +39,9 @@ class GameEventService
     {
         foreach (Round::active()->get() as $round)
         {
+
+            Log::info('Generating stories for round ' . $round->number . ' (' . $round->id . ')');
+
             $gameEvents = $round->gameEvents()->where('type', 'invasion')->get();
 
             foreach ($gameEvents as $gameEvent)
