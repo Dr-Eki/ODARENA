@@ -46,7 +46,7 @@ units:
       casualties: -50
       houses_military_units: 100
       defense_from_pairing: 1,100,100 # slot, amount, num required
-      building_limit: dock,1
+      #building_limit: dock,1
 
   - name: Siege Ship
     training_time: 12
@@ -65,7 +65,7 @@ units:
       immortal_on_victory: 1
       immortal_on_fending_off: 1
       casualties: -75
-      building_limit: dock,1
+      #building_limit: dock,1
 
   - name: Battleship
     training_time: 12
@@ -86,4 +86,4 @@ units:
       casualties: -75
       houses_military_units: 300
       offense_from_pairing: 1,300,300 # slot, amount, num required
-      building_limit: dock,1
+      #building_limit: dock,1

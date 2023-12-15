@@ -27,7 +27,6 @@ class OpenAIService
     {
         $payload = [
             'model' => 'gpt-4',
-            'created' => time(),
             'messages' => [
                 [
                     'role' => 'system',

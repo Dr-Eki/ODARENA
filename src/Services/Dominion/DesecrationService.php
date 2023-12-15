@@ -111,11 +111,9 @@ class DesecrationService
 
             $desecrationResult = $this->desecrationCalculator->getDesecrationResult($desecrator, $this->desecration['units_sent'], $this->desecration['bodies']['desecrated']);
 
-            
-
             if(!isset($this->desecration['result']['resource_key']))
             {
-                dd("Sacré bleu! A bug! Don't desecrate this battlefield again.");
+                dd("Sacré bleu! A bug! Don't desecrate this battlefield again.", 'Here is some debug information:', $this->desecration, $desecrationResult);
                 #dd($this->desecration, $desecrationResult);
             }
 
