@@ -84,7 +84,7 @@ class GameEventService
                 }
                 else
                 {
-                    Log::info('* Story already exists for invasion event ' . $gameEvent->id);
+                    Log::info('* Story already exists for invasion event ' . $gameEvent->id . ': ' . $gameEvent->story);
                 }
             }
         }
