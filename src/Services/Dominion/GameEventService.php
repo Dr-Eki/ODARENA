@@ -49,7 +49,7 @@ class GameEventService
 
                 Log::info('Checking story for invasion event ' . $gameEvent->id);
 
-                if(($gameEvent->story->story == null or $gameEvent->story->story == '') and $gameEvent->story->story !== 'Story is being written...')
+                if(!isset($gameEvent->story) and $gameEvent->story->story !== 'Story is being written...')
                 {
 
                     $gameEvent->story()->create([
