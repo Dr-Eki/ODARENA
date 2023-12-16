@@ -3116,20 +3116,6 @@ class InvadeActionService
         $bodies = 0;
         $bodiesRemovedFromConversion = 0;
 
-        if((array_sum($this->invasion['attacker']['conversions']) + array_sum($this->invasion['defender']['conversions'])) > 0)
-        {
-            $bodiesRemovedFromConversion += $this->invasion['attacker']['conversions']['bodies_spent'] ?: 0;
-            $bodiesRemovedFromConversion += $this->invasion['defender']['conversions']['bodies_spent'] ?: 0;
-        }
-
-        if((array_sum($this->invasion['attacker']['resource_conversions']) + array_sum($this->invasion['defender']['resource_conversions'])) > 0)
-        {
-            $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversions']['bodies_spent'] ?: 0;
-            $bodiesRemovedFromConversion += $this->invasion['attacker']['resource_conversions']['bodies_spent'] ?: 0;
-        }
-
-        $bodies -= $bodiesRemovedFromConversion;
-
         $winner = $this->invasion['result']['success'] ? 'attacker' : 'defender';
 
         foreach($attackerUnitsLost as $slot => $amount)
@@ -3150,9 +3136,22 @@ class InvadeActionService
             }
         }
 
-        $bodies = max(0, $bodies);
+        if((array_sum($this->invasion['attacker']['conversions']) + array_sum($this->invasion['defender']['conversions'])) > 0)
+        {
+            $bodiesRemovedFromConversion += $this->invasion['attacker']['conversions']['bodies_spent'] ?: 0;
+            $bodiesRemovedFromConversion += $this->invasion['defender']['conversions']['bodies_spent'] ?: 0;
+        }
+
+        if((array_sum($this->invasion['attacker']['resource_conversions']) + array_sum($this->invasion['defender']['resource_conversions'])) > 0)
+        {
+            $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversions']['bodies_spent'] ?: 0;
+            $bodiesRemovedFromConversion += $this->invasion['attacker']['resource_conversions']['bodies_spent'] ?: 0;
+        }
 
         # Deduct from $bodies the number of bodies already ransacked/converted
+        $bodies -= $bodiesRemovedFromConversion;
+
+        $bodies = max(0, $bodies);
 
         $this->invasion['result']['bodies']['fallen'] = $bodies;
         $this->invasion['result']['bodies']['available'] = $bodies;
