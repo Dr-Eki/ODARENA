@@ -191,6 +191,12 @@
                     </thead>
                     <tbody>
                         @foreach($availableBuildings as $building)
+                            @php
+                                $totalConstructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}");
+                                $totalRepairAmount = $queueService->getRepairQueueTotalByResource($selectedDominion, "building_{$building->key}");
+                                $totalInvasionAmount = $queueService->getInvasionQueueTotalByResource($selectedDominion, "building_{$building->key}");
+                                $totalTotalAmount = $totalConstructionAmount + $totalRepairAmount + $totalInvasionAmount;
+                            @endphp
                             <tr>
                                 <td>
                                     <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
@@ -198,15 +204,21 @@
                                     </span>
                                 </td>
                                 @for ($i = 1; $i <= 12; $i++)
+                                    @php
+                                        $constructionAmount = $queueService->getConstructionQueueAmount($selectedDominion, "building_{$building->key}", $i);
+                                        $repairAmount = $queueService->getRepairQueueAmount($selectedDominion, "building_{$building->key}", $i);
+                                        $invasionAmount = $queueService->getInvasionQueueAmount($selectedDominion, "building_{$building->key}", $i);
+                                        $totalAmount = $constructionAmount + $repairAmount + $invasionAmount;
+                                    @endphp
                                     <td class="text-center">
-                                        @if (($queueService->getConstructionQueueAmount($selectedDominion, "building_{$building->key}", $i) + $queueService->getRepairQueueAmount($selectedDominion, "building_{$building->key}", $i)) === 0)
-                                            -
+                                        @if ($totalAmount)
+                                            {{ number_format($totalAmount) }}
                                         @else
-                                            {{ number_format(($queueService->getConstructionQueueAmount($selectedDominion, "building_{$building->key}", $i) + $queueService->getRepairQueueAmount($selectedDominion, "building_{$building->key}", $i))) }}
+                                            -
                                         @endif
                                     </td>
                                 @endfor
-                                <td class="text-center">{{ number_format($queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}") + $queueService->getRepairQueueTotalByResource($selectedDominion, "building_{$building->key}")) }}</td>
+                                <td class="text-center">{{ number_format($totalTotalAmount) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
