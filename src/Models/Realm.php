@@ -64,6 +64,11 @@ class Realm extends AbstractModel
     {
         return $this->hasOne(Pack::class);
     }
+    
+    public function resources()
+    {
+        return $this->hasMany(RealmResource::class);
+    }
 
     # Allies are realms with which this dominion has a RealmAlliance or other realms that have a RealmAlliance with this realm
     public function getAllies()

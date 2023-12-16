@@ -81,6 +81,11 @@ class Round extends AbstractModel
     {
         return $this->hasMany(Realm::class);
     }
+    
+    public function resources()
+    {
+        return $this->hasMany(RoundResource::class);
+    }
 
     // Query Scopes
 
