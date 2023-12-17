@@ -11,70 +11,6 @@
 
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><i class="ra ra-tombstone"></i> Desecrate</h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="form-group">
-
-
-                            <label for="battlefield">Select a battlefield</label>
-                            <select name="battlefield" id="battlefield" class="form-control select2" required style="width: 100%" data-placeholder="Select a battlefield" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
-                                <option></option>
-                                @foreach ($desecrationCalculator->getAvailableBattlefields($selectedDominion) as $battlefield)
-                                    @php
-                                        $bodies = 'Unknown number of bodies';
-                                        if($selectedDominion->getSpellPerkValue('can_see_battlefield_bodies') or ($selectedDominion->round->ticks - $battlefield->tick) > 6)
-                                        {
-                                            $bodies = $battlefield->data['result']['bodies']['available'];
-                                        }
-
-                                        $isDesecrated = ($battlefield->data['result']['bodies']['desecrated'] > 0) ? 1 : 0;
-
-                                        if($bodies === 0)
-                                        {
-                                            continue;
-                                        }
-                                    @endphp
-                                    
-
-                                    <option value="{{ $battlefield->id }}"
-                                            data-bodies="{{ $bodies }}"
-                                            data-desecrated="{{ $isDesecrated }}"
-                                            >
-                                        {{ $battlefield->created_at }} - 
-                                        @if($battlefield->type == 'invasion')
-                                            {{ $battlefield->source->name }}
-
-                                            @if($battlefield->data['result']['success'])
-                                                successfully
-                                            @endif
-
-                                            @if($battlefield->isAmbush)
-                                                ambushed
-                                            @else
-                                                invaded
-                                            @endif
-
-                                            {{ $battlefield->target->name }} (# {{ $battlefield->target->realm->number }}) 
-
-                                            @if($battlefield->data['result']['success'])
-                                                conquering {{ $battlefield->data['attacker']['land_conquered'] }} acres
-                                            @endif
-
-                                        @elseif($battlefield->type == 'barbarian_invasion')
-                                            {{ $battlefield->source->name }} (# {{ $battlefield->source->realm->number }})  {{ $battlefield->data['type'] }} a {{ $battlefield->data['target'] }} for {{ $battlefield->data['land'] }} acres
-                                        @else
-                                            Unsupported type: {{ $battlefield->type }}
-                                        @endif
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="box box-primary">
-                    <div class="box-header with-border">
                         <h3 class="box-title"><i class="fa fa-users"></i> Units to send</h3>
                     </div>
                     <div class="box-body table-responsive no-padding">
@@ -171,6 +107,7 @@
                                             </td>
                                             <td id="invasion-force-max-op" data-amount="0">0</td>
                                         </tr>
+                                        {{--
                                         <tr>
                                             <td>
                                                 Target DP:
@@ -180,6 +117,19 @@
                                         <tr>
                                             <td>Land conquered:</td>
                                             <td id="invasion-land-conquered" data-amount="0">0</td>
+                                        </tr>
+                                        --}}
+                                        <tr>
+                                            <td>Bodies:</td>
+                                            <td id="invasion-bodies" data-amount="0">?</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Resource:</td>
+                                            <td id="invasion-resource-name" data-amount="0">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Amount:</td>
+                                            <td id="invasion-resource-amount" data-amount="0">0</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -371,17 +321,8 @@
                 <h3 class="box-title">Information</h3>
             </div>
             <div class="box-body">
-                <p>Here you can invade other players to try to capture some of their land and to gain prestige. Invasions are successful if you send more OP than they have DP.</p>
-                <p>If you hit the same target within two hours, you will not discover additional land. You will only get the acres you conquer. Note that this is down to the <em>exact second</em> of your previous hit and includes failed invasions.</p>
-                <p>You will only gain prestige on targets 75% or greater relative to your own land size.</p>
-                <p>For every acre you gain, you receive 25 XP.</p>
-                <p>Note that minimum raw DP a target can have is 10 DP per acre.</p>
-
-                @if ($militaryCalculator->getRecentlyInvadedCount($selectedDominion) and $selectedDominion->race->name == 'Sylvan')
-                    <hr />
-                    <p><strong>You were recently invaded, enraging your Spriggan and Leshy.</strong></p>
-                @endif
-
+                <p>Only those with the Visions of Death can sense the dead and know the number of bodies strewn across the battlefield.</p>
+                <p>It takes your units eight ticks to return from desecration.</p>
             </div>
         </div>
     </div>
@@ -422,8 +363,11 @@
             var homeForcesDPRawElement = $('#home-forces-dp-raw');
             var homeForcesMinDPElement = $('#home-forces-min-dp');
             var homeForcesDPAElement = $('#home-forces-dpa');
-            var invasionLandConqueredElement = $('#invasion-land-conquered');
-            var targetDpElement = $('#target-dp');
+            //var invasionLandConqueredElement = $('#invasion-land-conquered');
+            var invasionBodies = $('#invasion-bodies');
+            var invasionResourceName = $('#invasion-resource-name');
+            var invasionResourceAmount = $('#invasion-resource-amount');
+            //var targetDpElement = $('#target-dp');
 
             var invasionForceCountElement = $('#invasion-total-units');
 
@@ -452,7 +396,7 @@
             function updateUnitStats() {
                 // Update unit stats
                 $.get(
-                    "{{ route('api.dominion.invasion') }}?" + $('#desecrate_form').serialize(), {},
+                    "{{ route('api.dominion.desecration') }}?" + $('#desecrate_form').serialize(), {},
                     function(response) {
                         if(response.result == 'success')
                         {
@@ -470,25 +414,31 @@
                             invasionForceOPElement.data('amount', response.away_offense);
                             invasionForceDPElement.data('amount', response.away_defense);
                             invasionForceMaxOPElement.data('amount', response.max_op);
-                            invasionLandConqueredElement.data('amount', response.land_conquered);
+                            //invasionLandConqueredElement.data('amount', response.land_conquered);
+                            invasionBodies.data('amount', response.bodies_amount);
+                            invasionResourceName.data('amount', response.resource_name);
+                            invasionResourceAmount.data('amount', response.resource_amount);
                             homeForcesOPElement.data('amount', response.home_offense);
                             homeForcesDPElement.data('amount', response.home_defense);
                             homeForcesDPRawElement.data('amount', response.home_defense_raw);
                             homeForcesMinDPElement.data('amount', response.min_dp);
                             homeForcesDPAElement.data('amount', response.home_dpa);
-                            targetDpElement.data('amount', response.target_dp);
+                            //targetDpElement.data('amount', response.target_dp);
 
                             // Update OP / DP display
                             invasionForceOPElement.text(response.away_offense.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             invasionForceDPElement.text(response.away_defense.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             invasionForceMaxOPElement.text(response.max_op.toLocaleString(undefined, {maximumFractionDigits: 2}));
-                            invasionLandConqueredElement.text(response.land_conquered.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            //invasionLandConqueredElement.text(response.land_conquered.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            invasionBodies.text(response.bodies_amount.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            invasionResourceName.text(response.resource_name.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            invasionResourceAmount.text(response.resource_amount.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             homeForcesOPElement.text(response.home_offense.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             homeForcesDPElement.text(response.home_defense.toLocaleString(undefined, {maximumFractionDigits: 0}));
                             homeForcesDPRawElement.text(response.home_defense_raw.toLocaleString(undefined, {maximumFractionDigits: 0}));
                             homeForcesMinDPElement.text(response.min_dp.toLocaleString(undefined, {maximumFractionDigits: 0}));
                             homeForcesDPAElement.text(response.home_dpa.toLocaleString(undefined, {maximumFractionDigits: 0}));
-                            targetDpElement.text(response.target_dp.toLocaleString(undefined, {maximumFractionDigits: 0}));
+                            //targetDpElement.text(response.target_dp.toLocaleString(undefined, {maximumFractionDigits: 0}));
 
                             invasionForceCountElement.text(response.units_sent);
 

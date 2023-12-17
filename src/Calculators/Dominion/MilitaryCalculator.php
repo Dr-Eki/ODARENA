@@ -12,7 +12,6 @@ use OpenDominion\Models\Realm;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Unit;
 
-use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 
 use OpenDominion\Services\Dominion\GovernmentService;

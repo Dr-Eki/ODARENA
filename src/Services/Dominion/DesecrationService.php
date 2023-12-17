@@ -11,19 +11,20 @@ use OpenDominion\Models\Resource;
 use OpenDominion\Calculators\Dominion\DesecrationCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Services\Dominion\QueueService;
+use OpenDominion\Services\Dominion\ResourceService;
 
 class DesecrationService
 {
     use DominionGuardsTrait;
 
     protected $queueService;
+    protected $resourceService;
     protected $desecrationCalculator;
     protected $militaryCalculator;
 
     protected $desecrationEvent;
 
     protected $desecration = [
-        'game_event_id' => '',
         'units_returning' => [],
         'units_sent' => [],
         'bodies' => [
@@ -42,21 +43,17 @@ class DesecrationService
         $this->militaryCalculator = app(MilitaryCalculator::class);
 
         $this->queueService = app(QueueService::class);
+        $this->resourceService = app(ResourceService::class);
     }
 
-    public function desecrate(Dominion $desecrator, array $desecratingUnits, GameEvent $battlefield): array
+    public function desecrate(Dominion $desecrator, array $desecratingUnits): array
     {
 
         $this->guardLockedDominion($desecrator);
 
-        DB::transaction(function () use ($desecrator, $desecratingUnits, $battlefield) {
+        DB::transaction(function () use ($desecrator, $desecratingUnits) {
 
             // Checks
-            if(!$desecrator->round->getSetting('invasions'))
-            {
-                throw new GameException('Invasions are disabled this round.');
-            }
-
             if(!$desecrator->race->getPerkValue('can_desecrate'))
             {
                 throw new GameException('You cannot desecrate.');
@@ -65,16 +62,6 @@ class DesecrationService
             if($desecrator->protection_ticks > 0)
             {
                 throw new GameException('You cannot desecrate while under protection.');
-            }
-
-            if($desecrator->round->id !== $battlefield->source->round_id)
-            {
-                throw new GameException('Invalid battlefield.');
-            }
-
-            if(!in_array($battlefield->type, ['invasion', 'barbarian_invasion']))
-            {
-                throw new GameException('Invalid battlefield. Unsupported type.');
             }
 
             $unitsWithDesecrationPerk = 0;
@@ -91,35 +78,24 @@ class DesecrationService
                 throw new GameException('At least some units sent must be capable of desecration.');
             }
 
-
-            if(!$this->desecrationCalculator->getAvailableBattlefields($desecrator)->contains($battlefield))
-            {
-                throw new GameException('Invalid battlefield. It may be too old to desecrate.');
-            }  
-
-            $this->desecration['game_event_id'] = $battlefield->id;
             $this->desecration['units_sent'] = $desecratingUnits;
             $this->desecration['units_returning'] = $desecratingUnits;
 
             $this->desecration['bodies'] = [
-                'available' => $battlefield->data['result']['bodies']['available'],
+                'available' => $desecrator->round->resource_bodies,
                 'desecrated' => 0,
             ];
 
             // Desecrate
-            $this->desecration['bodies']['desecrated'] = $this->desecrationCalculator->getBodiesDesecrated($desecrator, $desecratingUnits, $battlefield);
+            $this->desecration['bodies']['desecrated'] = $this->desecrationCalculator->getBodiesDesecrated($desecrator, $desecratingUnits);
 
-            $desecrationResult = $this->desecrationCalculator->getDesecrationResult($desecrator, $this->desecration['units_sent'], $this->desecration['bodies']['desecrated']);
+            $desecrationResult = $this->desecrationCalculator->getDesecrationResult($desecrator, $this->desecration['units_sent']);
 
-            if(!isset($this->desecration['result']['resource_key']))
-            {
-                dd("Sacré bleu! A bug! Don't desecrate this battlefield again.", 'Here is some debug information:', $this->desecration, $desecrationResult);
-                #dd($this->desecration, $desecrationResult);
-            }
+
+            $this->desecration['result']['resource_key'] = key($desecrationResult);
 
             $resource = Resource::where('key', $this->desecration['result']['resource_key'])->first();
 
-            $this->desecration['result']['resource_key'] = key($desecrationResult);
             $this->desecration['result']['resource_name'] = $resource->name; #Resource::where('key', $this->desecration['result']['resource_key'])->firstOrFail()->name;
             $this->desecration['result']['amount'] = $desecrationResult[key($desecrationResult)];
 
@@ -137,7 +113,7 @@ class DesecrationService
 
             $queueDatas[] = ['resource_'.$this->desecration['result']['resource_key'] => $this->desecration['result']['amount']];
 
-            $ticks = $this->desecrationCalculator->isOwnRealmDesecration($desecrator, $battlefield) ? 2 : 12;
+            $ticks = 8;
 
             foreach($queueDatas as $queueData)
             {
@@ -149,13 +125,10 @@ class DesecrationService
                 );    
             }
 
-            $data = $battlefield->data;
-            $data['result']['bodies']['desecrated'] += $this->desecration['bodies']['desecrated'];
-            $data['result']['bodies']['available'] -= $this->desecration['bodies']['desecrated'];
-            $data['result']['bodies']['available'] = max(0, $data['result']['bodies']['available']);
-            $battlefield->data = $data;
-            
-            $battlefield->save();
+            # Update round resources (remove bodies)
+            $this->resourceService->updateRoundResources($desecrator->round, [
+                'body' => -$this->desecration['bodies']['desecrated'],
+            ]);
 
             $this->desecrationEvent = GameEvent::create([
                 'round_id' => $desecrator->round_id,
@@ -170,13 +143,21 @@ class DesecrationService
 
             $desecrator->save(['event' => HistoryService::EVENT_ACTION_DESECRATION]);
     
+            $message = sprintf(
+                'Your units desecrate %s %s and return with %s %s.',
+                number_format($this->desecration['bodies']['desecrated']),
+                str_plural('body', $this->desecration['bodies']['desecrated']),
+                number_format($this->desecration['result']['amount']),
+                str_plural($this->desecration['result']['resource_name'], $this->desecration['result']['amount'])
+            );
+
             # Debug before saving:
-            #ldd($this->desecration);
+            #ldd($this->desecration, $desecrator->round->resources, $message);
 
         });
 
         $message = sprintf(
-            'Your units arrive at the battlefield, desecrating %s %s and returning with %s %s.',
+            'Your units desecrate %s %s and begin their journey home with %s %s.',
             number_format($this->desecration['bodies']['desecrated']),
             str_plural('body', $this->desecration['bodies']['desecrated']),
             number_format($this->desecration['result']['amount']),
@@ -190,7 +171,6 @@ class DesecrationService
             'alert-type' => $alertType,
             'redirect' => route('dominion.event', [$this->desecrationEvent->id])
         ];
-
 
         return $this->desecration;
     }

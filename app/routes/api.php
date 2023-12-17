@@ -13,6 +13,7 @@ $router->group(['prefix' => 'v1', 'as' => 'api.'], static function (Router $rout
         $router->get('invasion')->uses('Dominion\APIController@calculateInvasion')->name('invasion');
         $router->get('expedition')->uses('Dominion\APIController@calculateExpedition')->name('expedition');
         $router->get('sorcery')->uses('Dominion\APIController@calculateSorcery')->name('sorcery');
+        $router->get('desecration')->uses('Dominion\APIController@calculateDesecration')->name('desecration');
     });
 
     $router->group(['prefix' => 'calculator', 'middleware' => ['api', 'auth'], 'as' => 'calculator.'], static function (Router $router) {

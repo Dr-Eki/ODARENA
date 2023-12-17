@@ -11,7 +11,10 @@ class DesecrateActionRequest extends AbstractDominionRequest
      */
     public function rules()
     {
-        $rules = ['battlefield' => 'required|exists:game_events,id'];
+        for ($i = 1; $i <= 10; $i++)
+        {
+            $rules['unit.' . $i] = 'integer|nullable|min:0';
+        }
 
         return $rules;
     }

@@ -348,7 +348,7 @@ class Dominion extends AbstractModel
     }
 
     # This code enables the following syntax:
-    # $dominion->{'terrain_' . $terrainKey}
+    # $dominion->{'terrain_' . $terrainKey} and similar
 
     public function __get($key)
     {

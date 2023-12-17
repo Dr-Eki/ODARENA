@@ -4,6 +4,7 @@ namespace OpenDominion\Calculators\Dominion;
 
 
 use DB;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 use OpenDominion\Helpers\LandHelper;
@@ -16,10 +17,11 @@ use OpenDominion\Models\Race;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\RealmResource;
 use OpenDominion\Models\Resource;
+use OpenDominion\Models\Round;
+use OpenDominion\Models\RoundResource;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
-use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
 use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 
@@ -78,9 +80,19 @@ class ResourceCalculator
         return RealmResource::where('resource_id',$resource->id)->where('realm_id',$realm->id)->first() ? true : false;
     }
 
+    public function roundHasResource(Round $round, string $resourceKey): bool
+    {
+        return $round->resources->contains('key', $resourceKey);
+    }
+
     public function getRealmResources(Realm $realm): Collection
     {
         return RealmResource::where('realm_id',$realm->id)->get();
+    }
+
+    public function getRoundResources(Round $round): Collection
+    {
+        return RoundResource::where('round_id',$round->id)->get();
     }
 
     public function getAmount(Dominion $dominion, string $resourceKey): int
@@ -784,5 +796,24 @@ class ResourceCalculator
 
         return in_array($resourceKey, $resourcesWithMaxStorage);
     }
+
+    public function getRoundResourceDecay(Round $round, string $resourceKey): int
+    {
+        // Get the current time
+        $currentTime = Carbon::now();
+    
+        // Set decay rates
+        $dayDecayRate = 2 / 100; // 2% for 06:00 to 18:00
+        $nightDecayRate = 0.5 / 100; // 0.5% for 18:00 to 06:00
+    
+        // Determine the current decay rate based on the time of day
+        $decayRate = ($currentTime->hour >= 6 && $currentTime->hour < 18) ? $dayDecayRate : $nightDecayRate;
+        
+        // Calculate decay
+        $decay = (int)round($round->{'resource_' . $resourceKey} * $decayRate);
+    
+        return $decay;
+    }
+    
 
 }

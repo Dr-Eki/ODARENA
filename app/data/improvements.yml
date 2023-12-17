@@ -221,6 +221,18 @@ hollowing:
 
 # END DWARG #
 
+# BEGIN SIMIAN #
+
+thriving:
+  name: Thriving
+  exclusive_races:
+    - Simian
+  perks:
+    population: 20,4800
+    barren_housing: 200,8000
+
+# END DWARG #
+
 # BEGIN SNOW ELF #
 
 gryphonry:

@@ -739,7 +739,7 @@ class InvadeActionService
             ]);
 
             # Debug before saving:
-            #ldd($this->invasion); dd('Safety!');
+            #ldd($this->invasion);# dd('Safety!');
             
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
@@ -3114,7 +3114,7 @@ class InvadeActionService
     protected function handleTheDead(Dominion $attacker, Dominion $defender, array $attackerUnitsLost, array $defenderUnitsLost): void
     {
         $bodies = 0;
-        $bodiesRemovedFromConversion = 0;
+        $bodiesRemovedFromConversions = 0;
 
         $winner = $this->invasion['result']['success'] ? 'attacker' : 'defender';
 
@@ -3138,24 +3138,31 @@ class InvadeActionService
 
         if((array_sum($this->invasion['attacker']['conversions']) + array_sum($this->invasion['defender']['conversions'])) > 0)
         {
-            $bodiesRemovedFromConversion += $this->invasion['attacker']['conversions']['bodies_spent'] ?: 0;
-            $bodiesRemovedFromConversion += $this->invasion['defender']['conversions']['bodies_spent'] ?: 0;
+            $bodiesRemovedFromConversions += $this->invasion['attacker']['conversions']['bodies_spent'] ?: 0;
+            $bodiesRemovedFromConversions += $this->invasion['defender']['conversions']['bodies_spent'] ?: 0;
         }
 
         if((array_sum($this->invasion['attacker']['resource_conversions']) + array_sum($this->invasion['defender']['resource_conversions'])) > 0)
         {
-            $bodiesRemovedFromConversion += $this->invasion['defender']['resource_conversions']['bodies_spent'] ?: 0;
-            $bodiesRemovedFromConversion += $this->invasion['attacker']['resource_conversions']['bodies_spent'] ?: 0;
+            $bodiesRemovedFromConversions += $this->invasion['defender']['resource_conversions']['bodies_spent'] ?: 0;
+            $bodiesRemovedFromConversions += $this->invasion['attacker']['resource_conversions']['bodies_spent'] ?: 0;
         }
 
+        $this->invasion['result']['bodies']['gross'] = $bodies;
+
         # Deduct from $bodies the number of bodies already ransacked/converted
-        $bodies -= $bodiesRemovedFromConversion;
+        $bodies -= $bodiesRemovedFromConversions;
+        $this->invasion['result']['bodies']['removed_from_conversions'] = $bodiesRemovedFromConversions;
 
         $bodies = max(0, $bodies);
 
-        $this->invasion['result']['bodies']['fallen'] = $bodies;
-        $this->invasion['result']['bodies']['available'] = $bodies;
-        $this->invasion['result']['bodies']['desecrated'] = 0;
+        # Update RoundResources
+        if($bodies > 0)
+        {
+            $this->resourceService->updateRoundResources($attacker->round, ['body' => $bodies]);
+        }
+
+        $this->invasion['result']['bodies']['net'] = $bodies;
     }
 
     protected function handleWatchedDominions(Dominion $attacker, Dominion $defender): void

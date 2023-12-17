@@ -82,9 +82,44 @@ class Round extends AbstractModel
         return $this->hasMany(Realm::class);
     }
     
+
+  
     public function resources()
     {
-        return $this->hasMany(RoundResource::class);
+        return $this->belongsToMany(
+            Resource::class,
+            'round_resources',
+            'round_id',
+            'resource_id'
+        )
+            ->withPivot('amount');
+    }
+    # This code enables the following syntax:
+    # $round->{'resource_' . $terrainKey} and similar
+
+    public function __get($key)
+    {
+    
+        if (preg_match('/^resource_(\w+)$/', $key, $matches)) {
+            return $this->getResourceAmount($matches[1]);
+        }
+        
+        return parent::__get($key);
+    }
+
+    protected function getResourceAmount($resourceKey)
+    {
+        $resourceKey = strtolower($resourceKey);
+    
+        $resource = $this->resources()
+            ->where('resources.key', $resourceKey)
+            ->first();
+    
+        if ($resource) {
+            return $resource->pivot->amount;
+        }
+    
+        return 0;
     }
 
     // Query Scopes

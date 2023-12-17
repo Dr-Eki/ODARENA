@@ -32,6 +32,7 @@ use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\TheftCalculator;
 use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Calculators\RealmCalculator;
 
@@ -57,6 +58,7 @@ use OpenDominion\Services\Dominion\DeityService;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\InfoOpService;
 use OpenDominion\Services\Dominion\InsightService;
+use OpenDominion\Services\Dominion\OpenAIService;
 use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\ResourceService;
@@ -113,7 +115,6 @@ class AppServiceProvider extends AbstractServiceProvider
         $this->app->singleton(EspionageCalculator::class);
         $this->app->singleton(ImprovementCalculator::class);
         $this->app->singleton(LandCalculator::class);
-        $this->app->singleton(LandImprovementCalculator::class);
         $this->app->singleton(MilitaryCalculator::class);
         $this->app->singleton(PopulationCalculator::class);
         $this->app->singleton(PrestigeCalculator::class);

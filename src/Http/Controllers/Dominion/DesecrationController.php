@@ -7,8 +7,6 @@ use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\UnitHelper;
 use OpenDominion\Http\Requests\Dominion\Actions\DesecrateActionRequest;
-use OpenDominion\Models\Dominion;
-use OpenDominion\Models\GameEvent;
 use OpenDominion\Services\Dominion\DesecrationService;
 use OpenDominion\Services\Dominion\QueueService;
 
@@ -30,13 +28,11 @@ class DesecrationController extends AbstractDominionController
     {
         $dominion = $this->getSelectedDominion();
         $desecrationService = app(DesecrationService::class);
-        $battlefield = GameEvent::findOrFail($request->get('battlefield'));
 
         try {
             $result = $desecrationService->desecrate(
                 $dominion,
-                $request->get('unit'),
-                $battlefield
+                $request->get('unit')
             );
 
         } catch (GameException $e) {

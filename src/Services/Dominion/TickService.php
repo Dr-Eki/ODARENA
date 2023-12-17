@@ -161,6 +161,13 @@ class TickService
             {
                 Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
 
+                # Calculate body decay
+                if(($decay = $this->resourceCalculator->getRoundResourceDecay($round, 'body')))
+                {
+                    Log::info('* Body decay: ' . number_format($decay) . ' / ' . number_format($round->resource_body));
+                    $this->resourceService->updateRoundResources($round, ['body' => (-$decay)]);
+                }
+
                 # Get dominions IDs with Stasis active
                 $stasisDominions = [];
                 $dominions = $round->activeDominions()->get();

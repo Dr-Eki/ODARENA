@@ -375,7 +375,9 @@ class DataSyncCommand extends Command implements CommandInterface
             }
 
             // Terrain Perks
-            $terrainPerksToSync = [];
+            $raceTerrainPerksSynced = [];
+            $raceTerrainPerkTypesSynced = [];
+
             foreach (object_get($data, 'terrain_perks', []) as $terrainKey => $terrainPerks)
             {
                 $terrain = Terrain::where('key', $terrainKey)->first();
@@ -398,7 +400,8 @@ class DataSyncCommand extends Command implements CommandInterface
                             'value' => $terrainPerkValue
                         ]);
     
-                        $terrainPerksToSync[] = $raceTerrainPerk->id;
+                        $raceTerrainPerksSynced[] = $raceTerrainPerk->key;
+                        $raceTerrainPerkTypesSynced[] = $raceTerrainPerkType->key;
                     }
 
                 }

@@ -238,23 +238,22 @@ if(!function_exists('ldump'))
 }
 
 
-if(!function_exists('ldd'))
-{
+if (!function_exists('ldd')) {
     /**
-     * Dumps but only if running locally.
-     *
-     * @param string $word
-     * @return string
+     * Dumps the given variables but only if running locally.
      */
-
-     function ldd($input = null)
+    function ldd(...$inputs)
     {
-        if(env('APP_ENV') == 'local')
-        {
-            dd($input);
+        if (env('APP_ENV') === 'local') {
+            foreach ($inputs as $input) {
+                dump($input);
+            }
+
+            die(1);
         }
     }
 }
+
 
 if(!function_exists('negative'))
 {

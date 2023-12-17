@@ -2,14 +2,7 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
-use OpenDominion\Models\Building;
-use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\DominionDeity;
-use OpenDominion\Models\DominionSpell;
-use OpenDominion\Models\DominionBuilding;
-use OpenDominion\Models\DominionImprovement;
-use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Spell;
 
@@ -20,6 +13,7 @@ use OpenDominion\Http\Requests\Dominion\API\SorceryCalculationRequest;
 
 use OpenDominion\Services\Dominion\API\DefenseCalculationService;
 use OpenDominion\Services\Dominion\API\ExpeditionCalculationService;
+use OpenDominion\Services\Dominion\API\DesecrationCalculationService;
 use OpenDominion\Services\Dominion\API\InvadeCalculationService;
 use OpenDominion\Services\Dominion\API\OffenseCalculationService;
 use OpenDominion\Services\Dominion\API\SorceryCalculationService;
@@ -81,6 +75,27 @@ class APIController extends AbstractDominionController
                 $caster,
                 $spell,
                 $wizardStrength
+            );
+        } catch (GameException $e) {
+            return [
+                'result' => 'error',
+                'errors' => [$e->getMessage()]
+            ];
+        }
+
+        return $result;
+    }
+
+    public function calculateDesecration(ExpeditionCalculationRequest $request): array
+    {
+        $dominion = $this->getSelectedDominion();
+        $desecrationCalculationService = app(DesecrationCalculationService::class);
+
+        try {
+            $result = $desecrationCalculationService->calculate(
+                $dominion,
+                $request->get('unit'),
+                $request->get('calc')
             );
         } catch (GameException $e) {
             return [

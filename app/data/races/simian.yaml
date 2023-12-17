@@ -2,9 +2,46 @@ name: Simian
 alignment: independent
 description:
 home_terrain: jungle
-playable: 0 # Round 88
+playable: 1
 skill_level: 2
 
+terrain_perks:
+  badlands:
+    population_mod: -0.10
+    fixed_barren_housing_raw: 2
+  desert:
+    food_production_mod: -0.10
+    fixed_barren_housing_raw: 3
+  forest:
+    population_mod: 0.10
+    casualties_on_defense_mod: -0.20
+    construction_cost_mod: -1
+    fixed_barren_housing_raw: 10
+  glacier:
+    food_production_mod: -0.20
+    population_mod: -0.20
+    fixed_barren_housing_raw: 0
+  hills:
+    lumber_production_mod: 0.15
+  jungle:
+    population_mod: 0.15
+    casualties_on_defense_mod: -0.20
+    construction_cost_mod: -0.8
+    fixed_barren_housing_raw: 10
+  mountains:
+    lumber_production_mod: 0.10
+    fixed_barren_housing_raw: 4
+  plains:
+    casualties_on_offense_mod: -0.10
+  swamps:
+    mana_production_mod: 0.20
+    lumber_production_mod: 0.20
+  volcanic:
+    lumber_production_mod: -0.25
+  water:
+    food_production_mod: 0.12
+  wetlands:
+    food_production_mod: 0.12
 
 resources:
   - gold
@@ -15,16 +52,11 @@ resources:
 improvement_resources:
   lumber: 3
 
-archmages_cost: 1200,gold
-
 perks:
   spy_strength: 10
   wizard_strength: -10
   construction_cost: -20
-  forest_construction_cost: -100
-  extra_barren_housing: 10
   increased_construction_speed: 3
-  max_population: 30
 
 units:
   - name: Chimpanzee
@@ -39,8 +71,8 @@ units:
       offense: 3
       defense: 0
     perks:
-      casualties_on_offense_vs_land: forest,-2,-90 # land_type, ratio%, max
-      offense_from_victories: 0.05,1.5 # +0.10 OP per Victory, max +3 (at 30 Victories)
+      casualties_on_offense_vs_terrain: forest,jungle;-2;-90 # terrains,terrains;effect;max
+      offense_from_victories: 0.1,2 # +0.10 OP per Victory, max +2 (at 20 Victories)
 
   - name: Bonobo
     training_time: 9
@@ -54,7 +86,7 @@ units:
       offense: 0
       defense: 3
     perks:
-      casualties_on_defense_from_land: forest,-1,-90 # land_type, ratio%, max
+      casualties_on_defense_from_terrain: forest,jungle;-1;-90 # terrains,terrains;effect;max
 
   - name: Orangutan
     training_time: 12
@@ -65,14 +97,15 @@ units:
     cost:
       gold: 850
     power:
-      offense: 5
-      defense: 8
+      offense: 4
+      defense: 5
     perks:
-      casualties_on_defense_from_land: forest,-1,-90 # land_type, ratio%, max
-      casualties_on_offense_vs_land: forest,-1,-90 # land_type, ratio%, max
+      casualties_on_defense_from_terrain: forest,jungle;-1;-90 # terrains,terrains;effect;max
+      casualties_on_offense_vs_terrain: forest,jungle;-1;-90 # terrains,terrains;effect;max
 
   - name: Gorilla
     training_time: 12
+    description: 
     type:
       - living
       - sentient
@@ -80,9 +113,9 @@ units:
     cost:
       gold: 1000
     power:
-      offense: 7
+      offense: 5
       defense: 4
     perks:
-      casualties_on_defense_from_land: forest,-1,-90 # land_type, ratio%, max
-      casualties_on_offense_vs_land: forest,-2,-90 # land_type, ratio%, max
-      offense_from_victories: 0.10,3 # +0.10 OP per Victory, max +3 (at 30 Victories)
+      casualties_on_defense_from_terrain: forest,jungle;-1;-90 # terrains,terrains;effect;max
+      casualties_on_offense_vs_terrain: forest,jungle;-2,;-90 # terrains,terrains;effect;max
+      offense_from_victories: 0.10,2 # +0.10 OP per Victory, max +2 (at 20 Victories)

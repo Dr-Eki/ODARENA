@@ -39,8 +39,6 @@ use OpenDominion\Traits\DominionGuardsTrait;
 use OpenDominion\Models\Spyop;
 
 
-use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
-
 class EspionageActionService
 {
     use DominionGuardsTrait;

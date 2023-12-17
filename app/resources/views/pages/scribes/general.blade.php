@@ -158,6 +158,7 @@
         </div>
     </div>
     
+    {{-- 
     <div class="col-sm-12 col-md-12">
         <a id="crypt"></a>
         <div class="box box-primary">
@@ -222,6 +223,7 @@
             </div>
         </div>
     </div>
+    --}}
     
     <div class="col-sm-12 col-md-12">
         <a id="desecration"></a>
@@ -238,11 +240,9 @@
                 <p><b>Barbarian Invasions</b></p>
                 <p><code>([Barbarian Units Lost] / 10) + [Land Gained]</code></p>
                 <p>Units which were converted into other units, die into other units, or from whom certain resources (currently only applicable to conversions into bodies) are extracted through resource conversion do not leave a body behind.</p>
-                <p>To desecrate, click the Desecration menu item. From this page, select the battlefield you wish to desecrate, specify how many units to send, and click Desecrate.</p>
-                <p>Standard return from desecration takes 12 ticks. However, if the battle was an invasion won by or an invasion fended off by someone in the same realm as the desecrator, return is two ticks.</p>
-                <p>Battlefields as old as 384 ticks can be desecrated.</p>
-                <p>The same battlefield can be desecrated several times.</p>
-                <p>No range limits apply to desecration.</p>
+                <p>To desecrate, click the Desecration menu item (only available to some factions). Specify the number of units to send and send them out.</p>
+                <p>It takes eight ticks for your units to return.</p>
+                <p>Bodies decay at a rate of 2% during the day (06:00—18:00) and 0.5% during the night (18:00-06:00).</p>
             </div>
         </div>
     </div>

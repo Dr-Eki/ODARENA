@@ -276,7 +276,6 @@
                                 <small class="text-muted">({{ number_format((100 - ($selectedDominion->peasants / $populationCalculator->getPopulation($selectedDominion)) * 100), 2) }}%)</small>
                             </td>
                         </tr>
-                        @include('partials.dominion.housing')
                         <tr>
                             <td>Max Population:</td>
                             <td>

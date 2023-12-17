@@ -6,7 +6,6 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Models\Dominion;
-use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
 
 # ODA
 use OpenDominion\Calculators\Dominion\SpellCalculator;

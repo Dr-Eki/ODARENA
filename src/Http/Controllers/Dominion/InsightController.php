@@ -18,7 +18,6 @@ use OpenDominion\Calculators\Dominion\DecreeCalculator;
 use OpenDominion\Calculators\Dominion\DominionCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
-use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\MoraleCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
@@ -184,7 +183,6 @@ class InsightController extends AbstractDominionController
             'dominionCalculator' => app(DominionCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),
             'improvementCalculator' => app(ImprovementCalculator::class),
-            'landImprovementCalculator' => app(LandImprovementCalculator::class),
             'landCalculator' => app(LandCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'moraleCalculator' => app(MoraleCalculator::class),
@@ -266,7 +264,6 @@ class InsightController extends AbstractDominionController
             'dominionCalculator' => app(DominionCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),
             'improvementCalculator' => app(ImprovementCalculator::class),
-            'landImprovementCalculator' => app(LandImprovementCalculator::class),
             'landCalculator' => app(LandCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'populationCalculator' => app(PopulationCalculator::class),

@@ -27,7 +27,6 @@ use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
-use OpenDominion\Calculators\Dominion\LandImprovementCalculator;
 
 class ArtefactsController extends AbstractDominionController
 {
@@ -60,7 +59,6 @@ class ArtefactsController extends AbstractDominionController
 
             'casualtiesCalculator' => app(CasualtiesCalculator::class),
             'improvementCalculator' => app(ImprovementCalculator::class),
-            'landImprovementCalculator' => app(LandImprovementCalculator::class),
             'landCalculator' => app(LandCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),

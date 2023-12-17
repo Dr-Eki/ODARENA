@@ -477,10 +477,6 @@ class WorldNewsHelper
             $mode = 'green';
         }
 
-        $originalEvent = GameEvent::findOrFail($desecration->data['game_event_id']);
-
-        $eventTypeString = $this->desecrationHelper->getDesecrationTargetTypeString($originalEvent);
-
         $viewerInvolved = ($desecrator->realm->id == $viewer->realm->id);
 
         #dump($desecrator->realm->id, $viewer->realm->id, $viewerInvolved, $desecrator->name, $viewer->name, $desecrator->realm->id == $viewer->realm->id);
@@ -488,17 +484,15 @@ class WorldNewsHelper
         if($viewerInvolved)
         {
             $string = sprintf(
-                '%s has desecrated a %s.',
-                $this->generateDominionString($desecrator, 'friendly', $viewer),
-                $eventTypeString
+                '%s performed a desecration.',
+                $this->generateDominionString($desecrator, 'friendly', $viewer)
               );
         }
         else
         {
             $string = sprintf(
-                '%s units have desecrated a %s.',
-                $this->raceHelper->getRaceAdjective($desecrator->race),
-                $eventTypeString
+                '%s units performed a desecration.',
+                $this->raceHelper->getRaceAdjective($desecrator->race)
             );
         }
 

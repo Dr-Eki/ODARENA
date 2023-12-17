@@ -4,7 +4,6 @@
 @section('content')
     @php
         $boxColor = 'success';
-        $originalEvent = OpenDominion\Models\GameEvent::where('id', $event->data['game_event_id'])->firstOrFail();
     @endphp
     @if($selectedDominion->realm->id !== $event->source->realm->id and $selectedDominion->realm->id !== $event->target->realm->id)
         <div class="row">
@@ -34,7 +33,7 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-12">
                                 <div class="text-center">
-                                <h4>{{ ucwords($desecrationHelper->getDesecrationTargetTypeString($originalEvent)) }} desecrated by {{ $event->source->name }}</h4>
+                                <h4>Desecration by {{ $event->source->name }}</h4>
                                 </div>
                                 <table class="table">
                                     <colgroup>
@@ -93,46 +92,9 @@
                                             <td>{{ number_format($event->data['bodies']['desecrated']) }}</td>
                                         </tr>
                                         <tr>
-                                            <td>{{ str_plural($event->data['result']['resource_name']) }} returning</td>
+                                            <td>{{ str_plural($event->data['result']['resource_name'], $event->data['result']['amount']) }} returning</td>
                                             <td>{{ number_format($event->data['result']['amount']) }}</td>
                                         </tr>
-                                        @if($originalEvent->type == 'barbarian_invasion')
-                                            <tr>
-                                                <td>Battle</td>
-                                                <td>
-                                                    <em>
-                                                    {{ $originalEvent->source->name }} (# {{ $originalEvent->source->realm->number }})  {{ $originalEvent->data['type'] }} a {{ $originalEvent->data['target'] }} for {{ $originalEvent->data['land'] }} acres
-                                                    </em>
-                                                </td>
-                                            </tr>
-                                        @elseif($originalEvent->type == 'invasion')
-
-                                            <tr>
-                                                <td>Battle</td>
-                                                <td>
-                                                    <em>
-                                                    {{ $originalEvent->source->name }}
-
-                                                    @if($originalEvent->data['result']['success'])
-                                                        successfully
-                                                    @endif
-        
-                                                    @if($originalEvent->isAmbush)
-                                                        ambushed
-                                                    @else
-                                                        invaded
-                                                    @endif
-        
-                                                    {{ $originalEvent->target->name }} (# {{ $originalEvent->target->realm->number }}) 
-        
-
-                                                    @if($originalEvent->data['result']['success'])
-                                                        conquering {{ $originalEvent->data['attacker']['land_conquered'] }} acres
-                                                    @endif
-                                                    </em>
-                                                </td>
-                                            </tr>
-                                        @endif
                                     </tbody>
                                 </table>
                             </div>
