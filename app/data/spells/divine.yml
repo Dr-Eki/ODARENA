@@ -29,7 +29,7 @@ fury_of_azk_hurum:
   class: passive
   cost: 7
   duration: 12
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Demon
   perks:
@@ -55,7 +55,7 @@ bregons_muster:
   class: passive
   cost: 12
   duration: 12
-  cooldown: 96
+  cooldown: 92
   deity: bregon
   perks:
     unit_gold_costs: -10
@@ -70,7 +70,7 @@ druvas_blessing:
   class: passive
   cost: 6
   duration: 12
-  cooldown: 96
+  cooldown: 92
   deity: druva
   perks:
     food_production_mod: 15
@@ -109,7 +109,7 @@ elskas_vision:
   class: passive
   cost: 4
   duration: 24
-  cooldown: 96
+  cooldown: 92
   deity: elskas
   perks:
     spy_strength_recovery: 3
@@ -136,7 +136,7 @@ mirnons_fortitude:
   class: passive
   cost: 6
   duration: 12
-  cooldown: 96
+  cooldown: 92
   deity: mirnon
   perks:
     ore_production_mod: 15
@@ -179,7 +179,7 @@ sazals_wrath:
   class: passive
   cost: 6
   duration: 12
-  cooldown: 96
+  cooldown: 92
   deity: sazal
   perks:
     sorcery_damage_suffered: 50
@@ -192,7 +192,7 @@ urugdakhs_benediction:
   class: active
   cost: 6
   duration: 48
-  cooldown: 96
+  cooldown: 92
   deity: urugdakh
   perks:
     convert_peasants_to_prestige: 5000,50 # 5,000 peasants become 50 prestige
@@ -204,7 +204,7 @@ urugdakhs_crusade:
   class: passive
   cost: 8
   duration: 1
-  cooldown: 96
+  cooldown: 92
   deity: urugdakh
   perks:
     offensive_power_from_devotion: urugdakh,0.02,40
@@ -218,7 +218,7 @@ zidurs_bane:
   class: passive
   cost: 6
   duration: 0
-  cooldown: 96
+  cooldown: 92
   deity: zidur
   perks:
     casualties: 10

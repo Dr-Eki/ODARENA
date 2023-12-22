@@ -1,6 +1,6 @@
 name: Ruler's Choice
 enabled: 0 # Round 88
-cooldown: 96
+cooldown: 92
 description: Azk'Hurum grants you the permission to slaughter freely or limit the search to the nearest foes.
 exclusive_races:
   - Demon

@@ -375,8 +375,6 @@ class DataSyncCommand extends Command implements CommandInterface
             }
 
             // Terrain Perks
-            $raceTerrainPerksSynced = [];
-            $raceTerrainPerkTypesSynced = [];
 
             foreach (object_get($data, 'terrain_perks', []) as $terrainKey => $terrainPerks)
             {
@@ -399,9 +397,6 @@ class DataSyncCommand extends Command implements CommandInterface
                         [
                             'value' => $terrainPerkValue
                         ]);
-    
-                        $raceTerrainPerksSynced[] = $raceTerrainPerk->key;
-                        $raceTerrainPerkTypesSynced[] = $raceTerrainPerkType->key;
                     }
 
                 }

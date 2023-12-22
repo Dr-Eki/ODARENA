@@ -73,7 +73,7 @@ rousing_roar:
   class: passive
   cost: 0
   duration: 6
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Kobold
   perks:
@@ -93,6 +93,25 @@ soothing_hum:
     morale_change_tick: -50
     no_morale_bonus_on_offense: 1
     no_morale_bonus_on_defense: 1
+
+## Simian
+
+rainy_season:
+  name: Rainy Season
+  scope: self
+  class: passive
+  cost: 12
+  duration: 96
+  cooldown: 576
+  exclusive_races:
+    - Simian
+  perks:
+    defensive_power: 100
+    population_growth: 100
+    food_production_mod: 50
+    lumber_production_mod: 50
+    cannot_invade: 1
+    cannot_send_expeditions: 1
 
 ## Swarm
 
@@ -220,7 +239,7 @@ winds_of_fortune:
   class: passive
   cost: 10
   duration: 1
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Armada
   perks:
@@ -246,7 +265,7 @@ enchanted_blades_friendly:
   class: passive
   cost: 10
   duration: 1
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Dark Elf
   perks:
@@ -259,7 +278,7 @@ astral_revelations:
   class: active
   cost: 10
   duration: 0
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Dimensionalists
   perks:
@@ -300,7 +319,7 @@ flaming_drills:
   class: passive
   cost: 2
   duration: 12
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Firewalker
   perks:
@@ -313,7 +332,7 @@ flood_the_caverns:
   class: passive
   cost: 4
   duration: 24
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Firewalker
   perks:
@@ -487,7 +506,7 @@ mycelial_visions:
   class: passive
   cost: 9
   duration: 24
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Myconid
   perks:
@@ -500,7 +519,7 @@ mycelial_visions_friendly:
   class: passive
   cost: 9
   duration: 24
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Myconid
   perks:
@@ -513,7 +532,7 @@ protective_spores:
   class: passive
   cost: 9
   duration: 24
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Myconid
   perks:
@@ -526,7 +545,7 @@ protective_spores_friendly:
   class: passive
   cost: 9
   duration: 24
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Myconid
   perks:
@@ -539,7 +558,7 @@ verdant_fields:
   class: passive
   cost: 9
   duration: 24
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Myconid
   perks:
@@ -552,7 +571,7 @@ verdant_fields_friendly:
   class: passive
   cost: 9
   duration: 24
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Myconid
   perks:
@@ -578,7 +597,7 @@ fimbulwinter:
   class: passive
   cost: 8
   duration: 24
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Norse
   perks:
@@ -635,24 +654,6 @@ stasis:
   perks:
     stasis: 1
 
-rainy_season:  
-  enabled: 0
-  name: Rainy Season
-  scope: self
-  class: passive
-  cost: 12
-  duration: 96
-  cooldown: 672
-  exclusive_races:
-    - Simian
-  perks:
-    defensive_power: 100
-    population_growth: 100
-    food_production_mod: 50
-    lumber_production_mod: 50
-    cannot_invade: 1
-    cannot_send_expeditions: 1
-
 guardian_spirit:  
   enabled: 0
   name: Guardian Spirit
@@ -699,7 +700,7 @@ arterial_rush:
   class: passive
   cost: 5
   duration: 1
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Vampires
   perks:
@@ -712,7 +713,7 @@ voidspell:
   class: passive
   cost: 8
   duration: 48
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Void
   perks:
@@ -725,7 +726,7 @@ voidspellmana:
   class: passive
   cost: 8
   duration: 24
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Void
   perks:
@@ -765,7 +766,7 @@ weren_wandering:
   class: active
   cost: 1
   duration: 0
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Weres
   perks:

@@ -15,8 +15,9 @@ terrain_perks:
   forest:
     population_mod: 0.10
     casualties_on_defense_mod: -0.20
-    construction_cost_mod: -1
+    construction_costs_mod: -1
     fixed_barren_housing_raw: 10
+    lumber_production_raw: 0.3
   glacier:
     food_production_mod: -0.20
     population_mod: -0.20
@@ -26,8 +27,9 @@ terrain_perks:
   jungle:
     population_mod: 0.15
     casualties_on_defense_mod: -0.20
-    construction_cost_mod: -0.8
+    construction_costs_mod: -0.8
     fixed_barren_housing_raw: 10
+    lumber_production_raw: 0.4
   mountains:
     lumber_production_mod: 0.10
     fixed_barren_housing_raw: 4
@@ -59,63 +61,72 @@ perks:
   increased_construction_speed: 3
 
 units:
-  - name: Chimpanzee
+  - name: Mauler
     training_time: 9
+    description: A ferocious unit that is the backbone of many Simian armies.
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 200
+      gold: 600
+      draftees: 1
     power:
       offense: 3
-      defense: 0
+      defense: 2
     perks:
-      casualties_on_offense_vs_terrain: forest,jungle;-2;-90 # terrains,terrains;effect;max
+      casualties_on_offense_vs_terrain: forest;jungle,-2,-50 # terrains,terrains;effect;max
       offense_from_victories: 0.1,2 # +0.10 OP per Victory, max +2 (at 20 Victories)
 
-  - name: Bonobo
+  - name: Vine Strider
     training_time: 9
+    description: These units navigate quickly across the Simian lands, providing safety wherever needed.
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 200
+      gold: 600
+      draftees: 1
     power:
       offense: 0
-      defense: 3
+      defense: 4
     perks:
-      casualties_on_defense_from_terrain: forest,jungle;-1;-90 # terrains,terrains;effect;max
+      casualties_on_defense_from_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
 
-  - name: Orangutan
+  - name: Ironwood Guardian
     training_time: 12
+    description: Protected by legendary ironwood, these units are the defenders of the Simian lands.
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 850
+      gold: 1200
+      lumber: 100
+      draftees: 1
     power:
       offense: 4
       defense: 5
     perks:
-      casualties_on_defense_from_terrain: forest,jungle;-1;-90 # terrains,terrains;effect;max
-      casualties_on_offense_vs_terrain: forest,jungle;-1;-90 # terrains,terrains;effect;max
+      casualties_on_defense_from_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
+      casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
 
-  - name: Gorilla
+  - name: Ironwood Berserker
     training_time: 12
-    description: 
+    description: Clad in armour made from the hardest wood, these units are the elite of the Simian army.
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 1000
+      gold: 1400
+      lumber: 200
+      draftees: 1
     power:
       offense: 5
       defense: 4
     perks:
-      casualties_on_defense_from_terrain: forest,jungle;-1;-90 # terrains,terrains;effect;max
-      casualties_on_offense_vs_terrain: forest,jungle;-2,;-90 # terrains,terrains;effect;max
+      casualties_on_defense_from_terrain: forest;jungle,-0.5,-50 # terrains,terrains;effect;max
+      casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
       offense_from_victories: 0.10,2 # +0.10 OP per Victory, max +2 (at 20 Victories)

@@ -44,6 +44,7 @@ class ImprovementHelper
             'advancement_costs' => 'advancements costs',
 
             'population' => 'population',
+            'barren_housing' => 'barren housing',
             'population_growth' => 'population growth',
             'unit_specific_housing' => 'unit specific housing',
             'military_housing' => 'military housing',

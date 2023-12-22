@@ -353,10 +353,18 @@ class UnitHelper
             'increases_own_casualties_on_defense' => 'Increases own casualties on defense.',
 
             'casualties_on_defense_from_land' => 'Casualties on defense reduced by 1%% for every %2$s%% %1$ss (max %3$s%% reduction).',
-            'casualties_on_offense_from_land' => 'Casualties on offense reduced by 1% for every %2$s%% %1$ss (max %3$s%% reduction).',
+            'casualties_on_offense_from_land' => 'Casualties on offense reduced by 1%% for every %2$s%% %1$ss (max %3$s%% reduction).',
 
             'casualties_on_defense_vs_land' => 'Casualties on defense reduced by 1%% against every %2$s%% %1$ss of attacker (max %3$s%% reduction).',
             'casualties_on_offense_vs_land' => 'Casualties on offense reduced by 1%% against every %2$s%% %1$ss of target (max %3$s%% reduction).',
+
+            'casualties_from_terrain' => '%2$g%% casualties for ever 1%% of %1$s (max %3$g%%).',
+            'casualties_on_defense_from_terrain' => '%2$g%% casualties on defense for ever 1%% of %1$s (max %3$g%%).',
+            'casualties_on_offense_from_terrain' => '%2$g%% casualties on offense for ever 1%% of %1$s (max %3$g%%).',
+
+            'casualties_vs_terrain' => '%2$g%% casualties for ever 1%% of %1$s of enemy (max %3$g%%).',
+            'casualties_on_defense_vs_terrain' => '%2$g%% casualties on defense for ever 1%% of %1$s of invader (max %3$g%%).',
+            'casualties_on_offense_vs_terrain' => '%2$g%% casualties on offense for ever 1%% of %1$s of target (max %3$g%%).',
 
             'only_dies_vs_raw_power' => 'Only dies against units with %s or more raw military power.',
 
@@ -1094,6 +1102,28 @@ class UnitHelper
                     $decree = Decree::where('id', $decreeState->decree_id)->first();
 
                     $perkValue = [$decree->name, $decreeState->name];
+                }
+
+                if(in_array($perk->key, [
+                    'casualties_vs_terrain',
+                    'casualties_on_offense_vs_terrain',
+                    'casualties_on_defense_vs_terrain',
+                    'casualties_from_terrain',
+                    'casualties_on_offense_from_terrain',
+                    'casualties_on_defense_from_terrain',
+                    ]))
+                {
+
+                    $terrainNames = [];
+
+                    foreach($perkValue[0] as $terrainKey)
+                    {
+                        $terrainNames[] = Terrain::where('key', $terrainKey)->first()->name;
+                    }
+
+                    $perkValue = [generate_sentence_from_array($terrainNames), $perkValue[1], $perkValue[2]];
+
+                    $nestedArrays = false;
                 }
 
                 if($perk->key === 'victories_limit' or 'net_victories_limit')

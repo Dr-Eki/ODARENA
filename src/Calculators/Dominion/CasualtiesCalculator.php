@@ -520,6 +520,107 @@ class CasualtiesCalculator
 
         return min(2, (max(0.20, $multiplier)));
     }
+    
+
+    private function getCasualtiesPerkMultipliersFromTerrain(Dominion $dominion, Dominion $enemy = null, Unit $unit, array $invasionData = [], string $mode = 'offense')
+    {
+        $multiplier = 0;
+
+        # casualties_on_offense_vs_terrain makes sense because attacker is using target's land to their advantage.
+        # casualties_on_defense_from_terrain makes sense because the defender is using its own land.
+        
+        # casualties_on_defense_vs_terrain makes NO SENSE because the defender is not leveraging the attacker's land.
+        # casualties_on_offense_from_terrain could make sense but is currently NOT USED and NOT PLANNED.
+
+        if($mode == 'offense')
+        {
+            if($terrainPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "casualties_on_offense_vs_terrain"))
+            {
+                $terrainKeys = (array)$terrainPerkData[0];
+                $perPercentage = (float)$terrainPerkData[1];
+                $maxPerk = (float)$terrainPerkData[1];
+
+                $perkedUpLand = 0;
+
+                foreach($terrainKeys as $terrainKey)
+                {
+                    $perkedUpLand += $enemy->{'terrain_' . $terrainKey};
+                }
+    
+                $perkUpLandRatio = $perkedUpLand / $enemy->land;
+
+                $perkValue = $perPercentage * $perkUpLandRatio;
+    
+                $multiplier += max($maxPerk, $perkValue);
+            }
+
+            if($terrainPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "casualties_on_offense_from_terrain")) # UNUSED
+            {
+                $terrainKeys = (array)$terrainPerkData[0];
+                $perPercentage = (float)$terrainPerkData[1];
+                $maxPerk = (float)$terrainPerkData[1];
+
+                $perkedUpLand = 0;
+
+                foreach($terrainKeys as $terrainKey)
+                {
+                    $perkedUpLand += $dominion->{'terrain_' . $terrainKey};
+                }
+    
+                $perkUpLandRatio = $perkedUpLand / $dominion->land;
+
+                $perkValue = $perPercentage * $perkUpLandRatio;
+    
+                $multiplier += max($maxPerk, $perkValue);
+            }
+        }
+
+        if($mode == 'defense')
+        {
+            if($terrainPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "casualties_on_defense_vs_terrain")) # MAKES NO SENSE
+            {
+                $terrainKeys = (array)$terrainPerkData[0];
+                $perPercentage = (float)$terrainPerkData[1];
+                $maxPerk = (float)$terrainPerkData[1];
+
+                $perkedUpLand = 0;
+
+                foreach($terrainKeys as $terrainKey)
+                {
+                    $perkedUpLand += $enemy->{'terrain_' . $terrainKey};
+                }
+    
+                $perkUpLandRatio = $perkedUpLand / $enemy->land;
+
+                $perkValue = $perPercentage * $perkUpLandRatio;
+    
+                $multiplier += max($maxPerk, $perkValue);
+            } 
+
+            if($terrainPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "casualties_on_defense_from_terrain"))
+            {
+                $terrainKeys = (array)$terrainPerkData[0];
+                $perPercentage = (float)$terrainPerkData[1];
+                $maxPerk = (float)$terrainPerkData[1];
+
+                $perkedUpLand = 0;
+
+                foreach($terrainKeys as $terrainKey)
+                {
+                    $perkedUpLand += $dominion->{'terrain_' . $terrainKey};
+                }
+    
+                $perkUpLandRatio = $perkedUpLand / $dominion->land;
+
+                $perkValue = $perPercentage * $perkUpLandRatio;
+    
+                $multiplier += max($maxPerk, $perkValue);
+            }
+        }
+
+
+    }
+
 
     private function getCasualtiesPerkMultipliersFromLand(Dominion $dominion, Dominion $enemy = null, Unit $unit, array $invasionData = [], string $mode = 'offense')
     {

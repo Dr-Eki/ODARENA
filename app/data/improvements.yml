@@ -83,6 +83,7 @@ housing:
     - Barbarian
     - Dwarg
     - Beastfolk
+    - Simian
     - Sylvan
     - Troll
   perks:
@@ -229,9 +230,9 @@ thriving:
     - Simian
   perks:
     population: 20,4800
-    barren_housing: 200,8000
+    barren_housing: 800,6000
 
-# END DWARG #
+# END SIMIAN #
 
 # BEGIN SNOW ELF #
 

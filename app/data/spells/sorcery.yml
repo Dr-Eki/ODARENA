@@ -210,7 +210,7 @@ silence:
   class: passive
   cost: 3
   duration: 0.25
-  cooldown: 96
+  cooldown: 92
   exclusive_races:
     - Lux
   perks:
@@ -306,7 +306,7 @@ kinthys_bane:
   class: active
   cost: 6
   duration: 0
-  cooldown: 96
+  cooldown: 92
   deity: kinthys
   perks:
     decrease_morale: 1.00

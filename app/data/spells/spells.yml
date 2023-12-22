@@ -7,7 +7,7 @@ enhanced_yields:
   level: 0
   cost: 0
   duration: 12
-  cooldown: 96
+  cooldown: 92
   perks:
     food_production_mod: 10
 
@@ -18,7 +18,7 @@ sazals_fog:
   level: 0
   cost: 0
   duration: 12
-  cooldown: 96
+  cooldown: 92
   perks:
     fog_of_war: 1
 
@@ -29,7 +29,7 @@ harmony:
   level: 0
   cost: 0
   duration: 24
-  cooldown: 96
+  cooldown: 92
   excluded_races:
     - Demon
   perks:
@@ -72,7 +72,7 @@ arboreal_abundance:
   level: 1
   cost: 8
   duration: 24
-  cooldown: 96
+  cooldown: 92
   perks:
     lumber_production_mod: 10
 
@@ -83,7 +83,7 @@ bountiful_blossom:
   level: 1
   cost: 10
   duration: 24
-  cooldown: 96
+  cooldown: 92
   perks:
     food_production_mod: 10
 
@@ -106,7 +106,7 @@ miners_fortune:
   level: 1
   cost: 12
   duration: 24
-  cooldown: 96
+  cooldown: 92
   perks:
     gems_production_mod: 10
 
@@ -117,7 +117,7 @@ mining_strength:
   level: 1
   cost: 8
   duration: 24
-  cooldown: 96
+  cooldown: 92
   perks:
     ore_production_mod: 10
 
@@ -141,7 +141,7 @@ enchanted_banners:
   cost: 10
   level: 3
   duration: 24
-  cooldown: 96
+  cooldown: 92
   perks:
     prestige_gains: 20
     prestige_losses: 40
@@ -153,7 +153,7 @@ panopticon:
   cost: 10
   level: 3
   duration: 36
-  cooldown: 96
+  cooldown: 92
   perks:
     sabotage_damage_suffered: -25
 

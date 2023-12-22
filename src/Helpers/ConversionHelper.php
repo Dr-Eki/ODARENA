@@ -9,6 +9,13 @@ use OpenDominion\Helpers\UnitHelper;
 
 class ConversionHelper
 {
+
+    /** @var CasualtiesCalculator */
+    protected $casualtiesCalculator;
+
+    /** @var UnitHelper */
+    protected $unitHelper;
+
     public function __construct()
     {
         $this->casualtiesCalculator = app(CasualtiesCalculator::class);
