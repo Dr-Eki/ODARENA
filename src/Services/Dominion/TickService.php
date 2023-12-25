@@ -170,7 +170,8 @@ class TickService
 
                 # Get dominions IDs with Stasis active
                 $stasisDominions = [];
-                $dominions = $round->activeDominions()->get();
+                #$dominions = $round->activeDominions()->get();
+                $dominions = $round->activeDominions()->inRandomOrder()->get();
                 $largestDominionSize = 0;
 
                 if(static::EXTENDED_LOGGING) { Log::debug('* Going through all dominions'); }

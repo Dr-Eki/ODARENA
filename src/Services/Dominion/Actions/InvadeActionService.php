@@ -1463,7 +1463,7 @@ class InvadeActionService
             $attackerMoraleChangeMultiplier += $attacker->race->getPerkMultiplier('morale_change_invasion');
             $attackerMoraleChangeMultiplier += $attacker->title->getPerkMultiplier('morale_gains') * $attacker->getTitlePerkMultiplier();
 
-            # Look for lowers_target_morale_on_successful_invasion
+            # Look for increases_morale_gains
             foreach($attacker->race->units as $unit)
             {
                 if(

@@ -395,6 +395,12 @@ class RaceHelper
                 $description = 'No draftee required to train spies';
                 $booleanValue = true;
                 break;
+            case 'draftees_count_as_wizards':
+                $negativeBenefit = false;
+                $description = 'Draftees count as wizards';
+                $valueType = '';
+                $booleanValue = 'static';
+                break;
             case 'draftee_dp':
                 $negativeBenefit = true;
                 $description = 'DP per draftee';

@@ -2058,6 +2058,8 @@ class MilitaryCalculator
         $wizards = $this->getTotalUnitsForSlot($dominion, 'wizards');
         $wizards += $this->getTotalUnitsForSlot($dominion, 'archmages') * 2;
 
+        $wizards += $dominion->race->getPerkValue('draftees_count_as_wizards') * $dominion->military_draftees;
+
         // Add units which count as (partial) spies (Dark Elf Adept)
         foreach ($dominion->race->units as $unit)
         {

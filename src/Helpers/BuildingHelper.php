@@ -164,7 +164,9 @@ class BuildingHelper
             'gold_production_raw_from_prisoner' => 'Produces %1$s gold per tick per prisoner up to a maximum of %2$s prisoners.',
             'gems_production_raw_from_prisoner' => 'Produces %1$s gems per tick per prisoner up to a maximum of %2$s prisoners.',
 
+            'gloom_production_raw_from_time' => 'Yields %3$s gloom between %1$s:00 and %2$s:00.',
             'light_production_raw_from_time' => 'Gathers %3$s light between %1$s:00 and %2$s:00.',
+            'mana_production_raw_from_time' => 'Gathers %3$s mama between %1$s:00 and %2$s:00.',
 
             'draftee_generation' => 'Generates %g draftees per tick (limited by population).',
 

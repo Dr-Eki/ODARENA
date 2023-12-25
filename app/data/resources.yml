@@ -59,6 +59,10 @@ gems:
   buy: null
   sell: 2
 
+gloom:
+  name: Gloom
+  description: A dark, thick liquid produced bottling starlight and filtering the shine out of it.
+
 gold:
   name: Gold
   description: Whether raw, in ingots, or in coins, gold is the foundation of most dominions' economies.

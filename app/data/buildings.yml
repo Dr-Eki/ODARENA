@@ -883,6 +883,19 @@ terrace:
 
 # END ICEKIN
 
+# BEGIN NOX
+
+night_tower:
+  name: Night Tower
+  category: production
+  exclusive_races:
+    - Nox
+  perks:
+    gloom_production_raw_from_time: 18,06,6 # Between the hours 18:00 and 06:00, produces 6 gloom
+    mana_production_raw_from_time: 18,06,50 # Between the hours 18:00 and 06:00, produces 50 mana
+
+# END NOX
+
 # BEGIN REPTILIANS
 
 bog:  

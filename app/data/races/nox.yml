@@ -2,76 +2,89 @@ name: Nox
 alignment: evil
 description:
 home_terrain: swamps
-playable: 0 # Round 88
+playable: 1
 skill_level: 2
 
+peasants_alias: dweller
+draftees_alias: initiate
 
 resources:
   - gold
   - food
   - mana
+  - gloom
   - lumber
   - gems
 
+
+peasants_production:
+  gold: 2.5
+  mana: 0.05
+
 perks:
-  food_consumption_mod: -50
-  gems_production_mod: -20
-  lumber_production_mod: -20
+  max_population: -25
+  draftees_count_as_wizards: 0.10
 
 units:
-  - name: Imp
+  - name: Phantom
     training_time: 0
     type:
       - magical
     cost:
-      mana: 18
+      mana: 54
     power:
       offense: 2
       defense: 0
     perks:
       does_not_count_as_population: 1
-      no_draftee: 1
-      instant_training: 1
-      pairing_limit: 4,4 # Unit slot, amount
-      fixed_casualties: 75
-      plunder: mana,1.25
+      pairing_limit: 5,20 # Unit slot, amount
+      fixed_casualties: 50
+      counts_as_spy: 0.25
 
-  - name: Wraith
+  - name: Shade
     training_time: 0
     type:
       - magical
     cost:
-      mana: 138
+      mana: 280
     power:
-      offense: 4
-      defense: 4
+      offense: 0
+      defense: 5
     perks:
       does_not_count_as_population: 1
-      no_draftee: 1
-      instant_training: 1
-      pairing_limit: 4,2 # Unit slot, amount
-      plunder: mana,1.25
+      pairing_limit: 5,16 # Unit slot, amount
+
+  - name: Fiend
+    training_time: 0
+    type:
+      - magical
+    cost:
+      mana: 672
+    power:
+      offense: 6
+      defense: 6
+    perks:
+      does_not_count_as_population: 1
+      pairing_limit: 5,12 # Unit slot, amount
+      plunder: mana,1000
 
   - name: Nightmare
     training_time: 0
     type:
       - magical
     cost:
-      mana: 200
-      wizard_strength: 100
+      mana: 600
+      wizard_strength: 10
     power:
-      offense: 200
-      defense: 200
+      offense: 8
+      defense: 5
     perks:
       does_not_count_as_population: 1
-      no_draftee: 1
-      instant_training: 1
-      pairing_limit: 4,1 # Unit slot, amount
       lowers_target_morale_on_successful_invasion: 1
-      immortal: 1
-      plunder: mana,1000
+      offense_from_resource_capped_exhausting: 1,1,gloom # +1 OP if paired with 1 gloom
+      pairing_limit: 5,12 # Unit slot, amount
 
-  - name: Shade
+  - name: Summoner
     training_time: 12
     type:
       - living
@@ -79,11 +92,12 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1200
-      lumber: 2
+      wizard: 3
+      mana: 170
     power:
-      offense: 3
+      offense: 0
       defense: 6
     perks:
+      counts_as_wizard: 5
       immortal: 1
-      counts_as_wizard: 0.333
+
