@@ -545,7 +545,7 @@ class UnitHelper
 
             'stuns_units' => 'Stuns some units with up to %1$s DP for %2$s ticks.',
 
-            'gold_improvements' => 'Increases improvement points from gold by (([Units]/[Land])/100)%%.',
+            'gold_improvements' => 'Increases improvement points from gold by ((([Units]/[Land]) * %g)/100)%%.',
 
             'cost_increase_to_train_per_unit' => 'Cost increased by %d%% each.',
 

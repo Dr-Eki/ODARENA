@@ -137,4 +137,4 @@ units:
     perks:
       immortal: 1
       offensive_power_mod: 0.10
-      cost_increase_to_train_per_unit: 2
+      cost_increase_to_train_per_unit: 2.75

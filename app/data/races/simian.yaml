@@ -13,7 +13,7 @@ terrain_perks:
     food_production_mod: -0.10
     fixed_barren_housing_raw: 3
   forest:
-    population_mod: 0.10
+    population_growth_mod: 1
     casualties_on_defense_mod: -0.20
     construction_costs_mod: -1
     fixed_barren_housing_raw: 10
@@ -25,7 +25,7 @@ terrain_perks:
   hills:
     lumber_production_mod: 0.15
   jungle:
-    population_mod: 0.15
+    population_growth_mod: 1.5
     casualties_on_defense_mod: -0.20
     construction_costs_mod: -0.8
     fixed_barren_housing_raw: 10
@@ -57,8 +57,7 @@ improvement_resources:
 perks:
   spy_strength: 10
   wizard_strength: -10
-  construction_cost: -20
-  increased_construction_speed: 3
+  increased_construction_speed: 2
 
 units:
   - name: Mauler
@@ -75,7 +74,7 @@ units:
       offense: 3
       defense: 2
     perks:
-      casualties_on_offense_vs_terrain: forest;jungle,-2,-50 # terrains,terrains;effect;max
+      casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
       offense_from_victories: 0.1,2 # +0.10 OP per Victory, max +2 (at 20 Victories)
 
   - name: Vine Strider

@@ -83,12 +83,11 @@
                                             @if ($protected)
                                                 @php
                                                     $spanClass = ($currentAmount >= $protected ? 'text-red' : 'text-green');
+                                                    $ticksProtected = ($protected/$production);
                                                 @endphp
-                                                <span class="text-muted">
-                                                    <span class="{{ $spanClass }}" data-toggle="tooltip" data-placement="top" title="Amount protected from theft">{{ number_format($protected) }}</span>
-                                                </span>
+                                                <span class="{{ $spanClass }}" data-toggle="tooltip" data-placement="top" title="Amount protected from theft.<br>{{ number_format($ticksProtected, 1) . ' ' . str_plural('tick', $ticksProtected)}} worth ">{{ number_format($protected) }}</span>
                                             @else
-                                                0
+                                                <span class="text-muted" data-toggle="tooltip" data-placement="top" title="Amount protected from theft">{{ number_format($protected) }}</span>
                                             @endif
                                         </td>
                                         <td>

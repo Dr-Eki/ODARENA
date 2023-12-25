@@ -82,7 +82,7 @@ units:
     perks:
       gold_production_raw_from_building_pairing: 0.05,alchemy,6
       building_limit: alchemy,20 # building, units per building
-      gold_improvements: 1
+      gold_improvements: 10
 
   - name: Gold Wyrm
     training_time: 12
@@ -95,7 +95,7 @@ units:
       gold: 333333
     power:
       offense: 0
-      defense: 200
+      defense: 1000
     perks:
       does_not_count_as_population: 1
       immortal_on_fending_off: 1

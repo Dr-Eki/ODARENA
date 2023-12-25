@@ -47,7 +47,7 @@ class GameEventService
             foreach ($gameEvents as $gameEvent)
             {
 
-                Log::info('Checking story for invasion event ' . $gameEvent->id);
+                #Log::info('Checking story for invasion event ' . $gameEvent->id);
 
                 if(!isset($gameEvent->story) and $gameEvent->story !== 'Story is being written...')
                 {
@@ -73,6 +73,8 @@ class GameEventService
                         // }
                         else
                         {
+
+                            Log::info('Updating story for invasion event ' . $gameEvent->id);
                             $gameEvent->story()->update([
                                 'story' => $story,
                                 'image' => $image

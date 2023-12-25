@@ -110,9 +110,9 @@ class ImprovementCalculator
             # Check units
             foreach($dominion->race->units as $unit)
             {
-                if($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ($resourceKey . '_improvements')))
+                if($unitResourceImprovementPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ($resourceKey . '_improvements')))
                 {
-                    $multiplier += ($dominion->{'military_unit'.$unit->slot} / $dominion->land) / 100;
+                    $multiplier += (($dominion->{'military_unit'.$unit->slot} * $unitResourceImprovementPerk) / $dominion->land) / 100;
                 }
             }
 
