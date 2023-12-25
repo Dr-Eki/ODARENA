@@ -1297,7 +1297,7 @@ class Dominion extends AbstractModel
                 }
 
                 # Time-based production (which is always on during protection but at half speed)
-                elseif($perkKey == 'light_production_raw_from_time')
+                elseif(in_array($perkKey, ['gloom_production_raw_from_time','light_production_raw_from_time','mana_production_raw_from_time']))
                 {
                     $perkValues = $this->extractBuildingPerkValues($perkValueString);
                     $amountProduced = (float)$perkValues[2];
@@ -1315,6 +1315,11 @@ class Dominion extends AbstractModel
                     {
                         $perk += $amountProduced * $buildingOwned;
                     }
+                }
+
+                elseif(in_array($perkKey, ['mana_production_raw_from_wizard_ratio']))
+                {
+                    $perk = (float)$perkValueString;
                 }
 
                 elseif($perkKey == ($this->race->key . '_unit_housing'))

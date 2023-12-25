@@ -22,6 +22,7 @@ use OpenDominion\Models\RoundResource;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 
@@ -165,6 +166,7 @@ class ResourceCalculator
         $production += $dominion->getUnitPerkProductionBonusFromTitle($resourceKey);
         $production += $dominion->getTerrainPerkValue($resourceKey . '_production_raw');
 
+        #$production += $dominion->getBuildingPerkValue($resourceKey . '_production_raw_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($dominion);
 
         if(isset($dominion->title))
         {

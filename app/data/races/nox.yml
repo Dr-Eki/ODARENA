@@ -6,7 +6,7 @@ playable: 1
 skill_level: 2
 
 peasants_alias: dweller
-draftees_alias: initiate
+draftees_alias: neophyte
 
 resources:
   - gold
@@ -16,7 +16,6 @@ resources:
   - lumber
   - gems
 
-
 peasants_production:
   gold: 2.5
   mana: 0.05
@@ -24,6 +23,7 @@ peasants_production:
 perks:
   max_population: -25
   draftees_count_as_wizards: 0.10
+  draftee_dp: 0
 
 units:
   - name: Phantom

@@ -885,6 +885,14 @@ terrace:
 
 # BEGIN NOX
 
+dark_spire:
+  name: Dark Spire
+  category: production
+  exclusive_races:
+    - Nox
+  perks:
+    mana_production_raw_from_wizard_ratio: 10 # 10 x Wizard Ratio mana/tick
+
 night_tower:
   name: Night Tower
   category: production
