@@ -1114,7 +1114,6 @@ class Dominion extends AbstractModel
                 # Resource conversion
                 elseif($perkKey == 'resource_conversion')
                 {
-
                     $resourceCalculator = app(ResourceCalculator::class);
                     $perkValues = $this->extractBuildingPerkValues($perkValueString);
 
@@ -1356,9 +1355,11 @@ class Dominion extends AbstractModel
 
                 # Build-specific perks
                 $buildingSpecificMultiplier = 1;
+                #$originalPerk = $perk;
 
                 if($perkKey == 'gold_production_raw')
                 {
+                    #isset($iterations) ? $iterations += 1 : $iterations = 1;
                     $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_production_mod');
                     $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_production_mod');
                 }
@@ -1373,7 +1374,10 @@ class Dominion extends AbstractModel
             }
 
             $perk *= $buildingSpecificMultiplier ?? 1;
+            $buildingSpecificMultiplier = null;
         }
+
+        #isset($iterations) ? dump('$iterations: ' . $iterations, '$buildingSpecificMultiplier:' . $buildingSpecificMultiplier, '$perk:'.$perk, '$originalPerk:'.$originalPerk, '***') : null;
 
         return $perk;
     }
