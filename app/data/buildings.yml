@@ -1002,7 +1002,7 @@ chrysalis:
   exclusive_races:
     - Swarm
   perks:
-    improvements: 1,1.5 # Every 1% gives 1% higher imps
+    improvements: 1,2 # Every 1% gives 1.85% higher imps
 
 burrow:
   name: Burrow
@@ -1066,7 +1066,7 @@ orchard:
   exclusive_races:
     - Sylvan
   perks:
-    improvements: 1,1.5 # Every 1% gives 1.5% higher imps
+    improvements: 1,2 # Every 1% gives 2% higher imps
 
 # END SYLVAN
 
@@ -1078,7 +1078,7 @@ stronghold:
   exclusive_races:
     - Troll
   perks:
-    improvements: 1,1.5 # Every 1% gives 1% higher imps
+    improvements: 1,2 # Every 1% gives 2% higher imps
     gem_theft_reduction: 1,2,100  # Every 1% reduces plat stolen by 8%, max 100% reduction
     improvements_damage_reduction: 1,0.50 # Every 1% reduces damage to improvements by 0.75%
 
@@ -1121,7 +1121,7 @@ institute:
     - Wood Elf
   land_type: forest
   perks:
-    improvements: 1,1.5 # Every 1% gives 1.5% higher imps
+    improvements: 1,2 # Every 1% gives 1.5% higher imps
 
 # END WOOD ELF
 
