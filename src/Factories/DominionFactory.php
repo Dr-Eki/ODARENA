@@ -128,7 +128,7 @@ class DominionFactory
 
             # NPC modifier is a number from 500 to 1000 (skewed toward higher).
             # It is to be used as a multiplier but stored as an int in database.
-            $startingParameters['npc_modifier'] = min(rand(500,1200), 1000);
+            $startingParameters['npc_modifier'] = min(rand(700,1200), 1000);
 
             # For usage in this function, divide npc_modifier by 1000 to create a multiplier.
             $npcModifier = $startingParameters['npc_modifier'] / 1000;

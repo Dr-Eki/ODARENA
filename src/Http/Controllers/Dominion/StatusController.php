@@ -11,6 +11,7 @@ use OpenDominion\Http\Requests\Dominion\Actions\NameChangeActionRequest;
 use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Calculators\Dominion\DominionCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\MoraleCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
@@ -55,6 +56,7 @@ class StatusController extends AbstractDominionController
             'dominionCalculator' => app(DominionCalculator::class),
             'dominionStateService' => app(DominionStateService::class),
             'landCalculator' => app(LandCalculator::class),
+            'magicCalculator' => app(MagicCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'moraleCalculator' => app(MoraleCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),

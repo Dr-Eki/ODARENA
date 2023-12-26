@@ -30,6 +30,7 @@ use OpenDominion\Calculators\Dominion\DecreeCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
@@ -55,6 +56,7 @@ class InsightService
     protected $decreeCalculator;
     protected $improvementCalculator;
     protected $landCalculator;
+    protected $magicCalculator;
     protected $militaryCalculator;
     protected $networthCalculator;
     protected $populationCalculator;
@@ -80,6 +82,7 @@ class InsightService
         $this->decreeCalculator = app(DecreeCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->networthCalculator = app(NetworthCalculator::class);
         $this->populationCalculator = app(PopulationCalculator::class);
@@ -167,7 +170,7 @@ class InsightService
                 'enemy_modifiers' => $this->militaryCalculator->getOffensiveMultiplierReduction($target),
                 'own_casualties' => $this->casualtiesCalculator->getBasicCasualtiesPerkMultipliers($target, 'offense'),
                 'spy_ratio' => $this->militaryCalculator->getSpyRatio($target, 'offense'),
-                'wizard_ratio' => $this->militaryCalculator->getWizardRatio($target, 'offense'),
+                'wizard_ratio' => $this->magicCalculator->getWizardRatio($target, 'offense'),
             ];
         $data['mods']['defense'] =
             [
@@ -175,7 +178,7 @@ class InsightService
                 'enemy_modifiers' => $this->militaryCalculator->getDefensiveMultiplierReduction($target),
                 'own_casualties' => $this->casualtiesCalculator->getBasicCasualtiesPerkMultipliers($target, 'defense'),
                 'spy_ratio' => $this->militaryCalculator->getSpyRatio($target, 'defense'),
-                'wizard_ratio' => $this->militaryCalculator->getWizardRatio($target, 'defense'),
+                'wizard_ratio' => $this->magicCalculator->getWizardRatio($target, 'defense'),
             ];
 
         # Units

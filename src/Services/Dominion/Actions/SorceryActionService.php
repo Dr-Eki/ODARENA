@@ -3,10 +3,9 @@
 namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
-use Exception;
 use LogicException;
-use Illuminate\Support\Carbon;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
@@ -46,6 +45,9 @@ class SorceryActionService
     /** @var ImprovementCalculator */
     protected $improvementCalculator;
 
+    /** @var MagicCalculator */
+    protected $magicCalculator;
+
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
 
@@ -79,6 +81,7 @@ class SorceryActionService
     public function __construct()
     {
         $this->improvementCalculator = app(ImprovementCalculator::class);
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->notificationService = app(NotificationService::class);
         $this->populationCalculator = app(PopulationCalculator::class);
@@ -151,7 +154,7 @@ class SorceryActionService
                 throw new GameException("You must have at least 4% Wizard Strength to perform sorcery.");
             }
 
-            if ($this->militaryCalculator->getWizardRatio($caster, 'offense') < 0.10)
+            if ($this->magicCalculator->getWizardRatio($caster, 'offense') < 0.10)
             {
                 throw new GameException("You must have at least 0.10 Wizard Ratio to perform sorcery.");
             }
@@ -222,14 +225,14 @@ class SorceryActionService
                         'mana_current' => $casterManaAmount,
                         'wizard_strength_current' => $caster->wizard_strength,
                         'wizard_strength_spent' => $wizardStrength,
-                        'wizard_ratio' => $this->militaryCalculator->getWizardRatio($caster, 'offense')
+                        'wizard_ratio' => $this->magicCalculator->getWizardRatio($caster, 'offense')
                     ],
                 'target' => [
                         'crypt_bodies' => 0,
                         'fog' => $target->getSpellPerkValue('fog_of_war') ? true : false,
                         'reveal_ops' => $target->getSpellPerkValue('reveal_ops') ? true : false,
                         'wizard_strength_current' => $target->wizard_strength,
-                        'wizard_ratio' => $this->militaryCalculator->getWizardRatio($target, 'defense')
+                        'wizard_ratio' => $this->magicCalculator->getWizardRatio($target, 'defense')
                     ],
                 'damage' => [],
             ];

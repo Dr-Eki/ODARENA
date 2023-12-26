@@ -3,11 +3,10 @@
 namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
-use Exception;
 use LogicException;
-use Illuminate\Support\Carbon;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
@@ -41,6 +40,9 @@ class SpellActionService
 
     /** @var LandCalculator */
     protected $landCalculator;
+
+    /** @var MagicCalculator */
+    protected $magicCalculator;
 
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
@@ -94,6 +96,7 @@ class SpellActionService
     {
         $this->improvementCalculator = app(ImprovementCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->networthCalculator = app(NetworthCalculator::class);
         $this->notificationService = app(NotificationService::class);
@@ -581,7 +584,7 @@ class SpellActionService
                     $resourceKey = (string)$spellPerkValues[2];
                     $unitSlots = (array)$spellPerkValues[3];
 
-                    $resourceRatioTaken = min($this->militaryCalculator->getWizardRatio($caster) * $ratioPerWpa, $maxRatio);
+                    $resourceRatioTaken = min($this->magicCalculator->getWizardRatio($caster) * $ratioPerWpa, $maxRatio);
                     $resourceAmountOwned = $this->resourceCalculator->getAmount($caster, $resourceKey);
                     $resourceAmountConverted = floor($resourceAmountOwned * $resourceRatioTaken);
 
@@ -890,8 +893,8 @@ class SpellActionService
             }
         }
 
-        $casterWpa = min(10,$this->militaryCalculator->getWizardRatio($caster, 'defense'));
-        $breakerWpa = min(10,$this->militaryCalculator->getWizardRatio($breaker, 'offense'));
+        $casterWpa = min(10,$this->magicCalculator->getWizardRatio($caster, 'defense'));
+        $breakerWpa = min(10,$this->magicCalculator->getWizardRatio($breaker, 'offense'));
 
         if ($casterWpa == 0.0 or $isLiberation or random_chance($this->opsHelper->blackOperationSuccessChance($breakerWpa, $casterWpa)))
         {

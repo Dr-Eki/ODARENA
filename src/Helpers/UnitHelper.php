@@ -497,13 +497,13 @@ class UnitHelper
             'attrition_protection_from_net_victories' => '%s unit protected from attrition per net victory.',
 
             // Limits
-            'pairing_limit' => 'You can at most have %2$s of this unit per %1$s. Training is limited to number of %1$s at home.',
-            'pairing_limit_including_away' => 'You can at most have %2$s of this unit per %1$s.',
-            'land_limit' => 'You can at most have %2$s of this unit per acre of %1$s.',
-            'total_land_limit' => 'You can at most have %2$s of this unit %1$s land.',
-            'building_limit' => 'You can at most have %2$s of this unit per %1$s.',
-            'building_limit_fixed' => 'You can at most have %2$s of this unit per %1$s.',
-            'building_limit_prestige' => 'You can at most have %2$s of this unit per %1$s. Increased by prestige multiplier.',
+            'pairing_limit' => 'You can at most have %2$g of this unit per %1$s. Training is limited to number of %1$s at home.',
+            'pairing_limit_including_away' => 'You can at most have %2$g of this unit per %1$s.',
+            'land_limit' => 'You can at most have %2$g of this unit per acre of %1$s.',
+            'total_land_limit' => 'You can at most have %2$g of this unit %1$s land.',
+            'building_limit' => 'You can at most have %2$g of this unit per %1$s.',
+            'building_limit_fixed' => 'You can at most have %2$g of this unit per %1$s.',
+            'building_limit_prestige' => 'You can at most have %2$g of this unit per %1$s. Increased by prestige multiplier.',
 
             'victories_limit' => 'You can at most have %2$s of this unit per %1$s %2$s.',
             'net_victories_limit' => 'You can at most have %1$s of this unit per %2$s net victory.',
@@ -539,7 +539,7 @@ class UnitHelper
 
             'increases_prestige_interest' => '%+g%% prestige interest for each of this unit.',
             
-            'lowers_target_morale_on_successful_invasion' => 'On successful invasion, lowers target\'s morale by %d%%.',
+            'lowers_target_morale_on_successful_invasion' => 'On successful invasion, lowers target\'s morale by %g (per each of this unit sent).',
 
             'increases_prestige_gains' => '%+g%% prestige gains for every 1%% of units sent.',
 

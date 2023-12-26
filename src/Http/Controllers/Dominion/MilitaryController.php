@@ -17,6 +17,7 @@ use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Calculators\Dominion\CasualtiesCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\PrestigeCalculator;
@@ -66,6 +67,7 @@ class MilitaryController extends AbstractDominionController
         return view('pages.dominion.military', [
             'casualtiesCalculator' => app(CasualtiesCalculator::class),
             'dominionHelper' => app(DominionHelper::class),
+            'magicCalculator' => app(MagicCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'populationCalculator' => app(PopulationCalculator::class),
             'resourceCalculator' => app(ResourceCalculator::class),

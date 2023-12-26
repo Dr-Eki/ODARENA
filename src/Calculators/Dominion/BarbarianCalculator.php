@@ -20,9 +20,9 @@ class BarbarianCalculator
     protected const DPA_CONSTANT = 27.5;
     protected const DPA_OVERSHOT = 1.10;
     protected const DPA_PER_TICK = 0.125;
-    protected const DPA_PER_TIMES_INVADED = 0.006;
+    protected const DPA_PER_TIMES_INVADED = 1.5;
 
-    protected const OPA_MULTIPLIER = 1.10;
+    protected const OPA_MULTIPLIER = 4/3;
 
     # Train % of new units as specs. /1000
     protected const SPECS_RATIO_MIN = 50;

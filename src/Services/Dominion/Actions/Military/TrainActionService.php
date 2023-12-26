@@ -21,6 +21,7 @@ use OpenDominion\Traits\DominionGuardsTrait;
 use OpenDominion\Calculators\Dominion\AdvancementCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
@@ -46,6 +47,7 @@ class TrainActionService
     protected $advancementCalculator;
     protected $improvementCalculator;
     protected $spellCalculator;
+    protected $magicCalculator;
     protected $militaryCalculator;
     protected $landCalculator;
     protected $populationCalculator;
@@ -66,6 +68,7 @@ class TrainActionService
         ImprovementCalculator $improvementCalculator,
         SpellCalculator $spellCalculator,
         MilitaryCalculator $militaryCalculator,
+        MagicCalculator $magicCalculator,
         LandCalculator $landCalculator,
         PopulationCalculator $populationCalculator
     )
@@ -85,6 +88,7 @@ class TrainActionService
         $this->improvementCalculator = $improvementCalculator;
         $this->spellCalculator = $spellCalculator;
         $this->militaryCalculator = $militaryCalculator;
+        $this->magicCalculator = $magicCalculator;
         $this->landCalculator = $landCalculator;
         $this->populationCalculator = $populationCalculator;
     }
@@ -235,9 +239,9 @@ class TrainActionService
             $minimumWpaToTrain = $dominion->race->getUnitPerkValueForUnitSlot($unitSlot, 'minimum_wpa_to_train');
             if($minimumWpaToTrain)
             {
-                if($this->militaryCalculator->getWizardRatio($dominion, 'offense') < $minimumWpaToTrain)
+                if($this->magicCalculator->getWizardRatio($dominion, 'offense') < $minimumWpaToTrain)
                 {
-                  throw new GameException('You need at least ' . $minimumWpaToTrain . ' wizard ratio (on offense) to train this unit. You only have ' . $this->militaryCalculator->getWizardRatio($dominion) . '.');
+                  throw new GameException('You need at least ' . $minimumWpaToTrain . ' wizard ratio (on offense) to train this unit. You only have ' . $this->magicCalculator->getWizardRatio($dominion) . '.');
                 }
             }
             # Minimum WPA check complete.

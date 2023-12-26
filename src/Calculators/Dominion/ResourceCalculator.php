@@ -22,7 +22,7 @@ use OpenDominion\Models\RoundResource;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
-use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\agicCalculator;
 use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 
@@ -37,18 +37,20 @@ class ResourceCalculator
 
     protected $buildingCalculator;
     protected $landCalculator;
+    protected $magicCalculator;
     protected $prestigeCalculator;
     protected $spellCalculator;
     protected $queueService;
     protected $statsService;
 
     public function __construct(
-          BuildingCalculator $buildingCalculator,
-          LandCalculator $landCalculator,
-          PrestigeCalculator $prestigeCalculator,
-          SpellCalculator $spellCalculator,
-          QueueService $queueService,
-          StatsService $statsService
+        BuildingCalculator $buildingCalculator,
+        LandCalculator $landCalculator,
+        MagicCalculator $magicCalculator,
+        PrestigeCalculator $prestigeCalculator,
+        SpellCalculator $spellCalculator,
+        QueueService $queueService,
+        StatsService $statsService
         )
     {
         $this->landHelper = app(LandHelper::class);
@@ -56,6 +58,7 @@ class ResourceCalculator
 
         $this->buildingCalculator = $buildingCalculator;
         $this->landCalculator = $landCalculator;
+        $this->magicCalculator = $magicCalculator;
         $this->prestigeCalculator = $prestigeCalculator;
         $this->spellCalculator = $spellCalculator;
 
@@ -166,7 +169,7 @@ class ResourceCalculator
         $production += $dominion->getUnitPerkProductionBonusFromTitle($resourceKey);
         $production += $dominion->getTerrainPerkValue($resourceKey . '_production_raw');
 
-        #$production += $dominion->getBuildingPerkValue($resourceKey . '_production_raw_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($dominion);
+        $production += $dominion->getBuildingPerkValue($resourceKey . '_production_raw_from_wizard_ratio') * $this->magicCalculator->getWizardRatio($dominion, 'defense');
 
         if(isset($dominion->title))
         {

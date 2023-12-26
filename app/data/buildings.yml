@@ -10,6 +10,7 @@ barracks:
     - Beastfolk
     - Glimjir
     - Kobold
+    - Nox
     - Reptilians
     - Spirit
     - Sylvan
@@ -25,6 +26,7 @@ guard_tower:
   excluded_races:
     - Dragons
     - Glimjir
+    - Nox
   perks:
     defensive_power: 1,1.5,30 # Every 1% gives 1.5% DP, max +30% DP
 
@@ -34,6 +36,7 @@ infirmary:
   excluded_races:
     - Dragons
     - Glimjir
+    - Nox
     - Spirit
   perks:
     casualties_on_defense: 1,-2.5,50 # Every 1% gives -2.5% max -50%
@@ -46,6 +49,7 @@ military_academy:
   excluded_races:
     - Dragons
     - Glimjir
+    - Nox
   perks:
     prestige_gains: 1,5,50 # Every 1% gives 10% prestige, max +100%
 
@@ -64,6 +68,7 @@ training_grounds:
   excluded_races:
     - Dragons
     - Glimjir
+    - Nox
   perks:
     offensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
 
@@ -87,6 +92,7 @@ watch_tower:
   excluded_races:
     - Dragons
     - Glimjir
+    - Nox
   perks:
     target_defensive_power_mod: 1,-1.5,30 # Every 1% gives -1.5% DP mods, max -30% DP mods
 
@@ -198,6 +204,7 @@ lumberyard:
     - Afflicted
     - Beastfolk
     - Elf
+    - Nox
     - Reptilians
     - Simian
     - Undead
@@ -259,6 +266,7 @@ tower:
   excluded_races:
     - Aurei
     - Glimjir
+    - Nox
     - Sylvan
   perks:
     mana_production_raw: 20
@@ -321,7 +329,7 @@ school:
     - Troll
     - Wood Elf
   perks:
-    improvements: 1,1 # Every 1% gives 0.8% higher imps
+    improvements: 1,1.5 # Every 1% gives 1.5% higher imps
 
 syndicate_quarters:
   name: Syndicate Quarters
@@ -891,7 +899,7 @@ dark_spire:
   exclusive_races:
     - Nox
   perks:
-    mana_production_raw_from_wizard_ratio: 10 # 10 x Wizard Ratio mana/tick
+    mana_production_raw_from_wizard_ratio: 6 # 6 x Wizard Ratio mana/tick
 
 night_tower:
   name: Night Tower
@@ -899,7 +907,7 @@ night_tower:
   exclusive_races:
     - Nox
   perks:
-    gloom_production_raw_from_time: 18,06,6 # Between the hours 18:00 and 06:00, produces 6 gloom
+    gloom_production_raw_from_time: 18,06,0.6 # Between the hours 18:00 and 06:00, produces 6 gloom
     mana_production_raw_from_time: 18,06,50 # Between the hours 18:00 and 06:00, produces 50 mana
 
 # END NOX

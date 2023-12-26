@@ -11,6 +11,7 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Unit;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Services\Dominion\QueueService;
@@ -30,6 +31,9 @@ class TrainingCalculator
 
     /** @var ImprovementCalculator */
     protected $improvementCalculator;
+
+    /** @var MagicCalculator */
+    protected $magicCalculator;
 
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
@@ -71,6 +75,7 @@ class TrainingCalculator
         $this->landCalculator = app(LandCalculator::class);
         $this->unitHelper = app(UnitHelper::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->queueService = app(QueueService::class);
         $this->spellCalculator = app(SpellCalculator::class);
@@ -384,7 +389,7 @@ class TrainingCalculator
 
         // Decrees
         $multiplier += $dominion->getDecreePerkMultiplier('unit_' . $resourceType . '_costs');
-        $multiplier += $dominion->getDecreePerkMultiplier('unit_' . $resourceType . '_costs_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($dominion);
+        $multiplier += $dominion->getDecreePerkMultiplier('unit_' . $resourceType . '_costs_from_wizard_ratio') * $this->magicCalculator->getWizardRatio($dominion);
 
         # Cap reduction at -50%
         $multiplier = max(-0.50, $multiplier);

@@ -537,30 +537,30 @@
                             <tr>
                                 <td>Ratio</td>
                                 <td>
-                                    <strong>{{ number_format($militaryCalculator->getWizardRatio($selectedDominion, 'offense'), 3) }}</strong>
-                                    @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
-                                        <small class="text-muted">({{ number_format(($militaryCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                    <strong>{{ number_format($magicCalculator->getWizardRatio($selectedDominion, 'offense'), 3) }}</strong>
+                                    @if ($magicCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
+                                        <small class="text-muted">({{ number_format(($magicCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
                                     @endif
                                 </td>
                                 <td>
-                                    <strong>{{ number_format($militaryCalculator->getWizardRatio($selectedDominion, 'defense'), 3) }}</strong>
-                                    @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
-                                        <small class="text-muted">({{ number_format(($militaryCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                    <strong>{{ number_format($magicCalculator->getWizardRatio($selectedDominion, 'defense'), 3) }}</strong>
+                                    @if ($magicCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
+                                        <small class="text-muted">({{ number_format(($magicCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
                                     @endif
                                 </td>
                             </tr>
                             <tr>
                                 <td><span data-toggle="tooltip" data-placement="top" title="Number of spies you have plus how many spies you have from units that count as spies in part or whole">Points</span></td>
                                 <td>
-                                    <strong>{{ number_format($militaryCalculator->getWizardPoints($selectedDominion, 'offense')) }}</strong>
-                                    @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
-                                        <small class="text-muted">({{ number_format(($militaryCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                    <strong>{{ number_format($magicCalculator->getWizardPoints($selectedDominion, 'offense')) }}</strong>
+                                    @if ($magicCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
+                                        <small class="text-muted">({{ number_format(($magicCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
                                     @endif
                                 </td>
                                 <td>
-                                    <strong>{{ number_format($militaryCalculator->getWizardPoints($selectedDominion, 'defense')) }}</strong>
-                                    @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
-                                        <small class="text-muted">({{ number_format(($militaryCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                    <strong>{{ number_format($magicCalculator->getWizardPoints($selectedDominion, 'defense')) }}</strong>
+                                    @if ($magicCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
+                                        <small class="text-muted">({{ number_format(($magicCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
                                     @endif
                                 </td>
                             </tr>

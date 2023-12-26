@@ -224,7 +224,7 @@ class CasualtiesCalculator
             }
 
             # PERK: immortal_from_wpa
-            if ($dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_from_wpa') and $this->militaryCalculator->getWizardRatio($dominion, $mode) >= $dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_from_wpa'))
+            if ($dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_from_wpa') and $this->magicCalculator->getWizardRatio($dominion, $mode) >= $dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_from_wpa'))
             {
                 return True;
             }
@@ -390,7 +390,7 @@ class CasualtiesCalculator
 
         if($wpaPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties_from_wizard_ratio'))
         {
-            $multiplier += ($this->militaryCalculator->getWizardRatio($dominion, $mode) * $wpaPerk) / 100;
+            $multiplier += ($this->magicCalculator->getWizardRatio($dominion, $mode) * $wpaPerk) / 100;
         }
 
         if($spaPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'casualties_from_spy_ratio'))
@@ -457,7 +457,7 @@ class CasualtiesCalculator
 
         if($casualtiesFromWpa = $dominion->getSpellPerkValue('increases_enemy_casualties_on_' . $enemyMode . '_from_wizard_ratio'))
         {
-            $multiplier += $this->militaryCalculator->getWizardRatio($dominion) * ($casualtiesFromWpa / 100);
+            $multiplier += $this->magicCalculator->getWizardRatio($dominion) * ($casualtiesFromWpa / 100);
         }
 
         if($casualtiesFromSpa = $dominion->getSpellPerkValue('increases_enemy_casualties_on_' . $enemyMode . '_from_spy_ratio'))

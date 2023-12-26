@@ -15,6 +15,7 @@ use OpenDominion\Calculators\Dominion\ConversionCalculator;
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\MoraleCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
@@ -59,6 +60,7 @@ class TickService
     protected $espionageCalculator;
     protected $improvementCalculator;
     protected $landCalculator;
+    protected $magicCalculator;
     protected $militaryCalculator;
     protected $moraleCalculator;
     protected $notificationService;
@@ -96,6 +98,7 @@ class TickService
         $this->conversionCalculator = app(ConversionCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->notificationService = app(NotificationService::class);
         $this->populationCalculator = app(PopulationCalculator::class);
         $this->prestigeCalculator = app(PrestigeCalculator::class);
@@ -1158,7 +1161,7 @@ class TickService
     
                 if($unitProductionFromWizardRatioPerk = $dominion->getBuildingPerkValue('unit_production_from_wizard_ratio'))
                 {
-                    $unitSummoningMultiplier += $this->militaryCalculator->getWizardRatio($dominion) / $unitProductionFromWizardRatioPerk;
+                    $unitSummoningMultiplier += $this->magicCalculator->getWizardRatio($dominion) / $unitProductionFromWizardRatioPerk;
                 }
     
                 $unitSummoning = $buildingUnitSummoningRaw * $unitSummoningMultiplier;

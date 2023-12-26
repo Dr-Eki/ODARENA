@@ -94,6 +94,44 @@ soothing_hum:
     no_morale_bonus_on_offense: 1
     no_morale_bonus_on_defense: 1
 
+## Nox
+
+nocten_acrimony:
+  name: Nocten Acrimony
+  level: 5
+  scope: self
+  class: passive
+  cost: 500
+  duration: 12
+  exclusive_races:
+    - Nox
+  perks:
+    offensive_power: 40
+
+nocten_shield:
+  name: Nocten Fervour
+  level: 5
+  scope: self
+  class: passive
+  cost: 500
+  duration: 12
+  exclusive_races:
+    - Nox
+  perks:
+    target_defensive_power_mod: -20
+
+nocten_veil:
+  name: Nocten Veil
+  level: 5
+  scope: self
+  class: passive
+  cost: 2500
+  duration: 60
+  exclusive_races:
+    - Nox
+  perks:
+    defensive_power: 40
+
 ## Simian
 
 rainy_season:
@@ -604,42 +642,6 @@ fimbulwinter:
     defensive_power: 10
     food_production_mod: -10
     lumber_production_mod: -10
-
-nocten_acrimony:  
-  enabled: 0
-  name: Nocten Acrimony
-  scope: self
-  class: passive
-  cost: 4000
-  duration: 48
-  exclusive_races:
-    - Nox
-  perks:
-    offensive_power: 40
-
-nocten_shield:  
-  enabled: 0
-  name: Nocten Fervour
-  scope: self
-  class: passive
-  cost: 4000
-  duration: 48
-  exclusive_races:
-    - Nox
-  perks:
-    target_defensive_power_mod: -20
-
-nocten_veil:  
-  enabled: 0
-  name: Nocten Veil
-  scope: self
-  class: passive
-  cost: 4000
-  duration: 48
-  exclusive_races:
-    - Nox
-  perks:
-    defensive_power: 40
 
 stasis:  
   enabled: 0

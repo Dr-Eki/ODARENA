@@ -81,7 +81,7 @@ class SpellCalculator
         $multiplier += $dominion->getDeityPerkMultiplier('spell_cost');
         $multiplier += $dominion->getSpellPerkMultiplier('spell_cost');
 
-        #$multiplier += $dominion->getDecreePerkMultiplier('spell_cost_from_wizard_ratio') * $this->militaryCalculator->getWizardRatio($dominion);
+        #$multiplier += $dominion->getDecreePerkMultiplier('spell_cost_from_wizard_ratio') * $this->magicCalculator->getWizardRatio($dominion);
 
         if(isset($dominion->title))
         {

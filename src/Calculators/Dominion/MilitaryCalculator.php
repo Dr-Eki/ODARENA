@@ -12,6 +12,7 @@ use OpenDominion\Models\Realm;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Unit;
 
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 
 use OpenDominion\Services\Dominion\GovernmentService;
@@ -39,6 +40,9 @@ class MilitaryCalculator
     /** @var LandCalculator */
     protected $landCalculator;
 
+    /** @var MagicCalculator */
+    protected $magicCalculator;
+
     /** @var PrestigeCalculator */
     protected $prestigeCalculator;
 
@@ -65,6 +69,7 @@ class MilitaryCalculator
         $this->governmentService = app(GovernmentService::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->prestigeCalculator = app(PrestigeCalculator::class);
         $this->queueService = app(QueueService::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
@@ -665,7 +670,7 @@ class MilitaryCalculator
             return 0;
         }
 
-        $powerFromPerk = (float)$wizardRatioPerk * $this->getWizardRatio($dominion, $powerType);
+        $powerFromPerk = (float)$wizardRatioPerk * $this->magicCalculator->getWizardRatio($dominion, $powerType);
 
         return $powerFromPerk;
     }
@@ -685,7 +690,7 @@ class MilitaryCalculator
 
         $powerFromPerk = 0;
 
-        if($this->getWizardRatio($dominion, $powerType) >= $wizardRatioRequired)
+        if($this->magicCalculator->getWizardRatio($dominion, $powerType) >= $wizardRatioRequired)
         {
             $powerFromPerk = $wizardRatioPerk;
         }
@@ -1967,7 +1972,7 @@ class MilitaryCalculator
             }
         }
 
-        $spies += $this->getWizardPoints($dominion) * $dominion->getDecreePerkValue('wizards_count_as_spies');
+        $spies += $this->magicCalculator->getWizardPoints($dominion) * $dominion->getDecreePerkValue('wizards_count_as_spies');
 
         return ($spies / $dominion->land);
     }

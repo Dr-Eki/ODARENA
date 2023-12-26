@@ -159,7 +159,7 @@
                                 @if (!$selectedDominion->race->getPerkValue('cannot_train_wizards'))
                                 <tr>
                                     <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="Wizard strength: {{ number_format($selectedDominion->wizard_strength) }}% {{ $selectedDominion->wizard_strength < 100 ? '(+' . $militaryCalculator->getWizardStrengthRegen($selectedDominion) . '%/tick)' : '' }}">
+                                        <span data-toggle="tooltip" data-placement="top" title="Wizard strength: {{ number_format($selectedDominion->wizard_strength) }}% {{ $selectedDominion->wizard_strength < 100 ? '(+' . $magicCalculator->getWizardStrengthRegen($selectedDominion) . '%/tick)' : '' }}">
                                             Wizards:
                                         </span>
                                     </td>
@@ -170,7 +170,7 @@
                                 @if (!$selectedDominion->race->getPerkValue('cannot_train_archmages'))
                                 <tr>
                                     <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="Wizard strength: {{ number_format($selectedDominion->wizard_strength) }}% {{ $selectedDominion->wizard_strength < 100 ? '(+' . $militaryCalculator->getWizardStrengthRegen($selectedDominion) . '%/tick)' : '' }}">
+                                        <span data-toggle="tooltip" data-placement="top" title="Wizard strength: {{ number_format($selectedDominion->wizard_strength) }}% {{ $selectedDominion->wizard_strength < 100 ? '(+' . $magicCalculator->getWizardStrengthRegen($selectedDominion) . '%/tick)' : '' }}">
                                             Archmages:
                                         </span>
                                     </td>
@@ -245,9 +245,9 @@
                         <tr>
                             <td><span data-toggle="tooltip" data-placement="top" title="Your current Wizards Per Acre (WPA) on offense">Offensive Wizard Ratio:</span></td>
                             <td>
-                                {{ number_format($militaryCalculator->getWizardRatio($selectedDominion, 'offense'), 3) }}
-                                @if ($militaryCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
-                                    <small class="text-muted">({{ number_format(($militaryCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
+                                {{ number_format($magicCalculator->getWizardRatio($selectedDominion, 'offense'), 3) }}
+                                @if ($magicCalculator->getWizardRatioMultiplier($selectedDominion) !== 1.0)
+                                    <small class="text-muted">({{ number_format(($magicCalculator->getWizardRatioMultiplier($selectedDominion)-1)*100, 2) }}%)</small>
                                 @endif
                             </td>
                         </tr>
