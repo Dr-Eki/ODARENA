@@ -169,7 +169,7 @@ class ResourceCalculator
         $production += $dominion->getUnitPerkProductionBonusFromTitle($resourceKey);
         $production += $dominion->getTerrainPerkValue($resourceKey . '_production_raw');
 
-        $production += $dominion->getBuildingPerkValue($resourceKey . '_production_raw_from_wizard_ratio') * $this->magicCalculator->getWizardRatio($dominion, 'defense');
+        $production += $dominion->getBuildingPerkValue($resourceKey . '_production_raw_from_wizard_ratio') * min(10, $this->magicCalculator->getWizardRatio($dominion, 'defense'));
 
         if(isset($dominion->title))
         {
