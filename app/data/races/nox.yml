@@ -68,7 +68,7 @@ units:
     type:
       - magical
     cost:
-      mana: 40
+      mana: 60
     power:
       offense: 2
       defense: 0
@@ -83,7 +83,7 @@ units:
     type:
       - magical
     cost:
-      mana: 140
+      mana: 260
     power:
       offense: 0
       defense: 5
@@ -98,7 +98,7 @@ units:
     type:
       - magical
     cost:
-      mana: 428
+      mana: 514
     power:
       offense: 6
       defense: 6
