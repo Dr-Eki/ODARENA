@@ -73,7 +73,8 @@ class TerrainHelper
             'sapling_production_mod' => ['%+g%% sapling production', ' for every 1%% of this terrain.'],
             'gunpowder_production_mod' => ['%+g%% gunpowder production', ' for every 1%% of this terrain.'],
             'kelp_production_mod' => ['%+g%% kelp production', ' for every 1%% of this terrain.'],
-            'pearlms_production_mod' => ['%+g%% pearls production', ' for every 1%% of this terrain.'],
+            'pearls_production_mod' => ['%+g%% pearls production', ' for every 1%% of this terrain.'],
+            'gloom_production_mod' => ['%+g%% gloom yield', ' for every 1%% of this terrain.'],
 
             'prisoner_upkeep_mod' => ['%+g%% prisoner upkeep', ' for every 1%% of this terrain.'],
 
