@@ -75,7 +75,7 @@ units:
     perks:
       does_not_count_as_population: 1
       pairing_limit: 5,15 # Unit slot, amount
-      counts_as_spy: 0.20
+      counts_as_spy: 0.10
 
   - name: Shade
     description: An ephemereal creature of pure magic. Its presence is barely noticeable, but its touch is deadly.
