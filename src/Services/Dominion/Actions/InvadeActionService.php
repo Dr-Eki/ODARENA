@@ -1494,15 +1494,15 @@ class InvadeActionService
             $defenderMoraleChange *= $defenderMoraleChangeMultiplier;
 
             # Look for lowers_target_morale_on_successful_invasion
-            for ($slot = 1; $slot <= $attacker->race->units->count(); $slot++)
-            {
-                if(
+            for ($slot = 1; $slot <= $attacker->race->units->count(); $slot++) {
+                if (
                     $lowersTargetMoralePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'lowers_target_morale_on_successful_invasion') and
-                    isset($units[$slot]) and
+                    isset($this->invasion['attacker']['units_sent'][$slot]) and
                     $this->invasion['result']['success']
-                    )
-                {
-                    $defenderMoraleChange -= $this->invasion['attacker']['units_sent'][$slot] * $lowersTargetMoralePerk;
+                ) {
+                    $targetMoralePerk = $this->invasion['attacker']['units_sent'][$slot] * $lowersTargetMoralePerk;
+                    
+                    $defender->morale = max(($defender->morale - $targetMoralePerk), 30); # Nightmare sanity cap
                 }
             }
 

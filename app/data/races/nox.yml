@@ -47,7 +47,7 @@ terrain_perks:
     mana_production_mod: 0.10
   volcanic:
     mana_production_mod: 0.10
-    gloomd_production_mod: 0.10
+    gloom_production_mod: 0.10
   water:
     food_production_mod: 0.12
     defensive_power_mod: 0.08
@@ -120,7 +120,7 @@ units:
       defense: 5
     perks:
       does_not_count_as_population: 1
-      lowers_target_morale_on_successful_invasion: 1
+      lowers_target_morale_on_successful_invasion: 0.04
       offense_from_resource_capped_exhausting: 1,1,gloom # +1 OP if paired with 1 gloom
       pairing_limit: 5,8 # Unit slot, amount
 
