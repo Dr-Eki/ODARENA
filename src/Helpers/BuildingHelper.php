@@ -166,7 +166,7 @@ class BuildingHelper
 
             'gloom_production_raw_from_time' => 'Yields %3$s gloom between %1$s:00 and %2$s:00.',
             'light_production_raw_from_time' => 'Gathers %3$s light between %1$s:00 and %2$s:00.',
-            'mana_production_raw_from_time' => 'Gathers %3$s mama between %1$s:00 and %2$s:00.',
+            'mana_production_raw_from_time' => 'Gathers %3$s mana between %1$s:00 and %2$s:00.',
 
             'mana_production_raw_from_wizard_ratio' => 'Produces %g * [Wizard Ratio] mana/tick.',
 
