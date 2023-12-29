@@ -3,6 +3,7 @@ alignment: evil
 description:
 home_terrain: swamps
 playable: 1
+experimental: 1
 skill_level: 2
 magic_level: 5
 
