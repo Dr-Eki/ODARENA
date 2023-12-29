@@ -438,7 +438,7 @@ colony:
   exclusive_races:
     - Ants
   perks:
-    housing: 80
+    housing: 110
     jobs: 0
 
 den:  
@@ -981,8 +981,8 @@ gryphon_nest:
     - Snow Elf
   land_type: mountain
   perks:
-    snow_elf_unit4_production_raw_capped: 0.005,20
-    attrition_protection: 2,4,Snow Elf # amount, slot, faction
+    snow_elf_unit4_production_raw_capped: 0.004,20
+    #attrition_protection: 2,4,Snow Elf # amount, slot, faction
 
 # END SNOW ELF
 

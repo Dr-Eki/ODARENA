@@ -105,14 +105,14 @@ units:
       - wild
       - massive
     cost:
-      gold: 0
+      food: 16000
+      draftees: 1
     power:
       offense: 100
       defense: 100
     perks:
-      cannot_be_trained: 1
       does_not_count_as_population: 1
-      building_limit: gryphon_nest,2
+      building_limit: gryphon_nest,4
+      attrition_if_capacity_limit_exceeded: 10 # Decays at a rate of 2.5% per tick of units exceeding building_limit
       food_consumption_raw: 4
       casualties: -20
-      attrition: 10
