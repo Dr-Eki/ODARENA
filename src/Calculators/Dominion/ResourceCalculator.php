@@ -22,7 +22,7 @@ use OpenDominion\Models\RoundResource;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
-use OpenDominion\Calculators\Dominion\agicCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 
@@ -820,5 +820,41 @@ class ResourceCalculator
         return $decay;
     }
     
+    public function getReturningResources(Dominion $dominion, bool $prestige = true, bool $xp = true): array
+    {
+        $returningResources = [];
+
+        foreach($dominion->race->resources as $resourceKey)
+        {
+            $returningResources[$resourceKey] = $this->queueService->getInvasionQueueTotalByResource($dominion, 'resource_' . $resourceKey);
+            $returningResources[$resourceKey] += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'resource_' . $resourceKey);
+            $returningResources[$resourceKey] += $this->queueService->getTheftQueueTotalByResource($dominion, 'resource_' . $resourceKey);
+            $returningResources[$resourceKey] += $this->queueService->getSabotageQueueTotalByResource($dominion, 'resource_' . $resourceKey);
+            $returningResources[$resourceKey] += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'resource_' . $resourceKey);
+            $returningResources[$resourceKey] += $this->queueService->getStunQueueTotalByResource($dominion, 'resource_' . $resourceKey);
+        }
+
+        if($prestige)
+        {
+            $returningResources['prestige'] = $this->queueService->getInvasionQueueTotalByResource($dominion, 'prestige');
+            $returningResources['prestige'] += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'prestige');
+            $returningResources['prestige'] += $this->queueService->getTheftQueueTotalByResource($dominion, 'prestige');
+            $returningResources['prestige'] += $this->queueService->getSabotageQueueTotalByResource($dominion, 'prestige');
+            $returningResources['prestige'] += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'prestige');
+            $returningResources['prestige'] += $this->queueService->getStunQueueTotalByResource($dominion, 'prestige');    
+        }
+
+        if($xp)
+        {
+            $returningResources['xp'] = $this->queueService->getInvasionQueueTotalByResource($dominion, 'xp');
+            $returningResources['xp'] += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'xp');
+            $returningResources['xp'] += $this->queueService->getTheftQueueTotalByResource($dominion, 'xp');
+            $returningResources['xp'] += $this->queueService->getSabotageQueueTotalByResource($dominion, 'xp');
+            $returningResources['xp'] += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'xp');
+            $returningResources['xp'] += $this->queueService->getStunQueueTotalByResource($dominion, 'xp');    
+        }
+
+        return $returningResources;
+    }
 
 }

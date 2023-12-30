@@ -658,7 +658,7 @@ class UnitHelper
                         $perkValue[2] = 1;
                     }
 
-                    $perkValue[1] = number_format($perkValue[1], 2);
+                    $perkValue[1] = $perkValue[1];
 
                     #$perkValue = []
                 }

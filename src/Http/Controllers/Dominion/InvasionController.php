@@ -26,6 +26,10 @@ class InvasionController extends AbstractDominionController
 {
     public function getInvade()
     {
+
+        $resourceCalculator = app(ResourceCalculator::class);
+        $returningResources = $resourceCalculator->getReturningResources($this->getSelectedDominion());
+
         return view('pages.dominion.invade', [
             'governmentService' => app(GovernmentService::class),
             'protectionService' => app(ProtectionService::class),
@@ -40,6 +44,8 @@ class InvasionController extends AbstractDominionController
             'rangeCalculator' => app(RangeCalculator::class),
             'resourceCalculator' => app(ResourceCalculator::class),
             'spellCalculator' => app(SpellCalculator::class),
+
+            'returningResources' => $returningResources,
 
             'raceHelper' => app(RaceHelper::class),
             'unitHelper' => app(UnitHelper::class),

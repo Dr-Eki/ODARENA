@@ -12,6 +12,12 @@ use OpenDominion\Services\Dominion\QueueService;
 class ResearchCalculator
 {
 
+    /** @var ResearchHelper */
+    protected $researchHelper;
+
+    /** @var QueueService */
+    protected $queueService;
+
     public function __construct()
     {
         $this->researchHelper = app(ResearchHelper::class);
