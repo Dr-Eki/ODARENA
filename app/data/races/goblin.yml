@@ -52,10 +52,11 @@ terrain_perks:
     gunpowder_production_mod: -0.04
 
 perks:
-  max_population: 40
+  max_population: 60
   population_growth: 50
   drafting: 2
-  improvement_points: 30
+  improvement_points: 60
+  improvements: 40
 
 units:
   - name: Kaboom

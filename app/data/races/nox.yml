@@ -75,7 +75,7 @@ units:
       defense: 0
     perks:
       does_not_count_as_population: 1
-      pairing_limit: 5,15 # Unit slot, amount
+      pairing_limit: 5,12 # Unit slot, amount
       counts_as_spy: 0.10
 
   - name: Shade
@@ -90,7 +90,7 @@ units:
       defense: 5
     perks:
       does_not_count_as_population: 1
-      pairing_limit: 5,12 # Unit slot, amount
+      pairing_limit: 5,10 # Unit slot, amount
       increases_enemy_casualties_on_defense: 1
 
   - name: Fiend
@@ -105,7 +105,7 @@ units:
       defense: 6
     perks:
       does_not_count_as_population: 1
-      pairing_limit: 5,10 # Unit slot, amount
+      pairing_limit: 5,8 # Unit slot, amount
       plunder: mana,60
 
   - name: Nightmare
@@ -123,7 +123,7 @@ units:
       does_not_count_as_population: 1
       lowers_target_morale_on_successful_invasion: 0.04
       offense_from_resource_capped_exhausting: 1,1,gloom # +1 OP if paired with 1 gloom
-      pairing_limit: 5,8 # Unit slot, amount
+      pairing_limit: 5,6 # Unit slot, amount
 
   - name: Evoker
     description: Evokers are the most powerful spellcasters in the world. They are able to summon and control powerful magical creatures.

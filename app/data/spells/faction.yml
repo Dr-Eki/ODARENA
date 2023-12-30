@@ -101,7 +101,7 @@ nocten_acrimony:
   level: 5
   scope: self
   class: passive
-  cost: 500
+  cost: 1500
   duration: 12
   exclusive_races:
     - Nox
@@ -113,7 +113,7 @@ nocten_shield:
   level: 5
   scope: self
   class: passive
-  cost: 500
+  cost: 1500
   duration: 12
   exclusive_races:
     - Nox
