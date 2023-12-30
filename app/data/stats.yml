@@ -665,6 +665,27 @@ body_salvaged:
 body_plundered:
   name: Body plundered
 
+gloom_production:
+  name: Gloom production
+gloom_sold:
+  name: Gloom sold
+gloom_bought:
+  name: Gloom bought
+gloom_building:
+  name: Gloom building
+gloom_rezoning:
+  name: Gloom rezoning
+gloom_training:
+  name: Gloom training
+gloom_improvements:
+  name: Gloom improvements
+gloom_lost:
+  name: Gloom lost
+gloom_salvaged:
+  name: Gloom salvaged
+gloom_plundered:
+  name: Gloom plundered
+
 # Land
 
 land_conquered:
