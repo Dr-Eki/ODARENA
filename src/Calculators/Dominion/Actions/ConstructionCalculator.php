@@ -230,6 +230,9 @@ class ConstructionCalculator
         // Deity
         $multiplier += $dominion->getDeityPerkMultiplier('construction_cost');
 
+        // Terrain
+        $multiplier += $dominion->getTerrainPerkMultiplier('construction_costs_mod');
+
         // Decree
         $multiplier += $dominion->getDecreePerkMultiplier('construction_cost');
         $multiplier += $dominion->getDecreePerkMultiplier('construction_cost_from_wizard_ratio') * $this->magicCalculator->getWizardRatio($dominion);
