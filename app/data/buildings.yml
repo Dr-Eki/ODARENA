@@ -473,6 +473,7 @@ farmstead:
 
 grove:
   name: Grove
+  category: housing
   exclusive_races:
     - Simian
   perks:
