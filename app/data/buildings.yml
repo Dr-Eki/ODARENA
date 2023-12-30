@@ -981,7 +981,7 @@ gryphon_nest:
     - Snow Elf
   land_type: mountain
   perks:
-    snow_elf_unit4_production_raw_capped: 0.004,20
+    snow_elf_unit4_production_raw_capped: 0.004,25
     #attrition_protection: 2,4,Snow Elf # amount, slot, faction
 
 # END SNOW ELF
