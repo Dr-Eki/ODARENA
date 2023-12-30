@@ -4,6 +4,7 @@ description:
 home_terrain: jungle
 playable: 1
 experimental: 1
+magic_level: 2
 skill_level: 2
 
 terrain_perks:
