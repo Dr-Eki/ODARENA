@@ -471,6 +471,14 @@ farmstead:
     jobs: 30
     food_production_raw: 50
 
+grove:
+  name: Grove
+  exclusive_races:
+    - Simian
+  perks:
+    housing: 30
+    jobs: 0
+
 hall: 
   name: Hall
   category: housing
@@ -1712,19 +1720,6 @@ compound:
     jobs: 0
     reduces_attrition: 0.5,1 # Every 0.5%, reduces 1%
     food_production_raw: 5
-
-grove:
-  enabled: 0
-  name: Grove
-  exclusive_races:
-    - Beastfolk
-    - Simian
-    - Weres
-    - Wood Elf
-  land_type: forest
-  perks:
-    housing: 30
-    jobs: 0
 
 orcish_longhouse:  
   enabled: 0
