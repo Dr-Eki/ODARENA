@@ -28,7 +28,6 @@ use OpenDominion\Models\DeityPerkType;
 use OpenDominion\Models\DominionAdvancement;
 use OpenDominion\Models\DominionBuilding;
 use OpenDominion\Models\DominionDecreeState;
-use OpenDominion\Models\DominionDeity;
 use OpenDominion\Models\DominionImprovement;
 use OpenDominion\Models\DominionResource;
 use OpenDominion\Models\DominionStat;
