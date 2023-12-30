@@ -95,8 +95,8 @@ class ImprovementCalculator
             $multiplier += $dominion->getDecreePerkMultiplier($resourceKey . '_improvement_points');
 
             # Terrain Perk
-            $multiplier += $dominion->getTerrainPerkMultiplier('improvement_points');
-            $multiplier += $dominion->getTerrainPerkMultiplier($resourceKey . '_improvement_points');
+            $multiplier += $dominion->getTerrainPerkMultiplier('improvement_points_mod');
+            $multiplier += $dominion->getTerrainPerkMultiplier($resourceKey . '_improvement_points_mod');
 
             # Faction
             $multiplier += $dominion->race->getPerkMultiplier('improvement_points');
