@@ -374,7 +374,6 @@ class DataSyncCommand extends Command implements CommandInterface
             }
 
             // Terrain Perks
-
             foreach (object_get($data, 'terrain_perks', []) as $terrainKey => $terrainPerks)
             {
                 $terrain = Terrain::where('key', $terrainKey)->first();

@@ -152,11 +152,11 @@ dwargen_mine:
 
 farm:  
   name: Farm
-  category: production
   excluded_races:
     - Dragons
     - Glimjir
     - Icekin
+    - Qur
     - Reptilians
     - Spirit
     - Sylvan
@@ -311,6 +311,7 @@ factory:
   excluded_races:
     - Barbarian
     - Glimjir
+    - Qur
     - Swarm
     - Sylvan
     - Wood Elf
@@ -921,6 +922,38 @@ night_tower:
 
 # END NOX
 
+# BEGIN QUR
+
+estate:
+  name: Estate
+  category: housing
+  exclusive_races:
+    - Qur
+  perks:
+    housing: 30
+    jobs: 10
+
+hunting_lodge:
+  name: Hunting Lodge
+  category: production
+  exclusive_races:
+    - Qur
+  perks:
+    food_production_raw: 50
+    draftee_housing: 10
+
+workshop:
+  name: Workshop
+  category: other
+  exclusive_races:
+    - Qur
+  perks:
+    construction_cost: 1,-4,50 # 1% gives -2% construction cost, max -30%
+    construction_time: 1,-2,25 # 1% gives -1% construction time, max -30%
+    unit_pairing_capped: 1,4,50 # Every 1% gives 4% more pairing
+
+# END QUR
+
 # BEGIN REPTILIANS
 
 bog:  
@@ -1247,16 +1280,6 @@ armoury:
   land_type: plain
   perks:
     ammunition_units_housing: 100
-
-hunting_lodge:  
-  enabled: 0
-  name: Hunting Lodge
-  exclusive_races:
-    - Qur
-  land_type: forest
-  perks:
-    food_production_raw: 80
-    draftee_housing: 10
 
 yak_breeder:  
   enabled: 0
@@ -1699,16 +1722,6 @@ plateau:
     troll_unit4_housing: 30
     jobs: 0
     housing: 0
-
-estate:  
-  enabled: 0
-  name: Estate
-  exclusive_races:
-    - Qur
-  land_type: forest
-  perks:
-    housing: 30
-    jobs: 10
 
 compound:  
   enabled: 0

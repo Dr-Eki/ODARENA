@@ -132,6 +132,20 @@ nocten_veil:
   perks:
     defensive_power: 40
 
+## Qur
+
+stasis: 
+  name: Stasis
+  level: 0
+  scope: self
+  class: passive
+  cost: 1.5
+  duration: 2
+  exclusive_races:
+    - Qur
+  perks:
+    stasis: 1
+
 ## Simian
 
 rainy_season:
@@ -643,18 +657,7 @@ fimbulwinter:
     food_production_mod: -10
     lumber_production_mod: -10
 
-stasis:  
-  enabled: 0
-  name: Stasis
-  scope: self
-  class: passive
-  cost: 1.5
-  duration: 2
-  cooldown: 0
-  exclusive_races:
-    - Qur
-  perks:
-    stasis: 1
+
 
 guardian_spirit:  
   enabled: 0

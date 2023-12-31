@@ -440,14 +440,14 @@ class UnitHelper
 
             'decay_protection' => 'Each units protects %1$s %2$s per tick from decay.',
 
-            'plunders' => 'Plunders up to %2$s %1$s on attack.', # Multiple resources
-            'plunder' => 'Plunders up to %2$s %1$s on attack.', # Single resource
+            'plunders' => 'Plunders up to %2$s %1$s on successful attack.', # Multiple resources
+            'plunder' => 'Plunders up to %2$s %1$s on successful attack.', # Single resource
 
             'destroy_resources_on_victory' => 'Destroys up to %2$s %1$s on victory.', # Multiple resources
             'destroy_resource_on_victory' => 'Destroys up to %2$s %1$s on victory.', # Single resource
 
-            'destroy_resources' => 'Destroys up to %2$s %1$s on attack.', # Multiple resources
-            'destroy_resource' => 'Destroys up to %2$s %1$s on attack.', # Single resource
+            'destroy_resources' => 'Destroys up to %2$s %1$s on successful attack.', # Multiple resources
+            'destroy_resource' => 'Destroys up to %2$s %1$s on successful attack.', # Single resource
 
             'mana_drain' => 'Each unit drains %s mana per tick.',
             'gold_upkeep_raw' => 'Costs %s gold per tick.',
@@ -478,6 +478,8 @@ class UnitHelper
 
             'faster_return_from_time' => 'Returns %3$s ticks faster from battle if sent out between %1$s:00 and %2$s:00.',
             'faster_return_from_terrain' => 'Returns %1$s ticks faster per %2$s%% %3$s (rounds down, max %4$s).',
+
+            'faster_return_from_wizard_ratio' => 'Returns %1$g tick faster per Wizard Ratio (max %2$g ticks faster).',
 
             // Training
             'cannot_be_trained' => 'Cannot be trained.',

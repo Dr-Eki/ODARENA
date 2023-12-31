@@ -30,6 +30,7 @@ use OpenDominion\Calculators\Dominion\ConversionCalculator;
 use OpenDominion\Calculators\Dominion\CasualtiesCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
@@ -100,6 +101,7 @@ class InvadeActionService
     private $gameEventService;
     private $governmentService;
     private $landCalculator;
+    private $magicCalculator;
     private $militaryCalculator;
     private $notificationService;
     private $statsService;
@@ -129,6 +131,7 @@ class InvadeActionService
         $this->gameEventService = app(GameEventService::class);
         $this->governmentService = app(GovernmentService::class);
         $this->landCalculator = app(LandCalculator::class);
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->notificationService = app(NotificationService::class);
         $this->statsService = app(StatsService::class);
@@ -2664,6 +2667,7 @@ class InvadeActionService
                         $returningUnits[$unitKey][$fasterReturningTicks] += $unitsWithFasterReturnTime;
                         $returningUnits[$unitKey][$ticks] -= $unitsWithFasterReturnTime;
                     }
+
                 }
             }
 
@@ -3576,6 +3580,19 @@ class InvadeActionService
             $ticks -= (int)$unit->getPerkValue('faster_return');
         }
 
+        # Check for faster_return_if_paired
+        if($fasterReturnFromWizardRatio = $attacker->race->getUnitPerkValueForUnitSlot($unit->slot, 'faster_return_from_wizard_ratio'))
+        {
+            $ticksFasterPerWizardRatio = (float)$fasterReturnFromWizardRatio[0];
+            $maxFaster = (int)$fasterReturnFromWizardRatio[1];
+            
+            $ticksFaster = $this->magicCalculator->getWizardRatio($attacker, 'offense') * $ticksFasterPerWizardRatio;
+            $ticksFaster = min($ticksFaster, $maxFaster);
+
+            # Determine new return speed
+            $ticks -= $ticksFaster;
+        }
+
         return $ticks;
     }
 
@@ -3591,6 +3608,30 @@ class InvadeActionService
         $ticks -= (int)$attacker->getSpellPerkValue('faster_return');
         $ticks -= (int)$attacker->getAdvancementPerkValue('faster_return');
         $ticks -= (int)$attacker->realm->getArtefactPerkValue('faster_return');
+
+        if($fasterReturnFromWizardRatio = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_from_wizard_ratio'))
+        {
+            $ticksFasterPerWizardRatio = (float)$fasterReturnFromWizardRatio[0];
+            $maxFaster = (int)$fasterReturnFromWizardRatio[1];
+            
+            $ticksFaster = $this->magicCalculator->getWizardRatio($attacker, 'offense') * $ticksFasterPerWizardRatio;
+            $ticksFaster = min($ticksFaster, $maxFaster);
+
+            # Determine new return speed
+            $ticks -= $ticksFaster;
+        }
+
+        if($fasterReturnFromSpyRatio = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_from_spy_ratio'))
+        {
+            $ticksFasterPerWizardRatio = (float)$fasterReturnFromSpyRatio[0];
+            $maxFaster = (int)$fasterReturnFromSpyRatio[1];
+            
+            $ticksFaster = $this->militaryCalculator->getSpyRatio($attacker, 'offense') * $fasterReturnFromSpyRatio;
+            $ticksFaster = min($ticksFaster, $maxFaster);
+
+            # Determine new return speed
+            $ticks -= $ticksFaster;
+        }
 
         return min(max(1, $ticks), 12);
     }

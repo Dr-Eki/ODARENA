@@ -9,38 +9,26 @@ class MilitaryHelper
 
     public function __construct()
     {
+        // ..
     }
+
+    protected $terminology = [
+        'growth' => ['label' => 'mutate', 'term' => 'mutation'],
+        'myconid' => ['label' => 'grow', 'term' => 'growth'],
+        'swarm' => ['label' => 'hatch', 'term' => 'hatching'],
+        'lux' => ['label' => 'ascend', 'term' => 'ascension'],
+        'void' => ['label' => 'form', 'term' => 'forming'],
+        'default' => ['label' => 'train', 'term' => 'training'],
+    ];
 
     public function getTrainingButtonLabel(Race $race)
     {
-        switch ($race->key) {
-            case 'growth':
-                return 'Mutate';
-            case 'myconid':
-                return 'Grow';
-            case 'swarm':
-                return 'Hatch';
-            case 'Lux':
-                return 'Ascend';
-            default:
-                return 'Train';
-            };
+        return $this->terminology[$race->key]['label'] ?? $this->terminology['default']['label'];
     }
 
     public function getTrainingTerm(Race $race)
     {
-        switch ($race->key) {
-            case 'growth':
-                return 'mutation';
-            case 'myconid':
-                return 'growth';
-            case 'swarm':
-                return 'hatching';
-            case 'Lux':
-                return 'ascension';
-            default:
-                return 'training';
-            };
+        return $this->terminology[$race->key]['term'] ?? $this->terminology['default']['term'];
     }
 
 }
