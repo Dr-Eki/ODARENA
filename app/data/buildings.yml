@@ -205,6 +205,7 @@ lumberyard:
     - Beastfolk
     - Elf
     - Nox
+    - Qur
     - Reptilians
     - Simian
     - Undead
@@ -234,6 +235,7 @@ ore_mine:
     - Dwarg
     - Goblin
     - Kobold
+    - Qur
     - Snow Elf
     - Troll
     - Yeti

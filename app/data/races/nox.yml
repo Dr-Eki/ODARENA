@@ -115,7 +115,7 @@ units:
       - magical
     cost:
       mana: 700
-      wizard_strength: 2
+      #wizard_strength: 2
     power:
       offense: 8
       defense: 5

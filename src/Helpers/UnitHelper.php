@@ -1306,6 +1306,7 @@ class UnitHelper
         $limitMultiplier = 1;
         $limitMultiplier += $dominion->getImprovementPerkMultiplier('unit_pairing');
         $limitMultiplier += $dominion->getBuildingPerkMultiplier('unit_pairing');
+        $limitMultiplier += $dominion->getBuildingPerkMultiplier('unit_pairing_capped');
         $limitMultiplier += $dominion->getSpellPerkMultiplier('unit_pairing');
         $limitMultiplier += $dominion->getTerrainPerkMultiplier('unit_pairing_mod');
 

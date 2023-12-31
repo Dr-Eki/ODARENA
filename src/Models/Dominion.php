@@ -1011,7 +1011,8 @@ class Dominion extends AbstractModel
                     'deity_power',
                     'population_capped',
                     'population_growth_capped',
-                    'unit_pairing'
+                    'unit_pairing',
+                    'unit_pairing_capped'
                 ];
 
                 if(in_array($perkKey, $singleValuePerks))

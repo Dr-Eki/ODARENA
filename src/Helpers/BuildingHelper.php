@@ -212,6 +212,7 @@ class BuildingHelper
             'training_time_mod' => '%2$s%% training time for every %1$s%% (max %3$s%%).',
 
             'unit_pairing' => '%2$s%% unit pairing for every %1$s%%.',
+            'unit_pairing_capped' => '%2$+g%% unit pairing for every %1$s%% (max %3$+g%%).',
 
             'unit_send_capacity' => '%+g units sendable.',
 
