@@ -1689,6 +1689,31 @@ class InvadeActionService
                         $this->resourceService->updateResources($defender, [$resourceKey => ($maxDestroyedBySlot * -1)]);
                     }
                 }
+
+
+                if ($destroysResourcesPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'destroy_resources_on_victory'))
+                {
+                    foreach($destroysResourcesPerk as $destroysResourcePerk)
+                    {
+                        $resourceKey = (string)$destroysResourcePerk[0];
+                        $amountDestroyedPerUnit = (float)$destroysResourcePerk[1];
+                        $maxDestroyedBySlot = (int)round(min($this->invasion['attacker']['units_sent'][$slot] * $amountDestroyedPerUnit, $this->resourceCalculator->getAmount($defender, $resourceKey)));
+    
+                        if($maxDestroyedBySlot > 0)
+                        {
+                            if(isset($this->invasion['attacker']['resources_destroyed'][$resourceKey]))
+                            {
+                                $this->invasion['attacker']['resources_destroyed'][$resourceKey] += $maxDestroyedBySlot;
+                            }
+                            else
+                            {
+                                $this->invasion['attacker']['resources_destroyed'][$resourceKey] = $maxDestroyedBySlot;
+                            }
+    
+                            $this->resourceService->updateResources($defender, [$resourceKey => ($maxDestroyedBySlot * -1)]);
+                        }
+                    }
+                }
             }
         }
 

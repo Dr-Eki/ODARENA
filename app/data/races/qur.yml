@@ -5,7 +5,7 @@ home_terrain: jungle
 playable: 0 # Round 88
 skill_level: 2
 
-
+peasants_alias: forager
 draftees_alias: hunter
 
 resources:
@@ -29,13 +29,17 @@ perks:
 
 units:
   - name: Artificer
+    description: The Artificers are the backbone of the Qur's military strategy. They are skilled enchanters who fashion magical crystals, each imbued with specific abilities or protective properties.
     training_time: 6
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 1000
+      gold: 800
+      ore: 50
+      lumber: 50
+      draftees: 1
     power:
       offense: 0
       defense: 0
@@ -43,6 +47,7 @@ units:
       xp_generation_raw: 0.025
 
   - name: Crystal
+    description: A crystalline formation of gems, imbued with magical properties by skillful Qur Artificers, these Crystals provide defense and can be adorned upon Zealots to form Crystalline Zealots.
     training_time: 0
     type:
       - magical
@@ -53,32 +58,12 @@ units:
       offense: 0
       defense: 2
     perks:
-      no_draftee: 1
       does_not_count_as_population: 1
       mana_upkeep_raw: 0.005
       pairing_limit: 1,4 # Unit slot, amount (max 2 of this unit per each Unit 4)
 
-  - name: Chariot
-    training_time: 12
-    type:
-      - machine
-    cost:
-      gold: 1000
-      lumber: 475
-    power:
-      offense: 0
-      defense: 0
-    perks:
-      faster_return: 6
-      reduces_casualties: 1
-      plunders: gold;5,lumber;5
-      offense_from_pairing: 4,7,1 # slot, amount, num required
-      sendable_with_zero_op: 1
-      does_not_count_as_population: 1
-      no_draftee: 1
-      pairing_limit: 1,1 # Unit slot, amount (max 1 of this unit per each Unit 1)
-
   - name: Zealot
+    description: Zealots are the Qur's primary warriors, fiercely dedicated and highly skilled in combat. They possess both physical prowess and a deep connection to their race's magical practices.
     training_time: 12
     type:
       - living
@@ -89,14 +74,15 @@ units:
       gold: 950
       mana: 10
     power:
-      offense: 7
-      defense: 8
+      offense: 5
+      defense: 6
     perks:
       destroy_resource_on_victory: soul,1
-      faster_return_if_paired: 3,6 # slot, ticks
+      faster_return_from_wizard_ratio: 1,6 # ticks (per 1 WPA), max
       plunders: mana;2,gems;1
 
   - name: Crystalline Zealot
+    description: Created by adorning Zealots with Crystals, these warriors represent the perfect fusion of the Qur’s martial and magical expertise.
     training_time: 1
     type:
       - living
@@ -112,7 +98,5 @@ units:
       defense: 13
     perks:
       destroy_resource_on_victory: soul,2
-      faster_return_if_paired: 3,6 # slot, ticks
+      faster_return_from_wizard_ratio: 1,6 # ticks (per 1 WPA), max
       plunders: mana;4,gems;2
-      offense_from_pairing: 3,7,1 # slot, amount, num required
-      no_draftee: 1

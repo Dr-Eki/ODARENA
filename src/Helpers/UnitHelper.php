@@ -547,7 +547,7 @@ class UnitHelper
 
             'gold_improvements' => 'Increases improvement points from gold by ((([Units]/[Land]) * %g)/100)%%.',
 
-            'cost_increase_to_train_per_unit' => 'Cost increased by %d%% each.',
+            'cost_increase_to_train_per_unit' => 'Cost increased by %g%% each.',
 
             'desecration' => 'Can desecrate up to %1$s casualties into %2$s %3$s each.',
 
