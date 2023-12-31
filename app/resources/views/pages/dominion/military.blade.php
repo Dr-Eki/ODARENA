@@ -138,17 +138,7 @@
                 </div>
                 <div class="box-footer">
                     <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }} id="submit">
-                      @if ($selectedDominion->race->name == 'Growth')
-                          Mutate
-                      @elseif ($selectedDominion->race->name == 'Myconid')
-                          Grow
-                      @elseif ($selectedDominion->race->name == 'Swarm')
-                          Hatch
-                      @elseif ($selectedDominion->race->name == 'Lux')
-                          Ascend
-                      @else
-                          Train
-                      @endif
+                      {{ $militaryHelper->getTrainingTerm($selectedDominion) } }}
                     </button>
                     <div class="pull-right">
 

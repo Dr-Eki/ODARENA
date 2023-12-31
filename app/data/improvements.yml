@@ -237,6 +237,7 @@ thriving:
 # BEGIN SNOW ELF #
 
 gryphonry:
+  enabled: 0
   name: Gryphonry
   exclusive_races:
     - Snow Elf

@@ -908,7 +908,7 @@ dark_spire:
   exclusive_races:
     - Nox
   perks:
-    mana_production_raw_from_wizard_ratio: 6 # 6 x Wizard Ratio mana/tick
+    mana_production_raw_from_wizard_ratio: 7 # 7 x Wizard Ratio mana/tick
 
 night_tower:
   name: Night Tower
@@ -917,7 +917,7 @@ night_tower:
     - Nox
   perks:
     gloom_production_raw_from_time: 18,06,0.6 # Between the hours 18:00 and 06:00, produces 6 gloom
-    mana_production_raw_from_time: 18,06,30 # Between the hours 18:00 and 06:00, produces 50 mana
+    mana_production_raw_from_time: 18,06,36 # Between the hours 18:00 and 06:00, produces 50 mana
 
 # END NOX
 

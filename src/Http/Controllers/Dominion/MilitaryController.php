@@ -6,6 +6,7 @@ use OpenDominion\Models\Resource;
 
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\DominionHelper;
+use OpenDominion\Helpers\MilitaryHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\UnitHelper;
 
@@ -47,6 +48,7 @@ class MilitaryController extends AbstractDominionController
             'dominionHelper' => app(DominionHelper::class),
             'magicCalculator' => app(MagicCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
+            'militaryHelper' => app(MilitaryHelper::class),
             'populationCalculator' => app(PopulationCalculator::class),
             'resourceCalculator' => app(ResourceCalculator::class),
             'queueService' => $queueService,

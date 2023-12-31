@@ -105,7 +105,7 @@ units:
       - wild
       - massive
     cost:
-      food: 16000
+      food: 20000
       draftees: 1
     power:
       offense: 100
