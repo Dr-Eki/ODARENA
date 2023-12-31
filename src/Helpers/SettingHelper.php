@@ -18,12 +18,12 @@ use OpenDominion\Models\Spell;
 
 class SettingHelper
 {
-    /** @var SpellHelper */
-    protected $spellHelper;
+    /** @var MilitaryHelper */
+    protected $militaryHelper;
 
     public function __construct()
     {
-        $this->spellHelper = app(SpellHelper::class);
+        $this->militaryHelper = app(MilitaryHelper::class);
     }
 
     public function getNotificationCategories(): array
@@ -342,7 +342,7 @@ class SettingHelper
         })->toArray();
     }
 
-    public function getNotificationMessage(string $category, string $type, array $data): string
+    public function getNotificationMessage(string $category, string $type, array $data, Dominion $dominion = null): string
     {
         switch ("{$category}.{$type}") {
 
@@ -372,7 +372,8 @@ class SettingHelper
                 $units = array_sum($data);
 
                 return sprintf(
-                    'Training of %s %s completed',
+                    '%s of %s %s completed',
+                    ucfirst($this->militaryHelper->getTrainingTerm($dominion->race)),
                     number_format($units),
                     str_plural('unit', $units)
                 );

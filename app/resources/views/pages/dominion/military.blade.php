@@ -138,7 +138,7 @@
                 </div>
                 <div class="box-footer">
                     <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }} id="submit">
-                      {{ $militaryHelper->getTrainingTerm($selectedDominion->race) }}
+                      {{ $militaryHelper->getTrainingButtonLabel($selectedDominion->race) }}
                     </button>
                     <div class="pull-right">
 

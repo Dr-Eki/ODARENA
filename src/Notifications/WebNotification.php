@@ -60,7 +60,8 @@ class WebNotification extends Notification
             'message' => $this->notificationHelper->getNotificationMessage(
                 $this->category,
                 $this->type,
-                $this->data
+                $this->data,
+                $dominion
             ),
             'data' => $this->data,
         ];

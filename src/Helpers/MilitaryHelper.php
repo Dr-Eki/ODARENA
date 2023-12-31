@@ -4,8 +4,6 @@ namespace OpenDominion\Helpers;
 
 use OpenDominion\Models\Race;
 
-#use OpenDominion\Helpers\RaceHelper;
-
 class MilitaryHelper
 {
 
@@ -13,7 +11,7 @@ class MilitaryHelper
     {
     }
 
-    public function getTrainingTerm(Race $race)
+    public function getTrainingButtonLabel(Race $race)
     {
         switch ($race->key) {
             case 'growth':
@@ -26,6 +24,22 @@ class MilitaryHelper
                 return 'Ascend';
             default:
                 return 'Train';
+            };
+    }
+
+    public function getTrainingTerm(Race $race)
+    {
+        switch ($race->key) {
+            case 'growth':
+                return 'mutation';
+            case 'myconid':
+                return 'growth';
+            case 'swarm':
+                return 'hatching';
+            case 'Lux':
+                return 'ascension';
+            default:
+                return 'training';
             };
     }
 

@@ -1011,7 +1011,7 @@ chrysalis:
   exclusive_races:
     - Swarm
   perks:
-    improvements: 1,2 # Every 1% gives 1.85% higher imps
+    improvements: 1,2 # Every 1% gives 2% higher imps
 
 burrow:
   name: Burrow

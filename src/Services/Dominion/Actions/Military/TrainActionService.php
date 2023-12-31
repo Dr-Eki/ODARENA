@@ -27,6 +27,7 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
+use OpenDominion\Helpers\MilitaryHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\ResourceHelper;
 use OpenDominion\Helpers\SpellHelper;
@@ -49,6 +50,7 @@ class TrainActionService
     protected $spellCalculator;
     protected $magicCalculator;
     protected $militaryCalculator;
+    protected $militaryHelper;
     protected $landCalculator;
     protected $populationCalculator;
     protected $spellHelper;
@@ -68,6 +70,7 @@ class TrainActionService
         ImprovementCalculator $improvementCalculator,
         SpellCalculator $spellCalculator,
         MilitaryCalculator $militaryCalculator,
+        MilitaryHelper $militaryHelper,
         MagicCalculator $magicCalculator,
         LandCalculator $landCalculator,
         PopulationCalculator $populationCalculator
@@ -78,6 +81,7 @@ class TrainActionService
         $this->unitHelper = $unitHelper;
         $this->raceHelper = $raceHelper;
         $this->spellHelper = $spellHelper;
+        $this->militaryHelper = $militaryHelper;
         $this->resourceHelper = $resourceHelper;
         $this->buildingCalculator = $buildingCalculator;
         $this->resourceCalculator = $resourceCalculator;
@@ -624,7 +628,8 @@ class TrainActionService
         $trainingCostsString = str_replace('And', 'and', $trainingCostsString);
 
         $message = sprintf(
-            'Training of %s begun at a cost of %s.',
+            '%s of %s begun at a cost of %s.',
+            ucfirst($this->militaryHelper->getTrainingTerm($dominion->race)),
             $unitsToTrainString,
             $trainingCostsString
         );

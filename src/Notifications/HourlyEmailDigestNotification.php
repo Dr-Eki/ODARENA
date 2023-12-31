@@ -65,7 +65,8 @@ class HourlyEmailDigestNotification extends Notification implements ShouldQueue
             $mailMessage = $mailMessage->line('- ' . $this->notificationHelper->getNotificationMessage(
                     $notification['category'],
                     $notification['type'],
-                    $notification['data']
+                    $notification['data'],
+                    $dominion
                 ));
         }
 
@@ -91,7 +92,8 @@ class HourlyEmailDigestNotification extends Notification implements ShouldQueue
         $subjectParts[] = $this->notificationHelper->getNotificationMessage(
             $firstNotification['category'],
             $firstNotification['type'],
-            $firstNotification['data']
+            $firstNotification['data'],
+            null
         );
 
         return implode(' ', $subjectParts);
