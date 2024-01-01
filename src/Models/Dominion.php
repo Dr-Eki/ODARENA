@@ -1319,7 +1319,7 @@ class Dominion extends AbstractModel
 
                 elseif(in_array($perkKey, ['mana_production_raw_from_wizard_ratio']))
                 {
-                    $perk = (float)$perkValueString;
+                    $perk = (float)$perkValueString * $buildingOwned;
                 }
 
                 elseif($perkKey == ($this->race->key . '_unit_housing'))
