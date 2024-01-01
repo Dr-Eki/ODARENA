@@ -635,12 +635,12 @@ class CasualtiesCalculator
         {
             if($terrainPerks = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "casualties_on_offense_vs_terrain"))
             {
-                foreach($terrainPerks as $terrainPerkData)
+                $terrainKeys = (array)$terrainPerks[0];
+                $perPercentage = (float)$terrainPerks[1];
+                $max = (float)$terrainPerks[2] / 100;
+
+                foreach($terrainKeys as $terrainKey)
                 {
-                    $terrainKey = (string)$terrainPerkData[0];
-                    $perPercentage = (float)$terrainPerkData[1];
-                    $max = (float)$terrainPerkData[2] / 100;
-    
                     # How much land does the enemy have of that land type?
                     $enemyLandOfLandType = $enemy->{'terrain_' . $terrainKey};
                     $enemyTotalLand = $enemy->land;
@@ -655,12 +655,12 @@ class CasualtiesCalculator
         {
             if($terrainPerks = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "casualties_on_defense_from_terrain"))
             {
-                foreach($terrainPerks as $terrainPerkData)
+                $terrainKeys = (array)$terrainPerks[0];
+                $perPercentage = (float)$terrainPerks[1];
+                $max = (float)$terrainPerks[2] / 100;
+
+                foreach($terrainKeys as $terrainKey)
                 {
-                    $terrainKey = (string)$terrainPerkData[0];
-                    $perPercentage = (float)$terrainPerkData[1];
-                    $max = (float)$terrainPerkData[2] / 100;
-    
                     # How much land does the enemy have of that land type?
                     $landOfLandType = $dominion->{'terrain_' . $terrainKey};
                     $totalLand = $dominion->land;
