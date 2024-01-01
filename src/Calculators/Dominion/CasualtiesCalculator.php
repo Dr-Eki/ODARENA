@@ -6,6 +6,7 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Unit;
 
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 
@@ -18,6 +19,11 @@ class CasualtiesCalculator
      * @var LandCalculator
      */
     protected $landCalculator;
+
+    /**
+     * @var MagicCalculator
+     */
+    protected $magicCalculator;
 
     /**
      * @var MilitaryCalculator
@@ -42,6 +48,7 @@ class CasualtiesCalculator
     public function __construct()
     {
         $this->landCalculator = app(LandCalculator::class);
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->populationCalculator = app(PopulationCalculator::class);
         $this->sorceryCalculator = app(SorceryCalculator::class);
