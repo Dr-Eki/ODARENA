@@ -635,38 +635,39 @@ class CasualtiesCalculator
         {
             if($terrainPerks = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "casualties_on_offense_vs_terrain"))
             {
-
-                dd($terrainPerks);
-
                 foreach($terrainPerks as $terrainPerkData)
                 {
                     $terrainKey = (string)$terrainPerkData[0];
                     $perPercentage = (float)$terrainPerkData[1];
+                    $max = (float)$terrainPerkData[2] / 100;
     
                     # How much land does the enemy have of that land type?
-                    $enemyLandOfLandType = $enemy->{'land_' . $landType};
+                    $enemyLandOfLandType = $enemy->{'terrain_' . $terrainKey};
                     $enemyTotalLand = $enemy->land;
                     $enemyLandTypePercentage = $enemyLandOfLandType / $enemyTotalLand;
     
-                    $multiplier += max($max, $enemyLandTypePercentage * $perPercentage);
+                    $multiplier = max($max, $multiplier + ($enemyLandTypePercentage * $perPercentage));
                 }
             }
         }
 
         if($mode == 'defense')
         {
-            if($terrainPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "casualties_on_defense_from_terrain"))
+            if($terrainPerks = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "casualties_on_defense_from_terrain"))
             {
-                $landType = (string)$landPerkData[0];
-                $perPercentage = (float)$landPerkData[1];
-                $max = (float)$landPerkData[2] / 100;
-
-                # How much land does the dominion have of that land type?
-                $landOfLandType = $dominion->{'land_' . $landType};
-                $totalLand = $dominion->land;
-                $enemyLandTypePercentage = $landOfLandType / $totalLand;
-
-                $multiplier += max($max, $enemyLandTypePercentage * $perPercentage);
+                foreach($terrainPerks as $terrainPerkData)
+                {
+                    $terrainKey = (string)$terrainPerkData[0];
+                    $perPercentage = (float)$terrainPerkData[1];
+                    $max = (float)$terrainPerkData[2] / 100;
+    
+                    # How much land does the enemy have of that land type?
+                    $landOfLandType = $dominion->{'terrain_' . $terrainKey};
+                    $totalLand = $dominion->land;
+                    $landTypePercentage = $landOfLandType / $totalLand;
+    
+                    $multiplier = max($max, $multiplier + ($landTypePercentage * $perPercentage));
+                }
             }
         }
 
