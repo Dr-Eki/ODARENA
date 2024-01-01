@@ -65,7 +65,11 @@
 <div class="row">
     <div class="col-sm-12 col-md-9">
         @component('partials.dominion.insight.box')
-        @slot('title', ('The Dominion of ' . $dominion->name))
+        @if(in_array($selected->dominion->round->mode, ['standard', 'standard-duration', 'deathmatch', 'deathmatch-duration']))
+            @slot('title', ('The Dominion of ' . $dominion->name))
+        @else
+            @slot('title', ('The Dominion of ' . $dominion->name) . ' (# ' . $dominion->realm->number . ')')
+        @endif
         @slot('titleIconClass', 'fa fa-chart-bar')
             @slot('tableResponsive', false)
             @slot('noPadding', true)
