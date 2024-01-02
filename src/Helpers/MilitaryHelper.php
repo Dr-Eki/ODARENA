@@ -13,12 +13,12 @@ class MilitaryHelper
     }
 
     protected $terminology = [
-        'growth' => ['label' => 'mutate', 'term' => 'mutation'],
-        'myconid' => ['label' => 'grow', 'term' => 'growth'],
-        'swarm' => ['label' => 'hatch', 'term' => 'hatching'],
-        'lux' => ['label' => 'ascend', 'term' => 'ascension'],
-        'void' => ['label' => 'form', 'term' => 'forming'],
-        'default' => ['label' => 'train', 'term' => 'training'],
+        'growth' => ['label' => 'Mutate', 'term' => 'mutation'],
+        'myconid' => ['label' => 'Grow', 'term' => 'growth'],
+        'swarm' => ['label' => 'Hatch', 'term' => 'hatching'],
+        'lux' => ['label' => 'Ascend', 'term' => 'ascension'],
+        'void' => ['label' => 'Form', 'term' => 'forming'],
+        'default' => ['label' => 'Train', 'term' => 'training'],
     ];
 
     public function getTrainingButtonLabel(Race $race)

@@ -263,25 +263,32 @@
             </div>
             <div class="box-body">
                 <h4>Hostile Spells You Have Cast</h4>
-                <table class="table table-condensed">
-                    <colgroup>
-                        <col>
-                        <col width="200">
-                        <col width="200">
-                    </colgroup>
-                    <tr>
-                        <th>Cast On</th>
-                        <th>Spell</th>
-                        <th>Duration</th>
-                    </tr>
-                    @foreach($spellCalculator->getPassiveSpellsCastByDominion($selectedDominion, 'hostile') as $activePassiveSpellCast)
+                <div class="box box-primary table-responsive" id="spells-cast">
+                    <table class="table table-striped table-hover" id="spells-cast-table">
+                        <colgroup>
+                            <col>
+                            <col width="200">
+                            <col width="200">
+                        </colgroup>
+                        <thead>
                             <tr>
-                                <td><a href="{{ route('dominion.insight.show', [$activePassiveSpellCast->dominion->id]) }}">{{ $activePassiveSpellCast->dominion->name }}&nbsp;(#&nbsp;{{ $activePassiveSpellCast->dominion->realm->number }})</a></td>
-                                <td>{{ $activePassiveSpellCast->spell->name }}</td>
-                                <td>{{ $activePassiveSpellCast->duration }} / {{ $activePassiveSpellCast->spell->duration }}</td>
+                                <th>Cast On</th>
+                                <th>Spell</th>
+                                <th>Duration</th>
                             </tr>
-                    @endforeach
+                        </thead>
+                        <tbody>
+                            @foreach($spellCalculator->getPassiveSpellsCastByDominion($selectedDominion, 'hostile') as $activePassiveSpellCast)
+                                <tr>
+                                    <td><a href="{{ route('dominion.insight.show', [$activePassiveSpellCast->dominion->id]) }}">{{ $activePassiveSpellCast->dominion->name }}&nbsp;(#&nbsp;{{ $activePassiveSpellCast->dominion->realm->number }})</a></td>
+                                    <td>{{ $activePassiveSpellCast->spell->name }}</td>
+                                    <td>{{ $activePassiveSpellCast->duration }} / {{ $activePassiveSpellCast->spell->duration }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
                     </table>
+                </div>
+                
                 <h4>Hostile Spells Cast On You</h4>
                 <table class="table table-condensed">
                     <colgroup>
@@ -537,5 +544,28 @@
         // prevent duplicate form submissions
         $(this).find(":submit").attr('disabled', 'disabled');
     });
+    </script>
+@endpush
+
+@push('page-styles')
+    <link rel="stylesheet" href="{{ asset('assets/vendor/datatables/css/dataTables.bootstrap.css') }}">
+    <style>
+        #spells-cast #spells-cast-table_filter { display: none !important; }
+    </style>
+@endpush
+
+@push('page-scripts')
+    <script type="text/javascript" src="{{ asset('assets/vendor/datatables/js/jquery.dataTables.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('assets/vendor/datatables/js/dataTables.bootstrap.js') }}"></script>
+@endpush
+
+@push('inline-scripts')
+    <script type="text/javascript">
+        (function ($) {
+            var table = $('#spells-cast-table').DataTable({
+                order: [2, 'desc'],
+                paging: false,
+            });
+        })(jQuery);
     </script>
 @endpush
