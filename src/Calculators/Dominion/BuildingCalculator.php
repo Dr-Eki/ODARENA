@@ -53,7 +53,7 @@ class BuildingCalculator
         $builtLand = $this->getTotalBuildings($dominion);
         $queuedBuildingsAmount = $this->queueService->getConstructionQueueTotal($dominion);
         $unbuiltLand = $dominion->land - $builtLand - $queuedBuildingsAmount;
-        $buildingsToDestroy = min($landLost, $builtLand + $queuedBuildingsAmount);
+        $buildingsToDestroy = $landLost - $unbuiltLand;
 
         // If there are no buildings to destroy, return empty array
         if ($buildingsToDestroy <= 0)
