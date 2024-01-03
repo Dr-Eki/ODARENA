@@ -3,29 +3,30 @@
 namespace OpenDominion\Http\Controllers\Dominion;
 
 use OpenDominion\Calculators\RealmCalculator;
-use OpenDominion\Calculators\Dominion\BuildingCalculator;
+#use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\ProductionCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
-use OpenDominion\Helpers\BuildingHelper;
-use OpenDominion\Helpers\LandHelper;
+#use OpenDominion\Helpers\BuildingHelper;
+#use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Helpers\StatsHelper;
 use OpenDominion\Helpers\UnitHelper;
-use OpenDominion\Services\Dominion\QueueService;
+#use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\StatsService;
 
-use DB;
+#use DB;
 use OpenDominion\Helpers\HistoryHelper;
 use OpenDominion\Helpers\RaceHelper;
 
 use OpenDominion\Models\DominionHistory;
 use OpenDominion\Models\DominionStat;
 use OpenDominion\Models\Spell;
-use OpenDominion\Models\Stat;
+#use OpenDominion\Models\Stat;
 
 class AdvisorsController extends AbstractDominionController
 {
@@ -40,6 +41,7 @@ class AdvisorsController extends AbstractDominionController
             'populationCalculator' => app(PopulationCalculator::class),
             'productionCalculator' => app(ProductionCalculator::class),
             'landCalculator' => app(LandCalculator::class),
+            'magicCalculator' => app(LandCalculator::class),
             'realmCalculator' => app(RealmCalculator::class),
             'raceHelper' => app(RaceHelper::class),
             'resourceCalculator' => app(ResourceCalculator::class),
@@ -71,6 +73,7 @@ class AdvisorsController extends AbstractDominionController
             'spellCalculator' => $spellCalculator,
             'spellHelper' => $spellHelper,
             'activeSpells' => $activeSpells,
+            'magicCalculator' => app(LandCalculator::class),
         ]);
     }
 
@@ -78,6 +81,7 @@ class AdvisorsController extends AbstractDominionController
     {
         return view('pages.dominion.advisors.military', [
             'landCalculator' => app(LandCalculator::class),
+            'magicCalculator' => app(LandCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'populationCalculator' => app(PopulationCalculator::class),
             'unitHelper' => app(UnitHelper::class),
@@ -97,6 +101,7 @@ class AdvisorsController extends AbstractDominionController
         return view('pages.dominion.advisors.statistics', [
             'dominionStats' => $dominionStats,
             'landCalculator' => app(LandCalculator::class),
+            'magicCalculator' => app(LandCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'populationCalculator' => app(PopulationCalculator::class),
             'unitHelper' => app(UnitHelper::class),
