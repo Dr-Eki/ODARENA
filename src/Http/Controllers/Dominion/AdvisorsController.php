@@ -41,7 +41,7 @@ class AdvisorsController extends AbstractDominionController
             'populationCalculator' => app(PopulationCalculator::class),
             'productionCalculator' => app(ProductionCalculator::class),
             'landCalculator' => app(LandCalculator::class),
-            'magicCalculator' => app(LandCalculator::class),
+            'magicCalculator' => app(MagicCalculator::class),
             'realmCalculator' => app(RealmCalculator::class),
             'raceHelper' => app(RaceHelper::class),
             'resourceCalculator' => app(ResourceCalculator::class),
@@ -73,7 +73,7 @@ class AdvisorsController extends AbstractDominionController
             'spellCalculator' => $spellCalculator,
             'spellHelper' => $spellHelper,
             'activeSpells' => $activeSpells,
-            'magicCalculator' => app(LandCalculator::class),
+            'magicCalculator' => app(MagicCalculator::class),
         ]);
     }
 
@@ -81,7 +81,7 @@ class AdvisorsController extends AbstractDominionController
     {
         return view('pages.dominion.advisors.military', [
             'landCalculator' => app(LandCalculator::class),
-            'magicCalculator' => app(LandCalculator::class),
+            'magicCalculator' => app(MagicCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'populationCalculator' => app(PopulationCalculator::class),
             'unitHelper' => app(UnitHelper::class),
@@ -101,7 +101,7 @@ class AdvisorsController extends AbstractDominionController
         return view('pages.dominion.advisors.statistics', [
             'dominionStats' => $dominionStats,
             'landCalculator' => app(LandCalculator::class),
-            'magicCalculator' => app(LandCalculator::class),
+            'magicCalculator' => app(MagicCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'populationCalculator' => app(PopulationCalculator::class),
             'unitHelper' => app(UnitHelper::class),
