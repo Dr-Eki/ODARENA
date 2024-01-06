@@ -148,6 +148,7 @@
                         </ul>
                     </div>
                 </div>
+                <p>Attributes and perks may vary depending on type of conversion. The above are the attributes and perks for regular units conversion.</p>
             </div>
 
             {{-- 

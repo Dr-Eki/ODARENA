@@ -232,6 +232,8 @@ class BuildingHelper
             'improvements_capped' => 'Improvements increased by %2$s%% for every %1$s%% (max +%3$s%%).',
             'improvements_interest' => 'Improvements interest increased by %2$s%% for every %1$s%% (max +%3$s%%).',
 
+            'quadratic_improvements' => 'Improvements increased by %2$s%% for every %1$s%% (no max).',
+
             'invest_bonus' => '+%2$g%% investment bonus for every %1$s%% (max +%3$s%%)',
             'gold_invest_bonus' => '+%2$g%% improvement points from gold for every %1$s%% (max +%3$s%%)',
             'food_invest_bonus' => '+%2$g%% improvement points from food for every %1$s%% (max +%3$s%%)',

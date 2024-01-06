@@ -95,7 +95,7 @@ units:
       gold: 333333
     power:
       offense: 0
-      defense: 1000
+      defense: 444
     perks:
       does_not_count_as_population: 1
       immortal_on_fending_off: 1

@@ -1349,6 +1349,31 @@ class Dominion extends AbstractModel
                     return $result;
                 }
 
+                elseif($perkKey == 'quadratic_improvements')
+                {
+
+                    $effectFromPerk = 0;
+                    # =B2*(2+B2) 
+
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+                    $ratio = (float)$perkValues[0];
+                    $multiplier = (float)$perkValues[1] / 100;
+                    $max = isset($perkValues[2]) ? (float)$perkValues[2] / 100 : 1;
+
+                    $buildingOwned = $buildingOwned;
+                    $buildingRatio = $buildingOwned / $landSize;
+
+                    $effectFromPerk += $buildingRatio * $ratio * (1 + $multiplier + $buildingRatio);
+
+                    if($max)
+                    {
+                        $effectFromPerk = min($perk, $max);
+                    }
+
+                    $perk += $effectFromPerk;
+
+                }
+
                 elseif($perkKey !== 'jobs' and $perkKey !== 'housing')
                 {
                     dd("[Error] Undefined building perk key (\$perkKey): $perkKey");

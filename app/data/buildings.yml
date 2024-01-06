@@ -324,9 +324,11 @@ factory:
 
 school:
   name: School
+  enabled: 0
   category: other
   excluded_races:
     - Beastfolk
+    - Glimjir
     - Swarm
     - Sylvan
     - Troll
@@ -815,7 +817,7 @@ coral_reef:
   exclusive_races:
     - Glimjir
   perks:
-    kelp_production_raw: 40
+    quadratic_improvements: 1,2 # Every 1% gives 1.5% higher imps
 
 giant_shell:
   name: Giant Shell

@@ -267,7 +267,7 @@ class ReleaseActionService
                 $releasedInto = str_plural($this->raceHelper->getPeasantsTerm($dominion->race), $amount);
                 $releasedUnitName = str_plural($this->raceHelper->getDrafteesTerm($dominion->race), $amount);
 
-                $unitStrings[] = sprintf('%s %s into %s', $amount, $releasedUnitName, $releasedInto);
+                $unitStrings[] = sprintf('%s %s into %s', number_format($amount), $releasedUnitName, $releasedInto);
                 
             }
             else
@@ -304,7 +304,6 @@ class ReleaseActionService
                         str_plural($unit->name, $amount));
                 }
             }
-
 
         }
 

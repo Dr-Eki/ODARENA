@@ -218,10 +218,10 @@ class SpellActionService
                 $dominion->wizard_strength -= $wizardStrengthCost;
             }
 
-            $dominion->save([
-                'event' => HistoryService::EVENT_ACTION_CAST_SPELL,
-                'action' => $spell->key
-            ]);
+            #$dominion->save([
+            #    'event' => HistoryService::EVENT_ACTION_CAST_SPELL,
+            #    'action' => $spell->key
+            #]);
         });
 
         if($spell->class !== 'invasion')

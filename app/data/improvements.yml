@@ -175,7 +175,6 @@ warfare:
   name: Warfare
   excluded_races:
     - Barbarian
-    - Demon
   perks:
     prestige_gains: 25,3000
 

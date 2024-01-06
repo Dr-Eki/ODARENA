@@ -318,4 +318,21 @@ class MagicCalculator
         }
     }
 
+    public function getTimesSpellCastByDominion(Dominion $dominion, Spell $spell): int
+    {
+        return $dominion->history
+            ->filter(function ($historyItem) use ($spell) {
+                if ($historyItem->event !== 'cast spell') {
+                    return false;
+                }
+    
+                // Assuming $historyItem->delta is already an array
+                $delta = $historyItem->delta;
+                return isset($delta['action']) && $delta['action'] === $spell->key;
+            })
+            ->count();
+    }
+    
+    
+
 }

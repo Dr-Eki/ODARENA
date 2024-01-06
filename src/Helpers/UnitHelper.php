@@ -10,6 +10,7 @@ use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Resource;
+use OpenDominion\Models\Spell;
 use OpenDominion\Models\Stat;
 use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Unit;
@@ -185,6 +186,9 @@ class UnitHelper
 
             'defense_from_prestige' => 'Defense increased by 1 for every %1$s prestige (max +%2$s).',
             'offense_from_prestige' => 'Offense increased by 1 for every %1$s prestige (max +%2$s).',
+
+            'defense_from_times_spell_cast' => '%2$+g defensive power for every time the spell %1$s has been cast.',
+            'offense_from_times_spell_cast' => '%2$+g offensive power for every time the spell %1$s has been cast.',
 
             'defense_vs_prestige' => 'Defense increased by 1 against every %1$s prestige of attacker (max +%2$s).',
             'offense_vs_prestige' => 'Offense increased by 1 against every %1$s prestige of target (max +%2$s).',
@@ -708,6 +712,25 @@ class UnitHelper
                     }
 
                     $perkValue = $data;
+                }
+
+                // Special case for defense_from_times_spell_cast
+                if ($perk->key === 'defense_from_times_spell_cast')
+                {
+                    $perSpell = (float)$perkValue[0];
+                    $spellKey = (string)$perkValue[1];
+                    $max = isset($perkValue[2]) ? $perkValue[2] : null;
+
+                    $spell = Spell::where('key', $spellKey)->firstOrFail();
+
+                    if($max)
+                    {
+                        $perkValue = [$spell->name, $perSpell, $max];
+                    }
+                    else
+                    {
+                        $perkValue = [$spell->name, $perSpell];
+                    }
                 }
 
                 # 'Returns %1$s ticks faster from per %2$%% %3$s (rounds down).',

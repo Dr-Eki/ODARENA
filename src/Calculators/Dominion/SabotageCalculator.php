@@ -279,8 +279,6 @@ class SabotageCalculator
         
         $rawDamage = min($rawDamage, ($baseDamage / 100)*1.5);
 
-        #dump('Raw damage is ' . $rawDamage . ' becase base damage is ' . $baseDamage . ' and total sabotage power sent is ' . $totalSabotagePowerSent . ' vs and target SPA is ' . $targetSpa);
-
         return $rawDamage;
     }
 

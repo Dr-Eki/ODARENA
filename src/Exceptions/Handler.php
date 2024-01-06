@@ -33,8 +33,17 @@ class Handler extends ExceptionHandler
      * {@inheritdoc}
      */
     #public function report(Exception $exception)
+    #public function report(Throwable $exception)
+    #{
+    #    parent::report($exception);
+    #}
+
     public function report(Throwable $exception)
     {
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
+            Log::error('MethodNotAllowedHttpException for URL: ' . request()->fullUrl());
+        }
+    
         parent::report($exception);
     }
 

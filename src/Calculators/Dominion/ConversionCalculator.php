@@ -881,7 +881,7 @@ class ConversionCalculator
 
             foreach($invasion['defender']['units_surviving'] as $slot => $amount)
             {
-                if($this->conversionHelper->isSlotConvertible($slot, $enemy, [], [], true, $cult, $invasion, $mode))
+                if($this->conversionHelper->isSlotConvertible($slot, $enemy, [], [], $cult, $invasion, $mode, 'psionic'))
                 {
                     # Lazy because they all become Unit1/Thrall for now.
                     $amountConverted = intval(min($invasion['defender']['units_lost'][$slot], $amount, $amount * $ratio));

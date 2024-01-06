@@ -579,6 +579,7 @@ class MilitaryCalculator
         $unitPower += $this->getUnitPowerFromResourceExhaustingPerk($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromTimePerk($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromSpell($dominion, $unit, $powerType);
+        $unitPower += $this->getUnitPowerFromTimesSpellCast($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromActiveSelfSpells($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromAdvancement($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromRulerTitle($dominion, $unit, $powerType);
@@ -1656,6 +1657,37 @@ class MilitaryCalculator
           {
               $powerFromPerk = $powerFromSpell;
           }
+
+          return $powerFromPerk;
+
+      }
+
+
+      protected function getUnitPowerFromTimesSpellCast(Dominion $dominion, Unit $unit, string $powerType): float
+      {
+
+          $spellPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_times_spell_cast", null);
+          $powerFromPerk = 0;
+
+          if (!$spellPerkData)
+          {
+              return 0;
+          }
+
+          $powerFromSpell = (float)$spellPerkData[0];
+          $spellKey = (string)$spellPerkData[1];
+          $max = isset($spellPerkData[2]) ? (int)$spellPerkData[2] : null;
+
+          $spell = Spell::where('key', $spellKey)->firstOrFail();
+
+          $timeSpellCast = $this->magicCalculator->getTimesSpellCastByDominion($dominion, $spell);
+
+          $powerFromPerk = $powerFromSpell * $timeSpellCast;
+
+        if ($max)
+        {
+            $powerFromPerk = min($powerFromPerk, $max);
+        }
 
           return $powerFromPerk;
 

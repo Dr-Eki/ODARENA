@@ -23,19 +23,19 @@ class ConversionHelper
         $this->unitHelper = app(UnitHelper::class);
     }
 
-    public function isSlotConvertible($slot, Dominion $dominion, array $unconvertibleAttributes = [], array $unconvertiblePerks = [], bool $isPsionic = false, Dominion $enemy = null, array $invasion = [], $mode = 'offense'): bool
+    public function isSlotConvertible($slot, Dominion $dominion, array $unconvertibleAttributes = [], array $unconvertiblePerks = [], Dominion $enemy = null, array $invasion = [], $mode = 'offense', $type = 'units'): bool
     {
         if(empty($unconvertibleAttributes))
         {
-            $unconvertibleAttributes = $this->getUnconvertibleAttributes($isPsionic);
+            $unconvertibleAttributes = $this->getUnconvertibleAttributes($type);
         }
 
         if(empty($unconvertiblePerks))
         {
-            $unconvertiblePerks = $this->getUnconvertiblePerks($isPsionic);
+            $unconvertiblePerks = $this->getUnconvertiblePerks($type);
         }
 
-        if($isPsionic)
+        if($type == 'psionic')
         {   
             $unit = $slot;
             if(!in_array($slot, ['draftees',' peasants']))
@@ -95,7 +95,7 @@ class ConversionHelper
 
     }
 
-    public function getUnconvertibleAttributes(bool $isPsionic = false): array
+    public function getUnconvertibleAttributes(string $conversionType = 'units'): array
     {
         
         $unconvertibleAttributes = [
@@ -111,7 +111,14 @@ class ConversionHelper
             'ship'
           ];
 
-        if($isPsionic)
+        # For Resource conversion, remove the 'massive' attribute
+        if($conversionType == 'resource')
+        {
+            unset($unconvertibleAttributes['massive']);
+        }
+
+        # For Psionic conversion, remove the 'aspect', 'fused', 'mindless', and 'wise' attributes
+        if($conversionType == 'psionic')
         {
             unset($unconvertibleAttributes['aspect']);
             unset($unconvertibleAttributes['fused']);
@@ -122,7 +129,7 @@ class ConversionHelper
         return $unconvertibleAttributes;
     }
     
-    public function getUnconvertiblePerks(bool $isPsionic = false): array
+    public function getUnconvertiblePerks(string $conversionType = 'units'): array
     {
         $unconvertiblePerks = [
             'fixed_casualties',
@@ -137,6 +144,12 @@ class ConversionHelper
             'dies_into_on_offense',
             'dies_into_multiple_on_victory'
           ];
+
+          # For Resource conversion, remove the 'fixed_casualties' perk
+          if($conversionType == 'resource')
+          {
+              unset($unconvertibleAttributes['fixed_casualties']);
+          }
 
         return $unconvertiblePerks;
     }

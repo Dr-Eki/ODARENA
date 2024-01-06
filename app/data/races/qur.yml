@@ -2,16 +2,52 @@ name: Qur
 alignment: independent
 description:
 home_terrain: jungle
-playable: 0 # Round 88
+playable: 1 # Round 88
 skill_level: 2
+magic_level: 4
 
 peasants_alias: forager
 draftees_alias: hunter
+
+terrain_perks:
+  badlands:
+    population_mod: -0.04
+  desert:
+    food_production_mod: -0.10
+  forest:
+    improvement_points_mod: 0.15
+    food_production_mod: 0.35
+  glacier:
+    mana_production_mod: 0.20
+    xp_generation_mod: 0.25
+    construction_costs_mod: 0.15
+  hills:
+    defensive_power_mod: 0.20
+  jungle:
+    improvement_points_mod: 0.20
+    food_production_mod: 0.20
+  mountains:
+    gems_production_mod: 0.30
+  plains:
+    casualties_mod: -0.25
+  swamps:
+    mana_production_mod: 0.40
+  volcanic:
+    mana_production_mod: 0.30
+    defensive_power_mod: 0.15
+    construction_costs_mod: 0.10
+  water:
+    food_production_mod: 0.25
+    defensive_power_mod: 0.10
+  wetlands:
+    food_production_mod: 0.25
+    enemy_casualties_mod: 0.125
 
 resources:
   - gold
   - food
   - lumber
+  - ore
   - gems
   - mana
 
@@ -22,10 +58,17 @@ improvement_resources:
   gems: 18
   mana: 10
 
+peasants_production:
+  gold: 2.80
+  food: 0.20
+
 perks:
-  salvaging: 65
+  salvaging: 60
+  lumber_production_mod: 10
+  ore_production_mod: 10
   gems_production_mod: 20
   food_production_raw_from_draftees: 2
+  draftee_dp: 1.5
 
 units:
   - name: Artificer
@@ -44,7 +87,7 @@ units:
       offense: 0
       defense: 0
     perks:
-      xp_generation_raw: 0.025
+      xp_generation_raw: 0.04
 
   - name: Crystal
     description: A crystalline formation of gems, imbued with magical properties by skillful Qur Artificers, these Crystals provide defense and can be adorned upon Zealots to form Crystalline Zealots.
@@ -71,18 +114,19 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 950
-      mana: 10
+      gold: 1700
+      mana: 25
+      draftees: 1
     power:
       offense: 5
       defense: 6
     perks:
-      destroy_resource_on_victory: soul,1
+      destroy_resources_on_victory: soul;1,gloom;0.2
       faster_return_from_wizard_ratio: 1,6 # ticks (per 1 WPA), max
       plunders: mana;2,gems;1
 
   - name: Crystalline Zealot
-    description: Created by adorning Zealots with Crystals, these warriors represent the perfect fusion of the Qur’s martial and magical expertise.
+    description: Created by adorning Zealots with Crystals, these warriors represent the perfect fusion of the Qur's martial and magical expertise.
     training_time: 1
     type:
       - living
@@ -91,12 +135,14 @@ units:
       - wise
     cost:
       unit2: 4
-      unit4: 1
+      unit3: 1
       mana: 20
+      ore: 100
     power:
-      offense: 10
-      defense: 13
+      offense: 8
+      defense: 9
     perks:
-      destroy_resource_on_victory: soul,2
+      destroy_resources_on_victory: soul;2,gloom;0.4
       faster_return_from_wizard_ratio: 1,6 # ticks (per 1 WPA), max
       plunders: mana;4,gems;2
+      mana_upkeep_raw: 0.005
