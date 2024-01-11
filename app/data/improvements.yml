@@ -247,13 +247,12 @@ thriving:
 # BEGIN SNOW ELF #
 
 gryphonry:
-  enabled: 0
   name: Gryphonry
   exclusive_races:
     - Snow Elf
   perks:
     unit_pairing: 100,10000
-    attrition_protection: 100,10000
+    attrition_protection: 50,5000
 
 # END SNOW ELF #
 

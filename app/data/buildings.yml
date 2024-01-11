@@ -324,7 +324,6 @@ factory:
 
 school:
   name: School
-  enabled: 0
   category: other
   excluded_races:
     - Beastfolk
@@ -334,7 +333,7 @@ school:
     - Troll
     - Wood Elf
   perks:
-    improvements: 1,1.5 # Every 1% gives 1.5% higher imps
+    improvements: 1,1.75 # Every 1% gives 1.75% higher imps
 
 syndicate_quarters:
   name: Syndicate Quarters
@@ -915,7 +914,7 @@ dark_spire:
   exclusive_races:
     - Nox
   perks:
-    mana_production_raw_from_wizard_ratio: 7 # 7 x Wizard Ratio mana/tick
+    mana_production_raw_from_wizard_ratio: 5 # 5 x Wizard Ratio mana/tick
 
 night_tower:
   name: Night Tower
@@ -1029,7 +1028,7 @@ gryphon_nest:
     - Snow Elf
   land_type: mountain
   perks:
-    snow_elf_unit4_production_raw_capped: 0.004,25
+    snow_elf_unit4_production_raw_capped: 0.008,25
     #attrition_protection: 2,4,Snow Elf # amount, slot, faction
 
 # END SNOW ELF
@@ -1050,7 +1049,7 @@ chrysalis:
   exclusive_races:
     - Swarm
   perks:
-    improvements: 1,2 # Every 1% gives 2% higher imps
+    improvements: 1,2.25 # Every 1% gives 2% higher imps
 
 burrow:
   name: Burrow
@@ -1114,7 +1113,7 @@ orchard:
   exclusive_races:
     - Sylvan
   perks:
-    improvements: 1,2 # Every 1% gives 2% higher imps
+    improvements: 1,2.25 # Every 1% gives 2% higher imps
 
 # END SYLVAN
 
@@ -1126,7 +1125,7 @@ stronghold:
   exclusive_races:
     - Troll
   perks:
-    improvements: 1,2 # Every 1% gives 2% higher imps
+    improvements: 1,2.25 # Every 1% gives 2% higher imps
     gem_theft_reduction: 1,2,100  # Every 1% reduces plat stolen by 8%, max 100% reduction
     improvements_damage_reduction: 1,0.50 # Every 1% reduces damage to improvements by 0.75%
 
@@ -1169,7 +1168,7 @@ institute:
     - Wood Elf
   land_type: forest
   perks:
-    improvements: 1,2 # Every 1% gives 1.5% higher imps
+    improvements: 1,2.25 # Every 1% gives 1.5% higher imps
 
 # END WOOD ELF
 
