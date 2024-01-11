@@ -221,6 +221,17 @@ hollowing:
 
 # END DWARG #
 
+# BEGIN GLIMJIR #
+
+rooting:
+  name: Rooting
+  exclusive_races:
+    - Glimjir
+  perks:
+    kelp_production_mod: 30,5600
+
+# END DWARG #
+
 # BEGIN SIMIAN #
 
 thriving:

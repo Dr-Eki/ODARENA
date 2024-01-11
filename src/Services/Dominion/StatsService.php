@@ -81,7 +81,7 @@ class StatsService
         }
     }
 
-    public function updateStats(Dominion $dominon, array $statValues): void
+    public function updateStats(Dominion $dominion, array $statValues): void
     {
         foreach($statValues as $stat => $value)
         {
@@ -89,7 +89,7 @@ class StatsService
         }
     }
 
-    public function setStats(Dominion $dominon, array $statValues): void
+    public function setStats(Dominion $dominion, array $statValues): void
     {
         foreach($statValues as $stat => $value)
         {

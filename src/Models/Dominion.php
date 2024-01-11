@@ -1353,7 +1353,6 @@ class Dominion extends AbstractModel
                 {
 
                     $effectFromPerk = 0;
-                    # =B2*(2+B2) 
 
                     $perkValues = $this->extractBuildingPerkValues($perkValueString);
                     $ratio = (float)$perkValues[0];

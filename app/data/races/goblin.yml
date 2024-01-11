@@ -93,38 +93,38 @@ units:
       reduces_casualties: 1
       counts_as_wizard: 0.025
 
-  - name: Ironhide
-    training_time: 9
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      gold: 600
-      ore: 80
-      draftees: 1
-    power:
-      offense: 0
-      defense: 2
-    perks:
-      defense_from_improvement_points: 0.01,1000000,2 # +0.01 for every 1,000,000 imp points, max +3
+  # - name: Ironhide
+  #   training_time: 9
+  #   type:
+  #     - living
+  #     - sentient
+  #     - intelligent
+  #   cost:
+  #     gold: 600
+  #     ore: 80
+  #     draftees: 1
+  #   power:
+  #     offense: 0
+  #     defense: 2
+  #   perks:
+  #     defense_from_improvement_points: 0.01,1000000,2 # +0.01 for every 1,000,000 imp points, max +3
 
-  - name: Warmonger
-    training_time: 12
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      gold: 1000
-      ore: 120
-      draftees: 1
-    power:
-      offense: 2
-      defense: 3
-    perks:
-      plunders: gold;1,gems;3
-      offense_from_improvement_points: 0.2,10000000,3 # +0.2 for every 10,000,000 imp points, max +3
+  # - name: Warmonger
+  #   training_time: 12
+  #   type:
+  #     - living
+  #     - sentient
+  #     - intelligent
+  #   cost:
+  #     gold: 1000
+  #     ore: 120
+  #     draftees: 1
+  #   power:
+  #     offense: 2
+  #     defense: 3
+  #   perks:
+  #     plunders: gold;1,gems;3
+  #     offense_from_improvement_points: 0.2,10000000,3 # +0.2 for every 10,000,000 imp points, max +3
 
   - name: Wolf Rider
     training_time: 12

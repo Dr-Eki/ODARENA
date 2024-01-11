@@ -504,36 +504,36 @@ class InvadeActionService
             $this->handleAnnexedDominions($attacker, $defender, $units);
 
             # Only count successful, non-in-realm hits over 75% as victories.
-            $countsAsVictory = 0;
-            $countsAsFailure = 0;
-            $countsAsRaze = 0;
-            $countsAsBottomfeed = 0;
+            $this->invasion['data']['is_victory'] = 0;
+            $this->invasion['data']['is_bottomfeed'] = 0;
+            $this->invasion['data']['is_failure'] = 0;
+            $this->invasion['data']['is_raze'] = 0;
 
             # Successful hits over 75% count as victories
             if($landRatio >= 0.75 and $this->invasion['result']['success'])
             {
-                $countsAsVictory = 1;
+                $this->invasion['data']['is_victory'] = 1;
             }
 
             # Successful hits under 75% count as BFs
             if($landRatio < 0.75 and $this->invasion['result']['success'])
             {
-                $countsAsBottomfeed = 1;
+                $this->invasion['data']['is_bottomfeed'] = 1;
             }
 
             # Overwhelmed hits count as failures
             if($this->invasion['result']['overwhelmed'])
             {
-                $countsAsFailure = 1;
+                $this->invasion['data']['is_failure'] = 1;
             }
 
             # Non-overwhelmed unsuccessful hits count as tactical razes
             if(!$this->invasion['result']['overwhelmed'] and !$this->invasion['result']['success'])
             {
-                $countsAsRaze = 1;
+                $this->invasion['data']['is_raze'] = 1;
             }
 
-            $this->handlePrestigeChanges($attacker, $defender, $units, $landRatio, $countsAsVictory, $countsAsBottomfeed, $countsAsFailure, $countsAsRaze);
+            $this->handlePrestigeChanges($attacker, $defender, $units, $landRatio, $this->invasion['data']['is_victory'], $$this->invasion['data']['is_bottomfeed'], $this->invasion['data']['is_failure'], $this->invasion['data']['is_raze']);
             $this->handleDuringInvasionUnitPerks($attacker, $defender, $units);
 
             $this->handleMoraleChanges($attacker, $defender, $landRatio, $units);
@@ -570,13 +570,13 @@ class InvadeActionService
             {
                 $this->invasion['attacker']['conversions'] = $offensiveConversions;
 
-                $this->statsService->updateStat($attacker, 'units_converted', array_sum($conversions['attacker']));
+                #$this->statsService->updateStat($attacker, 'units_converted', array_sum($conversions['attacker']));
             }
             if(array_sum($conversions['defender']) > 0)
             {
                 $this->invasion['defender']['conversions'] = $defensiveConversions;
 
-                $this->statsService->updateStat($defender, 'units_converted', array_sum($conversions['defender']));
+                #$this->statsService->updateStat($defender, 'units_converted', array_sum($conversions['defender']));
             }
 
             if($attacker->race->name == 'Cult')
@@ -633,25 +633,6 @@ class InvadeActionService
             # Handle resources to  be queued
             $this->handleResourceGainsForAttacker($attacker);
 
-            // Stat changes
-            if ($this->invasion['result']['success'])
-            {
-                $this->statsService->updateStat($attacker, 'land_conquered', (int)$this->invasion['attacker']['land_conquered']);
-                $this->statsService->updateStat($attacker, 'land_discovered', (int)$this->invasion['attacker']['land_discovered']);
-                $this->statsService->updateStat($attacker, 'invasion_victories', $countsAsVictory);
-                $this->statsService->updateStat($attacker, 'invasion_bottomfeeds', $countsAsBottomfeed);
-
-                $this->statsService->updateStat($target, 'land_lost', (int)$this->invasion['attacker']['land_conquered']);
-                $this->statsService->updateStat($defender, 'defense_failures', 1);
-            }
-            else
-            {
-                $this->statsService->updateStat($attacker, 'invasion_razes', $countsAsRaze);
-                $this->statsService->updateStat($attacker, 'invasion_failures', $countsAsFailure);
-
-                $this->statsService->updateStat($defender, 'defense_success', 1);
-            }
-
             # LEGION ANNEX SUPPORT EVENTS
             $legion = null;
             if($this->spellCalculator->hasAnnexedDominions($attacker))
@@ -678,6 +659,9 @@ class InvadeActionService
                     $legion = null;
                 }
             }
+
+            # Stats
+            $this->handleStats($attacker, $defender, $target);
 
             if($legion)
             {
@@ -868,10 +852,10 @@ class InvadeActionService
 
         # LDA mitigation
         $victoriesRatioMultiplier = 1;
-        if($this->statsService->getStat($attacker, 'defense_failures') >= 10)
-        {
-            $victoriesRatioMultiplier = $this->statsService->getStat($attacker, 'invasion_victories') / ($this->statsService->getStat($attacker, 'invasion_victories') + $this->statsService->getStat($attacker, 'defense_failures'));
-        }
+        // if($this->statsService->getStat($attacker, 'defense_failures') >= 10)
+        // {
+        //     $victoriesRatioMultiplier = $this->statsService->getStat($attacker, 'invasion_victories') / ($this->statsService->getStat($attacker, 'invasion_victories') + $this->statsService->getStat($attacker, 'defense_failures'));
+        // }
 
         # Successful hits over 75% give prestige to attacker and remove prestige from defender
         if($countsAsVictory)
@@ -1026,7 +1010,6 @@ class InvadeActionService
             $defender->prestige += $defenderPrestigeChange;
             $this->invasion['defender']['prestige_change'] = $defenderPrestigeChange;
         }
-
     }
 
     /**
@@ -2726,10 +2709,19 @@ class InvadeActionService
         /*
             Spells to check for:
             [AFFLICTED]
-              - [ATTACKER] Pestilence: Within 50% of target's DP? Cast.
-              - [ATTACKER] Great Fever: Is Invasion successful? Cast.
-              - [DEFENDER] Unhealing Wounds: Is target Afflicted? Cast.
+              - Pestilence: Within 50% of target's DP? Cast on target.
+              - Great Fever: Is Invasion successful? Cast on target.
+              - Festering Wounds: Is target Afflicted? Cast on attacker.
+              - Miasmic Charges: Is spell active (via resource_lost_on_invasion spell perk) and attacker not overwhelmed? Remove resources.
             [/AFFLICTED]
+
+            [LEGION]
+                - Annexation: Is invsaion successul and is target Barbarian? Cast on target.
+            [/LEGION]
+
+            [ANY]
+                - Lesser Pestilence: Does target have Pestilence and is attacker not Afflicted? Cast on attacker.
+            [/ANY]
         */
 
         if($attacker->race->name == 'Afflicted')
@@ -2773,14 +2765,24 @@ class InvadeActionService
         }
 
         # If defender has Pestilence, attacker gets Lesser Pestilence if attacker is not Afflicted and does not have Pestilence or Lesser Pestilence
-        if($this->spellCalculator->isSpellActive($defender, 'pestilence') and $attacker->race->name !== 'Afflicted' and !$this->spellCalculator->isSpellActive($attacker, 'pestilence') and !$this->spellCalculator->isSpellActive($attacker, 'pestilence'))
+        if(
+            $this->spellCalculator->isSpellActive($defender, 'pestilence')
+            and $attacker->race->name !== 'Afflicted'
+            and !$this->spellCalculator->isSpellActive($attacker, 'pestilence')
+            and !$this->spellCalculator->isSpellActive($attacker, 'lesser_pestilence')
+            )
         {
             $caster = $this->spellCalculator->getCaster($defender, 'pestilence');
             $this->spellActionService->castSpell($caster, 'lesser_pestilence', $attacker, $isInvasionSpell);
         }
 
         # If attacker has Pestilence, defender gets Lesser Pestilence if defender is not Afflicted and does not have Pestilence or Lesser Pestilence
-        if($this->spellCalculator->isSpellActive($attacker, 'pestilence') and $defender->race->name !== 'Afflicted' and !$this->spellCalculator->isSpellActive($defender, 'pestilence') and !$this->spellCalculator->isSpellActive($defender, 'pestilence'))
+        if(
+            $this->spellCalculator->isSpellActive($attacker, 'pestilence')
+            and $defender->race->name !== 'Afflicted'
+            and !$this->spellCalculator->isSpellActive($defender, 'pestilence')
+            and !$this->spellCalculator->isSpellActive($defender, 'lesser_pestilence')
+            )
         {
             $caster = $this->spellCalculator->getCaster($attacker, 'pestilence');
             $this->spellActionService->castSpell($caster, 'lesser_pestilence', $defender, $isInvasionSpell);
@@ -2879,9 +2881,6 @@ class InvadeActionService
             }
 
             # Update statistics
-            $this->statsService->updateStat($defender, 'ore_salvaged', $result['defender']['salvage']['ore']);
-            $this->statsService->updateStat($defender, 'lumber_salvaged', $result['defender']['salvage']['lumber']);
-            $this->statsService->updateStat($defender, 'gems_salvaged', $result['defender']['salvage']['gems']);
         }
 
         # Attacker gets no salvage or plunder if attack fails.
@@ -3314,24 +3313,6 @@ class InvadeActionService
         $this->invasion['result']['op_dp_ratio'] = $attackingForceOP / $targetDP;
         $this->invasion['result']['op_dp_ratio_raw'] = $attackingForceRawOP / $targetRawDP;
 
-        $this->statsService->setStat($attacker, 'op_sent_max', max($this->invasion['attacker']['op'], $this->statsService->getStat($attacker, 'op_sent_max')));
-        $this->statsService->updateStat($attacker, 'op_sent_total', $this->invasion['attacker']['op']);
-
-        if(request()->getHost() === 'odarena.com')
-        {
-            $day = $attacker->round->start_date->subDays(1)->diffInDays(now());
-            $day = sprintf('%02d', $day);
-            $this->statsService->setRoundStat($attacker->round, ('day' . $day . '_top_op'), max($this->invasion['attacker']['op'], $this->statsService->getRoundStat($attacker->round, ('day' . $day . '_top_op'))));
-        }
-
-        if($this->invasion['result']['success'])
-        {
-            $this->statsService->setStat($target, 'dp_failure_max', max($this->invasion['defender']['dp'], $this->statsService->getStat($attacker, 'dp_failure_max')));
-        }
-        else
-        {
-            $this->statsService->setStat($target, 'dp_success_max', max($this->invasion['defender']['dp'], $this->statsService->getStat($attacker, 'dp_success_max')));
-        }
     }
 
     /**
@@ -3438,6 +3419,102 @@ class InvadeActionService
             }
         }
     }
+
+    public function handleStats(Dominion $attacker, Dominion $defender, Dominion $target): void
+    {
+
+        $landRatio = $this->invasion['land_ratio'];
+
+        // Victory/defeat
+        if ($this->invasion['result']['success'])
+        {
+            $this->statsService->updateStat($attacker, 'land_conquered', $this->invasion['attacker']['land_conquered']);
+            $this->statsService->updateStat($attacker, 'land_discovered', $this->invasion['attacker']['land_discovered']);
+            $this->statsService->updateStat($attacker, 'invasion_victories', $this->invasion['data']['is_victory']);
+            $this->statsService->updateStat($attacker, 'invasion_bottomfeeds', $this->invasion['data']['is_bottomfeed']);
+
+            $this->statsService->updateStat($target, 'land_lost', $this->invasion['attacker']['land_conquered']);
+            $this->statsService->updateStat($defender, 'defense_failures', 1);
+        }
+        else
+        {
+            $this->statsService->updateStat($attacker, 'invasion_razes', $this->invasion['data']['is_raze']);
+            $this->statsService->updateStat($attacker, 'invasion_failures', $this->invasion['data']['is_failure']);
+
+            $this->statsService->updateStat($defender, 'defense_success', 1);
+        }
+
+        // Buildings
+        $this->statsService->updateStat($attacker, 'buildings_destroyed', array_sum($this->invasion['attacker']['conversions']));
+        $this->statsService->updateStat($defender, 'buildings_lost', array_sum($this->invasion['defender']['buildings']));
+
+        // Conversions
+        $this->statsService->updateStat($attacker, 'units_converted', array_sum($this->invasion['attacker']['conversions']));
+        $this->statsService->updateStat($defender, 'units_converted', array_sum($this->invasion['defender']['conversions']));
+
+        // Prestige changes
+        if(($attackerPrestigeChange = $this->invasion['attacker']['prestige_change']) > 0)
+        {
+            $this->statsService->updateStat($attacker, 'prestige_gained', $attackerPrestigeChange);
+        }
+        else
+        {
+            $this->statsService->updateStat($attacker, 'prestige_lost', abs($attackerPrestigeChange));
+        }
+
+        if(($defenderPrestigeChange = $this->invasion['defender']['prestige_change']) > 0)
+        {
+            $this->statsService->updateStat($defender, 'prestige_gained', $defenderPrestigeChange);
+        }
+        else
+        {
+            $this->statsService->updateStat($defender, 'prestige_lost', abs($defenderPrestigeChange));
+        }
+
+        // OP/DP killed/lost
+        $attackerRawOpLost = $this->militaryCalculator->getOffensivePowerRaw($attacker, $target, $landRatio, $this->invasion['attacker']['units_lost'], []);
+        $attackerModOpLost = $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $this->invasion['attacker']['units_lost'], []);
+        $defenderRawDpLost = $this->militaryCalculator->getDefensivePowerRaw($target, $attacker, $landRatio, $this->invasion['defender']['units_lost'], 0, $this->isAmbush, true, $this->invasion['attacker']['units_sent'], false, false);
+        $defenderModDpLost = $this->militaryCalculator->getDefensivePower($target, $attacker, $landRatio, $this->invasion['defender']['units_lost'], 0, $this->isAmbush, true, $this->invasion['attacker']['units_sent'], false, false);
+
+        $this->statsService->updateStat($attacker, 'raw_dp_killed_total',   $defenderRawDpLost);
+        $this->statsService->updateStat($defender, 'raw_dp_lost_total',     $defenderRawDpLost);
+        $this->statsService->updateStat($defender, 'raw_op_killed_total',   $attackerRawOpLost);
+        $this->statsService->updateStat($attacker, 'raw_op_lost_total',     $attackerRawOpLost);
+
+        $this->statsService->updateStat($attacker, 'mod_dp_killed_total',   $defenderModDpLost);
+        $this->statsService->updateStat($defender, 'mod_dp_lost_total',     $defenderModDpLost);
+        $this->statsService->updateStat($defender, 'mod_op_killed_total',   $attackerModOpLost);
+        $this->statsService->updateStat($attacker, 'mod_op_lost_total',     $attackerModOpLost);
+
+        $this->invasion['attacker']['op_lost'] = $attackerModOpLost;
+        $this->invasion['attacker']['op_lost_raw'] = $attackerRawOpLost;
+
+        $this->invasion['defender']['dp_lost'] = $defenderModDpLost;
+        $this->invasion['defender']['dp_lost_raw'] = $defenderRawDpLost;
+
+        // OP/DP totals
+        $this->statsService->setStat($attacker, 'op_sent_max', max($this->invasion['attacker']['op'], $this->statsService->getStat($attacker, 'op_sent_max')));
+        $this->statsService->updateStat($attacker, 'op_sent_total', $this->invasion['attacker']['op']);
+
+        if(request()->getHost() === 'odarena.com')
+        {
+            $day = $attacker->round->start_date->subDays(1)->diffInDays(now());
+            $day = sprintf('%02d', $day);
+            $this->statsService->setRoundStat($attacker->round, ('day' . $day . '_top_op'), max($this->invasion['attacker']['op'], $this->statsService->getRoundStat($attacker->round, ('day' . $day . '_top_op'))));
+        }
+
+        if($this->invasion['result']['success'])
+        {
+            $this->statsService->setStat($target, 'dp_failure_max', max($this->invasion['defender']['dp'], $this->statsService->getStat($attacker, 'dp_failure_max')));
+        }
+        else
+        {
+            $this->statsService->setStat($target, 'dp_success_max', max($this->invasion['defender']['dp'], $this->statsService->getStat($attacker, 'dp_success_max')));
+        }
+
+    }
+
 
     /**
      * Check if dominion is sending out at least *some* OP.

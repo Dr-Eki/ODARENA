@@ -22,35 +22,35 @@ resources:
 
 improvement_resources:
   gems: 18
-  miasma: 32
+  miasma: 44
   gold: 1
   lumber: 2
 
 terrain_perks:
   badlands:
-    attrition_mod: -0.10
+    attrition_mod: -0.20
   desert:
-    food_production_mod: -0.20
+    food_production_mod: -0.40
   forest:
-    food_production_mod: 0.20
+    food_production_mod: 0.40
   glacier:
-    attrition_mod: -0.15
+    attrition_mod: -0.30
   hills:
-    defensive_power_mod: 0.02
+    defensive_power_mod: 0.08
   jungle:
-    miasma_production_mod: 0.20
+    miasma_production_mod: 0.40
   mountains:
-    defensive_power_mod: 0.03
+    defensive_power_mod: 0.10
   plains:
-    unit_specific_housing_mod: 0.10
+    unit_specific_housing_mod: 0.20
   swamps:
-    unit_specific_housing_mod: 0.12
+    unit_specific_housing_mod: 0.25
   volcanic:
     food_production_mod: -0.20
   water:
-    food_production_mod: 0.12
+    food_production_mod: 0.20
   wetlands:
-    food_production_mod: 0.12
+    food_production_mod: 0.20
 
 perks:
   can_desecrate: 1
@@ -74,7 +74,7 @@ units:
       attrition: 0.25 # 0.25% lost each tick.
       no_draftee_on_release: 1
       releases_into_resource: 10,food
-      desecration: 1,2,miasma # Can desecrate up to 1 bodies into 2 miasma each
+      desecration: 1,4,miasma # Can desecrate up to 1 bodies into 2 miasma each
 
   - name: Pest Rat
     training_time: 9
@@ -89,7 +89,7 @@ units:
       offense: 0
       defense: 3
     perks:
-      miasma_production_raw: 0.04
+      miasma_production_raw: 0.06
       kills_into_resource_per_value: 25,miasma # 25 miasma per value of killed units
 
   - name: Wretch

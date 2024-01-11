@@ -187,7 +187,13 @@ class TickService
                             $stasisDominions[] = $dominion->id;
                         }
 
-                        if(($dominion->round->ticks % 4 == 0) and !$this->protectionService->isUnderProtection($dominion) and $dominion->round->hasStarted() and !$dominion->getSpellPerkValue('fog_of_war'))
+                        if(
+                            ($dominion->round->ticks % 4 == 0) and
+                            !$this->protectionService->isUnderProtection($dominion) and
+                            $dominion->round->hasStarted() and
+                            !$dominion->getSpellPerkValue('fog_of_war') and
+                            !$dominion->isAbandoned()
+                            )
                         {
                             $this->queueService->setForTick(false); # Necessary as otherwise this-tick units are missing
                             if(static::EXTENDED_LOGGING) { Log::debug('** Capturing insight for ' . $dominion->name); }

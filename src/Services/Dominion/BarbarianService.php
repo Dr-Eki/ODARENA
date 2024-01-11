@@ -515,6 +515,8 @@ class BarbarianService
         {
             $barbarian = $availableUsers[array_rand($availableUsers, 1)];
 
+            $barbarianUser = User::findorfail($barbarian);
+
             # Get Barbarian realm.
             $realm = Realm::query()
                 ->where('alignment', '=' , 'npc')
@@ -565,26 +567,28 @@ class BarbarianService
               'Hoodlums',
               'Rapscallions',
               'Scallywags',
-              'Wretches',
               'Knaves',
               'Scamps',
               'Miscreants',
               'Misfits',
               'Good-For-Nothings',
               'Murderers',
+              'Vagrants',
+              'Brigands',
+              'Wildlings',
+              'Cutthroats',
+              'Lowlifes',
             ];
 
-            $user = User::findorfail($barbarian);
-
             # Get ruler name.
-            $rulerName = $user->display_name;
+            $rulerName = $barbarianUser->display_name;
 
             # Get the corresponding dominion name.
             $dominionName = $rulerName . "'s " . $tribeTypes[array_rand($tribeTypes, 1)];
 
-            $barbarian = $this->dominionFactory->create($user, $realm, $race, $title, $rulerName, $dominionName, NULL);
+            $barbarian = $this->dominionFactory->create($barbarianUser, $realm, $race, $title, $rulerName, $dominionName, NULL);
 
-            $this->newDominionEvent = GameEvent::create([
+            GameEvent::create([
                 'round_id' => $barbarian->round_id,
                 'source_type' => Dominion::class,
                 'source_id' => $barbarian->id,

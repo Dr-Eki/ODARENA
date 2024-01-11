@@ -718,8 +718,7 @@ class PopulationCalculator
      */
     public function getPopulationBirth(Dominion $dominion): int
     {
-        return round($this->getPopulationBirthRaw
-        ($dominion) * $this->getPopulationBirthMultiplier($dominion));
+        return round($this->getPopulationBirthRaw($dominion) * $this->getPopulationBirthMultiplier($dominion));
     }
     /**
      * Returns the Dominions raw population birth.
@@ -788,6 +787,18 @@ class PopulationCalculator
                 $unitPopulationGrowthPerk = (float)$unitPopulationGrowthPerk;
                 $multiplier += ($dominion->{"military_unit".$unit->slot} / $this->getMaxPopulation($dominion)) * $unitPopulationGrowthPerk;
             }
+        }
+
+        $unfilledJobs = $this->getUnfilledJobs($dominion);
+        $totalJobs = $this->getEmploymentJobs($dominion);
+        
+        if($unfilledJobs)
+        {
+            $unfilledJobsMultiplier = ($unfilledJobs / $totalJobs);
+
+            #dump($unfilledJobsMultiplier, $unfilledJobs, $totalJobs);
+
+            $multiplier += $unfilledJobsMultiplier;
         }
         
         return (1 + $multiplier);
@@ -919,6 +930,8 @@ class PopulationCalculator
             }
         }
 
+        $jobs += $this->queueService->getConstructionQueueTotal($dominion) * 5;
+
         $multiplier = 1;
         $multiplier += $dominion->getAdvancementPerkMultiplier('jobs_per_building');
         $multiplier += $dominion->getImprovementPerkMultiplier('jobs_per_building');
@@ -941,6 +954,11 @@ class PopulationCalculator
         return min($this->getEmploymentJobs($dominion), $dominion->peasants);
     }
 
+    public function getPopulationUnemployed(Dominion $dominion): int
+    {
+        return max(0, $dominion->peasants - $this->getEmploymentJobs($dominion));
+    }
+
     /**
      * Returns the Dominion's employment percentage.
      *
@@ -958,6 +976,17 @@ class PopulationCalculator
 
         return (min(1, ($this->getPopulationEmployed($dominion) / $dominion->peasants)) * 100);
     }
+
+    public function getFilledJobs(Dominion $dominion): int
+    {
+        return min($this->getEmploymentJobs($dominion), $dominion->peasants);
+    }
+
+    public function getUnfilledJobs(Dominion $dominion): int
+    {
+        return max(0, $this->getEmploymentJobs($dominion) - $this->getPopulationEmployed($dominion));
+    }
+
 
     public function getAnnexedPeasants($dominion): int
     {

@@ -26,32 +26,32 @@ improvement_resources:
 
 terrain_perks:
   badlands:
-    gems_production_mod: -0.04
+    gems_production_mod: -0.20
   desert:
-    food_production_mod: -0.08
+    food_production_mod: -0.25
   forest:
-    lumber_production_mod: 0.08
+    lumber_production_mod: 0.40
   glacier:
-    casualties_on_defense_mod: -0.08
+    casualties_on_defense_mod: -0.25
   hills:
-    defensive_power_mod: 0.04
+    defensive_power_mod: 0.12
   jungle:
-    food_production_mod: 0.02
-    lumber_production_mod: 0.06
+    food_production_mod: 0.20
+    lumber_production_mod: 0.20
   mountains:
-    ore_production_mod: 0.09
+    ore_production_mod: 0.25
   plains:
-    casualties_on_offense_mod: -0.07
+    casualties_on_offense_mod: -0.25
   swamps:
-    food_production_mod: 0.04
-    mana_production_mod: 0.04
+    food_production_mod: 0.20
+    mana_production_mod: 0.15
   volcanic:
-    food_production_mod: -0.14
+    food_production_mod: -0.30
   water:
-    food_production_mod: 0.12
+    food_production_mod: 0.20
   wetlands:
-    food_production_mod: 0.04
-    sorcery_damage_suffered_mod: -0.12
+    food_production_mod: 0.10
+    sorcery_damage_suffered_mod: -0.30
 
 perks:
   draftee_dp: 1.5
@@ -131,8 +131,8 @@ units:
     offense: 6
     defense: 8
   perks:
-      offense_from_pairings: 2;3,3;2 # slot;amount
-      defense_from_pairing: 4,3 # slot,amount
+      offense_from_pairings: 2;4,3;3 # slot;amount
+      defense_from_pairing: 4,4 # slot,amount
       plunders: food;20,ore;10,gems;5
       #only_dies_vs_raw_power: 6 # >=
       casualties: -25

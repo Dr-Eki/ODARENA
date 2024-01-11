@@ -119,7 +119,7 @@ units:
       - intelligent
     cost:
       gold: 1580
-      food: 50
+      food: 40
       draftees: 1
     power:
       offense: 7

@@ -33,6 +33,52 @@ dp_failure_max:
 expeditions:
   name: Expeditions
 
+# Military
+
+raw_dp_killed_total:
+  name: Total raw DP killed
+
+raw_dp_lost_total:
+  name: Total raw DP lost
+
+raw_op_killed_total:
+  name: Total raw OP killed
+
+raw_op_lost_total:
+  name: Total raw OP lost
+
+mod_dp_killed_total:
+  name: Total modified DP killed
+
+mod_dp_lost_total:
+  name: Total modified DP lost
+
+mod_op_killed_total:
+  name: Total modified OP killed
+
+mod_op_lost_total:
+  name: Total modified OP lost
+
+prestige_gained:
+  name: Prestige gained
+
+prestige_lost:
+  name: Prestige lost
+
+# Buildings
+
+buildings_built:
+  name: Buildings built
+
+buildings_destroyed:
+  name: Buildings destroyed
+
+buildings_destroyed_self:
+  name: Buildings destroyed by self 
+
+buildings_captured:
+  name: Buildings captured
+
 # Production and Resources
 
 gold_production:

@@ -662,7 +662,7 @@ mass_grave:
   exclusive_races:
     - Afflicted
   perks:
-    peasants_conversions: 3,6;miasma,18;food # amountFrom, amountTo;resourceTo, amountTo;resourceTo
+    peasants_conversions: 3,18;miasma,18;food # amountFrom, amountTo;resourceTo, amountTo;resourceTo
 
 # END AFFLICTED
 
