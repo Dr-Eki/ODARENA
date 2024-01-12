@@ -1469,7 +1469,7 @@ class TickService
             ->update([
                 'dominions.prestige' => DB::raw('dominions.prestige + dominion_tick.prestige'),
                 'dominions.xp' => DB::raw('dominions.xp + dominion_tick.xp'),
-                'dominions.peasants' => DB::raw('dominions.peasants + dominion_tick.peasants + dominion_tick.peasants_sacrificed'),
+                'dominions.peasants' => DB::raw('GREATEST(0, dominions.peasants + dominion_tick.peasants + dominion_tick.peasants_sacrificed)'),
                 'dominions.peasants_last_hour' => DB::raw('dominion_tick.peasants'),
                 'dominions.morale' => DB::raw('dominions.morale + dominion_tick.morale'),
                 'dominions.spy_strength' => DB::raw('dominions.spy_strength + dominion_tick.spy_strength'),
@@ -1517,7 +1517,7 @@ class TickService
             ->update([
                 'dominions.prestige' => DB::raw('dominions.prestige + dominion_tick.prestige'),
                 'dominions.xp' => DB::raw('dominions.xp + dominion_tick.xp'),
-                'dominions.peasants' => DB::raw('dominions.peasants + dominion_tick.peasants + dominion_tick.peasants_sacrificed'),
+                'dominions.peasants' => DB::raw('GREATEST(0, dominions.peasants + dominion_tick.peasants + dominion_tick.peasants_sacrificed)'),
                 'dominions.peasants_last_hour' => DB::raw('dominion_tick.peasants'),
                 'dominions.morale' => DB::raw('dominions.morale + dominion_tick.morale'),
                 'dominions.spy_strength' => DB::raw('dominions.spy_strength + dominion_tick.spy_strength'),
