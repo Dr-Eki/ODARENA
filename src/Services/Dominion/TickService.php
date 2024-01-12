@@ -888,7 +888,15 @@ class TickService
             $tick->peasants = ($dominion->peasants)*-1;
         }
 
+            # If $populationPeasantGrowth is less than 0, make sure absolute valute is not greater than $dominion->peasants
+            if($populationPeasantGrowth < 0)
+            {
+                $populationPeasantGrowth = max($populationPeasantGrowth, $dominion->peasants * -1);
+            }
+        
+
         $tick->peasants = $populationPeasantGrowth;
+
 
         $tick->peasants_sacrificed = 0;
 
