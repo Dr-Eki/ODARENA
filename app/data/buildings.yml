@@ -320,7 +320,7 @@ factory:
   perks:
     construction_cost: 1,-2,30 # 1% gives -2% construction cost, max -30%
     construction_time: 1,-1.3,20 # 1% gives -1% construction time, max -30%
-    machine_unit_costs: 1,-0.5,7.5 # Every 1% gives -0.5% unit cost, max -50%
+    machine_unit_costs: 1,-0.5,7.5 # Every 1% gives -0.5% unit cost, max -7.5%
 
 school:
   name: School

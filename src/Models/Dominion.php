@@ -949,6 +949,8 @@ class Dominion extends AbstractModel
                     'unit_mana_costs',
                     'unit_food_costs',
                     'unit_blood_costs',
+
+                    'machine_unit_costs',
                 
                     // Unit training
                     'extra_units_trained',
