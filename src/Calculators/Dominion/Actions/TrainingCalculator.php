@@ -419,6 +419,7 @@ class TrainingCalculator
         {
             $multiplier += $dominion->realm->getArtefactPerkMultiplier($attribute . '_unit_costs');
             $multiplier += $dominion->getTechPerkMultiplier($attribute . '_unit_costs');
+            $multiplier += $dominion->getBuildingPerkMultiplier($attribute . '_unit_costs');
         }
 
         return $multiplier;
