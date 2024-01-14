@@ -677,17 +677,17 @@ class ResourceCalculator
 
         for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
         {
-            if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'provides_jobs') and $dominion->{'military_unit' . $slot} > 0)
+            if($slotProvidesJobs = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'provides_jobs'))
             {
-                $jobs += $dominion->{'military_unit' . $slot} * $dominion->race->getUnitPerkValueForUnitSlot($slot, 'provides_jobs');
+                $jobs += $dominion->{'military_unit' . $slot} * $slotProvidesJobs;
             }
         }
 
+        $jobs += $this->queueService->getConstructionQueueTotal($dominion) * 5;
+
         $multiplier = 1;
         $multiplier += $dominion->getAdvancementPerkMultiplier('jobs_per_building');
-        $multiplier += $dominion->getTechPerkMultiplier('jobs_per_building');
         $multiplier += $dominion->getImprovementPerkMultiplier('jobs_per_building');
-        $multiplier += $dominion->getBuildingPerkMultiplier('jobs_per_building');
 
         $jobs *= $multiplier;
 

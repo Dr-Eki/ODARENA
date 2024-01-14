@@ -924,9 +924,9 @@ class PopulationCalculator
 
         for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
         {
-            if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'provides_jobs'))
+            if($slotProvidesJobs = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'provides_jobs'))
             {
-                $jobs += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot) * $dominion->race->getUnitPerkValueForUnitSlot($slot, 'provides_jobs');
+                $jobs += $dominion->{'military_unit' . $slot} * $slotProvidesJobs;
             }
         }
 

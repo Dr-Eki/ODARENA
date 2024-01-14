@@ -7,6 +7,10 @@ use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 
 class ProductionCalculator
 {
+
+    /** @var MilitaryCalculator */
+    protected $militaryCalculator;
+
     public function __construct()
     {
         $this->militaryCalculator = app(MilitaryCalculator::class);
