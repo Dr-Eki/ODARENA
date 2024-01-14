@@ -22,17 +22,6 @@ sazals_fog:
   perks:
     fog_of_war: 1
 
-admin_fog:
-  name: Fog
-  scope: self
-  class: passive
-  level: 0
-  cost: 0
-  duration: 12
-  cooldown: 92
-  perks:
-    fog_of_war: 1
-
 harmony:
   name: Harmony
   scope: self
