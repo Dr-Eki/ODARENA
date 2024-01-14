@@ -724,7 +724,7 @@ class DataSyncCommand extends Command implements CommandInterface
 
                 foreach ($data as $spellKey => $spellData)
                 {
-                    $spellsToSync[] = $spellData->key;
+                    $spellsToSync[] = $spellKey;
 
                     $deityId = null;
                     if($deityKey = object_get($spellData, 'deity'))
