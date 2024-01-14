@@ -724,7 +724,7 @@ class DataSyncCommand extends Command implements CommandInterface
 
                 foreach ($data as $spellKey => $spellData)
                 {
-                    $spellsToSync[] = $spellData->name;
+                    $spellsToSync[] = $spellData->key;
 
                     $deityId = null;
                     if($deityKey = object_get($spellData, 'deity'))
@@ -809,7 +809,7 @@ class DataSyncCommand extends Command implements CommandInterface
 
         foreach(Spell::all() as $spell)
         {
-            if(!in_array($spell->name, $spellsToSync))
+            if(!in_array($spell->key, $spellsToSync))
             {
                 $this->info(">> Deleting spell {$spell->name}");
 
