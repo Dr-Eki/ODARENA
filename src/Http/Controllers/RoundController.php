@@ -401,19 +401,25 @@ class RoundController extends AbstractController
             
             if(in_array($round->mode,['factions','factions-duration']))
             {
-                $races = $races =$this->roundHelper->getRoundRaces($round)
+                $races = $this->roundHelper->getRoundRaces($round)
                     ->where('playable', 1)
                     ->pluck('id')->all();
             }
             elseif(in_array($round->mode,['packs','packs-duration']))
             {
-                $races = $races =$this->roundHelper->getRoundRaces($round)
+                $races = $this->roundHelper->getRoundRaces($round)
+                    ->where('playable', 1)
+                    ->pluck('id')->all();
+            }
+            elseif(in_array($round->mode,['deathmatch','deathmatch-duration']))
+            {
+                $races = $this->roundHelper->getRoundRaces($round)
                     ->where('playable', 1)
                     ->pluck('id')->all();
             }
             else
             {
-                $races = $races =$this->roundHelper->getRoundRaces($round)
+                $races = $this->roundHelper->getRoundRaces($round)
                     ->where('alignment', 'like', $alignment)
                     ->where('playable', 1)
                     ->pluck('id')->all();
