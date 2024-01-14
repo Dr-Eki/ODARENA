@@ -1883,7 +1883,8 @@ cabin:
     - Barbarian
   land_type: forest
   perks:
-    housing: 48
+    military_housing: 20
+    housing: 50
     jobs: 0
 
 # END BARBARIAN
