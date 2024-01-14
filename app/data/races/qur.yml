@@ -3,6 +3,7 @@ alignment: independent
 description:
 home_terrain: jungle
 playable: 1
+experimental: 1
 skill_level: 2
 magic_level: 4
 
