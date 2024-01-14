@@ -558,7 +558,7 @@ bazaar:
   category: holy
   deity: barathu_bint
   perks:
-    gold_production_mod: 1,4,20 # Every 1% gives +4% gold production, max +20%
+    gold_production_mod: 1,2,10 # Every 1% gives +4% gold production, max +20%
     exchange_rate: 1,4,20 # Every 1% gives +4% exchange rate, max +20%
 
 edifice:
