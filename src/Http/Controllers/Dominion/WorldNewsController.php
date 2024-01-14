@@ -13,13 +13,19 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\NetworthCalculator;
 
+use OpenDominion\Traits\DominionGuardsTrait;
+
 class WorldNewsController extends AbstractDominionController
 {
+    use DominionGuardsTrait;
 
     public function getIndex(int $realmNumber = null)
     {
-        $worldNewsService = app(WorldNewsService::class);
         $dominion = $this->getSelectedDominion();
+
+        $this->guardActionsDuringTick($dominion);
+        
+        $worldNewsService = app(WorldNewsService::class);
 
         $this->updateDominionNewsLastRead($dominion);
 

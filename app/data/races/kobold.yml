@@ -34,7 +34,7 @@ terrain_perks:
     food_production_mod: 0.08
 
 perks:
-  max_population: 30
+  max_population: 50
   population_growth: 20
   food_consumption_mod: -20
   #morale_change_tick: -50

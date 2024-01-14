@@ -139,7 +139,6 @@ stasis:
   level: 0
   scope: self
   class: passive
-  cost: 1.5
   duration: 2
   exclusive_races:
     - Qur

@@ -58,6 +58,7 @@ class HistoryHelper
           'train' => 'Training',
           'update notes' => 'Notes',
           'tech' => 'Advancement',
+          'research' => 'Research',
         ];
 
         return $name[$event] ? $name[$event] : 'Undefined event type (' . $event . ')';

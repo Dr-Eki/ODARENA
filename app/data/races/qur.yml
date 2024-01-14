@@ -2,7 +2,7 @@ name: Qur
 alignment: independent
 description:
 home_terrain: jungle
-playable: 1 # Round 88
+playable: 0 # Round 88
 skill_level: 2
 magic_level: 4
 
@@ -51,16 +51,16 @@ resources:
   - gems
   - mana
 
+peasants_production:
+  gold: 2.8
+  food: 0.1
+
 improvement_resources:
   gold: 1
   ore: 2
   lumber: 2
   gems: 18
   mana: 10
-
-peasants_production:
-  gold: 2.80
-  food: 0.20
 
 perks:
   salvaging: 60

@@ -816,7 +816,7 @@ coral_reef:
   exclusive_races:
     - Glimjir
   perks:
-    quadratic_improvements: 1,2 # Every 1% gives 1.5% higher imps
+    quadratic_improvements_mod: 1,2 # Every 1% gives 1.5% higher imps
 
 giant_shell:
   name: Giant Shell

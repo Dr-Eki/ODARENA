@@ -1349,24 +1349,24 @@ class Dominion extends AbstractModel
                     return $result;
                 }
 
-                elseif($perkKey == 'quadratic_improvements')
+                elseif($perkKey == 'quadratic_improvements_mod')
                 {
 
                     $effectFromPerk = 0;
 
                     $perkValues = $this->extractBuildingPerkValues($perkValueString);
-                    $ratio = (float)$perkValues[0];
-                    $multiplier = (float)$perkValues[1] / 100;
-                    $max = isset($perkValues[2]) ? (float)$perkValues[2] / 100 : 1;
 
-                    $buildingOwned = $buildingOwned;
+                    $perkRatio = (float)$perkValues[0];
+                    $perkMultiplier = (float)$perkValues[1];
+                    $perkMax = isset($perkValues[2]) ? (float)$perkValues[2] / 100 : null;
+
                     $buildingRatio = $buildingOwned / $landSize;
 
-                    $effectFromPerk += $buildingRatio * $ratio * (1 + $multiplier + $buildingRatio);
+                    $effectFromPerk += $buildingRatio * $perkRatio * ($perkMultiplier + $buildingRatio) * 100;
 
-                    if($max)
+                    if($perkMax)
                     {
-                        $effectFromPerk = min($perk, $max);
+                        $effectFromPerk = min($perk, $perkMax);
                     }
 
                     $perk += $effectFromPerk;
@@ -1650,10 +1650,11 @@ class Dominion extends AbstractModel
         return $perk;
     }
 
-    public function getImprovementsMod(string $perkKey = null): float
+    public function getImprovementsMod(): float
     {
         $multiplier = 1;
         $multiplier += $this->getBuildingPerkMultiplier('improvements');
+        $multiplier += $this->getBuildingPerkMultiplier('quadratic_improvements_mod');
         $multiplier += $this->getBuildingPerkMultiplier('improvements_capped');
         $multiplier += $this->getSpellPerkMultiplier('improvements');
         $multiplier += $this->getAdvancementPerkMultiplier('improvements');

@@ -70,7 +70,7 @@ units:
     type:
       - mindless
     cost:
-      mana: 275
+      mana: 250
       body: 1
     power:
       offense: 4
@@ -87,7 +87,7 @@ units:
       - intelligent
     cost:
       gold: 1000
-      mana: 240
+      mana: 210
       body: 1
     power:
       offense: 6
