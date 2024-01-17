@@ -533,7 +533,7 @@ class InvadeActionService
                 $this->invasion['data']['is_raze'] = 1;
             }
 
-            $this->handlePrestigeChanges($attacker, $defender, $units, $landRatio, $this->invasion['data']['is_victory'], $$this->invasion['data']['is_bottomfeed'], $this->invasion['data']['is_failure'], $this->invasion['data']['is_raze']);
+            $this->handlePrestigeChanges($attacker, $defender, $units, $landRatio, $this->invasion['data']['is_victory'], $this->invasion['data']['is_bottomfeed'], $this->invasion['data']['is_failure'], $this->invasion['data']['is_raze']);
             $this->handleDuringInvasionUnitPerks($attacker, $defender, $units);
 
             $this->handleMoraleChanges($attacker, $defender, $landRatio, $units);

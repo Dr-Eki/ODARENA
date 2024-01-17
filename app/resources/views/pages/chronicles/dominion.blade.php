@@ -352,7 +352,7 @@
                                         $improvementPerkMaxMultiplier += $dominion->getBuildingPerkMultiplier('quadratic_improvements_mod');
                                         $improvementPerkMaxMultiplier += $dominion->getAdvancementPerkMultiplier('improvements')
                                         $improvementPerkMaxMultiplier += $dominion->getSpellPerkMultiplier('improvements')
-                                        $improvementPerkMaxMultiplier += $dominion->race->getPerkMultiplier('improvements_max'));
+                                        $improvementPerkMaxMultiplier += $dominion->race->getPerkMultiplier('improvements_max');
 
                                         $improvementPerkMax *= $improvementPerkMaxMultiplier;
                                         
