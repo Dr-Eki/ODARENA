@@ -3446,8 +3446,11 @@ class InvadeActionService
 
         // Buildings
         $this->statsService->updateStat($attacker, 'buildings_destroyed', array_sum($this->invasion['attacker']['conversions']));
-        $this->statsService->updateStat($defender, 'buildings_lost', array_sum($this->invasion['defender']['buildings']));
-
+        if(isset($this->invasion['defender']['buildings']))
+        {
+            $this->statsService->updateStat($defender, 'buildings_destroyed', array_sum($this->invasion['defender']['conversions']));
+        }
+        
         // Conversions
         $this->statsService->updateStat($attacker, 'units_converted', array_sum($this->invasion['attacker']['conversions']));
         $this->statsService->updateStat($defender, 'units_converted', array_sum($this->invasion['defender']['conversions']));
