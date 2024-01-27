@@ -88,8 +88,6 @@ class DemolishActionService
 
         $this->buildingCalculator->removeBuildings($dominion, $demolishData);
 
-        dd('ook');
-
         $this->statsService->updateStat($dominion, 'buildings_destroyed_self', $totalBuildingsToDestroy);
 
         $dominion->save(['event' => HistoryService::EVENT_ACTION_DESTROY]);
