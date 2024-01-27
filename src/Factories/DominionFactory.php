@@ -394,18 +394,16 @@ class DominionFactory
                 'cooldown' => 192,
             ]);
 
-            /*
-            if($dominion->race->name == 'Werewolves')
+            if($dominion->race->name == 'Simian')
             {
                 DominionSpell::create([
                     'dominion_id' => $dominion->id,
                     'caster_id' => $dominion->id,
-                    'spell_id' => Spell::where('key','feral_shift')->first()->id,
+                    'spell_id' => Spell::where('key','rainy_season')->first()->id,
                     'duration' => 0,
-                    'cooldown' => 48,
+                    'cooldown' => 96,
                 ]);
             }
-            */
         });
 
         return $dominion;

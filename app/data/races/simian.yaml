@@ -94,7 +94,7 @@ units:
       defense: 4
     perks:
       casualties_on_defense_from_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
-      defense_from_victories: 0.10,2 # +0.10 OP per Victory, max +2 (at 20 Victories)
+      defense_from_victories: 0.05,1 # +0.05 OP per Victory, max +1 (at 20 Victories)
 
   - name: Ironwood Guardian
     training_time: 12
@@ -109,7 +109,7 @@ units:
       draftees: 1
     power:
       offense: 4
-      defense: 5
+      defense: 6
     perks:
       casualties_on_defense_from_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
       casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
