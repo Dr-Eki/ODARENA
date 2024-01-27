@@ -726,7 +726,7 @@ class InvadeActionService
             ]);
 
             # Debug before saving:
-            ldd($this->invasion);# dd('Safety!');
+            dd($this->invasion);# dd('Safety!');
             
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
@@ -3515,6 +3515,12 @@ class InvadeActionService
         {
             $this->statsService->setStat($target, 'dp_success_max', max($this->invasion['defender']['dp'], $this->statsService->getStat($attacker, 'dp_success_max')));
         }
+
+        $totalBuildingsDestroyed = isset($this->invasion['defender']['buildings_lost_total']) ? array_sum($this->invasion['defender']['buildings_lost_total']) : 0;
+
+        // Buildings destroyed/lost
+        $this->statsService->updateStat($attacker, 'buildings_destroyed', $totalBuildingsDestroyed);
+        $this->statsService->updateStat($target, 'buildings_lost', $totalBuildingsDestroyed);
 
     }
 

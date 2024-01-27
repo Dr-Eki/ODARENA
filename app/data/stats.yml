@@ -70,6 +70,9 @@ prestige_lost:
 buildings_built:
   name: Buildings built
 
+buildings_lost:
+  name: Buildings lost
+
 buildings_destroyed:
   name: Buildings destroyed
 

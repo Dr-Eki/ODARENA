@@ -89,6 +89,7 @@ units:
       defense: 0
     perks:
       xp_generation_raw: 0.04
+      counts_as_wizard: 0.10
 
   - name: Crystal
     description: A crystalline formation of gems, imbued with magical properties by skillful Qur Artificers, these Crystals provide defense and can be adorned upon Zealots to form Crystalline Zealots.

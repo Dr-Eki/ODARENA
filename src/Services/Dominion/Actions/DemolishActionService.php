@@ -10,6 +10,7 @@ use OpenDominion\Traits\DominionGuardsTrait;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Helpers\BuildingHelper;
+use OpenDominion\Services\Dominion\StatsService;
 
 class DemolishActionService
 {
@@ -21,10 +22,14 @@ class DemolishActionService
         /** @var BuildingHelper */
         protected $buildingHelper;
 
+        /** @var StatsService */
+        protected $statsService;
+
         public function __construct()
         {
             $this->buildingCalculator = app(BuildingCalculator::class);
             $this->buildingHelper = app(BuildingHelper::class);
+            $this->statsService = app(StatsService::class);
         }
 
     /**
@@ -82,6 +87,10 @@ class DemolishActionService
         }
 
         $this->buildingCalculator->removeBuildings($dominion, $demolishData);
+
+        dd('ook');
+
+        $this->statsService->updateStat($dominion, 'buildings_destroyed_self', $totalBuildingsToDestroy);
 
         $dominion->save(['event' => HistoryService::EVENT_ACTION_DESTROY]);
 

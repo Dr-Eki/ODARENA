@@ -246,6 +246,8 @@ class BuildActionService
                 $this->statsService->updateStat($dominion, ($secondaryResource . '_building'), $secondaryCostTotal);
             }
 
+            $this->statsService->updateStat($dominion, 'buildings_built', array_sum($data));
+
             $dominion->save(['event' => HistoryService::EVENT_ACTION_CONSTRUCT]);
 
         });

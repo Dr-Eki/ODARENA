@@ -89,7 +89,7 @@ units:
       - intelligent
       - wise
     cost:
-      food: 270
+      food: 240
       ore: 150
       lumber: 100
       draftees: 1
@@ -110,7 +110,7 @@ units:
       - intelligent
       - wise
     cost:
-      food: 270
+      food: 240
       ore: 160
       lumber: 100
       draftees: 1
@@ -128,7 +128,7 @@ units:
       - intelligent
       - wise
     cost:
-      food: 420
+      food: 380
       ore: 300
       draftees: 1
     power:

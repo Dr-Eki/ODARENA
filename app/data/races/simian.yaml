@@ -77,7 +77,7 @@ units:
       defense: 2
     perks:
       casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
-      offense_from_victories: 0.1,2 # +0.10 OP per Victory, max +2 (at 20 Victories)
+      offense_from_victories: 0.05,1 # +0.10 OP per Victory, max +2 (at 20 Victories)
 
   - name: Vine Strider
     training_time: 9
@@ -94,7 +94,7 @@ units:
       defense: 4
     perks:
       casualties_on_defense_from_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
-      defense_from_times_spell_cast: 1,rainy_season # +1 DP for every time the Rainy Season spell has been cast (power,spell,[max])
+      defense_from_victories: 0.10,2 # +0.10 OP per Victory, max +2 (at 20 Victories)
 
   - name: Ironwood Guardian
     training_time: 12
@@ -113,7 +113,7 @@ units:
     perks:
       casualties_on_defense_from_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
       casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
-      defense_from_victories: 0.10,2 # +0.10 OP per Victory, max +2 (at 20 Victories)
+      defense_from_times_spell_cast: 1,rainy_season # +1 DP for every time the Rainy Season spell has been cast (power,spell,[max])
 
   - name: Ironwood Berserker
     training_time: 12

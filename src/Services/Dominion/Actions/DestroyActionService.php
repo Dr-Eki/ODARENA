@@ -10,12 +10,17 @@ use OpenDominion\Traits\DominionGuardsTrait;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 
+
 class DestroyActionService
 {
     use DominionGuardsTrait;
 
         /** @var SpellCalculator */
         protected $spellCalculator;
+
+        /** @var BuildingCalculator */
+        protected $buildingCalculator;
+
 
         public function __construct()
         {
@@ -65,7 +70,6 @@ class DestroyActionService
             }
         }
 
-        # BV2
         $this->buildingCalculator->removeBuildings($dominion, $data);
 
         $dominion->save(['event' => HistoryService::EVENT_ACTION_DESTROY]);
