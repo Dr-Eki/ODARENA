@@ -850,6 +850,9 @@ class InvadeActionService
         $attackerPrestigeChange = 0;
         $defenderPrestigeChange = 0;
 
+        $this->invasion['attacker']['prestige_change'] = 0;
+        $this->invasion['defender']['prestige_change'] = 0;
+
         # LDA mitigation
         $victoriesRatioMultiplier = 1;
         // if($this->statsService->getStat($attacker, 'defense_failures') >= 10)

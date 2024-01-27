@@ -608,6 +608,7 @@ redoubt:
     military_housing: 36
     draftee_housing: 15
     housing: 0
+    jobs: 10
 
 shrine:
   name: Shrine
