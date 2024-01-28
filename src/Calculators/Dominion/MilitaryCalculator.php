@@ -499,7 +499,7 @@ class MilitaryCalculator
 
         // Spell
         $multiplier += $this->getSpellMultiplier($dominion, $attacker, 'defense');
-        $multiplier += $dominion->getSpellPerkMultiplier('defensive_power');
+        #$multiplier += $dominion->getSpellPerkMultiplier('defensive_power');
 
         // Deity
         $multiplier += $dominion->getDecreePerkMultiplier('defensive_power');
