@@ -793,9 +793,32 @@ class Dominion extends AbstractModel
 
                 # Get amount owned of $pairedBuilding
                 $pairedBuildingOwned = $this->buildings()->where('building_id', $pairedBuilding->id)->first()->pivot->owned;
+                unset($pairedBuilding);
 
                 # $buildingOwned is the minimum of the two
                 $buildingOwned = min($buildingOwned, floor($pairedBuildingOwned / $chunkSize));
+
+                $buildingOwned = intval($buildingOwned);
+            }
+
+            # Check if building has perk pairing_limit
+            if(($multiplePairingLimit = $building->getPerkValue('multiple_pairing_limit')))
+            {
+                $multiplePairingLimit = explode(',', $multiplePairingLimit);
+                $pairedBuildingKeys = explode(';', $multiplePairingLimit[1]);
+
+                $pairedBuildingsOwned = 0;
+                $chunkSize = (int)$multiplePairingLimit[0];
+
+                foreach($pairedBuildingKeys as $buildingKey)
+                {
+                    if($hasBuilding = $this->buildings->firstWhere('key', $buildingKey))
+                    {
+                        $pairedBuildingsOwned += $hasBuilding->pivot->owned;
+                    }
+                }
+
+                $buildingOwned = min($buildingOwned, floor($pairedBuildingsOwned / $chunkSize));
 
                 $buildingOwned = intval($buildingOwned);
             }

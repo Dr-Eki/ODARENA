@@ -39,6 +39,7 @@
                                     @php
                                         $amountOwned = $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building);
                                         $constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}");
+                                        $constructionAmount += $queueService->getRepairQueueTotalByResource($selectedDominion, "building_{$building->key}");
                                         $constructionAmount += $queueService->getInvasionQueueTotalByResource($selectedDominion, "building_{$building->key}");
                                         $canBuildBuilding = $constructionCalculator->canBuildBuilding($selectedDominion, $building);
                                         $boxClass = '';
