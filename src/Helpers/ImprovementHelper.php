@@ -30,6 +30,7 @@ class ImprovementHelper
             'sapling_production_mod' => 'sapling growth',
             'thunderstone_production_mod' => 'thunderstone discovery',
             'yak_production_mod' => 'yak taming',
+            'kelp_production_mod' => 'kelp harvesting',
 
             'sapling_max_storage' => 'sapling max storage',
 

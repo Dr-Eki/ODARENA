@@ -164,12 +164,13 @@ class BuildActionService
                 $pairedOwnedAndUnderConstruction = $pairedBuildingRecord ? ($pairedBuildingRecord->pivot->owned ?? 0) : 0;
                 $pairedOwnedAndUnderConstruction += $this->queueService->getConstructionQueueTotalByResource($dominion, "building_{$building->key}");
                 $pairedOwnedAndUnderConstruction += $this->queueService->getRepairQueueTotalByResource($dominion, "building_{$building->key}");
+                $pairedOwnedAndUnderConstruction += $this->queueService->getInvasionQueueTotalByResource($dominion, "building_{$building->key}");
 
                 $availableCapacityForBuilding = max($maxCapacity - $pairedOwnedAndUnderConstruction, 0);
 
                 if($amount > $availableCapacityForBuilding)
                 {
-                    throw new GameException('You cannot build ' . number_format($amount) . ' more ' . str_plural($building->name, $amount) . ' because you only have enough ' . $pairingBuilding->name . ' for ' . number_format($availableCapacityForBuilding) . ' new ' . str_plural($building->name, $availableCapacityForBuilding) . '.');
+                    #throw new GameException('You cannot build ' . number_format($amount) . ' more ' . str_plural($building->name, $amount) . ' because you only have enough ' . $pairingBuilding->name . ' for ' . number_format($availableCapacityForBuilding) . ' new ' . str_plural($building->name, $availableCapacityForBuilding) . '.');
                 }
             }
             if(($multiplePairingLimit = $building->getPerkValue('multiple_pairing_limit')))
@@ -197,6 +198,7 @@ class BuildActionService
                 $buildingOwnedAndUnderConstruction = $dominion->buildings()->where('key', $building->key)->first()->pivot->owned ?? 0;
                 $buildingOwnedAndUnderConstruction += $this->queueService->getConstructionQueueTotalByResource($dominion, "building_{$building->key}");
                 $buildingOwnedAndUnderConstruction += $this->queueService->getRepairQueueTotalByResource($dominion, "building_{$building->key}");
+                $buildingOwnedAndUnderConstruction += $this->queueService->getInvasionQueueTotalByResource($dominion, "building_{$building->key}");
 
                 $maxCapacity = (int)floor($pairingBuildingsOwned / $chunkSize);
 
@@ -204,7 +206,7 @@ class BuildActionService
 
                 if($amount > $availableCapacityForBuilding)
                 {
-                    throw new GameException('You cannot build ' . number_format($amount) . ' more ' . str_plural($building->name, $amount) . ' because you only have enough ' . generate_sentence_from_array($pairingBuildings) . ' for ' . number_format($availableCapacityForBuilding) . ' more ' . str_plural($building->name, $availableCapacityForBuilding) . '.');
+                    #throw new GameException('You cannot build ' . number_format($amount) . ' more ' . str_plural($building->name, $amount) . ' because you only have enough ' . generate_sentence_from_array($pairingBuildings) . ' for ' . number_format($availableCapacityForBuilding) . ' more ' . str_plural($building->name, $availableCapacityForBuilding) . '.');
                 }
             }
 
