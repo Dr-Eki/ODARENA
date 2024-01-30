@@ -312,7 +312,7 @@ class ExpeditionActionService
             $this->statsService->updateStat($dominion, 'expeditions', 1);
 
             # Debug before saving:
-            ldd($this->expedition); dd('Safety!');
+            ldd($this->expedition); #dd('Safety!');
 
             $this->expedition = GameEvent::create([
                 'round_id' => $dominion->round_id,
