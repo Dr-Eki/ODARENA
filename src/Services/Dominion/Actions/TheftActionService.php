@@ -353,10 +353,7 @@ class TheftActionService
             $thief->most_recent_theft_resource = $resource->key;
 
             # Debug before saving:
-            if(request()->getHost() === 'odarena.local' or request()->getHost() === 'odarena.virtual')
-            {
-                #dd($this->theft);
-            }
+            ldd($this->theft);
 
             $target->save(['event' => HistoryService::EVENT_ACTION_THEFT]);
             $thief->save(['event' => HistoryService::EVENT_ACTION_THEFT]);

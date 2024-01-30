@@ -381,10 +381,7 @@ class ArtefactActionService
             }
 
             # Debug before saving:
-            if(request()->getHost() === 'odarena.local' or request()->getHost() === 'odarena.virtual')
-            {
-                dd($this->invasionResult);
-            }
+            ldd($this->invasionResult);
 
             $this->invasionResult['log']['finished_at'] = time();
 

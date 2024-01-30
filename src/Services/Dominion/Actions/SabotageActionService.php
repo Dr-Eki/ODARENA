@@ -451,10 +451,7 @@ class SabotageActionService
             ]);
             
             # Debug before saving:
-            if(request()->getHost() === 'odarena.local' or request()->getHost() === 'odarena.virtual')
-            {
-                dd($this->sabotage);
-            }
+            ldd($this->sabotage);
 
             $target->save(['event' => HistoryService::EVENT_ACTION_SABOTAGE]);
             $saboteur->save(['event' => HistoryService::EVENT_ACTION_SABOTAGE]);
