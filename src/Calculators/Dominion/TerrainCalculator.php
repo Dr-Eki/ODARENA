@@ -12,21 +12,25 @@ use OpenDominion\Models\Race;
 use OpenDominion\Models\Terrain;
 
 use OpenDominion\Services\Dominion\QueueService;
+use OpenDominion\Services\Dominion\TerrainService;
 
 class TerrainCalculator
 {
     protected $dominionCalculator;
     protected $queueService;
     protected $terrainHelper;
+    protected $terrainService;
 
     public function __construct(
         DominionCalculator $dominionCalculator,
         QueueService $queueService,
-        TerrainHelper $terrainHelper
+        TerrainHelper $terrainHelper,
+        TerrainService $terrainService
     ) {
         $this->dominionCalculator = $dominionCalculator;
         $this->queueService = $queueService;
         $this->terrainHelper = $terrainHelper;
+        $this->terrainService = $terrainService;
     }
 
     public function getUnterrainedLand(Dominion $dominion): int
@@ -80,6 +84,8 @@ class TerrainCalculator
                 Log::error('Terrain lost: ' . print_r($terrainLost, true));
                 Log::error('Rezoning queue total: ' . $rezoningQueueTotal);
                 Log::error('Rezoning queue: ' . print_r($this->queueService->getRezoningQueue($dominion), true));
+
+                $this->terrainService->auditAndRepairTerrain($dominion);
 
                 throw new GameException('An error occurred while calculating terrain lost. Try again. If this keeps happening, please report it as a bug.');
             }
