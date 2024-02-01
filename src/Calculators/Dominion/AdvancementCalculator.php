@@ -59,6 +59,8 @@ class AdvancementCalculator
         $multiplier += $dominion->getSpellPerkMultiplier('advancement_costs');
         $multiplier += $dominion->getTechPerkMultiplier('advancement_costs');
 
+        $multiplier = max($multiplier, -0.80);
+
         return $multiplier;
     }
 
