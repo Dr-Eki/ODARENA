@@ -158,7 +158,7 @@ class ExpeditionCalculator
             $probability = $perk[2];
             $randomChance = (float)$probability / 100;
     
-            $found = $amount < $maxTrials ? $this->findResourceWithTrials($amount, $randomChance) : $amount * $randomChance;
+            $found = $amount <= $maxTrials ? $this->findResourceWithTrials($amount, $randomChance) : $amount * $randomChance;
             $found *= $amountFound;
             $found = (int)$found;
     

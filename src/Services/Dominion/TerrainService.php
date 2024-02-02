@@ -237,5 +237,7 @@ class TerrainService
             
         }
 
+        Log::info("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): unknown error.");
+
     }
 }
