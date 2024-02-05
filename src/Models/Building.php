@@ -23,6 +23,7 @@ class Building extends AbstractModel
         'excluded_races' => 'array',
         'exclusive_races' => 'array',
         'category' => 'text',
+        'round_modes' => 'array',
         'enabled' => 'integer',
     ];
 

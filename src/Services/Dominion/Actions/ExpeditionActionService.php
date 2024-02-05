@@ -312,7 +312,7 @@ class ExpeditionActionService
             $this->statsService->updateStat($dominion, 'expeditions', 1);
 
             # Debug before saving:
-            ldd($this->expedition); #dd('Safety!');
+            #$this->expedition); #dd('Safety!');
 
             $this->expedition = GameEvent::create([
                 'round_id' => $dominion->round_id,
@@ -402,25 +402,32 @@ class ExpeditionActionService
     {
         $this->expedition['artefact']['found'] = false;
 
-        if($dominion->round->mode !== 'artefacts')
+        if(!in_array($dominion->round->mode, ['artefacts', 'artefacts-packs']))
         {
             return;
         }
         
         if(random_chance($this->artefactCalculator->getChanceToDiscoverArtefactOnExpedition($dominion, $this->expedition)))
         {
-            $artefact = $this->artefactService->getRandomArtefact($dominion->round);
-
-            $this->queueService->queueResources(
-                'artefact',
-                $dominion,
-                [$artefact->key => 1],
-                12
-            );
-            $this->expedition['artefact']['found'] = true;
-            $this->expedition['artefact']['id'] = $artefact->id;
-            $this->expedition['artefact']['key'] = $artefact->key;
-            $this->expedition['artefact']['name'] = $artefact->name;
+            if($artefact = $this->artefactService->getRandomArtefact($dominion->round))
+            {
+                $this->queueService->queueResources(
+                    'artefact',
+                    $dominion,
+                    [$artefact->key => 1],
+                    12
+                );
+                $this->expedition['artefact']['found'] = true;
+                $this->expedition['artefact']['id'] = $artefact->id;
+                $this->expedition['artefact']['key'] = $artefact->key;
+                $this->expedition['artefact']['name'] = $artefact->name;
+    
+                $this->statsService->updateStat($dominion, 'artefacts_discovered', 1);
+            }
+            else
+            {
+                Log::info('Artefact was discovered but no random artefact could be found. Are all in play already?');
+            }
         }
     }
 
@@ -441,6 +448,8 @@ class ExpeditionActionService
                 [('resource_' . $resourceKey) => $amount],
                 12
             );
+
+            $this->statsService->updateStat($dominion, ($resourceKey . '_found'), $amount);
         }
     }
 

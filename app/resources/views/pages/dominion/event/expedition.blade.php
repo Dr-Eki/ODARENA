@@ -151,7 +151,7 @@
                                         </tbody>
                                 </table>
                             @endif
-                            @if(isset($event->data['resources_found']))
+                            @if(isset($event->data['is_resource_gathering_expedition']) and $event->data['is_resource_gathering_expedition'])
                                 <div class="text-center">
                                     <h4>Resources Discovered</h4>
                                 </div>
@@ -213,11 +213,16 @@
                 </div>
                 <div class="box-body no-padding">
                     <div class="col-xs-12 col-sm-12">
-                        You have discovered an artefact!
+                        <p>An artefact was discovered!</p>
 
-                        <h3>{{ $artefact->name }}</h3>
+                        <h3 class="text-orag">{{ $artefact->name }}</h3>
 
-                        Add artefact perks...
+                        <p>This artefact has a starting aegis of {{ number_format($artefact->base_power) }} and will provide your realm the following perks:</p>
+                        <ul>
+                            @foreach($artefactHelper->getArtefactPerksString($artefact) as $effect)
+                                <li>{{ ucfirst($effect) }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
             </div>

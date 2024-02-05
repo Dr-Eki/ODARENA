@@ -16,6 +16,10 @@ use OpenDominion\Models\GameEvent;
 
 class ArtefactService
 {
+
+    protected $artefactHelper;
+    protected $artefactCalculator;
+
     public function __construct()
     {
         $this->artefactHelper = app(ArtefactHelper::class);
@@ -31,7 +35,8 @@ class ArtefactService
             RealmArtefact::create([
                 'realm_id' => $realm->id,
                 'artefact_id' => $artefact->id,
-                'power' => $power
+                'power' => $power,
+                'max_power' => $power
             ]);
         });
     }
@@ -48,19 +53,16 @@ class ArtefactService
 
     public function getAvailableArtefacts(Round $round)
     {
-        $artefacts = Artefact::where('enabled',1)->get();
-        $realmArtefacts = RealmArtefact::join('realms', 'realms.id', '=', 'realm_artefacts.realm_id')
-                            ->join('rounds','rounds.id', '=', 'realms.round_id')->where('rounds.id',$round->id)->get();
-
-        # Check if artefact is already in use in realmArtefacts
-        foreach($artefacts as $key => $artefact)
-        {
-            if($realmArtefacts->contains($artefact))#where('artefact_id',$artefact->id)->count() > 0)
-            {
-                $artefacts->forget($key);
-            }
-        }
-        
+        // Get the IDs of the artefacts in use
+        $usedArtefactIds = RealmArtefact::join('realms', 'realms.id', '=', 'realm_artefacts.realm_id')
+            ->where('realms.round_id', $round->id)
+            ->pluck('artefact_id');
+    
+        // Get the artefacts that are not in use
+        $artefacts = Artefact::where('enabled', 1)
+            ->whereNotIn('id', $usedArtefactIds)
+            ->get();
+    
         return $artefacts;
     }
 
@@ -79,22 +81,13 @@ class ArtefactService
 
     public function updateRealmArtefactPower(Realm $realm, Artefact $artefact, int $powerChange): void
     {
-        if($powerChange >= 0)
-        {
-            DB::transaction(function () use ($realm, $artefact, $powerChange)
-            {
-                RealmArtefact::where('realm_id', $realm->id)->where('artefact_id', $artefact->id)
-                ->increment('power', $powerChange);
-            });
-        }
-        else
-        {
-            DB::transaction(function () use ($realm, $artefact, $powerChange)
-            {
-                RealmArtefact::where('realm_id', $realm->id)->where('artefact_id', $artefact->id)
-                ->decrement('power', $powerChange);
-            });
-        }
+        DB::transaction(function () use ($realm, $artefact, $powerChange) {
+            $method = $powerChange >= 0 ? 'increment' : 'decrement';
+    
+            RealmArtefact::where('realm_id', $realm->id)
+                ->where('artefact_id', $artefact->id)
+                ->$method('power', abs($powerChange));
+        });
     }
 
 }

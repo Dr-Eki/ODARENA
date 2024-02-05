@@ -184,7 +184,7 @@
                                                 <td>Land discovered:</td>
                                                 <td id="invasion-land-discovered-amount" data-amount="0">0</td>
                                             </tr>
-                                            @if($selectedDominion->round->mode == 'artefacts')
+                                            @if(in_array($selectedDominion->round->mode,['artefacts', 'artefacts-packs']))
                                             <tr>
                                                 <td><i class="ra ra-alien-fire"></i> Chance to discover artefact:</td>
                                                 <td id="artefact-discovery-chance" data-amount="0">0</td>

@@ -2,7 +2,7 @@
 
 azk_hurums_blood_purifier:
   name: Azk'Hurum's Blood Purifier
-  description: Made of obsidian, imbued with souls, and stained with blood, this device is used by Azk'Hurum to remove impurities from blood the followers have gathered.
+  description: Made of obsidian, imbued with souls, and stained with blood, this device is used by Azk'Hurum to remove impurities from gathered blood.
   deity: azk_hurum
   base_power: 500000
   exclusive_races:
@@ -20,12 +20,12 @@ barathu_bints_ledger:
     - Nox
     - Void
   perks:
-    exchange_rate: 7.5
-    gold_production_mod: 2.5
+    exchange_rate: 10
+    gold_production_mod: 15
 
 bregons_banner:
   name: Bregon's Banner
-  description: Great armies have rallied under this banner throughout the ages.
+  description: The greatest armies have rallied under this banner throughout the ages.
   deity: bregon
   base_power: 500000
   excluded_races:
@@ -66,10 +66,10 @@ glimjs_lantern:
   base_power: 500000
   exclusive_races:
     - Armada
-    - Merfolk
+    - Glimjir
   perks:
-    water_construction_cost: -50
-    water_buildings_effect: 10
+    kelp_production_mod: 10
+    pearls_production_mod: 20
 
 glimjs_bough:
   name: Glimj's Bough
@@ -78,7 +78,6 @@ glimjs_bough:
   base_power: 500000
   exclusive_races:
     - Armada
-    - Merfolk
   perks:
     ship_unit_costs: -10
 
@@ -142,8 +141,7 @@ tiranthaels_blade:
   exclusive_races:
     - Sacred Order
   perks:
-    reduced_conversions: 25
-    prestige_gains: 25
+    prestige_gains: 50
 
 urugdakhs_axe:
   name: Urugdakh's Axe
@@ -154,7 +152,7 @@ urugdakhs_axe:
     - Black Orc
   perks:
     prestige_gains_on_retaliation: 100 # NYI
-    offensive_power: 5
+    offensive_power: 10
 
 zidurs_effluvium:
   name: Zidur's Effluvium
@@ -175,7 +173,7 @@ ancient_sceptre:
   description: Carried by rulers of a bygone era.
   base_power: 250000
   perks:
-    governor_offensive_power: 5
+    governor_offensive_power: 10
 
 cornucopia:
   name: Cornucopia
@@ -186,7 +184,7 @@ cornucopia:
     lumber_production_mod: 20
 
 flying_compass:
-  name: The Flying Compass
+  name: Flying Compass
   description: Shows the fastest path home.
   base_power: 250000
   perks:
@@ -213,3 +211,4 @@ scrolls_of_knowledge:
   base_power: 250000
   perks:
     xp_generation_mod: 10
+

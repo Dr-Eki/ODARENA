@@ -220,7 +220,7 @@
                         @endif
 
                         @if (
-                                    (in_array($selectedDominion->round->mode, ['standard', 'standard-duration', 'factions', 'factions-duration', 'artefacts','pack','packs-duration']) and $event->source->realm->id === $selectedDominion->realm->id) or
+                                    (in_array($selectedDominion->round->mode, ['standard', 'standard-duration', 'factions', 'factions-duration', 'artefacts', 'artefacts-packs', 'pack','packs-duration']) and $event->source->realm->id === $selectedDominion->realm->id) or
                                     (in_array($selectedDominion->round->mode, ['deathmatch', 'deathmatch-duration']) and $event->source->id === $selectedDominion->id)
                             )
                         <table class="table">
@@ -716,7 +716,7 @@
                         @endif
 
                         @if (
-                                (in_array($selectedDominion->round->mode, ['standard', 'standard-duration', 'factions', 'factions-duration', 'artefacts','packs','packs-duration']) and $event->target->realm->id === $selectedDominion->realm->id) or
+                                (in_array($selectedDominion->round->mode, ['standard', 'standard-duration', 'factions', 'factions-duration', 'artefacts', 'artefacts-packs', 'packs','packs-duration']) and $event->target->realm->id === $selectedDominion->realm->id) or
                                 (in_array($selectedDominion->round->mode, ['deathmatch', 'deathmatch-duration']) and $event->target->id === $selectedDominion->id)
                             )
 

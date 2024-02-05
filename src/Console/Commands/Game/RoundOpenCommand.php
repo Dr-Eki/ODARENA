@@ -179,7 +179,7 @@ class RoundOpenCommand extends Command implements CommandInterface
                     $this->realmFactory->create($round, $race->key);
                 }
             }
-            elseif($gameMode == 'packs' or $gameMode == 'packs-duration')
+            elseif($gameMode == 'packs' or $gameMode == 'packs-duration' or $gameMode == 'artefacts-packs')
             {
                 $this->info("Creating NPC realm...");
                 $this->realmFactory->create($round, 'npc');

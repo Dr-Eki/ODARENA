@@ -299,6 +299,12 @@ class ConstructionCalculator
         if (count($building->exclusive_races) > 0 && !in_array($dominion->race->name, $building->exclusive_races)) {
             return false;
         }
+
+        # Check if round mode matches
+        if(isset($building->round_modes) and !in_array($dominion->round->mode, $building->round_modes))
+        {
+            return false;
+        }
     
         return true;
     }

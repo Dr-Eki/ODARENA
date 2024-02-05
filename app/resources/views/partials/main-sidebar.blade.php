@@ -108,8 +108,7 @@
                     <li class="{{ Route::is('dominion.desecrate') ? 'active' : null }}"><a href="{{ route('dominion.desecrate') }}"><i class="ra ra-tombstone ra-fw"></i> <span>Desecrate</span></a></li>
                 @endif
 
-
-                @if ($selectedDominion->round->mode == 'artefacts')
+                @if (in_array($selectedDominion->round->mode, ['artefacts', 'artefacts-packs']))
                     <li class="{{ Route::is('dominion.artefacts') ? 'active' : null }}"><a href="{{ route('dominion.artefacts') }}"><i class="ra ra-alien-fire"></i> <span>Artefacts</span></a></li>
                 @endif
 

@@ -25,6 +25,7 @@ guard_tower:
   name: Guard Tower
   category: military
   excluded_races:
+    - Barbarian
     - Dragons
     - Glimjir
     - Nox
@@ -35,6 +36,7 @@ infirmary:
   name: Infirmary
   category: military
   excluded_races:
+    - Barbarian
     - Dragons
     - Glimjir
     - Nox
@@ -48,6 +50,7 @@ military_academy:
   name: Military Academy
   category: military
   excluded_races:
+    - Barbarian
     - Dragons
     - Glimjir
     - Nox
@@ -67,6 +70,7 @@ training_grounds:
   name: Training Grounds
   category: military
   excluded_races:
+    - Barbarian
     - Dragons
     - Glimjir
     - Nox
@@ -415,6 +419,20 @@ granary:
   perks:
     food_theft_protection: 25000
     lumber_theft_protection: 12500
+
+## Special
+
+battery:
+  name: Battery
+  category: other
+  excluded_races:
+    - Barbarian
+  round_modes:
+    - artefacts
+    - artefacts-packs
+  perks:
+    artefact_shield_restoration: 10
+    mana_upkeep_raw_per_artefact: 2
 
 ## Homes
 cave:  

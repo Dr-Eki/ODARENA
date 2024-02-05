@@ -57,7 +57,7 @@
                             <p>Land goal: <strong>{{ number_format($currentRound->goal) }}.</strong></p>
                         @elseif(in_array($currentRound->mode, ['standard-duration','deathmatch-duration','factions-duration','packs-duration']))
                             <p>Round length: <strong>{{ number_format($currentRound->goal) }} ticks.</strong></p>
-                        @elseif($currentRound->mode == 'artefacts')
+                        @elseif(in_array($currentRound->mode, ['artefacts','artefacts-packs']))
                             <p>Artefacts to control: <strong>{{ number_format($currentRound->goal) }}.</strong></p>
                         @endif
 

@@ -311,10 +311,10 @@ class WorldNewsHelper
             Mirnon has accepted the devotion of Dark Elf (#3).
         */
 
-        $artefactClass = $this->getSpanClass('info');
+        $artefactClass = $this->getSpanClass('other');
 
         $string = sprintf(
-            '<span class="%s">%s</span> has been brought to the %s.',
+            '<span class="%s">%s</span> has been brought to %s.',
             $artefactClass,
             $artefact->name,
             $this->generateRealmOnlyString($realm)
@@ -513,13 +513,12 @@ class WorldNewsHelper
 
         if(isset($expedition['data']['artefact']) and $expedition['data']['artefact']['found'])
         {
-
             $string = sprintf(
-                'An expedition sent out by %s discovered <strong class="%s">%s</strong> land and found an artefact: <span class="%s">%s</span>.',
+                'An expedition sent out by %s discovered <strong class="%s">%s</strong> land and found <span class="%s">%s</span>.',
                 $this->generateDominionString($dominion, 'neutral', $viewer),
                 $this->getSpanClass($mode),
                 number_format($expedition['data']['land_discovered']),
-                $this->getSpanClass('info'),
+                $this->getSpanClass('other'),
                 Artefact::findOrFail($expedition['data']['artefact']['id'])->name
               );
 
@@ -1034,7 +1033,7 @@ class WorldNewsHelper
     public function generateRealmOnlyString(Realm $realm, $mode = 'other'): string
     {
 
-        if(in_array($realm->round->mode, ['packs', 'packs-duration']))
+        if(in_array($realm->round->mode, ['packs', 'packs-duration', 'artefacts-packs']))
         {
 
             if($realm->alignment === 'npc')
@@ -1126,7 +1125,7 @@ class WorldNewsHelper
     {
         return [
             'abandon_dominion' => 'Dominion abandoned',
-            #'artefact_completed' => 'Artefact arrival',
+            'artefact_completed' => 'Artefact arrival',
             'barbarian_invasion' =>'Barbarian invasion',
             'decree_issued' => 'Decree issued',
             'decree_revoked' => 'Decree revoked',

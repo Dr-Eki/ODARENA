@@ -16,10 +16,25 @@ class BuildingHelper
         return Building::where('enabled',1)->pluck('key');
     }
 
-    public function getBuildingDescription(Building $building): ?string
+    public function getBuildingDescription(Building $building, bool $forScribes = false): ?string
     {
 
         $helpStrings[$building->name] = '';
+
+        if($forScribes and isset($building->round_modes))
+        {
+
+
+            $roundHelper = app(RoundHelper::class);
+            $roundModesArray = [];
+
+            foreach($building->round_modes as $roundModeKey)
+            {
+                $roundModesArray[] = $roundHelper->getRoundModeString(null, $roundModeKey, true);
+            }
+
+            $helpStrings[$building->name] .= '<li>Only available in ' . generate_sentence_from_array($roundModesArray) . ' rounds.</li>';
+        }
 
         if(isset($building->deity))
         {
@@ -118,6 +133,8 @@ class BuildingHelper
             'mana_upkeep_raw' => 'Drains %g mana per tick.',
             'pearls_upkeep_raw' => 'Costs %g pearls per tick.',
             'prisoner_upkeep_raw' => 'Works %g prisoners per tick to death.',
+
+            'mana_upkeep_raw_per_artefact' => 'Drains %g mana per tick per artefact in the realm.',
 
             'gold_production_mod' => 'Gold production increased by %2$s%% for every %1$s%% (max +%3$s%%).',
             'food_production_mod' => 'Food production increased by %2$s%% for every %1$s%% (max +%3$s%%).',
@@ -295,6 +312,7 @@ class BuildingHelper
             # Other/special
             'deity_power' => 'Increases deity perks %2$s%% for every %1$s%% (max +%3$s%%)',
             'research_required_to_build' => 'Requires %s research to build.',
+            'artefact_shield_restoration' => '%+g artefact shield restoration per tick',
 
             'pairing_limit' => 'You can at most have one per %2$s %1$s. Unpaired buildings are not effective.',
             'multiple_pairing_limit' => 'You can at most have one per %1$s %2$s. Unpaired buildings are not effective.',

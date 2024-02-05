@@ -22,7 +22,18 @@ class RoundHelper
 
     public function getRoundModes(): array
     {
-        return ['standard', 'standard-duration', 'deathmatch', 'deathmatch-duration', 'factions', 'factions-duration', 'packs', 'packs-duration', 'artefacts'];
+        return [
+            'standard',
+            'standard-duration',
+            'deathmatch',
+            'deathmatch-duration',
+            'factions',
+            'factions-duration',
+            'packs',
+            'packs-duration',
+            'artefacts',
+            'artefacts-packs'
+        ];
     }
 
     public function getRoundModeString(Round $round = null, string $roundModeKey = null, bool $detailed = false): string
@@ -55,6 +66,7 @@ class RoundHelper
                 break;
 
             case 'artefacts':
+            case 'artefacts-packs':
                 $roundModeString = 'Artefacts';
                 break;
         }
@@ -79,6 +91,10 @@ class RoundHelper
         
                 case 'artefacts':
                     $roundModeString .= '';
+                    break;
+        
+                case 'artefacts-packs':
+                    $roundModeString .= ' (packs)';
                     break;
             }
         }
@@ -107,6 +123,7 @@ class RoundHelper
                 return 'ticks';
 
             case 'artefacts':
+            case 'artefacts-packs':
                 return 'artefacts';
         }
     }
@@ -142,6 +159,10 @@ class RoundHelper
 
             case 'artefacts':
                 return 'Your dominion is in a realm with friendly dominions and the goal is to be the first realm to capture at least the required number of artefacts.';
+
+            case 'artefacts-packs':
+                return 'Leaders form packs which can consist of any number of dominions of almost any combination of factions. The goal is for your pack to capture the number of require artefacts. These rounds are non-canon.';
+    
         }
     }
 
@@ -168,6 +189,7 @@ class RoundHelper
                 return '<i class="ra ra-double-team ra-fw text-blue"></i>';
 
             case 'artefacts':
+            case 'artefacts-packs':
                 return '<i class="ra ra-alien-fire text-orange"></i>';
 
             default:
@@ -271,7 +293,7 @@ class RoundHelper
             # For each race, check if round->mode is in race->round_modes, remove if not.
             foreach($races as $key => $race)
             {
-                if(!in_array($round->mode, $race->round_modes))
+                if(isset($race->round_modes) and !in_array($round->mode, $race->round_modes))
                 {
                     $races->forget($key);
                 }

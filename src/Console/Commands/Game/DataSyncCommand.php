@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use OpenDominion\Console\Commands\CommandInterface;
 
+# Models
 use OpenDominion\Models\Advancement;
 use OpenDominion\Models\AdvancementPerk;
 use OpenDominion\Models\AdvancementPerkType;
@@ -67,6 +68,7 @@ use OpenDominion\Models\UnitPerkType;
 # Helpers
 
 use OpenDominion\Helpers\BuildingHelper;
+use OpenDominion\Helpers\RoundHelper;
 
 class DataSyncCommand extends Command implements CommandInterface
 {
@@ -80,6 +82,7 @@ class DataSyncCommand extends Command implements CommandInterface
     protected $filesystem;
 
     protected $buildingHelper;
+    protected $roundHelper;
 
     /**
      * DataSyncCommand constructor.
@@ -93,6 +96,7 @@ class DataSyncCommand extends Command implements CommandInterface
         $this->filesystem = $filesystem;
 
         $this->buildingHelper = app(BuildingHelper::class);
+        $this->roundHelper = app(RoundHelper::class);
     }
 
     /**
@@ -194,7 +198,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'peasants_production' => object_get($data, 'peasants_production', ['gold' => 3]),
                     'peasants_alias' => object_get($data, 'peasants_alias', null),
                     'draftees_alias' => object_get($data, 'draftees_alias', null),
-                    'round_modes' => object_get($data, 'round_modes', ['standard', 'standard-duration','deathmatch','deathmatch-duration','factions','factions-duration','packs','packs-duration']),
+                    'round_modes' => object_get($data, 'round_modes', $this->roundHelper->getRoundModes()),
 
                     'spies_cost' => object_get($data, 'spies_cost', '500,gold'),
                     'wizards_cost' => object_get($data, 'wizards_cost', '500,gold'),
@@ -529,6 +533,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'excluded_races' => object_get($buildingData, 'excluded_races', []),
                     'exclusive_races' => object_get($buildingData, 'exclusive_races', []),
                     'category' => object_get($buildingData, 'category', 'production'),
+                    'round_modes' => object_get($buildingData, 'round_modes', NULL),
                     'deity_id' => $deityId,
                     'enabled' => (int)object_get($buildingData, 'enabled', 1)
                 ]);

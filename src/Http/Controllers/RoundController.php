@@ -179,7 +179,7 @@ class RoundController extends AbstractController
         ]);
 
         $pack = null;
-        if(in_array($round->mode, ['packs','packs-duration']))
+        if(in_array($round->mode, ['packs','packs-duration', 'artefacts-packs']))
         {
             # If pack is "random", get a random pack
             if($request['pack'] == 'random_public')
@@ -405,7 +405,7 @@ class RoundController extends AbstractController
                     ->where('playable', 1)
                     ->pluck('id')->all();
             }
-            elseif(in_array($round->mode,['packs','packs-duration']))
+            elseif(in_array($round->mode,['packs','packs-duration','artefacts-packs']))
             {
                 $races = $this->roundHelper->getRoundRaces($round)
                     ->where('playable', 1)
@@ -440,7 +440,7 @@ class RoundController extends AbstractController
         }
 
         $pack = null;
-        if(in_array($round->mode, ['packs','packs-duration']))
+        if(in_array($round->mode, ['packs','packs-duration','artefacts-packs']))
         {
             # If pack is "random", get a random pack
             if($request['pack'] == 'random_public')
@@ -664,6 +664,11 @@ class RoundController extends AbstractController
                 throw new GameException("Invalid pack status.");
             }
 
+            if(!in_array($round->mode, ['packs','packs-duration','artefacts-packs']))
+            {
+                throw new GameException("Packs cannot be created this round.");
+            }
+
             $this->guardAgainstUserAlreadyHavingDominionInRound($round);
             $this->guardAgainstUserAlreadyHavingCreatedAPack($round);
         } catch (GameException $e) {
@@ -763,7 +768,13 @@ class RoundController extends AbstractController
             return true;
         }
 
-        return in_array($round->mode, $race->round_modes);
+        if(isset($race->round_modes))
+        {
+            return in_array($round->mode, $race->round_modes);
+        }
+
+        return true;
+
     }
 
 }

@@ -33,6 +33,24 @@ dp_failure_max:
 expeditions:
   name: Expeditions
 
+# Resource Finding
+gold_found:
+  name: Gold found
+food_found:
+  name: Food found
+lumber_found:
+  name: Lumber found
+ore_found:
+  name: Ore found
+gems_found:
+  name: Gems found
+mana_found:
+  name: Mana found
+horse_found:
+  name: Horses found
+blood_found:
+  name: Blood found
+
 # Military
 
 raw_dp_killed_total:
@@ -769,10 +787,12 @@ blood_stolen:
   name: Blood stolen
 peasants_stolen:
   name: Peasants abducted
+
 espionage_peasants_killed:
   name: Peasants killed
 draftees_stolen:
   name: Draftees abducted
+
 espionage_draftees_killed:
   name: Draftees killed (espionage)
 espionage_peasants_lost:
@@ -1257,6 +1277,26 @@ day23_top_op:
   name: Day 23 Highest Offensive Power Seen
 day24_top_op:
   name: Day 24 Highest Offensive Power Seen
+
+# Artefacts
+
+artefacts_discovered:
+  name: Artefacts discovered
+
+artefacts_captured:
+  name: Artefacts captured
+
+artefacts_lost:
+  name: Artefacts lost
+
+artefacts_military_damage_dealt:
+  name: Artefacts military damage dealt
+
+artefacts_magic_damage_dealt:
+  name: Artefacts magic damage dealt
+
+artefacts_sabotage_damage_dealt:
+  name: Artefacts sabotage damage dealt
 
 # Specials
 

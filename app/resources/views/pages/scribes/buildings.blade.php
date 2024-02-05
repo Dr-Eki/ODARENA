@@ -39,7 +39,7 @@
                                 {!! $buildingHelper->getExclusivityString($building) !!}
                             </td>
                             <td>
-                                {!! $buildingHelper->getBuildingDescription($building) !!}
+                                {!! $buildingHelper->getBuildingDescription($building, true) !!}
                             </td>
                         </tr>
                     @endforeach

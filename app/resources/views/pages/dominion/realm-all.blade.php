@@ -14,7 +14,7 @@
             </div>
             <div class="box-header with-border">
                   <div class="row">
-                    @if($selectedDominion->round->mode == 'standard' or $selectedDominion->round->mode == 'standard-duration' or $selectedDominion->round->mode == 'artefacts')
+                    @if(in_array($selectedDominion->round->mode,['standard', 'standard-duration', 'artefacts', 'artefacts-packs']))
                         <div class="col-sm-3 text-center">
                             @if($realm->number === 1)
                                 <span style="display:block; font-weight: bold;">Barbarians</span>

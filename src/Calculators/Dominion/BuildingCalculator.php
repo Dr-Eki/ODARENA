@@ -264,6 +264,16 @@ class BuildingCalculator
                 $buildings->push($building);
             }
         }
+
+        # XYZZY
+        foreach($buildings as $building)
+        {
+            # Check if round mode matches
+            if(isset($building->round_modes) and !in_array($dominion->round->mode, $building->round_modes))
+            {
+                $buildings->forget($building->key);
+            }
+        }
     
         return $buildings->sortBy('name');
     }

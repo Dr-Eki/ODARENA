@@ -4,7 +4,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-sm-12 col-md-12">
+    <div class="col-sm-9 col-md-9">
         <form action="{{ route('dominion.artefacts') }}" method="post" role="form" id="artefacts_form">
                 @csrf
 
@@ -32,112 +32,112 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <label class="btn btn-block" for="send_units">
-                                <input type="radio" id="send_units" name="action_type" value="send_units" autocomplete="off" {{ (old('action_type') == 'send_units') ? 'checked' : null }} required>&nbsp;<h3 class="box-title"><i class="ra ra-crossed-swords ra-fw"></i>Send Units</h3>
-                            </label>
-                        </div>
-                        <div class="box-body table-responsive no-padding">
-                            <table class="table">
-                                <colgroup>
-                                    <col>
-                                    <col width="100">
-                                    <col width="100">
-                                    <col width="100">
-                                    <col width="150">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th>Unit</th>
-                                        <th class="text-center">OP / DP</th>
-                                        <th class="text-center">Available</th>
-                                        <th class="text-center">Send</th>
-                                        <th class="text-center">Total OP / DP</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $offenseVsBuildingTypes = [];
-                                        $offenseVsLandTypes = [];
-                                        $offenseVsPrestige = [];
-                                        $offenseVsBarren = [];
-                                        $offenseVsResource = [];
-                                        $offenseVsOpposingUnits = [];
-                                        $offenseFromMob = [];
-                                        $offenseFromBeingOutnumbered = [];
-                                    @endphp
-                                    @foreach (range(1, $selectedDominion->race->units->count()) as $unitSlot)
-                                        @php
-                                            $unit = $selectedDominion->race->units->filter(function ($unit) use ($unitSlot) {
-                                                return ($unit->slot === $unitSlot);
-                                            })->first();
-                                        @endphp
-
-                                        @if ($unit->power_offense == 0 and $unit->getPerkValue('sendable_with_zero_op') != 1)
-                                            @continue
-                                        @endif
-
-                                        @php
-                                            $offensivePower = $militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unit, 'offense');
-                                            $defensivePower = $militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unit, 'defense');
-
-                                            $hasDynamicOffensivePower = $unit->perks->filter(static function ($perk) {
-                                                return starts_with($perk->key, ['offense_from_', 'offense_staggered_', 'offense_vs_', 'offense_m']);
-                                            })->count() > 0;
-
-                                            $hasDynamicDefensivePower = $unit->perks->filter(static function ($perk) {
-                                                return starts_with($perk->key, ['defense_from_', 'defense_staggered_', 'defense_vs_']);
-                                            })->count() > 0;
-
-                                            $unitType = 'unit' . $unitSlot;
-                                        @endphp
-
+            @if($artefactCalculator->getDamageType($selectedDominion) == 'military')
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                            </div>
+                            <div class="box-body table-responsive no-padding">
+                                <table class="table">
+                                    <colgroup>
+                                        <col>
+                                        <col width="100">
+                                        <col width="100">
+                                        <col width="100">
+                                        <col width="150">
+                                    </colgroup>
+                                    <thead>
                                         <tr>
-                                            <td>
-                                                <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $selectedDominion->race, [$militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unitHelper->getUnitFromRaceUnitType($selectedDominion->race, $unitType), 'offense'), $militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unitHelper->getUnitFromRaceUnitType($selectedDominion->race, $unitType), 'defense'), ]) }}">
-                                                    {{ $unitHelper->getUnitName("unit{$unitSlot}", $selectedDominion->race) }}
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                <span id="unit{{ $unitSlot }}_op">{{ floatval($offensivePower) }}</span>{{ $hasDynamicOffensivePower ? '*' : null }}
-                                                /
-                                                <span id="unit{{ $unitSlot }}_dp" class="text-muted">{{ floatval($defensivePower) }}</span><span class="text-muted">{{ $hasDynamicDefensivePower ? '*' : null }}</span>
-                                            </td>
-                                            <td class="text-center">
-                                                {{ number_format($selectedDominion->{"military_unit{$unitSlot}"}) }}
-                                            </td>
-                                            <td class="text-center">
-                                                <input type="number"
-                                                       name="unit[{{ $unitSlot }}]"
-                                                       id="unit[{{ $unitSlot }}]"
-                                                       class="form-control text-center"
-                                                       placeholder="0"
-                                                       min="0"
-                                                       max="{{ $selectedDominion->{"military_unit{$unitSlot}"} }}"
-                                                       style="min-width:5em;"
-                                                       data-slot="{{ $unitSlot }}"
-                                                       data-amount="{{ $selectedDominion->{"military_unit{$unitSlot}"} }}"
-                                                       data-op="{{ $unit->power_offense }}"
-                                                       data-dp="{{ $unit->power_defense }}"
-                                                       {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
-                                            </td>
-                                            <td class="text-center" id="unit{{ $unitSlot }}_stats">
-                                                <span class="op">0</span> / <span class="dp text-muted">0</span>
-                                            </td>
+                                            <th>Unit</th>
+                                            <th class="text-center">OP / DP</th>
+                                            <th class="text-center">Available</th>
+                                            <th class="text-center">Send</th>
+                                            <th class="text-center">Total OP / DP</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $offenseVsBuildingTypes = [];
+                                            $offenseVsLandTypes = [];
+                                            $offenseVsPrestige = [];
+                                            $offenseVsBarren = [];
+                                            $offenseVsResource = [];
+                                            $offenseVsOpposingUnits = [];
+                                            $offenseFromMob = [];
+                                            $offenseFromBeingOutnumbered = [];
+                                        @endphp
+                                        @foreach (range(1, $selectedDominion->race->units->count()) as $unitSlot)
+                                            @php
+                                                $unit = $selectedDominion->race->units->filter(function ($unit) use ($unitSlot) {
+                                                    return ($unit->slot === $unitSlot);
+                                                })->first();
+                                            @endphp
+
+                                            @if ($unit->power_offense == 0 and $unit->getPerkValue('sendable_with_zero_op') != 1)
+                                                @continue
+                                            @endif
+
+                                            @php
+                                                $offensivePower = $militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unit, 'offense');
+                                                $defensivePower = $militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unit, 'defense');
+
+                                                $hasDynamicOffensivePower = $unit->perks->filter(static function ($perk) {
+                                                    return starts_with($perk->key, ['offense_from_', 'offense_staggered_', 'offense_vs_', 'offense_m']);
+                                                })->count() > 0;
+
+                                                $hasDynamicDefensivePower = $unit->perks->filter(static function ($perk) {
+                                                    return starts_with($perk->key, ['defense_from_', 'defense_staggered_', 'defense_vs_']);
+                                                })->count() > 0;
+
+                                                $unitType = 'unit' . $unitSlot;
+                                            @endphp
+
+                                            <tr>
+                                                <td>
+                                                    <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $selectedDominion->race, [$militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unitHelper->getUnitFromRaceUnitType($selectedDominion->race, $unitType), 'offense'), $militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unitHelper->getUnitFromRaceUnitType($selectedDominion->race, $unitType), 'defense'), ]) }}">
+                                                        {{ $unitHelper->getUnitName("unit{$unitSlot}", $selectedDominion->race) }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span id="unit{{ $unitSlot }}_op">{{ floatval($offensivePower) }}</span>{{ $hasDynamicOffensivePower ? '*' : null }}
+                                                    /
+                                                    <span id="unit{{ $unitSlot }}_dp" class="text-muted">{{ floatval($defensivePower) }}</span><span class="text-muted">{{ $hasDynamicDefensivePower ? '*' : null }}</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ number_format($selectedDominion->{"military_unit{$unitSlot}"}) }}
+                                                </td>
+                                                <td class="text-center">
+                                                    <input type="number"
+                                                        name="unit[{{ $unitSlot }}]"
+                                                        id="unit[{{ $unitSlot }}]"
+                                                        class="form-control text-center"
+                                                        placeholder="0"
+                                                        min="0"
+                                                        max="{{ $selectedDominion->{"military_unit{$unitSlot}"} }}"
+                                                        style="min-width:5em;"
+                                                        data-slot="{{ $unitSlot }}"
+                                                        data-amount="{{ $selectedDominion->{"military_unit{$unitSlot}"} }}"
+                                                        data-op="{{ $unit->power_offense }}"
+                                                        data-dp="{{ $unit->power_defense }}"
+                                                        {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
+                                                </td>
+                                                <td class="text-center" id="unit{{ $unitSlot }}_stats">
+                                                    <span class="op">0</span> / <span class="dp text-muted">0</span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-
+                </div>
+                <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="box box-danger">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><i class="ra ra-sword"></i> Invasion force</h3>
+                                <h3 class="box-title"><i class="ra ra-sword"></i> Attack force</h3>
                             </div>
                             <div class="box-body table-responsive no-padding">
                                 <table class="table">
@@ -157,42 +157,42 @@
                             </div>
                             <div class="box-footer">
     
-                              @if ($selectedDominion->isSpellActive('rainy_season'))
-                                  <p><strong><em>You cannot attack during the Rainy Season.</em></strong></p>
+                            @if ($selectedDominion->isSpellActive('rainy_season'))
+                                <p><strong><em>You cannot attack during the Rainy Season.</em></strong></p>
     
-                              @elseif ($selectedDominion->isSpellActive('stasis'))
-                                  <p><strong><em>You cannot attack while you are in stasis.</em></strong></p>
+                            @elseif ($selectedDominion->isSpellActive('stasis'))
+                                <p><strong><em>You cannot attack while you are in stasis.</em></strong></p>
     
-                              @elseif ($selectedDominion->isSpellActive('flood_the_caverns'))
-                                  <p><strong><em>You cannot attack while the caverns are flooded.</em></strong></p>
+                            @elseif ($selectedDominion->isSpellActive('flood_the_caverns'))
+                                <p><strong><em>You cannot attack while the caverns are flooded.</em></strong></p>
     
-                              @elseif ($protectionService->isUnderProtection($selectedDominion))
-                                  <p><strong><em>You are currently under protection for <b>{{ $selectedDominion->protection_ticks }}</b> {{ str_plural('tick', $selectedDominion->protection_ticks) }} and may not attack during that time.</em></strong></p>
+                            @elseif ($protectionService->isUnderProtection($selectedDominion))
+                                <p><strong><em>You are currently under protection for <b>{{ $selectedDominion->protection_ticks }}</b> {{ str_plural('tick', $selectedDominion->protection_ticks) }} and may not attack during that time.</em></strong></p>
     
-                              @elseif (!$selectedDominion->round->hasStarted())
-                                  <p><strong><em>You cannot attack until the round has started.</em></strong></p>
+                            @elseif (!$selectedDominion->round->hasStarted())
+                                <p><strong><em>You cannot attack until the round has started.</em></strong></p>
     
-                              @elseif ($selectedDominion->morale < 50)
-                                  <p><strong><em>Your military needs at least 50% morale to attack. You currently have {{ $selectedDominion->morale }} morale.</em></strong></p>
+                            @elseif ($selectedDominion->morale < 50)
+                                <p><strong><em>Your military needs at least 50% morale to attack. You currently have {{ $selectedDominion->morale }} morale.</em></strong></p>
     
-                              @else
-                                  @if($selectedDominion->race->name == 'Dimensionalists')
-                                      @if($resourceCalculator->getAmount($selectedDominion, 'cosmic_alignment') >= $selectedDominion->race->getPerkValue('cosmic_alignment_to_invade'))
-                                          <button type="submit"
-                                                  class="btn btn-danger"
-                                                  {{ $selectedDominion->isLocked() ? 'disabled' : null }}
-                                                  id="invade-button">
-                                              <i class="ra ra-player-teleport"></i>
-                                              Plot chart and teleport units
-                                          </button>
+                            @else
+                                @if($selectedDominion->race->name == 'Dimensionalists')
+                                    @if($resourceCalculator->getAmount($selectedDominion, 'cosmic_alignment') >= $selectedDominion->race->getPerkValue('cosmic_alignment_to_invade'))
+                                        <button type="submit"
+                                                class="btn btn-danger"
+                                                {{ $selectedDominion->isLocked() ? 'disabled' : null }}
+                                                id="invade-button">
+                                            <i class="ra ra-player-teleport"></i>
+                                            Plot chart and teleport units
+                                        </button>
     
-                                          <br><span class="label label-info">This will expend {{ number_format($selectedDominion->race->getPerkValue('cosmic_alignment_to_invade')) }} Cosmic Alignments.</span>
+                                        <br><span class="label label-info">This will expend {{ number_format($selectedDominion->race->getPerkValue('cosmic_alignment_to_invade')) }} Cosmic Alignments.</span>
     
-                                      @else
-                                          <span class="label label-danger">You need at least {{ number_format($selectedDominion->race->getPerkValue('cosmic_alignment_to_invade')) }} Cosmic Alignments to plot a chart to teleport units. Currently: {{ number_format($resourceCalculator->getAmount($selectedDominion, 'cosmic_alignment')) }}.</span>
-                                      @endif
+                                    @else
+                                        <span class="label label-danger">You need at least {{ number_format($selectedDominion->race->getPerkValue('cosmic_alignment_to_invade')) }} Cosmic Alignments to plot a chart to teleport units. Currently: {{ number_format($resourceCalculator->getAmount($selectedDominion, 'cosmic_alignment')) }}.</span>
+                                    @endif
     
-                                  @else
+                                @else
                                     <button type="submit"
                                             class="btn btn-danger"
                                             {{ $selectedDominion->isLocked() ? 'disabled' : null }}
@@ -200,8 +200,8 @@
                                         <i class="ra ra-crossed-swords"></i>
                                         Send Units
                                     </button>
-                                  @endif
-                              @endif
+                                @endif
+                            @endif
                             </div>
                         </div>
                     </div>
@@ -241,109 +241,108 @@
                         </div>
                     </div>
                 </div>
-
-                
-                <div class="col-sm-6">
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <label class="btn btn-block" for="cast_spell">
-                                <input type="radio" id="cast_spell" name="action_type" value="cast_spell" autocomplete="off" {{ (old('action_type') == 'send_units') ? 'checked' : null }} required>&nbsp;<h3 class="box-title"><i class="fas fa-hat-wizard fa-fw"></i>Cast Spell</h3>
-                            </label>
-                        </div>
-
-                        <div class="box-body">
-                          {{-- //Columns must be a factor of 12 (1,2,3,4,6,12) --}}
-                        @php
-                            $numOfCols = 1;
-                            $rowCount = 0;
-                            $bootstrapColWidth = 12 / $numOfCols;
-                        @endphp
-
-                            <div class="row">
-
-                            @foreach($spells as $spell)
-                                @php
-                                    $canCast = $spellCalculator->canCastSpell($selectedDominion, $spell);
-                                @endphp
-                                <div class="col-md-{{ $bootstrapColWidth }}">
-                                    <label class="btn btn-block">
-                                    <div class="box {!! $sorceryHelper->getSpellClassBoxClass($spell) !!}">
-                                        <div class="box-header with-border">
-                                            <input type="hidden" name="spell" value="{{ $spell->id }}" autocomplete="off" checked disabled>&nbsp;<h4 class="box-title">{{ $spell->name }}</h4>
-                                            <span class="pull-right" data-toggle="tooltip" data-placement="top" title="{!! $sorceryHelper->getSpellClassDescription($spell) !!}"><i class="{!! $sorceryHelper->getSpellClassIcon($spell) !!}"></i></span>
-                                        </div>
-
-                                        <div class="box-body">
-                                            <p>
-                                                @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
-                                                    {{ $effect }}
-                                                @endforeach
-                                            </p>
-
-                                            <div class="box-footer">
-                                                @include('partials.dominion.sorcery-spell-basics')
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </label>
-                                </div>
-
-                                @php
-                                    $rowCount++;
-                                @endphp
-
-                                @if($rowCount % $numOfCols == 0)
-                                    </div><div class="row">
-                                @endif
-
-                            @endforeach
-                            </div>
-                            <div class="col-md-12">
-                                <h4><i class="fas fa-hat-wizard"></i> Wizard Strength</h4>
-                                <input type="number"
-                                       id="amountSlider"
-                                       class="form-control slider"
-                                       name="wizard_strength"
-                                       value="0"
-                                       data-slider-value="{{ min($selectedDominion->wizard_strength, 100) }}"
-                                       data-slider-min="0"
-                                       data-slider-max="{{ $selectedDominion->wizard_strength }}"
-                                       data-slider-step="1"
-                                       data-slider-tooltip="show"
-                                       data-slider-handle="round"
-                                       data-slider-id="blue"
-                                        {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
-
-                                <div class="box-footer">
-                                    <button type="submit"
-                                            class="btn btn-danger"
-                                            {{ $selectedDominion->isLocked() ? 'disabled' : null }}
-                                            id="cast-spell-button">
-                                        <i class="fas fa-hand-sparkles"></i>
-                                        Cast Spell
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- End units/spell row -->
+            @endif
         </form>
     </div>
-</div>
-
-<div class="row">
     <div class="col-sm-12 col-md-3">
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title">Information</h3>
             </div>
             <div class="box-body">
-                <p>?</p>
+                <p>Begin by selecting which artefact you want to target.</p>
+                @if($artefactCalculator->getDamageType($selectedDominion) == 'military')
+                    <p>Then select the units you want to send to attack the artefact.</p>
+                @endif
             </div>
         </div>
     </div>
 </div>
+
+@php
+    $realmArtefacts = $selectedDominion->realm->realmArtefacts;
+    $realmArtefactsCount = $selectedDominion->realm->artefacts->count();
+@endphp
+    @if($realmArtefactsCount)
+    <div class="row">
+        <div class="col-sm-12 col-md-9">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="ra ra-castle"></i> Realm Artefacts</h3>
+                </div>
+                <div class="box-body">
+                    <div class="box box-primary table-responsive" id="spells-cast">
+                        <table class="table table-striped table-hover" id="spells-cast-table">
+                            <colgroup>
+                                <col>
+                                <col width="200">
+                                <col width="400">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Artefact</th>
+                                    <th>Aegis</th>
+                                    <th>Perks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($realmArtefacts as $realmArtefact)
+                                @php
+                                    $realmArtefactPowerRatio = $realmArtefact->power / $realmArtefact->max_power;
+
+                                    if($realmArtefactPowerRatio < 0.10)
+                                    {
+                                        $powerColor = 'danger';
+                                    }
+                                    elseif($realmArtefactPowerRatio < 0.65)
+                                    {
+                                        $powerColor = 'warning';
+                                    }
+                                    elseif($realmArtefactPowerRatio < 1)
+                                    {
+                                        $powerColor = 'info';
+                                    }
+                                    else
+                                    {
+                                        $powerColor = 'success';
+                                    }
+                                @endphp
+                                <tr>
+                                    <td>
+                                        <strong>{{ $realmArtefact->artefact->name }}</strong><br>
+                                        <i class="text-muted">{{ $realmArtefact->artefact->description }}</i>
+                                    </td>
+                                    <td>
+                                        <span class="label label-{{ $powerColor }}">{{ number_format($realmArtefact->power) }} / {{ number_format($realmArtefact->max_power) }}</span>
+                                    <td>
+                                        <ul>
+                                            @foreach($artefactHelper->getArtefactPerksString($realmArtefact->artefact) as $effect)
+                                                <li>{{ ucfirst($effect) }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-sm-12 col-md-3">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Information</h3>
+                </div>
+                <div class="box-body">
+                    <p>Your realm has <strong>{{ number_format($realmArtefactsCount) }} {{ str_plural('artefact', $realmArtefactsCount) }}</strong>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
 
 @endsection
 

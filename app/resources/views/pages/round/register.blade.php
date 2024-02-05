@@ -168,7 +168,7 @@
                     </div>
                 @endif
 
-                @if(in_array($round->mode, ['packs','packs-duration']))
+                @if(in_array($round->mode, ['packs','packs-duration', 'artefacts-packs']))
                     <div class="form-group">
                         <label for="faction" class="col-sm-3 control-label">Join Pack</label>
                         <div class="col-sm-4">
@@ -234,7 +234,7 @@
                                     <input type="checkbox" name="one_pack" required> <span class="label label-danger">Special rule:</span> This is packs round and clause 3.2 of the Terms and Conditions is slightly modified: you can play multis must they all be in the same pack.
                                 </label>
                             </div>
-                        @elseif($round->mode == 'artefacts')
+                        @elseif($round->mode == 'artefacts' or $round->mode == 'artefacts-packs')
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="limited_multis" required> <span class="label label-danger">Special rule:</span> This is an Artefacts round and clause 3.2 of the Terms and Conditions is limited: you are only allowed one multi (two total dominions) this round.

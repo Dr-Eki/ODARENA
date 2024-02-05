@@ -102,6 +102,11 @@ class Realm extends AbstractModel
         return RealmAlliance::where('realm_id', $this->id)->orWhere('allied_realm_id', $this->id)->get();
     }
 
+    public function realmArtefacts()
+    {
+        return $this->hasMany(RealmArtefact::class, 'realm_id');
+    }
+
     public function artefacts()
     {
         return $this->hasManyThrough(

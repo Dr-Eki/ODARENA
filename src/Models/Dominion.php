@@ -876,6 +876,7 @@ class Dominion extends AbstractModel
                     'soul_upkeep_raw',
                     'pearls_upkeep_raw',
                     'prisoner_upkeep_raw',
+                    'mana_upkeep_raw_per_artefact',
                 
                     'gold_theft_protection',
                     'food_theft_protection',

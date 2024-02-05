@@ -457,6 +457,8 @@ class ResourceCalculator
         $consumption += $dominion->getAdvancementPerkValue($consumedResourceKey . '_upkeep_raw');
         $consumption += $dominion->getUnitPerkProductionBonus($consumedResourceKey . '_upkeep_raw');
 
+        $consumption += $dominion->getBuildingPerkValue($consumedResourceKey . '_upkeep_raw_per_artefact') * $dominion->realm->artefacts->count();
+
         # Add upkeep mod
         $upkeepMultiplier = 1;
         $upkeepMultiplier += $dominion->getBuildingPerkMultiplier($consumedResourceKey . '_upkeep_mod');

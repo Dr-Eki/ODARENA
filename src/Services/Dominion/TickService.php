@@ -291,9 +291,28 @@ class TickService
                             }
 
                             # For indefinite rounds, create a countdown.
-                            if($round->mode == 'artefacts')
+                            if(in_array($round->mode, ['artefacts', 'artefacts-packs']))
                             {
-                            #    dd('uhhh...');
+                                if($dominion->realm->artefacts()->count() >= $round->goal)
+                                {
+                                    $endTick = $round->ticks + $this->roundHelper->getRoundCountdownTickLength() * 2;
+
+                                    $countdownEvent = GameEvent::create([
+                                        'round_id' => $dominion->round_id,
+                                        'source_type' => Dominion::class,
+                                        'source_id' => $dominion->id,
+                                        'target_type' => Realm::class,
+                                        'target_id' => $dominion->realm_id,
+                                        'type' => 'round_countdown',
+                                        'data' => ['end_tick' => $endTick],
+                                        'tick' => $dominion->round->ticks
+                                    ]);
+                                    $dominion->save(['event' => HistoryService::EVENT_ROUND_COUNTDOWN]);
+                                    $round->end_tick = $endTick;
+                                    $round->save();
+
+                                    if(static::EXTENDED_LOGGING) { Log::debug('*** Countdown triggered by realm #' . $dominion->realm->number); }
+                                }
                             }
                         }
                     }
@@ -1848,6 +1867,7 @@ class TickService
         {
             $artefactKey = $finishedArtefactInQueue->resource;
             $artefact = Artefact::where('key', $artefactKey)->first();
+
             $this->artefactService->addArtefactToRealm($dominion->realm, $artefact);
 
             GameEvent::create([

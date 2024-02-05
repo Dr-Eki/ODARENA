@@ -142,7 +142,7 @@
                                                 <small class="text-muted">The round starts at {{ $round->start_date }}.<br>The target land size is {{ number_format($round->goal) }}.</small>
                                             @elseif(in_array($round->mode, ['standard-duration','deathmatch-duration','factions-duration','packs-duration']))
                                                 <small class="text-muted">The round starts at {{ $round->start_date }}.<br>The round lasts for {{ number_format($round->goal) }} ticks.</small>
-                                            @elseif($round->mode == 'artefacts')
+                                            @elseif(in_array($round->mode, ['artefacts','artefacts-packs']))
                                                 <small class="text-muted">The round starts at {{ $round->start_date }}.<br>The round lasts until a realm holds {{ number_format($round->goal) }} artefacts.</small>
                                             @endif
                                         @else

@@ -2,9 +2,10 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
-use Illuminate\Database\Eloquent\Builder;
+#use Illuminate\Database\Eloquent\Builder;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 
+use OpenDominion\Helpers\ArtefactHelper;
 use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\DesecrationHelper;
 use OpenDominion\Helpers\EventHelper;
@@ -14,9 +15,9 @@ use OpenDominion\Helpers\SabotageHelper;
 use OpenDominion\Helpers\SorceryHelper;
 use OpenDominion\Helpers\UnitHelper;
 
-use OpenDominion\Models\Dominion;
+#use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
-use OpenDominion\Models\Realm;
+#use OpenDominion\Models\Realm;
 
 class EventController extends AbstractDominionController
 {
@@ -55,6 +56,7 @@ class EventController extends AbstractDominionController
             'unitHelper' => app(UnitHelper::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'desecrationHelper' => app(DesecrationHelper::class),
+            'artefactHelper' => app(ArtefactHelper::class),
             'buildingHelper' => app(BuildingHelper::class),
             'landHelper' => app(LandHelper::class),
             'raceHelper' => app(RaceHelper::class),
