@@ -21,7 +21,8 @@
                                     <option></option>
                                     @foreach ($otherRealmArtefacts as $realmArtefact)
                                         <option value="{{ $realmArtefact->id }}"
-                                                data-power="{{ number_format($realmArtefact->power) }}">
+                                                data-power="{{ number_format($realmArtefact->power) }}"
+                                                data-maxpower="{{ number_format($realmArtefact->max_power) }}">
                                             {{ $realmArtefact->artefact->name }} (#{{ $realmArtefact->realm->number }})
                                         </option>
                                     @endforeach
@@ -500,11 +501,25 @@
                 return state.text;
             }
 
-            const power = state.element.dataset.power;
+            const power = parseInt(state.element.dataset.power);
+            const maxpower = parseInt(state.element.dataset.maxpower);
+
+            let realmArtefactPowerRatio = power / maxpower;
+            let powerColor;
+
+            if (realmArtefactPowerRatio < 0.10) {
+                powerColor = 'danger';
+            } else if (realmArtefactPowerRatio < 0.65) {
+                powerColor = 'warning';
+            } else if (realmArtefactPowerRatio < 1) {
+                powerColor = 'info';
+            } else {
+                powerColor = 'success';
+            }
 
             return $(`
                 <div class="pull-left">${state.text}</div>
-                <div class="pull-right">Aegis: ${power}</div>
+                <div class="pull-right">Aegis: <span class="label label-${powerColor}">${power} / ${maxpower}</span></div>
                 <div style="clear: both;"></div>
             `);
         }

@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Calculators\Dominion;
 
+use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Unit;
 
@@ -55,7 +56,7 @@ class CasualtiesCalculator
         $this->statsService = app(StatsService::class);
     }
 
-    private function getInvasionCasualtiesRatioForUnit(Dominion $dominion, Unit $unit, Dominion $enemy = null, array $invasionData = [], string $mode = 'offense'): float
+    private function getInvasionCasualtiesRatioForUnit(Dominion $dominion, Unit $unit, Dominion $enemy = null, array $invasionData = [], string $mode = 'offense', bool $isArtefactAttack = false): float
     {
 
         if($fixedCasualties = $this->getFixedCasualties($dominion, $enemy, $unit, $invasionData, $mode))
@@ -67,6 +68,11 @@ class CasualtiesCalculator
             'offense' => 0.10,
             'defense' => 0.05
         ];
+
+        if($isArtefactAttack)
+        {
+            return $ratios['offense'];
+        }
 
         $baseRatio = $ratios[$mode];
 
@@ -106,13 +112,18 @@ class CasualtiesCalculator
         return $ratio;
     }
 
-    private function getInvasionCasualtiesRatioForUnitType(Dominion $dominion, string $unitType, Dominion $enemy = null, array $invasionData = [], string $mode = 'offense'): float
+    private function getInvasionCasualtiesRatioForUnitType(Dominion $dominion, string $unitType, Dominion $enemy = null, array $invasionData = [], string $mode = 'offense', bool $isArtefactAttack = false): float
     {
 
         $ratios = [
             'offense' => 0.10,
             'defense' => 0.05
         ];
+
+        if($isArtefactAttack)
+        {
+            return $ratios['offense'];
+        }
 
         $baseRatio = $ratios[$mode];
 
@@ -148,9 +159,8 @@ class CasualtiesCalculator
         return $ratio;
     }
 
-    public function getInvasionCasualties(Dominion $dominion, array $units, Dominion $enemy, array $invasionData = [], string $mode = 'offense'): array
+    public function getInvasionCasualties(Dominion $dominion, array $units, Dominion $enemy = null, array $invasionData = [], string $mode = 'offense', bool $isArtefactAttack = false): array
     {
-        #ldump('$mode for ' . $dominion->name . ' is ' . $mode);
         $casualties = [];
 
         foreach($units as $slot => $amountSent)
@@ -166,7 +176,7 @@ class CasualtiesCalculator
                 if(!$this->isUnitImmortal($dominion, $enemy, $unit, $invasionData, $mode))
                 {
                     #ldump($this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode));
-                    $casualties[$slot] += (int)round($amountSent * $this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode));
+                    $casualties[$slot] += (int)round($amountSent * $this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode, $isArtefactAttack));
                 }
             }
             elseif($slot == 'draftees')
@@ -175,7 +185,7 @@ class CasualtiesCalculator
                 if(!$this->isUnitTypeImmortal($dominion, $enemy, $unitType, $invasionData, $mode))
                 {
                     #ldump($this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode));
-                    $casualties[$slot] += (int)round($amountSent * $this->getInvasionCasualtiesRatioForUnitType($dominion, $unitType, $enemy, $invasionData, $mode));
+                    $casualties[$slot] += (int)round($amountSent * $this->getInvasionCasualtiesRatioForUnitType($dominion, $unitType, $enemy, $invasionData, $mode, $isArtefactAttack));
                 }
             }
 

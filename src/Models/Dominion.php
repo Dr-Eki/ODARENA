@@ -154,9 +154,6 @@ class Dominion extends AbstractModel
         'daily_gold' => 'boolean',
         'daily_land' => 'boolean',
 
-        'royal_guard_active_at' => 'datetime',
-        'eltie_guard_active_at' => 'datetime',
-
         'is_locked' => 'integer',
 
         'most_recent_improvement_resource' => 'string',

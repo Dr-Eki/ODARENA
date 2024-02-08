@@ -27,6 +27,7 @@ class HistoryService
     public const EVENT_ACTION_PERFORM_ESPIONAGE_OPERATION = 'perform espionage operation';
     public const EVENT_ACTION_INVADE = 'invade';
     public const EVENT_ACTION_INVADE_SUPPORT = 'invasion support';
+    public const EVENT_ACTION_ATTACK_ARTEFACT = 'artefact attack';
     public const EVENT_ACTION_EXPEDITION = 'expedition';
     public const EVENT_ACTION_THEFT = 'theft';
     public const EVENT_ACTION_SABOTAGE = 'sabotage';
@@ -188,9 +189,6 @@ class HistoryService
                 'daily_land',
                 'council_last_read',
                 'news_last_read',
-                'royal_guard_active_at',
-                'elite_guard_active_at',
-                'barbarian_guard_active_at',
                 'last_tick_at',
                 'monarchy_vote_for_dominion_id',
                 'tick_voted',

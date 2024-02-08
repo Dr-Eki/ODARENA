@@ -3,16 +3,12 @@
 namespace OpenDominion\Services\Dominion;
 
 use DB;
-use Carbon\Carbon;
 use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\RealmArtefact;
 use OpenDominion\Models\Round;
-use OpenDominion\Exceptions\GameException;
 use OpenDominion\Calculators\Dominion\ArtefactCalculator;
 use OpenDominion\Helpers\ArtefactHelper;
-use OpenDominion\Services\Dominion\QueueService;
-use OpenDominion\Models\GameEvent;
 
 class ArtefactService
 {
