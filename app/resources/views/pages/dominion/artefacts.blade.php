@@ -18,7 +18,6 @@
                             <div class="form-group">
                                 <label for="target_artefact">Select artefact</label>
                                 <select name="target_artefact" id="target_artefact" class="form-control select2" required style="width: 100%" data-placeholder="Select artefact" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
-                                    <option></option>
                                     @foreach ($otherRealmArtefacts as $realmArtefact)
                                         <option value="{{ $realmArtefact->id }}"
                                                 data-power="{{ number_format($realmArtefact->power) }}"
@@ -40,6 +39,7 @@
                             <div class="box-header with-border">
                             </div>
                             <div class="box-body table-responsive no-padding">
+                                <input type="hidden" name="action_type" value="military">
                                 <table class="table">
                                     <colgroup>
                                         <col>
@@ -501,10 +501,13 @@
                 return state.text;
             }
 
-            const power = parseInt(state.element.dataset.power);
-            const maxpower = parseInt(state.element.dataset.maxpower);
+            const power = (state.element.dataset.power);
+            const maxpower = (state.element.dataset.maxpower);
 
-            let realmArtefactPowerRatio = power / maxpower;
+            const intPower = parseInt(state.element.dataset.power);
+            const intMaxpower = parseInt(state.element.dataset.maxpower);
+
+            let realmArtefactPowerRatio = intPower / intMaxpower;
             let powerColor;
 
             if (realmArtefactPowerRatio < 0.10) {

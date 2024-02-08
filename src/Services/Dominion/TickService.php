@@ -1204,6 +1204,8 @@ class TickService
                     $usedCapacity += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getArtefactQueueTotalByResource($dominion, 'military_unit' . $slot);
     
                     $availableCapacity = max(0, $maxCapacity - $usedCapacity);
     
@@ -1246,6 +1248,8 @@ class TickService
                     $usedCapacity += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getArtefactQueueTotalByResource($dominion, 'military_unit' . $slot);
     
                     $availableCapacity = max(0, $maxCapacity - $usedCapacity);
     
@@ -1288,6 +1292,8 @@ class TickService
                     $usedCapacity += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getArtefactQueueTotalByResource($dominion, 'military_unit' . $slot);
     
                     $availableCapacity = max(0, $maxCapacity - $usedCapacity);
     

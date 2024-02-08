@@ -135,6 +135,7 @@ sazals_staff:
 
 tiranthaels_blade:
   name: Tiranthael's Blade
+  enabled: 0
   description: This blade was used to sort the pure from the impure.
   deity: tiranthael
   base_power: 500000
@@ -145,6 +146,7 @@ tiranthaels_blade:
 
 urugdakhs_axe:
   name: Urugdakh's Axe
+  enabled: 0
   description: A holy symbol to Black Orcs.
   deity: urugdakh
   base_power: 500000
@@ -195,8 +197,8 @@ great_trip_hammer:
   description: A magical machine sought by many seeking to raise an army.
   base_power: 450000
   perks:
-    unit_gold_costs: -5
-    unit_ore_costs: -5
+    unit_gold_costs: -10
+    unit_ore_costs: -10
 
 ichor_of_vitality:
   name: Ichor of Vitality

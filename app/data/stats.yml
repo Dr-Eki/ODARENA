@@ -1289,6 +1289,9 @@ artefacts_captured:
 artefacts_lost:
   name: Artefacts lost
 
+artefacts_attacks:
+  name: Artefact attacks
+
 artefacts_military_damage_dealt:
   name: Artefacts military damage dealt
 
@@ -1297,6 +1300,9 @@ artefacts_magic_damage_dealt:
 
 artefacts_sabotage_damage_dealt:
   name: Artefacts sabotage damage dealt
+
+artefacts_total_op_sent:
+  name: Total OP sent on artefacts
 
 # Specials
 

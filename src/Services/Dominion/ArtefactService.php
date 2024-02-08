@@ -64,9 +64,13 @@ class ArtefactService
 
     public function getRandomArtefact(Round $round): Artefact
     {
+        return $this->getAvailableArtefacts($round)->random();
+
+        /*
         $artefacts = $this->getAvailableArtefacts($round);
         $artefact = $artefacts->random();
         return $artefact;
+        */
     }
 
     public function moveArtefactFromRealmToRealm(Realm $fromRealm, Realm $toRealm, Artefact $artefact): void

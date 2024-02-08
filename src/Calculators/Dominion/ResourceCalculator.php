@@ -383,6 +383,9 @@ class ResourceCalculator
                 $population += $this->queueService->getExpeditionQueueTotalByResource($dominion, "military_unit{$unit->slot}");
                 $population += $this->queueService->getTheftQueueTotalByResource($dominion, "military_unit{$unit->slot}");
                 $population += $this->queueService->getSabotageQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                $population += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                $population += $this->queueService->getDesecrationQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                $population += $this->queueService->getArtefactQueueTotalByResource($dominion, "military_unit{$unit->slot}");
             }
 
             $production += $population * $productionFromPopulation;

@@ -54,14 +54,16 @@ class ArtefactsController extends AbstractDominionController
         $dominion = $this->getSelectedDominion();
         $artefactActionService = app(ArtefactActionService::class);
 
+        $realmArtefact = RealmArtefact::findOrFail($request->get('target_artefact'));
+
         if($request->get('action_type') == 'military')
         {
             try
             {
                 $result = $artefactActionService->militaryAttack(
                     $dominion,
-                    Realm::findOrFail($request->get('realm')),
-                    Artefact::findOrFail($request->get('artefact')),
+                    $realmArtefact->realm,
+                    $realmArtefact->artefact,
                     $request->get('unit')
                 );
 
@@ -75,6 +77,6 @@ class ArtefactsController extends AbstractDominionController
         }
 
         $request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
-        return redirect()->to($result['redirect'] ?? route('dominion.artefact'));
+        return redirect()->to($result['redirect'] ?? route('dominion.expedition'));
     }
 }

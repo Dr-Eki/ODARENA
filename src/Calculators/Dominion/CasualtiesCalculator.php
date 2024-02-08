@@ -173,7 +173,7 @@ class CasualtiesCalculator
                     return ($unit->slot === $slot);
                 })->first();
 
-                if(!$this->isUnitImmortal($dominion, $enemy, $unit, $invasionData, $mode))
+                if(!$this->isUnitImmortal($dominion, $enemy, $unit, $invasionData, $mode, $isArtefactAttack))
                 {
                     #ldump($this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode));
                     $casualties[$slot] += (int)round($amountSent * $this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode, $isArtefactAttack));
@@ -182,7 +182,7 @@ class CasualtiesCalculator
             elseif($slot == 'draftees')
             {
                 $unitType = $slot;
-                if(!$this->isUnitTypeImmortal($dominion, $enemy, $unitType, $invasionData, $mode))
+                if(!$this->isUnitTypeImmortal($dominion, $enemy, $unitType, $invasionData, $mode, $isArtefactAttack))
                 {
                     #ldump($this->getInvasionCasualtiesRatioForUnit($dominion, $unit, $enemy, $invasionData, $mode));
                     $casualties[$slot] += (int)round($amountSent * $this->getInvasionCasualtiesRatioForUnitType($dominion, $unitType, $enemy, $invasionData, $mode, $isArtefactAttack));
@@ -194,7 +194,7 @@ class CasualtiesCalculator
         return $casualties;
     }
 
-    private function getFixedCasualties(Dominion $dominion, Dominion $enemy, Unit $unit, array $invasionData = [], string $mode = 'offense'): float
+    private function getFixedCasualties(Dominion $dominion, Dominion $enemy = null, Unit $unit, array $invasionData = [], string $mode = 'offense'): float
     {
         $fixedCasualtiesPerk = 0;
 
@@ -217,8 +217,13 @@ class CasualtiesCalculator
 
     }
 
-    public function isUnitImmortal(Dominion $dominion, Dominion $enemy, /*Unit*/ $unit, array $invasionData = [], string $mode = 'offense')
+    public function isUnitImmortal(Dominion $dominion, Dominion $enemy = null, /*Unit*/ $unit, array $invasionData = [], string $mode = 'offense', bool $isArtefactAttack = false)
     {
+        if($isArtefactAttack)
+        {
+            return false;
+        }
+
         if(is_a($unit, 'OpenDominion\Models\Unit', true))
         {
             $slot = (int)$unit->slot;
@@ -299,8 +304,13 @@ class CasualtiesCalculator
         }
         
     }
-    private function isUnitTypeImmortal(Dominion $dominion, Dominion $enemy, string $unitType, array $invasionData = [], string $mode = 'offense')
+    private function isUnitTypeImmortal(Dominion $dominion, Dominion $enemy = null, string $unitType, array $invasionData = [], string $mode = 'offense', bool $isArtefactAttack = false)
     {
+        if($isArtefactAttack)
+        {
+            return false;
+        }
+
         $unitType = str_replace('military_', '', $unitType);
         
         if($unitType == 'draftees')
