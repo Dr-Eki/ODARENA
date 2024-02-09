@@ -73,8 +73,8 @@ class WorldNewsHelper
             case 'alliance_rescinded':
                 return $this->generateAllianceOfferRescindedString($event->target, $event->source, $viewer);
 
-            case 'artefact':
-                return $this->generateArtefactString($event, $viewer);
+            case 'artefact_attack':
+                return $this->generateArtefactAttackString($event, $viewer);
 
             case 'artefact_completed':
                 return $this->generateArtefactCompletedString($event->target, $event->source, $viewer);
@@ -308,7 +308,7 @@ class WorldNewsHelper
         return $string;
     }
 
-    public function generateArtefactString(GameEvent $event, Dominion $viewer): string
+    public function generateArtefactAttackString(GameEvent $event, Dominion $viewer): string
     {
         /*
             Mirnon has accepted the devotion of Dark Elf (#3).
@@ -1232,6 +1232,8 @@ class WorldNewsHelper
                 return 'fa fa-user-secret fa-fw';
             case 'desecration':
                 return 'ra ra-tombstone ra-fw';
+            case 'artefact_attack':
+                return 'ra ra-alien-fire ra-fw';
             default:
                 return '';
         }

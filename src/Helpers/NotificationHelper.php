@@ -82,6 +82,12 @@ class NotificationHelper
                 'route' => route('dominion.artefacts'),
                 'iconClass' => 'ra ra-alien-fire text-green',
             ],
+            'artefact_attack_completed' => [
+                'label' => 'Units returned from an artefact attack',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.artefacts'),
+                'iconClass' => 'ra ra-alien-fire text-green',
+            ],
             'desecration_completed' => [
                 'label' => 'Units returned from desecration',
                 'defaults' => ['email' => false, 'ingame' => true],
@@ -592,6 +598,11 @@ class NotificationHelper
                 return sprintf(
                     'Your units return with the %s artefact for the realm.',
                     $artefact->name
+                );
+
+            case 'hourly_dominion.artefact_attack_completed':
+                return sprintf(
+                    'Your units return from attacking an artefact.'
                 );
 
             case 'hourly_dominion.theft_completed':

@@ -381,12 +381,6 @@ class ArtefactActionService
             $this->attack['log']['initiated_at'] = $now;
             $this->attack['log']['requested_at'] = $_SERVER['REQUEST_TIME'];
 
-            $attackerCasualties = $this->casualtiesCalculator->getInvasionCasualties($attacker, $this->attack['attacker']['units_sent'], null, $this->attack, 'offense', true);
-
-            $this->attack['attacker']['units_lost'] = $attackerCasualties;
-
-            $this->handleCasualties($attacker);
-
             $this->handleDamage($attacker, $realmArtefact, $units);
 
             $this->handlePrestigeChanges($attacker, $realmArtefact, $units);
@@ -394,6 +388,12 @@ class ArtefactActionService
 
             $this->handleMoraleChanges($attacker, $realmArtefact, $units);
             $this->handleXp($attacker, $realmArtefact, $units);
+
+            $attackerCasualties = $this->casualtiesCalculator->getInvasionCasualties($attacker, $this->attack['attacker']['units_sent'], null, $this->attack, 'offense', true);
+
+            $this->attack['attacker']['units_lost'] = $attackerCasualties;
+
+            $this->handleCasualties($attacker);
 
             $this->handleReturningUnits($attacker, $this->attack['attacker']['units_surviving'], [], []);
 
@@ -407,25 +407,25 @@ class ArtefactActionService
             $this->attack['log']['request_duration'] = $this->attack['log']['initiated_at'] - $this->attack['log']['requested_at'];
 
             ksort($this->attack);
-            foreach($this->attack as $subitem)
-            {
-                ksort($subitem);
-            }
+            ksort($this->attack['artefact']);
+            ksort($this->attack['attacker']);
+            ksort($this->attack['log']);
+            ksort($this->attack['result']);
 
             $this->attackEvent = GameEvent::create([
                 'round_id' => $attacker->round_id,
                 'source_type' => Dominion::class,
                 'source_id' => $attacker->id,
-                'target_type' => Artefact::class,
-                'target_id' => $artefact->id,
-                'type' => 'artefact_military_damage',
+                'target_type' => NULL,
+                'target_id' => NULL,
+                'type' => 'artefact_attack',
                 'data' => $this->attack,
                 'tick' => $attacker->round->ticks
             ]);
 
             # Debug before saving:
-            #ldd($this->attack);# dd('Safety!');
-            
+            #ldd($this->attack); dd('Safety!');
+
             $attacker->save(['event' => HistoryService::EVENT_ACTION_ATTACK_ARTEFACT]);
         });
         
@@ -496,7 +496,7 @@ class ArtefactActionService
         $slowestTroopsReturnHours = $this->getSlowestUnitReturnHours($attacker, $units);
 
         $this->queueService->queueResources(
-            'artefact',
+            'artefact_attack',
             $attacker,
             ['prestige' => $prestigeChange],
             $slowestTroopsReturnHours
@@ -520,7 +520,7 @@ class ArtefactActionService
 
         $baseDamage = (int)floor($baseDamage);
         
-        $breaksShield = $baseDamage > $realmArtefact->power;
+        $breaksShield = $baseDamage >= $realmArtefact->power;
 
         $netDamage = min($baseDamage, $realmArtefact->power);
 
@@ -529,7 +529,17 @@ class ArtefactActionService
         if($breaksShield)
         {
             $this->attack['result']['shield_broken'] = true;
-            $this->artefactService->moveArtefactFromRealmToRealm($realm, $attacker->realm, $artefact);
+            
+            # Remove artefact from current realm
+            $realmArtefact->delete();
+
+            # Queue for attacker's realm
+            $this->queueService->queueResources(
+                'artefact',
+                $attacker,
+                [$artefact->key => 1],
+                12
+            );
         }
         else
         {
@@ -538,6 +548,9 @@ class ArtefactActionService
 
             $this->artefactService->updateRealmArtefactPower($realm, $artefact, $netDamage*-1);
         }
+
+
+        $this->attack['attacker']['casualties_ratio_modifier'] = $this->attack['attacker']['damage_dealt'] / $this->attack['attacker']['op'];
 
     }
 
@@ -666,7 +679,7 @@ class ArtefactActionService
         $this->attack['attacker']['xp_gained'] = $xpGained;
 
         $this->queueService->queueResources(
-            'artefact',
+            'artefact_attack',
             $attacker,
             ['xp' => $xpGained],
             $slowestTroopsReturnHours
@@ -966,7 +979,7 @@ class ArtefactActionService
                     if($amount > 0)
                     {
                         $this->queueService->queueResources(
-                            'artefact',
+                            'artefact_attack',
                             $attacker,
                             [$unitKey => $amount],
                             $unitTypeTick

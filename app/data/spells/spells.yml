@@ -11,7 +11,7 @@ enhanced_yields:
   perks:
     food_production_mod: 10
 
-sazals_fog:
+fog:
   name: Fog
   scope: self
   class: passive

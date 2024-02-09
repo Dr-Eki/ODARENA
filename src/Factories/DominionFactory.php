@@ -389,7 +389,7 @@ class DominionFactory
             DominionSpell::create([
                 'dominion_id' => $dominion->id,
                 'caster_id' => $dominion->id,
-                'spell_id' => Spell::where('key','sazals_fog')->first()->id,
+                'spell_id' => Spell::where('key','fog')->first()->id,
                 'duration' => 0,
                 'cooldown' => 192,
             ]);

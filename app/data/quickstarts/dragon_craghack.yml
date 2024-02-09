@@ -67,7 +67,7 @@ resources:
 
 spells:
     sazals_charge: 0,96
-    sazals_fog: 0,96
+    fog: 0,96
     mirnons_fortitude: 0,62
     miners_fortune: 0,62
 

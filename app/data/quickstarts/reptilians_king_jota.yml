@@ -56,7 +56,7 @@ resources:
 
 spells:
     sazals_charge: 0,96
-    sazals_fog: 0,96
+    fog: 0,96
     enhanced_yields: 0,15
     miners_fortune: 0,19
     bountiful_blossom: 0,23

@@ -54,7 +54,7 @@ resources:
 
 spells:
     sazals_charge: 0,96
-    sazals_fog: 0,96
+    fog: 0,96
     enhanced_yields: 0,12
     arboreal_abundance: 0,27
     bountiful_blossom: 0,34

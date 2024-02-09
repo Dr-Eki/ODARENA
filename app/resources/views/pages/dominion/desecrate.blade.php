@@ -199,7 +199,7 @@
                                         </tr>
                                         @if($selectedDominion->getSpellPerkValue('fog_of_war'))
                                             @php
-                                                $spell = OpenDominion\Models\Spell::where('key', 'sazals_fog')->firstOrFail();
+                                                $spell = OpenDominion\Models\Spell::where('key', 'fog')->firstOrFail();
                                             @endphp
                                             <tr>
                                                 <td>Sazal's Fog:</td>

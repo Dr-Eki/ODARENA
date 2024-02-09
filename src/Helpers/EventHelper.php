@@ -37,6 +37,11 @@ class EventHelper
             return true;
         }
 
+        if($event->type == 'artefact_attack')
+        {
+            return true;
+        }
+
         return false;
     }
 

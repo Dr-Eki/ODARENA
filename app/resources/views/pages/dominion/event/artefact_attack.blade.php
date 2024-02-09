@@ -133,36 +133,51 @@
                                 @endif
                             @endif
                             </div>
-                            <table class="table">
-                                <colgroup>
-                                    <col width="50%">
-                                    <col width="50%">
-                                </colgroup>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="2">&nbsp;</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Damage suffered:</td>
-                                        <td><span class="text-danger">{{ number_format($event->data['artefact']['damage_suffered']) }}</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Previous power:</td>
-                                        <td>{{ number_format($event->data['artefact']['current_power']) }}</td>
-                                    </tr>
-                                    @if($event->data['artefact']['result']['shield_broken'])
+                            @if($event->data['result']['shield_broken'])
+                                @php
+                                    $previousOwnerRealm = OpenDominion\Models\Realm::find($event->data['artefact']['current_realm_id']);
+                                @endphp
+                                <p>&nbsp;</p>
+                                @if($previousOwnerRealm->id === $selectedDominion->realm->id)
+                                    <p class="text-center text-danger">
+                                        <strong>The shield protecting this artefact has been broken!</strong>
+                                    </p>
+                                    <p class="text-center text-muted">
+                                        The artefact has been lost from your realm.
+                                    </p>
+                                @else
+                                    <p class="text-center text-success">
+                                        <strong>Your shield protecting this artefact has been broken!</strong>
+                                    </p>
+                                    <p class="text-center text-muted">
+                                        The artefact is being returned to your realm.
+                                    </p>
+                                @endif
+                            @else
+                                <table class="table">
+                                    <colgroup>
+                                        <col width="50%">
+                                        <col width="50%">
+                                    </colgroup>
+                                    <tbody>
                                         <tr>
-                                            <td>
-                                            </td>
+                                            <td colspan="2">&nbsp;</td>
                                         </tr>
-                                    @else
+                                        <tr>
+                                            <td>Damage suffered:</td>
+                                            <td><span class="text-danger">{{ number_format($event->data['artefact']['damage_suffered']) }}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Previous power:</td>
+                                            <td>{{ number_format($event->data['artefact']['current_power']) }}</td>
+                                        </tr>
                                         <tr>
                                             <td>New power:</td>
                                             <td>{{ number_format($event->data['artefact']['new_power']) }}</td>
                                         </tr>
-                                    @endif
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            @endif
                         </div>
                     </div>
                     

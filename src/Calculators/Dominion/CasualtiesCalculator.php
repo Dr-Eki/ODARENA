@@ -71,7 +71,7 @@ class CasualtiesCalculator
 
         if($isArtefactAttack)
         {
-            return $ratios['offense'];
+            return ($ratios['offense'] * $invasionData['attacker']['casualties_ratio_modifier']);
         }
 
         $baseRatio = $ratios[$mode];
@@ -122,7 +122,7 @@ class CasualtiesCalculator
 
         if($isArtefactAttack)
         {
-            return $ratios['offense'];
+            return ($ratios['offense'] * $invasionData['attacker']['casualties_ratio_modifier']);
         }
 
         $baseRatio = $ratios[$mode];

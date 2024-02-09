@@ -263,7 +263,12 @@ class SpellActionService
             $durationMultiplier = 1;
             $durationMultiplier += $caster->getBuildingPerkMultiplier('spell_duration_mod');
 
-            $duration = intval(floor($duration * $durationMultiplier));
+            $duration += $caster->getArtefactPerkValue($spell->key . '_duration_raw');
+            
+            $duration = (int)floor($duration * $durationMultiplier);
+
+            $duration = max(1, $duration);
+
 
             $this->statsService->updateStat($caster, 'magic_self_success', 1);
 

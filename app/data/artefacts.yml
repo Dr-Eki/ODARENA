@@ -195,7 +195,7 @@ flying_compass:
 great_trip_hammer:
   name: Great Trip Hammer
   description: A magical machine sought by many seeking to raise an army.
-  base_power: 450000
+  base_power: 400000
   perks:
     unit_gold_costs: -10
     unit_ore_costs: -10
@@ -207,6 +207,13 @@ ichor_of_vitality:
   perks:
     casualties: -20
 
+phantom_chalice:
+  name: Phantom Chalice
+  description: Filled with a spectral elixir, it blurs the line between the seen and unseen.
+  base_power: 100000
+  perks:
+    fog_duration_raw: 4 #{$spell->key}_duration-raw
+
 scrolls_of_knowledge:
   name: Scrolls of Knowledge
   description: Ancient texts, studied to learn more about the present and the future.
@@ -214,3 +221,9 @@ scrolls_of_knowledge:
   perks:
     xp_generation_mod: 10
 
+starlight_mantle:
+  name: Starlight Mantle
+  description: Woven from the essence of night skies, the mantle cloaks those under its protection.
+  base_power: 125000
+  perks:
+    spy_strength: 20
