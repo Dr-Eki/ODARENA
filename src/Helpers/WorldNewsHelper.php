@@ -73,6 +73,9 @@ class WorldNewsHelper
             case 'alliance_rescinded':
                 return $this->generateAllianceOfferRescindedString($event->target, $event->source, $viewer);
 
+            case 'artefact':
+                return $this->generateArtefactString($event, $viewer);
+
             case 'artefact_completed':
                 return $this->generateArtefactCompletedString($event->target, $event->source, $viewer);
 
@@ -299,6 +302,36 @@ class WorldNewsHelper
         {
             $string = sprintf(
                 'An alliance invitation between two foreign realms has been rescinded.'
+              );
+        }
+
+        return $string;
+    }
+
+    public function generateArtefactString(GameEvent $event, Dominion $viewer): string
+    {
+        /*
+            Mirnon has accepted the devotion of Dark Elf (#3).
+        */
+
+        $artefact = Artefact::where('key', $event->data['artefact']['key'])->firstOrFail();
+        $artefactRealm = Realm::where('id', $event->data['artefact']['current_realm_id'])->firstOrFail();
+        $attacker = $event->source;
+
+        if($event->data['result']['shield_broken'])
+        {
+            $string = sprintf(
+                '%s broke the aegis of %s, claiming the artefact for the realm.',
+                $this->generateDominionString($attacker, 'neutral', $viewer),
+                $this->generateArtefactOnlyString($artefact, $artefactRealm, 'other')
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                '%s attacked %s.',
+                $this->generateDominionString($attacker, 'neutral', $viewer),
+                $this->generateArtefactOnlyString($artefact, $artefactRealm, 'other')
               );
         }
 
@@ -1065,6 +1098,18 @@ class WorldNewsHelper
         }
 
         return $string;
+    }
+
+    public function generateArtefactOnlyString(Artefact $artefact, Realm $realm, $mode = 'neutral'): string
+    {
+
+        return sprintf(
+            '<span class="%s">%s</span> <a href="%s">(# %s)</a>',
+            $this->getSpanClass($mode),
+            $artefact->name,
+            route('dominion.realm', [$realm->number]),
+            $realm->number
+          );
     }
 
     public function getSpanClass(string $mode = 'neutral'): string

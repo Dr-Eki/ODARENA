@@ -291,6 +291,15 @@ class InsightService
             }
         });
 
+        // Units returning from artefacts
+        $this->queueService->getArtefactQueue($target)->each(static function ($row) use (&$data)
+        {
+            if (starts_with($row->resource, 'military_')) {
+                $unitType = str_replace('military_', '', $row->resource);
+                $data['units']['returning'][$unitType][$row->hours] += $row->amount;
+            }
+        });
+
         // Units training
         $this->queueService->getTrainingQueue($target)->each(static function ($row) use (&$data)
         {
