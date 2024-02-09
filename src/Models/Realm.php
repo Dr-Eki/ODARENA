@@ -128,7 +128,12 @@ class Realm extends AbstractModel
     {
         return ($this->monarch !== null);
     }
-
+    public function getPackLeader()
+    {
+        return $this->pack->leader;
+    }
+    
+    # Artefacts stuff
     protected function getArtefactPerks()
     {
         return $this->artefacts->flatMap(
@@ -136,11 +141,6 @@ class Realm extends AbstractModel
                 return $artefact->perks;
             }
         );
-    }
-
-    public function getPackLeader()
-    {
-        return $this->pack->leader;
     }
 
     /**

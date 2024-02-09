@@ -1269,7 +1269,6 @@ class DataSyncCommand extends Command implements CommandInterface
 
         foreach ($data as $artefactKey => $artefactData)
         {
-
             $artefactsToSync[] = $artefactData->name;
 
             $deityId = null;

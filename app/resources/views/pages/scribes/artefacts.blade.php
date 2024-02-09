@@ -38,7 +38,7 @@
                           <tr>
                               <td>
                                   {{ $artefact->name }}
-                                  {!! $artefactHelper->getExclusivityString($artefact) !!}
+                                  {{-- {!! $artefactHelper->getExclusivityString($artefact) !!} --}}
                               </td>
                               <td>{{ number_format($artefact->base_power) }}</td>
                               <td>

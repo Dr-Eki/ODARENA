@@ -3,6 +3,7 @@
         <div class="navbar-collapse">
             <ul class="nav navbar-nav scribes-menu">
                 <li class="{{ Route::is('scribes.advancements') ? 'active' : null }}"><a href="{{ route('scribes.advancements') }}">Advancements</a></li>
+                <li class="{{ Route::is('scribes.artefacts') ? 'active' : null }}"><a href="{{ route('scribes.artefacts') }}">Artefacts</a></li>
                 <li class="{{ Route::is('scribes.buildings') ? 'active' : null }}"><a href="{{ route('scribes.buildings') }}">Buildings</a></li>
                 <li class="{{ Route::is('scribes.decrees') ? 'active' : null }}"><a href="{{ route('scribes.decrees') }}">Decrees</a></li>
                 <li class="{{ Route::is('scribes.deities') ? 'active' : null }}"><a href="{{ route('scribes.deities') }}">Deities</a></li>

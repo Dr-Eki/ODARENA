@@ -26,6 +26,8 @@ class ArtefactHelper
             'gold_production_mod' => '%+d%% gold production',
             'boat_production_mod' => '%+d%% boat production',
             'xp_generation_mod' => '%+d%% XP generation',
+            'kelp_production_mod' => '%+d%% kelp production',
+            'pearls_production_mod' => '%+d%% pearls production',
 
             'no_gold_production' => 'No gold production or revenue',
             'no_ore_production' => 'No ore production',
@@ -87,6 +89,8 @@ class ArtefactHelper
             'base_wizard_strength' => '%+d%% base wizard strength.',
 
             'sorcery_spell_duration' => '%+d%% sorcery spell duration.',
+        
+            'fog_duration_raw' => '%+g ticks Fog duration.',
 
             // Espionage
             'spy_strength' => '%+d%% spy strength',

@@ -263,8 +263,8 @@ class SpellActionService
             $durationMultiplier = 1;
             $durationMultiplier += $caster->getBuildingPerkMultiplier('spell_duration_mod');
 
-            $duration += $caster->getArtefactPerkValue($spell->key . '_duration_raw');
-            
+            $duration += $caster->realm->getArtefactPerkValue($spell->key . '_duration_raw');
+
             $duration = (int)floor($duration * $durationMultiplier);
 
             $duration = max(1, $duration);
