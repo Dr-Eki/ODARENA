@@ -166,6 +166,9 @@ class InvadeActionService
         $this->guardLockedDominion($attacker);
         $this->guardActionsDuringTick($attacker);
         $this->guardLockedDominion($target);
+        
+        // Clear all cached values
+        Cache::flush();
 
         if($attacker->race->name !== 'Barbarian')
         {
