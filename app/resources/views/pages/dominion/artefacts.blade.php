@@ -3,7 +3,7 @@
 
 @section('content')
 
-@if(in_array($selectedDominion->round->mode, ['artefacts','artefacts-packs']))
+@if(!in_array($selectedDominion->round->mode, ['artefacts','artefacts-packs']))
     {{ abort(500, 'Invalid round mode') }}
 @endif
 
