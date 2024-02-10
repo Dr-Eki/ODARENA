@@ -90,6 +90,8 @@ class ArtefactHelper
 
             'sorcery_spell_duration' => '%+d%% sorcery spell duration.',
         
+            'spell_perks_mod' => '%+d%% all spell perks.',
+
             'fog_duration_raw' => '%+g ticks Fog duration.',
 
             // Espionage
@@ -137,9 +139,9 @@ class ArtefactHelper
             'improvements' => '%+d%% improvements',
             'improvement_points' => '%+d%% improvement points',
 
-            'lumber_improvement_points' => '%+d%% lumber improvement points',
-            'gems_improvement_points' => '%+d%% lumber improvement points',
-            'ore_improvement_points' => '%+d%% lumber improvement points',
+            'lumber_improvement_points_mod' => '%+d%% lumber improvement points',
+            'gems_improvement_points_mod' => '%+d%% lumber improvement points',
+            'ore_improvement_points_mod' => '%+d%% lumber improvement points',
 
             // Land and Construction
             'land_discovered' => '%+d%% land discovered on successful invasions',
@@ -149,6 +151,9 @@ class ArtefactHelper
             'cannot_explore' => 'Cannot explore',
 
             'conquered_land_rezoned_to_water' => '%+d%% conquered land rezoned to water',
+
+            // Divinity
+            'deity_power_mod' => '%+d%% deity power',
 
             // Special, one-off
 

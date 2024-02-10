@@ -434,6 +434,9 @@ class TickService
                 if(static::EXTENDED_LOGGING) { Log::debug('* Update all other queues'); }
                 $this->updateAllOtherQueues($round, $stasisDominions);
 
+                if(static::EXTENDED_LOGGING) { Log::debug('* Update all artefact aegises'); }
+                $this->updateArtefactsAegises($round);
+
                 Log::info(sprintf(
                     '[TICK] Ticked %s dominions in %s ms in %s',
                     number_format($round->activeDominions->count()),
@@ -1887,7 +1890,15 @@ class TickService
                 'tick' => $dominion->round->ticks
             ]);
         }
+    }
 
+    private function updateArtefactsAegises(Round $round): void
+    {
+        # Update artefact aegis
+        foreach($round->realms as $realm)
+        {
+            $this->artefactService->updateArtefactAegis($realm);
+        }
     }
 
     # Take buildings that are one tick away from finished and create or increment DominionBuildings.

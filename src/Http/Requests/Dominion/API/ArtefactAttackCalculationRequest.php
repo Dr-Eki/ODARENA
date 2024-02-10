@@ -4,7 +4,7 @@ namespace OpenDominion\Http\Requests\Dominion\API;
 
 use OpenDominion\Http\Requests\Dominion\AbstractDominionRequest;
 
-class InvadeCalculationRequest extends AbstractDominionRequest
+class ArtefactAttackCalculationRequest extends AbstractDominionRequest
 {
     /**
      * {@inheritdoc}
@@ -12,7 +12,7 @@ class InvadeCalculationRequest extends AbstractDominionRequest
     public function rules()
     {
         return [
-            'target_dominion' => 'nullable|integer',
+            'target_artefact' => 'nullable|integer|exists:artefacts,id',
             'unit' => 'nullable|array'
         ];
     }

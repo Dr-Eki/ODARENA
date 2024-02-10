@@ -140,17 +140,17 @@
                                 <p>&nbsp;</p>
                                 @if($previousOwnerRealm->id === $selectedDominion->realm->id)
                                     <p class="text-center text-danger">
-                                        <strong>The shield protecting this artefact has been broken!</strong>
+                                        <strong>The aegis protecting this artefact has been broken!</strong>
                                     </p>
                                     <p class="text-center text-muted">
                                         The artefact has been lost from your realm.
                                     </p>
                                 @else
                                     <p class="text-center text-success">
-                                        <strong>Your shield protecting this artefact has been broken!</strong>
+                                        <strong>The aegis protecting your artefact has been broken!</strong>
                                     </p>
                                     <p class="text-center text-muted">
-                                        The artefact is being returned to your realm.
+                                        The artefact is being returned to the attacker's realm.
                                     </p>
                                 @endif
                             @else

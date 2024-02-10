@@ -1510,15 +1510,14 @@ class Dominion extends AbstractModel
                     ->orWhere('dominion_id', '=', $this->id)
                     ->get()
                     ->keyBy('spell_id');
-
             
-            $spells = $this->spells;
+            $spells = $this->spells()->with(['perks', 'deity'])->get();
 
             # We're only interested in spells that have the perk we're looking for
-            $spells = $spells->filter(static function (Spell $spell) use ($perkKey) {
-                return $spell->perks->filter(static function (SpellPerkType $spellPerkType) use ($perkKey) {
-                    return ($spellPerkType->key === $perkKey);
-                })->isNotEmpty();
+            $spells = $spells->filter(function (Spell $spell) use ($perkKey) {
+                return $spell->perks->contains(function (SpellPerkType $spellPerkType) use ($perkKey) {
+                    return $spellPerkType->key === $perkKey;
+                });
             });
 
             # Check each spell
@@ -1603,6 +1602,11 @@ class Dominion extends AbstractModel
                 {
                     $perk *= (1 + $spellDamageSufferedPerk);
                 }
+            }
+
+            if (is_numeric($perk))
+            {
+                $perk *= 1 + $this->realm->getArtefactPerkMultiplier('spell_perks_mod');
             }
 
             return $perk;

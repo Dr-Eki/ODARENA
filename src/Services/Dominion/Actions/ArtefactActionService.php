@@ -460,7 +460,7 @@ class ArtefactActionService
 
         $prestigeChange = 0;
 
-        $basePrestigeGain = 100;
+        $basePrestigeGain = 20;
 
         $prestigeChange += $basePrestigeGain * ($this->attack['attacker']['damage_dealt'] / $realmArtefact->max_power);
 
@@ -512,17 +512,18 @@ class ArtefactActionService
         $this->attack['result']['shield_broken'] = false;
         $baseDamage = 0;
 
-        $this->attack['attacker']['op'] = $this->militaryCalculator->getOffensivePower($attacker, null, 1, $units, [], false);
+        $this->attack['attacker']['op'] = $this->artefactCalculator->getDamageDealt($attacker, $units, $artefact);
         $this->attack['attacker']['op_raw'] = $this->militaryCalculator->getOffensivePowerRaw($attacker, null, 1, $units, [], false);
         
         $baseDamage = $this->attack['attacker']['op'];
-        $this->attack['attacker']['base_damage'] = $this->attack['attacker']['op'];
 
         $baseDamage = (int)floor($baseDamage);
         
         $breaksShield = $baseDamage >= $realmArtefact->power;
 
         $netDamage = min($baseDamage, $realmArtefact->power);
+
+        $this->attack['attacker']['base_damage'] = $baseDamage;
 
         $this->attack['attacker']['damage_dealt'] = $netDamage;
 

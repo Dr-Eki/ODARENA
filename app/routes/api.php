@@ -11,6 +11,7 @@ $router->group(['prefix' => 'v1', 'as' => 'api.'], static function (Router $rout
 
     $router->group(['prefix' => 'dominion', 'middleware' => ['api', 'auth', 'dominionselected'], 'as' => 'dominion.'], static function (Router $router) {
         $router->get('invasion')->uses('Dominion\APIController@calculateInvasion')->name('invasion');
+        $router->get('artefact-attack')->uses('Dominion\APIController@calculateArtefactAttack')->name('artefact-attack');
         $router->get('expedition')->uses('Dominion\APIController@calculateExpedition')->name('expedition');
         $router->get('sorcery')->uses('Dominion\APIController@calculateSorcery')->name('sorcery');
         $router->get('desecration')->uses('Dominion\APIController@calculateDesecration')->name('desecration');

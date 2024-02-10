@@ -109,7 +109,7 @@ class MilitaryCalculator
 
         $op *= $this->getMoraleMultiplier($attacker, 'offense');
 
-        if($isInvasion)
+        if($isInvasion and isset($target))
         {
             $op *= $this->getOffensiveMultiplierReduction($defender, $isInvasion);
         }

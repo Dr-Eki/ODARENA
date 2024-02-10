@@ -219,10 +219,6 @@ class CasualtiesCalculator
 
     public function isUnitImmortal(Dominion $dominion, Dominion $enemy = null, /*Unit*/ $unit, array $invasionData = [], string $mode = 'offense', bool $isArtefactAttack = false)
     {
-        if($isArtefactAttack)
-        {
-            return false;
-        }
 
         if(is_a($unit, 'OpenDominion\Models\Unit', true))
         {
@@ -234,7 +230,7 @@ class CasualtiesCalculator
             }
 
             # Lux does not kill anyone
-            if($enemy->race->getPerkValue('does_not_kill'))
+            if(isset($enemy) and $enemy->race->getPerkValue('does_not_kill'))
             {
                 return True;
             }
@@ -306,11 +302,6 @@ class CasualtiesCalculator
     }
     private function isUnitTypeImmortal(Dominion $dominion, Dominion $enemy = null, string $unitType, array $invasionData = [], string $mode = 'offense', bool $isArtefactAttack = false)
     {
-        if($isArtefactAttack)
-        {
-            return false;
-        }
-
         $unitType = str_replace('military_', '', $unitType);
         
         if($unitType == 'draftees')

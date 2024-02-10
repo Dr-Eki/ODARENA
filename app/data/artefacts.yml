@@ -5,8 +5,6 @@ azk_hurums_blood_purifier:
   description: Made of obsidian, imbued with souls, and stained with blood, this device is used by Azk'Hurum to remove impurities from gathered blood.
   deity: azk_hurum
   base_power: 500000
-  exclusive_races:
-    - Demon
   perks:
     unit_blood_costs: -25
 
@@ -15,12 +13,8 @@ barathu_bints_ledger:
   description: Barathu Bint kept a careful log of trade routes and a guide for fair and effective negotiations.
   deity: barathu_bint
   base_power: 500000
-  excluded_races:
-    - Afflicted
-    - Nox
-    - Void
   perks:
-    exchange_rate: 10
+    exchange_rate: 20
     gold_production_mod: 15
 
 bregons_banner:
@@ -28,9 +22,6 @@ bregons_banner:
   description: The greatest armies have rallied under this banner throughout the ages.
   deity: bregon
   base_power: 500000
-  excluded_races:
-    - Nox
-    - Void
   perks:
     training_time_raw: -2
 
@@ -39,22 +30,16 @@ druvas_amulet:
   description: A magical link between the carrier and the land all that live on and in it.
   deity: druva
   base_power: 500000
-  excluded_races:
-    - Afflicted
-    - Nox
-    - Void
   perks:
-    lumber_improvement_points: 25
-    food_production_mod: 10
-    rezone_cost: -20
+    lumber_improvement_points_mod: 25
+    food_production_mod: 25
+    rezone_cost: -25
 
 elskas_ambrosia:
   name: Elskas' Ambrosia
   description: A pernicious liquid whose fumes imbue Reptilians with both violent outbursts and incredible stealth.
   deity: elskas
   base_power: 500000
-  exclusive_races:
-    - Reptilians
   perks:
     increases_enemy_casualties: 20
     immortal_spies: 1
@@ -64,20 +49,15 @@ glimjs_lantern:
   description: Lit by Glimj to see across and into the deepest, darkest waters.
   deity: glimj
   base_power: 500000
-  exclusive_races:
-    - Armada
-    - Glimjir
   perks:
-    kelp_production_mod: 10
+    kelp_production_mod: 20
     pearls_production_mod: 20
 
-glimjs_bough:
-  name: Glimj's Bough
+glimjs_bow:
+  name: Glimj's Bow
   description: The original bough from Glimj's great sailship teaches much about shipbuilding.
   deity: glimj
   base_power: 500000
-  exclusive_races:
-    - Armada
   perks:
     ship_unit_costs: -10
 
@@ -86,8 +66,6 @@ ixs_contraption:
   description: A machine which can make other machines.
   deity: ix
   base_power: 500000
-  excluded_races:
-    - Void
   perks:
     machine_unit_costs: -10
 
@@ -97,17 +75,14 @@ ixs_schematics:
   deity: ix
   base_power: 500000
   perks:
-    xp_generation_mod: 25
-    improvements: 20
+    xp_generation_mod: 50
+    improvements: 50
 
 kinthys_disembowler:
   name: Kinthys' Disembowler
   description: Always within reach to satisfy Kinthys' lust for drawn-out, torturous death.
   deity: kinthys
   base_power: 500000
-  exclusive_races:
-    - Afflicted
-    - Undead
   perks:
     increases_enemy_casualties: 25
 
@@ -116,13 +91,9 @@ mirnons_pickaxe:
   description: What made Mirnon the greatest was not only enormous and deep mines, but also the artful skill in refining minerals and gems.
   deity: mirnon
   base_power: 500000
-  excluded_races:
-    - Afflicted
-    - Nox
-    - Void
   perks:
-    gems_improvement_points: 25
-    ore_improvement_points: 50
+    gems_improvement_points_mod: 25
+    ore_improvement_points_mod: 50
 
 sazals_staff:
   name: Sazal's Staff
@@ -130,8 +101,7 @@ sazals_staff:
   deity: sazal
   base_power: 500000
   perks:
-    base_wizard_strength: 40
-    mana_production_mod: 20
+    spell_perks_mod: 100
 
 tiranthaels_blade:
   name: Tiranthael's Blade
@@ -139,8 +109,6 @@ tiranthaels_blade:
   description: This blade was used to sort the pure from the impure.
   deity: tiranthael
   base_power: 500000
-  exclusive_races:
-    - Sacred Order
   perks:
     prestige_gains: 50
 
@@ -150,8 +118,6 @@ urugdakhs_axe:
   description: A holy symbol to Black Orcs.
   deity: urugdakh
   base_power: 500000
-  exclusive_races:
-    - Black Orc
   perks:
     prestige_gains_on_retaliation: 100 # NYI
     offensive_power: 10
@@ -161,9 +127,6 @@ zidurs_effluvium:
   description: A small vial that never runs dry.
   deity: zidur
   base_power: 500000
-  exclusive_races:
-    - Afflicted
-    - Undead
   perks:
     sorcery_spell_duration: 50
     crypt_decay: -50
@@ -184,6 +147,13 @@ cornucopia:
   perks:
     food_production_mod: 20
     lumber_production_mod: 20
+
+divine_compendium:
+  name: Divine Compendium
+  description: A tome containing secrets to reach the divines.
+  base_power: 400000
+  perks:
+    deity_power_mod: 100
 
 flying_compass:
   name: Flying Compass
@@ -219,7 +189,7 @@ scrolls_of_knowledge:
   description: Ancient texts, studied to learn more about the present and the future.
   base_power: 250000
   perks:
-    xp_generation_mod: 10
+    xp_generation_mod: 20
 
 starlight_mantle:
   name: Starlight Mantle
@@ -227,3 +197,10 @@ starlight_mantle:
   base_power: 125000
   perks:
     spy_strength: 20
+
+spellstone_crystal:
+  name: Spellstone Crystal
+  description: A crystal that can store and release magical energy.
+  perks:
+    base_wizard_strength: 40
+    mana_production_mod: 20

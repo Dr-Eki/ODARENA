@@ -3,6 +3,7 @@
 namespace OpenDominion\Services\Dominion;
 
 use DB;
+use Log;
 use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\RealmArtefact;
@@ -89,5 +90,26 @@ class ArtefactService
                 ->$method('power', abs($powerChange));
         });
     }
+
+    public function updateArtefactAegis(Realm $realm): void
+    {
+        if(!$realm->artefacts->count())
+        {
+            return;
+        }
+    
+        $realmArtefacts = $realm->realmArtefacts()->whereColumn('power', '<', 'max_power')->get();
+    
+        DB::transaction(function () use ($realmArtefacts, $realm) {
+            foreach($realmArtefacts as $realmArtefact)
+            {
+                $aegisRestoration = $this->artefactCalculator->getAegisRestoration($realmArtefact);
+                Log::info('[AEGIS] Added ' . $aegisRestoration . ' power to ' . $realmArtefact->artefact->name . ' in realm ' . $realm->name . ' (ID: ' . $realm->id . '), from ' . $realmArtefact->power . ' to ' . ($realmArtefact->power + $aegisRestoration) . ' (max: ' . $realmArtefact->max_power . ')');
+                $realmArtefact->power += $aegisRestoration;
+                $realmArtefact->save();
+            }
+        });
+    }
+    
 
 }

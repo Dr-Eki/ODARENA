@@ -2,15 +2,18 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
+use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Spell;
 
 use OpenDominion\Exceptions\GameException;
+use OpenDominion\Http\Requests\Dominion\API\ArtefactAttackCalculationRequest;
 use OpenDominion\Http\Requests\Dominion\API\ExpeditionCalculationRequest;
 use OpenDominion\Http\Requests\Dominion\API\InvadeCalculationRequest;
 use OpenDominion\Http\Requests\Dominion\API\SorceryCalculationRequest;
 
+use OpenDominion\Services\Dominion\API\ArtefactAttackCalculationService;
 use OpenDominion\Services\Dominion\API\DefenseCalculationService;
 use OpenDominion\Services\Dominion\API\ExpeditionCalculationService;
 use OpenDominion\Services\Dominion\API\DesecrationCalculationService;
@@ -31,6 +34,28 @@ class APIController extends AbstractDominionController
                 Dominion::find($request->get('target_dominion')),
                 $request->get('unit'),
                 $request->get('calc')
+            );
+        } catch (GameException $e) {
+            return [
+                'result' => 'error',
+                'errors' => [$e->getMessage()]
+            ];
+        }
+
+        return $result;
+    }
+
+    public function calculateArtefactAttack(ArtefactAttackCalculationRequest $request): array
+    {
+        $dominion = $this->getSelectedDominion();
+        $artefactAttackeCalculationService = app(ArtefactAttackCalculationService::class);
+
+        try {
+            $result = $artefactAttackeCalculationService->calculate(
+                $dominion,
+                Artefact::find($request->get('target_artefact')),
+                $request->get('unit'),
+                $request->get('calc'),
             );
         } catch (GameException $e) {
             return [

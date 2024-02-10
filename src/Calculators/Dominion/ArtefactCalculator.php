@@ -10,24 +10,27 @@ use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\RealmArtefact;
+use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Services\Dominion\StatsService;
 
 class ArtefactCalculator
 {
 
+    protected $militaryCalculator;
     protected $statsService;
-
+    
     public function __construct()
     {
+        $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->statsService = app(StatsService::class);
     }
 
     public function getNewPower(Realm $realm, Artefact $artefact): int
     {
         $base = $artefact->base_power;
-        $power = $realm->round->ticks * (1000 * (1 + ($realm->round->ticks / 2000) + ($base / 1000000)));
+        $aegis = $realm->round->ticks * (1000 * (1 + ($realm->round->ticks / 2000) + ($base / 1000000)));
 
-        return max($base, $power);
+        return max($base, $aegis);
     }
 
     public function getDamageType(Dominion $dominion): string
@@ -35,21 +38,20 @@ class ArtefactCalculator
         return 'military';
     }
 
-    public function getShieldRestoration(RealmArtefact $realmArtefact): int
+    public function getAegisRestoration(RealmArtefact $realmArtefact): int
     {
-
-        $artefact = $realmArtefact->artefact;
-        $realm = $realmArtefact->realm;
-
         $restoration = 0;
 
-        $restoration += $artefact->base_power / 1000;
-        $restoration += $this->getRealmArtefactShieldRestoration($realm);
+        $restoration += $realmArtefact->max_power * 0.10 / 100;
+        $restoration += $this->getRealmArtefactAegisRestoration($realmArtefact->realm);
+
+        # Restoration plus power cannot exceed max power, cap restoration
+        $restoration = min($restoration, $realmArtefact->max_power - $realmArtefact->power);
 
         return $restoration;
     }
 
-    public function getRealmArtefactShieldRestoration(Realm $realm): int
+    public function getRealmArtefactAegisRestoration(Realm $realm): int
     {
         $restoration = 0;
 
@@ -78,9 +80,9 @@ class ArtefactCalculator
 
         $chance = 0;
 
-        $chance += ($dominion->round->ticks / 1344) * ($expedition['land_discovered'] / 50);
+        $chance += ($dominion->round->ticks / 1344) * ($expedition['land_discovered'] / 10);
 
-        $chance += $this->statsService->getStat($dominion, 'artefacts_found') / 50;
+        $chance += $this->statsService->getStat($dominion, 'artefacts_found') / 25;
         
         $chance *= $this->getChanceToDiscoverArtefactMultiplier($dominion);
 
@@ -105,6 +107,38 @@ class ArtefactCalculator
         $multiplier += $dominion->getSpellPerkMultiplier('chance_to_discover_artefacts');
         $multiplier += $dominion->getAdvancementPerkMultiplier('chance_to_discover_artefacts');
         $multiplier += $dominion->race->getPerkMultiplier('chance_to_discover_artefacts');
+
+        return $multiplier;
+    }
+
+    public function getDamageDealt(Dominion $attacker, array $units, Artefact $artefact = null): int
+    {
+        $damage = 0;
+
+        $damage += $this->militaryCalculator->getOffensivePower($attacker, null, 1, $units, [], false);
+
+        $damage *= $this->getDamageDealtMultiplier($attacker, $artefact);
+
+        return $damage;
+    }
+
+    public function getDamageDealtMultiplier(Dominion $attacker, Artefact $artefact = null): float
+    {
+        $multiplier = 1.00;
+
+        $multiplier += $attacker->getImprovementPerkMultiplier('artefacts_damage_dealt');
+        $multiplier += $attacker->getSpellPerkMultiplier('artefacts_damage_dealt');
+
+        if($artefact)
+        {
+            if($attacker->hasDeity() and isset($artefact->deity))
+            {
+                if($artefact->deity->id == $attacker->deity->id)
+                {
+                    $multiplier += 0.2;
+                }
+            }
+        }
 
         return $multiplier;
     }

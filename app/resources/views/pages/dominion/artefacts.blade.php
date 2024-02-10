@@ -410,7 +410,7 @@
             function updateUnitStats() {
                 // Update unit stats
                 $.get(
-                    "{{ route('api.dominion.invasion') }}?" + $('#artefacts_form').serialize(), {},
+                    "{{ route('api.dominion.artefact-attack') }}?" + $('#artefacts_form').serialize(), {},
                     function(response) {
                         if(response.result == 'success')
                         {
