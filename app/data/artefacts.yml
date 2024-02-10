@@ -129,7 +129,6 @@ zidurs_effluvium:
   base_power: 250000
   perks:
     sorcery_spell_duration: 50
-    crypt_decay: -50
 
 # REGULAR
 

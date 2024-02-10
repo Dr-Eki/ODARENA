@@ -24,6 +24,7 @@
                           <col width="100">
                           <col>
                           <col>
+                          <col>
                       </colgroup>
                       <thead>
                           <tr>
@@ -31,6 +32,7 @@
                               <th>Aegis</th>
                               <th>Divine</th>
                               <th>Perks</th>
+                              <th>Description</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -38,14 +40,13 @@
                           <tr>
                               <td>
                                   {{ $artefact->name }}
-                                  {{-- {!! $artefactHelper->getExclusivityString($artefact) !!} --}}
                               </td>
                               <td>{{ number_format($artefact->base_power) }}</td>
                               <td>
                                   @if($artefact->deity)
                                       {{ $artefact->deity->name }}
                                   @else
-                                      <em class="text-muted">No</em>
+                                    &mdash;
                                   @endif
                               </td>
                               <td>
@@ -54,6 +55,9 @@
                                           <li>{{ ucfirst($effect) }}</li>
                                       @endforeach
                                   </ul>
+                              </td>
+                              <td>
+                                  <p class="text-muted">{{ $artefact->description }}</p>
                               </td>
                           </tr>
                       @endforeach

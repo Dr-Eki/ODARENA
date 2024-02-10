@@ -159,6 +159,12 @@ prisoner:
   buy: null
   sell: 4
 
+rage:
+  name: Rage
+  description: Captured in war and kept alive only to serve.
+  buy: null
+  sell: null
+
 sapling:
   name: Sapling
   description: The beginnings of trees, imbued with magic life of Sylvans.

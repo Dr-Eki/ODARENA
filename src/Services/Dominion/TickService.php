@@ -7,6 +7,7 @@ use File;
 use Exception;
 use Log;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 
 use OpenDominion\Calculators\RealmCalculator;
 use OpenDominion\Calculators\Dominion\BarbarianCalculator;
@@ -142,6 +143,9 @@ class TickService
      */
     public function tickHourly()
     {
+        // Clear all cached values
+        Cache::flush();
+        
         if(File::exists('storage/framework/down'))
         {
             $logString = 'Tick at ' . $this->now . ' skipped.';

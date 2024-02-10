@@ -4,6 +4,7 @@ namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
 use Log;
+use Illuminate\Support\Facades\Cache;
 use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Models\Dominion;
