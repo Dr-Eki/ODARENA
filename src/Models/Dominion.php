@@ -1200,11 +1200,7 @@ class Dominion extends AbstractModel
                     return $result;
                 }
                 # Dark Elven slave workers
-                elseif(
-                          $perkKey == 'ore_production_raw_from_prisoner' or
-                          $perkKey == 'gold_production_raw_from_prisoner' or
-                          $perkKey == 'gems_production_raw_from_prisoner'
-                      )
+                elseif(in_array($perkKey, ['ore_production_raw_from_prisoner', 'gold_production_raw_from_prisoner', 'gems_production_raw_from_prisoner']))
                 {
                     $resourceCalculator = app(ResourceCalculator::class);
                     $perkValues = $this->extractBuildingPerkValues($perkValueString);
@@ -1220,9 +1216,7 @@ class Dominion extends AbstractModel
 
                     $perk += floor($prisonersWorking * $productionPerPrisoner);
                 }
-                elseif(
-                          $perkKey == 'thunderstone_production_raw_random'
-                      )
+                elseif($perkKey == 'thunderstone_production_raw_random')
                 {
                     $randomlyGenerated = 0;
                     $randomChance = (float)$perkValueString / 100;
@@ -1238,14 +1232,14 @@ class Dominion extends AbstractModel
 
                     $perk += $randomlyGenerated;
                 }
-                elseif(
-                          $perkKey == 'dimensionalists_unit1_production_raw_capped' or
-                          $perkKey == 'dimensionalists_unit2_production_raw_capped' or
-                          $perkKey == 'dimensionalists_unit3_production_raw_capped' or
-                          $perkKey == 'dimensionalists_unit4_production_raw_capped' or
-                          $perkKey == 'snow_elf_unit4_production_raw_capped' or
-                          $perkKey == 'aurei_unit2_production_raw_capped'
-                      )
+                elseif(in_array($perkKey, [
+                        'dimensionalists_unit1_production_raw_capped',
+                        'dimensionalists_unit2_production_raw_capped',
+                        'dimensionalists_unit3_production_raw_capped',
+                        'dimensionalists_unit4_production_raw_capped',
+                        'snow_elf_unit4_production_raw_capped',
+                        'aurei_unit2_production_raw_capped'
+                    ]))
                 {
                     $perkValues = $this->extractBuildingPerkValues($perkValueString);
 
@@ -1262,10 +1256,7 @@ class Dominion extends AbstractModel
                     $perk += (int)$unitsGeneratedInt;
                 }
                 # Buildings where we only ever want a single value
-                elseif(
-                          $perkKey == 'unit_production_from_wizard_ratio' or
-                          $perkKey == 'unit_production_from_spy_ratio' # Unused
-                      )
+                elseif(in_array($perkKey, ['unit_production_from_wizard_ratio','unit_production_from_spy_ratio']))
                 {
                     $perk = (float)$perkValueString;
                 }
@@ -1335,6 +1326,7 @@ class Dominion extends AbstractModel
                     {
                         $perk += $amountProduced * $buildingOwned;
                     }
+                }
 
                 elseif(in_array($perkKey, ['mana_production_raw_from_wizard_ratio']))
                 {
@@ -1420,13 +1412,9 @@ class Dominion extends AbstractModel
                 }
 
             }
-
             $perk *= $buildingSpecificMultiplier ?? 1;
             $buildingSpecificMultiplier = null;
         }
-
-        #isset($iterations) ? dump('$iterations: ' . $iterations, '$buildingSpecificMultiplier:' . $buildingSpecificMultiplier, '$perk:'.$perk, '$originalPerk:'.$originalPerk, '***') : null;
-
         return $perk;
     }
 
