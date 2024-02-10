@@ -55,7 +55,7 @@ glimjs_lantern:
 
 glimjs_bow:
   name: Glimj's Bow
-  description: The original bough from Glimj's great sailship teaches much about shipbuilding.
+  description: The original bow from Glimj's great sailship teaches much about shipbuilding.
   deity: glimj
   base_power: 250000
   perks:
