@@ -28,21 +28,23 @@ class ArtefactCalculator
     public function getNewPower(Realm $realm, Artefact $artefact): int
     {
         $base = $artefact->base_power;
-        $aegis = $realm->round->ticks * (1000 * (1 + ($realm->round->ticks / 2000) + ($base / 1000000)));
+        $ticks = max($realm->round->ticks, 1);
+        
+        $aegis = $base * pow(pow(5, 1/1200), $ticks);
 
-        return max($base, $aegis);
+        return (int)round($aegis);
     }
 
     public function getDamageType(Dominion $dominion): string
     {
         return 'military';
     }
-
+  
     public function getAegisRestoration(RealmArtefact $realmArtefact): int
     {
         $restoration = 0;
 
-        $restoration += $realmArtefact->max_power * 0.10 / 100;
+        $restoration += $realmArtefact->max_power * 0.25 / 100;
         $restoration += $this->getRealmArtefactAegisRestoration($realmArtefact->realm);
 
         # Restoration plus power cannot exceed max power, cap restoration
@@ -54,17 +56,17 @@ class ArtefactCalculator
     public function getRealmArtefactAegisRestoration(Realm $realm): int
     {
         $restoration = 0;
-
+    
         foreach($realm->dominions as $realmDominion)
         {
-            $restorationFromDominion = 0;
-            $restorationFromDominion += $realmDominion->getBuildingPerkValue('artefact_shield_restoration');
-
-            $restorationFromDominion *= $realmDominion->getImprovementPerkMultiplier('artefact_shield_restoration_mod');
-
-            $restoration += $restorationFromDominion;
+            $manaDrained = $realmDominion->getBuildingPerkValue('mana_upkeep_raw_per_artefact');
+            $manaOwned = $realmDominion->resource_mana;
+            $manaMultiplier = $manaDrained > $manaOwned ? $manaOwned / $manaDrained : 1;
+    
+            $restoration += $realmDominion->getBuildingPerkValue('artefact_shield_restoration') * $manaMultiplier;
+            $restoration *= $realmDominion->getImprovementPerkMultiplier('artefact_shield_restoration_mod');
         }
-
+    
         return $restoration;
     }
 

@@ -4,7 +4,7 @@ azk_hurums_blood_purifier:
   name: Azk'Hurum's Blood Purifier
   description: Made of obsidian, imbued with souls, and stained with blood, this device is used by Azk'Hurum to remove impurities from gathered blood.
   deity: azk_hurum
-  base_power: 500000
+  base_power: 250000
   perks:
     unit_blood_costs: -25
 
@@ -12,7 +12,7 @@ barathu_bints_ledger:
   name: Barathu Bint's Ledger
   description: Barathu Bint kept a careful log of trade routes and a guide for fair and effective negotiations.
   deity: barathu_bint
-  base_power: 500000
+  base_power: 250000
   perks:
     exchange_rate: 20
     gold_production_mod: 15
@@ -21,7 +21,7 @@ bregons_banner:
   name: Bregon's Banner
   description: The greatest armies have rallied under this banner throughout the ages.
   deity: bregon
-  base_power: 500000
+  base_power: 250000
   perks:
     training_time_raw: -2
 
@@ -29,7 +29,7 @@ druvas_amulet:
   name: Druva's Amulet
   description: A magical link between the carrier and the land all that live on and in it.
   deity: druva
-  base_power: 500000
+  base_power: 250000
   perks:
     lumber_improvement_points_mod: 25
     food_production_mod: 25
@@ -39,7 +39,7 @@ elskas_ambrosia:
   name: Elskas' Ambrosia
   description: A pernicious liquid whose fumes imbue Reptilians with both violent outbursts and incredible stealth.
   deity: elskas
-  base_power: 500000
+  base_power: 250000
   perks:
     increases_enemy_casualties: 20
     immortal_spies: 1
@@ -48,7 +48,7 @@ glimjs_lantern:
   name: Glimj's Lantern
   description: Lit by Glimj to see across and into the deepest, darkest waters.
   deity: glimj
-  base_power: 500000
+  base_power: 250000
   perks:
     kelp_production_mod: 20
     pearls_production_mod: 20
@@ -57,7 +57,7 @@ glimjs_bow:
   name: Glimj's Bow
   description: The original bough from Glimj's great sailship teaches much about shipbuilding.
   deity: glimj
-  base_power: 500000
+  base_power: 250000
   perks:
     ship_unit_costs: -10
 
@@ -65,7 +65,7 @@ ixs_contraption:
   name: Ix's Contraption
   description: A machine which can make other machines.
   deity: ix
-  base_power: 500000
+  base_power: 250000
   perks:
     machine_unit_costs: -10
 
@@ -73,7 +73,7 @@ ixs_schematics:
   name: Ix's Schematics
   description: Handwritten notes unlocking new way of understanding the interconnectedness of complex systems.
   deity: ix
-  base_power: 500000
+  base_power: 250000
   perks:
     xp_generation_mod: 50
     improvements: 50
@@ -82,7 +82,7 @@ kinthys_disembowler:
   name: Kinthys' Disembowler
   description: Always within reach to satisfy Kinthys' lust for drawn-out, torturous death.
   deity: kinthys
-  base_power: 500000
+  base_power: 250000
   perks:
     increases_enemy_casualties: 25
 
@@ -90,7 +90,7 @@ mirnons_pickaxe:
   name: Mirnon's Pickaxe
   description: What made Mirnon the greatest was not only enormous and deep mines, but also the artful skill in refining minerals and gems.
   deity: mirnon
-  base_power: 500000
+  base_power: 250000
   perks:
     gems_improvement_points_mod: 25
     ore_improvement_points_mod: 50
@@ -99,7 +99,7 @@ sazals_staff:
   name: Sazal's Staff
   description: A staff used to weave some of the strongest magic the world has ever seen.
   deity: sazal
-  base_power: 500000
+  base_power: 250000
   perks:
     spell_perks_mod: 100
 
@@ -108,7 +108,7 @@ tiranthaels_blade:
   enabled: 0
   description: This blade was used to sort the pure from the impure.
   deity: tiranthael
-  base_power: 500000
+  base_power: 250000
   perks:
     prestige_gains: 50
 
@@ -117,7 +117,7 @@ urugdakhs_axe:
   enabled: 0
   description: A holy symbol to Black Orcs.
   deity: urugdakh
-  base_power: 500000
+  base_power: 250000
   perks:
     prestige_gains_on_retaliation: 100 # NYI
     offensive_power: 10
@@ -126,7 +126,7 @@ zidurs_effluvium:
   name: Zidur's Effluvium
   description: A small vial that never runs dry.
   deity: zidur
-  base_power: 500000
+  base_power: 250000
   perks:
     sorcery_spell_duration: 50
     crypt_decay: -50
@@ -136,14 +136,14 @@ zidurs_effluvium:
 ancient_sceptre:
   name: Ancient Sceptre
   description: Carried by rulers of a bygone era.
-  base_power: 250000
+  base_power: 100000
   perks:
     governor_offensive_power: 10
 
 cornucopia:
   name: Cornucopia
   description: Water flowing through the cornucopia makes nature burst into a triumphant growth.
-  base_power: 250000
+  base_power: 120000
   perks:
     food_production_mod: 20
     lumber_production_mod: 20
@@ -151,21 +151,21 @@ cornucopia:
 divine_compendium:
   name: Divine Compendium
   description: A tome containing secrets to reach the divines.
-  base_power: 400000
+  base_power: 80000
   perks:
     deity_power_mod: 100
 
 flying_compass:
   name: Flying Compass
   description: Shows the fastest path home.
-  base_power: 250000
+  base_power: 100000
   perks:
     faster_return: 2
 
 great_trip_hammer:
   name: Great Trip Hammer
   description: A magical machine sought by many seeking to raise an army.
-  base_power: 400000
+  base_power: 200000
   perks:
     unit_gold_costs: -10
     unit_ore_costs: -10
@@ -173,21 +173,21 @@ great_trip_hammer:
 ichor_of_vitality:
   name: Ichor of Vitality
   description: Imbues the anointed with safer passage through war.
-  base_power: 250000
+  base_power: 140000
   perks:
     casualties: -20
 
 phantom_chalice:
   name: Phantom Chalice
   description: Filled with a spectral elixir, it blurs the line between the seen and unseen.
-  base_power: 100000
+  base_power: 90000
   perks:
     fog_duration_raw: 4 #{$spell->key}_duration-raw
 
 scrolls_of_knowledge:
   name: Scrolls of Knowledge
   description: Ancient texts, studied to learn more about the present and the future.
-  base_power: 250000
+  base_power: 100000
   perks:
     xp_generation_mod: 20
 
@@ -201,6 +201,7 @@ starlight_mantle:
 spellstone_crystal:
   name: Spellstone Crystal
   description: A crystal that can store and release magical energy.
+  base_power: 125000
   perks:
-    base_wizard_strength: 40
+    base_wizard_strength: 50
     mana_production_mod: 20
