@@ -936,7 +936,7 @@ dark_spire:
   exclusive_races:
     - Nox
   perks:
-    mana_production_raw_from_wizard_ratio: 5 # 5 x Wizard Ratio mana/tick
+    mana_production_raw_from_wizard_ratio: 33 # MAX(LOG([WPA]),0)*[Perk Value]
 
 night_tower:
   name: Night Tower

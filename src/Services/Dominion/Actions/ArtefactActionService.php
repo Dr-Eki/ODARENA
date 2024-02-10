@@ -460,9 +460,11 @@ class ArtefactActionService
 
         $prestigeChange = 0;
 
-        $basePrestigeGain = 20;
+        $damageRatio = $this->attack['attacker']['damage_dealt'] / $realmArtefact->max_power;
 
-        $prestigeChange += $basePrestigeGain * ($this->attack['attacker']['damage_dealt'] / $realmArtefact->max_power);
+        $basePrestigeGain = $this->attack['attacker']['damage_dealt'] / 10000;
+
+        $prestigeChange += $basePrestigeGain * (1 + ($damageRatio * 2) ^ EXP($damageRatio));
 
         $prestigeChangeMultiplier = 1;
 
@@ -654,7 +656,7 @@ class ArtefactActionService
      */
     protected function handleXp(Dominion $attacker, RealmArtefact $realmArtefact, array $units): void
     {
-        $xpPerDamageDealt = 0.01;
+        $xpPerDamageDealt = 0.0632;
 
         $xpPerDamageDealtMultiplier = 1;
  
@@ -666,12 +668,8 @@ class ArtefactActionService
         $xpPerDamageDealtMultiplier += $attacker->getDeityPerkMultiplier('xp_gains');
         $xpPerDamageDealtMultiplier += $attacker->getDecreePerkMultiplier('xp_gains');
 
-        $damageRatio = $this->attack['attacker']['damage_dealt'] / $realmArtefact->max_power;
-        $damageRatioMultiplier = 1 + ($damageRatio * 3) ** exp($damageRatio);
-
         $xpGained = $xpPerDamageDealt * $this->attack['attacker']['damage_dealt'];
         $xpGained *= $xpPerDamageDealtMultiplier;
-        $xpGained *= $damageRatioMultiplier;
 
         $xpGained = (int)floor($xpGained);
 

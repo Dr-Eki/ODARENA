@@ -6,15 +6,12 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use OpenDominion\Exceptions\GameException;
-use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\SelectorService;
-#use OpenDominion\Services\Dominion\StatsService;
-use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Services\Dominion\QueueService;
-use Illuminate\Support\Carbon;
 
 /**
  * OpenDominion\Models\Dominion
@@ -1338,11 +1335,14 @@ class Dominion extends AbstractModel
                     {
                         $perk += $amountProduced * $buildingOwned;
                     }
-                }
 
                 elseif(in_array($perkKey, ['mana_production_raw_from_wizard_ratio']))
                 {
-                    $perk = (float)$perkValueString * $buildingOwned;
+                    $magicCalculator = app(MagicCalculator::class);
+                
+                    $perk = max(log($magicCalculator->getWizardRatio($this, 'defense')), 0) * (float)$perkValueString * $buildingOwned;
+
+                    unset($magicCalculator);
                 }
 
                 elseif($perkKey == ($this->race->key . '_unit_housing'))
