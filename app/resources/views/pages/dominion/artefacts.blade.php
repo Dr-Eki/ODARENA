@@ -3,6 +3,10 @@
 
 @section('content')
 
+@if(in_array($selectedDominion->round->mode, ['artefacts','artefacts-packs']))
+    {{ abort(500, 'Invalid round mode') }}
+@endif
+
 <div class="row">
     <div class="col-sm-9 col-md-9">
         <form action="{{ route('dominion.artefacts') }}" method="post" role="form" id="artefacts_form">
