@@ -163,16 +163,20 @@ class RangeCalculator
      * @param Dominion $self
      * @return Collection
      */
-    public function getDominionsInRange(Dominion $self): Collection
+    public function getDominionsInRange(Dominion $self, bool $excludeFogged = false, bool $excludeBarbarians = false): Collection
     {
         return $self->round->activeDominions()
             ->with(['realm', 'round'])
             ->get()
-            ->filter(function ($dominion) use ($self) {
+            ->filter(function ($dominion) use ($self, $excludeFogged, $excludeBarbarians) {
                 return (
 
                     # Not in the same realm (unless deathmatch round); and
                     (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','artefacts-packs','factions','factions-duration','packs','packs-duration']) ? ($dominion->realm->id !== $self->realm->id) : true) and
+
+                    ($excludeFogged and !$dominion->getSpellPerkValue('fog_of_war')) and
+
+                    ($excludeBarbarians and !$dominion->race->key !== 'barbarian') and
 
                     # Not self
                     ($dominion->id !== $self->id) and

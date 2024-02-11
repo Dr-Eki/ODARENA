@@ -177,8 +177,8 @@
                             @elseif (!$selectedDominion->round->hasStarted())
                                 <p><strong><em>You cannot attack until the round has started.</em></strong></p>
     
-                            @elseif ($selectedDominion->morale < 50)
-                                <p><strong><em>Your military needs at least 50% morale to attack. You currently have {{ $selectedDominion->morale }} morale.</em></strong></p>
+                            @elseif ($selectedDominion->morale < 100)
+                                <p><strong><em>Your military needs at least 100 morale to attack artefacts. You currently have {{ $selectedDominion->morale }} morale.</em></strong></p>
     
                             @else
                                 @if($selectedDominion->race->name == 'Dimensionalists')
@@ -200,7 +200,7 @@
                                 @else
                                     <button type="submit"
                                             class="btn btn-danger"
-                                            {{ $selectedDominion->isLocked() ? 'disabled' : null }}
+                                            {{ ($selectedDominion->isLocked() or !$artefactCalculator->canAttackArtefacts($selectedDominion)) ? 'disabled' : null }}
                                             id="invade-button">
                                         <i class="ra ra-crossed-swords"></i>
                                         Send Units
@@ -255,9 +255,19 @@
                 <h3 class="box-title">Information</h3>
             </div>
             <div class="box-body">
-                <p>Begin by selecting which artefact you want to target.</p>
-                @if($artefactCalculator->getDamageType($selectedDominion) == 'military')
-                    <p>Then select the units you want to send to attack the artefact.</p>
+                @php
+                    $numberOfQualifyingDominionsInRange = $artefactCalculator->getNumberOfQualifyingHostileDominionsInRange($selectedDominion);
+                    $minimumNumberOfDominionsInRangeRequired = $artefactCalculator->getMinimumNumberOfDominionsInRangeRequired($selectedDominion->round);
+                @endphp
+                <p>From this page, you can attack the aegis of other realms' artefacts.</p>
+                <p>To be worthy of attacking an artefact, you must have a certain number of hostile dominions in range. <span class="text-muted">Fogged dominions and Barbarians do not count.</span></p>
+                <p>You have <strong>{{ number_format($numberOfQualifyingDominionsInRange) }} {{ str_plural('dominion', $numberOfQualifyingDominionsInRange) }}</strong> out of the required <strong>{{ number_format($minimumNumberOfDominionsInRangeRequired) }}</strong> in range.</p>
+                @if($artefactCalculator->canAttackArtefacts($selectedDominion))
+                    <p class="text-success">You meet the requirements to attack artefacts.</p>
+                    <p>Begin by selecting which artefact you want to target.</p>
+                    <p>Then select the units you want to send to attack the aegis.</p>
+                @else
+                    <p class="text-danger">You do not meet the requirements to attack artefacts.</p>
                 @endif
             </div>
         </div>

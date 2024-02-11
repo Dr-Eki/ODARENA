@@ -2,26 +2,26 @@
 
 namespace OpenDominion\Calculators\Dominion;
 
-#use DB;
-#use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
-use OpenDominion\Helpers\ArtefactHelper;
 use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\RealmArtefact;
+use OpenDominion\Models\Round;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Services\Dominion\StatsService;
 
 class ArtefactCalculator
 {
 
     protected $militaryCalculator;
+    protected $rangeCalculator;
     protected $statsService;
     
     public function __construct()
     {
         $this->militaryCalculator = app(MilitaryCalculator::class);
+        $this->rangeCalculator = app(RangeCalculator::class);
         $this->statsService = app(StatsService::class);
     }
 
@@ -78,15 +78,16 @@ class ArtefactCalculator
             return 0;
         }
 
-        return 1;
+        if(isLocal()) { return 1; }
 
         $chance = 0;
 
-        $chance += ($dominion->round->ticks / 1344) * ($expedition['land_discovered'] / 10);
-
-        $chance += $this->statsService->getStat($dominion, 'artefacts_found') / 25;
+        $chance += ($dominion->round->ticks / 1344) * (($expedition['land_discovered'] - 2) / 10) * (1 + $this->statsService->getStat($dominion, 'artefacts_found') / 26);
         
         $chance *= $this->getChanceToDiscoverArtefactMultiplier($dominion);
+
+        $chance = min(0.80, $chance);
+        $chance = max(0.00, $chance);
 
         return $chance;
     }
@@ -143,6 +144,31 @@ class ArtefactCalculator
         }
 
         return $multiplier;
+    }
+
+    public function canAttackArtefacts(Dominion $dominion): bool
+    {
+        if($this->getNumberOfQualifyingHostileDominionsInRange($dominion) < $this->getMinimumNumberOfDominionsInRangeRequired($dominion->round))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getNumberOfQualifyingHostileDominionsInRange(Dominion $dominion): int
+    {
+        return $this->rangeCalculator->getDominionsInRange($dominion, true, true)->count(); # true = exclude fogged dominions, true = exclude Barbarians
+    }
+
+    public function getMinimumNumberOfDominionsInRangeRequired(Round $round): int
+    {
+        #$dominionsCount = $round->activeDominions()->count();
+        # Exclude barbarians
+        #$dominionsCount -= $round->activeDominions()->where('race.key','barbarian')->count();
+        #return max(2, round($dominionsCount * 0.10));
+
+        return 2;
     }
 
 }

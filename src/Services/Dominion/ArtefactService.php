@@ -104,7 +104,7 @@ class ArtefactService
             foreach($realmArtefacts as $realmArtefact)
             {
                 $aegisRestoration = $this->artefactCalculator->getAegisRestoration($realmArtefact);
-                Log::info('[AEGIS] Added ' . $aegisRestoration . ' power to ' . $realmArtefact->artefact->name . ' in realm ' . $realm->name . ' (ID: ' . $realm->id . '), from ' . $realmArtefact->power . ' to ' . ($realmArtefact->power + $aegisRestoration) . ' (max: ' . $realmArtefact->max_power . ')');
+                Log::info('[AEGIS] Added ' . number_format($aegisRestoration) . ' power to ' . $realmArtefact->artefact->name . ' in realm ' . $realm->name . ' (ID: ' . $realm->id . '), from ' . number_format($realmArtefact->power) . ' to ' . number_format($realmArtefact->power + $aegisRestoration) . ' (max: ' . number_format($realmArtefact->max_power) . ')');
                 $realmArtefact->power += $aegisRestoration;
                 $realmArtefact->save();
             }

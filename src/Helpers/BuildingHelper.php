@@ -314,6 +314,8 @@ class BuildingHelper
             'research_required_to_build' => 'Requires %s research to build.',
             'artefact_shield_restoration' => '%+g artefact shield restoration per tick',
 
+            'max_effective_building_ratio' => 'Only effective on up to %s%% of land.',
+
             'pairing_limit' => 'You can at most have one per %2$s %1$s. Unpaired buildings are not effective.',
             'multiple_pairing_limit' => 'You can at most have one per %1$s %2$s. Unpaired buildings are not effective.',
 

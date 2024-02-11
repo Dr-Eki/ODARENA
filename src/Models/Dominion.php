@@ -1246,6 +1246,8 @@ class Dominion extends AbstractModel
                     {
                         $perk = (float)$perkValueString;
                     }
+
+                    # Attrition protection
                     elseif($perkKey == 'attrition_protection')
                     {
                         $perkValues = $this->extractBuildingPerkValues($perkValueString);
@@ -1314,6 +1316,7 @@ class Dominion extends AbstractModel
                         }
                     }
 
+                    # Mana production based on WPA
                     elseif(in_array($perkKey, ['mana_production_raw_from_wizard_ratio']))
                     {
                         $magicCalculator = app(MagicCalculator::class);
@@ -1372,6 +1375,16 @@ class Dominion extends AbstractModel
 
                         $perk += $effectFromPerk;
 
+                    }
+
+                    elseif($perkKey == 'artefact_shield_restoration')
+                    {
+                        if($maxBuildingRatio = $building->getPerkValue('max_effective_building_ratio'))
+                        {
+                            $buildingOwnedForThisPerk = min($buildingOwned, $this->land * ($maxBuildingRatio / 100));
+                        }
+
+                        $perk += $perkValueString * $buildingOwnedForThisPerk;
                     }
 
                     elseif($perkKey !== 'jobs' and $perkKey !== 'housing')

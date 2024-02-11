@@ -169,6 +169,14 @@ great_trip_hammer:
     unit_gold_costs: -10
     unit_ore_costs: -10
 
+horn_of_valour:
+  name: Horn of Valour
+  description: A horn that can be heard across the land, inspiring those who hear it.
+  base_power: 160000
+  perks:
+    prestige_gains: 50
+    base_morale: 50
+
 ichor_of_vitality:
   name: Ichor of Vitality
   description: Imbues the anointed with safer passage through war.

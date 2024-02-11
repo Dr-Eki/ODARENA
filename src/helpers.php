@@ -254,6 +254,15 @@ if (!function_exists('ldd')) {
     }
 }
 
+if (!function_exists('isLocal')) {
+    /**
+     * Dumps the given variables but only if running locally.
+     */
+    function isLocal()
+    {
+        return env('APP_ENV') === 'local';
+    }
+}
 
 if(!function_exists('negative'))
 {

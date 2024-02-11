@@ -99,6 +99,7 @@ class MoraleCalculator
         }
 
         $baseModifier += $dominion->getTechPerkValue('base_morale');
+        $baseModifier += $dominion->realm->getArtefactPerkValue('base_morale');
 
         return $baseModifier;
     }

@@ -200,6 +200,13 @@ class ArtefactActionService
                 throw new GameException('You cannot invade artefacts in allied realms.');
             }
 
+            $hostileDominionsInRange = $this->artefactCalculator->getNumberOfQualifyingHostileDominionsInRange($attacker);
+            $minimumHostileDominionsInRangeRequired = $this->artefactCalculator->getMinimumNumberOfDominionsInRangeRequired($attacker->round);
+            if ($hostileDominionsInRange < $minimumHostileDominionsInRangeRequired) 
+            {
+                throw new GameException('You must have at least ' . number_format($hostileDominionsInRange) . ' hostile ' . str_plural('dominion', $hostileDominionsInRange) . ' in range to be worthy of attacking the aegis. Fogged dominions and Barbarians do not count.');
+            }
+            
             foreach($attacker->race->resources as $resourceKey)
             {
                 if($resourceCostToInvade = $attacker->race->getPerkValue($resourceKey . '_to_invade'))

@@ -208,16 +208,12 @@
             <div class="box box-warning">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        <i class="ra ra-alien-fire"></i> Artefact
+                        <i class="ra ra-alien-fire"></i> Artefact discovered
                     </h3>
                 </div>
                 <div class="box-body no-padding">
                     <div class="col-xs-12 col-sm-12">
-                        <p>An artefact was discovered!</p>
-
-                        <h3 class="text-orag">{{ $artefact->name }}</h3>
-
-                        <p>This artefact has a starting aegis of {{ number_format($artefact->base_power) }} and will provide your realm the following perks:</p>
+                        <h4 class="text-orag">{{ $artefact->name }}</h4>
                         <ul>
                             @foreach($artefactHelper->getArtefactPerksString($artefact) as $effect)
                                 <li>{{ ucfirst($effect) }}</li>

@@ -144,7 +144,7 @@ class Round extends AbstractModel
      */
     public function openForRegistration()
     {
-        return ($this->hasEnded() and !$this->hasCountdown());
+        return !$this->hasEnded();
     }
 
     public function userAlreadyRegistered(User $user)
@@ -178,7 +178,8 @@ class Round extends AbstractModel
         $countdown = GameEvent::where('round_id', $this->id)->where(function($query)
         {
       			$query->where('type','round_countdown')
-          				->orWhere('type','round_countdown_duration');
+          				->orWhere('type','round_countdown_duration')
+          				->orWhere('type','round_countdown_artefacts');
         })->first();
 
         return $countdown ? true : false;
