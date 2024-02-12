@@ -74,6 +74,8 @@ class ArtefactHelper
 
             'crypt_decay' => '%+d%% crypt decay.',
 
+            'base_morale' => '%+g base morale.',
+
             // Population
             'population_growth' => '%+d%% population growth rate',
             'max_population' => '%+d%% population',
