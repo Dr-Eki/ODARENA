@@ -82,7 +82,7 @@ class NotificationHelper
                 'route' => route('dominion.artefacts'),
                 'iconClass' => 'ra ra-alien-fire text-green',
             ],
-            'artefact_attack_completed' => [
+            'artefactattack_completed' => [
                 'label' => 'Units returned from an artefact attack',
                 'defaults' => ['email' => false, 'ingame' => true],
                 'route' => route('dominion.artefacts'),
@@ -600,7 +600,7 @@ class NotificationHelper
                     $artefact->name
                 );
 
-            case 'hourly_dominion.artefact_attack_completed':
+            case 'hourly_dominion.artefactattack_completed':
                 return sprintf(
                     'Your units return from attacking an artefact.'
                 );

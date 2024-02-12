@@ -82,8 +82,11 @@ class Round extends AbstractModel
         return $this->hasMany(Realm::class);
     }
     
+    public function winners()
+    {
+        return $this->hasMany(RoundWinner::class);
+    }
 
-  
     public function resources()
     {
         return $this->belongsToMany(
@@ -175,12 +178,28 @@ class Round extends AbstractModel
      */
     public function hasCountdown()
     {
-        $countdown = GameEvent::where('round_id', $this->id)->where(function($query)
+        $countdown = GameEvent::where('round_id', $this->id)
+        ->where(function($query) {
+            $query->where('type','round_countdown')
+                ->orWhere('type','round_countdown_duration')
+                ->orWhere('type','round_countdown_artefacts');
+        })
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+        # Check if there is a more recent round_countdown_artefacts_cancelled game event
+        if($countdown && $countdown->type == 'round_countdown_artefacts')
         {
-      			$query->where('type','round_countdown')
-          				->orWhere('type','round_countdown_duration')
-          				->orWhere('type','round_countdown_artefacts');
-        })->first();
+            $cancelled = GameEvent::where('round_id', $this->id)
+                ->where('type','round_countdown_artefacts_cancelled')
+                ->where('created_at','>',$countdown->created_at)
+                ->first();
+
+            if($cancelled)
+            {
+                return false;
+            }
+        }
 
         return $countdown ? true : false;
     }

@@ -12,6 +12,7 @@ use OpenDominion\Helpers\ArtefactHelper;
 use OpenDominion\Helpers\UnitHelper;
 
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Http\Requests\Dominion\Actions\ArtefactActionRequest;
 use OpenDominion\Services\Dominion\Actions\ArtefactActionService;
@@ -37,6 +38,7 @@ class ArtefactsController extends AbstractDominionController
             'artefactHelper' => app(ArtefactHelper::class),
             'artefactCalculator' => app(ArtefactCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
+            'spellCalculator' => app(SpellCalculator::class),
             
             'protectionService' => app(ProtectionService::class),
 

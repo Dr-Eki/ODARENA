@@ -1358,7 +1358,7 @@ class UnitHelper
             $limitingUnits += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
             $limitingUnits += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
             $limitingUnits += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
-            $limitingUnits += $this->queueService->getArtefactQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
+            $limitingUnits += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
 
             $maxCapacity = floor($limitingUnits * $perUnitLimitedTo * $limitMultiplier);
         }
@@ -1457,7 +1457,7 @@ class UnitHelper
         $currentlyTrained += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
         $currentlyTrained += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
         $currentlyTrained += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
-        $currentlyTrained += $this->queueService->getArtefactQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
+        $currentlyTrained += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
 
         $totalWithAmountToTrain = $currentlyTrained + $amountToTrain;
 

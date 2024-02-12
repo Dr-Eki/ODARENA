@@ -16,6 +16,7 @@ use OpenDominion\Models\Spell;
 use OpenDominion\Models\Spyop;
 use OpenDominion\Models\Tech;
 
+use OpenDominion\Calculators\Dominion\ArtefactCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
@@ -28,6 +29,7 @@ use OpenDominion\Helpers\RoundHelper;
 
 class WorldNewsHelper
 {
+    protected $artefactCalculator;
     protected $landCalculator;
     protected $militaryCalculator;
     protected $rangeCalculator;
@@ -40,6 +42,7 @@ class WorldNewsHelper
 
     public function __construct()
     {
+        $this->landCalculator = app(ArtefactCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->rangeCalculator = app(RangeCalculator::class);
@@ -73,7 +76,7 @@ class WorldNewsHelper
             case 'alliance_rescinded':
                 return $this->generateAllianceOfferRescindedString($event->target, $event->source, $viewer);
 
-            case 'artefact_attack':
+            case 'artefactattack':
                 return $this->generateArtefactAttackString($event, $viewer);
 
             case 'artefact_completed':
@@ -127,6 +130,12 @@ class WorldNewsHelper
             case 'round_countdown_duration':
             case 'round_countdown':
                 return $this->generateCountdownString($event, $viewer);
+
+            case 'round_countdown_artefacts':
+                return $this->generateArtefactsCountdownString($event, $viewer);
+
+            case 'round_countdown_artefacts_cancelled':
+                return $this->generateArtefactsCountdownCancelledString($event, $viewer);
 
             case 'research_completed':
                 return $this->generateResearchCompletedString($event->target, $event->source, $viewer);
@@ -406,6 +415,46 @@ class WorldNewsHelper
             );
         }
 
+    }
+
+    public function generateArtefactsCountdownString(GameEvent $countdown, Dominion $viewer): string
+    {
+
+        $realms = $countdown['data']['realms'];
+
+        if(count($realms) == 1)
+        {
+            $realm = Realm::where('id', $realms[0]['realm_id'])->firstOrFail();
+
+            return sprintf(
+                '%s obtained %s or more %s and triggered the the countdown! The round ends in 96 ticks, at tick %s, unless another realm takes enough the artefact from them.',
+                $this->generateRealmOnlyString($realm),
+                $countdown->round->goal,
+                str_plural('artefact', $countdown->round->goal),
+                $countdown->round->end_tick
+            );
+        }
+        else
+        {
+            $announcementRealms = [];
+            foreach($realms as $realm)
+            {
+                $announcementRealms[] = $this->generateRealmOnlyString(Realm::where('id', $realm['realm_id'])->firstOrFail());
+            }
+
+            return sprintf(
+                '%s have obtained %s or more %s and triggered the the countdown! The round ends in 96 ticks, at tick %s, unless another realm takes enough artefacts from them.',
+                generate_sentence_from_array($announcementRealms),
+                $countdown->round->goal,
+                str_plural('artefact', $countdown->round->goal),
+                $countdown->round->end_tick
+            );
+        }
+    }
+
+    public function generateArtefactsCountdownCancelledString(GameEvent $countdown)
+    {
+        return 'The countdown has been cancelled. No realm has the required amount of artefacts.';
     }
 
     public function generateDecreeIssuedString(Dominion $issuer, GameEvent $decreeIssuedEvent, Dominion $viewer): string
@@ -1232,7 +1281,7 @@ class WorldNewsHelper
                 return 'fa fa-user-secret fa-fw';
             case 'desecration':
                 return 'ra ra-tombstone ra-fw';
-            case 'artefact_attack':
+            case 'artefactattack':
                 return 'ra ra-alien-fire ra-fw';
             default:
                 return '';

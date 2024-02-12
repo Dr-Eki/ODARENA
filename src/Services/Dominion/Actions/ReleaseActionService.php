@@ -129,7 +129,7 @@ class ReleaseActionService
             {
                 $totalUnitsReturning += $this->queueService->getInvasionQueueTotalByResource($dominion, "military_unit{$slot}");
                 $totalUnitsReturning += $this->queueService->getDesecrationQueueTotalByResource($dominion, "military_unit{$slot}");
-                $totalUnitsReturning += $this->queueService->getArtefactQueueTotalByResource($dominion, "military_unit{$slot}");
+                $totalUnitsReturning += $this->queueService->getArtefactattackQueueTotalByResource($dominion, "military_unit{$slot}");
             }
             if ($totalUnitsReturning !== 0)
             {

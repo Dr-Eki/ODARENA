@@ -41,14 +41,14 @@
                                     $unitTickAmount += $queueService->getSabotageQueueAmount($selectedDominion, "military_{$unitType}", $i);
                                     $unitTickAmount += $queueService->getDesecrationQueueAmount($selectedDominion, "military_{$unitType}", $i);
                                     $unitTickAmount += $queueService->getStunQueueAmount($selectedDominion, "military_{$unitType}", $i);
-                                    $unitTickAmount += $queueService->getArtefactQueueAmount($selectedDominion, "military_{$unitType}", $i);
+                                    $unitTickAmount += $queueService->getArtefactattackQueueAmount($selectedDominion, "military_{$unitType}", $i);
                                 @endphp
                                 <td class="text-center">
                                     {{ ($unitTickAmount > 0) ? number_format($unitTickAmount) : '-' }}
                                 </td>
                             @endfor
                             <td class="text-center">
-                                {{ number_format($queueService->getInvasionQueueTotalByResource($selectedDominion, "military_{$unitType}") + $queueService->getExpeditionQueueTotalByResource($selectedDominion, "military_{$unitType}") + $queueService->getTheftQueueAmount($selectedDominion, "military_{$unitType}", $i) + $queueService->getSabotageQueueAmount($selectedDominion, "military_{$unitType}", $i) + $queueService->getDesecrationQueueAmount($selectedDominion, "military_{$unitType}", $i) + $queueService->getStunQueueAmount($selectedDominion, "military_{$unitType}", $i) + $queueService->getArtefactQueueAmount($selectedDominion, "military_{$unitType}", $i)) }}
+                                {{ number_format($queueService->getInvasionQueueTotalByResource($selectedDominion, "military_{$unitType}") + $queueService->getExpeditionQueueTotalByResource($selectedDominion, "military_{$unitType}") + $queueService->getTheftQueueAmount($selectedDominion, "military_{$unitType}", $i) + $queueService->getSabotageQueueAmount($selectedDominion, "military_{$unitType}", $i) + $queueService->getDesecrationQueueAmount($selectedDominion, "military_{$unitType}", $i) + $queueService->getStunQueueAmount($selectedDominion, "military_{$unitType}", $i) + $queueService->getArtefactattackQueueAmount($selectedDominion, "military_{$unitType}", $i)) }}
                             </td>
                         </tr>
                     @endforeach
@@ -63,14 +63,14 @@
                                     $spiesTickAmount += $queueService->getSabotageQueueAmount($selectedDominion, "military_spies", $i);
                                     $spiesTickAmount += $queueService->getDesecrationQueueAmount($selectedDominion, "military_spies", $i);
                                     $spiesTickAmount += $queueService->getStunQueueAmount($selectedDominion, "military_spies", $i);
-                                    $spiesTickAmount += $queueService->getArtefactQueueAmount($selectedDominion, "military_spies", $i);
+                                    $spiesTickAmount += $queueService->getArtefactattackQueueAmount($selectedDominion, "military_spies", $i);
                                 @endphp
                                 <td class="text-center">
                                     {{ ($spiesTickAmount > 0) ? number_format($spiesTickAmount) : '-' }}
                                 </td>
                             @endfor
                             <td class="text-center">
-                                {{ number_format($queueService->getInvasionQueueTotalByResource($selectedDominion, "military_spies") + $queueService->getExpeditionQueueTotalByResource($selectedDominion, "military_spies") + $queueService->getTheftQueueAmount($selectedDominion, "military_spies", $i) + $queueService->getSabotageQueueAmount($selectedDominion, "military_spies", $i) + $queueService->getDesecrationQueueAmount($selectedDominion, "military_spies", $i) + $queueService->getStunQueueAmount($selectedDominion, "military_spies", $i) + $queueService->getArtefactQueueAmount($selectedDominion, "military_spies", $i)) }}
+                                {{ number_format($queueService->getInvasionQueueTotalByResource($selectedDominion, "military_spies") + $queueService->getExpeditionQueueTotalByResource($selectedDominion, "military_spies") + $queueService->getTheftQueueAmount($selectedDominion, "military_spies", $i) + $queueService->getSabotageQueueAmount($selectedDominion, "military_spies", $i) + $queueService->getDesecrationQueueAmount($selectedDominion, "military_spies", $i) + $queueService->getStunQueueAmount($selectedDominion, "military_spies", $i) + $queueService->getArtefactattackQueueAmount($selectedDominion, "military_spies", $i)) }}
                             </td>
                         </tr>
                     @endif
@@ -85,14 +85,14 @@
                                     $wizardsTickAmount += $queueService->getSabotageQueueAmount($selectedDominion, "military_wizards", $i);
                                     $wizardsTickAmount += $queueService->getDesecrationQueueAmount($selectedDominion, "military_wizards", $i);
                                     $wizardsTickAmount += $queueService->getStunQueueAmount($selectedDominion, "military_wizards", $i);
-                                    $wizardsTickAmount += $queueService->getArtefactQueueAmount($selectedDominion, "military_wizards", $i);
+                                    $wizardsTickAmount += $queueService->getArtefactattackQueueAmount($selectedDominion, "military_wizards", $i);
                                 @endphp
                                 <td class="text-center">
                                     {{ ($wizardsTickAmount > 0) ? number_format($wizardsTickAmount) : '-' }}
                                 </td>
                             @endfor
                             <td class="text-center">
-                                {{ number_format($queueService->getInvasionQueueTotalByResource($selectedDominion, "military_wizards") + $queueService->getExpeditionQueueTotalByResource($selectedDominion, "military_wizards") + $queueService->getTheftQueueAmount($selectedDominion, "military_wizards", $i) + $queueService->getSabotageQueueAmount($selectedDominion, "military_wizards", $i) + $queueService->getDesecrationQueueAmount($selectedDominion, "military_wizards", $i) + $queueService->getStunQueueAmount($selectedDominion, "military_wizards", $i) + $queueService->getArtefactQueueAmount($selectedDominion, "military_wizards", $i)) }}
+                                {{ number_format($queueService->getInvasionQueueTotalByResource($selectedDominion, "military_wizards") + $queueService->getExpeditionQueueTotalByResource($selectedDominion, "military_wizards") + $queueService->getTheftQueueAmount($selectedDominion, "military_wizards", $i) + $queueService->getSabotageQueueAmount($selectedDominion, "military_wizards", $i) + $queueService->getDesecrationQueueAmount($selectedDominion, "military_wizards", $i) + $queueService->getStunQueueAmount($selectedDominion, "military_wizards", $i) + $queueService->getArtefactattackQueueAmount($selectedDominion, "military_wizards", $i)) }}
                             </td>
                         </tr>
                     @endif
@@ -107,14 +107,14 @@
                                     $archmagesTickAmount += $queueService->getSabotageQueueAmount($selectedDominion, "military_archmages", $i);
                                     $archmagesTickAmount += $queueService->getDesecrationQueueAmount($selectedDominion, "military_archmages", $i);
                                     $archmagesTickAmount += $queueService->getStunQueueAmount($selectedDominion, "military_archmages", $i);
-                                    $archmagesTickAmount += $queueService->getArtefactQueueAmount($selectedDominion, "military_archmages", $i);
+                                    $archmagesTickAmount += $queueService->getArtefactattackQueueAmount($selectedDominion, "military_archmages", $i);
                                 @endphp
                                 <td class="text-center">
                                     {{ ($archmagesTickAmount > 0) ? number_format($archmagesTickAmount) : '-' }}
                                 </td>
                             @endfor
                             <td class="text-center">
-                                {{ number_format($queueService->getInvasionQueueTotalByResource($selectedDominion, "military_archmages") + $queueService->getExpeditionQueueTotalByResource($selectedDominion, "military_archmages") + $queueService->getTheftQueueAmount($selectedDominion, "military_archmages", $i) + $queueService->getSabotageQueueAmount($selectedDominion, "military_archmages", $i) + $queueService->getDesecrationQueueAmount($selectedDominion, "military_archmages", $i) + $queueService->getStunQueueAmount($selectedDominion, "military_archmages", $i) + $queueService->getArtefactQueueAmount($selectedDominion, "military_archmages", $i)) }}
+                                {{ number_format($queueService->getInvasionQueueTotalByResource($selectedDominion, "military_archmages") + $queueService->getExpeditionQueueTotalByResource($selectedDominion, "military_archmages") + $queueService->getTheftQueueAmount($selectedDominion, "military_archmages", $i) + $queueService->getSabotageQueueAmount($selectedDominion, "military_archmages", $i) + $queueService->getDesecrationQueueAmount($selectedDominion, "military_archmages", $i) + $queueService->getStunQueueAmount($selectedDominion, "military_archmages", $i) + $queueService->getArtefactattackQueueAmount($selectedDominion, "military_archmages", $i)) }}
                             </td>
                         </tr>
                     @endif

@@ -263,6 +263,7 @@ class QueueService
      * @param array $arguments
      * @return mixed
      */
+
     public function __call($name, $arguments)
     {
         preg_match_all('/((?:^|[A-Z])[a-z]+)/', $name, $matches);

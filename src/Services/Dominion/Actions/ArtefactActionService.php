@@ -425,7 +425,7 @@ class ArtefactActionService
                 'source_id' => $attacker->id,
                 'target_type' => NULL,
                 'target_id' => NULL,
-                'type' => 'artefact_attack',
+                'type' => 'artefactattack',
                 'data' => $this->attack,
                 'tick' => $attacker->round->ticks
             ]);
@@ -471,7 +471,7 @@ class ArtefactActionService
 
         $basePrestigeGain = $this->attack['attacker']['damage_dealt'] / 10000;
 
-        $prestigeChange += $basePrestigeGain * (1 + ($damageRatio * 2) ^ EXP($damageRatio));
+        $prestigeChange += $basePrestigeGain * (1 + pow(($damageRatio * 2), EXP($damageRatio)));
 
         $prestigeChangeMultiplier = 1;
 
@@ -505,7 +505,7 @@ class ArtefactActionService
         $slowestTroopsReturnHours = $this->getSlowestUnitReturnHours($attacker, $units);
 
         $this->queueService->queueResources(
-            'artefact_attack',
+            'artefactattack',
             $attacker,
             ['prestige' => $prestigeChange],
             $slowestTroopsReturnHours
@@ -685,7 +685,7 @@ class ArtefactActionService
         $this->attack['attacker']['xp_gained'] = $xpGained;
 
         $this->queueService->queueResources(
-            'artefact_attack',
+            'artefactattack',
             $attacker,
             ['xp' => $xpGained],
             $slowestTroopsReturnHours
@@ -985,7 +985,7 @@ class ArtefactActionService
                     if($amount > 0)
                     {
                         $this->queueService->queueResources(
-                            'artefact_attack',
+                            'artefactattack',
                             $attacker,
                             [$unitKey => $amount],
                             $unitTypeTick

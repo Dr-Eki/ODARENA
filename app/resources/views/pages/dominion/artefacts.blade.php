@@ -138,6 +138,191 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+
+                        <div class="box box-danger">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><i class="ra ra-sword"></i> Invasion force</h3>
+                            </div>
+                            <div class="box-body table-responsive no-padding">
+                                <table class="table">
+                                    <colgroup>
+                                        <col width="30%">
+                                        <col width="70%">
+                                    </colgroup>
+                                    <tbody>
+                                        <tr>
+                                            <td>OP:</td>
+                                            <td>
+                                                <strong id="invasion-force-op" data-amount="0">0</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Morale:</td>
+                                            <td>{{ number_format($selectedDominion->morale) }}</td>
+                                        </tr>
+                                        {{-- 
+                                        <tr>
+                                            <td>DP:</td>
+                                            <td id="invasion-force-dp" data-amount="0">0</td>
+                                        </tr>
+                                        --}}
+                                        <tr>
+                                            <td>
+                                                Max OP:
+                                                <i class="fa fa-question-circle"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="You may send out a maximum of 133% of your new home DP in OP. (4:3 rule)"></i>
+                                            </td>
+                                            <td id="invasion-force-max-op" data-amount="0">0</td>
+                                        </tr>
+                                        {{-- 
+                                        <tr>
+                                            <td>
+                                                Target DP:
+                                            </td>
+                                            <td id="target-dp" data-amount="0">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Land conquered:</td>
+                                            <td id="invasion-land-conquered" data-amount="0">0</td>
+                                        </tr>
+                                        --}}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="box-footer">
+
+                              @if ((bool)$selectedDominion->race->getPerkValue('cannot_invade'))
+                                <p><strong><em>Your faction is not able to invade other dominions.</em></strong></p>
+
+                              @elseif ($spellCalculator->isSpellActive($selectedDominion, 'rainy_season'))
+                                <p><strong><em>You cannot invade during the Rainy Season.</em></strong></p>
+
+                              @elseif ($spellCalculator->isSpellActive($selectedDominion, 'stasis'))
+                                <p><strong><em>You cannot invade while you are in stasis.</em></strong></p>
+    
+                                @elseif ($spellCalculator->isSpellActive($selectedDominion, 'flood_the_caverns'))
+                                    <p><strong><em>You cannot attack while the caverns are flooded.</em></strong></p>
+
+                              @elseif ($protectionService->isUnderProtection($selectedDominion))
+                              <p><strong><em>You are currently under protection for <b>{{ $selectedDominion->protection_ticks }}</b> {{ str_plural('tick', $selectedDominion->protection_ticks) }} and may not invade during that time.</em></strong></p>
+
+                              @elseif (!$selectedDominion->round->hasStarted())
+                              <p><strong><em>You cannot invade until the round has started.</em></strong></p>
+
+                              @elseif ($selectedDominion->morale < 50 and !$selectedDominion->race->getPerkValue('can_invade_at_any_morale'))
+                              <p><strong><em>Your military needs at least 50 morale to invade others. Your military currently has {{ $selectedDominion->morale }} morale.</em></strong></p>
+
+                              @else
+                                @if($selectedDominion->race->name == 'Dimensionalists')
+
+                                    @if($resourceCalculator->getAmount($selectedDominion, 'cosmic_alignment') >= $selectedDominion->race->getPerkValue('cosmic_alignment_to_invade'))
+                                        <button type="submit"
+                                                class="btn btn-danger"
+                                                {{ $selectedDominion->isLocked() ? 'disabled' : null }}
+                                                id="invade-button">
+                                            <i class="ra ra-player-teleport"></i>
+                                            Plot chart and teleport units
+                                        </button>
+
+                                        <br><span class="label label-info">This will expend {{ number_format($selectedDominion->race->getPerkValue('cosmic_alignment_to_invade')) }} Cosmic Alignments.</span>
+
+                                    @else
+                                        <span class="label label-danger">You need at least {{ number_format($selectedDominion->race->getPerkValue('cosmic_alignment_to_invade')) }} Cosmic Alignments to plot a chart to teleport units. Currently: {{ number_format($resourceCalculator->getAmount($selectedDominion, 'cosmic_alignment')) }}.</span>
+                                    @endif
+                                        
+                                @else
+                                  <button type="submit"
+                                          class="btn btn-danger"
+                                          {{ $selectedDominion->isLocked() ? 'disabled' : null }}
+                                          id="invade-button">
+                                      <i class="ra ra-crossed-swords"></i>
+                                      Send Units
+                                  </button>
+
+                                    @if($selectedDominion->race->name == 'Firewalker')
+                                    <br><span class="label label-info">You have enough caverns to send {{ number_format($militaryCalculator->getMaxSendableUnits($selectedDominion)) }} units.</span>
+                                    @endif
+                                @endif
+                              @endif
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><i class="fa fa-home"></i> Military At Home</h3>
+                            </div>
+                            <div class="box-body table-responsive no-padding">
+                                <table class="table">
+                                    <colgroup>
+                                        <col width="30%">
+                                        <col width="70%">
+                                    </colgroup>
+                                    <tbody>
+                                        {{--
+                                        <tr>
+                                            <td>OP:</td>
+                                            <td id="home-forces-op" data-original="{{ $militaryCalculator->getOffensivePower($selectedDominion) }}" data-amount="0">
+                                                {{ number_format($militaryCalculator->getOffensivePower($selectedDominion), 2) }}
+                                            </td>
+                                        </tr>
+                                        --}}
+                                        <tr>
+                                            <td>Mod DP:</td>
+                                            <td>
+                                                <span id="home-forces-dp" data-original="{{ $militaryCalculator->getDefensivePower($selectedDominion) }}" data-amount="0">
+                                                    {{ number_format($militaryCalculator->getDefensivePower($selectedDominion)) }}
+                                                </span>
+
+                                                <small class="text-muted">
+                                                    (<span id="home-forces-dp-raw" data-original="{{ $militaryCalculator->getDefensivePowerRaw($selectedDominion) }}" data-amount="0">{{ number_format($militaryCalculator->getDefensivePowerRaw($selectedDominion)) }}</span> raw)
+                                                </small>
+                                            </td>
+                                        </tr>
+                                        {{--
+                                        <tr>
+                                            <td>
+                                                Min DP:
+                                                <i class="fa fa-question-circle"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="You must leave at least 33% of your invasion force OP in DP at home. (33% rule)"></i>
+                                            </td>
+                                            <td id="home-forces-min-dp" data-amount="0">0</td>
+                                        </tr>
+                                        --}}
+                                        <tr>
+                                            <td>DPA:</td>
+                                            <td id="home-forces-dpa" data-amount="0">
+                                                {{ number_format($militaryCalculator->getDefensivePower($selectedDominion) / $selectedDominion->land, 2) }}
+                                            </td>
+                                        </tr>
+                                        @if($selectedDominion->getSpellPerkValue('fog_of_war'))
+                                            @php
+                                                $spell = OpenDominion\Models\Spell::where('key', 'fog')->firstOrFail();
+                                            @endphp
+                                            <tr>
+                                                <td>Sazal's Fog:</td>
+                                                <td>
+                                                    {{ number_format($spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }} {{ str_plural('tick', $spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }}
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                {{-- 
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
                         <div class="box box-danger">
@@ -156,6 +341,25 @@
                                             <td>
                                                 <strong id="invasion-force-op" data-amount="0">0</strong>
                                             </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Morale:</td>
+                                            <td>{{ number_format($selectedDominion->morale) }}</td>
+                                        </tr>                                            
+                                        <tr>
+                                            <td>DP:</td>
+                                            <td id="invasion-force-dp" data-amount="0">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Max OP:
+                                                <i class="fa fa-question-circle"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="You may send out a maximum of 133% of your new home DP in OP. (4:3 rule)"></i>
+                                            </td>
+                                            <td id="invasion-force-max-op" data-amount="0">0</td>
+                                        </tr>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -246,6 +450,7 @@
                         </div>
                     </div>
                 </div>
+                --}}
             @endif
         </form>
     </div>

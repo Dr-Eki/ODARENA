@@ -126,7 +126,6 @@ class ArtefactAttackCalculationService
         $this->calculationResult['away_defense'] = $this->militaryCalculator->getDefensivePower($dominion, null, null, $units);
 
         $this->calculationResult['away_offense'] = $this->artefactCalculator->getDamageDealt($dominion, $units, $artefact); #
-        return $this->calculationResult;
 
         #######
 

@@ -292,7 +292,7 @@ class InsightService
         });
 
         // Units returning from artefacts
-        $this->queueService->getArtefactQueue($target)->each(static function ($row) use (&$data)
+        $this->queueService->getArtefactattackQueue($target)->each(static function ($row) use (&$data)
         {
             if (starts_with($row->resource, 'military_')) {
                 $unitType = str_replace('military_', '', $row->resource);

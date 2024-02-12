@@ -104,15 +104,15 @@
                                         </tr>
                                         <tr>
                                             <td>Prestige:</td>
-                                            <td>{{ vsprintf('%+g', number_format($event->data['attacker']['prestige_gained'])) }}</td>
+                                            <td>{{ number_format($event->data['attacker']['prestige_gained']) }}</td>
                                         </tr>
                                         <tr>
                                             <td>XP:</td>
-                                            <td>{{ vsprintf('%+g', number_format($event->data['attacker']['xp_gained'])) }}</td>
+                                            <td>{{ number_format($event->data['attacker']['xp_gained']) }}</td>
                                         </tr>
                                         <tr>
                                             <td>Morale:</td>
-                                            <td>{{ vsprintf('%+g', number_format($event->data['attacker']['morale_change'])) }}</td>
+                                            <td>{{ number_format($event->data['attacker']['morale_change']) }}</td>
                                         </tr>
                                     </tbody>
                                 </table>

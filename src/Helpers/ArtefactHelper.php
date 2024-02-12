@@ -63,7 +63,7 @@ class ArtefactHelper
             'unit_food_costs' => '%+d%% unit food costs.',
 
             'ship_unit_costs' => '%+d%% costs for ship units.',
-            'machine_unit_costs' => '%+d%% costs for ship units.',
+            'machine_unit_costs' => '%+d%% costs for machine units.',
 
             'prestige_gains' => '%+d%% prestige gains.',
             'prestige_gains_on_retaliation' => '%+d%% prestige gains on retaliation.',
@@ -90,7 +90,7 @@ class ArtefactHelper
 
             'sorcery_spell_duration' => '%+d%% sorcery spell duration.',
         
-            'spell_perks_mod' => '%+d%% all spell perks.',
+            'spell_perks_mod' => '%+d%% all spell perks (does not include sorcery).',
 
             'fog_duration_raw' => '%+g ticks Fog duration.',
 

@@ -37,6 +37,7 @@ use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Round;
+use OpenDominion\Models\RoundWinner;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Tech;
 use OpenDominion\Models\Dominion\Tick;
@@ -1140,7 +1141,7 @@ class TickService
                     $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getArtefactQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slot);
     
                     $availableCapacity = max(0, $maxCapacity - $usedCapacity);
     
@@ -1184,7 +1185,7 @@ class TickService
                     $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getArtefactQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slot);
     
                     $availableCapacity = max(0, $maxCapacity - $usedCapacity);
     
@@ -1228,7 +1229,7 @@ class TickService
                     $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getArtefactQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    $usedCapacity += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slot);
     
                     $availableCapacity = max(0, $maxCapacity - $usedCapacity);
     
@@ -1853,34 +1854,69 @@ class TickService
 
     public function handleWinConditions(Round $round): void
     {
+
+        # If end tick is set and this is the last tick, declareWinner()
+        if(isset($round->end_tick) and $round->end_tick == ($round->ticks + 1))
+        {
+            $this->declareWinner($round);
+        }
+
         # If we don't already have a countdown, see if any dominion triggers it.
         if(in_array($round->mode, ['artefacts','artefacts-packs']))
         {
             $goal = $round->goal;
 
-            # See if any realms from $round have count of realmArtefacts >= $round->goal
-            if($realm = $round->realms()->whereHas('artefacts', function($query) use ($goal) {
+            # Grab realms from $round have count of realmArtefacts >= $round->goal
+            $realms = $round->realms()->whereHas('artefacts', function($query) use ($goal) {
                 $query->havingRaw('COUNT(*) >= ?', [$goal]);
-            })->inRandomOrder()->first())
+            })->get();
+
+            if($realms->count() and !$round->hasCountdown())
             {
                 $round->end_tick = $round->ticks + $this->roundHelper->getRoundCountdownTickLength() * 2;
                 $round->save();
 
+                $realms->load('artefacts');
+
+                $data['end_tick'] = $round->end_tick;
+                foreach($realms as $realm)
+                {
+                    $data['realms'][] = ['realm_id' => $realm->id, 'artefacts' => $realm->artefacts->pluck('key')->toArray()];
+                }
+
                 GameEvent::create([
                     'round_id' => $round->id,
-                    'source_type' => Realm::class,
-                    'source_id' => $realm->id,
+                    'source_type' => Round::class,
+                    'source_id' => $round->id,
                     'target_type' => NULL,
                     'target_id' => NULL,
-                    'type' => 'round_countdown',
-                    'data' => ['end_tick' => $round->end_tick],
+                    'type' => 'round_countdown_artefacts',
+                    'data' => $data,
                     'tick' => $round->ticks
                 ]);
-                $realm->save(['event' => HistoryService::EVENT_ROUND_COUNTDOWN]);
+                $round->save(['event' => HistoryService::EVENT_ROUND_COUNTDOWN]);
 
-                if(static::EXTENDED_LOGGING) { Log::debug('*** Countdown triggered by ' . $realm->name); }
+                if(static::EXTENDED_LOGGING) { Log::debug('*** Countdown triggered by ' . $realms->count() . ' realm(s)'); }
             }
 
+            if(!$realms->count() and $round->hasCountdown())
+            {
+                # Reset the end
+                $round->end_tick = NULL;
+                $round->save();
+
+                # Create a cancelled event
+                GameEvent::create([
+                    'round_id' => $round->id,
+                    'source_type' => Round::class,
+                    'source_id' => $round->id,
+                    'target_type' => NULL,
+                    'target_id' => NULL,
+                    'type' => 'round_countdown_artefacts_cancelled',
+                    'data' => NULL,
+                    'tick' => $round->ticks
+                ]);
+            }
         }
         elseif(!$round->hasCountdown())
         {
@@ -1930,6 +1966,52 @@ class TickService
                 }
             }
         }
+    }
+
+    private function declareWinner(Round $round): void
+    {
+
+        if(in_array($round->mode, ['artefacts', 'artefacts-packs']))
+        {
+            $goal = $round->goal;
+
+            # Find the round->dominions where dominion->land is equal to max(dominion->land)
+            $winnerRealms = $round->realms()->whereHas('artefacts', function($query) use ($goal) {
+                $query->havingRaw('COUNT(*) >= ?', [$goal]);
+            })->get();
+
+            $data['count'] = $winnerRealms->count();
+
+            foreach($winnerRealms as $winnerRealm)
+            {
+                RoundWinner::create([
+                    'round_id' => $round->id,
+                    'source_type' => Realm::class,
+                    'source_id' => $winnerRealm->id,
+                    'data' => $data
+                ]);
+            }
+        }
+        else
+        {
+            # Find the round->dominions where dominion->land is equal to max(dominion->land)
+            $winnerDominions = Dominion::where('round_id', $round->id)
+                ->whereRaw('land = (select max(land) from dominions where round_id = ?)', [$round->id])
+                ->get();
+
+            $data['count'] = $winnerDominions->count();
+
+            foreach($winnerDominions as $winnerDominion)
+            {
+                RoundWinner::create([
+                    'round_id' => $round->id,
+                    'source_type' => Dominion::class,
+                    'source_id' => $winnerDominion->id,
+                    'data' => $data
+                ]);
+            }
+        }
+
     }
 
 }

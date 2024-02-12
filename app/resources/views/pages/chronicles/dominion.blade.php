@@ -505,7 +505,7 @@
                                     $amount += $queueService->getTheftQueueAmount($dominion, "military_{$unitType}", $i);
                                     $amount += $queueService->getSabotageQueueAmount($dominion, "military_{$unitType}", $i);
                                     $amount += $queueService->getDesecrationQueueAmount($dominion, "military_{$unitType}", $i);
-                                    $amount += $queueService->getArtefactQueueAmount($dominion, "military_{$unitType}", $i);
+                                    $amount += $queueService->getArtefactattackQueueAmount($dominion, "military_{$unitType}", $i);
                                 @endphp
                                 <td class="text-center">
                                     @if ($amount === 0)
@@ -516,7 +516,7 @@
                                 </td>
                             @endfor
                             <td class="text-center">
-                                {{ number_format($queueService->getInvasionQueueTotalByResource($dominion, "military_{$unitType}") + $queueService->getExpeditionQueueTotalByResource($dominion, "military_{$unitType}") + $queueService->getTheftQueueTotalByResource($dominion, "military_{$unitType}") + $queueService->getSabotageQueueTotalByResource($dominion, "military_{$unitType}") + $queueService->getArtefactQueueTotalByResource($dominion, "military_{$unitType}")) }}
+                                {{ number_format($queueService->getInvasionQueueTotalByResource($dominion, "military_{$unitType}") + $queueService->getExpeditionQueueTotalByResource($dominion, "military_{$unitType}") + $queueService->getTheftQueueTotalByResource($dominion, "military_{$unitType}") + $queueService->getSabotageQueueTotalByResource($dominion, "military_{$unitType}") + $queueService->getArtefactattackQueueTotalByResource($dominion, "military_{$unitType}")) }}
                             </td>
                         </tr>
                     @endforeach

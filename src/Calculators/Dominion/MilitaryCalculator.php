@@ -2139,7 +2139,7 @@ class MilitaryCalculator
                 $this->queueService->getDesecrationQueueTotalByResource($dominion, "military_unit{$slot}") +
                 $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$slot}") +
                 $this->queueService->getSabotageQueueTotalByResource($dominion, "military_unit{$slot}") +
-                $this->queueService->getArtefactQueueTotalByResource($dominion, "military_unit{$slot}")
+                $this->queueService->getArtefactattackQueueTotalByResource($dominion, "military_unit{$slot}")
             );
         }
         elseif(in_array($slot, ['draftees', 'spies', 'wizards', 'archmages']))
@@ -2152,7 +2152,7 @@ class MilitaryCalculator
                 $this->queueService->getDesecrationQueueTotalByResource($dominion, "military_{$slot}") +
                 $this->queueService->getStunQueueTotalByResource($dominion, "military_{$slot}") +
                 $this->queueService->getSabotageQueueTotalByResource($dominion, "military_{$slot}") +
-                $this->queueService->getArtefactQueueTotalByResource($dominion, "military_{$slot}")
+                $this->queueService->getArtefactattackQueueTotalByResource($dominion, "military_{$slot}")
             );
         }
         else
