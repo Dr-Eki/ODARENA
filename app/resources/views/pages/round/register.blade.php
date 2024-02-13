@@ -34,7 +34,7 @@
                     <label for="dominion_name" class="col-sm-3 control-label">Dominion Name</label>
                     <div class="col-sm-6">
                         <input type="text" name="dominion_name" id="dominion_name" class="form-control" placeholder="Dominion Name" value="{{ old('dominion_name') }}" maxlength="50" required autofocus
-                            @if(in_array($round->mode, ['packs','packs-duration']))
+                            @if(in_array($round->mode, ['packs','packs-duration','artefacts-packs']))
                                 autocomplete="off"
                             @endif
                         >
@@ -74,7 +74,7 @@
                 </div>
 
                 <!-- Faction -->
-                @if(in_array($round->mode, ['factions','factions-duration','packs','packs-duration']))
+                @if(in_array($round->mode, ['factions','factions-duration','packs','packs-duration','artefacts-packs','artefacts']))
                     <div class="form-group">
                         <label for="faction" class="col-sm-3 control-label">Faction</label>
                         <div class="col-sm-6">

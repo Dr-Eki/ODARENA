@@ -168,7 +168,7 @@
                                         {!! $roundHelper->getRoundModeIcon($round) !!} {{ $roundHelper->getRoundModeString($round) }}
                                     </span>
 
-                                    @if(in_array($round->mode, ['packs','packs-duration']))
+                                    @if(in_array($round->mode, ['packs','packs-duration','artefacts-packs']))
                                         @php
                                             $userRoundPacks = $packService->getPacksCreatedByUserInRound($user, $round);
                                         @endphp

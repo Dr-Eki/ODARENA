@@ -142,8 +142,8 @@ class ArtefactHelper
             'improvement_points' => '%+d%% improvement points',
 
             'lumber_improvement_points_mod' => '%+d%% lumber improvement points',
-            'gems_improvement_points_mod' => '%+d%% lumber improvement points',
-            'ore_improvement_points_mod' => '%+d%% lumber improvement points',
+            'gems_improvement_points_mod' => '%+d%% gems improvement points',
+            'ore_improvement_points_mod' => '%+d%% ore improvement points',
 
             // Land and Construction
             'land_discovered' => '%+d%% land discovered on successful invasions',

@@ -66,7 +66,7 @@
                                 <small class="text-muted" data-toggle="tooltip" data-placement="top" title="Number of dominions in this realm">({{ $roundRealm->dominions->count() }})</small>
                             </div>
                         @endforeach
-                    @elseif(in_array($selectedDominion->round->mode, ['packs','packs-duration']))
+                    @elseif(in_array($selectedDominion->round->mode, ['packs','packs-duration','artefacts-packs']))
                         @foreach($selectedDominion->round->realms as $roundRealm)
                             <div class="col-sm-{{ round(12 / count($selectedDominion->round->realms)) }} text-center">
                                 @php
@@ -398,7 +398,7 @@
                                     </tr>
                                 @endif
 
-                                @if(in_array($realm->round->mode, ['packs', 'packs-duration']) and $realm->alignment !== 'npc')
+                                @if(in_array($realm->round->mode, ['packs', 'packs-duration','artefacts-packs']) and $realm->alignment !== 'npc')
                                     <tr>
                                         <td>Pack status:</td>
                                         <td>{{ $packHelper->getPackStatusString($realm->pack) }}</td>

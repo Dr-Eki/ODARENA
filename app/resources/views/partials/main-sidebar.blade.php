@@ -157,7 +157,7 @@
                             <ul class="collapse" id="realms">
                                 <li>&nbsp;<a href="{{ route('dominion.realm.all') }}">All</a></li>
                                 @foreach($selectedDominion->round->realms()->get() as $realm)
-                                    @if(in_array($selectedDominion->round->mode, ['packs','packs-duration']))
+                                    @if(in_array($selectedDominion->round->mode, ['packs','packs-duration','artefacts-pack']))
                                         <li>&nbsp;<a href="{{ route('dominion.realm', $realm->number) }}">{{ $realmHelper->getRealmPackName($realm) }} (# {{ $realm->number }})</a></li>
                                     @else
                                         <li>&nbsp;<a href="{{ route('dominion.realm', $realm->number) }}">{{ $realmHelper->getAlignmentNoun($realm->alignment) }} (# {{ $realm->number }})</a></li>
