@@ -461,7 +461,7 @@
             </div>
             <div class="box-body">
                 @php
-                    $numberOfQualifyingDominionsInRange = $artefactCalculator->getNumberOfQualifyingHostileDominionsInRange($selectedDominion);
+                    $numberOfQualifyingDominionsInRange = $artefactCalculator->getQualifyingHostileDominionsInRange($selectedDominion)->count();
                     $minimumNumberOfDominionsInRangeRequired = $artefactCalculator->getMinimumNumberOfDominionsInRangeRequired($selectedDominion->round);
                 @endphp
                 <p>From this page, you can attack the aegis of other realms' artefacts.</p>

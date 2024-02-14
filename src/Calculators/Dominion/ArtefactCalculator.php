@@ -2,6 +2,8 @@
 
 namespace OpenDominion\Calculators\Dominion;
 
+use Illuminate\Support\Collection;
+
 use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Realm;
@@ -148,7 +150,7 @@ class ArtefactCalculator
 
     public function canAttackArtefacts(Dominion $dominion): bool
     {
-        if($this->getNumberOfQualifyingHostileDominionsInRange($dominion) < $this->getMinimumNumberOfDominionsInRangeRequired($dominion->round))
+        if($this->getQualifyingHostileDominionsInRange($dominion)->count() < $this->getMinimumNumberOfDominionsInRangeRequired($dominion->round))
         {
             return false;
         }
@@ -156,9 +158,9 @@ class ArtefactCalculator
         return true;
     }
 
-    public function getNumberOfQualifyingHostileDominionsInRange(Dominion $dominion): int
+    public function getQualifyingHostileDominionsInRange(Dominion $dominion): Collection
     {
-        return $this->rangeCalculator->getDominionsInRange($dominion, true, true)->count(); # true = exclude fogged dominions, true = exclude Barbarians
+        return $this->rangeCalculator->getDominionsInRange($dominion, true, true); # true = exclude fogged dominions, true = exclude Barbarians
     }
 
     public function getMinimumNumberOfDominionsInRangeRequired(Round $round): int

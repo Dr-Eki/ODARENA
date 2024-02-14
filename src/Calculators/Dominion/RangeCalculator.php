@@ -176,7 +176,7 @@ class RangeCalculator
 
                     ($excludeFogged and !$dominion->getSpellPerkValue('fog_of_war')) and
 
-                    ($excludeBarbarians and !$dominion->race->key !== 'barbarian') and
+                    ($excludeBarbarians and $dominion->race->key !== 'barbarian') and
 
                     # Not self
                     ($dominion->id !== $self->id) and

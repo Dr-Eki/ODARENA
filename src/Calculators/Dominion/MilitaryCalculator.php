@@ -2377,11 +2377,20 @@ class MilitaryCalculator
         {
             $invasionEvents = GameEvent::query()
                 ->join('dominions as source_dominion','game_events.source_id','source_dominion.id')
-                ->join('dominions as target_dominion','game_events.target_id','target_dominion.id')
                 ->where('game_events.tick', '>=', ($attacker->round->ticks - $ticks))
                 ->where('game_events.source_id', $defender->id)
-                ->where('target_dominion.realm_id', $attacker->realm_id)
-                ->whereIn('game_events.type', ['invasion', 'artefactattack'])
+                ->where(function ($query) use ($attacker)
+                {
+                    $query->where(function ($query) use ($attacker)
+                    {
+                        $query->where('game_events.type', 'invasion')
+                            ->where('game_events.target_id', $attacker->id);
+                    })->orWhere(function ($query) use ($attacker)
+                    {
+                        $query->where('game_events.type', 'artefactattack')
+                            ->where('game_events.target_id', $attacker->realm_id);
+                    });
+                })
                 ->get();
     
             return !$invasionEvents->isEmpty();
