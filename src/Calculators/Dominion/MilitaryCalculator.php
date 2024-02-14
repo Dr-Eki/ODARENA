@@ -2376,27 +2376,17 @@ class MilitaryCalculator
         if($defender)
         {
             $invasionEvents = GameEvent::query()
-                              ->join('dominions as source_dominion','game_events.source_id','source_dominion.id')
-                              ->join('dominions as target_dominion','game_events.target_id','target_dominion.id')
-                              ->where('game_events.tick', '>=', ($attacker->round->ticks - $ticks))
-                              ->where([
-                                  'game_events.type' => 'invasion',
-                                  'game_events.source_id' => $defender->id,
-                                  'target_dominion.realm_id' => $attacker->realm_id,
-                              ])
-                              ->get();
-
-            if (!$invasionEvents->isEmpty())
-            {
-                return true;
-            }
-            else
-            {
-              return false;
-            }
+                ->join('dominions as source_dominion','game_events.source_id','source_dominion.id')
+                ->join('dominions as target_dominion','game_events.target_id','target_dominion.id')
+                ->where('game_events.tick', '>=', ($attacker->round->ticks - $ticks))
+                ->where('game_events.source_id', $defender->id)
+                ->where('target_dominion.realm_id', $attacker->realm_id)
+                ->whereIn('game_events.type', ['invasion', 'artefactattack'])
+                ->get();
+    
+            return !$invasionEvents->isEmpty();
         }
-        
-
+    
         return false;
     }
 
@@ -2447,37 +2437,28 @@ class MilitaryCalculator
      */
     public function getSpellMultiplier(Dominion $dominion, Dominion $target = null, string $power): float
     {
-
         $multiplier = 0;
-
-        if($power == 'offense')
+    
+        if ($power === 'offense')
         {
             $multiplier += $dominion->getSpellPerkMultiplier('offensive_power');
-            
-            # Retaliation spells (only vs. self in deathmatches)
-            if(in_array($dominion->round->mode,['deathmatch','deathmatch-duration']))
+    
+            $isRecentlyInvaded = in_array($dominion->round->mode, ['deathmatch', 'deathmatch-duration']) ?
+                $this->isSelfRecentlyInvadedByTarget($dominion, $target) :
+                $this->isOwnRealmRecentlyInvadedByTarget($dominion, $target);
+    
+            if ($isRecentlyInvaded)
             {
-                if ($this->isSelfRecentlyInvadedByTarget($dominion, $target))
-                {
-                    $multiplier += $dominion->getSpellPerkMultiplier('offensive_power_on_retaliation');
-                }
+                $multiplier += $dominion->getSpellPerkMultiplier('offensive_power_on_retaliation');
             }
-            else
-            {
-                if ($this->isOwnRealmRecentlyInvadedByTarget($dominion, $target))
-                {
-                    $multiplier += $dominion->getSpellPerkMultiplier('offensive_power_on_retaliation');
-                }
-            }
-
         }
-        elseif($power == 'defense')
+    
+        if ($power === 'defense')
         {
-            $multiplier += $dominion->getSpellPerkMultiplier('defensive_power');# $this->spellCalculator->getPassiveSpellPerkMultiplier($dominion, 'defensive_power');
+            $multiplier += $dominion->getSpellPerkMultiplier('defensive_power');
         }
-
+    
         return $multiplier;
-
     }
 
     /**

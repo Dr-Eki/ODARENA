@@ -423,8 +423,8 @@ class ArtefactActionService
                 'round_id' => $attacker->round_id,
                 'source_type' => Dominion::class,
                 'source_id' => $attacker->id,
-                'target_type' => NULL,
-                'target_id' => NULL,
+                'target_type' => RealmArtefact::class,
+                'target_id' => Realm::find($realm->id)->id,
                 'type' => 'artefactattack',
                 'data' => $this->attack,
                 'tick' => $attacker->round->ticks
