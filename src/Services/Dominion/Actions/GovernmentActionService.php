@@ -94,7 +94,7 @@ class GovernmentActionService
         {
             throw new RuntimeException('Dominion not found.');
         }
-        if ($dominion->realm != $monarch->realm)
+        if ($dominion->realm->id != $monarch->realm->id)
         {
             throw new RuntimeException('You cannot vote for a Governor outside of your realm.');
         }
