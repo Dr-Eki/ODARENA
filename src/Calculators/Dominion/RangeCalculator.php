@@ -8,6 +8,7 @@ use OpenDominion\Services\Dominion\ProtectionService;
 
 # ODA
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\SpellCalculator;
 
 class RangeCalculator
 {
@@ -23,6 +24,9 @@ class RangeCalculator
 
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
+
+    /** @var SpellCalculator */
+    protected $spellCalculator;
 
     /**
      * RangeCalculator constructor.
@@ -165,6 +169,7 @@ class RangeCalculator
      */
     public function getDominionsInRange(Dominion $self, bool $excludeFogged = false, bool $excludeBarbarians = false): Collection
     {
+
         return $self->round->activeDominions()
             ->with(['realm', 'round'])
             ->get()
@@ -174,9 +179,11 @@ class RangeCalculator
                     # Not in the same realm (unless deathmatch round); and
                     (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','artefacts-packs','factions','factions-duration','packs','packs-duration']) ? ($dominion->realm->id !== $self->realm->id) : true) and
 
-                    ($excludeFogged and !$dominion->getSpellPerkValue('fog_of_war')) and
+                    # If $excludeFogged is true, exclude dominions with fog active
+                    !($excludeFogged == true and $dominion->isSpellActive('fog')) and
 
-                    ($excludeBarbarians and $dominion->race->key !== 'barbarian') and
+                    # Exclude barbarians (dominion->race->key) if $excludeBarbarians is true
+                    !($excludeBarbarians == true and $dominion->race->key !== 'barbarian') and
 
                     # Not self
                     ($dominion->id !== $self->id) and
