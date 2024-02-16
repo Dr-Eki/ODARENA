@@ -50,6 +50,8 @@ horse_found:
   name: Horses found
 blood_found:
   name: Blood found
+thunderstone_found:
+  name: Thunderstones found
 
 # Military
 
