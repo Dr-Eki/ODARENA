@@ -169,43 +169,43 @@ class RangeCalculator
      */
     public function getDominionsInRange(Dominion $self, bool $excludeFogged = false, bool $excludeBarbarians = false): Collection
     {
-
         return $self->round->activeDominions()
             ->with(['realm', 'round'])
             ->get()
             ->filter(function ($dominion) use ($self, $excludeFogged, $excludeBarbarians) {
-                return (
-
-                    # Not in the same realm (unless deathmatch round); and
-                    (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','artefacts-packs','factions','factions-duration','packs','packs-duration']) ? ($dominion->realm->id !== $self->realm->id) : true) and
-
-                    # If $excludeFogged is true, exclude dominions with fog active
-                    !($excludeFogged == true and $dominion->isSpellActive('fog')) and
-
-                    # Exclude barbarians (dominion->race->key) if $excludeBarbarians is true
-                    !($excludeBarbarians == true and $dominion->race->key == 'barbarian') and
-
-                    # Not self
-                    ($dominion->id !== $self->id) and
-
-                    # Is in range; and
+                return $this->isNotSameRealm($dominion, $self) and
+                    $this->isNotFogged($dominion, $excludeFogged) and
+                    $this->isNotBarbarian($dominion, $excludeBarbarians) and
+                    $this->isNotSelf($dominion, $self) and
                     $this->isInRange($self, $dominion) and
-
-                    # Is not in protection;
                     !$this->protectionService->isUnderProtection($dominion) and
-
-                    # Is not an ally
                     !$self->realm->getAllies()->contains($dominion->realm) and
-
-                    # Is not locked;
-                    $dominion->is_locked !== 1
-                );
+                    $dominion->is_locked !== 1;
             })
             ->sortByDesc(function ($dominion) {
                 return $dominion->land;
             })
             ->values();
-        
+    }
+    
+    private function isNotSameRealm($dominion, $self): bool
+    {
+        return in_array($dominion->round->mode, ['standard','standard-duration','artefacts','artefacts-packs','factions','factions-duration','packs','packs-duration']) ? ($dominion->realm->id !== $self->realm->id) : true;
+    }
+    
+    private function isNotFogged($dominion, $excludeFogged): bool
+    {
+        return !($excludeFogged == true and $dominion->isSpellActive('fog'));
+    }
+    
+    private function isNotBarbarian($dominion, $excludeBarbarians): bool
+    {
+        return !($excludeBarbarians == true and $dominion->race->key == 'barbarian');
+    }
+    
+    private function isNotSelf($dominion, $self): bool
+    {
+        return $dominion->id !== $self->id;
     }
 
     /**

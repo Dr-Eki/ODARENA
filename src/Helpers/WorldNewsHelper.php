@@ -21,6 +21,7 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 
+use OpenDominion\Helpers\ArtefactHelper;
 use OpenDominion\Helpers\DesecrationHelper;
 use OpenDominion\Helpers\EventHelper;
 use OpenDominion\Helpers\RaceHelper;
@@ -34,6 +35,7 @@ class WorldNewsHelper
     protected $militaryCalculator;
     protected $rangeCalculator;
 
+    protected $artefactHelper;
     protected $desecrationHelper;
     protected $eventHelper;
     protected $raceHelper;
@@ -47,6 +49,7 @@ class WorldNewsHelper
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->rangeCalculator = app(RangeCalculator::class);
 
+        $this->artefactHelper = app(ArtefactHelper::class);
         $this->desecrationHelper = app(DesecrationHelper::class);
         $this->eventHelper = app(EventHelper::class);
         $this->raceHelper = app(RaceHelper::class);
@@ -330,16 +333,18 @@ class WorldNewsHelper
         if($event->data['result']['shield_broken'])
         {
             $string = sprintf(
-                '%s broke the aegis of %s, claiming the artefact for the realm.',
+                '%s broke the aegis of <span data-toggle="tooltip" data-placement="top" title="%s">%s</span>, claiming the artefact for the realm.',
                 $this->generateDominionString($attacker, 'neutral', $viewer),
+                $this->artefactHelper->getArtefactTooltip($artefact),
                 $this->generateArtefactOnlyString($artefact, $artefactRealm, 'other')
               );
         }
         else
         {
             $string = sprintf(
-                '%s attacked %s.',
+                '%s attacked <span data-toggle="tooltip" data-placement="top" title="%s">%s</span>.',
                 $this->generateDominionString($attacker, 'neutral', $viewer),
+                $this->artefactHelper->getArtefactTooltip($artefact),
                 $this->generateArtefactOnlyString($artefact, $artefactRealm, 'other')
               );
         }
@@ -356,7 +361,8 @@ class WorldNewsHelper
         $artefactClass = $this->getSpanClass('other');
 
         $string = sprintf(
-            '<span class="%s">%s</span> has been brought to %s.',
+            '<span data-toggle="tooltip" data-placement="top" title="%s" class="%s">%s</span> has been brought to %s.',
+            $this->artefactHelper->getArtefactTooltip($artefact),
             $artefactClass,
             $artefact->name,
             $this->generateRealmOnlyString($realm)
@@ -596,10 +602,11 @@ class WorldNewsHelper
         if(isset($expedition['data']['artefact']) and $expedition['data']['artefact']['found'])
         {
             $string = sprintf(
-                'An expedition sent out by %s discovered <strong class="%s">%s</strong> land and found <span class="%s">%s</span>.',
+                'An expedition sent out by %s discovered <strong class="%s">%s</strong> land and found <span data-toggle="tooltip" data-placement="top" title="%s" class="%s">%s</span>.',
                 $this->generateDominionString($dominion, 'neutral', $viewer),
                 $this->getSpanClass($mode),
                 number_format($expedition['data']['land_discovered']),
+                $this->artefactHelper->getArtefactTooltip(Artefact::findOrFail($expedition['data']['artefact']['id'])),
                 $this->getSpanClass('other'),
                 Artefact::findOrFail($expedition['data']['artefact']['id'])->name
               );
