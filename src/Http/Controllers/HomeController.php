@@ -15,7 +15,6 @@ use OpenDominion\Models\Spyop;
 use OpenDominion\Models\Tech;
 use OpenDominion\Services\Dominion\SelectorService;
 use OpenDominion\Calculators\Dominion\LandCalculator;
-use Carbon\Carbon;
 
 class HomeController extends AbstractController
 {

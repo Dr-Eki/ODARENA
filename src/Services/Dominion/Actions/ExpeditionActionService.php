@@ -406,7 +406,9 @@ class ExpeditionActionService
         {
             return;
         }
-        
+
+        $this->expedition['artefact']['chance_to_find'] = $this->artefactCalculator->getChanceToDiscoverArtefactOnExpedition($dominion, $this->expedition);
+     
         if(random_chance($this->artefactCalculator->getChanceToDiscoverArtefactOnExpedition($dominion, $this->expedition)))
         {
             if($artefact = $this->artefactService->getRandomArtefact($dominion->round))
