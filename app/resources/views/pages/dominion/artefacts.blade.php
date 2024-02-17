@@ -533,7 +533,15 @@
                                         <i class="text-muted">{{ $realmArtefact->artefact->description }}</i>
                                     </td>
                                     <td>
-                                        <span class="label label-{{ $powerColor }}">{{ number_format($realmArtefact->power) }} / {{ number_format($realmArtefact->max_power) }}</span>
+                                        <span 
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            @if($realmArtefactPowerRatio < 1)
+                                                title="<span class='text-muted'>Restoration:</span>&nbsp;{{ number_format($artefactCalculator->getAegisRestoration($realmArtefact)) }}"
+                                            @endif
+                                            class="label label-{{ $powerColor }}">
+                                                {{ number_format($realmArtefact->power) }} / {{ number_format($realmArtefact->max_power) }}
+                                            </span>
                                     <td>
                                         <ul>
                                             @foreach($artefactHelper->getArtefactPerksString($realmArtefact->artefact) as $effect)

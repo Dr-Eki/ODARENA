@@ -848,6 +848,7 @@ class ResourceCalculator
             $returningResources['prestige'] += $this->queueService->getSabotageQueueTotalByResource($dominion, 'prestige');
             $returningResources['prestige'] += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'prestige');
             $returningResources['prestige'] += $this->queueService->getStunQueueTotalByResource($dominion, 'prestige');    
+            $returningResources['prestige'] += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'prestige');    
         }
 
         if($xp)
@@ -858,6 +859,12 @@ class ResourceCalculator
             $returningResources['xp'] += $this->queueService->getSabotageQueueTotalByResource($dominion, 'xp');
             $returningResources['xp'] += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'xp');
             $returningResources['xp'] += $this->queueService->getStunQueueTotalByResource($dominion, 'xp');    
+            $returningResources['xp'] += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'xp');    
+        }
+
+        if(in_array($dominion->round->mode, ['artefacts', 'artefacts-packs']))
+        {
+            
         }
 
         return $returningResources;
