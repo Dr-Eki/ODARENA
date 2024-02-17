@@ -534,9 +534,9 @@
                                     </td>
                                     <td>
                                         <span 
-                                            data-toggle="tooltip"
-                                            data-placement="top"
-                                            @if($realmArtefactPowerRatio < 1)
+                                            @if($realmArtefactPowerRatio > 1)
+                                                data-toggle="tooltip"
+                                                data-placement="top"
                                                 title="<span class='text-muted'>Restoration:</span>&nbsp;{{ number_format($artefactCalculator->getAegisRestoration($realmArtefact)) }}"
                                             @endif
                                             class="label label-{{ $powerColor }}">
