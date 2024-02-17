@@ -180,7 +180,7 @@ class RangeCalculator
                     (in_array($dominion->round->mode, ['standard','standard-duration','artefacts','artefacts-packs','factions','factions-duration','packs','packs-duration']) ? ($dominion->realm->id !== $self->realm->id) : true) and
 
                     # If $excludeFogged is true, exclude dominions with fog active
-                    !($excludeFogged == true and $dominion->isSpellActive('fog')) and
+                    #!($excludeFogged == true and $dominion->isSpellActive('fog')) and
 
                     # Exclude barbarians (dominion->race->key) if $excludeBarbarians is true
                     !($excludeBarbarians == true and $dominion->race->key !== 'barbarian') and
