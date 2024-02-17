@@ -248,7 +248,8 @@ class ArtefactHelper
 
     public function getArtefactTooltip(Artefact $artefact): string
     {
-        $tooltip = '<ul>';
+        $tooltip = '<strong>' . $artefact->name . '</strong>';
+        $tooltip .= '<ul>';
 
         foreach($this->getArtefactPerksString($artefact) as $effect)
         {

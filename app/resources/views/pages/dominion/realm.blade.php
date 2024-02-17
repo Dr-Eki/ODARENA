@@ -327,7 +327,7 @@
 
                             <tr>
                                 <td>
-                                    <span data-toggle="tooltip" data-placement="top" title="{{ $artefactHelper->getArtefactHelpString($artefact) }}">
+                                    <span data-toggle="tooltip" data-placement="top" title="{{ $artefactHelper->getArtefactTooltip($artefact) }}">
                                         {{ $artefact->name }}
                                     </span>
                                 </td>
