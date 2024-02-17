@@ -91,27 +91,36 @@ class DesecrationService
 
             $desecrationResult = $this->desecrationCalculator->getDesecrationResult($desecrator, $this->desecration['units_sent']);
 
-
-            $this->desecration['result']['resource_key'] = key($desecrationResult);
-
-            $resource = Resource::where('key', $this->desecration['result']['resource_key'])->first();
-
-            $this->desecration['result']['resource_name'] = $resource->name; #Resource::where('key', $this->desecration['result']['resource_key'])->firstOrFail()->name;
-            $this->desecration['result']['amount'] = $desecrationResult[key($desecrationResult)];
-
             // Remove units
             foreach($desecratingUnits as $slot => $amount)
             {
                 $desecrator->{'military_unit'.$slot} -= $amount;
             }
-
             // Generate queue data
             foreach($desecratingUnits as $slot => $amount)
             {
                 $queueDatas[] = ['military_unit'.$slot => $amount];
             }
 
-            $queueDatas[] = ['resource_'.$this->desecration['result']['resource_key'] => $this->desecration['result']['amount']];
+            if(empty($desecrationResult))
+            {
+                #throw new GameException('No resources were desecrated.');
+            }
+            else
+            {
+                $this->desecration['result']['resource_key'] = key($desecrationResult);
+
+                $resource = Resource::where('key', $this->desecration['result']['resource_key'])->first();
+    
+                $this->desecration['result']['resource_name'] = $resource->name; #Resource::where('key', $this->desecration['result']['resource_key'])->firstOrFail()->name;
+                $this->desecration['result']['amount'] = $desecrationResult[key($desecrationResult)];
+
+                $queueDatas[] = ['resource_'.$this->desecration['result']['resource_key'] => $this->desecration['result']['amount']];
+
+
+            }
+
+            
 
             $ticks = 8;
 
@@ -143,28 +152,29 @@ class DesecrationService
 
             $desecrator->save(['event' => HistoryService::EVENT_ACTION_DESECRATION]);
     
-            $message = sprintf(
-                'Your units desecrate %s %s and return with %s %s.',
-                number_format($this->desecration['bodies']['desecrated']),
-                str_plural('body', $this->desecration['bodies']['desecrated']),
-                number_format($this->desecration['result']['amount']),
-                str_plural($this->desecration['result']['resource_name'], $this->desecration['result']['amount'])
-            );
-
             # Debug before saving:
             #ldd($this->desecration, $desecrator->round->resources, $message);
 
         });
 
-        $message = sprintf(
-            'Your units desecrate %s %s and begin their journey home with %s %s.',
-            number_format($this->desecration['bodies']['desecrated']),
-            str_plural('body', $this->desecration['bodies']['desecrated']),
-            number_format($this->desecration['result']['amount']),
-            str_plural($this->desecration['result']['resource_name'], $this->desecration['result']['amount'])
-        );
+        if($this->desecration['bodies']['desecrated'] > 0)
+        {
+            $message = sprintf(
+                'Your units desecrate %s %s and begin their journey home with %s %s.',
+                number_format($this->desecration['bodies']['desecrated']),
+                str_plural('body', $this->desecration['bodies']['desecrated']),
+                number_format($this->desecration['result']['amount']),
+                str_plural($this->desecration['result']['resource_name'], $this->desecration['result']['amount'])
+            );
+    
+            $alertType = 'success';
+        }
+        else
+        {
+            $message = 'Your units desecrate nothing.';
+            $alertType = 'warning';
+        }
 
-        $alertType = ($this->desecration['bodies']['desecrated'] > 0 ? 'success' : 'warning');
 
         return [
             'message' => $message,

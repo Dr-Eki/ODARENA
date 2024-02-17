@@ -203,7 +203,7 @@ class DesecrationCalculationService
             }
         }
 
-        $desecrationResult = $this->desecrationCalculator->getDesecrationResult($dominion, $units);
+        $desecrationResult = $this->desecrationCalculator->getDesecrationResult($dominion, $units, true);
 
         $resourceKey = key($desecrationResult);
 
@@ -216,7 +216,7 @@ class DesecrationCalculationService
             $this->calculationResult['resource_name'] = 'Unknown';
         }
 
-        if(($amount = $desecrationResult[key($desecrationResult)]) !== null)
+        if(isset($desecrationResult[key($desecrationResult)]) and ($amount = $desecrationResult[key($desecrationResult)]))
         {
             $this->calculationResult['resource_amount'] = $amount;
         }
@@ -228,7 +228,7 @@ class DesecrationCalculationService
         #$this->calculationResult['resource_name'] = Resource::where('key', $resourceKey)->first()->name;
         #$this->calculationResult['resource_amount'] = $desecrationResult[key($desecrationResult)];
 
-        $this->calculationResult['bodies_amount'] = $dominion->getSpellPerkValue('can_see_battlefield_bodies') ? $dominion->round->resource_body : 'We are not sufficiently attuned to death to see how many ripe bodies are available on the battlefields.';
+        $this->calculationResult['bodies_amount'] = $dominion->getSpellPerkValue('can_see_battlefield_bodies') ? $dominion->round->resource_body : 'We are not sufficiently attuned to death to see how many ripe bodies are available on the battlefields. Numbers below are best case estimates.';
 
         return $this->calculationResult;
     }

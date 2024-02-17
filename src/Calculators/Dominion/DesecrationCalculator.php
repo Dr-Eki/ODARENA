@@ -34,11 +34,11 @@ class DesecrationCalculator
 
     }
 
-    public function getDesecrationResult(Dominion $desecrator, array $desecratingUnits): array
+    public function getDesecrationResult(Dominion $desecrator, array $desecratingUnits, bool $isCalc = false): array
     {
         $result = []; # [resourceKey => amount] pairs
 
-        $bodiesDesecrated = $this->getBodiesDesecrated($desecrator, $desecratingUnits);
+        $bodiesDesecrated = $this->getBodiesDesecrated($desecrator, $desecratingUnits, $isCalc);
         $bodiesRemaining = $desecrator->round->resource_body;
 
         if($bodiesDesecrated <= 0 or $bodiesRemaining <= 0)
@@ -64,6 +64,11 @@ class DesecrationCalculator
             $resourceCreated = $bodiesUsed * $perBody;
 
             $result[$resourceKey] = (int)floor(($result[$resourceKey] ?? 0) + $resourceCreated);
+
+            if($isCalc and !$desecrator->getSpellPerkValue('can_see_battlefield_bodies'))
+            {
+                $result[$resourceKey] = 0;
+            }
 
             $bodiesRemaining = $bodiesRemaining - $bodiesUsed;
         }

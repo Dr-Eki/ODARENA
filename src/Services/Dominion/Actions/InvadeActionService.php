@@ -3679,7 +3679,7 @@ class InvadeActionService
             $ticksFasterPerWizardRatio = (float)$fasterReturnFromWizardRatio[0];
             $maxFaster = (int)$fasterReturnFromWizardRatio[1];
             
-            $ticksFaster = $this->magicCalculator->getWizardRatio($attacker, 'offense') * $ticksFasterPerWizardRatio;
+            $ticksFaster = floor($this->magicCalculator->getWizardRatio($attacker, 'offense') * $ticksFasterPerWizardRatio);
             $ticksFaster = min($ticksFaster, $maxFaster);
 
             # Determine new return speed
@@ -3707,7 +3707,7 @@ class InvadeActionService
             $ticksFasterPerWizardRatio = (float)$fasterReturnFromWizardRatio[0];
             $maxFaster = (int)$fasterReturnFromWizardRatio[1];
             
-            $ticksFaster = $this->magicCalculator->getWizardRatio($attacker, 'offense') * $ticksFasterPerWizardRatio;
+            $ticksFaster = floor($this->magicCalculator->getWizardRatio($attacker, 'offense') * $ticksFasterPerWizardRatio);
             $ticksFaster = min($ticksFaster, $maxFaster);
 
             # Determine new return speed

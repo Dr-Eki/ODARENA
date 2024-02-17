@@ -91,10 +91,12 @@
                                             <td>Bodies desecrated</td>
                                             <td>{{ number_format($event->data['bodies']['desecrated']) }}</td>
                                         </tr>
-                                        <tr>
-                                            <td>{{ str_plural($event->data['result']['resource_name'], $event->data['result']['amount']) }} returning</td>
-                                            <td>{{ number_format($event->data['result']['amount']) }}</td>
-                                        </tr>
+                                        @if($event->data['bodies']['desecrated'] > 0)
+                                            <tr>
+                                                <td>{{ str_plural($event->data['result']['resource_name'], $event->data['result']['amount']) }} returning</td>
+                                                <td>{{ number_format($event->data['result']['amount']) }}</td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
