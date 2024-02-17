@@ -202,7 +202,7 @@ class ArtefactActionService
 
             $hostileDominionsInRange = $this->artefactCalculator->getQualifyingHostileDominionsInRange($attacker);
             $minimumHostileDominionsInRangeRequired = $this->artefactCalculator->getMinimumNumberOfDominionsInRangeRequired($attacker->round);
-            if ($hostileDominionsInRange < $minimumHostileDominionsInRangeRequired) 
+            if ($hostileDominionsInRange->count() < $minimumHostileDominionsInRangeRequired) 
             {
                 throw new GameException('You must have at least ' . number_format($hostileDominionsInRange->count()) . ' hostile ' . str_plural('dominion', $hostileDominionsInRange) . ' in range to be worthy of attacking the aegis. Fogged dominions and Barbarians do not count.');
             }
