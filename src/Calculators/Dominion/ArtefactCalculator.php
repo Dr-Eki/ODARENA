@@ -11,6 +11,7 @@ use OpenDominion\Models\RealmArtefact;
 use OpenDominion\Models\Round;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
+use OpenDominion\Models\GameEvent;
 use OpenDominion\Services\Dominion\StatsService;
 
 class ArtefactCalculator
@@ -150,12 +151,7 @@ class ArtefactCalculator
 
     public function canAttackArtefacts(Dominion $dominion): bool
     {
-        if($this->getQualifyingHostileDominionsInRange($dominion)->count() < $this->getMinimumNumberOfDominionsInRangeRequired($dominion->round))
-        {
-            return false;
-        }
-
-        return true;
+        return $this->checkHasEnoughHostileDominionsInRange($dominion) and $this->checkEnoughTicksHavePassedSinceMostRecentArtefactAttack($dominion);
     }
 
     public function getQualifyingHostileDominionsInRange(Dominion $dominion): Collection
@@ -171,6 +167,39 @@ class ArtefactCalculator
         #return max(2, round($dominionsCount * 0.10));
 
         return 2;
+    }
+
+    public function dominionHasAttackedArtefact(Dominion $dominion): bool
+    {
+        return GameEvent::where('source_id', $dominion->id)
+        ->where('type', 'artefactattack')
+        ->exists();
+    }
+
+    public function getTicksSinceMostRecentArtefactAttackByDominion(Dominion $dominion): int
+    {
+        return $dominion->round->ticks - GameEvent::where('source_id', $dominion->id)
+        ->where('type', 'artefactattack')
+        ->orderBy('created_at', 'desc')
+        ->first()
+        ->tick;
+    }
+
+    ## BEGIN CHECKS
+
+    public function checkHasEnoughHostileDominionsInRange(Dominion $dominion): bool
+    {
+        return $this->getQualifyingHostileDominionsInRange($dominion)->count() >= $this->getMinimumNumberOfDominionsInRangeRequired($dominion->round);
+    }
+
+    public function checkEnoughTicksHavePassedSinceMostRecentArtefactAttack(Dominion $dominion): bool
+    {
+        if($this->dominionHasAttackedArtefact($dominion))
+        {
+            return $this->getTicksSinceMostRecentArtefactAttackByDominion($dominion) >= 1;
+        }
+
+        return true;
     }
 
 }

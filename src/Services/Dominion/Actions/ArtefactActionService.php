@@ -206,6 +206,16 @@ class ArtefactActionService
             {
                 throw new GameException('You must have at least ' . number_format($hostileDominionsInRange->count()) . ' hostile ' . str_plural('dominion', $hostileDominionsInRange) . ' in range to be worthy of attacking the aegis. Fogged dominions and Barbarians do not count.');
             }
+
+            if(!$this->artefactCalculator->checkEnoughTicksHavePassedSinceMostRecentArtefactAttack($attacker))
+            {
+                throw new GameException('You can only perform one artefact attack per tick. Try again later.');
+            }
+
+            if(!$this->artefactCalculator->canAttackArtefacts($attacker))
+            {
+                throw new GameException('You cannot attack artefacts at this time.');
+            }
             
             foreach($attacker->race->resources as $resourceKey)
             {

@@ -467,6 +467,7 @@
                 <p>From this page, you can attack the aegis of other realms' artefacts.</p>
                 <p>To be worthy of attacking an artefact, you must have a certain number of hostile dominions in range. <span class="text-muted">Fogged dominions and Barbarians do not count.</span></p>
                 <p>You have <strong>{{ number_format($numberOfQualifyingDominionsInRange) }} {{ str_plural('dominion', $numberOfQualifyingDominionsInRange) }}</strong> out of the required <strong>{{ number_format($minimumNumberOfDominionsInRangeRequired) }}</strong> in range.</p>
+                <p>You can only perform one artefact attack per tick.</p>
                 @if($artefactCalculator->canAttackArtefacts($selectedDominion))
                     <p class="text-success">You meet the requirements to attack artefacts.</p>
                     <p>Begin by selecting which artefact you want to target.</p>
