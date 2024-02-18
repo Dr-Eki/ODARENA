@@ -1705,4 +1705,25 @@ class UnitHelper
         return false;
     }
 
+    public function getUnitKey($needle): string
+    {
+        $lookup = [
+            'spies' => 'military_spies',
+            'wizards' => 'military_wizards',
+            'archmages' => 'military_archmages',
+            'peasants' => 'peasants',
+            'draftees' => 'military_draftees',
+        ];
+    
+        if (is_numeric($needle)) {
+            return 'military_unit' . $needle;
+        }
+    
+        if (preg_match('/^unit[1-9]0?$/', $needle)) {
+            return str_replace('unit', 'military_unit', $needle);
+        }
+    
+        return $lookup[$needle] ?? $needle;
+    }
+
 }

@@ -35,6 +35,7 @@ use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\ResourceConversionCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\TerrainCalculator;
+use OpenDominion\Calculators\Dominion\UnitReturnCalculator;
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 
 use OpenDominion\Services\NotificationService;
@@ -118,6 +119,7 @@ class ArtefactActionService
     private $terrainCalculator;
     private $terrainService;
     private $trainingCalculator;
+    private $unitReturnCalculator;
     private $unitHelper;
 
     public function __construct()
@@ -149,6 +151,7 @@ class ArtefactActionService
         $this->terrainCalculator = app(TerrainCalculator::class);
         $this->terrainService = app(TerrainService::class);
         $this->trainingCalculator = app(TrainingCalculator::class);
+        $this->unitReturnCalculator = app(UnitReturnCalculator::class);
         $this->raceHelper = app(RaceHelper::class);
         $this->unitHelper = app(UnitHelper::class);
     }
@@ -441,7 +444,7 @@ class ArtefactActionService
             ]);
 
             # Debug before saving:
-            #ldd($this->attack); dd('Safety!');
+            #ldd($this->attack); #dd('Safety!');
 
             $attacker->save(['event' => HistoryService::EVENT_ACTION_ATTACK_ARTEFACT]);
         });
@@ -708,7 +711,7 @@ class ArtefactActionService
 
     }
 
-    # Unit Return 2.0
+    # Unit Return 3.0
     protected function handleReturningUnits(Dominion $attacker, array $units, array $convertedUnits): void
     {
         # If instant return
@@ -719,298 +722,36 @@ class ArtefactActionService
         # Normal return
         else
         {
-            $returningUnits = [
-                'military_spies' => array_fill(1, 12, 0),
-                'military_wizards' => array_fill(1, 12, 0),
-                'military_archmages' => array_fill(1, 12, 0),
-            ];
+            $returningUnits = $this->unitReturnCalculator->getReturningUnitsArray($attacker, [
+                'survivors' => $units, 
+                'converted' => !empty($convertedUnits) ? $convertedUnits : null
+            ]);
 
-            foreach($attacker->race->units as $unit)
-            {
-                $returningUnits['military_unit' . $unit->slot] = array_fill(1, 12, 0);
-            }
+            $this->attack['attacker']['units_returning'] = $returningUnits;
 
-            # Check for instant_return
-            for ($slot = 1; $slot <= $attacker->race->units->count(); $slot++)
+            foreach($returningUnits as $slot => $amount)
             {
-                if($attacker->race->getUnitPerkValueForUnitSlot($slot, 'instant_return'))
+                $unit = $attacker->race->units->firstWhere('slot', $slot);
+
+                $ticks = $this->unitReturnCalculator->getUnitReturnTicks($attacker, $unit, 'invasion');
+
+                $unitKey = $this->unitHelper->getUnitKey($slot);
+    
+                if($amount > 0)
                 {
-                    # This removes the unit from the $returningUnits array, thereby ensuring it is neither removed nor queued.
-                    unset($returningUnits['military_unit' . $slot]);
+
+                    $attacker->{$unitKey} -= $amount;
+
+                    $this->queueService->queueResources(
+                        'invasion',
+                        $attacker,
+                        [$unitKey => $amount],
+                        $ticks
+                    );
                 }
             }
 
-            $someWinIntoUnits = array_fill(1, $attacker->race->units->count(), 0);
-
-            foreach($returningUnits as $unitKey => $values)
-            {
-                $unitType = str_replace('military_', '', $unitKey);
-                $slot = str_replace('unit', '', $unitType);
-                $amountReturning = 0;
-
-                $returningUnitKey = $unitKey;
-
-                if(in_array($slot, [1,2,3,4,5,6,7,8,9,10]))
-                {
-
-                    # Remove the units from attacker and add them to $amountReturning.
-                    if (array_key_exists($slot, $units))
-                    {
-                        $attacker->$unitKey -= $units[$slot];
-                        $amountReturning += $units[$slot];
-                    }
-
-                    # Check if we have conversions for this unit type/slot
-                    if (array_key_exists($slot, $convertedUnits))
-                    {
-                        $amountReturning += $convertedUnits[$slot];
-                    }
-
-                    # Check if we have some winning into
-                    if (array_key_exists($slot, $someWinIntoUnits))
-                    {
-                        $amountReturning += $someWinIntoUnits[$slot];
-                    }
-
-                    # Default return time is 12 ticks.
-                    $ticks = $this->getUnitReturnTicksForSlot($attacker, $slot);
-
-                    # Default all returners to tick 12
-                    $returningUnits[$returningUnitKey][$ticks] += $amountReturning;
-
-                    # Look for dies_into and variations amongst the dead attacking units.
-                    if(isset($this->attack['attacker']['units_lost'][$slot]))
-                    {
-                        $casualties = $this->attack['attacker']['units_lost'][$slot];
-
-                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into'))
-                        {
-                            # Which unit do they die into?
-                            $newUnitSlot = $diesIntoPerk[0];
-                            $newUnitKey = "military_unit{$newUnitSlot}";
-                            $newUnitSlotReturnTime = $this->getUnitReturnTicksForSlot($attacker, $newUnitSlot);
-
-                            $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += $casualties;
-                        }
-
-                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_wizard'))
-                        {
-                            # Which unit do they die into?
-                            $newUnitKey = "military_wizards";
-                            $newUnitSlotReturnTime = 12;
-
-                            $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += $casualties;
-                        }
-
-                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_spy'))
-                        {
-                            # Which unit do they die into?
-                            $newUnitKey = "military_spies";
-                            $newUnitSlotReturnTime = 12;
-
-                            $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += $casualties;
-                        }
-
-                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_archmage'))
-                        {
-                            # Which unit do they die into?
-                            $newUnitKey = "military_archmages";
-                            $newUnitSlotReturnTime = 12;
-
-                            $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += $casualties;
-                        }
-
-                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_on_offense'))
-                        {
-                            # Which unit do they die into?
-                            $newUnitSlot = $diesIntoPerk[0];
-                            $newUnitKey = "military_unit{$newUnitSlot}";
-                            $newUnitSlotReturnTime = $this->getUnitReturnTicksForSlot($attacker, $newUnitSlot);
-
-                            $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += $casualties;
-                        }
-
-                        if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple'))
-                        {
-                            # Which unit do they die into?
-                            $newUnitSlot = $diesIntoMultiplePerk[0];
-                            $newUnitAmount = (float)$diesIntoMultiplePerk[1];
-                            $newUnitKey = "military_unit{$newUnitSlot}";
-                            $newUnitSlotReturnTime = $this->getUnitReturnTicksForSlot($attacker, $newUnitSlot);
-
-                            $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += floor($casualties * $newUnitAmount);
-                        }
-
-                        if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple_on_offense'))
-                        {
-                            # Which unit do they die into?
-                            $newUnitSlot = $diesIntoMultiplePerk[0];
-                            $newUnitAmount = (float)$diesIntoMultiplePerk[1];
-                            $newUnitKey = "military_unit{$newUnitSlot}";
-                            $newUnitSlotReturnTime = $this->getUnitReturnTicksForSlot($attacker, $newUnitSlot);
-
-                            $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += floor($casualties * $newUnitAmount);
-                        }
-
-                        # Check for faster_return_from_terrain
-                        if($fasterReturnFromTerrainPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_from_terrain'))
-                        {
-
-                            $perChunk = $fasterReturnFromTerrainPerk[0];
-                            $chunkSize = $fasterReturnFromTerrainPerk[1];
-                            $terrainKey = $fasterReturnFromTerrainPerk[2];
-                            $maxPerk = $fasterReturnFromTerrainPerk[3];
-
-                            $ticksFaster = ($attacker->{'terrain_' . $terrainKey} / $attacker->land) * 100 / $chunkSize * $perChunk;
-                            $ticksFaster = min($ticksFaster, $maxPerk);
-                            $ticksFaster = floor($ticksFaster);
-
-                            $fasterReturningTicks = min(max(1, ($ticks - $ticksFaster)), 12);
-
-                            # How many of $slot should return faster?
-                            $unitsWithFasterReturnTime = $amountReturning;
-
-                            $returningUnits[$unitKey][$fasterReturningTicks] += $unitsWithFasterReturnTime;
-                            $returningUnits[$unitKey][$ticks] -= $unitsWithFasterReturnTime;
-                        }
-
-                        # Check for faster_return_from_time
-                        if($fasterReturnFromTimePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_from_time'))
-                        {
-
-                            $hourFrom = $fasterReturnFromTimePerk[0];
-                            $hourTo = $fasterReturnFromTimePerk[1];
-                            if (
-                                (($hourFrom < $hourTo) and (now()->hour >= $hourFrom and now()->hour < $hourTo)) or
-                                (($hourFrom > $hourTo) and (now()->hour >= $hourFrom or now()->hour < $hourTo))
-                            )
-                            {
-                                $ticksFaster = (int)$fasterReturnFromTimePerk[2];
-                            }
-                            else
-                            {
-                                $ticksFaster = 0;
-                            }
-
-                            $fasterReturningTicks = min(max(1, ($ticks - $ticksFaster)), 12);
-
-                            # How many of $slot should return faster?
-                            $unitsWithFasterReturnTime = $amountReturning;
-
-                            $returningUnits[$unitKey][$fasterReturningTicks] += $unitsWithFasterReturnTime;
-                            $returningUnits[$unitKey][$ticks] -= $unitsWithFasterReturnTime;
-                        }
-
-                        # Check for faster_return from buildings
-                        if($buildingFasterReturnPerk = $attacker->getBuildingPerkMultiplier('faster_return'))
-                        {
-                            $fasterReturn = min(max(0, $buildingFasterReturnPerk), 1);
-                            $normalReturn = 1 - $fasterReturn;
-                            $ticksFaster = 6;
-
-                            $fasterReturningTicks = min(max(1, ($ticks - $ticksFaster), 12));
-
-                            $unitsWithFasterReturnTime = round($amountReturning * $buildingFasterReturnPerk);
-                            $unitsWithRegularReturnTime = round($amountReturning - $amountWithFasterReturn);
-
-                            $returningUnits[$unitKey][$fasterReturningTicks] += $unitsWithFasterReturnTime;
-                            $returningUnits[$unitKey][$ticks] -= $unitsWithFasterReturnTime;
-                        }
-
-                        # Check for faster_return_units and faster_return_units_increasing from buildings
-                        if($buildingFasterReturnPerk = $attacker->getBuildingPerkValue('faster_returning_units') or $buildingFasterReturnPerk = $attacker->getBuildingPerkValue('faster_returning_units_increasing'))
-                        {
-                            $fasterReturn = min(max(0, $buildingFasterReturnPerk), 1);
-                            $normalReturn = 1 - $fasterReturn;
-                            $ticksFaster = 4;
-
-                            $fasterReturningTicks = min(max(1, ($ticks - $ticksFaster)), 12);
-
-                            $unitsWithFasterReturnTime = min($buildingFasterReturnPerk, $amountReturning);
-                            $unitsWithRegularReturnTime = round($amountReturning - $unitsWithFasterReturnTime);
-
-                            $returningUnits[$unitKey][$fasterReturningTicks] += $unitsWithFasterReturnTime;
-                            $returningUnits[$unitKey][$ticks] -= $unitsWithFasterReturnTime;
-                        }
-                    }
-                }
-            }
-
-            # Check for faster return from pairing perks
-            foreach($returningUnits as $unitKey => $unitKeyTicks)
-            {
-                $unitType = str_replace('military_', '', $unitKey);
-                $slot = str_replace('unit', '', $unitType);
-                $amountReturning = 0;
-
-                $returningUnitKey = $unitKey;
-
-                if(in_array($slot, [1,2,3,4,5,6,7,8,9,10]))
-                {
-                    $amountReturning = array_sum($returningUnits[$unitKey]);
-
-                    # Check for faster_return_if_paired
-                    if($fasterReturnIfPairedPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_if_paired'))
-                    {
-                        $pairedUnitSlot = (int)$fasterReturnIfPairedPerk[0];
-                        $pairedUnitKey = 'military_unit'.$pairedUnitSlot;
-                        $ticksFaster = (int)$fasterReturnIfPairedPerk[1];
-                        $pairedUnitKeyReturning = array_sum($returningUnits[$pairedUnitKey]);
-
-                        # Determine new return speed
-                        $fasterReturningTicks = min(max($ticks - $ticksFaster, 1), 12);
-
-                        # How many of $slot should return faster?
-                        $unitsWithFasterReturnTime = min($pairedUnitKeyReturning, $amountReturning);
-                        $unitsWithRegularReturnTime = max(0, $units[$slot] - $unitsWithFasterReturnTime);
-
-                        $returningUnits[$unitKey][$fasterReturningTicks] += $unitsWithFasterReturnTime;
-                        $returningUnits[$unitKey][$ticks] -= $unitsWithFasterReturnTime;
-                    }
-
-                    # Check for faster_return_if_paired_multiple
-                    if($fasterReturnIfPairedMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_if_paired_multiple'))
-                    {
-                        $pairedUnitSlot = (int)$fasterReturnIfPairedMultiplePerk[0];
-                        $pairedUnitKey = 'military_unit'.$pairedUnitSlot;
-                        $ticksFaster = (int)$fasterReturnIfPairedMultiplePerk[1];
-                        $unitChunkSize = (int)$fasterReturnIfPairedMultiplePerk[2];
-                        $pairedUnitKeyReturning = array_sum($returningUnits[$pairedUnitKey]);
-
-                        # Determine new return speed
-                        $fasterReturningTicks = min(max($ticks - $ticksFaster, 1), 12);
-
-                        # How many of $slot should return faster?
-                        $unitsWithFasterReturnTime = min($pairedUnitKeyReturning * $unitChunkSize, $amountReturning);
-                        $unitsWithRegularReturnTime = max(0, $units[$slot] - $unitsWithFasterReturnTime);
-
-                        $returningUnits[$unitKey][$fasterReturningTicks] += $unitsWithFasterReturnTime;
-                        $returningUnits[$unitKey][$ticks] -= $unitsWithFasterReturnTime;
-                    }
-
-                }
-            }
-
-            $this->attack['attacker']['units_returning_raw'] = $returningUnits;
-
-            foreach($returningUnits as $unitKey => $unitKeyTicks)
-            {
-                foreach($unitKeyTicks as $unitTypeTick => $amount)
-                {
-                    if($amount > 0)
-                    {
-                        $this->queueService->queueResources(
-                            'artefactattack',
-                            $attacker,
-                            [$unitKey => $amount],
-                            $unitTypeTick
-                        );
-                    }
-                }
-
-                $slot = str_replace('military_unit', '', $unitKey);
-                $this->attack['attacker']['units_returning'][$slot] = array_sum($unitKeyTicks);
-            }
+            $attacker->save();
         }
     }
 

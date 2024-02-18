@@ -33,7 +33,6 @@ class UnitReturnCalculator
             throw new \InvalidArgumentException('Invalid eventType for getUnitReturnTicks()');
         }
 
-
         $baseReturnTicks = $this->getUnitBaseReturnTicks($dominion, $unit, $eventType);
         $returnTicksMultiplier = $this->getUnitReturnTicksMultiplier($dominion);
 
@@ -154,23 +153,11 @@ class UnitReturnCalculator
 
         foreach ($units as $unitsGroup)
         {
-            foreach($unitsGroup as $unitSlot => $amount)
+            if(is_array($unitsGroup))
             {
-                if(is_numeric($unitSlot))
+                foreach($unitsGroup as $unitSlot => $amount)
                 {
-                    $unit = $dominion->race->units->where('slot', $unitSlot)->first();
-
-                    $returningUnits[] = [
-                        'slot' => $unitSlot,
-                        'return_ticks' => $this->getUnitReturnTicks($dominion, $unit),
-                    ];    
-                }
-                elseif(in_array($unitSlot, ['spies', 'wizards', 'archmages', 'draftees', 'peasants']))
-                {
-                    $returningUnits[] = [
-                        'unit' => $unitSlot,
-                        'return_ticks' => config('game.defaults.unit_return_ticks'),
-                    ];   
+                    $returningUnits[$unitSlot] = isset($returningUnits[$unitSlot]) ? $returningUnits[$unitSlot] + $amount : $amount;
                 }
             }
         }
