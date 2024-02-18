@@ -346,15 +346,7 @@
                                 @foreach($improvement->perks as $perk)
                                     @php
                                         $improvementPerkMax = $dominion->extractImprovementPerkValues($perk->pivot->value)[0];
-                                        $improvementPerkMaxMultiplier = 1;
-                                        $improvementPerkMaxMultiplier += $dominion->getBuildingPerkMultiplier('improvements');
-                                        $improvementPerkMaxMultiplier += $dominion->getBuildingPerkMultiplier('improvements_capped')
-                                        $improvementPerkMaxMultiplier += $dominion->getBuildingPerkMultiplier('quadratic_improvements_mod');
-                                        $improvementPerkMaxMultiplier += $dominion->getAdvancementPerkMultiplier('improvements');
-                                        $improvementPerkMaxMultiplier += $dominion->getSpellPerkMultiplier('improvements');
-                                        $improvementPerkMaxMultiplier += $dominion->race->getPerkMultiplier('improvements_max');
-
-                                        $improvementPerkMax *= $improvementPerkMaxMultiplier;
+                                        $improvementPerkMax *= $dominion->getImprovementsMod();
                                         
                                         $improvementPerkCoefficient = $dominion->extractImprovementPerkValues($perk->pivot->value)[1];
 

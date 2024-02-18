@@ -35,8 +35,9 @@ class UnitReturnCalculator
 
     public function getUnitBaseReturnTicks(Dominion $dominion, Unit $unit, string $eventType = 'invasion'): int
     {
-        $ticks = config('game.defaults.unit_training_ticks');
+        $ticks = config('game.defaults.unit_return_ticks');
 
+        # Faster return perks
         $ticks -= $unit->getPerkValue('faster_return');
         $ticks -= $dominion->getSpellPerkValue('faster_return');
         $ticks -= $dominion->getAdvancementPerkValue('faster_return');
@@ -53,8 +54,17 @@ class UnitReturnCalculator
         $ticks -= $this->getFasterReturnFromTerrainPerk($dominion, $unit);
         $ticks -= $this->getFasterReturnFromTimePerk($dominion, $unit);
 
+        # Slower return perks
+        $ticks += $dominion->getSpellPerkValue('slower_return_on_' . $eventType);
+        $ticks += $dominion->realm->getArtefactPerkValue('slower_return_on_' . $eventType);
+
+        $ticks += $dominion->getSpellPerkValue('slower_return');
+        $ticks += $dominion->realm->getArtefactPerkValue('slower_return');
+
+        # Minimum 1 tick
         $ticks = (int)floor($ticks);
         $ticks = max(1, $ticks);
+        $ticks = min(config('game.defaults.unit_return_ticks'), $ticks);
 
         return $ticks;
 
@@ -75,7 +85,6 @@ class UnitReturnCalculator
     {
         if($fasterReturnFromTerrainPerk = $unit->getPerkValue('faster_return_from_terrain'))
         {
-
             $perChunk = $fasterReturnFromTerrainPerk[0];
             $chunkSize = $fasterReturnFromTerrainPerk[1];
             $terrainKey = $fasterReturnFromTerrainPerk[2];
