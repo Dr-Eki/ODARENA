@@ -298,169 +298,172 @@ class BarbarianService
             if($invadePlayer)
             {
                 $logString .= "\t\t** " . $dominion->name . ' is invading ' . $target->name . "! ⚔️\n";
-                $invasionActionService = app(InvadeActionService::class);
-                $invasionActionService->invade($dominion, $target, $units);
+                app(InvadeActionService::class)->invade($dominion, $target, $units);
             }
             else
             {
-                $landGainRatio = rand($this->barbarianCalculator->getSetting('LAND_GAIN_MIN'), $this->barbarianCalculator->getSetting('LAND_GAIN_MAX'))/1000;
-
-                $logString .= "\t\t* Invasion:\n";
-                $logString .= "\t\t**Land gain ratio: " . number_format($landGainRatio*100,2) . "% \n";
-
-                # Calculate the amount of acres to grow.
-                $landGained = intval($dominion->land * $landGainRatio);
-                $logString .= "\t\t**Land to gain: " . number_format($landGained). "\n";
-
-                # After 384 ticks into the round, Barbarian will abort invasion if the land gained would put the Barbarian within 60% of the largest dominion of the round
-                if($dominion->round->ticks > 384 and !(env('APP_ENV') == 'local'))
+                DB::transaction(function () use ($dominion, $logString)
                 {
-                    $largestDominion = $dominion->round->getNthLargestDominion(1);
+                    $landGainRatio = rand($this->barbarianCalculator->getSetting('LAND_GAIN_MIN'), $this->barbarianCalculator->getSetting('LAND_GAIN_MAX'))/1000;
 
-                    if(($dominion->land + $landGained) >= ($largestDominion->land * 0.6))
+                    $logString .= "\t\t* Invasion:\n";
+                    $logString .= "\t\t**Land gain ratio: " . number_format($landGainRatio*100,2) . "% \n";
+
+                    # Calculate the amount of acres to grow.
+                    $landGained = intval($dominion->land * $landGainRatio);
+                    $logString .= "\t\t**Land to gain: " . number_format($landGained). "\n";
+
+                    # After 384 ticks into the round, Barbarian will abort invasion if the land gained would put the Barbarian within 60% of the largest dominion of the round
+                    if($dominion->round->ticks > 384 and !(env('APP_ENV') == 'local'))
                     {
-                        $logString .= "\t\t**Land to gain would put Barbarian within 60% of largest dominion. Aborting invasion.\n";
-                        Log::info($logString);
-                        return;
+                        $largestDominion = $dominion->round->getNthLargestDominion(1);
+
+                        if(($dominion->land + $landGained) >= ($largestDominion->land * 0.6))
+                        {
+                            $logString .= "\t\t**Land to gain would put Barbarian within 60% of largest dominion. Aborting invasion.\n";
+                            Log::info($logString);
+                            return;
+                        }
                     }
-                }
 
-                # Add the land gained to the $dominion.
-                $this->statsService->updateStat($dominion, 'land_conquered', $landGained);
-                $this->statsService->updateStat($dominion, 'invasion_victories', 1);
+                    # Add the land gained to the $dominion.
+                    $this->statsService->updateStat($dominion, 'land_conquered', $landGained);
+                    $this->statsService->updateStat($dominion, 'invasion_victories', 1);
 
-                $sentRatio = rand($this->barbarianCalculator->getSetting('SENT_RATIO_MIN'), $this->barbarianCalculator->getSetting('SENT_RATIO_MAX'))/1000;
+                    $sentRatio = rand($this->barbarianCalculator->getSetting('SENT_RATIO_MIN'), $this->barbarianCalculator->getSetting('SENT_RATIO_MAX'))/1000;
 
-                $casualtiesRatio = rand($this->barbarianCalculator->getSetting('CASUALTIES_MIN'), $this->barbarianCalculator->getSetting('CASUALTIES_MAX'))/1000;
+                    $casualtiesRatio = rand($this->barbarianCalculator->getSetting('CASUALTIES_MIN'), $this->barbarianCalculator->getSetting('CASUALTIES_MAX'))/1000;
 
-                $logString .= "\t\t**Sent ratio: " . number_format($sentRatio*100,2). "%\n";
-                $logString .= "\t\t**Casualties ratio: " . number_format($casualtiesRatio*100,2). "%\n";
+                    $logString .= "\t\t**Sent ratio: " . number_format($sentRatio*100,2). "%\n";
+                    $logString .= "\t\t**Casualties ratio: " . number_format($casualtiesRatio*100,2). "%\n";
 
-                # Calculate how many Unit1 and Unit4 are sent.
-                $unitsSent['military_unit1'] = $dominion->military_unit1 * $sentRatio;
-                $unitsSent['military_unit4'] = $dominion->military_unit4 * $sentRatio;
+                    # Calculate how many Unit1 and Unit4 are sent.
+                    $unitsSent['military_unit1'] = $dominion->military_unit1 * $sentRatio;
+                    $unitsSent['military_unit4'] = $dominion->military_unit4 * $sentRatio;
 
-                # Remove the sent units from the dominion.
-                $dominion->military_unit1 -= $unitsSent['military_unit1'];
-                $dominion->military_unit4 -= $unitsSent['military_unit4'];
+                    # Remove the sent units from the dominion.
+                    $dominion->military_unit1 -= $unitsSent['military_unit1'];
+                    $dominion->military_unit4 -= $unitsSent['military_unit4'];
 
-                # Calculate losses by applying casualties ratio to units sent.
-                $unitsLost['military_unit1'] = $unitsSent['military_unit1'] * $casualtiesRatio;
-                $unitsLost['military_unit4'] = $unitsSent['military_unit4'] * $casualtiesRatio;
+                    # Calculate losses by applying casualties ratio to units sent.
+                    $unitsLost['military_unit1'] = $unitsSent['military_unit1'] * $casualtiesRatio;
+                    $unitsLost['military_unit4'] = $unitsSent['military_unit4'] * $casualtiesRatio;
 
-                # Calculate amount of returning units.
-                $unitsReturning['military_unit1'] = intval(max($unitsSent['military_unit1'] - $unitsLost['military_unit1'],0));
-                $unitsReturning['military_unit4'] = intval(max($unitsSent['military_unit4'] - $unitsLost['military_unit4'],0));
+                    # Calculate amount of returning units.
+                    $unitsReturning['military_unit1'] = intval(max($unitsSent['military_unit1'] - $unitsLost['military_unit1'],0));
+                    $unitsReturning['military_unit4'] = intval(max($unitsSent['military_unit4'] - $unitsLost['military_unit4'],0));
 
-                $terrainGained = $this->terrainCalculator->getTerrainDiscovered($dominion, $landGained);
+                    $terrainGained = $this->terrainCalculator->getTerrainDiscovered($dominion, $landGained);
 
-                # Queue the incoming land.
-                $this->queueService->queueResources(
-                    'invasion',
-                    $dominion,
-                    ['land' => $landGained]
-                );
-
-                foreach($terrainGained as $terrainKey => $amount)
-                {
-                    # Queue the incoming terrain.
+                    # Queue the incoming land.
                     $this->queueService->queueResources(
                         'invasion',
                         $dominion,
-                        [('terrain_'.$terrainKey) => $amount]
+                        ['land' => $landGained]
                     );
-                }
+
+                    foreach($terrainGained as $terrainKey => $amount)
+                    {
+                        # Queue the incoming terrain.
+                        $this->queueService->queueResources(
+                            'invasion',
+                            $dominion,
+                            [('terrain_'.$terrainKey) => $amount]
+                        );
+                    }
 
 
-                # Queue the returning units.
-                $this->queueService->queueResources(
-                    'invasion',
-                    $dominion,
-                    $unitsReturning
-                );
+                    # Queue the returning units.
+                    $this->queueService->queueResources(
+                        'invasion',
+                        $dominion,
+                        $unitsReturning
+                    );
 
-                $invasionTypes = [
-                    'attacked', 
-                    'raided', 
-                    'pillaged', 
-                    'ransacked', 
-                    'looted', 
-                    'devastated', 
-                    'plundered', 
-                    'sacked', 
-                    'invaded', 
-                    'laid waste to',
-                    'besieged',
-                    'overran',
-                    'stormed',
-                    'conquered',
-                    'overwhelmed',
-                    'assaulted',
-                    'breached',
-                    'overpowered',
-                    'subdued',
-                    'infested',
-                    'infiltrated',
-                    'seized'
-                ];
+                    $invasionTypes = [
+                        'attacked', 
+                        'raided', 
+                        'pillaged', 
+                        'ransacked', 
+                        'looted', 
+                        'devastated', 
+                        'plundered', 
+                        'sacked', 
+                        'invaded', 
+                        'laid waste to',
+                        'besieged',
+                        'overran',
+                        'stormed',
+                        'conquered',
+                        'overwhelmed',
+                        'assaulted',
+                        'breached',
+                        'overpowered',
+                        'subdued',
+                        'infested',
+                        'infiltrated',
+                        'seized'
+                    ];
+                    
+                    $invasionTargets = [
+                        'settlement', 
+                        'village', 
+                        'town', 
+                        'hamlet', 
+                        'plot of unclaimed land', 
+                        'community', 
+                        'trading hub', 
+                        'merchant outpost', 
+                        'camp',
+                        'outpost',
+                        'farmstead',
+                        'hamlet',
+                        'cottage',
+                        'thorp',
+                        'croft',
+                        'shanty',
+                        'cabana',
+                        'huts',
+                    ];
+                    
+
+                    $bodies = array_sum($unitsLost) / 10 + $landGained;
+                    $bodies = (int)floor($bodies);
                 
-                $invasionTargets = [
-                    'settlement', 
-                    'village', 
-                    'town', 
-                    'hamlet', 
-                    'plot of unclaimed land', 
-                    'community', 
-                    'trading hub', 
-                    'merchant outpost', 
-                    'camp',
-                    'outpost',
-                    'farmstead',
-                    'hamlet',
-                    'cottage',
-                    'thorp',
-                    'croft',
-                    'shanty',
-                    'cabana',
-                    'huts',
-                ];
-                
-
-                $bodies = array_sum($unitsLost) / 10 + $landGained;
-                $bodies = (int)floor($bodies);
-               
-                $data = [
-                    'type' => $invasionTypes[rand(0,count($invasionTypes)-1)],
-                    'target' => $invasionTargets[rand(0,count($invasionTargets)-1)],
-                    'land' => $landGained,
-                    'result' =>
-                        [
-                        'bodies' =>
+                    $data = [
+                        'type' => $invasionTypes[rand(0,count($invasionTypes)-1)],
+                        'target' => $invasionTargets[rand(0,count($invasionTargets)-1)],
+                        'land' => $landGained,
+                        'result' =>
                             [
-                            'fallen' => $bodies,
-                            'available' => $bodies,
-                            'desecrated' => 0
+                            'bodies' =>
+                                [
+                                'fallen' => $bodies,
+                                'available' => $bodies,
+                                'desecrated' => 0
+                                ],
                             ],
-                        ],
-                  ];
+                    ];
 
-                # Update RoundResources
-                if($bodies > 0)
-                {
-                    $this->resourceService->updateRoundResources($dominion->round, ['body' => $bodies]);
-                }
+                    # Update RoundResources
+                    if($bodies > 0)
+                    {
+                        $this->resourceService->updateRoundResources($dominion->round, ['body' => $bodies]);
+                    }
 
-                $barbarianInvasionEvent = GameEvent::create([
-                    'round_id' => $dominion->round_id,
-                    'source_type' => Dominion::class,
-                    'source_id' => $dominion->id,
-                    'target_type' => Realm::class,
-                    'target_id' => $dominion->realm_id,
-                    'type' => 'barbarian_invasion',
-                    'data' => $data,
-                    'tick' => $dominion->round->ticks
-                ]);
-                $dominion->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
+                    GameEvent::create([
+                        'round_id' => $dominion->round_id,
+                        'source_type' => Dominion::class,
+                        'source_id' => $dominion->id,
+                        'target_type' => Realm::class,
+                        'target_id' => $dominion->realm_id,
+                        'type' => 'barbarian_invasion',
+                        'data' => $data,
+                        'tick' => $dominion->round->ticks
+                    ]);
+                    $dominion->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
+
+                });
             }
 
         }
