@@ -352,7 +352,54 @@
                     <h3 class="box-title"><i class="ra ra-castle"></i> Realm Artefacts</h3>
                 </div>
                 <div class="box-body">
-                    <div class="box box-primary table-responsive" id="spells-cast">
+                    @foreach($realmArtefacts as $realmArtefact)
+                        @php
+                            $realmArtefactPowerRatio = $realmArtefact->power / $realmArtefact->max_power;
+
+                            if($realmArtefactPowerRatio < 0.10)
+                            {
+                                $powerColor = 'danger';
+                            }
+                            elseif($realmArtefactPowerRatio < 0.65)
+                            {
+                                $powerColor = 'warning';
+                            }
+                            elseif($realmArtefactPowerRatio < 1)
+                            {
+                                $powerColor = 'info';
+                            }
+                            else
+                            {
+                                $powerColor = 'success';
+                            }
+                        @endphp
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="col-sm-12 col-md-4">
+                                    <strong>{{ $realmArtefact->artefact->name }}</strong><br>
+                                    <small class="text-muted"><i>{{ $realmArtefact->artefact->description }}</i></small>
+                                </div>
+                                <div class="col-sm-12 col-md-2">
+                                    <span 
+                                        @if($realmArtefactPowerRatio < 1)
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="<span class='text-muted'>Restoration:</span>&nbsp;{{ number_format($artefactCalculator->getAegisRestoration($realmArtefact)) }}"
+                                        @endif
+                                        class="label label-{{ $powerColor }}">
+                                            {{ number_format($realmArtefact->power) }} / {{ number_format($realmArtefact->max_power) }}
+                                    </span>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <p>
+                                        {!! generate_sentence_from_array($artefactHelper->getArtefactPerksString($realmArtefact->artefact)) !!}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    {{-- 
+                    <div class="table-responsive" id="spells-cast">
                         <table class="table table-striped table-hover" id="spells-cast-table">
                             <colgroup>
                                 <col>
@@ -415,6 +462,7 @@
                             </tbody>
                         </table>
                     </div>
+                    --}}
                 </div>
             </div>
         </div>
