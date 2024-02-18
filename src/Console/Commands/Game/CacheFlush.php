@@ -13,7 +13,7 @@ use OpenDominion\Models\Dominion;
 class GenerateQuickstartCommand extends Command implements CommandInterface
 {
     /** @var string The name and signature of the console command. */
-    protected $signature = 'game:flush:cache';
+    protected $signature = 'game:cache:flush';
 
     /** @var string The console command description. */
     protected $description = 'Flush all game caches';
@@ -33,8 +33,15 @@ class GenerateQuickstartCommand extends Command implements CommandInterface
 
     public function handle(): void
     {
-        Cache::flush();
-        $this->info('Game caches flushed');
+        $this->info('Flushing game cache...');
+        if(Cache::flush())
+        {
+            $this->info('Game caches flushed');
+        }
+        else
+        {
+            $this->error('Failed to flush game caches');
+        }
     }
 
 
