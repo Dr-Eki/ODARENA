@@ -733,7 +733,7 @@ class ArtefactActionService
             {
                 $unit = $attacker->race->units->firstWhere('slot', $slot);
 
-                $ticks = $this->unitReturnCalculator->getUnitReturnTicks($attacker, $unit, 'invasion');
+                $ticks = $this->unitReturnCalculator->getUnitReturnTicks($attacker, $unit, 'artefactattack');
 
                 $unitKey = $this->unitHelper->getUnitKey($slot);
     
@@ -743,7 +743,7 @@ class ArtefactActionService
                     $attacker->{$unitKey} -= $amount;
 
                     $this->queueService->queueResources(
-                        'invasion',
+                        'artefactattack',
                         $attacker,
                         [$unitKey => $amount],
                         $ticks
