@@ -1,7 +1,7 @@
 <?php
 
 namespace OpenDominion\Calculators\Dominion;
-
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 use OpenDominion\Models\Dominion;
@@ -25,14 +25,17 @@ class UnitReturnCalculator
         $this->unitHelper = app()->make(UnitHelper::class);
     }
  
-    public function getUnitReturnTime(Dominion $dominion, Unit $unit, $eventType = 'invasion', array $units = []): int
+    public function getUnitReturnTicks(Dominion $dominion, Unit $unit, $eventType = 'invasion', array $units = []): int
     {
-        return max((int)floor($this->getUnitBaseReturnTime($dominion, $unit, $eventType) * $this->getUnitReturnTimeMultiplier($dominion, $unit, $eventType, $units)), 1);
+        $baseReturnTicks = $this->getUnitBaseReturnTicks($dominion, $unit, $eventType);
+        $returnTicksMultiplier = $this->getUnitReturnTicksMultiplier($dominion);
+
+        return max((int)floor($baseReturnTicks * $returnTicksMultiplier), 1);
     }
 
-    public function getUnitBaseReturnTime(Dominion $dominion, Unit $unit, string $eventType = 'invasion'): int
+    public function getUnitBaseReturnTicks(Dominion $dominion, Unit $unit, string $eventType = 'invasion'): int
     {
-        $ticks = $unit->getPerkValue('return_time') ?? 12;
+        $ticks = config('game.defaults.unit_training_ticks');
 
         $ticks -= $unit->getPerkValue('faster_return');
         $ticks -= $dominion->getSpellPerkValue('faster_return');
@@ -57,7 +60,7 @@ class UnitReturnCalculator
 
     }
 
-    public function getUnitReturnTimeMultiplier(Dominion $dominion): float
+    public function getUnitReturnTicksMultiplier(Dominion $dominion): float
     {
         $multiplier = 1;
 
@@ -104,27 +107,81 @@ class UnitReturnCalculator
         return 0;
     }
 
-    public function getSlowestUnitReturnTime(Dominion $dominion, array $units): int
+    public function getSlowestUnitReturnTicks(Dominion $dominion, array $units): int
     {
         $returnTimes = [];
 
         foreach ($units as $unit) {
-            $returnTimes[] = $this->getUnitReturnTime($dominion, $unit);
+            $returnTimes[] = $this->getUnitReturnTicks($dominion, $unit);
         }
 
         return max($returnTimes);
     }
 
-    public function getFastestUnitReturnTime(Dominion $dominion, array $units): int
+    public function getFastestUnitReturnTicks(Dominion $dominion, array $units): int
     {
         $returnTimes = [];
 
         foreach ($units as $unit) {
-            $returnTimes[] = $this->getUnitReturnTime($dominion, $unit);
+            $returnTimes[] = $this->getUnitReturnTicks($dominion, $unit);
         }
 
         return min($returnTimes);
     }
 
+    public function getReturningUnitsArray(Dominion $dominion, array $units): array
+    {
+
+        $this->validateUnits($units);
+
+        $returningUnits = [];
+
+        foreach ($units as $unitsGroup)
+        {
+            foreach($unitsGroup as $unitSlot => $amount)
+            {
+                if(is_numeric($unitSlot))
+                {
+                    $unit = $dominion->race->units->where('slot', $unitSlot)->first();
+
+                    $returningUnits[] = [
+                        'slot' => $unitSlot,
+                        'return_ticks' => $this->getUnitReturnTicks($dominion, $unit),
+                    ];    
+                }
+                elseif(in_array($unitSlot, ['spies', 'wizards', 'archmages', 'draftees', 'peasants']))
+                {
+                    $returningUnits[] = [
+                        'unit' => $unitSlot,
+                        'return_ticks' => 12,
+                    ];   
+                }
+            }
+        }
+
+        return $returningUnits;
+    }
+
+    public function validateUnits(array $units): void
+    {
+        $validator = Validator::make($units, [
+            'survivors' => 'required|array',
+            'converted' => 'nullable|array',
+            'survivors.*' => 'integer|min:0',
+            'converted.*' => 'integer|min:0',
+        ]);
+    
+        $validator->sometimes(['survivors.spies', 'survivors.wizards', 'survivors.archmages', 'survivors.draftees', 'survivors.peasants'], 'required|integer|min:0', function ($input) {
+            return array_key_exists('spies', $input['survivors']) || array_key_exists('wizards', $input['survivors']) || array_key_exists('archmages', $input['survivors']) || array_key_exists('draftees', $input['survivors']) || array_key_exists('peasants', $input['survivors']);
+        });
+    
+        $validator->sometimes(['converted.spies', 'converted.wizards', 'converted.archmages', 'converted.draftees', 'converted.peasants'], 'nullable|integer|min:0', function ($input) {
+            return isset($input['converted']) && (array_key_exists('spies', $input['converted']) || array_key_exists('wizards', $input['converted']) || array_key_exists('archmages', $input['converted']) || array_key_exists('draftees', $input['converted']) || array_key_exists('peasants', $input['converted']));
+        });
+    
+        if ($validator->fails()) {
+            throw new \InvalidArgumentException($validator->errors()->first());
+        }
+    }
 
 }

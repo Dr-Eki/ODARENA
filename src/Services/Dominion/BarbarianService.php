@@ -101,46 +101,41 @@ class BarbarianService
         {
             return;
         }
-
-        $land = $dominion->land;
-
+    
         foreach($this->landHelper->getLandTypes() as $landType)
         {
-            $land += $this->queueService->getInvasionQueueTotalByResource($dominion, $landType);
+            $dominion->land += $this->queueService->getInvasionQueueTotalByResource($dominion, $landType);
         }
-
+    
         $units = [
             'military_unit1' => 0,
             'military_unit2' => 0,
             'military_unit3' => 0,
             'military_unit4' => 0,
         ];
-
+    
         $dpaDeltaPaid = $this->barbarianCalculator->getDpaDeltaPaid($dominion);
         $opaDeltaPaid = $this->barbarianCalculator->getOpaDeltaPaid($dominion);
-
+    
+        $specsRatio = rand($this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'), $this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'))/1000;
+        $elitesRatio = 1-$specsRatio;
+    
         if($dpaDeltaPaid > 0)
         {
-            $dpToTrain = $dpaDeltaPaid * $land * $this->barbarianCalculator->getSetting('DPA_OVERSHOT');
-
-            $specsRatio = rand($this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'), $this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'))/1000;
-            $elitesRatio = 1-$specsRatio;
-
+            $dpToTrain = $dpaDeltaPaid * $dominion->land * $this->barbarianCalculator->getSetting('DPA_OVERSHOT');
+    
             $units['military_unit2'] = ceil(($dpToTrain * $specsRatio) / $this->barbarianCalculator->getSetting('UNIT2_DP'));
             $units['military_unit3'] = ceil(($dpToTrain * $elitesRatio) / $this->barbarianCalculator->getSetting('UNIT3_DP'));
         }
-
+    
         if($opaDeltaPaid > 0)
         {
-            $opToTrain = $opaDeltaPaid * $land;
-
-            $specsRatio = rand($this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'), $this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'))/1000;
-            $elitesRatio = 1-$specsRatio;
-
+            $opToTrain = $opaDeltaPaid * $dominion->land;
+    
             $units['military_unit1'] = ceil(($opToTrain * $specsRatio) / $this->barbarianCalculator->getSetting('UNIT1_OP'));
             $units['military_unit4'] = ceil(($opToTrain * $elitesRatio) / $this->barbarianCalculator->getSetting('UNIT4_OP'));
         }
-
+    
         foreach($units as $unit => $amountToTrain)
         {
             if($amountToTrain > 0)
@@ -150,7 +145,6 @@ class BarbarianService
                 $this->queueService->queueResources('training', $dominion, $data, $ticks);
             }
         }
-
     }
 
     public function handleBarbarianInvasion(Dominion $dominion): void
@@ -504,90 +498,30 @@ class BarbarianService
 
     public function createBarbarian(Round $round): void
     {
-        # Get Barbarian users.
-        $barbarianUsers = DB::table('users')
-            ->where('users.email', 'like', 'barbarian%@odarena.com')
-            ->orWhere('users.email', 'like', 'barbarian%@odarena.local')
-            ->pluck('users.id')
+        $barbarianUsers = User::where('email', 'like', 'barbarian%@odarena.com')
+            ->orWhere('email', 'like', 'barbarian%@odarena.local')
+            ->whereDoesntHave('dominions', function ($query) use ($round) {
+                $query->where('round_id', $round->id);
+            })
+            ->pluck('id')
             ->toArray();
-
-        $currentBarbarians = DB::table('users')
-            ->join('dominions','dominions.user_id', 'users.id')
-            ->whereIn('users.id', $barbarianUsers)
-            ->where('dominions.round_id', '=' , $round->id)
-            ->pluck('users.id')
-            ->toArray();
-
-        $availableUsers = array_diff($barbarianUsers, $currentBarbarians);
-
-        if(!empty($availableUsers))
-        {
-            $barbarian = $availableUsers[array_rand($availableUsers, 1)];
-
-            $barbarianUser = User::findorfail($barbarian);
-
-            # Get Barbarian realm.
-            $realm = Realm::query()
-                ->where('alignment', '=' , 'npc')
-                ->where('round_id', '=' , $round->id)
-                ->first();
-
-            # Get Barbarian race.
-            $race = Race::query()
-                ->where('name', '=', 'Barbarian')
-                ->first();
-
-            # Get title.
-            $title = Title::query()
-                ->where('name', '=', 'Commander')
-                ->first();
-
+    
+        if (!empty($barbarianUsers)) {
+            $barbarianUserId = $barbarianUsers[array_rand($barbarianUsers, 1)];
+    
+            $barbarianUser = User::findOrFail($barbarianUserId);
+    
+            $realm = Realm::firstWhere([
+                ['alignment', '=', 'npc'],
+                ['round_id', '=', $round->id]
+            ]);
+    
+            $race = Race::firstWhere('name', '=', 'Barbarian');
+    
+            $title = Title::firstWhere('name', '=', 'Commander');
+   
             # Barbarian tribe names
-            $tribeTypes = [
-              'Crew',
-              'Gang',
-              'Tribe',
-              'Band',
-              'Rovers',
-              'Raiders',
-              'Ruffians',
-              'Roughnecks',
-              'Mongrels',
-              'Clan',
-              'Scofflaws',
-              'Mob',
-              'Scoundrels',
-              'Rascals',
-              'Outlaws',
-              'Savages',
-              'Vandals',
-              'Coterie',
-              'Muggers',
-              'Brutes',
-              'Pillagers',
-              'Thieves',
-              'Crooks',
-              'Junta',
-              'Bruisers',
-              'Guerrillas',
-              'Posse',
-              'Herd',
-              'Hooligans',
-              'Hoodlums',
-              'Rapscallions',
-              'Scallywags',
-              'Knaves',
-              'Scamps',
-              'Miscreants',
-              'Misfits',
-              'Good-For-Nothings',
-              'Murderers',
-              'Vagrants',
-              'Brigands',
-              'Wildlings',
-              'Cutthroats',
-              'Lowlifes',
-            ];
+            $tribeTypes = config('barbarian.tribeTypes');
 
             # Get ruler name.
             $rulerName = $barbarianUser->display_name;

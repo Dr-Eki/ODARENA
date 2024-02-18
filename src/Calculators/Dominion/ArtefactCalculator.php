@@ -166,7 +166,7 @@ class ArtefactCalculator
         #$dominionsCount -= $round->activeDominions()->where('race.key','barbarian')->count();
         #return max(2, round($dominionsCount * 0.10));
 
-        return 2;
+        return config('artefacts.minimum_hostile_dominions');
     }
 
     public function dominionHasAttackedArtefact(Dominion $dominion): bool
