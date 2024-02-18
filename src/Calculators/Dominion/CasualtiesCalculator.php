@@ -264,7 +264,7 @@ class CasualtiesCalculator
                 }
             }
 
-            if($mode == 'offense')
+            if($mode == 'offense' and !$isArtefactAttack)
             {
                 # PERK: immortal_on_victory
                 if ($dominion->race->getUnitPerkValueForUnitSlot($slot, 'immortal_on_victory') and $invasionData['result']['success'])
