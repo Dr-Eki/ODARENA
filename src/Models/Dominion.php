@@ -1800,6 +1800,7 @@ class Dominion extends AbstractModel
             $multiplier += $this->race->getPerkMultiplier('deity_power');
             $multiplier += $this->title->getPerkMultiplier('deity_power') * $this->getTitlePerkMultiplier();
             $multiplier += $this->getDecreePerkMultiplier('deity_power');
+            $multiplier += $this->realm->getDecreePerkMultiplier('deity_power_mod');
             
             $devotionDurationMultiplier = 1 + min($this->devotion->duration * 0.1 / 100, 1);
 
