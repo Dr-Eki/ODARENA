@@ -27,6 +27,13 @@ class UnitReturnCalculator
  
     public function getUnitReturnTicks(Dominion $dominion, Unit $unit, $eventType = 'invasion', array $units = []): int
     {
+
+        if(!in_array($eventType, ['invasion', 'artefactattack', 'expedition', 'stun', 'desecration', 'sabotage', 'theft']))
+        {
+            throw new \InvalidArgumentException('Invalid eventType for getUnitReturnTicks()');
+        }
+
+
         $baseReturnTicks = $this->getUnitBaseReturnTicks($dominion, $unit, $eventType);
         $returnTicksMultiplier = $this->getUnitReturnTicksMultiplier($dominion);
 
