@@ -7,10 +7,8 @@ use OpenDominion\Calculators\Dominion\CasualtiesCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Exceptions\GameException;
-use OpenDominion\Helpers\UnitHelper;
 use OpenDominion\Http\Requests\Dominion\Actions\InvadeActionRequest;
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\RealmArtefact;
 use OpenDominion\Services\Dominion\Actions\InvadeActionService;
 use OpenDominion\Services\Dominion\GovernmentService;
 use OpenDominion\Services\Dominion\ProtectionService;
@@ -20,7 +18,9 @@ use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
+use OpenDominion\Helpers\ArtefactHelper;
 use OpenDominion\Helpers\RaceHelper;
+use OpenDominion\Helpers\UnitHelper;
 
 class InvasionController extends AbstractDominionController
 {
@@ -47,6 +47,7 @@ class InvasionController extends AbstractDominionController
 
             'returningResources' => $returningResources,
 
+            'artefactHelper' => app(ArtefactHelper::class),
             'raceHelper' => app(RaceHelper::class),
             'unitHelper' => app(UnitHelper::class),
         ]);
