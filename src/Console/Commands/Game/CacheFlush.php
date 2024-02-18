@@ -18,26 +18,11 @@ class GenerateQuickstartCommand extends Command implements CommandInterface
     /** @var string The console command description. */
     protected $description = 'Flush all game caches';
 
-    /** @var GameEventService */
-    protected $quickstartService;
-
-    /**
-     * GameTickCommand constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->quickstartService = app(QuickstartService::class);
-    }
-
     public function handle(): void
     {
         $this->info('Flushing game cache...');
 
         $cacheFlush = Cache::flush();
-
-        dump($cacheFlush);
 
         if($cacheFlush)
         {
@@ -48,6 +33,4 @@ class GenerateQuickstartCommand extends Command implements CommandInterface
             $this->error('Failed to flush game caches');
         }
     }
-
-
 }

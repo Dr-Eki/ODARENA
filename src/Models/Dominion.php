@@ -710,8 +710,8 @@ class Dominion extends AbstractModel
      */
     public function getTechPerkValue(string $perkKey): float
     {
-        return Cache::remember("dominion.{$this->id}.techPerkValue.{$perkKey}", 5, function () use ($perkKey)
-        {
+        #return Cache::remember("dominion.{$this->id}.techPerkValue.{$perkKey}", 5, function () use ($perkKey)
+        #{
             $perks = $this->getTechPerks()->groupBy('key');
             if (isset($perks[$perkKey])) {
                 $max = (float)$perks[$perkKey]->max('pivot.value');
@@ -721,7 +721,7 @@ class Dominion extends AbstractModel
                 return $max;
             }
             return 0;
-        });
+        #});
     }
 
     /**
@@ -746,7 +746,7 @@ class Dominion extends AbstractModel
 
     public function getBuildingPerkValue(string $perkKey)
     {
-        return Cache::remember("dominion.{$this->id}.buildingPerkValue.{$perkKey}", 5, function () use ($perkKey) {
+        #return Cache::remember("dominion.{$this->id}.buildingPerkValue.{$perkKey}", 5, function () use ($perkKey) {
             
             $landSize = $this->land;#$this->land_plain + $this->land_mountain + $this->land_swamp + $this->land_forest + $this->land_hill + $this->land_water;
             $perk = 0;
@@ -1416,7 +1416,7 @@ class Dominion extends AbstractModel
             }
 
             return $perk;
-        });
+        #});
     }
 
     /**
@@ -1489,8 +1489,8 @@ class Dominion extends AbstractModel
 
     public function getSpellPerkValue(string $perkKey): float
     {
-        return Cache::remember("dominion.{$this->id}.spellPerkValue.{$perkKey}", 5, function () use ($perkKey)
-        {
+        #return Cache::remember("dominion.{$this->id}.spellPerkValue.{$perkKey}", 5, function () use ($perkKey)
+        #{
             $deityKey = $this->hasDeity() ? $this->deity->key : null;
             $perk = 0;
 
@@ -1598,7 +1598,7 @@ class Dominion extends AbstractModel
             }
 
             return $perk;
-        });
+        #});
     }
 
     /**
@@ -1645,8 +1645,8 @@ class Dominion extends AbstractModel
     */
     public function getImprovementPerkValue(string $perkKey): float
     {
-        return Cache::remember("dominion.{$this->id}.improvementPerkValue.{$perkKey}", 5, function () use ($perkKey)
-        {
+        #return Cache::remember("dominion.{$this->id}.improvementPerkValue.{$perkKey}", 5, function () use ($perkKey)
+        #{
             $perk = 0;
 
             foreach ($this->improvements as $improvement)
@@ -1665,7 +1665,7 @@ class Dominion extends AbstractModel
             $perk *= $this->getImprovementsMod();
 
             return $perk;
-        });
+        #});
     }
 
     public function getImprovementsMod(): float
@@ -1793,8 +1793,8 @@ class Dominion extends AbstractModel
             return 0;
         }
 
-        return Cache::remember("dominion.{$this->id}.deityPerkValue.{$perkKey}", 5, function () use ($perkKey)
-        {
+        #return Cache::remember("dominion.{$this->id}.deityPerkValue.{$perkKey}", 5, function () use ($perkKey)
+        #{
             $multiplier = 1;
             $multiplier += $this->getBuildingPerkMultiplier('deity_power');
             $multiplier += $this->race->getPerkMultiplier('deity_power');
@@ -1805,7 +1805,7 @@ class Dominion extends AbstractModel
             $devotionDurationMultiplier = 1 + min($this->devotion->duration * 0.1 / 100, 1);
 
             return (float)$this->deity->getPerkValue($perkKey) * $multiplier * $devotionDurationMultiplier;
-        });
+        #});
     }
 
     /**
@@ -1860,27 +1860,27 @@ class Dominion extends AbstractModel
 
     public function getTerrainPerkValue(string $perkKey): float
     {
-        return Cache::remember("dominion.{$this->id}.terrainPerkValue.{$perkKey}", 5, function () use ($perkKey)
-        {
+        #return Cache::remember("dominion.{$this->id}.terrainPerkValue.{$perkKey}", 5, function () use ($perkKey)
+        #{
             return $this->race->raceTerrains->sum(function ($raceTerrain) use ($perkKey)
             {
                 $terrainPerk = $raceTerrain->perks()->where('key', $perkKey)->first();
                 return $terrainPerk ? $terrainPerk->pivot->value * $this->{'terrain_' . $raceTerrain->terrain->key} : 0;
             });
-            });
+        #});
     }
     
     public function getTerrainPerkMultiplier(string $perkKey): float
     {
 
-        return Cache::remember("dominion.{$this->id}.terrainPerkMultiplier.{$perkKey}", 5, function () use ($perkKey)
-        {
+        #return Cache::remember("dominion.{$this->id}.terrainPerkMultiplier.{$perkKey}", 5, function () use ($perkKey)
+        #{
             return $this->race->raceTerrains->sum(function ($raceTerrain) use ($perkKey)
             {
                 $terrainPerk = $raceTerrain->perks()->where('key', $perkKey)->first();
                 return $terrainPerk ? ($terrainPerk->pivot->value * $this->{'terrain_' . $raceTerrain->terrain->key}) / $this->land : 0;
             });
-        });
+        #});
     }
     
     # DECREES
@@ -1896,8 +1896,8 @@ class Dominion extends AbstractModel
 
     public function getDecreePerkValue(string $key)
     {
-        return Cache::remember("dominion.{$this->id}.decreePerkValue.{$key}", 5, function () use ($key)
-        {
+        #return Cache::remember("dominion.{$this->id}.decreePerkValue.{$key}", 5, function () use ($key)
+        #{
             $perks = $this->getDecreeStatePerks()->groupBy('key');
 
             $buildingGenerationPerks = [
@@ -1937,7 +1937,7 @@ class Dominion extends AbstractModel
             }
 
             return 0;
-        });
+        #});
     }
 
     public function getDecreePerkMultiplier(string $key): float
@@ -1975,8 +1975,8 @@ class Dominion extends AbstractModel
     */
     public function getAdvancementPerkValue(string $perkKey): float
     {
-        return Cache::remember("dominion.{$this->id}.advancementPerkValue.{$perkKey}", 5, function () use ($perkKey)
-        {
+        #return Cache::remember("dominion.{$this->id}.advancementPerkValue.{$perkKey}", 5, function () use ($perkKey)
+        #{
             $perk = 0;
 
             foreach ($this->advancements as $advancement)
@@ -1991,7 +1991,7 @@ class Dominion extends AbstractModel
             }
 
             return $perk;
-        });
+        #});
     }
 
     /**
