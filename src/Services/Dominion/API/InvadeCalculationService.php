@@ -75,7 +75,7 @@ class InvadeCalculationService
      * @param array $units
      * @return array
      */
-    public function calculate(Dominion $dominion, Dominion $target = null, ?array $units, ?array $calc, Artefact $artefact = null): array
+    public function calculate(Dominion $dominion, Dominion $target = null, ?array $units, ?array $calc): array
     {
         #$this->guardActionsDuringTick($dominion);
 
@@ -132,15 +132,6 @@ class InvadeCalculationService
         if($target)
         {
             $this->calculationResult['away_offense'] = $this->militaryCalculator->getOffensivePower($dominion, $target, $landRatio, $units, [], true); #
-        }
-        elseif($artefact)
-        {
-            $this->calculationResult['away_offense'] = $this->militaryCalculator->getOffensivePower($dominion, null, $landRatio, $units, [], true); #
-
-            if($dominion->hasDeity() and $artefact->deity->id == $dominion->deity->id)
-            {
-                $this->calculationResult['away_offense'] *= 1.2;
-            }
         }
         else
         {

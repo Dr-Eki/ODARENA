@@ -444,6 +444,12 @@ class BarbarianService
                         ],
                   ];
 
+                # Update RoundResources
+                if($bodies > 0)
+                {
+                    $this->resourceService->updateRoundResources($dominion->round, ['body' => $bodies]);
+                }
+
                 $barbarianInvasionEvent = GameEvent::create([
                     'round_id' => $dominion->round_id,
                     'source_type' => Dominion::class,
