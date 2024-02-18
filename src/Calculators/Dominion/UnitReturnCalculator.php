@@ -162,7 +162,7 @@ class UnitReturnCalculator
                 {
                     $returningUnits[] = [
                         'unit' => $unitSlot,
-                        'return_ticks' => 12,
+                        'return_ticks' => config('game.defaults.unit_return_ticks'),
                     ];   
                 }
             }

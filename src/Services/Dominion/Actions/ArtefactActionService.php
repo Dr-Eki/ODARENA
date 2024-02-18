@@ -446,7 +446,7 @@ class ArtefactActionService
             $attacker->save(['event' => HistoryService::EVENT_ACTION_ATTACK_ARTEFACT]);
         });
         
-        if($this->attack['result']['shield_broken'])
+        if($this->attack['result']['aegis_broken'])
         {
             $message = sprintf(
                 'Your units deal %s damage to %s, breaking the aegis and capturing the artefact!',
@@ -506,7 +506,7 @@ class ArtefactActionService
 
         $prestigeChange *= $prestigeChangeMultiplier;
 
-        $prestigeChange *= $this->attack['result']['shield_broken'] ? 2 : 1;
+        $prestigeChange *= $this->attack['result']['aegis_broken'] ? 2 : 1;
 
         $prestigeChange = (int)floor($prestigeChange);
 
@@ -528,7 +528,7 @@ class ArtefactActionService
         $realm = $realmArtefact->realm;
         $artefact = $realmArtefact->artefact;
 
-        $this->attack['result']['shield_broken'] = false;
+        $this->attack['result']['aegis_broken'] = false;
         $baseDamage = 0;
 
         $this->attack['attacker']['op'] = $this->artefactCalculator->getDamageDealt($attacker, $units, $artefact);
@@ -548,7 +548,7 @@ class ArtefactActionService
 
         if($breaksShield)
         {
-            $this->attack['result']['shield_broken'] = true;
+            $this->attack['result']['aegis_broken'] = true;
             
             # Remove artefact from current realm
             $realmArtefact->delete();
@@ -655,7 +655,7 @@ class ArtefactActionService
             $moraleChange = 0;
         }
         
-        if($this->attack['result']['shield_broken'])
+        if($this->attack['result']['aegis_broken'])
         {
             $moraleChange *= 2;
         }
@@ -1060,7 +1060,7 @@ class ArtefactActionService
         $this->statsService->setStat($attacker, 'op_sent_max', max($this->attack['attacker']['op'], $this->statsService->getStat($attacker, 'op_sent_max')));
         $this->statsService->updateStat($attacker, 'op_sent_total', $this->attack['attacker']['op']);
 
-        if($this->attack['result']['shield_broken'])
+        if($this->attack['result']['aegis_broken'])
         {
             $this->statsService->updateStat($attacker, 'artefacts_captured', 1);
         }

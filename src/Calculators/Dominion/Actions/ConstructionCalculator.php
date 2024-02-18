@@ -255,7 +255,7 @@ class ConstructionCalculator
 
     public function getConstructionTicks(Dominion $dominion): int
     {
-        $ticks = 12;
+        $ticks = config('game.defaults.construction_ticks');
 
         $ticks -= $dominion->race->getPerkValue('increased_construction_speed');
         $ticks += $dominion->getTechPerkValue('construction_time_raw');
