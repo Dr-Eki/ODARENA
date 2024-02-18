@@ -34,7 +34,12 @@ class GenerateQuickstartCommand extends Command implements CommandInterface
     public function handle(): void
     {
         $this->info('Flushing game cache...');
-        if(Cache::flush())
+
+        $cacheFlush = Cache::flush();
+
+        dump($cacheFlush);
+
+        if($cacheFlush)
         {
             $this->info('Game caches flushed');
         }
