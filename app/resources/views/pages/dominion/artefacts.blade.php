@@ -286,18 +286,6 @@
                                                 </small>
                                             </td>
                                         </tr>
-                                        {{--
-                                        <tr>
-                                            <td>
-                                                Min DP:
-                                                <i class="fa fa-question-circle"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top"
-                                                   title="You must leave at least 33% of your invasion force OP in DP at home. (33% rule)"></i>
-                                            </td>
-                                            <td id="home-forces-min-dp" data-amount="0">0</td>
-                                        </tr>
-                                        --}}
                                         <tr>
                                             <td>DPA:</td>
                                             <td id="home-forces-dpa" data-amount="0">
@@ -322,135 +310,6 @@
 
                     </div>
                 </div>
-                {{-- 
-                <div class="row">
-                    <div class="col-sm-12 col-md-6">
-                        <div class="box box-danger">
-                            <div class="box-header with-border">
-                                <h3 class="box-title"><i class="ra ra-sword"></i> Attack force</h3>
-                            </div>
-                            <div class="box-body table-responsive no-padding">
-                                <table class="table">
-                                    <colgroup>
-                                        <col width="50%">
-                                        <col width="50%">
-                                    </colgroup>
-                                    <tbody>
-                                        <tr>
-                                            <td>Damage dealt:</td>
-                                            <td>
-                                                <strong id="invasion-force-op" data-amount="0">0</strong>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Morale:</td>
-                                            <td>{{ number_format($selectedDominion->morale) }}</td>
-                                        </tr>                                            
-                                        <tr>
-                                            <td>DP:</td>
-                                            <td id="invasion-force-dp" data-amount="0">0</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Max OP:
-                                                <i class="fa fa-question-circle"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top"
-                                                   title="You may send out a maximum of 133% of your new home DP in OP. (4:3 rule)"></i>
-                                            </td>
-                                            <td id="invasion-force-max-op" data-amount="0">0</td>
-                                        </tr>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="box-footer">
-    
-                            @if ($selectedDominion->isSpellActive('rainy_season'))
-                                <p><strong><em>You cannot attack during the Rainy Season.</em></strong></p>
-    
-                            @elseif ($selectedDominion->isSpellActive('stasis'))
-                                <p><strong><em>You cannot attack while you are in stasis.</em></strong></p>
-    
-                            @elseif ($selectedDominion->isSpellActive('flood_the_caverns'))
-                                <p><strong><em>You cannot attack while the caverns are flooded.</em></strong></p>
-    
-                            @elseif ($protectionService->isUnderProtection($selectedDominion))
-                                <p><strong><em>You are currently under protection for <b>{{ $selectedDominion->protection_ticks }}</b> {{ str_plural('tick', $selectedDominion->protection_ticks) }} and may not attack during that time.</em></strong></p>
-    
-                            @elseif (!$selectedDominion->round->hasStarted())
-                                <p><strong><em>You cannot attack until the round has started.</em></strong></p>
-    
-                            @elseif ($selectedDominion->morale < 100)
-                                <p><strong><em>Your military needs at least 100 morale to attack artefacts. You currently have {{ $selectedDominion->morale }} morale.</em></strong></p>
-    
-                            @else
-                                @if($selectedDominion->race->name == 'Dimensionalists')
-                                    @if($resourceCalculator->getAmount($selectedDominion, 'cosmic_alignment') >= $selectedDominion->race->getPerkValue('cosmic_alignment_to_invade'))
-                                        <button type="submit"
-                                                class="btn btn-danger"
-                                                {{ $selectedDominion->isLocked() ? 'disabled' : null }}
-                                                id="invade-button">
-                                            <i class="ra ra-player-teleport"></i>
-                                            Plot chart and teleport units
-                                        </button>
-    
-                                        <br><span class="label label-info">This will expend {{ number_format($selectedDominion->race->getPerkValue('cosmic_alignment_to_invade')) }} Cosmic Alignments.</span>
-    
-                                    @else
-                                        <span class="label label-danger">You need at least {{ number_format($selectedDominion->race->getPerkValue('cosmic_alignment_to_invade')) }} Cosmic Alignments to plot a chart to teleport units. Currently: {{ number_format($resourceCalculator->getAmount($selectedDominion, 'cosmic_alignment')) }}.</span>
-                                    @endif
-    
-                                @else
-                                    <button type="submit"
-                                            class="btn btn-danger"
-                                            {{ ($selectedDominion->isLocked() or !$artefactCalculator->canAttackArtefacts($selectedDominion)) ? 'disabled' : null }}
-                                            id="invade-button">
-                                        <i class="ra ra-crossed-swords"></i>
-                                        Send Units
-                                    </button>
-                                @endif
-                            @endif
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6">
-                        <div class="box box-success">
-                            <div class="box-header with-border">
-                                <h3 class="box-title"><i class="fa fa-home"></i> Status At Home</h3>
-                            </div>
-                            <div class="box-body table-responsive no-padding">
-                                <table class="table">
-                                    <colgroup>
-                                        <col width="50%">
-                                        <col width="50%">
-                                    </colgroup>
-                                    <tbody>
-                                        <tr>
-                                            <td>Mod DP:</td>
-                                            <td>
-                                                <span id="home-forces-dp" data-original="{{ $militaryCalculator->getDefensivePower($selectedDominion) }}" data-amount="0">
-                                                    {{ number_format($militaryCalculator->getDefensivePower($selectedDominion)) }}
-                                                </span>
-    
-                                                <small class="text-muted">
-                                                    (<span id="home-forces-dp-raw" data-original="{{ $militaryCalculator->getDefensivePowerRaw($selectedDominion) }}" data-amount="0">{{ number_format($militaryCalculator->getDefensivePowerRaw($selectedDominion)) }}</span> raw)
-                                                </small>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>DPA:</td>
-                                            <td id="home-forces-dpa" data-amount="0">
-                                                {{ number_format($militaryCalculator->getDefensivePower($selectedDominion) / $selectedDominion->land, 2) }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                --}}
             @endif
         </form>
     </div>
@@ -475,6 +334,7 @@
                 @else
                     <p class="text-danger">You do not meet the requirements to attack artefacts.</p>
                 @endif
+                <p>If an artefact is damaged, you provide up to <strong>{{number_format($artefactCalculator->getDominionArtefactAegisRestoration($selectedDominion)) }}</strong> aegis restoration per tick.</p>
             </div>
         </div>
     </div>

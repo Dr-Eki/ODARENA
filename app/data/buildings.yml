@@ -431,7 +431,7 @@ battery:
     - artefacts
     - artefacts-packs
   perks:
-    artefact_shield_restoration: 10
+    artefact_aegis_restoration: 10
     mana_upkeep_raw_per_artefact: 2
     max_effective_building_ratio: 5 # No perk effect after 5% of land
 

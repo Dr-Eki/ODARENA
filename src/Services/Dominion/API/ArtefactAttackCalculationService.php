@@ -77,12 +77,9 @@ class ArtefactAttackCalculationService
      */
     public function calculate(Dominion $dominion, Artefact $artefact = null, ?array $units, ?array $calc): array
     {
-        #$this->guardActionsDuringTick($dominion);
-
-        #isset($target) ?? $this->guardActionsDuringTick($target);
+        $this->guardActionsDuringTick($dominion);
 
         $landRatio = 1;
-        $target = null;
 
         if ($dominion->isLocked() || $dominion->round->hasEnded())
         {
@@ -104,14 +101,14 @@ class ArtefactAttackCalculationService
             $this->calculationResult['units'][$unit->slot]['dp'] = $this->militaryCalculator->getUnitPowerWithPerks(
                 $dominion,
                 null,
-                1,
+                $landRatio,
                 $unit,
                 'defense'
             );
             $this->calculationResult['units'][$unit->slot]['op'] = $this->militaryCalculator->getUnitPowerWithPerks(
                 $dominion,
                 null,
-                1,
+                $landRatio,
                 $unit,
                 'offense',
                 $calc
@@ -120,24 +117,23 @@ class ArtefactAttackCalculationService
         $this->calculationResult['units_sent'] = array_sum($units);
 
         // Calculate total offense and defense
-        $this->calculationResult['dp_multiplier'] = $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
-        $this->calculationResult['op_multiplier'] = $this->militaryCalculator->getOffensivePowerMultiplier($dominion);
+        #$this->calculationResult['dp_multiplier'] = $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
+        #$this->calculationResult['op_multiplier'] = $this->militaryCalculator->getOffensivePowerMultiplier($dominion);
 
         $this->calculationResult['away_defense'] = $this->militaryCalculator->getDefensivePower($dominion, null, null, $units);
 
-        $this->calculationResult['away_offense'] = $this->artefactCalculator->getDamageDealt($dominion, $units, $artefact); #
+        #$this->calculationResult['away_offense'] = 0;#$this->artefactCalculator->getDamageDealt($dominion, $units, $artefact);
 
         if($artefact)
         {
+            $this->calculationResult['away_offense'] = $this->artefactCalculator->getDamageDealt($dominion, $units, $artefact);
             if($dominion->hasDeity() and $artefact->deity->id == $dominion->deity->id)
             {
                 $this->calculationResult['away_offense'] *= 1.2;
             }
         }
 
-        $this->calculationResult['away_opa'] = $this->calculationResult['away_offense'] / $dominion->land;
-
-        #######
+        #$this->calculationResult['away_opa'] = $this->calculationResult['away_offense'] / $dominion->land;
 
         $unitsHome = [
             0 => $dominion->military_draftees,
@@ -149,14 +145,13 @@ class ArtefactAttackCalculationService
         }
 
         $this->calculationResult['home_defense'] = $this->militaryCalculator->getDefensivePower($dominion, null, null, $unitsHome);
-        $this->calculationResult['home_defense_raw'] = $this->militaryCalculator->getDefensivePowerRaw($dominion, null, null, $unitsHome);
+        #$this->calculationResult['home_defense_raw'] = $this->militaryCalculator->getDefensivePowerRaw($dominion, null, null, $unitsHome);
 
-        $this->calculationResult['home_offense'] = $this->militaryCalculator->getOffensivePower($dominion, null, $landRatio, $unitsHome, $calc);
-        $this->calculationResult['home_dpa'] = $this->calculationResult['home_defense'] / $dominion->land;
+        #$this->calculationResult['home_offense'] =  $this->artefactCalculator->getDamageDealt($dominion, $unitsHome, $artefact);#$this->militaryCalculator->getOffensivePower($dominion, null, $landRatio, $unitsHome, $calc);
+        #$this->calculationResult['home_dpa'] = $this->calculationResult['home_defense'] / $dominion->land;
 
         $this->calculationResult['max_op'] = $this->calculationResult['home_defense'] * (4/3);
         $this->calculationResult['min_dp'] = $this->calculationResult['away_offense'] / 3;
-
 
         if($dominion->hasProtector())
         {

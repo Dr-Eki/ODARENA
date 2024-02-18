@@ -330,7 +330,7 @@ class WorldNewsHelper
         $artefactRealm = Realm::where('id', $event->data['artefact']['current_realm_id'])->firstOrFail();
         $attacker = $event->source;
 
-        if($event->data['result']['shield_broken'])
+        if($event->data['result']['aegis_broken'])
         {
             $string = sprintf(
                 '%s broke the aegis of <span data-toggle="tooltip" data-placement="top" title="%s">%s</span>, claiming the artefact for the realm.',

@@ -62,15 +62,28 @@ class ArtefactCalculator
     
         foreach($realm->dominions as $realmDominion)
         {
-            $manaDrained = $realmDominion->getBuildingPerkValue('mana_upkeep_raw_per_artefact');
-            $manaOwned = $realmDominion->resource_mana;
-            $manaMultiplier = $manaDrained > $manaOwned ? $manaOwned / $manaDrained : 1;
-    
-            $restoration += $realmDominion->getBuildingPerkValue('artefact_shield_restoration') * $manaMultiplier;
-            $restoration *= $realmDominion->getImprovementPerkMultiplier('artefact_shield_restoration_mod');
+            $restoration += $this->getDominionArtefactAegisRestoration($realmDominion);
         }
     
         return $restoration;
+    }
+
+    public function getDominionArtefactAegisRestoration(Dominion $dominion): int
+    {
+        $restoration = 0;
+
+        $manaDrained = $dominion->getBuildingPerkValue('mana_upkeep_raw_per_artefact');
+        $manaOwned = $dominion->resource_mana;
+        $manaMultiplier = $manaDrained > $manaOwned ? $manaOwned / $manaDrained : 1;
+
+        $restoration += $dominion->getBuildingPerkValue('artefact_aegis_restoration') * $manaMultiplier;
+
+        $restorationMultiplier = 1;
+        $restorationMultiplier += $dominion->getImprovementPerkMultiplier('artefact_aegis_restoration_mod');
+
+        $restoration *= $restorationMultiplier;
+
+        return (int)floor($restoration);
     }
 
     public function getChanceToDiscoverArtefactOnExpedition(Dominion $dominion, array $expedition): float

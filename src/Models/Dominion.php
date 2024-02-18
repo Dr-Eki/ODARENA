@@ -1377,8 +1377,10 @@ class Dominion extends AbstractModel
 
                     }
 
-                    elseif($perkKey == 'artefact_shield_restoration')
+                    elseif($perkKey == 'artefact_aegis_restoration')
                     {
+                        $buildingOwnedForThisPerk = $buildingOwned;
+
                         if($maxBuildingRatio = $building->getPerkValue('max_effective_building_ratio'))
                         {
                             $buildingOwnedForThisPerk = min($buildingOwned, $this->land * ($maxBuildingRatio / 100));
@@ -1414,7 +1416,6 @@ class Dominion extends AbstractModel
                 $perk *= $buildingSpecificMultiplier ?? 1;
                 $buildingSpecificMultiplier = null;
             }
-
             return $perk;
         #});
     }

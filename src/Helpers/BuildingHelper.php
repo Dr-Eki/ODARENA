@@ -312,7 +312,7 @@ class BuildingHelper
             # Other/special
             'deity_power' => 'Increases deity perks %2$s%% for every %1$s%% (max +%3$s%%)',
             'research_required_to_build' => 'Requires %s research to build.',
-            'artefact_shield_restoration' => '%+g artefact shield restoration per tick',
+            'artefact_aegis_restoration' => '%+g artefact shield restoration per tick',
 
             'max_effective_building_ratio' => 'Only effective on up to %s%% of land.',
 

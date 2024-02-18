@@ -133,7 +133,7 @@
                                 @endif
                             @endif
                             </div>
-                            @if($event->data['result']['shield_broken'])
+                            @if($event->data['result']['aegis_broken'])
                                 @php
                                     $previousOwnerRealm = OpenDominion\Models\Realm::find($event->data['artefact']['current_realm_id']);
                                 @endphp
