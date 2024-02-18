@@ -605,16 +605,16 @@ class ArtefactActionService
     protected function handleMoraleChanges(Dominion $attacker, RealmArtefact $realmArtefact, array $units): void
     {
 
-        $attackerMoraleChange = 0;
+        $moraleChange = 0;
 
         $baseMoraleChange = 50;
 
-        $attackerMoraleChange += $baseMoraleChange * ($this->attack['attacker']['damage_dealt'] / $realmArtefact->max_power);
+        $moraleChange += $baseMoraleChange * ($this->attack['attacker']['damage_dealt'] / $realmArtefact->max_power);
 
-        $attackerMoraleChangeMultiplier = 1;
-        $attackerMoraleChangeMultiplier += $attacker->getBuildingPerkMultiplier('morale_gains');
-        $attackerMoraleChangeMultiplier += $attacker->race->getPerkMultiplier('morale_change_invasion');
-        $attackerMoraleChangeMultiplier += $attacker->title->getPerkMultiplier('morale_gains') * $attacker->getTitlePerkMultiplier();
+        $moraleChangeMultiplier = 1;
+        $moraleChangeMultiplier += $attacker->getBuildingPerkMultiplier('morale_gains');
+        $moraleChangeMultiplier += $attacker->race->getPerkMultiplier('morale_change_invasion');
+        $moraleChangeMultiplier += $attacker->title->getPerkMultiplier('morale_gains') * $attacker->getTitlePerkMultiplier();
 
         # Look for increases_morale_gains
         foreach($attacker->race->units as $unit)
@@ -624,7 +624,7 @@ class ArtefactActionService
                 isset($units[$unit->slot])
                 )
             {
-                $attackerMoraleChangeMultiplier += ($this->attack['attacker']['units_sent'][$unit->slot] / array_sum($this->attack['attacker']['units_sent'])) * $increasesMoraleGainsPerk;
+                $moraleChangeMultiplier += ($this->attack['attacker']['units_sent'][$unit->slot] / array_sum($this->attack['attacker']['units_sent'])) * $increasesMoraleGainsPerk;
             }
 
 
@@ -633,25 +633,30 @@ class ArtefactActionService
                 isset($units[$unit->slot])
                 )
             {
-                $attackerMoraleChange += $this->attack['attacker']['units_sent'][$unit->slot] * $increasesMoraleGainsPerk;
+                $moraleChange += $this->attack['attacker']['units_sent'][$unit->slot] * $increasesMoraleGainsPerk;
             }
         }
 
-        $attackerMoraleChange *= $attackerMoraleChangeMultiplier;
+        $moraleChange *= $moraleChangeMultiplier;
 
         # Look for no_morale_changes
         if($attacker->race->getPerkValue('no_morale_changes'))
         {
-            $attackerMoraleChange = 0;
+            $moraleChange = 0;
         }
         
+        if($this->attack['result']['shield_broken'])
+        {
+            $moraleChange *= 2;
+        }
+
         # Round
-        $attackerMoraleChange = (int)round($attackerMoraleChange);
+        $moraleChange = (int)round($moraleChange);
 
         # Change attacker morale.        
-        $attacker->morale += $attackerMoraleChange;
+        $attacker->morale += $moraleChange;
 
-        $this->attack['attacker']['morale_change'] = $attackerMoraleChange;
+        $this->attack['attacker']['morale_change'] = $moraleChange;
 
     }
 
