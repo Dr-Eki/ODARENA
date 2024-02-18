@@ -862,9 +862,13 @@ class ResourceCalculator
             $returningResources['xp'] += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'xp');    
         }
 
-        if(in_array($dominion->round->mode, ['artefacts', 'artefacts-packs']))
+        if($this->queueService->getArtefactQueueTotal($dominion))
         {
-            
+            foreach($this->queueService->getArtefactQueue($dominion) as $artefactQueue)
+            {
+                $returningResources['artefacts'][$artefactQueue->resource] = $artefactQueue->hours;
+            }
+
         }
 
         return $returningResources;

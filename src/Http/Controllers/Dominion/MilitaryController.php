@@ -5,6 +5,7 @@ namespace OpenDominion\Http\Controllers\Dominion;
 use OpenDominion\Models\Resource;
 
 use OpenDominion\Exceptions\GameException;
+use OpenDominion\Helpers\ArtefactHelper;
 use OpenDominion\Helpers\DominionHelper;
 use OpenDominion\Helpers\MilitaryHelper;
 use OpenDominion\Helpers\RaceHelper;
@@ -44,6 +45,7 @@ class MilitaryController extends AbstractDominionController
         $returningResources = $resourceCalculator->getReturningResources($self);
 
         return view('pages.dominion.military', [
+            'artefactHelper' => app(ArtefactHelper::class),
             'casualtiesCalculator' => app(CasualtiesCalculator::class),
             'dominionHelper' => app(DominionHelper::class),
             'magicCalculator' => app(MagicCalculator::class),

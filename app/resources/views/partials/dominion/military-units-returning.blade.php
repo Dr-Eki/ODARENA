@@ -124,7 +124,24 @@
                         </tr>
 
                         @foreach($returningResources as $key => $totalAmount)
-                            @if($totalAmount !== 0)
+                            @if($key == 'artefacts' and is_array($totalAmount))
+                                @foreach($totalAmount as $artefactKey => $tick)
+                                    @php
+                                        $artefact = OpenDominion\Models\Artefact::where('key', $artefactKey)->first();
+                                    @endphp
+                                    <tr>
+                                        <td><span data-toggle="tooltip" data-placement="top" title="{{ $artefactHelper->getArtefactTooltip($artefact) }}">{{ $artefact->name }}</span></td>
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <td class="text-center">
+                                                {!! ($tick == $i) ? '<i class="ra ra-alien-fire"></i>' : '-' !!}
+                                            </td>
+                                        @endfor
+                                        <td class="text-center">
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @elseif($totalAmount !== 0)
                                 @php
 
                                     $name = 'undefined:'.$key;
