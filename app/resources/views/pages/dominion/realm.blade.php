@@ -284,6 +284,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title"><i class="ra ra-uncertainty"></i> Barbarian AI</h3>
                 </div>
+
                 <div class="box-body">
                       <div class="row">
                           <ul>

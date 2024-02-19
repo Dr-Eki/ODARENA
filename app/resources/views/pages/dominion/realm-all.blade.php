@@ -183,28 +183,6 @@
 
             </div>
         </div>
-
-        @if($realm->alignment === 'npc' and $realm->round->hasStarted())
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="ra ra-uncertainty"></i> Barbarian AI</h3>
-                </div>
-                <div class="box-body">
-                      <div class="row">
-                          <ul>
-                          @foreach($barbarianSettings as $setting => $value)
-                              <li>{{ $setting }}: <code>{{ $value }}</code></li>
-                          @endforeach
-                          <li>NPC_MODIFIER: <code>rand(500,1000)</code>, assigned to each Barbarian at registration</li>
-                          <li>CHANCE_TO_HIT: <code>1 / ([Chance To Hit Constant] - (14 - min([Current Day], 14))) = {{ 1/($barbarianSettings['CHANCE_TO_HIT_CONSTANT'] - (14 - min($realm->round->start_date->subDays(1)->diffInDays(now()),14))) }}</code></li>
-                          <li>DPA_TARGET: <code>[DPA Constant] + (([Ticks Into The Round] * [DPA Per Tick]) + ([Times Invaded] * [DPA_PER_TIMES_INVADED])) * [NPC Modifier] = {{ $barbarianSettings['DPA_CONSTANT'] }} + ({{ $realm->round->ticks }} * {{ $barbarianSettings['DPA_PER_TICK'] }})  * [NPC Modifier] = ({{ $barbarianSettings['DPA_CONSTANT'] + ($realm->round->ticks * $barbarianSettings['DPA_PER_TICK']) }} + ([Times Invaded] * {{ $barbarianSettings['DPA_PER_TIMES_INVADED'] }} ) * [NPC Modifier]</code></li>
-                          <li>OPA_TARGET: <code>[DPA] * [OPA Multiplier]</code></li>
-                          </ul>
-                      </div>
-                </div>
-
-            </div>
-        @endif
     </div>
 
     <div class="col-sm-12 col-md-3">

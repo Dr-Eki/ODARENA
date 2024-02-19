@@ -374,51 +374,9 @@ class BarbarianService
                         $unitsReturning
                     );
 
-                    $invasionTypes = [
-                        'attacked', 
-                        'raided', 
-                        'pillaged', 
-                        'ransacked', 
-                        'looted', 
-                        'devastated', 
-                        'plundered', 
-                        'sacked', 
-                        'invaded', 
-                        'laid waste to',
-                        'besieged',
-                        'overran',
-                        'stormed',
-                        'conquered',
-                        'overwhelmed',
-                        'assaulted',
-                        'breached',
-                        'overpowered',
-                        'subdued',
-                        'infested',
-                        'infiltrated',
-                        'seized'
-                    ];
+                    $invasionTypes = config('barbarians.invasionTypes');
                     
-                    $invasionTargets = [
-                        'settlement', 
-                        'village', 
-                        'town', 
-                        'hamlet', 
-                        'plot of unclaimed land', 
-                        'community', 
-                        'trading hub', 
-                        'merchant outpost', 
-                        'camp',
-                        'outpost',
-                        'farmstead',
-                        'hamlet',
-                        'cottage',
-                        'thorp',
-                        'croft',
-                        'shanty',
-                        'cabana',
-                        'huts',
-                    ];
+                    $invasionTargets = config('barbarians.invasionTargets');
                     
 
                     $bodies = array_sum($unitsLost) / 10 + $landGained;
@@ -521,7 +479,7 @@ class BarbarianService
             $title = Title::firstWhere('name', '=', 'Commander');
    
             # Barbarian tribe names
-            $tribeTypes = config('barbarian.tribeTypes');
+            $tribeTypes = config('barbarians.tribeTypes');
 
             # Get ruler name.
             $rulerName = $barbarianUser->display_name;
