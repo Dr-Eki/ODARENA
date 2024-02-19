@@ -411,8 +411,10 @@ class ExpeditionActionService
      
         if(random_chance($this->artefactCalculator->getChanceToDiscoverArtefactOnExpedition($dominion, $this->expedition)))
         {
-            if($artefact = $this->artefactService->getRandomArtefact($dominion->round))
+            if($artefact = $this->artefactService->getRandomUndiscoveredArtefact($dominion->round))
             {
+                $this->expedition['artefact']['found'] = true;
+
                 $this->queueService->queueResources(
                     'artefact',
                     $dominion,

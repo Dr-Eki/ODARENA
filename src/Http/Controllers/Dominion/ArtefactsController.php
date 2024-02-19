@@ -3,8 +3,8 @@
 namespace OpenDominion\Http\Controllers\Dominion;
 
 use OpenDominion\Calculators\Dominion\ArtefactCalculator;
-use OpenDominion\Models\Artefact;
-use OpenDominion\Models\Realm;
+#use OpenDominion\Models\Artefact;
+#use OpenDominion\Models\Realm;
 use OpenDominion\Models\RealmArtefact;
 use OpenDominion\Models\Spell;
 
@@ -17,6 +17,7 @@ use OpenDominion\Exceptions\GameException;
 use OpenDominion\Http\Requests\Dominion\Actions\ArtefactActionRequest;
 use OpenDominion\Services\Dominion\Actions\ArtefactActionService;
 use OpenDominion\Services\Dominion\ProtectionService;
+use OpenDominion\Services\Dominion\ArtefactService;
 
 class ArtefactsController extends AbstractDominionController
 {
@@ -41,6 +42,7 @@ class ArtefactsController extends AbstractDominionController
             'spellCalculator' => app(SpellCalculator::class),
             
             'protectionService' => app(ProtectionService::class),
+            'artefactService' => app(ArtefactService::class),
 
             'unitHelper' => app(UnitHelper::class),
 

@@ -335,6 +335,12 @@
                     <p class="text-danger">You do not meet the requirements to attack artefacts.</p>
                 @endif
                 <p>If an artefact is damaged, you provide up to <strong>{{number_format($artefactCalculator->getDominionArtefactAegisRestoration($selectedDominion)) }}</strong> aegis restoration per tick.</p>
+
+                {{-- 
+                {{ ldump($artefactService->getArtefactsInQueue($selectedDominion->round)) }}
+                {{ ldump($artefactService->getRealmArtefactsArtefacts($selectedDominion->round)) }}
+                {{ ldd($artefactService->getUndiscoveredArtefacts($selectedDominion->round)) }}
+                --}}
             </div>
         </div>
     </div>
