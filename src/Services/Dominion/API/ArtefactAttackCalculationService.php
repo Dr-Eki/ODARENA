@@ -127,10 +127,10 @@ class ArtefactAttackCalculationService
         if($artefact)
         {
             $this->calculationResult['away_offense'] = $this->artefactCalculator->getDamageDealt($dominion, $units, $artefact);
-            if($dominion->hasDeity() and $artefact->deity->id == $dominion->deity->id)
-            {
-                $this->calculationResult['away_offense'] *= 1.2;
-            }
+            #if($dominion->hasDeity() and $artefact->deity->id == $dominion->deity->id)
+            #{
+            #    $this->calculationResult['away_offense'] *= 1.2;
+            #}
         }
 
         #$this->calculationResult['away_opa'] = $this->calculationResult['away_offense'] / $dominion->land;
