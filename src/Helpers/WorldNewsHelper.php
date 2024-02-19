@@ -1182,6 +1182,7 @@ class WorldNewsHelper
                 return 'text-aqua';
 
             case 'green':
+            case 'success':
                 return 'text-green';
 
             case 'barbarian':
@@ -1190,6 +1191,9 @@ class WorldNewsHelper
 
             case 'purple':
                 return 'text-purple';
+            
+            case 'primary':
+                return 'text-primary';
 
             default:
                 return 'text-aqua';

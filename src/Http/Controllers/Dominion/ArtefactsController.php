@@ -3,12 +3,11 @@
 namespace OpenDominion\Http\Controllers\Dominion;
 
 use OpenDominion\Calculators\Dominion\ArtefactCalculator;
-#use OpenDominion\Models\Artefact;
-#use OpenDominion\Models\Realm;
 use OpenDominion\Models\RealmArtefact;
 use OpenDominion\Models\Spell;
 
 use OpenDominion\Helpers\ArtefactHelper;
+use OpenDominion\Helpers\WorldNewsHelper;
 use OpenDominion\Helpers\UnitHelper;
 
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
@@ -44,6 +43,7 @@ class ArtefactsController extends AbstractDominionController
             'protectionService' => app(ProtectionService::class),
             'artefactService' => app(ArtefactService::class),
 
+            'worldNewsHelper' => app(WorldNewsHelper::class),
             'unitHelper' => app(UnitHelper::class),
 
             'realmArtefacts' => $realmArtefacts,

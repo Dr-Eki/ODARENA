@@ -25,6 +25,8 @@ class BarbarianCalculator
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
 
+    protected $settings;
+
     /**
      * BuildingCalculator constructor.
      *
@@ -36,23 +38,14 @@ class BarbarianCalculator
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->queueService = app(QueueService::class);
         $this->statsService = app(StatsService::class);
+
+        $this->settings = config('barbarians.settings');
     }
 
-    public function getSettings(): array
-    {
-        return config('barbarians.settings');
-    }
 
     public function getSetting(string $setting): string
     {
-        $value = null;
-        $settings = $this->getSettings();
-        if(isset($settings[$setting]))
-        {
-            $value = $settings[$setting];
-        }
-
-        return $value;
+        return $this->settings[$setting] ?? null;
     }
 
     public function getDpaTarget(Dominion $dominion = null, Round $round = null, ?float $npcModifier = 1000): int
@@ -72,10 +65,8 @@ class BarbarianCalculator
             $dpa *= ($npcModifier / 1000);
         }
 
-        $round = $round ?? Round::find($dominion->round_id);
-
         # Special for round league ID 7
-        if($round->league->id == 7)
+        if($dominion->round->league->id == 7)
         {
             $dpa /= 4;
             $dpa = ceil($dpa);

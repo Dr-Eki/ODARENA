@@ -358,19 +358,19 @@
 
                             if($realmArtefactPowerRatio < 0.10)
                             {
-                                $powerColor = 'danger';
+                                $powerLabelStyle = 'danger';
                             }
                             elseif($realmArtefactPowerRatio < 0.65)
                             {
-                                $powerColor = 'warning';
+                                $powerLabelStyle = 'warning';
                             }
                             elseif($realmArtefactPowerRatio < 1)
                             {
-                                $powerColor = 'info';
+                                $powerLabelStyle = 'info';
                             }
                             else
                             {
-                                $powerColor = 'success';
+                                $powerLabelStyle = 'success';
                             }
                         @endphp
                         <div class="row">
@@ -386,7 +386,7 @@
                                             data-placement="top"
                                             title="<span class='text-muted'>Restoration:</span>&nbsp;{{ number_format($artefactCalculator->getAegisRestoration($realmArtefact)) }}"
                                         @endif
-                                        class="label label-{{ $powerColor }}">
+                                        class="label label-{{ $powerLabelStyle }}">
                                             {{ number_format($realmArtefact->power) }} / {{ number_format($realmArtefact->max_power) }}
                                     </span>
                                 </div>
@@ -432,7 +432,7 @@
                 <div class="box-body">
                     @foreach($discoveredArtefacts as $artefact)
                         @php
-                            unset($powerColor);
+                            unset($powerLabelStyle);
                             unset($realmArtefactPowerRatio);
                             unset($isQueued);
                             unset($destinationDominion);
@@ -440,13 +440,14 @@
                             unset($ticksRemaining);
                             unset($artefactRealm);
                             unset($realmArtefact);
-                            unset($isOwnRealm);
+                            
+                            $isOwnRealm = false;
 
                             $isQueued = $queuedArtefacts->contains($artefact);
 
                             if($isQueued)
                             {
-                                $powerColor = 'primary';
+                                $powerLabelStyle = 'primary';
                                 $destinationDominion = $artefactService->getArtefactInQueueDestination($selectedDominion->round, $artefact);
                                 $destinationRealm = $destinationDominion->realm;
                                 $ticksRemaining = $artefactService->getArtefactInQueueTicksRemaining($selectedDominion->round, $artefact);
@@ -463,21 +464,24 @@
 
                                 if($realmArtefactPowerRatio < 0.10)
                                 {
-                                    $powerColor = 'danger';
+                                    $powerLabelStyle = 'danger';
                                 }
                                 elseif($realmArtefactPowerRatio < 0.65)
                                 {
-                                    $powerColor = 'warning';
+                                    $powerLabelStyle = 'warning';
                                 }
                                 elseif($realmArtefactPowerRatio < 1)
                                 {
-                                    $powerColor = 'info';
+                                    $powerLabelStyle = 'info';
                                 }
                                 else
                                 {
-                                    $powerColor = 'success';
+                                    $powerLabelStyle = 'success';
                                 }
                             }
+
+                            $realmLabelStyle = $isOwnRealm ? 'primary' : 'hostile';
+                            
 
                         @endphp
                         <div class="row">
@@ -499,7 +503,7 @@
                                         </a>
                                     @else
                                         <a href="{{ route('dominion.realm', $artefactRealm->number) }}">
-                                            Realm # {{ $artefactRealm->number }}
+                                            {!! $worldNewsHelper->generateRealmOnlyString($artefactRealm, $realmLabelStyle) !!}
                                         </a>
                                     @endif
                                 </div>
@@ -511,7 +515,7 @@
                                                 data-toggle="tooltip"
                                                 data-placement="top"
                                                 title="<span class='text-muted'>Restoration:</span>&nbsp;{{ number_format($artefactCalculator->getAegisRestoration($realmArtefact)) }}"
-                                                class="label label-{{ $powerColor }}">
+                                                class="label label-{{ $powerLabelStyle }}">
                                                 {{ number_format($realmArtefact->power) }} / {{ number_format($realmArtefact->max_power) }}
                                         </span>
                                     @endif
@@ -706,21 +710,21 @@
             const intMaxpower = parseInt(state.element.dataset.maxpower);
 
             let realmArtefactPowerRatio = intPower / intMaxpower;
-            let powerColor;
+            let powerLabelStyle;
 
             if (realmArtefactPowerRatio < 0.10) {
-                powerColor = 'danger';
+                powerLabelStyle = 'danger';
             } else if (realmArtefactPowerRatio < 0.65) {
-                powerColor = 'warning';
+                powerLabelStyle = 'warning';
             } else if (realmArtefactPowerRatio < 1) {
-                powerColor = 'info';
+                powerLabelStyle = 'info';
             } else {
-                powerColor = 'success';
+                powerLabelStyle = 'success';
             }
 
             return $(`
                 <div class="pull-left">${state.text}</div>
-                <div class="pull-right">Aegis: <span class="label label-${powerColor}">${power} / ${maxpower}</span></div>
+                <div class="pull-right">Aegis: <span class="label label-${powerLabelStyle}">${power} / ${maxpower}</span></div>
                 <div style="clear: both;"></div>
             `);
         }
