@@ -2507,6 +2507,8 @@ class MilitaryCalculator
             $hasReturningUnits += $this->queueService->getExpeditionQueueTotalByResource($dominion, "military_unit{$slot}");
             $hasReturningUnits += $this->queueService->getTheftQueueTotalByResource($dominion, "military_unit{$slot}");
             $hasReturningUnits += $this->queueService->getSabotageQueueTotalByResource($dominion, "military_unit{$slot}");
+            $hasReturningUnits += $this->queueService->getDesecrationQueueTotalByResource($dominion, "military_unit{$slot}");
+            $hasReturningUnits += $this->queueService->getArtefactattackQueueTotalByResource($dominion, "military_unit{$slot}");
         }
 
         return $hasReturningUnits;
