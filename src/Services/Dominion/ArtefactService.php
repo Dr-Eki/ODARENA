@@ -10,17 +10,20 @@ use OpenDominion\Models\RealmArtefact;
 use OpenDominion\Models\Round;
 use OpenDominion\Calculators\Dominion\ArtefactCalculator;
 use OpenDominion\Helpers\ArtefactHelper;
+use OpenDominion\Services\Dominion\QueueService;
 
 class ArtefactService
 {
 
     protected $artefactHelper;
     protected $artefactCalculator;
+    protected $queueService;
 
     public function __construct()
     {
         $this->artefactHelper = app(ArtefactHelper::class);
         $this->artefactCalculator = app(ArtefactCalculator::class);
+        $this->queueService = app(QueueService::class);
     }
 
     public function addArtefactToRealm(Realm $realm, Artefact $artefact): void
@@ -48,30 +51,36 @@ class ArtefactService
         });
     }
 
-    public function getAvailableArtefacts(Round $round)
+    public function getDiscoveredArtefacts(Round $round)
     {
         // Get the IDs of the artefacts in use
         $usedArtefactIds = RealmArtefact::join('realms', 'realms.id', '=', 'realm_artefacts.realm_id')
             ->where('realms.round_id', $round->id)
             ->pluck('artefact_id');
-    
-        // Get the artefacts that are not in use
+
+        $queuedArtefactIds = $this->getArtefactsInQueue($round);
+
+        // Get the artefacts that are in use
         $artefacts = Artefact::where('enabled', 1)
-            ->whereNotIn('id', $usedArtefactIds)
-            ->get();
-    
+            ->whereIn('id', $usedArtefactIds)
+            ->orWhereIn('id', $queuedArtefactIds)
+            ->pluck('id');
+
         return $artefacts;
+
     }
 
-    public function getRandomArtefact(Round $round): Artefact
+    public function getUndiscoveredArtefacts(Round $round)
     {
-        return $this->getAvailableArtefacts($round)->random();
+        return Artefact::where('enabled', 1)
+            ->where('round_id', $round->id)
+            ->whereNotIn('id', $this->getDiscoveredArtefacts($round))
+            ->get();
+    }
 
-        /*
-        $artefacts = $this->getAvailableArtefacts($round);
-        $artefact = $artefacts->random();
-        return $artefact;
-        */
+    public function getRandomUndiscoveredArtefact(Round $round): Artefact
+    {
+        return $this->getUndiscoveredArtefacts($round)->random();
     }
 
     public function moveArtefactFromRealmToRealm(Realm $fromRealm, Realm $toRealm, Artefact $artefact): void
@@ -112,4 +121,21 @@ class ArtefactService
     }
     
 
+    public function getArtefactsInQueue(Round $round)
+    {
+        # Raw query to get all queues where source = artefact
+        $queues = DB::table('queue')
+            ->where('round_id', $round->id)
+            ->where('source', 'artefact')
+            ->pluck('resource');
+
+        $artefacts = [];
+
+        foreach($queues as $queue)
+        {
+            $artefacts[] = Artefact::where('key', $queue->resource)->first()->id;
+        }
+           
+        return $artefacts;
+    }
 }

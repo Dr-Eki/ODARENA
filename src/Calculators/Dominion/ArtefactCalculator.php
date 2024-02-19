@@ -215,4 +215,5 @@ class ArtefactCalculator
         return true;
     }
 
+
 }
