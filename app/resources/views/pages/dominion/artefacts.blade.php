@@ -335,12 +335,6 @@
                     <p class="text-danger">You do not meet the requirements to attack artefacts.</p>
                 @endif
                 <p>If an artefact is damaged, you provide up to <strong>{{number_format($artefactCalculator->getDominionArtefactAegisRestoration($selectedDominion)) }}</strong> aegis restoration per tick.</p>
-
-                {{-- 
-                {{ ldump($artefactService->getArtefactsInQueue($selectedDominion->round)) }}
-                {{ ldump($artefactService->getRealmArtefactsArtefacts($selectedDominion->round)) }}
-                {{ ldd($artefactService->getUndiscoveredArtefacts($selectedDominion->round)) }}
-                --}}
             </div>
         </div>
     </div>
@@ -348,9 +342,9 @@
 
 @php
     $realmArtefacts = $selectedDominion->realm->realmArtefacts;
-    $realmArtefactsCount = $selectedDominion->realm->artefacts->count();
+    $realmArtefactsCount = $realmArtefacts->count();
 @endphp
-    @if($realmArtefactsCount)
+@if($realmArtefactsCount)
     <div class="row">
         <div class="col-sm-12 col-md-9">
             <div class="box box-primary">
@@ -416,6 +410,133 @@
                 </div>
                 <div class="box-body">
                     <p>Your realm has <strong>{{ number_format($realmArtefactsCount) }} {{ str_plural('artefact', $realmArtefactsCount) }}</strong>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
+@php
+    $realmArtefacts = $artefactService->getRealmArtefactsArtefacts($selectedDominion->round);
+    $queuedArtefacts = $artefactService->getArtefactsInQueue($selectedDominion->round);
+    $discoveredArtefacts = $artefactService->getDiscoveredArtefacts($selectedDominion->round)->sortBy('name');
+    $discoveredArtefactsCount = $discoveredArtefacts->count();
+@endphp
+@if($discoveredArtefactsCount)
+    <div class="row">
+        <div class="col-sm-12 col-md-9">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="ra ra-castle-emblem"></i> World Artefacts</h3>
+                </div>
+                <div class="box-body">
+                    @foreach($discoveredArtefacts as $artefact)
+                        @php
+                            unset($powerColor);
+                            unset($realmArtefactPowerRatio);
+                            unset($isQueued);
+                            unset($destinationDominion);
+                            unset($destinationRealm);
+                            unset($ticksRemaining);
+                            unset($artefactRealm);
+                            unset($realmArtefact);
+                            unset($isOwnRealm);
+
+                            $isQueued = $queuedArtefacts->contains($artefact);
+
+                            if($isQueued)
+                            {
+                                $powerColor = 'primary';
+                                $destinationDominion = $artefactService->getArtefactInQueueDestination($selectedDominion->round, $artefact);
+                                $destinationRealm = $destinationDominion->realm;
+                                $ticksRemaining = $artefactService->getArtefactInQueueTicksRemaining($selectedDominion->round, $artefact);
+                            }
+                            else
+                            {
+
+                                $artefactRealm = $artefactService->getArtefactRealm($selectedDominion->round, $artefact);
+                                $realmArtefact = OpenDominion\Models\RealmArtefact::where('artefact_id', $artefact->id)->where('realm_id', $artefactRealm->id)->first();
+
+                                $isOwnRealm = $artefactRealm->id === $selectedDominion->realm->id;
+
+                                $realmArtefactPowerRatio = $realmArtefact->power / $realmArtefact->max_power;
+
+                                if($realmArtefactPowerRatio < 0.10)
+                                {
+                                    $powerColor = 'danger';
+                                }
+                                elseif($realmArtefactPowerRatio < 0.65)
+                                {
+                                    $powerColor = 'warning';
+                                }
+                                elseif($realmArtefactPowerRatio < 1)
+                                {
+                                    $powerColor = 'info';
+                                }
+                                else
+                                {
+                                    $powerColor = 'success';
+                                }
+                            }
+
+                        @endphp
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="col-sm-12 col-md-2">
+                                    <span 
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="<span class='text-muted'>Description:</span> {{ $artefact->description }}">
+                                        <strong>{{ $artefact->name }}</strong><br>
+                                    </span>
+                                </div>
+                                <div class="col-sm-12 col-md-2">
+                                    @if($isQueued)
+                                        <a href="{{ route('dominion.realm', $destinationRealm->number) }}">
+                                            <small>
+                                                Arriving in Realm # {{ $destinationRealm->number }} in {{ number_format($ticksRemaining) . ' ' . str_plural('tick', $ticksRemaining) }} 
+                                            </small>
+                                        </a>
+                                    @else
+                                        <a href="{{ route('dominion.realm', $artefactRealm->number) }}">
+                                            Realm # {{ $artefactRealm->number }}
+                                        </a>
+                                    @endif
+                                </div>
+                                <div class="col-sm-12 col-md-2">
+                                    @if($isQueued) 
+                                        <span class="label label-primary">In transit</span>
+                                    @else
+                                        <span 
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="<span class='text-muted'>Restoration:</span>&nbsp;{{ number_format($artefactCalculator->getAegisRestoration($realmArtefact)) }}"
+                                                class="label label-{{ $powerColor }}">
+                                                {{ number_format($realmArtefact->power) }} / {{ number_format($realmArtefact->max_power) }}
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <p>
+                                        {!! generate_sentence_from_array($artefactHelper->getArtefactPerksString($artefact)) !!}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-sm-12 col-md-3">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Information</h3>
+                </div>
+                <div class="box-body">
+                    <p><strong>{{ number_format($discoveredArtefactsCount) . ' ' . str_plural('artefact', $discoveredArtefactsCount) }}</strong> discovered so far this round:</p>    
+                    <p>{{ number_format($realmArtefacts->count()) }} currently held by realms and {{ number_format($queuedArtefacts->count()) }} in transit.</p>
                 </div>
             </div>
         </div>

@@ -6,6 +6,7 @@ use DB;
 use Log;
 use Illuminate\Support\Collection;
 use OpenDominion\Models\Artefact;
+use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\RealmArtefact;
 use OpenDominion\Models\Round;
@@ -120,7 +121,6 @@ class ArtefactService
         });
     }
     
-
     public function getArtefactsInQueue(Round $round): Collection
     {
         $queues = DB::table('dominion_queue')
@@ -140,5 +140,39 @@ class ArtefactService
         }
     
         return $artefacts;
+    }
+
+    # Effectively, the destination is a realm but functionally it's a dominion because of how the queue system works.
+    public function getArtefactInQueueDestination(Round $round, Artefact $artefact): Dominion
+    {
+        $dominionId = DB::table('dominion_queue')
+            ->join('dominions', 'dominions.id', '=', 'dominion_queue.dominion_id')
+            ->where('dominions.round_id', $round->id)
+            ->where('resource', $artefact->key)
+            ->where('source', 'artefact')
+            ->pluck('dominion_id')
+            ->first();
+    
+        return Dominion::find($dominionId);
+    }
+
+    public function getArtefactInQueueTicksRemaining(Round $round, Artefact $artefact): int
+    {
+        return DB::table('dominion_queue')
+            ->join('dominions', 'dominions.id', '=', 'dominion_queue.dominion_id')
+            ->where('dominions.round_id', $round->id)
+            ->where('resource', $artefact->key)
+            ->where('source', 'artefact')
+            ->pluck('hours')
+            ->first();
+    }
+
+    public function getArtefactRealm(Round $round, Artefact $artefact): Realm
+    {
+        return Realm::where('round_id', $round->id)
+            ->whereHas('artefacts', function ($query) use ($artefact) {
+                $query->where('artefact_id', $artefact->id);
+            })
+            ->first();
     }
 }
