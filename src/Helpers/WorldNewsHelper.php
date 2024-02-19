@@ -1174,6 +1174,7 @@ class WorldNewsHelper
         {
             case 'hostile':
             case 'red':
+            case 'danger':
                 return 'text-red';
 
             case 'friendly':
@@ -1187,6 +1188,7 @@ class WorldNewsHelper
 
             case 'barbarian':
             case 'other':
+            case 'warning':
                 return 'text-orange';
 
             case 'purple':

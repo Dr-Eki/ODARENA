@@ -478,10 +478,11 @@
                                 {
                                     $powerLabelStyle = 'success';
                                 }
-                            }
 
-                            $realmLabelStyle = $isOwnRealm ? 'primary' : 'hostile';
-                            
+                                $realmLabelStyle = $isOwnRealm ? 'success' : 'warning';
+
+                                $realmString = $artefactRealm->alignment === 'npc' ? 'Barbarians' : $artefactRealm->getPackLeader()->display_name . "'s Pack";
+                            }
 
                         @endphp
                         <div class="row">
@@ -503,7 +504,9 @@
                                         </a>
                                     @else
                                         <a href="{{ route('dominion.realm', $artefactRealm->number) }}">
-                                            {!! $worldNewsHelper->generateRealmOnlyString($artefactRealm, $realmLabelStyle) !!}
+                                            <span class="label label-{{ $realmLabelStyle }}">
+                                                    {{ $realmString }} (# {{ $artefactRealm->number }})
+                                            </span>
                                         </a>
                                     @endif
                                 </div>

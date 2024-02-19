@@ -1,5 +1,7 @@
 <?php
 
+# app/config/game.php
+
 return [
 
     'defaults' => [

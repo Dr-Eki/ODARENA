@@ -1,5 +1,7 @@
 <?php
 
+# app/config/barbarians.php
+
 return [
     'tribeTypes' => [
         'Crew',
