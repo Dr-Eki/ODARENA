@@ -144,7 +144,7 @@ class RealmController extends AbstractDominionController
         {
             $alignmentNoun = 'Barbarian Horde';
             $alignmentAdjective = 'Barbarian';
-            $barbarianSettings = $barbarianCalculator->getSettings();
+            $barbarianSettings = config('barbarians.settings');
         }
         elseif($realm->alignment == 'players')
         {
