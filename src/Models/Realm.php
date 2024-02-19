@@ -136,11 +136,7 @@ class Realm extends AbstractModel
     # Artefacts stuff
     protected function getArtefactPerks()
     {
-        return $this->artefacts->filter(
-            function ($artefact) {
-                return $artefact->power > 0;
-            }
-        )->flatMap(
+        return $this->artefacts->flatMap(
             function ($artefact) {
                 return $artefact->perks;
             }

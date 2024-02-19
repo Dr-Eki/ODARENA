@@ -58,12 +58,12 @@ class ArtefactService
             ->where('realms.round_id', $round->id)
             ->pluck('artefact_id');
 
-        $queuedArtefactIds = $this->getArtefactsInQueue($round);
+        #$queuedArtefactIds = $this->getArtefactsInQueue($round);
 
         // Get the artefacts that are in use
         $artefacts = Artefact::where('enabled', 1)
             ->whereIn('id', $usedArtefactIds)
-            ->orWhereIn('id', $queuedArtefactIds)
+            #->orWhereIn('id', $queuedArtefactIds)
             ->pluck('id');
 
         return $artefacts;
@@ -124,7 +124,7 @@ class ArtefactService
     public function getArtefactsInQueue(Round $round)
     {
         # Raw query to get all queues where source = artefact
-        $queues = DB::table('queue')
+        $queues = DB::table('dominion_queues')
             ->where('round_id', $round->id)
             ->where('source', 'artefact')
             ->pluck('resource');
