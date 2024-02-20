@@ -1988,6 +1988,7 @@ class TickService
                     'round_id' => $round->id,
                     'source_type' => Realm::class,
                     'source_id' => $winnerRealm->id,
+                    'type' => $data['count'] > 1 ? 'draw' : 'win',
                     'data' => $data
                 ]);
             }
@@ -2003,10 +2004,14 @@ class TickService
 
             foreach($winnerDominions as $winnerDominion)
             {
+                $data['winners'][$winnerDominion->id]['land'] = $winnerDominion->land;
+                $data['winners'][$winnerDominion->id]['networth'] = $winnerDominion->land;
+
                 RoundWinner::create([
                     'round_id' => $round->id,
                     'source_type' => Dominion::class,
                     'source_id' => $winnerDominion->id,
+                    'type' => $data['count'] > 1 ? 'draw' : 'win',
                     'data' => $data
                 ]);
             }
