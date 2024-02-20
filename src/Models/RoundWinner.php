@@ -30,6 +30,7 @@ class RoundWinner extends AbstractModel
     public $incrementing = false;
 
     protected $casts = [
+        'type' => 'string',
         'data' => 'array',
     ];
 
