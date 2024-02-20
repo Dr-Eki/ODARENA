@@ -14,7 +14,7 @@ class AddTypeToRoundWinnersTable extends Migration
     public function up()
     {
         Schema::table('round_winners', function (Blueprint $table) {
-            $table->text('type')->before('data');           
+            $table->text('type')->after('data');           
         });
     }
 
