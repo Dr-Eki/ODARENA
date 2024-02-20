@@ -1986,8 +1986,8 @@ class TickService
             {
                 RoundWinner::create([
                     'round_id' => $round->id,
-                    'source_type' => Realm::class,
-                    'source_id' => $winnerRealm->id,
+                    'winner_type' => Realm::class,
+                    'winner_id' => $winnerRealm->id,
                     'type' => $data['count'] > 1 ? 'draw' : 'win',
                     'data' => $data
                 ]);
@@ -2009,8 +2009,8 @@ class TickService
 
                 RoundWinner::create([
                     'round_id' => $round->id,
-                    'source_type' => Dominion::class,
-                    'source_id' => $winnerDominion->id,
+                    'winner_type' => Dominion::class,
+                    'winner_id' => $winnerDominion->id,
                     'type' => $data['count'] > 1 ? 'draw' : 'win',
                     'data' => $data
                 ]);
