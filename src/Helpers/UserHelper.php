@@ -197,7 +197,7 @@ class UserHelper
 
         foreach($this->getUserDominions($user) as $dominion)
         {
-            if(($placementInRound = $this->roundHelper->getDominionPlacementInRound($dominion)) <= $places)
+            if(($placementInRound = $this->roundHelper->getDominionPlacementInRound($dominion)) <= $places and !in_array($dominion->round->mode, ['artefacts', 'artefacts-packs']))
             {
                 $topPlacements[$placementInRound][] = $dominion->id;
             }
