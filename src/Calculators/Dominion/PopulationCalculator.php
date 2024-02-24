@@ -99,6 +99,17 @@ class PopulationCalculator
         $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_wizards');
         $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_archmages');
 
+        $military += $this->queueService->getStunQueueTotalByResource($dominion, 'military_spies');
+        $military += $this->queueService->getStunQueueTotalByResource($dominion, 'military_wizards');
+        $military += $this->queueService->getStunQueueTotalByResource($dominion, 'military_archmages');
+
+        $military += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_spies');
+        $military += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_wizards');
+        $military += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_archmages');
+        $military += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_spies');
+        $military += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_wizards');
+        $military += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_archmages');
+
         # Check each Unit for does_not_count_as_population perk.
         foreach($dominion->race->units as $unit)
         {
@@ -106,6 +117,9 @@ class PopulationCalculator
             {
                 $unitAmount = $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot);
                 $unitAmount += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                $unitAmount += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                $unitAmount += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                $unitAmount += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$unit->slot}");
 
                 # Check for housing_count
                 if($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'housing_count'))
@@ -528,6 +542,15 @@ class PopulationCalculator
         $units += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_spies");
         $units += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_wizards");
         $units += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_archmages");
+        $units += $this->queueService->getStunQueueTotalByResource($dominion, "military_spies");
+        $units += $this->queueService->getStunQueueTotalByResource($dominion, "military_wizards");
+        $units += $this->queueService->getStunQueueTotalByResource($dominion, "military_archmages");
+        $units += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_spies");
+        $units += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_wizards");
+        $units += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_archmages");
+        $units += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_spies");
+        $units += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_wizards");
+        $units += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_archmages");
 
         for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
         {
@@ -535,11 +558,17 @@ class PopulationCalculator
             {
                 $units += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
                 $units += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+                $units += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$slot}");
+                $units += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$slot}");
+                $units += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$slot}");
             }
         }
 
         $units += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'draftees');
         $units += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_draftees");
+        $units += $this->queueService->getStunQueueTotalByResource($dominion, "military_draftees");
+        $units += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_draftees");
+        $units += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_draftees");
 
         $units = max(0, $units);
 
@@ -567,6 +596,9 @@ class PopulationCalculator
                 {
                     $slotUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $housedSlot);
                     $slotUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$housedSlot}");
+                    $slotUnits += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$housedSlot}");
+                    $slotUnits += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$housedSlot}");
+                    $slotUnits += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$housedSlot}");
                 }
 
                 $units += min($slotUnits, $this->getAvailableHousingFromUnitSpecificBuildings($dominion, $housedSlot));
@@ -587,6 +619,9 @@ class PopulationCalculator
                     {
                         $slotUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
                         $slotUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+                        $slotUnits += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$slot}");
+                        $slotUnits += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$slot}");
+                        $slotUnits += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$slot}");
                     }
 
                     $units += min($slotUnits, $this->getAvailableHousingFromUnitSpecificBuildings($dominion, $slot));
@@ -615,6 +650,9 @@ class PopulationCalculator
                     {
                         $slotUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot);
                         $slotUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                        $slotUnits += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                        $slotUnits += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                        $slotUnits += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$unit->slot}");
                     }
 
                     $units += min($slotUnits, $this->getAvailableHousingFromUnitAttributeSpecificBuildings($dominion));
@@ -637,6 +675,9 @@ class PopulationCalculator
         $draftees = $dominion->military_draftees;
         $draftees += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'draftees');
         $draftees += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_draftees"); # From stun?
+        $draftees += $this->queueService->getStunQueueTotalByResource($dominion, "military_draftees"); # From stun?
+        $draftees += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_draftees"); # From stun?
+        $draftees += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_draftees"); # From stun?
         return min($dominion->military_draftees, $this->getAvailableHousingFromDrafteeSpecificBuildings($dominion));
     }
 
@@ -648,6 +689,8 @@ class PopulationCalculator
     {
         $spyUnits = $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'spies');
         $spyUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_spies");
+        $spyUnits += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_spies");
+        $spyUnits += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_spies");
 
         for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
         {
@@ -667,6 +710,9 @@ class PopulationCalculator
                 {
                     $spyUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
                     $spyUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+                    $spyUnits += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$slot}");
+                    $spyUnits += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$slot}");
+                    $spyUnits += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$slot}");
                 }
             }
         }
@@ -684,6 +730,12 @@ class PopulationCalculator
         $wizUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, 'archmages');
         $wizUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_wizards");
         $wizUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_archmages");
+        $wizUnits += $this->queueService->getStunQueueTotalByResource($dominion, "military_wizards");
+        $wizUnits += $this->queueService->getStunQueueTotalByResource($dominion, "military_archmages");
+        $wizUnits += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_wizards");
+        $wizUnits += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_archmages");
+        $wizUnits += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_wizards");
+        $wizUnits += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_archmages");
 
         for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
         {
@@ -703,6 +755,9 @@ class PopulationCalculator
                 {
                     $wizUnits += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
                     $wizUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+                    $wizUnits += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$slot}");
+                    $wizUnits += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$slot}");
+                    $wizUnits += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$slot}");
                 }
             }
         }

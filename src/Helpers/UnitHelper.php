@@ -1352,6 +1352,8 @@ class UnitHelper
 
             $limitingUnits = $dominion->{'military_unit' . $slotLimited};
             $limitingUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
+            $limitingUnits += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
+            $limitingUnits += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
             $limitingUnits += $this->queueService->getInvasionQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
             $limitingUnits += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
             $limitingUnits += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
@@ -1451,6 +1453,8 @@ class UnitHelper
 
         $currentlyTrained = $dominion->{'military_unit' . $slotLimited};
         $currentlyTrained += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
+        $currentlyTrained += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
+        $currentlyTrained += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
         $currentlyTrained += $this->queueService->getInvasionQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
         $currentlyTrained += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
         $currentlyTrained += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slotLimited);

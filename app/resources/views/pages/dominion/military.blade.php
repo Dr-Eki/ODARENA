@@ -76,6 +76,7 @@
                                                         $incomingAmount = 0;
                                                         $incomingAmount += $queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}");
                                                         $incomingAmount += $queueService->getSummoningQueueTotalByResource($selectedDominion, "military_{$unitType}");
+                                                        $incomingAmount += $queueService->getEvolutionQueueTotalByResource($selectedDominion, "military_{$unitType}");
                                                     @endphp
                                                   {{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unit->slot)) }}
                                                   <!-- Incoming -->
@@ -97,6 +98,7 @@
                                                     $incomingAmount = 0;
                                                     $incomingAmount += $queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}");
                                                     $incomingAmount += $queueService->getSummoningQueueTotalByResource($selectedDominion, "military_{$unitType}");
+                                                    $incomingAmount += $queueService->getEvolutionQueueTotalByResource($selectedDominion, "military_{$unitType}");
                                                 @endphp
 
                                                   {{ number_format($trained) }}

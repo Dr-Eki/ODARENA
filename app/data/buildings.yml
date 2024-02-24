@@ -1426,64 +1426,7 @@ ziggurat:
 
 # BEGIN GROWTH
 
-tissue_plain:  
-  enabled: 0
-  name: Tissue
-  exclusive_races:
-    - Growth
-  land_type: plain
-  perks:
-    food_production_raw: 4
-    housing: 176
-    jobs: 0
-
-sinew:  
-  enabled: 0
-  name: Sinew
-  exclusive_races:
-    - Growth
-  land_type: plain
-  perks:
-    casualties_on_defense: 1,-7.5,75 # 1% gives -2% max -100%
-    casualties_on_offense: 1,-7.5,75 # 1% gives -2%, max -100%
-    housing: 88
-    jobs: 0
-
-tissue_forest:  
-  enabled: 0
-  name: Tissue
-  exclusive_races:
-    - Growth
-  land_type: forest
-  perks:
-    food_production_raw: 4
-    housing: 176
-    jobs: 0
-
-tendon:  
-  enabled: 0
-  name: Tendon
-  exclusive_races:
-    - Growth
-  land_type: forest
-  perks:
-    improvements: 1,4 # Every 1% gives 2.5% higher imps
-    housing: 88
-    jobs: 0
-
-tissue_mountain:  
-  enabled: 0
-  name: Tissue
-  exclusive_races:
-    - Growth
-  land_type: mountain
-  perks:
-    food_production_raw: 4
-    housing: 176
-    jobs: 0
-
-cartilage:  
-  enabled: 0
+cartilage:
   name: Cartilage
   exclusive_races:
     - Growth
@@ -1493,20 +1436,17 @@ cartilage:
     housing: 88
     jobs: 0
 
-tissue_hill:  
-  enabled: 0
-  name: Tissue
+fleshforge:
+  name: Fleshforge
   exclusive_races:
     - Growth
-  land_type: hill
   perks:
-    food_production_raw: 4
-    housing: 176
+    growth_units_production: 1;2;3;4,1 # slots;slots, amount
+    housing: 44
     jobs: 0
 
-incisor:  
-  enabled: 0
-  name: Incisor
+incisor:
+  name: Teratoma
   exclusive_races:
     - Growth
   land_type: hill
@@ -1515,49 +1455,32 @@ incisor:
     housing: 88
     jobs: 0
 
-tissue_swamp:  
-  enabled: 0
+tissue:
   name: Tissue
   exclusive_races:
     - Growth
-  land_type: swamp
   perks:
     food_production_raw: 4
     housing: 176
     jobs: 0
 
-sac:  
-  enabled: 0
-  name: Sac
+sinew:
+  name: Sinew
   exclusive_races:
     - Growth
-  land_type: swamp
   perks:
-    mana_production_raw: 6
-    unit_food_costs: 1,-4,40 # ratio, perk, max
+    casualties_on_defense: 1,-7.5,75 # 1% gives -2% max -100%
+    casualties_on_offense: 1,-7.5,75 # 1% gives -2%, max -100%
     housing: 88
     jobs: 0
 
-tissue_water:  
-  enabled: 0
-  name: Tissue
+tendon:
+  name: Tendon
   exclusive_races:
     - Growth
-  land_type: water
   perks:
-    food_production_raw: 4
-    housing: 176
-    jobs: 0
-
-gill:  
-  enabled: 0
-  name: Gill
-  exclusive_races:
-    - Growth
-  land_type: water
-  perks:
-    food_production_mod: 1,10,1000 # Every 1% gives +8% food production, max +20%
-    housing: 0
+    improvements: 1,4 # Every 1% gives 2.5% higher imps
+    housing: 88
     jobs: 0
 
 # END GROWTH

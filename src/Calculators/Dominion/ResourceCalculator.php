@@ -395,7 +395,7 @@ class ResourceCalculator
         # Check for RESOURCE_production_raw_from_draftees
         $production += $dominion->military_draftees * $dominion->race->getPerkValue($resourceKey . '_production_raw_from_draftees');
 
-        // raw_mod perks
+        // _production_raw_mod perks
         $rawModPerks = 1;
         $rawModPerks += $dominion->getBuildingPerkMultiplier($resourceKey . '_production_raw_mod');
         $rawModPerks += $dominion->getSpellPerkMultiplier($resourceKey . '_production_raw_mod');
@@ -527,7 +527,9 @@ class ResourceCalculator
                   {
                       $consumers += $amount;
                       $consumers += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+                      #$consumers += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$slot}"); # Specifically and intentionally excluded
                       #$consumers += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$slot}"); # Specifically and intentionally excluded
+                      $consumers += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$slot}");
                   }
             }
 

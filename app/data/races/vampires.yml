@@ -1,10 +1,11 @@
 name: Vampires
 alignment: independent
-description: >-
+description: Cursed with eternal life, Vampires are a powerful, hierarchical society. 
 home_terrain: forest
-playable: 0 # Round 88
+playable: 1
 skill_level: 2
-
+experimental: 1
+magic_level: 3
 
 resources:
   - gold
@@ -15,7 +16,7 @@ resources:
 
 perks:
   max_population: 20
-  food_consumption_mod: -80
+  food_consumption_mod: -50
   title_bonus: 100
 
 units:
@@ -23,45 +24,43 @@ units:
     type:
       - living
       - mindless
+    cost:
+      gold: 700
     power:
       offense: 0
       defense: 4
     perks:
-      cannot_be_trained: 1
-      strength_conversion: 4,1,2 # threshold,under,over
       casualties: 20
 
-  - name: Gnarl
+  - name: Acolyte
     type:
       - living
       - sentient
-    power:
-      offense: 9
-      defense: 9
-    perks:
-      cannot_be_trained: 1
-      casualties: -50
-      offense_from_time: 18,06,4 # Between the hours 18:00 and 06:00, gains +6 OP
-      strength_conversion: 4,1,2 # threshold,under,over
-      displaced_peasants_conversion: 1
-      some_win_into: 3,3 # ratio, slot
-
-  - name: Ravager
-    type:
-      - living
-      - sentient
-      - massive
       - intelligent
+    cost:
+      gold: 1000
     power:
-      offense: 22
-      defense: 12
+      offense: 3
+      defense: 3
     perks:
-      cannot_be_trained: 1
-      casualties: -75
-      food_consumption_raw: 0.5
-      offense_from_time: 18,06,6 # Between the hours 18:00 and 06:00, gains +6 OP
-      strength_conversion: 4,1,2 # threshold,under,over
-      displaced_peasants_conversion: 1
+      offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP
+      evolves_into_unit: 3,0.001,12 # 0.001% of this unit become unit3, taking 12 ticks to complete
+
+  - name: Magistrate
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+    power:
+      offense: 4
+      defense: 5
+    perks:
+    perks:
+      offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP
+      defense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 DP
+      evolves_into_unit: 4,0.001,12 # 0.001% of this unit become unit3, taking 12 ticks to complete
+      faster_return_from_time: 18,06,2 # Between the hours 18:00 and 06:00, returns 4 ticks faster
 
   - name: Noble
     training_time: 12
@@ -69,18 +68,12 @@ units:
       - living
       - sentient
       - intelligent
-    cost:
-      gold: 1600
+      - wise
+      - legendary
     power:
-      offense: 8
-      defense: 8
+      offense: 7
+      defense: 7
     perks:
-      strength_conversion: 4,1,2 # threshold,under,over
       defense_from_time: 06,18,1 # Between the hours 18:00 and 06:00, gains +1 DP
       offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP
       faster_return_from_time: 18,06,4 # Between the hours 18:00 and 06:00, returns 4 ticks faster
-      counts_as_spy_offense_from_time: 18,06,0.10
-      counts_as_spy_defense_from_time: 06,18,0.10
-      counts_as_spy: 0.10
-      displaced_peasants_conversion: 1
-      theft_carry_capacity: -33

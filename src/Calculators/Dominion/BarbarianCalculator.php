@@ -117,6 +117,8 @@ class BarbarianCalculator
         $dp += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit3') * $this->getSetting('UNIT3_DP');
         $dp += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit2') * $this->getSetting('UNIT2_DP');
         $dp += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit3') * $this->getSetting('UNIT3_DP');
+        $dp += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit2') * $this->getSetting('UNIT2_DP');
+        $dp += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit3') * $this->getSetting('UNIT3_DP');
 
         return $dp;
     }
@@ -128,6 +130,8 @@ class BarbarianCalculator
         $op += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit4') * $this->getSetting('UNIT4_OP');
         $op += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit1') * $this->getSetting('UNIT1_OP');
         $op += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit4') * $this->getSetting('UNIT4_OP');
+        $op += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit1') * $this->getSetting('UNIT1_OP');
+        $op += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit4') * $this->getSetting('UNIT4_OP');
 
         return $op;
     }

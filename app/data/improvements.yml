@@ -231,6 +231,17 @@ rooting:
 
 # END DWARG #
 
+# BEGIN GROWTH #
+tissue:
+  name: Tissue
+  exclusive_races:
+    - Growth
+  perks:
+    population: 120,82000
+    food_production_mod: 120,82000
+
+# END GROWTH #
+
 # BEGIN SIMIAN #
 
 thriving:
@@ -783,17 +794,7 @@ waves:
     chance_of_instant_return: 50,50000
 # END VOID #
 
-# BEGIN GROWTH #
-tissue:  
-  enabled: 0
-  name: Tissue
-  exclusive_races:
-    - Growth
-  perks:
-    population: 120,82000
-    food_production_mod: 120,82000
 
-# END GROWTH #
 
 
 

@@ -282,7 +282,7 @@ class InsightService
             }
         });
 
-        // Units returning from desecration
+        // Units returning from stun
         $this->queueService->getStunQueue($target)->each(static function ($row) use (&$data)
         {
             if (starts_with($row->resource, 'military_')) {
@@ -310,6 +310,14 @@ class InsightService
             }
         });
         $this->queueService->getSummoningQueue($target)->each(static function ($row) use (&$data)
+        {
+            if (starts_with($row->resource, 'military_'))
+            {
+                $unitType = str_replace('military_', '', $row->resource);
+                $data['units']['training'][$unitType][$row->hours] += $row->amount;
+            }
+        });
+        $this->queueService->getEvolutionQueue($target)->each(static function ($row) use (&$data)
         {
             if (starts_with($row->resource, 'military_'))
             {

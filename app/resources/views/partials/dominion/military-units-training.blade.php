@@ -37,6 +37,7 @@
                                         $incomingAmount = 0;
                                         $incomingAmount += $queueService->getTrainingQueueAmount($selectedDominion, "military_{$unitType}", $i);
                                         $incomingAmount += $queueService->getSummoningQueueAmount($selectedDominion, "military_{$unitType}", $i);
+                                        $incomingAmount += $queueService->getEvolutionQueueAmount($selectedDominion, "military_{$unitType}", $i);
                                     @endphp
                                     @if ($incomingAmount)
                                         {{ number_format($incomingAmount) }}
@@ -47,7 +48,7 @@
                             @endfor
                             <td class="text-center">
                                 {{ number_format($selectedDominion->{'military_' . $unitType}) }}
-                                ({{ number_format($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}") + $queueService->getSummoningQueueTotalByResource($selectedDominion, "military_{$unitType}")) }})
+                                ({{ number_format($queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}") + $queueService->getSummoningQueueTotalByResource($selectedDominion, "military_{$unitType}") + $queueService->getEvolutionQueueTotalByResource($selectedDominion, "military_{$unitType}")) }})
                             </td>
                         </tr>
                     @endforeach

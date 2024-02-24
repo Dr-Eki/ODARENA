@@ -61,6 +61,8 @@ class TheftCalculator
 
         # But the target can decrease, which comes afterwards
         $targetModifier = 1;
+        $targetModifier += $target->race->getPerkMultiplier($resource->key . '_theft');
+        $targetModifier += $target->race->getPerkMultiplier('all_theft');
         $targetModifier += $target->getSpellPerkMultiplier($resource->key . '_theft');
         $targetModifier += $target->getSpellPerkMultiplier('all_theft');
         $targetModifier += $target->getImprovementPerkMultiplier($resource->key . '_theft');

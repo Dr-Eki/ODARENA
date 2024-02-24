@@ -6,14 +6,12 @@ playable: 0 # Round 88
 skill_level: 2
 experimental: 1
 
-
-peasants_alias: cell
-draftees_alias: amoeba
+peasants_alias: prion
+draftees_alias: callus
 
 resources:
   - food
   - lumber
-  - mana
   - acid
 
 construction_materials:
@@ -21,55 +19,54 @@ construction_materials:
 
 improvement_resources:
   food: 1.2
-  lumber: 2.4
+  lumber: 10
 
 peasants_production:
   food: 0.5
 
 perks:
-  population_growth: 200
   no_food_consumption: 1
   cannot_train_spies: 1
   cannot_train_wizards: 1
   cannot_train_archmages: 1
-  growth_cannot_build: 1
-  reduced_conversions: 100
-  draftee_dp: 0.01
-  cannot_rezone: 1
+  cannot_perform_sorcery: 1
+  cannot_sabotage: 1
+  population_growth: 200
+  #reduced_conversions: 100
+  food_theft: -99.99
+  draftee_dp: 0.05
   cannot_release_units: 1
   unemployed_peasants_produce: 1
   no_morale_changes: 1
 
 units:
-  - name: Abscess
+  - name: Scute
     training_time: 9
     type:
       - living
       - mindless
     cost:
-      food: 65
+      food: 0
     power:
-      offense: 0.5
-      defense: 0
+      offense: 0.25
+      defense: 1.00
     perks:
-      counts_as_wizard_offense: 0.2
-      counts_as_spy_offense: 0.2
+      cannot_be_trained: 1
 
-  - name: Blister
+  - name: Nail
     training_time: 9
     type:
       - living
       - mindless
     cost:
-      food: 65
+      food: 0
     power:
-      offense: 0
-      defense: 0.5
+      offense: 1.00
+      defense: 0.75
     perks:
-      counts_as_wizard_defense: 0.15
-      counts_as_spy_defense: 0.15
+      cannot_be_trained: 1
 
-  - name: Cyst
+  - name: Pincer
     training_time: 12
     type:
       - living
@@ -77,13 +74,12 @@ units:
     cost:
       food: 160
     power:
-      offense: 0
-      defense: 1
+      offense: 1.25
+      defense: 0.50
     perks:
-        mana_production_raw: 0.015
-        food_production_raw: 0.50
+      cannot_be_trained: 1
 
-  - name: Ulcer
+  - name: Quill
     training_time: 12
     type:
       - living
@@ -91,5 +87,7 @@ units:
     cost:
       food: 170
     power:
-      offense: 1
-      defense: 0.5
+      offense: 1.50
+      defense: 0.25
+    perks:
+      cannot_be_trained: 1

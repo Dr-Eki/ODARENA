@@ -51,6 +51,20 @@ maelstrom:
   perks:
     increases_enemy_casualties_on_defense: 50
 
+## Growth
+
+metabolism:
+  name: Metabolism
+  level: 0
+  scope: self
+  class: passive
+  duration: 48
+  cooldown: 144
+  exclusive_races:
+    - Growth
+  perks:
+    food_production_raw_mod: 100
+
 ## Kobold
 
 howling:
@@ -425,18 +439,7 @@ pyromancy:
     unit_gold_costs: 2
     unit_magma_costs: 2
 
-metabolism:  
-  enabled: 0
-  name: Metabolism
-  scope: self
-  class: passive
-  cost: 8
-  duration: 48
-  cooldown: 144
-  exclusive_races:
-    - Growth
-  perks:
-    food_production_raw_mod: 100
+
 
 iceshield:  
   enabled: 0

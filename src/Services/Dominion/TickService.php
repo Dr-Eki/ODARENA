@@ -25,6 +25,7 @@ use OpenDominion\Calculators\Dominion\ProductionCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RoundHelper;
@@ -55,6 +56,7 @@ class TickService
 
     /** @var Carbon */
     protected $now;
+    protected $temporaryData = [];
 
     protected $barbarianCalculator;
     protected $buildingCalculator;
@@ -73,6 +75,7 @@ class TickService
     protected $resourceCalculator;
     protected $sorceryCalculator;
     protected $spellCalculator;
+    protected $unitCalculator;
 
     protected $improvementHelper;
     protected $landHelper;
@@ -114,6 +117,7 @@ class TickService
         $this->moraleCalculator = app(MoraleCalculator::class);
         $this->realmCalculator = app(RealmCalculator::class);
         $this->sorceryCalculator = app(SorceryCalculator::class);
+        $this->unitCalculator = app(UnitCalculator::class);
 
         $this->improvementHelper = app(ImprovementHelper::class);
         $this->landHelper = app(LandHelper::class);
@@ -161,6 +165,7 @@ class TickService
 
         foreach ($activeRounds as $round)
         {
+            $this->temporaryData[$round->id] = [];
 
             $round->is_ticking = 1;
             $round->save();
@@ -182,7 +187,6 @@ class TickService
 
                 # Get dominions IDs with Stasis active
                 $stasisDominions = [];
-                #$dominions = $round->activeDominions()->get();
                 $dominions = $round->activeDominions()->inRandomOrder()->get();
                 $largestDominionSize = 0;
 
@@ -191,6 +195,12 @@ class TickService
                 {
                     if($dominion->protection_ticks === 0)
                     {
+
+                        $this->temporaryData[$round->id][$dominion->id] = [];
+
+                        $this->temporaryData[$round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
+                        $this->temporaryData[$round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsGenerated($dominion);
+
                         if($dominion->getSpellPerkValue('stasis'))
                         {
                             $stasisDominions[] = $dominion->id;
@@ -230,6 +240,9 @@ class TickService
 
                         if(static::EXTENDED_LOGGING){ Log::debug('** Updating research for ' . $dominion->name); }
                         $this->handleResearch($dominion);
+
+                        if(static::EXTENDED_LOGGING){ Log::debug('** Updating units for ' . $dominion->name); }
+                        $this->handleUnits($dominion);
 
                         if(static::EXTENDED_LOGGING) { Log::debug('** Handle Barbarians:'); }
                         # NPC Barbarian: invasion, training, construction
@@ -448,16 +461,9 @@ class TickService
 
                         if(static::EXTENDED_LOGGING) { Log::debug('** Handle unit attrition for ' . $dominion->name); }
 
-                        $attritionUnits = [];
-                        foreach($dominion->race->units as $unit)
+                        if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
                         {
-                            $attritionUnits[] = $dominion->tick->{'attrition_unit'.$unit->slot};
-                        }
-
-                        if(array_sum($attritionUnits) > 0 and !$dominion->isAbandoned())
-                        {
-                            $this->notificationService->queueNotification('attrition_occurred', $attritionUnits);
-                            #$this->notificationService->queueNotification('attrition_occurred',[$dominion->tick->attrition_unit1, $dominion->tick->attrition_unit2, $dominion->tick->attrition_unit3, $dominion->tick->attrition_unit4]);
+                            $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']);
                         }
 
                         if(static::EXTENDED_LOGGING) { Log::debug('** Cleaning up active spells'); }
@@ -528,6 +534,8 @@ class TickService
                  'ticks' => ($round->ticks + 1),
                  'is_ticking' => 0
              ])->save();
+
+             unset($this->temporaryData[$round->id]);
         }
     }
 
@@ -555,6 +563,40 @@ class TickService
         Log::info('[DAILY] Daily tick finished');
     }
 
+    protected function cleanupActiveSpells(Dominion $dominion)
+    {
+        $finishedSpells = $dominion->spells()
+            ->where('duration', '<=', 0)
+            ->where('cooldown', '<=', 0)
+            ->with('spell')
+            ->get();
+    
+        $beneficialSpells = [];
+        $harmfulSpells = [];
+    
+        foreach ($finishedSpells as $spellInstance) {
+            if ($spellInstance->caster_id == $dominion->id) {
+                $beneficialSpells[] = $spellInstance->spell->key;
+            } else {
+                $harmfulSpells[] = $spellInstance->spell->key;
+            }
+        }
+    
+        if (!empty($beneficialSpells) and !$dominion->isAbandoned()) {
+            $this->notificationService->queueNotification('beneficial_magic_dissipated', $beneficialSpells);
+        }
+    
+        if (!empty($harmfulSpells) and !$dominion->isAbandoned()) {
+            $this->notificationService->queueNotification('harmful_magic_dissipated', $harmfulSpells);
+        }
+    
+        $dominion->spells()
+            ->where('duration', '<=', 0)
+            ->where('cooldown', '<=', 0)
+            ->delete();
+    }
+
+    /*
     protected function cleanupActiveSpells(Dominion $dominion)
     {
         $finished = DB::table('dominion_spells')
@@ -596,6 +638,7 @@ class TickService
             ->where('cooldown', '<=', 0)
             ->delete();
     }
+    */
 
     protected function cleanupQueues(Dominion $dominion)
     {
@@ -918,338 +961,31 @@ class TickService
         # Tickly unit perks
         $generatedLand = 0;
 
-        foreach($dominion->race->units as $unit)
+        // Myconid: Land generation
+        if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_per_tick'))
         {
-            ${'generatedUnit' . $unit->slot} = 0;
-            ${'attritionUnit' . $unit->slot} = 0;
-        }
+            $landPerTick = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_per_tick') * (1 - ($dominion->land/12000));
+            $multiplier = 1;
+            $multiplier += $dominion->getSpellPerkMultiplier('land_generation_mod');
+            $multiplier += $dominion->getImprovementPerkMultiplier('land_generation_mod');
 
-        # Cult unit attrition reduction
-        $attritionMultiplier = 0;
-        if($dominion->race->name == 'Cult')
-        {
-            $attritionMultiplier -= ($dominion->military_unit3 + $dominion->military_unit4) / max($this->populationCalculator->getPopulationMilitary($dominion),1);
-        }
+            $landPerTick *= $multiplier;
 
-        # Generic attrition perks
-        $attritionMultiplier -= $dominion->getBuildingPerkMultiplier('reduces_attrition'); # Positive value, hence -
-        $attritionMultiplier += $dominion->getImprovementPerkMultiplier('attrition_mod'); # Negative value, hence +
-        $attritionMultiplier += $dominion->getDecreePerkMultiplier('attrition_mod'); # Negative value, hence +
-        $attritionMultiplier += $dominion->getSpellPerkMultiplier('attrition_mod'); # Negative value, hence +
-        $attritionMultiplier += $dominion->getTerrainPerkMultiplier('attrition_mod'); # Negative value, hence +
+            $generatedLand += $dominion->{"military_unit".$slot} * $landPerTick;
+            $generatedLand = max($generatedLand, 0);
 
-        # Cap at -100%
-        $attritionMultiplier = max(-1, $attritionMultiplier);
-
-        // Check for no-attrition perks.
-        if($dominion->getSpellPerkValue('no_attrition'))
-        {
-            $attritionMultiplier = -1;
-        }
-
-        for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
-        {
-            // Myconid: Land generation
-            if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_per_tick'))
+            # Defensive Warts turn off land generation
+            if($dominion->getSpellPerkValue('stop_land_generation'))
             {
-                $landPerTick = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_per_tick') * (1 - ($dominion->land/12000));
-                $multiplier = 1;
-                $multiplier += $dominion->getSpellPerkMultiplier('land_generation_mod');
-                $multiplier += $dominion->getImprovementPerkMultiplier('land_generation_mod');
-
-                $landPerTick *= $multiplier;
-
-                $generatedLand += $dominion->{"military_unit".$slot} * $landPerTick;
-                $generatedLand = max($generatedLand, 0);
-
-                # Defensive Warts turn off land generation
-                if($dominion->getSpellPerkValue('stop_land_generation'))
-                {
-                    $generatedLand = 0;
-                }
-            }
-
-            $availablePopulation = $this->populationCalculator->getMaxPopulation($dominion) - $this->populationCalculator->getPopulationMilitary($dominion);
-
-            // Myconid and Cult: Unit generation
-            if($unitGenerationPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'unit_production'))
-            {
-                $unitToGenerateSlot = $unitGenerationPerk[0];
-                $unitAmountToGeneratePerGeneratingUnit = $unitGenerationPerk[1];
-                $unitAmountToGenerate = $dominion->{'military_unit'.$slot} * $unitAmountToGeneratePerGeneratingUnit;
-
-                $unitAmountToGenerate = max(0, min($unitAmountToGenerate, $availablePopulation));
-
-                ${'generatedUnit' . $unitToGenerateSlot} += $unitAmountToGenerate;
-
-                $availablePopulation -= $unitAmountToGenerate;
-            }
-
-            // Unit attrition
-            if($unitAttritionPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'attrition'))
-            {
-                $unitAttritionAmount = intval($dominion->{'military_unit'.$slot} * $unitAttritionPerk/100 * (1 + $attritionMultiplier));
-
-                if($attritionProtection = $dominion->getBuildingPerkValue('attrition_protection'))
-                {
-                    $amountProtected = $attritionProtection[0];
-                    $slotProtected = $attritionProtection[1];
-                    $amountProtected *= 1 + $dominion->getImprovementPerkMultiplier('attrition_protection');
-
-                    if($slot == $slotProtected)
-                    {
-                        $unitAttritionAmount -= $amountProtected;
-                    }
-                }
-
-                if($unitAttritionProtectionPerNetVictoriesPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'attrition_protection_from_net_victories'))
-                {
-                    $amountProtected = min($this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot), $this->militaryCalculator->getNetVictories($dominion)) * $unitAttritionProtectionPerNetVictoriesPerk;
-
-                    $unitAttritionAmount -= $amountProtected;
-                }
-
-                $unitAttritionAmount = max(0, min($unitAttritionAmount, $dominion->{'military_unit'.$slot})); # Sanity caps.
-
-                # Look for static attrition protection.
-
-                ${'attritionUnit' . $slot} += round($unitAttritionAmount);
-            }
-
-            // Unit attrition if building limit exceeded
-            if($unitBuildingLimitAttritionPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'attrition_if_capacity_limit_exceeded') and $this->unitHelper->unitHasCapacityLimit($dominion, $slot))
-            {
-                $unitMaxCapacity = $this->unitHelper->getUnitMaxCapacity($dominion, $slot);
-
-                $unitAmount = $dominion->{'military_unit'.$slot};
-                #$unitAmount = $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
-
-                $unitsSubjectToAttrition = $unitAmount - $unitMaxCapacity;
-
-                $unitAttritionAmount = $unitsSubjectToAttrition * ($unitBuildingLimitAttritionPerk / 100);
-
-                $unitAttritionAmount = max(0, min($unitAttritionAmount, $dominion->{'military_unit'.$slot})); # Sanity caps (greater than 0, and cannot exceed units at home)
-
-                ${'attritionUnit' . $slot} += round($unitAttritionAmount);
-
+                $generatedLand = 0;
             }
         }
 
         # Imperial Crypt: Rites of Zidur, Rites of Kinthys
         $tick->crypt_bodies_spent = 0;
-
-        # Round 79: logic retired (temporarily?)
-        # Version 1.4 (Round 50, no Necromancer pairing limit)
-        # Version 1.3 (Round 42, Spells 2.0 compatible-r)
-        if ($this->spellCalculator->isSpellActive($dominion, 'dark_rites'))
-        {
-            $spell = Spell::where('key', 'dark_rites')->first();
-
-            $spellPerkValues = $spell->getActiveSpellPerkValues($spell->key, 'converts_crypt_bodies');
-
-            # Check bodies available in the crypt
-            $bodiesAvailable = max(0, floor($this->resourceCalculator->getRealmAmount($dominion->realm, 'body') - $tick->crypt_bodies_spent));
-
-            # Break down the spell perk
-            $raisersPerRaisedUnit = (int)$spellPerkValues[0];
-            $raisingUnitSlot = (int)$spellPerkValues[1];
-            $unitRaisedSlot = (int)$spellPerkValues[2];
-
-            $unitsRaised = $dominion->{'military_unit' . $raisingUnitSlot} / $raisersPerRaisedUnit;
-
-            $unitsRaised = max(0, min($unitsRaised, $bodiesAvailable));
-
-            $tick->{'generated_unit' . $unitRaisedSlot} += $unitsRaised;
-            $tick->crypt_bodies_spent += $unitsRaised;
-        }
-        if ($this->spellCalculator->isSpellActive($dominion, 'rites_of_zidur'))
-        {
-            $spell = Spell::where('key', 'rites_of_zidur')->first();
-
-            $spellPerkValues = $spell->getActiveSpellPerkValues($spell->key, 'converts_crypt_bodies');
-
-            # Check bodies available in the crypt
-            $bodiesAvailable = max(0, floor($this->resourceCalculator->getRealmAmount($dominion->realm, 'body') - $tick->crypt_bodies_spent));
-
-            # Break down the spell perk
-            $raisersPerRaisedUnit = (int)$spellPerkValues[0];
-            $raisingUnitSlot = (int)$spellPerkValues[1];
-            $unitRaisedSlot = (int)$spellPerkValues[2];
-
-            $unitsRaised = $dominion->{'military_unit' . $raisingUnitSlot} / $raisersPerRaisedUnit;
-
-            $unitsRaised = max(0, min($unitsRaised, $bodiesAvailable));
-
-            $tick->{'generated_unit' . $unitRaisedSlot} += $unitsRaised;
-            $tick->crypt_bodies_spent += $unitsRaised;
-        }
-        if ($this->spellCalculator->isSpellActive($dominion, 'rites_of_kinthys'))
-        {
-            $spell = Spell::where('key', 'rites_of_kinthys')->first();
-
-            $spellPerkValues = $spell->getActiveSpellPerkValues($spell->key, 'converts_crypt_bodies');
-
-            # Check bodies available in the crypt
-            $bodiesAvailable = max(0, floor($this->resourceCalculator->getRealmAmount($dominion->realm, 'body') - $tick->crypt_bodies_spent));
-
-            # Break down the spell perk
-            $raisersPerRaisedUnit = (int)$spellPerkValues[0];
-            $raisingUnitSlot = (int)$spellPerkValues[1];
-            $unitRaisedSlot = (int)$spellPerkValues[2];
-
-            $unitsRaised = $dominion->{'military_unit' . $raisingUnitSlot} / $raisersPerRaisedUnit;
-
-            $unitsRaised = max(0, min($unitsRaised, $bodiesAvailable));
-
-            $tick->{'generated_unit' . $unitRaisedSlot} += $unitsRaised;
-            $tick->crypt_bodies_spent += $unitsRaised;
-        }
         
-        for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
-        {
-            $unitsToSummon = 0;
-            $raceKey = str_replace(' ', '_', strtolower($dominion->race->name));
-
-            # Passive unit generation from buildings
-            $buildingUnitSummoningRaw = $dominion->getBuildingPerkValue($raceKey . '_unit' . $slot . '_production_raw');
-            $buildingUnitSummoningRaw += $dominion->getBuildingPerkValue($raceKey . '_unit' . $slot . '_production_raw_capped');
-
-            if($buildingUnitSummoningRaw > 0)
-            {
-                $unitSummoningMultiplier = 1;
-                $unitSummoningMultiplier += $dominion->getBuildingPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
-                $unitSummoningMultiplier += $dominion->getSpellPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
-    
-                if($unitProductionFromWizardRatioPerk = $dominion->getBuildingPerkValue('unit_production_from_wizard_ratio'))
-                {
-                    $unitSummoningMultiplier += $this->magicCalculator->getWizardRatio($dominion) / $unitProductionFromWizardRatioPerk;
-                }
-    
-                $unitSummoning = $buildingUnitSummoningRaw * $unitSummoningMultiplier;
-    
-                # Check for capacity limit
-                if($this->unitHelper->unitHasCapacityLimit($dominion, $slot))
-                {
-                    $maxCapacity = $this->unitHelper->getUnitMaxCapacity($dominion, $slot);
-    
-                    $usedCapacity = $dominion->{'military_unit' . $slot};
-                    $usedCapacity += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getInvasionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slot);
-    
-                    $availableCapacity = max(0, $maxCapacity - $usedCapacity);
-    
-                    $unitsToSummon = floor(min($unitSummoning, $availableCapacity));
-                }
-                # If no capacity limit
-                else
-                {
-                    $unitsToSummon = $unitSummoning;
-                }
-            }
-
-            # Passive unit generation from decrees
-            $decreeUnitSummoningRaw = $dominion->getDecreePerkValue($raceKey . '_unit' . $slot . '_production_raw');
-
-            if($decreeUnitSummoningRaw)
-            {
-                $decreeUnitSummoningPerks = explode(',', $decreeUnitSummoningRaw);
-                
-                $slotProduced = (int)$decreeUnitSummoningPerks[0];
-                $amountProduced = (float)$decreeUnitSummoningPerks[1];
-                $slotProducing = (int)$decreeUnitSummoningPerks[2];
-
-                $unitSummoningMultiplier = 1;
-                $unitSummoningMultiplier += $dominion->getBuildingPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
-                $unitSummoningMultiplier += $dominion->getSpellPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
-
-                $unitSummoning = $dominion->{'military_unit' . $slotProducing} * $amountProduced * $unitSummoningMultiplier;
-    
-                # Check for capacity limit
-                if($this->unitHelper->unitHasCapacityLimit($dominion, $slot))
-                {
-                    $maxCapacity = $this->unitHelper->getUnitMaxCapacity($dominion, $slot);
-    
-                    $usedCapacity = $dominion->{'military_unit' . $slot};
-                    $usedCapacity += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getInvasionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slot);
-    
-                    $availableCapacity = max(0, $maxCapacity - $usedCapacity);
-    
-                    $unitsToSummon = floor(min($unitSummoning, $availableCapacity));
-                }
-                # If no capacity limit
-                else
-                {
-                    $unitsToSummon = $unitSummoning;
-                }
-            }
-
-            # Passive unit generation from decrees
-            $decreeUnitSummoningFromCryptRaw = $dominion->getDecreePerkValue($raceKey . '_unit' . $slot . '_production_raw_from_crypt');
-
-            if($decreeUnitSummoningFromCryptRaw)
-            {
-                $decreeUnitSummoningPerks = explode(',', $decreeUnitSummoningFromCryptRaw);
-                
-                $slotProduced = (int)$decreeUnitSummoningPerks[0];
-                $amountProduced = (float)$decreeUnitSummoningPerks[1];
-                $slotProducing = (int)$decreeUnitSummoningPerks[2];
-
-                $unitSummoningMultiplier = 1;
-                $unitSummoningMultiplier += $dominion->getBuildingPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
-                $unitSummoningMultiplier += $dominion->getSpellPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
-
-                $unitSummoning = $dominion->{'military_unit' . $slotProducing} * $amountProduced * $unitSummoningMultiplier;
-    
-                # Check for capacity limit
-                if($this->unitHelper->unitHasCapacityLimit($dominion, $slot))
-                {
-                    $maxCapacity = $this->unitHelper->getUnitMaxCapacity($dominion, $slot);
-    
-                    $usedCapacity = $dominion->{'military_unit' . $slot};
-                    $usedCapacity += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getInvasionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slot);
-    
-                    $availableCapacity = max(0, $maxCapacity - $usedCapacity);
-    
-                    $unitsToSummon = floor(min($unitSummoning, $availableCapacity));
-                }
-                # If no capacity limit
-                else
-                {
-                    $unitsToSummon = $unitSummoning;
-                }
-
-                $unitsToSummon = min($unitsToSummon, $this->resourceCalculator->getRealmAmount($dominion->realm, 'body'));
-                $tick->crypt_bodies_spent += $unitsToSummon;
-            }
-
-            # Because you never know...
-            $unitsToSummon = intval(max($unitsToSummon, 0));
-
-            $tick->{'generated_unit'.$slot} += $unitsToSummon;
-        }
+        $unitsGenerated = $this->unitCalculator->getUnitsGenerated($dominion);
+        $unitsAttrited = $this->unitCalculator->getUnitsAttrited($dominion);
 
         # Passive conversions
         $passiveConversions = $this->conversionCalculator->getPassiveConversions($dominion);
@@ -1260,8 +996,8 @@ class TickService
 
             foreach($dominion->race->units as $unit)
             {
-                ${'generatedUnit' . $unit->slot} += $unitsConverted[$unit->slot];
-                $tick->{'attrition_unit' . $unit->slot} += $unitsRemoved[$unit->slot];
+                $unitsGenerated[$unit->slot] += $unitsConverted[$unit->slot];
+                $unitsAttrited[$unit->slot] += $unitsRemoved[$unit->slot];
             }
         }
         
@@ -1270,8 +1006,8 @@ class TickService
 
         foreach($dominion->race->units as $unit)
         {
-            $tick->{'generated_unit' . $unit->slot} += intval(${'generatedUnit' . $unit->slot}) + (rand()/getrandmax() < fmod(${'generatedUnit' . $unit->slot}, 1) ? 1 : 0);
-            $tick->{'attrition_unit' . $unit->slot} += intval(${'attritionUnit' . $unit->slot});
+            $tick->{'generated_unit' . $unit->slot} += intval($unitsGenerated[$unit->slot]) + (rand()/getrandmax() < fmod($unitsGenerated[$unit->slot], 1) ? 1 : 0);
+            $tick->{'attrition_unit' . $unit->slot} += intval($unitsAttrited[$unit->slot]);
         }
 
         # Handle building self-destruct
@@ -1339,36 +1075,29 @@ class TickService
         $this->handleImprovements($dominion);
         $this->handleDeities($dominion);
         $this->handleResearch($dominion);
+        $this->handleUnits($dominion);
 
         $this->updateDominion($dominion);
         $this->updateDominionSpells($dominion);
         $this->updateDominionDeity($dominion);
         $this->updateDominionQueues($dominion);
 
-        Log::info(sprintf(
-            '[TICK] Ticked dominion %s in %s ms.',
-            $dominion->name,
-            number_format($this->now->diffInMilliseconds(now()))
-        ));
-
-        $this->now = now();
-
         DB::transaction(function () use ($dominion)
         {
+            $this->temporaryData[$dominion->round->id][$dominion->id] = [];
+
+            $this->temporaryData[$dominion->round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
+            $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsGenerated($dominion);
+
             # Queue starvation notification.
             if($dominion->tick->starvation_casualties and !$dominion->isAbandoned())
             {
                 $this->notificationService->queueNotification('starvation_occurred');
             }
 
-            $attritionUnits = [];
-            foreach($dominion->race->units as $unit)
+            if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
             {
-                $attritionUnits[] = $dominion->tick->{'attrition_unit'.$unit->slot};
-            }
-            if(array_sum($attritionUnits) > 0 and !$dominion->isAbandoned())
-            {
-                $this->notificationService->queueNotification('attrition_occurred',[$attritionUnits]);
+                $this->notificationService->queueNotification('attrition_occurred',[$this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']]);
             }
 
             # Clean up
@@ -1408,7 +1137,7 @@ class TickService
         $this->dominionStateService->saveDominionState($dominion);
 
         Log::info(sprintf(
-            '[TICK] Cleaned up queues, sent notifications, and precalculated dominion %s in %s ms.',
+            '[TICK] Ticked dominion %s in %s ms.',
             $dominion->name,
             number_format($this->now->diffInMilliseconds(now()))
         ));
@@ -1624,12 +1353,6 @@ class TickService
             $this->buildingCalculator->createOrIncrementBuildings($dominion, [$buildingKey => $amount]);
         }
 
-        # Special case for Growth
-        if($dominion->race->name == 'Growth')
-        {
-            dd('E101 - unsupported');
-        }
-
         # Handle self-destruct
         if($buildingsDestroyed = $dominion->tick->buildings_destroyed)
         {
@@ -1659,8 +1382,6 @@ class TickService
             ($improvementInterestPerk = (mt_rand($dominion->race->getPerkValue('improvements_interest_random_min')*100, $dominion->race->getPerkValue('improvements_interest_random_max')*100))/100)
           )
         {
-            $improvementInterest = [];
-
             $multiplier = 1;
             $multiplier += $dominion->getBuildingPerkMultiplier('improvements_interest');
             $multiplier += $dominion->getSpellPerkMultiplier('improvements_interest');
@@ -1684,8 +1405,6 @@ class TickService
                     $this->improvementCalculator->decreaseImprovements($dominion, [$improvement->key => $interest*-1]);
                 }
             }
-
-
         }
     }
 
@@ -1751,41 +1470,33 @@ class TickService
         $resourcesProduced = [];
         $resourcesConsumed = [];
         $resourcesNetChange = [];
-
+    
         foreach($dominion->race->resources as $resourceKey)
         {
             $resourcesProduced[$resourceKey] = 0;
             $resourcesConsumed[$resourceKey] = 0;
             $resourcesNetChange[$resourceKey] = 0;
         }
-
+    
         $finishedResourcesInQueue = DB::table('dominion_queue')
                                         ->where('dominion_id',$dominion->id)
                                         ->where('resource', 'like', 'resource%')
                                         ->whereIn('source', ['exploration', 'invasion', 'expedition', 'theft', 'desecration'])
                                         ->where('hours',1)
                                         ->get();
-
+    
         foreach($finishedResourcesInQueue as $finishedResourceInQueue)
         {
             $resourceKey = str_replace('resource_', '', $finishedResourceInQueue->resource);
             $amount = intval($finishedResourceInQueue->amount);
-            $resource = Resource::where('key', $resourceKey)->first();
-
+    
             # Silently discard resources this faction doesn't use, if we somehow have any incoming from queue.
             if(in_array($resourceKey, $dominion->race->resources))
             {
-                if(isset($resourcesToAdd[$resourceKey]))
-                {
-                    $resourcesProduced[$resourceKey] += $amount;
-                }
-                else
-                {
-                    $resourcesProduced[$resourceKey] = $amount;
-                }
+                $resourcesProduced[$resourceKey] += $amount;
             }
         }
-
+    
         # Add production.
         foreach($dominion->race->resources as $resourceKey)
         {
@@ -1793,7 +1504,7 @@ class TickService
             $resourcesConsumed[$resourceKey] += $this->resourceCalculator->getConsumption($dominion, $resourceKey);
             $resourcesNetChange[$resourceKey] += $resourcesProduced[$resourceKey] - $resourcesConsumed[$resourceKey];
         }
-
+    
         $this->resourceService->updateResources($dominion, $resourcesNetChange);
     }
 
@@ -1850,6 +1561,46 @@ class TickService
             #$terrain = Terrain::where('key', $terrainKey)->first();
             $this->terrainService->update($dominion, [$terrainKey => $amount]);
         }
+    }
+
+    # This function handles queuing of evolved units (Vampires)
+    private function handleUnits(Dominion $dominion): void
+    {
+
+        $units = $this->unitCalculator->getDominionUnitBlankArray($dominion);
+        $evolvedUnits = [];
+
+        foreach($units as $slot => $zero)
+        {
+            if($unitEvolutionPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot,'evolves_into'))
+            {
+                $targetSlot = (float)$unitEvolutionPerk[0];
+                $evolutionRatio = (int)$unitEvolutionPerk[1];
+                $evolutionTicks = (int)$unitEvolutionPerk[2];
+
+                $unitCount = $dominion->{'military_unit' . $slot};
+
+                $unitsEvolved = (int)floor($unitCount * ($evolutionRatio / 100));
+
+                if(isset($evolvedUnits[$targetSlot]))
+                {
+                    $evolvedUnits[$targetSlot] = [$evolutionTicks => $evolvedUnits[$targetSlot] + $unitsEvolved];
+                }
+                else
+                {
+                    $evolvedUnits[$targetSlot] = [$evolutionTicks => $unitsEvolved];
+                }
+            }
+        }
+
+        foreach($evolvedUnits as $targetSlot => $evolvedUnitQueueData)
+        {
+            $evolvedUnit = $evolvedUnitQueueData[0];
+            $evolutionTicks = $evolvedUnitQueueData[1];
+
+            $this->queueService->queueResources('evolution', $dominion, ['military_unit' . $targetSlot => $evolvedUnit], $evolutionTicks);
+        }
+  
     }
 
     public function handleWinConditions(Round $round): void
@@ -1970,53 +1721,53 @@ class TickService
 
     private function declareWinner(Round $round): void
     {
-
+        $winners = [];
+    
         if(in_array($round->mode, ['artefacts', 'artefacts-packs']))
         {
             $goal = $round->goal;
-
-            # Find the round->dominions where dominion->land is equal to max(dominion->land)
+    
             $winnerRealms = $round->realms()->whereHas('artefacts', function($query) use ($goal) {
                 $query->havingRaw('COUNT(*) >= ?', [$goal]);
             })->get();
-
+    
             $data['count'] = $winnerRealms->count();
-
+    
             foreach($winnerRealms as $winnerRealm)
             {
-                RoundWinner::create([
+                $winners[] = [
                     'round_id' => $round->id,
                     'winner_type' => Realm::class,
                     'winner_id' => $winnerRealm->id,
                     'type' => $data['count'] > 1 ? 'draw' : 'win',
                     'data' => $data
-                ]);
+                ];
             }
         }
         else
         {
-            # Find the round->dominions where dominion->land is equal to max(dominion->land)
             $winnerDominions = Dominion::where('round_id', $round->id)
                 ->whereRaw('land = (select max(land) from dominions where round_id = ?)', [$round->id])
                 ->get();
-
+    
             $data['count'] = $winnerDominions->count();
-
+    
             foreach($winnerDominions as $winnerDominion)
             {
                 $data['winners'][$winnerDominion->id]['land'] = $winnerDominion->land;
                 $data['winners'][$winnerDominion->id]['networth'] = $winnerDominion->land;
-
-                RoundWinner::create([
+    
+                $winners[] = [
                     'round_id' => $round->id,
                     'winner_type' => Dominion::class,
                     'winner_id' => $winnerDominion->id,
                     'type' => $data['count'] > 1 ? 'draw' : 'win',
                     'data' => $data
-                ]);
+                ];
             }
         }
-
+    
+        RoundWinner::insert($winners);
     }
 
 }
