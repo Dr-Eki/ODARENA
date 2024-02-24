@@ -18,6 +18,7 @@ perks:
   max_population: 20
   food_consumption_mod: -50
   title_bonus: 100
+  deity_power: -25
 
 units:
   - name: Servant

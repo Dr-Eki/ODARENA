@@ -154,6 +154,8 @@ class UnitHelper
 
             'passive_conversion' => 'Converts %3$s %1$s into %2$s each tick.',
 
+            'evolves_into_unit' => '%2$s%% of this unit evolve into %1$s each tick (T: %3$s).',
+
             'peasants_to_unit_conversion' => 'Converts %1$s peasants into %2$s per tick (up to %3$s%% military ratio).',
 
             'captures_displaced_peasants' => 'Captures enemy displaced enemy peasants.',
@@ -881,6 +883,19 @@ class UnitHelper
 
                     $perkValue = [str_plural($unitFrom->name), str_plural($unitTo->name), $rate];
                 }
+
+                if($perk->key === 'evolves_into_unit')
+                {
+
+                    $targetSlot = (int)$perkValue[0];
+                    $evolutionRatio = (float)$perkValue[1];
+                    $evolutionTicks = (int)$perkValue[2];
+
+                    $unitTo = $race->units->where('slot', $targetSlot)->first();
+
+                    $perkValue = [str_plural($unitTo->name), $evolutionRatio, $evolutionTicks];
+                }
+
                 if($perk->key === 'value_conversion')
                 {
                     $multiplier = (float)$perkValue[0];

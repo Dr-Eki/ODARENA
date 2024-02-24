@@ -228,6 +228,38 @@ class UnitCalculator
 
     }
 
+    public function getUnitLandGeneration(Dominion $dominion): int
+    {     
+
+        $generatedLand = 0;
+
+        foreach($this->getDominionUnitBlankArray($dominion) as $slot => $zero)
+        {
+            # Defensive Warts turn off land generation
+            if($dominion->getSpellPerkValue('stop_land_generation'))
+            {
+                break;
+            }
+
+            if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_per_tick'))
+            {
+                $landPerTick = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_per_tick') * (1 - ($dominion->land/12000));
+                $multiplier = 1;
+                $multiplier += $dominion->getSpellPerkMultiplier('land_generation_mod');
+                $multiplier += $dominion->getImprovementPerkMultiplier('land_generation_mod');
+    
+                $landPerTick *= $multiplier;
+    
+                $generatedLand += $dominion->{"military_unit".$slot} * $landPerTick;
+                $generatedLand = max($generatedLand, 0);
+    
+
+            }
+        }
+
+        return $generatedLand;
+    }
+
     public function getAttritionMultiplier(Dominion $dominion): float
     {
         $attritionMultiplier = 1;
@@ -255,6 +287,15 @@ class UnitCalculator
         $attritionMultiplier = max(-1, $attritionMultiplier);
 
         return $attritionMultiplier;
+    }
+
+    public function getEvolutionMultiplier(Dominion $dominion): float
+    {
+        $evolutionMultiplier = 1;
+
+        $evolutionMultiplier += $dominion->getSpellPerkMultiplier('unit_evolution_mod');
+
+        return $evolutionMultiplier;
     }
 
     public function getDominionUnitBlankArray(Dominion $dominion): array

@@ -5,16 +5,8 @@ namespace OpenDominion\Helpers;
 use LogicException;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Realm;
+use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
-
-/* TBD:
-
-    Hide/Show Barbarian Events
-    Hide/Show Active Spells in Menu/Top Bar
-    Hide/Show Confirm Release Units?
-    Hide/Show Confirm Destroy Buildings?
-
-*/
 
 class SettingHelper
 {
@@ -91,6 +83,12 @@ class SettingHelper
                 'defaults' => ['email' => false, 'ingame' => true],
                 'route' => route('dominion.military'),
                 'iconClass' => 'ra ra-muscle-up text-green',
+            ],
+            'evolution_completed' => [
+                'label' => 'Unit summoning/generation completed',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.military'),
+                'iconClass' => 'ra ra-aura text-green',
             ],
             'stun_completed' => [
                 'label' => 'Stunned units recovered',
@@ -1105,6 +1103,7 @@ class SettingHelper
 
             case 'irregular_dominion.reflected_hostile_spell':
                 $sourceDominion = Dominion::with('realm')->findOrFail($data['sourceDominionId']);
+                $spell = Spell::where('key', $data['spellKey'])->first();
 
                 return sprintf(
                     'The energy mirror protecting our dominion has reflected a %s spell back at %s (#%s).',

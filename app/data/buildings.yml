@@ -255,6 +255,7 @@ saw_mill:
     - Kobold
     - Snow Elf
     - Troll
+    - Vampires
   perks:
     lumber_production_raw: 35
 
@@ -1031,7 +1032,6 @@ trench:
 
 # END REPTILIANS
 
-
 # BEGIN SNOW ELF
 
 battlement:
@@ -1153,6 +1153,21 @@ stronghold:
     improvements_damage_reduction: 1,0.50 # Every 1% reduces damage to improvements by 0.75%
 
 # END TROLL
+
+# BEGIN VAMPIRES
+
+mansion:
+  name: Mansion
+  category: housing 
+  exclusive_races:
+    - Vampires
+  land_type: forest
+  perks:
+    housing: 30
+    jobs: 10
+    vampires_unit1_housing: 10
+
+# END VAMPIRES
 
 # BEGIN WOOD ELF
 forest_haven:
@@ -1794,17 +1809,6 @@ sacred_temple:
     sacred_order_unit3_housing: 40
 
 # END SACRED ORDER
-
-mansion:  
-  enabled: 0
-  name: Mansion
-  exclusive_races:
-    - Vampires
-  land_type: forest
-  perks:
-    housing: 30
-    jobs: 10
-    vampires_unit1_housing: 60
 
 ###
 

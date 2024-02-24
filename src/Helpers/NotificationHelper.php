@@ -124,6 +124,12 @@ class NotificationHelper
                 'route' => route('dominion.military'),
                 'iconClass' => 'ra ra-muscle-up text-green',
             ],
+            'evolution_completed' => [
+                'label' => 'Unit evolution completed',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.military'),
+                'iconClass' => 'ra ra-aura text-green',
+            ],
             'stun_completed' => [
                 'label' => 'Stunned units recovered',
                 'defaults' => ['email' => false, 'ingame' => true],

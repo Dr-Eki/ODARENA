@@ -959,27 +959,7 @@ class TickService
         }
 
         # Tickly unit perks
-        $generatedLand = 0;
-
-        // Myconid: Land generation
-        if($dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_per_tick'))
-        {
-            $landPerTick = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_per_tick') * (1 - ($dominion->land/12000));
-            $multiplier = 1;
-            $multiplier += $dominion->getSpellPerkMultiplier('land_generation_mod');
-            $multiplier += $dominion->getImprovementPerkMultiplier('land_generation_mod');
-
-            $landPerTick *= $multiplier;
-
-            $generatedLand += $dominion->{"military_unit".$slot} * $landPerTick;
-            $generatedLand = max($generatedLand, 0);
-
-            # Defensive Warts turn off land generation
-            if($dominion->getSpellPerkValue('stop_land_generation'))
-            {
-                $generatedLand = 0;
-            }
-        }
+        $generatedLand = $this->unitCalculator->getUnitLandGeneration($dominion);
 
         # Imperial Crypt: Rites of Zidur, Rites of Kinthys
         $tick->crypt_bodies_spent = 0;
@@ -1566,41 +1546,54 @@ class TickService
     # This function handles queuing of evolved units (Vampires)
     private function handleUnits(Dominion $dominion): void
     {
-
         $units = $this->unitCalculator->getDominionUnitBlankArray($dominion);
-        $evolvedUnits = [];
-
+        $evolvedUnitsTo = [];
+        $evolvedUnitsFrom = [];
+        $evolutionMultiplier = $this->unitCalculator->getEvolutionMultiplier($dominion);
+    
         foreach($units as $slot => $zero)
         {
-            if($unitEvolutionPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot,'evolves_into'))
+            if($unitEvolutionPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'evolves_into_unit'))
             {
-                $targetSlot = (float)$unitEvolutionPerk[0];
-                $evolutionRatio = (int)$unitEvolutionPerk[1];
+                $targetSlot = (int)$unitEvolutionPerk[0];
+                $evolutionRatio = (float)$unitEvolutionPerk[1];
                 $evolutionTicks = (int)$unitEvolutionPerk[2];
-
+    
                 $unitCount = $dominion->{'military_unit' . $slot};
-
-                $unitsEvolved = (int)floor($unitCount * ($evolutionRatio / 100));
-
-                if(isset($evolvedUnits[$targetSlot]))
+    
+                $unitsEvolved = $unitCount * ($evolutionRatio / 100);
+                $unitsEvolved = floor($unitsEvolved * $evolutionMultiplier);
+                $unitsEvolved = (int)min($unitCount, $unitsEvolved);
+    
+                if($unitsEvolved > 0)
                 {
-                    $evolvedUnits[$targetSlot] = [$evolutionTicks => $evolvedUnits[$targetSlot] + $unitsEvolved];
-                }
-                else
-                {
-                    $evolvedUnits[$targetSlot] = [$evolutionTicks => $unitsEvolved];
+                    if(isset($evolvedUnitsTo[$targetSlot]))
+                    {
+                        $evolvedUnitsTo[$targetSlot] = [$evolutionTicks => $evolvedUnitsTo[$targetSlot] + $unitsEvolved];
+                        $evolvedUnitsFrom[$targetSlot] += $unitsEvolved;
+                    }
+                    else
+                    {
+                        $evolvedUnitsTo[$targetSlot] = [$evolutionTicks => $unitsEvolved];
+                        $evolvedUnitsFrom[$targetSlot] = $unitsEvolved;
+                    }
                 }
             }
         }
-
-        foreach($evolvedUnits as $targetSlot => $evolvedUnitQueueData)
+    
+        foreach($evolvedUnitsTo as $targetSlot => $evolvedUnitQueueData)
         {
-            $evolvedUnit = $evolvedUnitQueueData[0];
-            $evolutionTicks = $evolvedUnitQueueData[1];
-
-            $this->queueService->queueResources('evolution', $dominion, ['military_unit' . $targetSlot => $evolvedUnit], $evolutionTicks);
+            $evolutionTicks = $evolvedUnitQueueData[0];
+            $evolvedUnitAmount = $evolvedUnitQueueData[1];
+    
+            $this->queueService->queueResources('evolution', $dominion, ['military_unit' . $targetSlot => $evolvedUnitAmount], $evolutionTicks);
         }
-  
+
+        foreach($evolvedUnitsFrom as $sourceSlot => $amountEvolved)
+        {
+            $dominion->{'military_unit' . $sourceSlot} -= $amountEvolved;
+        }
+
     }
 
     public function handleWinConditions(Round $round): void
