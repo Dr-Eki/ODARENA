@@ -57,9 +57,12 @@ class UnitCalculator
 
             foreach($generatedUnitSlots as $key => $slot)
             {
+                $multiplier = 1;
+                $multiplier += $dominion->getImprovementPerkMultiplier($dominion->race->key . '_unit' . $slot . '_generation_mod');
+
                 $amountGenerated = $buildingAmount * $amountPerBuilding;
-                $amountGenerated *= (1 + $dominion->getImprovementPerkMultiplier($dominion->race->key . '_unit' . $slot . '_generation_mod'));
-                $unitsGenerated[$slot] += (int)floor($buildingAmount * $amountPerBuilding);
+                $amountGenerated *= $multiplier;
+                $unitsGenerated[$slot] += (int)floor($amountGenerated);
             }
         }
         

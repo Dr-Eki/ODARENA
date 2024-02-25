@@ -2,11 +2,9 @@
 
 namespace OpenDominion\Helpers;
 use Illuminate\Support\Collection;
-use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
 
 use OpenDominion\Models\Improvement;
-use OpenDominion\Models\ImprovementPerk;
 
 class ImprovementHelper
 {
@@ -117,6 +115,10 @@ class ImprovementHelper
 
             'sabotage_damage_dealt' => 'sabotage damage dealt',
             'sabotage_damage_suffered' => 'sabotage damage suffered',
+
+            'growth_unit2_generation_mod' => 'Incisor mutation',
+            'growth_unit3_generation_mod' => 'Pincer mutation',
+            'growth_unit4_generation_mod' => 'Quill mutation',
         ];
 
         return isset($improvementPerkDescriptions[$improvementPerk]) ? $improvementPerkDescriptions[$improvementPerk] : 'Missing description';
