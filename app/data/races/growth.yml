@@ -39,7 +39,7 @@ perks:
   cannot_release_units: 1
   unemployed_peasants_produce: 1
   no_morale_changes: 1
-  draft_rate_per_defensive_failure: 1
+  draft_rate_per_defensive_failure: 2
   cannot_change_draft_rate: 1
   starting_draft_rate: 0
 
@@ -52,7 +52,7 @@ units:
     cost:
       food: 0
     power:
-      offense: 0.25
+      offense: 0.25 
       defense: 1.00
     perks:
       cannot_be_trained: 1

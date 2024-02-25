@@ -2,6 +2,7 @@ agriculture:
   name: Agriculture
   excluded_races:
     - Barbarian
+    - Growth
     - Spirit
     - Sylvan
     - Troll
@@ -12,6 +13,7 @@ conduits:
   name: Conduits
   excluded_races:
     - Barbarian
+    - Growth
     - Sylvan
     - Troll
   perks:
@@ -21,6 +23,7 @@ construction:
   name: Construction
   excluded_races:
     - Barbarian
+    - Growth
     - Sylvan
     - Troll
   perks:
@@ -32,6 +35,7 @@ defenses:
   excluded_races:
     - Barbarian
     - Beastfolk
+    - Growth
     - Sylvan
     - Troll
   perks:
@@ -41,6 +45,7 @@ education:
   name: Education
   excluded_races:
     - Barbarian
+    - Growth
     - Troll
   perks:
     improvement_points: 20,3000
@@ -49,6 +54,7 @@ espionage:
   name: Espionage
   excluded_races:
     - Barbarian
+    - Growth
     - Troll
   perks:
     spy_strength: 40,6000
@@ -58,6 +64,7 @@ leadership:
   name: Leadership
   excluded_races:
     - Barbarian
+    - Growth
   perks:
     title_bonus: 40,1000
 
@@ -83,6 +90,7 @@ housing:
     - Barbarian
     - Dwarg
     - Beastfolk
+    - Growth
     - Sylvan
     - Troll
   perks:
@@ -93,6 +101,7 @@ markets:
   excluded_races:
     - Barbarian
     - Beastfolk
+    - Growth
     - Sylvan
     - Troll
   perks:
@@ -105,6 +114,7 @@ mining:
     - Barbarian
     - Ants
     - Glimjir
+    - Growth
     - Icekin
     - Reptilians
     - Spirit
@@ -119,6 +129,7 @@ sabotage:
   name: Sabotage
   excluded_races:
     - Barbarian
+    - Growth
     - Sylvan
   perks:
     spy_losses: -40,6400
@@ -139,6 +150,7 @@ science:
   name: Science
   excluded_races:
     - Barbarian
+    - Growth
     - Troll
   perks:
     advancement_costs: -30,6000
@@ -147,6 +159,7 @@ sorcery:
   name: Sorcery
   excluded_races:
     - Barbarian
+    - Growth
     - Dwarg
   perks:
     sorcery_damage_dealt: 40,5500
@@ -157,6 +170,7 @@ tactics:
   excluded_races:
     - Barbarian
     - Beastfolk
+    - Growth
     - Sylvan
     - Troll
   perks:
@@ -166,6 +180,7 @@ warding:
   name: Warding
   excluded_races:
     - Barbarian
+    - Growth
     - Troll
   perks:
     sorcery_damage_suffered: -40,5500
@@ -174,6 +189,7 @@ warfare:
   name: Warfare
   excluded_races:
     - Barbarian
+    - Growth
   perks:
     prestige_gains: 25,3000
 
@@ -181,6 +197,7 @@ wizardry:
   name: Wizardry
   excluded_races:
     - Beastfolk
+    - Growth
     - Sylvan
   perks:
     wizard_strength: 40,6000
@@ -239,6 +256,34 @@ tissue:
   perks:
     population: 120,82000
     food_production_mod: 120,82000
+
+calcification:
+  name: Calcification
+  exclusive_races:
+    - Growth
+  perks:
+    growth_unit2_generation_mod: -50,60000
+    growth_unit3_generation_mod: 50,60000
+    growth_unit4_generation_mod: -50,60000
+
+enamel:
+  name: Enamel
+  exclusive_races:
+    - Growth
+  perks:
+    growth_unit2_generation_mod: 50,60000
+    growth_unit3_generation_mod: -50,60000
+    growth_unit4_generation_mod: -50,60000
+
+
+keratin:
+  name: Keratin
+  exclusive_races:
+    - Growth
+  perks:
+    growth_unit2_generation_mod: -50,60000
+    growth_unit3_generation_mod: -50,60000
+    growth_unit4_generation_mod: 50,60000
 
 # END GROWTH #
 

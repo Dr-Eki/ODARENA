@@ -49,6 +49,21 @@ class UnitCalculator
         $units = $this->getDominionUnitBlankArray($dominion);
         $unitsGenerated = $units;
 
+        if($raceUnitsGenerationBuildingPerk = $dominion->getBuildingPerkValue($dominion->race->key . '_units_production'))
+        {
+            $buildingAmount = (float)$raceUnitsGenerationBuildingPerk['buildings_amount'];
+            $amountPerBuilding = (float)$raceUnitsGenerationBuildingPerk['amount_per_building'];
+            $generatedUnitSlots = (array)$raceUnitsGenerationBuildingPerk['generated_unit_slots'];
+
+            foreach($generatedUnitSlots as $key => $slot)
+            {
+                $amountGenerated = $buildingAmount * $amountPerBuilding;
+                $amountGenerated *= (1 + $dominion->getImprovementPerkMultiplier($dominion->race->key . '_unit' . $slot . '_generation_mod'));
+                $unitsGenerated[$slot] += (int)floor($buildingAmount * $amountPerBuilding);
+            }
+        }
+        
+
         foreach($units as $slot => $zero)
         {
             $unitsToSummon = 0;
@@ -130,7 +145,7 @@ class UnitCalculator
             $unitsGenerated[$slot] += $unitsToSummon;
         }
 
-        return $units;
+        return $unitsGenerated;
     }
 
     public function getUnitsAttrited(Dominion $dominion): array

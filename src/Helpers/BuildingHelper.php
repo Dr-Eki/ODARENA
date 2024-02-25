@@ -308,6 +308,7 @@ class BuildingHelper
             'wizard_strength_on_offense' => 'Wizard strength on offense increased by %2$s%% for every %1$s%%.',
 
             'spell_duration_mod' => '+%2$g%% spell duration for every %1$s%% (max +%3$g%%).',
+            'sorcery_damage_suffered' => '%2$+g%% sorcery damage suffered for every %1$s%% (max -%3$s%%).',
 
             # Other/special
             'deity_power' => 'Increases deity perks %2$s%% for every %1$s%% (max +%3$s%%)',
@@ -327,6 +328,8 @@ class BuildingHelper
             'aurei_unit_housing' => 'Houses %1$s %2$s.',
             'snow_elf_unit_housing' => 'Houses %1$s %2$s.',
             'vampires_unit_housing' => 'Houses %1$s %2$s.',
+
+            'growth_units_production' => 'Produces %1$s per tick.',
 
         ];
 
@@ -360,13 +363,6 @@ class BuildingHelper
             }
 
             # SPECIAL DESCRIPTION PERKS
-
-            # If $perk->key ends with _theft_protection
-            if (str_ends_with($perk->key, '_theft_protection'))
-            {
-                #$perkValue = number_format($perkValue); # The , added here breaks the sprintf below
-            }
-
             if($perk->key == 'pairing_limit')
             {
                 $buildingKey = $perkValue[0];
@@ -426,6 +422,20 @@ class BuildingHelper
     
                         $perkValue = [$amountHoused, str_plural($unit->name, $amountHoused)];
                     }
+                }
+
+                if($perk->key == ($raceKey . '_units_production'))
+                {
+                    $unitsGenerated = [];
+                    $amountProduced = (int)$perkValue[1];
+                    $race = Race::firstWhere('key', $raceKey);
+
+                    foreach($perkValue[0] as $key => $unitSlot)
+                    {
+                        $unitsGenerated[] = str_plural($race->units->firstWhere('slot', (int)$unitSlot)->name, $amountProduced);
+                    }
+
+                    $perkValue = [$amountProduced, generate_sentence_from_array($unitsGenerated)];
                 }
             }
 

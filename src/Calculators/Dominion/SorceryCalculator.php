@@ -177,6 +177,9 @@ class SorceryCalculator
         $modifier += $target->getSpellPerkMultiplier('damage_from_spells');
         $modifier += $target->getSpellPerkMultiplier('sorcery_damage_suffered');
 
+        // Buildings
+        $modifier += $target->getBuildingPerkMultiplier('sorcery_damage_suffered');
+
         // Advancement — unused
         $modifier += $target->getAdvancementPerkMultiplier('damage_from_spells');
 

@@ -9,6 +9,7 @@ barracks:
     - Aurei
     - Beastfolk
     - Glimjir
+    - Growth
     - Kobold
     - Nox
     - Reptilians
@@ -28,6 +29,7 @@ guard_tower:
     - Barbarian
     - Dragons
     - Glimjir
+    - Growth
     - Nox
   perks:
     defensive_power: 1,1.5,30 # Every 1% gives 1.5% DP, max +30% DP
@@ -39,6 +41,7 @@ infirmary:
     - Barbarian
     - Dragons
     - Glimjir
+    - Growth
     - Nox
     - Spirit
   perks:
@@ -53,6 +56,7 @@ military_academy:
     - Barbarian
     - Dragons
     - Glimjir
+    - Growth
     - Nox
   perks:
     prestige_gains: 1,5,50 # Every 1% gives 10% prestige, max +100%
@@ -73,6 +77,7 @@ training_grounds:
     - Barbarian
     - Dragons
     - Glimjir
+    - Growth
     - Nox
   perks:
     offensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
@@ -84,6 +89,7 @@ wall:
     - Barbarian
     - Dragons
     - Glimjir
+    - Growth
     - Reptilians
     - Sylvan
     - Swarm
@@ -97,6 +103,7 @@ watch_tower:
   excluded_races:
     - Dragons
     - Glimjir
+    - Growth
     - Nox
   perks:
     target_defensive_power_mod: 1,-1.5,30 # Every 1% gives -1.5% DP mods, max -30% DP mods
@@ -123,6 +130,7 @@ aqueduct:
   excluded_races:
     - Demon
     - Glimjir
+    - Growth
     - Swarm
     - Sylvan
     - Spirit
@@ -160,6 +168,7 @@ farm:
   excluded_races:
     - Dragons
     - Glimjir
+    - Growth
     - Icekin
     - Qur
     - Reptilians
@@ -176,6 +185,7 @@ gold_mine:
     - Aurei
     - Dragons
     - Glimjir
+    - Growth
     - Spirit
     - Sylvan
     - Swarm
@@ -193,6 +203,7 @@ gem_mine:
     - Beastfolk
     - Demon
     - Glimjir
+    - Growth
     - Reptilians
     - Simian
     - Swarm
@@ -274,6 +285,7 @@ tower:
   excluded_races:
     - Aurei
     - Glimjir
+    - Growth
     - Nox
     - Sylvan
   perks:
@@ -306,6 +318,7 @@ harbour:
   excluded_races:
     - Dragons
     - Glimjir
+    - Growth
     - Reptilians
     - Swarm
   perks:
@@ -319,6 +332,7 @@ factory:
   excluded_races:
     - Barbarian
     - Glimjir
+    - Growth
     - Qur
     - Swarm
     - Sylvan
@@ -334,6 +348,7 @@ school:
   excluded_races:
     - Beastfolk
     - Glimjir
+    - Growth
     - Swarm
     - Sylvan
     - Troll
@@ -346,6 +361,7 @@ syndicate_quarters:
   category: other
   excluded_races:
     - Glimjir
+    - Growth
     - Swarm
     - Sylvan
   perks:
@@ -371,6 +387,7 @@ wizard_guild:
   excluded_races:
     - Aurei
     - Glimjir
+    - Growth
     - Icekin
     - Swarm
     - Sylvan
@@ -388,6 +405,7 @@ constabulary:
   category: other
   excluded_races:
     - Glimjir
+    - Growth
     - Sylvan
   land_type: hill
   perks:
@@ -403,6 +421,7 @@ vault:
   category: other
   excluded_races:
     - Glimjir
+    - Growth
     - Reptilians
     - Sylvan
     - Wood Elf
@@ -416,6 +435,7 @@ granary:
   category: other
   excluded_races:
     - Glimjir
+    - Growth
     - Spirit
   perks:
     food_theft_protection: 25000
@@ -673,6 +693,7 @@ monument:
   excluded_races:
     - Demon
     - Glimjir
+    - Growth
     - Reptilians
   perks:
     deity_power: 1,5,100
@@ -1441,8 +1462,19 @@ ziggurat:
 
 # BEGIN GROWTH
 
+abscess:
+  name: Abscess
+  category: other
+  exclusive_races:
+    - Growth
+  perks:
+    improvements: 1,3.33 # Every 1% gives 2.5% higher imps
+    housing: 88
+    jobs: 0
+
 cartilage:
   name: Cartilage
+  category: military
   exclusive_races:
     - Growth
   land_type: mountain
@@ -1451,17 +1483,51 @@ cartilage:
     housing: 88
     jobs: 0
 
-fleshforge:
-  name: Fleshforge
+cyst:
+  name: Cyst
+  category: other
   exclusive_races:
     - Growth
   perks:
-    growth_units_production: 1;2;3;4,1 # slots;slots, amount
+    sorcery_damage_suffered: 1,-4,80 # 1% gives -4%, max -80%
+    housing: 88
+    jobs: 0
+
+hide:
+  name: Hide
+  category: military
+  exclusive_races:
+    - Growth
+  land_type: mountain
+  perks:
+    defensive_power: 1,1.2,120 # Every 1% gives 1% OP, max +40% OP
+    housing: 66
+    jobs: 0
+
+mutator:
+  name: Mutator
+  category: production
+  exclusive_races:
+    - Growth
+  perks:
+    growth_units_production: 1;2;3;4,0.02 # slots;slots, amount
     housing: 44
     jobs: 0
 
-incisor:
+sinew:
+  name: Sinew
+  category: military
+  exclusive_races:
+    - Growth
+  perks:
+    casualties_on_defense: 1,-4,60 # 1% gives -2% max -100%
+    casualties_on_offense: 1,-4,60 # 1% gives -2%, max -100%
+    housing: 88
+    jobs: 0
+
+teratoma:
   name: Teratoma
+  category: military
   exclusive_races:
     - Growth
   land_type: hill
@@ -1470,33 +1536,19 @@ incisor:
     housing: 88
     jobs: 0
 
+
 tissue:
   name: Tissue
+  category: housing
   exclusive_races:
     - Growth
   perks:
-    food_production_raw: 4
+    food_production_raw: 12
     housing: 176
     jobs: 0
 
-sinew:
-  name: Sinew
-  exclusive_races:
-    - Growth
-  perks:
-    casualties_on_defense: 1,-7.5,75 # 1% gives -2% max -100%
-    casualties_on_offense: 1,-7.5,75 # 1% gives -2%, max -100%
-    housing: 88
-    jobs: 0
 
-tendon:
-  name: Tendon
-  exclusive_races:
-    - Growth
-  perks:
-    improvements: 1,4 # Every 1% gives 2.5% higher imps
-    housing: 88
-    jobs: 0
+
 
 # END GROWTH
 

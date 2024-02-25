@@ -3240,7 +3240,7 @@ class InvadeActionService
 
     protected function handleAfterInvasionPerks(Dominion $attacker, Dominion $defender): void
     {
-        if($draftRatePerDefensiveFailurePerk = $defender->race->getPerkValue('draft_rate_per_defensive_failure'))
+        if($this->invasion['result']['success'] and ($draftRatePerDefensiveFailurePerk = $defender->race->getPerkValue('draft_rate_per_defensive_failure')))
         {
             $defender->draft_rate += $draftRatePerDefensiveFailurePerk;
         }

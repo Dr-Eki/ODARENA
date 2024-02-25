@@ -508,7 +508,7 @@ class DominionFactory
         }
         elseif($race->name == 'Growth')
         {
-          $startingBuildings['tissue_swamp'] = $landBase;
+          $startingBuildings['tissue'] = $landBase;
         }
         elseif($race->name == 'Myconid')
         {

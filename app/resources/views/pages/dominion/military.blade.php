@@ -130,9 +130,11 @@
                     </table>
                 </div>
                 <div class="box-footer">
-                    <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }} id="submit">
-                      {{ $militaryHelper->getTrainingButtonLabel($selectedDominion->race) }}
-                    </button>
+                    @if($selectedDominion->race->key !== 'growth')
+                        <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }} id="submit">
+                        {{ $militaryHelper->getTrainingButtonLabel($selectedDominion->race) }}
+                        </button>
+                    @endif
                     <div class="pull-right">
 
                       @if(!$selectedDominion->race->getPerkValue('no_drafting'))
@@ -171,7 +173,7 @@
                                     ({{ number_format($populationCalculator->getPopulationMilitaryPercentage($selectedDominion), 2) }}%)
                                 </td>
                             </tr>
-                            @if ($selectedDominion->race->name !== 'Growth' and !$selectedDominion->race->getPerkValue('no_drafting'))
+                            @if (!$selectedDominion->race->getPerkValue('no_drafting'))
                                 <tr>
                                     @if ($selectedDominion->race->name == 'Myconid')
                                         <td class="text">Germination</td>
@@ -182,23 +184,17 @@
                                     <td class="text">
                                         <input type="number" name="draft_rate" class="form-control text-center"
                                             style="display: inline-block; width: 4em;" placeholder="0" min="0" max="100"
-                                            value="{{ $selectedDominion->draft_rate }}" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>&nbsp;%
+                                            value="{{ $selectedDominion->draft_rate }}" {{ ($selectedDominion->isLocked() or $selectedDominion->race->getPerkValue('cannot_change_draft_rate')) ? 'disabled' : null }}>&nbsp;%
                                     </td>
                                 </tr>
                             @endif
                             @include('partials.dominion.housing')
-                            @if($selectedDominion->race->name == 'Undead' and $selectedDominion->realm->alignment == 'evil')
-                                <tr>
-                                    <td class="text">Crypt bodies:</td>
-                                    <td class="text">{{ number_format($resourceCalculator->getRealmAmount($selectedDominion->realm, 'body')) }}</td>
-                                </tr>
-                            @endif
                         </tbody>
                     </table>
                 </div>
-                @if ($selectedDominion->race->getPerkValue('cannot_change_draft_rate') and !$selectedDominion->race->getPerkValue('no_drafting'))
+                @if (!$selectedDominion->race->getPerkValue('no_drafting'))
                     <div class="box-footer">
-                        <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>Change</button>
+                        <button type="submit" class="btn btn-primary" {{ ($selectedDominion->isLocked() or $selectedDominion->race->getPerkValue('cannot_change_draft_rate')) ? 'disabled' : null }}>Change</button>
                         </form>
 
                         @if(!$selectedDominion->race->getPerkValue('cannot_release_units'))

@@ -982,6 +982,7 @@ class Dominion extends AbstractModel
                         'wizard_strength',
                         'wizard_strength_recovery',
                         'wizard_cost',
+                        'sorcery_damage_suffered',
                         'spy_cost',
                         'spell_duration_mod',
                     
@@ -1354,6 +1355,20 @@ class Dominion extends AbstractModel
 
                             $result[$unitSlot] = (isset($result[$unitSlot]) ? $result[$unitSlot] + $amountHousable : $amountHousable);
                         }
+
+                        return $result;
+                    }
+
+                    elseif($perkKey == ($this->race->key . '_units_production'))
+                    {
+                        $unitsGenerated = 0;
+
+                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
+
+                        $result = [];
+                        $result['buildings_amount'] = $buildingOwned;
+                        $result['amount_per_building'] = (float)$perkValues[1];
+                        $result['generated_unit_slots'] = (array)$perkValues[0];
 
                         return $result;
                     }
