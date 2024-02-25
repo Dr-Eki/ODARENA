@@ -7,7 +7,6 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Helpers\UnitHelper;
 
 use OpenDominion\Calculators\Dominion\MagicCalculator;
-#use OpenDominion\Calculators\Dominion\PopulationCalculator;
 
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\StatsService;
@@ -32,11 +31,17 @@ class UnitCalculator
 
     public function __construct()
     {
-        $this->magicCalculator = new MagicCalculator();
-        #$this->populationCalculator = new PopulationCalculator();
-        $this->queueService = new QueueService();
-        $this->statsService = new StatsService();
-        $this->unitHelper = new UnitHelper();
+        $this->magicCalculator = app(MagicCalculator::class);
+        $this->queueService = app(QueueService::class);
+        $this->statsService = app(StatsService::class);
+        $this->unitHelper = app(UnitHelper::class);
+    }
+
+    private function getPopulationCalculator() {
+        if (!$this->populationCalculator) {
+            $this->populationCalculator = app(PopulationCalculator::class);
+        }
+        return $this->populationCalculator;
     }
 
     public function getUnitsGenerated(Dominion $dominion): array
@@ -47,9 +52,13 @@ class UnitCalculator
         foreach($units as $slot => $zero)
         {
             $unitsToSummon = 0;
-            $raceKey = str_replace(' ', '_', strtolower($dominion->race->name));
+            $raceKey = $dominion->race->key;
 
-            $availablePopulation = $this->populationCalculator->getMaxPopulation($dominion) - $this->populationCalculator->getPopulationMilitary($dominion);
+            // Original line:
+            // $availablePopulation = $this->populationCalculator->getMaxPopulation($dominion) - $this->getMilitaryUnitsTotal($dominion);
+
+            // Modified to use the getter method:
+            $availablePopulation = $this->getPopulationCalculator()->getMaxPopulation($dominion) - $this->getMilitaryUnitsTotal($dominion);
 
             // Myconid and Cult: Unit generation
             if($unitGenerationPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'unit_production'))
@@ -87,6 +96,9 @@ class UnitCalculator
                 {
                     $maxCapacity = $this->unitHelper->getUnitMaxCapacity($dominion, $slot);
     
+                    $usedCapacity = $this->getUnitTypeTotalPaid($dominion, 'military_unit' . $slot);
+
+                    /*
                     $usedCapacity = $dominion->{'military_unit' . $slot};
                     $usedCapacity += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
@@ -99,6 +111,7 @@ class UnitCalculator
                     $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
                     $usedCapacity += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slot);
+                    */
     
                     $availableCapacity = max(0, $maxCapacity - $usedCapacity);
     
@@ -119,7 +132,6 @@ class UnitCalculator
 
         return $units;
     }
-
 
     public function getUnitsAttrited(Dominion $dominion): array
     {
@@ -229,7 +241,7 @@ class UnitCalculator
         # Cult unit attrition reduction
         if($dominion->race->name == 'Cult')
         {
-            $attritionMultiplier -= ($dominion->military_unit3 + $dominion->military_unit4) / max($this->populationCalculator->getPopulationMilitary($dominion),1);
+            $attritionMultiplier -= ($dominion->military_unit3 + $dominion->military_unit4) / max($this->getMilitaryUnitsTotal($dominion),1);
         }
 
         # Generic attrition perks
@@ -425,6 +437,17 @@ class UnitCalculator
         !$dominion->race->getPerkValue('cannot_train_archmages') ?: $unitKeys[] = 'archmages';
 
         return $unitKeys;
+    }
 
+    public function getMilitaryUnitsTotal(Dominion $dominion): int
+    {
+        $total = 0;
+
+        foreach($this->getDominionUnitKeys($dominion) as $unitKey)
+        {
+            $total += $dominion->{$unitKey};
+        }
+
+        return $total;
     }
 }

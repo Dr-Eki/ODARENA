@@ -131,7 +131,7 @@ class UnitHelper
     {
 
         $helpStrings = [
-            'draftees' => 'Used for exploring and training other units.',
+            'draftees' => 'Used for training other units.',
             'spies' => 'Used for espionage.',
             'wizards' => 'Used for casting offensive spells.',
             'archmages' => 'Used for casting offensive spells. Twice as strong as regular wizards.',

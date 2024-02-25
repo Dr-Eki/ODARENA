@@ -45,7 +45,6 @@ class PopulationCalculator
      */
     public function __construct() {
         $this->landCalculator = app(LandCalculator::class);
-        #$this->moraleCalculator = app(MoraleCalculator::class);
         $this->prestigeCalculator = app(PrestigeCalculator::class);
         $this->queueService = app(QueueService::class);
         $this->raceHelper = app(RaceHelper::class);
@@ -124,31 +123,31 @@ class PopulationCalculator
      * @param Dominion $dominion
      * @return int
      */
-     public function getMaxPopulation(Dominion $dominion): int
-     {
-         $maxPopulation = 0;
+    public function getMaxPopulation(Dominion $dominion): int
+    {
+        $maxPopulation = 0;
 
-         if($dominion->race->getPerkValue('no_population'))
-         {
-             return $maxPopulation;
-         }
+        if($dominion->race->getPerkValue('no_population'))
+        {
+            return $maxPopulation;
+        }
 
-         $maxPopulation += $this->getMaxPopulationRaw($dominion) * $this->getMaxPopulationMultiplier($dominion);
-         $maxPopulation += $this->getUnitsHousedInUnitAttributeSpecificBuildings($dominion);
-         $maxPopulation += $this->getUnitsHousedInUnitSpecificBuildings($dominion);
-         $maxPopulation += $this->getUnitsHousedInSpyHousing($dominion);
-         $maxPopulation += $this->getUnitsHousedInWizardHousing($dominion);
-         $maxPopulation += $this->getDrafteesHousedInDrafteeSpecificBuildings($dominion);
-         $maxPopulation += $this->getUnitsHousedInMilitaryHousing($dominion);
+        $maxPopulation += $this->getMaxPopulationRaw($dominion) * $this->getMaxPopulationMultiplier($dominion);
+        $maxPopulation += $this->getUnitsHousedInUnitAttributeSpecificBuildings($dominion);
+        $maxPopulation += $this->getUnitsHousedInUnitSpecificBuildings($dominion);
+        $maxPopulation += $this->getUnitsHousedInSpyHousing($dominion);
+        $maxPopulation += $this->getUnitsHousedInWizardHousing($dominion);
+        $maxPopulation += $this->getDrafteesHousedInDrafteeSpecificBuildings($dominion);
+        $maxPopulation += $this->getUnitsHousedInMilitaryHousing($dominion);
 
-         # For barbs, lower pop by NPC modifier.
-         if($dominion->race->name == 'Barbarian')
-         {
-             $maxPopulation *= ($dominion->npc_modifier / 1000);
-         }
+        # For barbs, lower pop by NPC modifier.
+        if($dominion->race->name == 'Barbarian')
+        {
+            $maxPopulation *= ($dominion->npc_modifier / 1000);
+        }
 
-         return $maxPopulation;
-     }
+        return $maxPopulation;
+    }
 
     /**
      * Returns the Dominion's raw max population.

@@ -554,9 +554,6 @@ class InvadeActionService
             # Demon
             $this->handlePeasantKilling($attacker, $defender, $units, $landRatio);
 
-            # Monster
-            $this->handleStrengthGain($attacker, $defender, $units, $landRatio);
-
             # Conversions
             $offensiveConversions = array_fill(1, $attacker->race->units->count(), 0);
             $defensiveConversions = array_fill(1, $defender->race->units->count(), 0);
@@ -636,6 +633,9 @@ class InvadeActionService
 
             # Handle resources to  be queued
             $this->handleResourceGainsForAttacker($attacker);
+
+            # Handle post-invasion effects
+            $this->handleAfterInvasionPerks($attacker, $defender);
 
             # LEGION ANNEX SUPPORT EVENTS
             $legion = null;
@@ -2206,48 +2206,6 @@ class InvadeActionService
 
     }
 
-    public function handleStrengthGain(Dominion $attacker, Dominion $defender): void
-    {
-        if(($attacker->race->name !== 'Monster' and $defender->race->name !== 'Monster'))
-        {
-            return;
-        }
-
-        if($attacker->race->name == 'Monster')
-        {
-            $mode = 'offense';
-            $role = 'attacker';
-            $monster = $attacker;
-            $enemy = $defender;
-        }
-        else
-        {
-            $mode = 'defense';
-            $role = 'defender';
-            $monster = $defender;
-            $enemy = $attacker;
-        }
-        
-        $this->invasion[$role]['strength_gain'] = $this->militaryCalculator->getStrengthGain($monster, $enemy, $mode, $this->invasion);
-
-        if($this->invasion[$role]['strength_gain'] !== 0)
-        {
-            if($mode == 'offense')
-            {
-                $this->queueService->queueResources(
-                    'invasion',
-                    $monster,
-                    ['resource_strength' => $this->invasion[$role]['strength_gain']],
-                    12
-                );
-            }
-            else
-            {
-                $this->resourceService->updateResources($monster, ['resource_strength' => $this->invasion[$role]['strength_gain']]);
-            }
-        }
-    }
-
     public function handlePsionicConversions(Dominion $cult, Dominion $enemy, string $mode = 'offense'): void
     {
 
@@ -3278,6 +3236,16 @@ class InvadeActionService
         }
 
         $this->invasion['attacker']['ambush'] = $this->isAmbush;
+    }
+
+    protected function handleAfterInvasionPerks(Dominion $attacker, Dominion $defender): void
+    {
+        if($draftRatePerDefensiveFailurePerk = $defender->race->getPerkValue('draft_rate_per_defensive_failure'))
+        {
+            $defender->draft_rate += $draftRatePerDefensiveFailurePerk;
+        }
+
+        $defender->save();
     }
 
     /**

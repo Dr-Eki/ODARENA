@@ -131,6 +131,15 @@ class AppServiceProvider extends AbstractServiceProvider
         $this->app->singleton(RezoningCalculator::class);
         $this->app->singleton(TechCalculator::class);
         $this->app->singleton(TrainingCalculator::class);
+
+        $this->app->singleton(PopulationCalculatorInterface::class, function ($app) {
+            return new PopulationCalculator($app->make(UnitCalculatorInterface::class));
+        });
+        
+        $this->app->singleton(UnitCalculatorInterface::class, function ($app) {
+            return new UnitCalculator($app->make(PopulationCalculatorInterface::class));
+        });
+        
     }
 
     protected function registerServices()

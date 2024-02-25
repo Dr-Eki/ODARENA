@@ -179,7 +179,7 @@ class DominionFactory
 
             if($race->name == 'Growth')
             {
-                $startingParameters['draft_rate'] = 100;
+                $startingParameters['draft_rate'] = 0;
             }
 
             if($race->name == 'Kerranad')
