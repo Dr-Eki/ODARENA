@@ -56,7 +56,7 @@ perks:
   reduced_conversions: 35
   draftee_dp: 0.1
   population_growth: 50
-  drafting: 2
+  drafting_growth_factor: 2
 
 units:
   - name: Soldier Ant

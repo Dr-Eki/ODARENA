@@ -13,7 +13,7 @@ draftees_alias: callus
 resources:
   - food
   - lumber
-  - acid
+  #- acid
 
 construction_materials:
   - food
@@ -36,12 +36,12 @@ perks:
   #reduced_conversions: 100
   food_theft: -99.9999
   draftee_dp: 0.05
-  cannot_release_units: 1
+  #cannot_release_units: 1
   unemployed_peasants_produce: 1
   no_morale_changes: 1
-  draft_rate_per_defensive_failure: 2
+  drafting: -100
+  drafting_per_defensive_failure: 1
   cannot_change_draft_rate: 1
-  starting_draft_rate: 0
 
 units:
   - name: Scute
@@ -56,6 +56,7 @@ units:
       defense: 1.00
     perks:
       cannot_be_trained: 1
+      cannot_be_released: 1
 
   - name: Incisor
     training_time: 9
@@ -69,6 +70,7 @@ units:
       defense: 0.75
     perks:
       cannot_be_trained: 1
+      cannot_be_released: 1
       kills_into_resource_per_value: 10000,food
 
   - name: Pincer
@@ -83,6 +85,7 @@ units:
       defense: 0.50
     perks:
       cannot_be_trained: 1
+      cannot_be_released: 1
       plunder: lumber,10
 
   - name: Quill
@@ -97,4 +100,5 @@ units:
       defense: 0.25
     perks:
       cannot_be_trained: 1
+      cannot_be_released: 1
       casualties_on_offense: -20

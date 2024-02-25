@@ -262,9 +262,9 @@ calcification:
   exclusive_races:
     - Growth
   perks:
-    growth_unit2_generation_mod: -50,60000
+    growth_unit2_generation_mod: -20,60000
     growth_unit3_generation_mod: 50,60000
-    growth_unit4_generation_mod: -50,60000
+    growth_unit4_generation_mod: -20,60000
 
 enamel:
   name: Enamel
@@ -272,8 +272,8 @@ enamel:
     - Growth
   perks:
     growth_unit2_generation_mod: 50,60000
-    growth_unit3_generation_mod: -50,60000
-    growth_unit4_generation_mod: -50,60000
+    growth_unit3_generation_mod: -20,60000
+    growth_unit4_generation_mod: -20,60000
 
 
 keratin:
@@ -281,8 +281,8 @@ keratin:
   exclusive_races:
     - Growth
   perks:
-    growth_unit2_generation_mod: -50,60000
-    growth_unit3_generation_mod: -50,60000
+    growth_unit2_generation_mod: -20,60000
+    growth_unit3_generation_mod: -20,60000
     growth_unit4_generation_mod: 50,60000
 
 # END GROWTH #

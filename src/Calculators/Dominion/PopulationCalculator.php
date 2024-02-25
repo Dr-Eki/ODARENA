@@ -818,6 +818,8 @@ class PopulationCalculator
         // Values (percentages)
         $growthFactor = 0.01;
 
+        $growthFactor += $dominion->race->getPerkValue('drafting_growth_factor');
+
         $multiplier = 1;
 
         // Advancement
@@ -833,7 +835,8 @@ class PopulationCalculator
         $multiplier += $dominion->getImprovementPerkMultiplier('drafting');
 
         // Faction Perk
-        $multiplier += $dominion->race->getPerkValue('drafting');
+        $multiplier += $dominion->race->getPerkMultiplier('drafting');
+        $multiplier += $dominion->race->getPerkMultiplier('drafting_per_defensive_failure') * $this->statsService->getStat($dominion, 'defense_failures');
 
         // Decree
         $multiplier += $dominion->getDecreePerkMultiplier('drafting');

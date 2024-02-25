@@ -65,7 +65,6 @@ class UnitCalculator
                 $unitsGenerated[$slot] += (int)floor($amountGenerated);
             }
         }
-        
 
         foreach($units as $slot => $zero)
         {

@@ -1510,7 +1510,7 @@ mutator:
   exclusive_races:
     - Growth
   perks:
-    growth_units_production: 1;2;3;4,0.02 # slots;slots, amount
+    growth_units_production: 2;3;4,0.08 # slots;slots, amount
     housing: 44
     jobs: 0
 
