@@ -600,6 +600,11 @@ class Dominion extends AbstractModel
         return $this->user_id ? false : true;
     }
 
+    public function getMoraleMultiplier(): float
+    {
+        return 0.90 + $this->morale / 1000;
+    }
+
     public function getLockedReason(int $reason): string
     {
         switch ($reason)

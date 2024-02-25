@@ -12,10 +12,10 @@ use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\ProductionCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
-use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\User;
 
@@ -247,6 +247,7 @@ class ChroniclesController extends AbstractController
             'productionCalculator' => app(ProductionCalculator::class),
             'resourceCalculator' => app(ResourceCalculator::class),
             'spellCalculator' => app(SpellCalculator::class),
+            'unitCalculator' => app(UnitCalculator::class),
 
             'buildingHelper' => app(BuildingHelper::class),
             'deityHelper' => app(DeityHelper::class),

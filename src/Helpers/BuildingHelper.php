@@ -326,6 +326,7 @@ class BuildingHelper
             'therozou_unit_housing' => 'Houses %1$s %2$s.',
             'aurei_unit_housing' => 'Houses %1$s %2$s.',
             'snow_elf_unit_housing' => 'Houses %1$s %2$s.',
+            'vampires_unit_housing' => 'Houses %1$s %2$s.',
 
         ];
 

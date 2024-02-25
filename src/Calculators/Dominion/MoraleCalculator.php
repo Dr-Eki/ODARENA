@@ -7,7 +7,7 @@ use OpenDominion\Models\Dominion;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
-use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 
 class MoraleCalculator
@@ -20,8 +20,8 @@ class MoraleCalculator
     /** @var LandCalculator */
     protected $landCalculator;
 
-    /** @var MilitaryCalculator */
-    protected $militaryCalculator;
+    /** @var UnitCalculator */
+    protected $unitCalculator;
 
     /** @var PopulationCalculator */
     protected $populationCalculator;
@@ -30,7 +30,7 @@ class MoraleCalculator
     {
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
-        $this->militaryCalculator = app(MilitaryCalculator::class);
+        $this->unitCalculator = app(UnitCalculator::class);
         $this->populationCalculator = app(PopulationCalculator::class);
     }
 
@@ -59,12 +59,12 @@ class MoraleCalculator
         {
             if($increasesMorale = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'increases_morale_by_population') * 100)
             {
-                $baseModifier += ($this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot) / $this->populationCalculator->getPopulation($dominion)) * $increasesMorale;
+                $baseModifier += ($this->unitCalculator->getTotalUnitsForSlot($dominion, $slot) / $this->populationCalculator->getPopulation($dominion)) * $increasesMorale;
             }
 
             if($increasesMoraleFixed = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'increases_morale_fixed') * 100)
             {
-                $amountOfThisUnit = $this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot);
+                $amountOfThisUnit = $this->unitCalculator->getTotalUnitsForSlot($dominion, $slot);
 
                 # Is the unit limited to a building?
                 if($buildingPairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'building_limit'))
@@ -128,10 +128,6 @@ class MoraleCalculator
         return max(0.10, $moraleChangeModifier);
 
     }
-
-    public function getMoraleMultiplier(Dominion $dominion): float
-    {
-        return 0.90 + floor($dominion->morale) / 1000;
-    }
+   
 
 }

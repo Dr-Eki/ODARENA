@@ -8,7 +8,6 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title"><i class="ra ra-sword"></i> Military</h3>
-                <a href="{{ route('dominion.mentor.military') }}" class="pull-right"><span><i class="ra ra-help"></i> Mentor</span></a>
             </div>
             <form action="{{ route('dominion.military.train') }}" method="post" role="form">
                 @csrf
@@ -72,17 +71,13 @@
                                               </td>
                                               <td class="text-center">  <!-- Trained -->
                                                     @php
-                                                        $trained = $militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unit->slot);
-                                                        $incomingAmount = 0;
-                                                        $incomingAmount += $queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}");
-                                                        $incomingAmount += $queueService->getSummoningQueueTotalByResource($selectedDominion, "military_{$unitType}");
-                                                        $incomingAmount += $queueService->getEvolutionQueueTotalByResource($selectedDominion, "military_{$unitType}");
+                                                        $incomingAmount = $unitCalculator->getUnitTypeTotalIncoming($selectedDominion, $unitType);
                                                     @endphp
-                                                  {{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unit->slot)) }}
+                                                  {{ number_format($unitCalculator->getUnitTypeTotalTrained($selectedDominion, $unitType)) }}
                                                   <!-- Incoming -->
                                                   @if($incomingAmount > 0)
                                                     <br>
-                                                    <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($incomingAmount + $trained) }}">
+                                                    <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($unitCalculator->getUnitTypeTotalPaid($selectedDominion, $unitType)) }}">
                                                         ({{ number_format($incomingAmount) }})
                                                     </span>
                                                   @endif
@@ -94,17 +89,13 @@
                                               <td class="text-center">&mdash;</td>
                                               <td class="text-center">  <!-- If Spy/Wiz/AM -->
                                                 @php
-                                                    $trained = $militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unitType);
-                                                    $incomingAmount = 0;
-                                                    $incomingAmount += $queueService->getTrainingQueueTotalByResource($selectedDominion, "military_{$unitType}");
-                                                    $incomingAmount += $queueService->getSummoningQueueTotalByResource($selectedDominion, "military_{$unitType}");
-                                                    $incomingAmount += $queueService->getEvolutionQueueTotalByResource($selectedDominion, "military_{$unitType}");
+                                                    $incomingAmount = $unitCalculator->getUnitTypeTotalIncoming($selectedDominion, $unitType);
                                                 @endphp
 
-                                                  {{ number_format($trained) }}
+                                                  {{ number_format($unitCalculator->getUnitTypeTotalTrained($selectedDominion, $unitType)) }}
 
                                                   @if($incomingAmount > 0)
-                                                      <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($trained + $incomingAmount) }}">
+                                                      <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($unitCalculator->getUnitTypeTotalPaid($selectedDominion, $unitType)) }}">
                                                           <br>({{ number_format($incomingAmount) }})
                                                       </span>
                                                   @endif
@@ -205,19 +196,19 @@
                         </tbody>
                     </table>
                 </div>
-                @if ($selectedDominion->race->name !== 'Growth' and !$selectedDominion->race->getPerkValue('no_drafting'))
-                <div class="box-footer">
-                    <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>Change</button>
-                    </form>
-
-                    @if(!$selectedDominion->race->getPerkValue('cannot_release_units'))
-                        <form action="{{ route('dominion.military.release-draftees') }}" method="post" role="form" class="pull-right">
-                            @csrf
-                            <input type="hidden" style="display:none;" name="release[draftees]" value={{ intval($selectedDominion->military_draftees) }}>
-                            <button type="submit" class="btn btn-warning btn-small" {{ ($selectedDominion->isLocked() or $selectedDominion->military_draftees == 0) ? 'disabled' : null }}>Release {{ str_plural($raceHelper->getDrafteesTerm($selectedDominion->race)) }}</button>
+                @if ($selectedDominion->race->getPerkValue('cannot_change_draft_rate') and !$selectedDominion->race->getPerkValue('no_drafting'))
+                    <div class="box-footer">
+                        <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>Change</button>
                         </form>
-                    @endif
-                </div>
+
+                        @if(!$selectedDominion->race->getPerkValue('cannot_release_units'))
+                            <form action="{{ route('dominion.military.release-draftees') }}" method="post" role="form" class="pull-right">
+                                @csrf
+                                <input type="hidden" style="display:none;" name="release[draftees]" value={{ intval($selectedDominion->military_draftees) }}>
+                                <button type="submit" class="btn btn-warning btn-small" {{ ($selectedDominion->isLocked() or $selectedDominion->military_draftees == 0) ? 'disabled' : null }}>Release {{ str_plural($raceHelper->getDrafteesTerm($selectedDominion->race)) }}</button>
+                            </form>
+                        @endif
+                    </div>
                 @endif
         </div>
 

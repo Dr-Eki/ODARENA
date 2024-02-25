@@ -25,6 +25,7 @@ use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 
 use OpenDominion\Services\Analytics\AnalyticsEvent;
@@ -63,6 +64,7 @@ class MilitaryController extends AbstractDominionController
             'networthCalculator' => app(NetworthCalculator::class),
             'returningResources' => $returningResources,
             'spellCalculator' => app(SpellCalculator::class),
+            'unitCalculator' => app(UnitCalculator::class),
         ]);
     }
 

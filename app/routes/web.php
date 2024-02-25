@@ -99,6 +99,7 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('advisors/history')->uses('Dominion\AdvisorsController@getHistory')->name('advisors.history');
 
             // Mentor
+            /*
             $router->get('mentor')->uses('Dominion\MentorController@getMentor')->name('mentor');
             $router->get('mentor/general')->uses('Dominion\MentorController@getMentorGeneral')->name('mentor.general');
             $router->get('mentor/advancements')->uses('Dominion\MentorController@getMentorAdvancements')->name('mentor.advancements');
@@ -108,6 +109,7 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('mentor/invade')->uses('Dominion\MentorController@getMentorInvade')->name('mentor.invade');
             $router->get('mentor/magic')->uses('Dominion\MentorController@getMentorMagic')->name('mentor.magic');
             $router->get('mentor/military')->uses('Dominion\MentorController@getMentorMilitary')->name('mentor.military');
+            */
 
             # Buildings
             $router->get('buildings')->uses('Dominion\BuildingController@getBuildings')->name('buildings');

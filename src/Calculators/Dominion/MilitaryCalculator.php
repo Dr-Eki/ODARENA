@@ -14,6 +14,7 @@ use OpenDominion\Models\Unit;
 
 use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 
 use OpenDominion\Services\Dominion\GovernmentService;
 use OpenDominion\Services\Dominion\QueueService;
@@ -58,6 +59,8 @@ class MilitaryCalculator
     /** @var StatsService */
     protected $statsService;
 
+    /** @var UnitCalculator */
+    protected $unitCalculator;
 
     /** @var ImprovementHelper */
     protected $improvementHelper;
@@ -75,6 +78,7 @@ class MilitaryCalculator
         $this->resourceCalculator = app(ResourceCalculator::class);
         $this->spellCalculator = app(SpellCalculator::class);
         $this->statsService = app(StatsService::class);
+        $this->unitCalculator = app(UnitCalculator::class);
         $this->improvementHelper = app(ImprovementHelper::class);
     }
 
@@ -107,7 +111,7 @@ class MilitaryCalculator
     {
         $op = ($this->getOffensivePowerRaw($attacker, $defender, $landRatio, $units, $calc) * $this->getOffensivePowerMultiplier($attacker, $defender));
 
-        $op *= $this->getMoraleMultiplier($attacker, 'offense');
+        $op *= $attacker->getMoraleMultiplier();
 
         if($isInvasion and isset($target))
         {
@@ -333,7 +337,7 @@ class MilitaryCalculator
         $dp = $this->getDefensivePowerRaw($defender, $attacker, $landRatio, $units, $multiplierReduction, $isAmbush, $ignoreRawDpFromBuildings, $invadingUnits, $ignoreRawDpFromAnnexedDominions);
         $dp *= $this->getDefensivePowerMultiplier($defender, $attacker, $multiplierReduction);
 
-        return ($dp * $this->getMoraleMultiplier($defender, 'defense'));
+        return ($dp * $defender->getMoraleMultiplier());
     }
 
     /**
@@ -585,7 +589,7 @@ class MilitaryCalculator
         $unitPower += $this->getUnitPowerFromRulerTitle($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromDeity($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromDevotion($dominion, $unit, $powerType);
-        $unitPower += $this->getUnitPowerFromBuildingsBasedPerk($dominion, $unit, $powerType); # This perk uses multiple buildings!
+        #$unitPower += $this->getUnitPowerFromBuildingsBasedPerk($dominion, $unit, $powerType); # This perk uses multiple buildings!
         $unitPower += $this->getUnitPowerFromImprovementPointsPerImprovement($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromImprovementPoints($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromResearch($dominion, $unit, $powerType);
@@ -1213,29 +1217,9 @@ class MilitaryCalculator
 
         $military = 0;
 
-        # Draftees, Spies, Wizards, and Arch Mages always count.
-        $military += $dominion->military_draftees;
-        $military += $dominion->military_spies;
-        $military += $dominion->military_wizards;
-        $military += $dominion->military_archmages;
-
-        # Units in training
-        $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_spies');
-        $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_wizards');
-        $military += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_archmages');
-        $military += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_spies');
-        $military += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_wizards');
-        $military += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_archmages');
-        $military += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_spies');
-        $military += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_wizards');
-        $military += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_archmages');
-
-        for ($unitSlot = 1; $unitSlot <= $dominion->race->units->count(); $unitSlot++)
+        foreach($this->unitCalculator->getDominionUnitKeys($dominion) as $unitKey)
         {
-            $military += $this->getTotalUnitsForSlot($dominion, $unitSlot);
-            $military += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unitSlot}");
-            $military += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$unitSlot}");
-            $military += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$unitSlot}");
+            $military += $this->unitCalculator->getUnitTypeTotal($dominion, $unitKey);
         }
 
         $militaryPercentage = min(1, $military / ($military + $dominion->peasants));
@@ -1481,29 +1465,11 @@ class MilitaryCalculator
 
             $military = 0;
 
-            # Draftees, Spies, Wizards, and Arch Mages always count.
-            $military += $target->military_draftees;
-            $military += $target->military_spies;
-            $military += $target->military_wizards;
-            $military += $target->military_archmages;
+            $military = 0;
 
-            # Units in training
-            $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_spies');
-            $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_wizards');
-            $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_archmages');
-            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_spies');
-            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_wizards');
-            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_archmages');
-            $military += $this->queueService->getEvolutionQueueTotalByResource($target, 'military_spies');
-            $military += $this->queueService->getEvolutionQueueTotalByResource($target, 'military_wizards');
-            $military += $this->queueService->getEvolutionQueueTotalByResource($target, 'military_archmages');
-
-            foreach($target->race->units as $unit)
+            foreach($this->unitCalculator->getDominionUnitKeys($target) as $unitKey)
             {
-                $military += $this->getTotalUnitsForSlot($dominion, $unit->slot);
-                $military += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unit->slot}");
-                $military += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$unit->slot}");
-                $military += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                $military += $this->unitCalculator->getUnitTypeTotal($target, $unitKey);
             }
 
             $militaryPercentage = min(1, $military / ($military + $dominion->peasants));
@@ -1527,29 +1493,11 @@ class MilitaryCalculator
 
             $military = 0;
 
-            # Draftees, Spies, Wizards, and Arch Mages always count.
-            $military += $target->military_draftees;
-            $military += $target->military_spies;
-            $military += $target->military_wizards;
-            $military += $target->military_archmages;
+            $military = 0;
 
-            # Units in training
-            $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_spies');
-            $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_wizards');
-            $military += $this->queueService->getTrainingQueueTotalByResource($target, 'military_archmages');
-            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_spies');
-            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_wizards');
-            $military += $this->queueService->getSummoningQueueTotalByResource($target, 'military_archmages');
-            $military += $this->queueService->getEvolutionQueueTotalByResource($target, 'military_spies');
-            $military += $this->queueService->getEvolutionQueueTotalByResource($target, 'military_wizards');
-            $military += $this->queueService->getEvolutionQueueTotalByResource($target, 'military_archmages');
-
-            foreach($target->race->units as $unit)
+            foreach($this->unitCalculator->getDominionUnitKeys($target) as $unitKey)
             {
-                $military += $this->getTotalUnitsForSlot($dominion, $unit->slot);
-                $military += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$unit->slot}");
-                $military += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$unit->slot}");
-                $military += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                $military += $this->unitCalculator->getUnitTypeTotal($target, $unitKey);
             }
 
             $militaryPercentage = min(1, $military / ($military + $dominion->peasants));
@@ -1823,6 +1771,7 @@ class MilitaryCalculator
           return $powerFromPerk;
       }
 
+      /*
       protected function getUnitPowerFromBuildingsBasedPerk(Dominion $dominion, Unit $unit, string $powerType): float
       {
           $buildingsPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_from_buildings", null);
@@ -1851,6 +1800,7 @@ class MilitaryCalculator
 
           return $powerFromPerk;
       }
+      */
 
       protected function getUnitPowerFromImprovementPointsPerImprovement(Dominion $dominion, Unit $unit, string $powerType): float
       {
@@ -1943,24 +1893,6 @@ class MilitaryCalculator
           return $powerFromPerk;
 
       }
-
-    /**
-     * Returns the Dominion's morale modifier.
-     *
-     * Net OP/DP gets lowered linearly by up to -20% at 0% morale.
-     *
-     * @param Dominion $dominion
-     * @return float
-     */
-    public function getMoraleMultiplier(Dominion $dominion, string $mode): float
-    {
-        if($dominion->getSpellPerkValue('no_morale_bonus_on_' . $mode))
-        {
-            return 1;
-        }
-        
-        return 0.90 + $dominion->morale / 1000;
-    }
 
     /**
      * Returns the Dominion's spy ratio.
@@ -2884,41 +2816,26 @@ class MilitaryCalculator
 
         foreach($dominion->race->units as $unit)
         {
-            $units += $dominion->{'military_unit' . $unit->slot};
+            $units += $this->unitCalculator->getUnitTypeTotalAtHome($dominion, ('unit' . $unit->slot));
 
             if($includeUnitsInTraining)
             {
-                $units += $this->queueService->getTrainingQueueTotalByResource($dominion, ('military_unit' . $unit->slot));
-                $units += $this->queueService->getSummonigQueueTotalByResource($dominion, ('military_unit' . $unit->slot));
-                $units += $this->queueService->getEvolutionQueueTotalByResource($dominion, ('military_unit' . $unit->slot));
+                $units += $this->unitCalculator->getUnitTypeTotalIncoming($dominion, ('unit' . $unit->slot));
             }
         }
-        
+
         if($includeDraftees)
         {
-            $units += $dominion->military_draftees;
+            $units += $this->unitCalculator->getUnitTypeTotalAtHome($dominion, 'draftees');
         }
 
         if($includeSpiesAndWizards)
         {
-            $units += $dominion->military_spies;
-            $units += $dominion->military_wizards;
-            $units += $dominion->military_archmages;
-
-            if($includeUnitsInTraining)
-            {
-                $units += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_spies');
-                $units += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_wizards');
-                $units += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_archmages');
-                $units += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_spies');
-                $units += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_wizards');
-                $units += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_archmages');
-                $units += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_spies');
-                $units += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_wizards');
-                $units += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_archmages');
-            }
+            $units += $this->unitCalculator->getUnitTypeTotalAtHome($dominion, 'spies');
+            $units += $this->unitCalculator->getUnitTypeTotalAtHome($dominion, 'wizards');
+            $units += $this->unitCalculator->getUnitTypeTotalAtHome($dominion, 'archmages');
         }
-        
+
         if($includePeasants)
         {
             $units += $dominion->peasants;

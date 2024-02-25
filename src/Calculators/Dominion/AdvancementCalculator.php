@@ -170,13 +170,12 @@ class AdvancementCalculator
 
     }
 
-    public function maxLevelAfforded(Dominion $dominion)
+    public function maxLevelAfforded(Dominion $dominion): int
     {
         $maxLevel = $this->getDominionMaxLevel($dominion);
 
         if(!$maxLevel)
         {
-            dd('ugh');
             return 0;
         }
 

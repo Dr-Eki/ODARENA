@@ -1164,8 +1164,8 @@ mansion:
   land_type: forest
   perks:
     housing: 30
-    jobs: 10
-    vampires_unit1_housing: 10
+    jobs: 0
+    vampires_unit_housing: 1,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
 
 # END VAMPIRES
 

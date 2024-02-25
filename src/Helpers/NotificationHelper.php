@@ -494,12 +494,24 @@ class NotificationHelper
 
             case 'hourly_dominion.summoning_completed':
                 $units = array_sum($data);
+                $term = isset($dominion) ? ($dominion->race->key == 'growth' ? 'mutated' : 'summoned') : 'summoned';
 
                 return sprintf(
                     '%s %s %s',
                     number_format($units),
                     str_plural('unit', $units),
-                    'summoned'
+                    $term
+                );
+
+            case 'hourly_dominion.evolution_completed':
+                $units = array_sum($data);
+                $term = isset($dominion) ? ($dominion->race->key == 'vampires' ? 'aged' : 'evolved') : 'evolved';
+
+                return sprintf(
+                    '%s %s %s',
+                    number_format($units),
+                    str_plural('unit', $units),
+                    $term
                 );
 
             case 'hourly_dominion.stun_completed':

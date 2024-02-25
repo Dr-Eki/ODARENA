@@ -22,11 +22,13 @@ perks:
 
 units:
   - name: Servant
+    training_time: 6
     type:
       - living
       - mindless
     cost:
       gold: 700
+      draftees: 1
     power:
       offense: 0
       defense: 4
@@ -34,18 +36,20 @@ units:
       casualties: 20
 
   - name: Acolyte
+    training_time: 9
     type:
       - living
       - sentient
       - intelligent
     cost:
       gold: 1000
+      draftees: 1
     power:
       offense: 3
       defense: 3
     perks:
       offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP
-      evolves_into_unit: 3,0.001,12 # 0.001% of this unit become unit3, taking 12 ticks to complete
+      evolves_into_unit: 3,0.1,12 # 0.001% of this unit become unit3, taking 12 ticks to complete
 
   - name: Magistrate
     type:
@@ -60,8 +64,9 @@ units:
     perks:
       offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP
       defense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 DP
-      evolves_into_unit: 4,0.001,12 # 0.001% of this unit become unit3, taking 12 ticks to complete
+      evolves_into_unit: 4,0.05,12 # 0.001% of this unit become unit3, taking 12 ticks to complete
       faster_return_from_time: 18,06,2 # Between the hours 18:00 and 06:00, returns 4 ticks faster
+      casualties: -20
 
   - name: Noble
     training_time: 12
@@ -78,3 +83,4 @@ units:
       defense_from_time: 06,18,1 # Between the hours 18:00 and 06:00, gains +1 DP
       offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP
       faster_return_from_time: 18,06,4 # Between the hours 18:00 and 06:00, returns 4 ticks faster
+      casualties: -40

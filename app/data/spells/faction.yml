@@ -105,8 +105,6 @@ soothing_hum:
     - Kobold
   perks:
     morale_change_tick: -50
-    no_morale_bonus_on_offense: 1
-    no_morale_bonus_on_defense: 1
 
 ## Nox
 

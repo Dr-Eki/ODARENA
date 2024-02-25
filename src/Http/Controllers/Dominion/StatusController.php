@@ -19,6 +19,7 @@ use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\ProductionCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\TitleCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 
 use OpenDominion\Models\Title;
 
@@ -67,6 +68,7 @@ class StatusController extends AbstractDominionController
             'resourceCalculator' => app(ResourceCalculator::class),
             'queueService' => app(QueueService::class),
             'titleCalculator' => app(TitleCalculator::class),
+            'unitCalculator' => app(UnitCalculator::class),
 
             'dominionHelper' => app(DominionHelper::class),
             'raceHelper' => app(RaceHelper::class),

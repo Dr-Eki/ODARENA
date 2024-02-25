@@ -6,6 +6,7 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\CasualtiesCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Http\Requests\Dominion\Actions\InvadeActionRequest;
 use OpenDominion\Models\Dominion;
@@ -44,6 +45,7 @@ class InvasionController extends AbstractDominionController
             'rangeCalculator' => app(RangeCalculator::class),
             'resourceCalculator' => app(ResourceCalculator::class),
             'spellCalculator' => app(SpellCalculator::class),
+            'unitCalculator' => app(UnitCalculator::class),
 
             'returningResources' => $returningResources,
 

@@ -7,10 +7,10 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Helpers\UnitHelper;
 
 use OpenDominion\Calculators\Dominion\MagicCalculator;
-use OpenDominion\Calculators\Dominion\MilitaryCalculator;
-use OpenDominion\Calculators\Dominion\PopulationCalculator;
+#use OpenDominion\Calculators\Dominion\PopulationCalculator;
 
 use OpenDominion\Services\Dominion\QueueService;
+use OpenDominion\Services\Dominion\StatsService;
 
 class UnitCalculator
 {
@@ -18,14 +18,14 @@ class UnitCalculator
     /** @var MagicCalculator */
     protected $magicCalculator;
 
-    /** @var MilitaryCalculator */
-    protected $militaryCalculator;
-
     /** @var PopulationCalculator */
     protected $populationCalculator;
 
     /** @var QueueService */
     protected $queueService;
+
+    /** @var StatsService */
+    protected $statsService;
 
     /** @var UnitHelper */
     protected $unitHelper;
@@ -33,9 +33,9 @@ class UnitCalculator
     public function __construct()
     {
         $this->magicCalculator = new MagicCalculator();
-        $this->militaryCalculator = new MilitaryCalculator();
-        $this->populationCalculator = new PopulationCalculator();
+        #$this->populationCalculator = new PopulationCalculator();
         $this->queueService = new QueueService();
+        $this->statsService = new StatsService();
         $this->unitHelper = new UnitHelper();
     }
 
@@ -111,52 +111,6 @@ class UnitCalculator
                 }
             }
 
-            # Passive unit generation from decrees
-            $decreeUnitSummoningRaw = $dominion->getDecreePerkValue($raceKey . '_unit' . $slot . '_production_raw');
-
-            if($decreeUnitSummoningRaw)
-            {
-                $decreeUnitSummoningPerks = explode(',', $decreeUnitSummoningRaw);
-                
-                $slotProduced = (int)$decreeUnitSummoningPerks[0];
-                $amountProduced = (float)$decreeUnitSummoningPerks[1];
-                $slotProducing = (int)$decreeUnitSummoningPerks[2];
-
-                $unitSummoningMultiplier = 1;
-                $unitSummoningMultiplier += $dominion->getBuildingPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
-                $unitSummoningMultiplier += $dominion->getSpellPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
-
-                $unitSummoning = $dominion->{'military_unit' . $slotProducing} * $amountProduced * $unitSummoningMultiplier;
-    
-                # Check for capacity limit
-                if($this->unitHelper->unitHasCapacityLimit($dominion, $slot))
-                {
-                    $maxCapacity = $this->unitHelper->getUnitMaxCapacity($dominion, $slot);
-    
-                    $usedCapacity = $dominion->{'military_unit' . $slot};
-                    $usedCapacity += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getInvasionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slot);
-    
-                    $availableCapacity = max(0, $maxCapacity - $usedCapacity);
-    
-                    $unitsToSummon = floor(min($unitSummoning, $availableCapacity));
-                }
-                # If no capacity limit
-                else
-                {
-                    $unitsToSummon = $unitSummoning;
-                }
-            }
-
             # Because you never know...
             $unitsToSummon = (int)max($unitsToSummon, 0);
 
@@ -195,14 +149,17 @@ class UnitCalculator
 
                 if($unitAttritionProtectionPerNetVictoriesPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'attrition_protection_from_net_victories'))
                 {
-                    $amountProtected = min($this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot), $this->militaryCalculator->getNetVictories($dominion)) * $unitAttritionProtectionPerNetVictoriesPerk;
+                    $netVictories = $this->statsService->getStat($dominion, 'invasion_victories') - $this->statsService->getStat($dominion, 'defense_failures');
+                    $unitSlotTotal = $this->getUnitTypeTotal($dominion, $slot, true, true);
+
+                    $amountProtected = min($unitSlotTotal, $netVictories) * $unitAttritionProtectionPerNetVictoriesPerk;
 
                     $unitAttritionAmount -= $amountProtected;
                 }
 
                 $unitAttritionAmount = max(0, min($unitAttritionAmount, $dominion->{'military_unit'.$slot})); # Sanity caps.
 
-                ${'attritionUnit' . $slot} += round($unitAttritionAmount);
+                $unitsAttrited[$slot] += round($unitAttritionAmount);
             }
 
             // Unit attrition if building limit exceeded
@@ -218,11 +175,10 @@ class UnitCalculator
 
                 $unitAttritionAmount = max(0, min($unitAttritionAmount, $dominion->{'military_unit'.$slot})); # Sanity caps (greater than 0, and cannot exceed units at home)
 
-                ${'attritionUnit' . $slot} += round($unitAttritionAmount);
+                $unitsAttrited[$slot] += round($unitAttritionAmount);
 
             }
         }
-
 
         return $unitsAttrited;
 
@@ -308,5 +264,167 @@ class UnitCalculator
 
         return $units;
     }
+
+
+    public function getUnitTypeTotalReturning(Dominion $dominion, string $unitType): int
+    {
+        return $this->getUnitTypeTotal($dominion, $unitType, true, false, true);
+    }
+
+    public function getUnitTypeTotalIncoming(Dominion $dominion, string $unitType): int
+    {
+        return $this->getUnitTypeTotal($dominion, $unitType, true, true, false);
+    }
+
+    public function getUnitTypeTotalTrained(Dominion $dominion, string $unitType): int
+    {
+        return $this->getUnitTypeTotal($dominion, $unitType, false, false, true);
+    }
+
+    public function getUnitTypeTotalPaid(Dominion $dominion, string $unitType): int
+    {
+        return $this->getUnitTypeTotal($dominion, $unitType, false, false, false);
+    }
+
+    public function getUnitTypeTotalAtHome(Dominion $dominion, string $unitType): int
+    {
+        return $this->getUnitTypeTotal($dominion, $unitType, false, true, true);
+    }
+
+    public function getUnitTypeTotal(Dominion $dominion, string $unitType, bool $excludeAtHome = false, bool $excludeReturning = false, bool $excludeIncoming = false): int
+    {
+        # Incoming = units the dominion does not yet own, but are in the process of being summoned, trained, or evolved
+        # Returning = units the dominion does own, but are returning from something (an action)
+        
+        $unitKey = $this->getUnitKey($unitType);
+
+        if($unitKey === null)
+        {
+            dd($unitKey, $unitType);
+            return 0;
+        }
+
+        $units = $excludeAtHome ? 0 : $dominion->{$unitKey};
+
+        # Returning queues
+        if(!$excludeReturning)
+        {
+            $units += $this->queueService->getArtefactattackQueueTotalByResource($dominion, $unitKey);
+            $units += $this->queueService->getDesecrationQueueTotalByResource($dominion, $unitKey);
+            $units += $this->queueService->getExpeditionQueueTotalByResource($dominion, $unitKey);
+            $units += $this->queueService->getInvasionQueueTotalByResource($dominion, $unitKey);
+            $units += $this->queueService->getSabotageQueueTotalByResource($dominion, $unitKey);
+            $units += $this->queueService->getStunQueueTotalByResource($dominion, $unitKey);
+            $units += $this->queueService->getTheftQueueTotalByResource($dominion, $unitKey);    
+        }
+
+        # Incoming queues
+        if(!$excludeIncoming)
+        {
+            $units += $this->queueService->getEvolutionQueueTotalByResource($dominion, $unitKey);
+            $units += $this->queueService->getTrainingQueueTotalByResource($dominion, $unitKey);
+            $units += $this->queueService->getSummoningQueueTotalByResource($dominion, $unitKey);
+        }
+
+        return $units;
+    }
+
+    public function getQueuedReturningUnitTypeAtTick(Dominion $dominion, string $unitType, int $tick): int
+    {
+        return $this->getQueuedUnitTypeAtTick($dominion, $unitType, $tick, false, true);
+    }
+
+    public function getQueuedIncomingUnitTypeAtTick(Dominion $dominion, string $unitType, int $tick): int
+    {
+        return $this->getQueuedUnitTypeAtTick($dominion, $unitType, $tick, true, false);
+    }
+
+    public function getQueuedUnitTypeAtTick(Dominion $dominion, string $unitType, int $tick, bool $excludeReturning = false, bool $excludeIncoming = false): int
+    {
+        # Incoming = units the dominion does not yet own, but are in the process of being summoned, trained, or evolved
+        # Returning = units the dominion does own, but are returning from something (an action)
+        
+        $unitKey = $this->getUnitKey($unitType);
+
+        if($unitKey === null)
+        {
+            return 0;
+        }
+
+        $units = 0;
+
+        # Returning queues
+        if(!$excludeReturning)
+        {
+            $units += $this->queueService->getArtefactattackQueueAmount($dominion, $unitKey, $tick);
+            $units += $this->queueService->getDesecrationQueueAmount($dominion, $unitKey, $tick);
+            $units += $this->queueService->getExpeditionQueueAmount($dominion, $unitKey, $tick);
+            $units += $this->queueService->getInvasionQueueAmount($dominion, $unitKey, $tick);
+            $units += $this->queueService->getSabotageQueueAmount($dominion, $unitKey, $tick);
+            $units += $this->queueService->getStunQueueAmount($dominion, $unitKey, $tick);
+            $units += $this->queueService->getTheftQueueAmount($dominion, $unitKey, $tick);
+        }
+
+        # Incoming queues
+        if(!$excludeIncoming)
+        {
+            $units += $this->queueService->getTrainingQueueAmount($dominion, $unitKey, $tick);
+            $units += $this->queueService->getSummoningQueueAmount($dominion, $unitKey, $tick);
+            $units += $this->queueService->getEvolutionQueueAmount($dominion, $unitKey, $tick);
+        }
+
+        return $units;
+    }
+
+    public function getUnitSlot($unitType): ?string
+    {
+        if (strpos($unitType, 'military_unit') === 0 || strpos($unitType, 'unit') === 0) {
+            return preg_replace('/\D/', '', $unitType);
+        }
     
+        return null;
+    }
+
+    public function getUnitKey($unitType): ?string
+    {
+
+        $lookup = [
+            'draftees' => 'military_draftees',
+            'military_draftees' => 'military_draftees',
+            'spies' => 'military_spies',
+            'military_spies' => 'military_spies',
+            'wizards' => 'military_wizards',
+            'military_wizards' => 'military_wizards',
+            'archmages' => 'military_archmages',
+            'military_archmages' => 'military_archmages',
+        ];
+        
+        $unitKey = $lookup[$unitType] ?? null;
+
+        if($unitKey == null)
+        {
+            $unitKey = is_numeric($unitType) ? 'military_unit' . $unitType : 'military_unit' . $this->getUnitSlot($unitType);
+        }
+
+        return $unitKey;
+    }
+
+    public function getDominionUnitKeys(Dominion $dominion): array
+    {
+        $unitKeys = [];
+
+        !$dominion->race->getPerkValue('no_drafting') ?: $unitKeys[] = 'draftees';
+
+        foreach($dominion->race->units as $unit)
+        {
+            $unitKeys[] = 'unit'.$this->getUnitKey($unit->slot);
+        }
+
+        !$dominion->race->getPerkValue('cannot_train_spies') ?: $unitKeys[] = 'spies';
+        !$dominion->race->getPerkValue('cannot_train_wizards') ?: $unitKeys[] = 'wizards';
+        !$dominion->race->getPerkValue('cannot_train_archmages') ?: $unitKeys[] = 'archmages';
+
+        return $unitKeys;
+
+    }
 }

@@ -27,6 +27,7 @@ use OpenDominion\Calculators\Dominion\ProductionCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 
 use OpenDominion\Helpers\AdvancementHelper;
 use OpenDominion\Helpers\BuildingHelper;
@@ -194,6 +195,7 @@ class InsightController extends AbstractDominionController
             'rangeCalculator' => app(RangeCalculator::class),
             'resourceCalculator' => app(ResourceCalculator::class),
             'spellCalculator' => app(SpellCalculator::class),
+            'unitCalculator' => app(UnitCalculator::class),
 
             'protectionService' => app(ProtectionService::class),
             'statsService' => app(StatsService::class),
@@ -273,6 +275,7 @@ class InsightController extends AbstractDominionController
             'rangeCalculator' => app(RangeCalculator::class),
             'resourceCalculator' => app(ResourceCalculator::class),
             'spellCalculator' => app(SpellCalculator::class),
+            'unitCalculator' => app(UnitCalculator::class),
 
             'protectionService' => app(ProtectionService::class),
             'statsService' => app(StatsService::class),

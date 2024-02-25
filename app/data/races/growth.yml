@@ -72,7 +72,7 @@ units:
       - living
       - mindless
     cost:
-      food: 160
+      food: 0
     power:
       offense: 1.25
       defense: 0.50
@@ -85,7 +85,7 @@ units:
       - living
       - mindless
     cost:
-      food: 170
+      food: 0
     power:
       offense: 1.50
       defense: 0.25

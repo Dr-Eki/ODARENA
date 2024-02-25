@@ -6,7 +6,7 @@ use DB;
 use File;
 use Exception;
 use Log;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 
 use OpenDominion\Calculators\RealmCalculator;
@@ -36,7 +36,7 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Realm;
-use OpenDominion\Models\Resource;
+#use OpenDominion\Models\Resource;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\RoundWinner;
 use OpenDominion\Models\Spell;
@@ -185,188 +185,144 @@ class TickService
                     $this->resourceService->updateRoundResources($round, ['body' => (-$decay)]);
                 }
 
-                # Get dominions IDs with Stasis active
-                $stasisDominions = [];
-                $dominions = $round->activeDominions()->inRandomOrder()->get();
-                $largestDominionSize = 0;
+                # Get all dominions for this round where protection_ticks == 0, in random order
+                $dominions = $round->activeDominions()
+                    ->where('protection_ticks', 0)
+                    ->inRandomOrder()
+                    ->with([
+                        'race',
+                        'race.perks',
+                        'race.units',
+                        'race.units.perks',
+                    ])
+                    ->get();
 
+                $this->temporaryData[$round->id]['stasis_dominions'] = [];
+                
                 if(static::EXTENDED_LOGGING) { Log::debug('* Going through all dominions'); }
                 foreach ($dominions as $dominion)
                 {
-                    if($dominion->protection_ticks === 0)
+
+                    $this->temporaryData[$round->id][$dominion->id] = [];
+
+                    $this->temporaryData[$round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
+                    $this->temporaryData[$round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsGenerated($dominion);
+
+                    if(
+                        ($dominion->round->ticks % 4 == 0) and
+                        !$this->protectionService->isUnderProtection($dominion) and
+                        $dominion->round->hasStarted() and
+                        !$dominion->getSpellPerkValue('fog_of_war') and
+                        !$dominion->isAbandoned()
+                        )
                     {
-
-                        $this->temporaryData[$round->id][$dominion->id] = [];
-
-                        $this->temporaryData[$round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
-                        $this->temporaryData[$round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsGenerated($dominion);
-
-                        if($dominion->getSpellPerkValue('stasis'))
-                        {
-                            $stasisDominions[] = $dominion->id;
-                        }
-
-                        if(
-                            ($dominion->round->ticks % 4 == 0) and
-                            !$this->protectionService->isUnderProtection($dominion) and
-                            $dominion->round->hasStarted() and
-                            !$dominion->getSpellPerkValue('fog_of_war') and
-                            !$dominion->isAbandoned()
-                            )
-                        {
-                            $this->queueService->setForTick(false); # Necessary as otherwise this-tick units are missing
-                            if(static::EXTENDED_LOGGING) { Log::debug('** Capturing insight for ' . $dominion->name); }
-                            $this->insightService->captureDominionInsight($dominion);
-                            $this->queueService->setForTick(true); # Reset
-                        }
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Updating resources for ' . $dominion->name); }
-                        $this->handleResources($dominion);
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Updating buildings for ' . $dominion->name); }
-                        $this->handleBuildings($dominion);
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Updating terrain for ' . $dominion->name); }
-                        $this->handleTerrain($dominion);
-
-                        if(static::EXTENDED_LOGGING){ Log::debug('** Updating improvments for ' . $dominion->name); }
-                        $this->handleImprovements($dominion);
-
-                        if(static::EXTENDED_LOGGING){ Log::debug('** Updating deities for ' . $dominion->name); }
-                        $this->handleDeities($dominion);
-
-                        if(static::EXTENDED_LOGGING){ Log::debug('** Updating artefacts for ' . $dominion->name); }
-                        $this->handleArtefacts($dominion);
-
-                        if(static::EXTENDED_LOGGING){ Log::debug('** Updating research for ' . $dominion->name); }
-                        $this->handleResearch($dominion);
-
-                        if(static::EXTENDED_LOGGING){ Log::debug('** Updating units for ' . $dominion->name); }
-                        $this->handleUnits($dominion);
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Handle Barbarians:'); }
-                        # NPC Barbarian: invasion, training, construction
-                        if($dominion->race->name === 'Barbarian')
-                        {
-                            if(static::EXTENDED_LOGGING) { Log::debug('*** Handle Barbarian invasions for ' . $dominion->name); }
-                            $this->barbarianService->handleBarbarianInvasion($dominion, $largestDominionSize);
-
-                            if(static::EXTENDED_LOGGING) { Log::debug('*** Handle Barbarian construction for ' . $dominion->name); }
-                            $this->barbarianService->handleBarbarianConstruction($dominion);
-
-                            if(static::EXTENDED_LOGGING) { Log::debug('*** Handle Barbarian improvements for ' . $dominion->name); }
-                            $this->barbarianService->handleBarbarianImprovements($dominion);
-                        }
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Calculate $largestDominion'); }
-                        $largestDominionSize = max($dominion->land, $largestDominionSize);
-                        if(static::EXTENDED_LOGGING) { Log::debug('*** $largestDominion =' . number_format($largestDominionSize)); }
+                        $this->queueService->setForTick(false); # Necessary as otherwise this-tick units are missing
+                        if(static::EXTENDED_LOGGING) { Log::debug('** Capturing insight for ' . $dominion->name); }
+                        $this->insightService->captureDominionInsight($dominion);
+                        $this->queueService->setForTick(true); # Reset
                     }
-                }
 
-                unset($dominions);
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Updating buildings for ' . $dominion->name); }
+                    $this->handleBuildings($dominion);
 
-                if(static::EXTENDED_LOGGING) { Log::debug('* Update stasis dominions'); }
-                // Scoot hour 1 Qur Stasis units back to hour 2
-                foreach($stasisDominions as $stasisDominion)
-                {
-                    $stasisDominion = Dominion::findorfail($stasisDominion);
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Updating terrain for ' . $dominion->name); }
+                    $this->handleTerrain($dominion);
 
-                    ## Determine how many of each unit type is returning in $tick ticks
-                    $tick = 1;
+                    if(static::EXTENDED_LOGGING){ Log::debug('** Updating improvments for ' . $dominion->name); }
+                    $this->handleImprovements($dominion);
 
-                    foreach (range(1, $stasisDominion->race->units->count()) as $slot)
+                    if(static::EXTENDED_LOGGING){ Log::debug('** Updating deities for ' . $dominion->name); }
+                    $this->handleDeities($dominion);
+
+                    if(static::EXTENDED_LOGGING){ Log::debug('** Updating artefacts for ' . $dominion->name); }
+                    $this->handleArtefacts($dominion);
+
+                    if(static::EXTENDED_LOGGING){ Log::debug('** Updating research for ' . $dominion->name); }
+                    $this->handleResearch($dominion);
+
+                    if(static::EXTENDED_LOGGING){ Log::debug('** Updating units for ' . $dominion->name); }
+                    $this->handleUnits($dominion);
+
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Updating resources for ' . $dominion->name); }
+                    $this->handleResources($dominion);
+
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle Barbarians:'); }
+                    # NPC Barbarian: invasion, training, construction
+                    if($dominion->race->name === 'Barbarian')
                     {
-                        $unitType = 'unit' . $slot;
-                        for ($i = 1; $i <= 12; $i++)
+                        if(static::EXTENDED_LOGGING) { Log::debug('*** Handle Barbarian invasions for ' . $dominion->name); }
+                        $this->barbarianService->handleBarbarianInvasion($dominion);
+
+                        if(static::EXTENDED_LOGGING) { Log::debug('*** Handle Barbarian construction for ' . $dominion->name); }
+                        $this->barbarianService->handleBarbarianConstruction($dominion);
+
+                        if(static::EXTENDED_LOGGING) { Log::debug('*** Handle Barbarian improvements for ' . $dominion->name); }
+                        $this->barbarianService->handleBarbarianImprovements($dominion);
+                    }
+
+                    if(static::EXTENDED_LOGGING) { Log::debug('* Handle stasis'); }
+                    $this->handleStasis($dominion);
+
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle Pestilence'); }
+                    // Afflicted: Abomination generation
+                    if(!empty($dominion->tick->pestilence_units))
+                    {
+                        $caster = Dominion::findorfail($dominion->tick->pestilence_units['caster_dominion_id']);
+
+                        if(static::EXTENDED_LOGGING) { Log::debug('*** ' . $dominion->name . ' has pestilence from ' . $caster->name); }
+
+                        if ($caster)
                         {
-                            $invasionQueueUnits[$slot][$i] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_{$unitType}", $i);
+                            $this->queueService->queueResources('summoning', $caster, ['military_unit1' => $dominion->tick->pestilence_units['units']['military_unit1']], 12);
                         }
                     }
 
-                    $this->queueService->setForTick(false);
-                    foreach($stasisDominion->race->units as $unit)
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle land generation'); }
+                    // Myconid: Land generation
+                    if(!empty($dominion->tick->generated_land))
                     {
-                        $units['unit' . $unit->slot] = $this->queueService->getInvasionQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
+                        $this->queueService->queueResources('exploration', $dominion, ['land' => $dominion->tick->generated_land], 12);
                     }
+
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle unit generation'); }
+                    // Unit generation
+                    foreach($dominion->race->units as $unit)
+                    {
+                        if(!empty($dominion->tick->{'generated_unit' . $unit->slot}))
+                        {
+                            $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], 12);
+                        }
+                    }
+
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle starvation for ' . $dominion->name); }
                     
-                    $units['spies'] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_spies", $tick);
-                    $units['wizards'] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_wizards", $tick);
-                    $units['archmages'] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_archmages", $tick);
-
-                    foreach($units as $slot => $amount)
+                    if($this->resourceCalculator->isOnBrinkOfStarvation($dominion) and !$dominion->isAbandoned())
                     {
-                        $unitType = 'military_'.$slot;
-                        # Dequeue the units from hour 1
-                        $this->queueService->dequeueResourceForHour('invasion', $stasisDominion, $unitType, $amount, $tick);
-                        #echo "\nUnits dequeued";
-
-                        # (Re-)Queue the units to hour 2
-                        $this->queueService->queueResources('invasion', $stasisDominion, [$unitType => $amount], ($tick+1));
-                        #echo "\nUnits requeued";
+                        $this->notificationService->queueNotification('starvation_occurred');
+                        Log::info('[STARVATION] ' . $dominion->name . ' (# ' . $dominion->realm->number . ') is starving.');
                     }
 
-                    foreach($stasisDominion->race->units as $unit)
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle unit attrition for ' . $dominion->name); }
+                    if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
                     {
-                        $units['unit' . $unit->slot] = $this->queueService->getExpeditionQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
+                        $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']);
                     }
 
-                    foreach($units as $slot => $amount)
-                    {
-                        $unitType = 'military_'.$slot;
-                        # Dequeue the units from hour 1
-                        $this->queueService->dequeueResourceForHour('invasion', $stasisDominion, $unitType, $amount, $tick);
-                        #echo "\nUnits dequeued";
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Cleaning up active spells'); }
+                    $this->cleanupActiveSpells($dominion);
 
-                        # (Re-)Queue the units to hour 2
-                        $this->queueService->queueResources('invasion', $stasisDominion, [$unitType => $amount], ($tick+1));
-                        #echo "\nUnits requeued";
-                    }
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Cleaning up queues'); }
+                    $this->cleanupQueues($dominion);
 
-                    foreach($stasisDominion->race->units as $unit)
-                    {
-                        $units['unit' . $unit->slot] = $this->queueService->getTheftQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
-                    }
-                    
-                    $units['spies'] = $this->queueService->getTheftQueueAmount($stasisDominion, "military_spies", $tick);
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Sending notifications (hourly_dominion)'); }
+                    $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
 
-                    foreach($units as $slot => $amount)
-                    {
-                        $unitType = 'military_'.$slot;
-                        # Dequeue the units from hour 1
-                        $this->queueService->dequeueResourceForHour('theft', $stasisDominion, $unitType, $amount, $tick);
-                        #echo "\nUnits dequeued";
-
-                        # (Re-)Queue the units to hour 2
-                        $this->queueService->queueResources('theft', $stasisDominion, [$unitType => $amount], ($tick+1));
-                        #echo "\nUnits requeued";
-                    }
-
-                    foreach($stasisDominion->race->units as $unit)
-                    {
-                        $units['unit' . $unit->slot] = $this->queueService->getSabotageQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
-                    }
-
-                    $units['spies'] = $this->queueService->getSabotageQueueAmount($stasisDominion, "military_spies", $tick);
-
-                    foreach($units as $slot => $amount)
-                    {
-                        $unitType = 'military_'.$slot;
-                        # Dequeue the units from hour 1
-                        $this->queueService->dequeueResourceForHour('sabotage', $stasisDominion, $unitType, $amount, $tick);
-                        #echo "\nUnits dequeued";
-
-                        # (Re-)Queue the units to hour 2
-                        $this->queueService->queueResources('sabotage', $stasisDominion, [$unitType => $amount], ($tick+1));
-                        #echo "\nUnits requeued";
-                    }
-
-                    $this->queueService->setForTick(true);
-
+                    if(static::EXTENDED_LOGGING) { Log::debug('** Precalculate tick'); }
+                    $this->precalculateTick($dominion, true);
                 }
 
                 if(static::EXTENDED_LOGGING) { Log::debug('* Update all dominions'); }
-                $this->updateDominions($round, $stasisDominions);
+                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
                 if(static::EXTENDED_LOGGING) { Log::debug('* Update all spells'); }
                 $this->updateAllSpells($round);
@@ -378,7 +334,7 @@ class TickService
                 $this->updateAllInvasionQueues($round);
 
                 if(static::EXTENDED_LOGGING) { Log::debug('* Update all other queues'); }
-                $this->updateAllOtherQueues($round, $stasisDominions);
+                $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
                 if(static::EXTENDED_LOGGING) { Log::debug('* Update all artefact aegises'); }
                 $this->updateArtefactsAegises($round);
@@ -392,16 +348,7 @@ class TickService
 
                 $this->now = now();
 
-                $dominions = $round->activeDominions()
-                    ->with([
-                        'race',
-                        'race.perks',
-                        'race.units',
-                        'race.units.perks',
-                    ])
-                    ->get();
-
-                $realms = $round->realms()->get();
+                #$realms = $round->realms()->get();
 
                 $spawnBarbarian = rand(1, (int)$this->barbarianCalculator->getSetting('ONE_IN_CHANCE_TO_SPAWN'));
 
@@ -412,9 +359,15 @@ class TickService
                     $this->barbarianService->createBarbarian($round);
                 }
 
-                if(static::EXTENDED_LOGGING){ Log::debug('* Going through all dominions again'); }
+                #if(static::EXTENDED_LOGGING){ Log::debug('* Going through all dominions again'); }
+                /*
                 foreach ($dominions as $dominion)
                 {
+
+                    $this->temporaryData[$round->id][$dominion->id] = [];
+
+                    $this->temporaryData[$round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
+                    $this->temporaryData[$round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsGenerated($dominion);
 
                     if(static::EXTENDED_LOGGING) { Log::debug('** Handle Pestilence'); }
                     // Afflicted: Abomination generation
@@ -439,7 +392,6 @@ class TickService
 
                     if(static::EXTENDED_LOGGING) { Log::debug('** Handle unit generation'); }
                     // Unit generation
-
                     foreach($dominion->race->units as $unit)
                     {
                         if(!empty($dominion->tick->{'generated_unit' . $unit->slot}) and $dominion->protection_ticks == 0)
@@ -456,11 +408,9 @@ class TickService
                         {
                             $this->notificationService->queueNotification('starvation_occurred');
                             Log::info('[STARVATION] ' . $dominion->name . ' (# ' . $dominion->realm->number . ') is starving.');
-                            #echo "Queue starvation notification for " . $dominion->name . "\t\n";
                         }
 
                         if(static::EXTENDED_LOGGING) { Log::debug('** Handle unit attrition for ' . $dominion->name); }
-
                         if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
                         {
                             $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']);
@@ -480,7 +430,9 @@ class TickService
 
                     });
                 }
+                */
 
+                /*
                 foreach($realms as $realm)
                 {
                     $bodiesAmount = $this->resourceCalculator->getRealmAmount($realm, 'body');
@@ -509,17 +461,15 @@ class TickService
                         Log::info($cryptLogString);
                     }
                 }
+                */
             });
         
             # Run audit functions after tick transaction is completed.
-            DB::transaction(function () use ($round)
+            if(static::EXTENDED_LOGGING) { Log::debug('** Audit and repair terrain'); }
+            foreach($round->activeDominions as $dominion)
             {
-                if(static::EXTENDED_LOGGING) { Log::debug('** Audit and repair terrain'); }
-                foreach($round->activeDominions as $dominion)
-                {
-                    $this->terrainService->auditAndRepairTerrain($dominion);
-                }
-            });
+                $this->terrainService->auditAndRepairTerrain($dominion);
+            }
 
             Log::info(sprintf(
                 '[QUEUES] Cleaned up queues, sent notifications, and precalculated %s dominions in %s ms in %s',
@@ -565,32 +515,41 @@ class TickService
 
     protected function cleanupActiveSpells(Dominion $dominion)
     {
-        $finishedSpells = $dominion->spells()
+        $finished = DB::table('dominion_spells')
+            ->where('dominion_id', $dominion->id)
             ->where('duration', '<=', 0)
             ->where('cooldown', '<=', 0)
-            ->with('spell')
             ->get();
-    
+
         $beneficialSpells = [];
         $harmfulSpells = [];
-    
-        foreach ($finishedSpells as $spellInstance) {
-            if ($spellInstance->caster_id == $dominion->id) {
-                $beneficialSpells[] = $spellInstance->spell->key;
-            } else {
-                $harmfulSpells[] = $spellInstance->spell->key;
+
+        foreach ($finished as $row)
+        {
+            $spell = Spell::where('id', $row->spell_id)->first();
+
+            if ($row->caster_id == $dominion->id)
+            {
+                $beneficialSpells[] = $spell->key;
+            }
+            else
+            {
+                $harmfulSpells[] = $spell->key;
             }
         }
-    
-        if (!empty($beneficialSpells) and !$dominion->isAbandoned()) {
+
+        if (!empty($beneficialSpells) and !$dominion->isAbandoned())
+        {
             $this->notificationService->queueNotification('beneficial_magic_dissipated', $beneficialSpells);
         }
-    
-        if (!empty($harmfulSpells) and !$dominion->isAbandoned()) {
+
+        if (!empty($harmfulSpells) and !$dominion->isAbandoned())
+        {
             $this->notificationService->queueNotification('harmful_magic_dissipated', $harmfulSpells);
         }
-    
-        $dominion->spells()
+
+        DB::table('dominion_spells')
+            ->where('dominion_id', $dominion->id)
             ->where('duration', '<=', 0)
             ->where('cooldown', '<=', 0)
             ->delete();
@@ -762,6 +721,27 @@ class TickService
         // Hacky refresh for dominion
         $dominion->refresh();
 
+        // Define the excluded sources
+        $excludedSources = ['construction', 'repair', 'restore', 'deity', 'artefact', 'research', 'rezoning'];
+
+        // Get the incoming queue
+        $incomingQueue = DB::table('dominion_queue')
+            ->where('dominion_id', $dominion->id)
+            ->whereNotIn('source', $excludedSources)
+            ->where('hours', '=', 1)
+            ->get();
+
+        foreach ($incomingQueue as $row)
+        {
+            // Check if the resource is not a 'resource_' or 'terrain_'
+            if (!Str::startsWith($row->resource, ['resource_', 'terrain_'])) {
+                $tick->{$row->resource} += $row->amount;
+                // Temporarily add next hour's resources for accurate calculations
+                $dominion->{$row->resource} += $row->amount;
+            }
+        }
+
+        /*
         // Queues
         $incomingQueue = DB::table('dominion_queue')
             ->where('dominion_id', $dominion->id)
@@ -787,6 +767,7 @@ class TickService
                 $dominion->{$row->resource} += $row->amount;
             }
         }
+        */
 
         if($dominion->race->name == 'Barbarian')
         {
@@ -1039,7 +1020,7 @@ class TickService
      *
      * @throws Exception|Throwable
      */
-    public function tickManually(Dominion $dominion)
+    public function tickManually(Dominion $dominion): void
     {
 
         Log::debug(sprintf(
@@ -1047,23 +1028,30 @@ class TickService
             $dominion->name
         ));
 
+        if($dominion->protection_ticks <= 0)
+        {
+            Log::debug('[TICK] Manual tick skipped for %s, protection ticks are <=0.');
+            return;
+        }
+
         $this->precalculateTick($dominion, true);
-
-        $this->handleResources($dominion);
-        $this->handleBuildings($dominion);
-        $this->handleTerrain($dominion);
-        $this->handleImprovements($dominion);
-        $this->handleDeities($dominion);
-        $this->handleResearch($dominion);
-        $this->handleUnits($dominion);
-
-        $this->updateDominion($dominion);
-        $this->updateDominionSpells($dominion);
-        $this->updateDominionDeity($dominion);
-        $this->updateDominionQueues($dominion);
 
         DB::transaction(function () use ($dominion)
         {
+
+            $this->handleBuildings($dominion);
+            $this->handleTerrain($dominion);
+            $this->handleImprovements($dominion);
+            $this->handleDeities($dominion);
+            $this->handleResearch($dominion);
+            $this->handleUnits($dominion);
+            $this->handleResources($dominion);
+    
+            $this->updateDominion($dominion);
+            $this->updateDominionSpells($dominion);
+            $this->updateDominionDeity($dominion);
+            $this->updateDominionQueues($dominion);
+
             $this->temporaryData[$dominion->round->id][$dominion->id] = [];
 
             $this->temporaryData[$dominion->round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
@@ -1105,15 +1093,11 @@ class TickService
                     }
                 }
             }
-        });
-        
-        # Run audit functions after tick transaction is completed.
-        DB::transaction(function () use ($dominion)
-        {
+
             if(static::EXTENDED_LOGGING) { Log::debug('** Audit and repair terrain'); }
             $this->terrainService->auditAndRepairTerrain($dominion);
         });
-
+        
         $this->dominionStateService->saveDominionState($dominion);
 
         Log::info(sprintf(
@@ -1557,7 +1541,6 @@ class TickService
             {
                 $targetSlot = (int)$unitEvolutionPerk[0];
                 $evolutionRatio = (float)$unitEvolutionPerk[1];
-                $evolutionTicks = (int)$unitEvolutionPerk[2];
     
                 $unitCount = $dominion->{'military_unit' . $slot};
     
@@ -1569,24 +1552,24 @@ class TickService
                 {
                     if(isset($evolvedUnitsTo[$targetSlot]))
                     {
-                        $evolvedUnitsTo[$targetSlot] = [$evolutionTicks => $evolvedUnitsTo[$targetSlot] + $unitsEvolved];
+                        $evolvedUnitsTo[$targetSlot] += $unitsEvolved;
                         $evolvedUnitsFrom[$targetSlot] += $unitsEvolved;
                     }
                     else
                     {
-                        $evolvedUnitsTo[$targetSlot] = [$evolutionTicks => $unitsEvolved];
-                        $evolvedUnitsFrom[$targetSlot] = $unitsEvolved;
+                        $evolvedUnitsTo[$targetSlot] = $unitsEvolved;
+                        $evolvedUnitsFrom[$slot] = $unitsEvolved;
                     }
                 }
             }
         }
+
     
-        foreach($evolvedUnitsTo as $targetSlot => $evolvedUnitQueueData)
+        foreach($evolvedUnitsTo as $targetSlot => $evolvedUnitAmount)
         {
-            $evolutionTicks = $evolvedUnitQueueData[0];
-            $evolvedUnitAmount = $evolvedUnitQueueData[1];
+            $evolvedUnit = $dominion->race->units->where('slot', $targetSlot)->first();
     
-            $this->queueService->queueResources('evolution', $dominion, ['military_unit' . $targetSlot => $evolvedUnitAmount], $evolutionTicks);
+            $this->queueService->queueResources('evolution', $dominion, ['military_unit' . $targetSlot => $evolvedUnitAmount], ($evolvedUnit->training_time + 1)); # +1 because 12 becomes 11 otherwise
         }
 
         foreach($evolvedUnitsFrom as $sourceSlot => $amountEvolved)
@@ -1594,6 +1577,111 @@ class TickService
             $dominion->{'military_unit' . $sourceSlot} -= $amountEvolved;
         }
 
+        $dominion->save();
+
+    }
+
+    // Scoot hour 1 Qur Stasis units back to hour 2
+    public function handleStasis(Dominion $dominion): void
+    {
+        if(!$dominion->getSpellPerkValue('stasis'))
+        {
+            return;
+        }
+
+        $this->temporaryData[$dominion->round->id]['stasis_dominions'][] = $dominion->id;
+
+        if(static::EXTENDED_LOGGING) { Log::debug('** Dominion is in stasis'); }
+        $stasisDominion = Dominion::findorfail($dominion->id);
+
+        ## Determine how many of each unit type is returning in $tick ticks
+        $tick = 1;
+
+        foreach (range(1, $stasisDominion->race->units->count()) as $slot)
+        {
+            $unitType = 'unit' . $slot;
+            for ($i = 1; $i <= 12; $i++)
+            {
+                $invasionQueueUnits[$slot][$i] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_{$unitType}", $i);
+            }
+        }
+
+        $this->queueService->setForTick(false);
+        foreach($stasisDominion->race->units as $unit)
+        {
+            $units['unit' . $unit->slot] = $this->queueService->getInvasionQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
+        }
+        
+        $units['spies'] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_spies", $tick);
+        $units['wizards'] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_wizards", $tick);
+        $units['archmages'] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_archmages", $tick);
+
+        foreach($units as $slot => $amount)
+        {
+            $unitType = 'military_'.$slot;
+            # Dequeue the units from hour 1
+            $this->queueService->dequeueResourceForHour('invasion', $stasisDominion, $unitType, $amount, $tick);
+            #echo "\nUnits dequeued";
+
+            # (Re-)Queue the units to hour 2
+            $this->queueService->queueResources('invasion', $stasisDominion, [$unitType => $amount], ($tick+1));
+            #echo "\nUnits requeued";
+        }
+
+        foreach($stasisDominion->race->units as $unit)
+        {
+            $units['unit' . $unit->slot] = $this->queueService->getExpeditionQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
+        }
+
+        foreach($units as $slot => $amount)
+        {
+            $unitType = 'military_'.$slot;
+            # Dequeue the units from hour 1
+            $this->queueService->dequeueResourceForHour('invasion', $stasisDominion, $unitType, $amount, $tick);
+            #echo "\nUnits dequeued";
+
+            # (Re-)Queue the units to hour 2
+            $this->queueService->queueResources('invasion', $stasisDominion, [$unitType => $amount], ($tick+1));
+            #echo "\nUnits requeued";
+        }
+
+        foreach($stasisDominion->race->units as $unit)
+        {
+            $units['unit' . $unit->slot] = $this->queueService->getTheftQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
+        }
+        
+        $units['spies'] = $this->queueService->getTheftQueueAmount($stasisDominion, "military_spies", $tick);
+
+        foreach($units as $slot => $amount)
+        {
+            $unitType = 'military_'.$slot;
+            # Dequeue the units from hour 1
+            $this->queueService->dequeueResourceForHour('theft', $stasisDominion, $unitType, $amount, $tick);
+
+            # (Re-)Queue the units to hour 2
+            $this->queueService->queueResources('theft', $stasisDominion, [$unitType => $amount], ($tick+1));
+        }
+
+        foreach($stasisDominion->race->units as $unit)
+        {
+            $units['unit' . $unit->slot] = $this->queueService->getSabotageQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
+        }
+
+        $units['spies'] = $this->queueService->getSabotageQueueAmount($stasisDominion, "military_spies", $tick);
+
+        foreach($units as $slot => $amount)
+        {
+            $unitType = 'military_'.$slot;
+            # Dequeue the units from hour 1
+            $this->queueService->dequeueResourceForHour('sabotage', $stasisDominion, $unitType, $amount, $tick);
+            #echo "\nUnits dequeued";
+
+            # (Re-)Queue the units to hour 2
+            $this->queueService->queueResources('sabotage', $stasisDominion, [$unitType => $amount], ($tick+1));
+            #echo "\nUnits requeued";
+        }
+
+        $this->queueService->setForTick(true);
     }
 
     public function handleWinConditions(Round $round): void

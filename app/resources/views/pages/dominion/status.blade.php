@@ -124,57 +124,86 @@
                                     </td>
                                     <td>{{ number_format($selectedDominion->morale) }} / {{ number_format($moraleCalculator->getBaseMorale($selectedDominion)) }}</td>
                                 </tr>
-                                @if(!$selectedDominion->race->getPerkValue('no_drafting'))
-                                <tr>
-                                    <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString($selectedDominion->race, $selectedDominion) }}">
-                                            {{ $raceHelper->getDrafteesTerm($selectedDominion->race) }}:
-                                        </span>
-                                    </td>
-                                    <td>{{ number_format($selectedDominion->military_draftees) }}</td>
-                                </tr>
+                                    @if(!$selectedDominion->race->getPerkValue('no_drafting'))
+                                    <tr>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getDrafteeHelpString($selectedDominion->race, $selectedDominion) }}">
+                                                {{ $raceHelper->getDrafteesTerm($selectedDominion->race) }}:
+                                            </span>
+                                        </td>
+                                        <td>{{ number_format($selectedDominion->military_draftees) }}</td>
+                                    </tr>
                                 @endif
                                 @foreach($selectedDominion->race->units as $unit)
-                                <tr>
-                                    <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString(('unit' . $unit->slot), $selectedDominion->race, [$militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unit, 'offense'), $militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unit, 'defense'), ]) }}">
-                                            {{ $unit->name }}:
-                                        </span>
-                                    </td>
-                                    <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, $unit->slot)) }}</td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString(('unit' . $unit->slot), $selectedDominion->race, [$militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unit, 'offense'), $militaryCalculator->getUnitPowerWithPerks($selectedDominion, null, null, $unit, 'defense'), ]) }}">
+                                                {{ $unit->name }}:
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title='
+                                                <small class="text-muted">Returning: </small>{{ number_format($unitCalculator->getUnitTypeTotalReturning($selectedDominion, ('unit'.$unit->slot))) }}<br>
+                                                <small class="text-muted">Incoming: </small>{{ number_format($unitCalculator->getUnitTypeTotalIncoming($selectedDominion, ('unit'.$unit->slot))) }}<br>
+                                                <small class="text-muted">Paid: </small>{{ number_format($unitCalculator->getUnitTypeTotalPaid($selectedDominion, ('unit'.$unit->slot))) }}'>
+                                            {{ number_format($unitCalculator->getUnitTypeTotalTrained($selectedDominion, ('unit' . $unit->slot))) }}
+                                            </span>
+                                        </td>
+                                    </tr>
                                 @endforeach
 
                                 @if (!$selectedDominion->race->getPerkValue('cannot_train_spies'))
-                                <tr>
-                                    <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="Spy strength: {{ number_format($selectedDominion->spy_strength) }}% {{ $selectedDominion->spy_strength < 100 ? '(+' . $militaryCalculator->getSpyStrengthRegen($selectedDominion) . '%/tick)' : '' }}">
-                                            Spies:
-                                        </span>
-                                    </td>
-                                    <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, 'spies')) }}</td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="Spy strength: {{ number_format($selectedDominion->spy_strength) }}% {{ $selectedDominion->spy_strength < 100 ? '(+' . $militaryCalculator->getSpyStrengthRegen($selectedDominion) . '%/tick)' : '' }}">
+                                                Spies:
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title='
+                                                <small class="text-muted">Returning: </small>{{ number_format($unitCalculator->getUnitTypeTotalReturning($selectedDominion, 'spies')) }}<br>
+                                                <small class="text-muted">Incoming: </small>{{ number_format($unitCalculator->getUnitTypeTotalIncoming($selectedDominion, 'spies')) }}<br>
+                                                <small class="text-muted">Paid: </small>{{ number_format($unitCalculator->getUnitTypeTotalPaid($selectedDominion, 'spies')) }}'>
+                                            {{ number_format($unitCalculator->getUnitTypeTotalTrained($selectedDominion, 'spies')) }}
+                                            </span>
+                                        </td>
+                                    </tr>
                                 @endif
 
                                 @if (!$selectedDominion->race->getPerkValue('cannot_train_wizards'))
-                                <tr>
-                                    <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="Wizard strength: {{ number_format($selectedDominion->wizard_strength) }}% {{ $selectedDominion->wizard_strength < 100 ? '(+' . $magicCalculator->getWizardStrengthRegen($selectedDominion) . '%/tick)' : '' }}">
-                                            Wizards:
-                                        </span>
-                                    </td>
-                                    <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, 'wizards')) }}</td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="Wizard strength: {{ number_format($selectedDominion->wizard_strength) }}% {{ $selectedDominion->wizard_strength < 100 ? '(+' . $magicCalculator->getWizardStrengthRegen($selectedDominion) . '%/tick)' : '' }}">
+                                                Wizards:
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title='
+                                                <small class="text-muted">Returning: </small>{{ number_format($unitCalculator->getUnitTypeTotalReturning($selectedDominion, 'wizards')) }}<br>
+                                                <small class="text-muted">Incoming: </small>{{ number_format($unitCalculator->getUnitTypeTotalIncoming($selectedDominion, 'wizards')) }}<br>
+                                                <small class="text-muted">Paid: </small>{{ number_format($unitCalculator->getUnitTypeTotalPaid($selectedDominion, 'wizards')) }}'>
+                                            {{ number_format($unitCalculator->getUnitTypeTotalTrained($selectedDominion, 'wizards')) }}
+                                            </span>
+                                        </td>
+                                    </tr>
                                 @endif
 
                                 @if (!$selectedDominion->race->getPerkValue('cannot_train_archmages'))
-                                <tr>
-                                    <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="Wizard strength: {{ number_format($selectedDominion->wizard_strength) }}% {{ $selectedDominion->wizard_strength < 100 ? '(+' . $magicCalculator->getWizardStrengthRegen($selectedDominion) . '%/tick)' : '' }}">
-                                            Archmages:
-                                        </span>
-                                    </td>
-                                    <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($selectedDominion, 'archmages')) }}</td>
+                                    <tr>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="Wizard strength: {{ number_format($selectedDominion->wizard_strength) }}% {{ $selectedDominion->wizard_strength < 100 ? '(+' . $magicCalculator->getWizardStrengthRegen($selectedDominion) . '%/tick)' : '' }}">
+                                                Archmages:
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title='
+                                                <small class="text-muted">Returning: </small>{{ number_format($unitCalculator->getUnitTypeTotalReturning($selectedDominion, 'archmages')) }}<br>
+                                                <small class="text-muted">Incoming: </small>{{ number_format($unitCalculator->getUnitTypeTotalIncoming($selectedDominion, 'archmages')) }}<br>
+                                                <small class="text-muted">Paid: </small>{{ number_format($unitCalculator->getUnitTypeTotalPaid($selectedDominion, 'archmages')) }}'>
+                                            {{ number_format($unitCalculator->getUnitTypeTotalTrained($selectedDominion, 'archmages')) }}
+                                            </span>
+                                        </td>
+                                    </tr>
                                 @endif
 
                                 </tr>

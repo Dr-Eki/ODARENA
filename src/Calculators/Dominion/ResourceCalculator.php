@@ -442,8 +442,8 @@ class ResourceCalculator
             $multiplier *= 1 + $this->prestigeCalculator->getPrestigeMultiplier($dominion);
         }
 
-        $multiplier *= (0.9 + $dominion->morale / 1000); # Can't use alculator->getMoraleMultiplier()
-
+        $multiplier *= $dominion->getMoraleMultiplier();
+        
         return $multiplier;
     }
 
