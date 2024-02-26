@@ -329,7 +329,7 @@ class BuildingHelper
             'snow_elf_unit_housing' => 'Houses %1$s %2$s.',
             'vampires_unit_housing' => 'Houses %1$s %2$s.',
 
-            'growth_units_production' => 'Produces %1$s per tick.',
+            'growth_units_production' => 'Produces %s per tick.',
 
         ];
 
@@ -426,16 +426,26 @@ class BuildingHelper
 
                 if($perk->key == ($raceKey . '_units_production'))
                 {
-                    $unitsGenerated = [];
-                    $amountProduced = (int)$perkValue[1];
+                    $amountProduced = (float)$perkValue[1];
                     $race = Race::firstWhere('key', $raceKey);
 
-                    foreach($perkValue[0] as $key => $unitSlot)
+                    if(is_array($perkValue[0]))
                     {
-                        $unitsGenerated[] = str_plural($race->units->firstWhere('slot', (int)$unitSlot)->name, $amountProduced);
-                    }
+                        $unitsGenerated = [];
 
-                    $perkValue = [$amountProduced, generate_sentence_from_array($unitsGenerated)];
+                        foreach($perkValue[0] as $key => $unitSlot)
+                        {
+                            $unitsGenerated[] = str_plural($race->units->firstWhere('slot', (int)$unitSlot)->name, $amountProduced);
+                        }
+
+                        $perkValue = [$amountProduced, generate_sentence_from_array($unitsGenerated)];
+                    }
+                    elseif(is_numeric($perkValue[0]))
+                    {
+                        $unitGenerated = $race->units->firstWhere('slot', (int)$perkValue[0])->name;
+
+                        $perkValue = [$amountProduced, str_plural($unitGenerated, $amountProduced)];
+                    }
                 }
             }
 

@@ -1361,16 +1361,25 @@ class Dominion extends AbstractModel
 
                     elseif($perkKey == ($this->race->key . '_units_production'))
                     {
-                        $unitsGenerated = 0;
-
                         $perkValues = $this->extractBuildingPerkValues($perkValueString);
 
-                        $result = [];
-                        $result['buildings_amount'] = $buildingOwned;
-                        $result['amount_per_building'] = (float)$perkValues[1];
-                        $result['generated_unit_slots'] = (array)$perkValues[0];
+                        if(!is_array($perkValues[0]))
+                        {
+                            $perkValues[0] = [$perkValues[0]];
+                        }
 
-                        return $result;
+                        $data[$building->key] = [
+                            'buildings_amount' => $buildingOwned,
+                            'amount_per_building' => (float)$perkValues[1],
+                            'generated_unit_slots' => (array)$perkValues[0]
+                        ];
+
+                        if(!is_array($perk))
+                        {
+                            $perk = [$perk];
+                        }
+
+                        $perk[] = $data;
                     }
 
                     elseif($perkKey == 'quadratic_improvements_mod')
@@ -1433,7 +1442,10 @@ class Dominion extends AbstractModel
                     }
 
                 }
-                $perk *= $buildingSpecificMultiplier ?? 1;
+                if(is_numeric($perk))
+                {
+                    $perk *= $buildingSpecificMultiplier ?? 1;
+                }
                 $buildingSpecificMultiplier = null;
             }
             return $perk;

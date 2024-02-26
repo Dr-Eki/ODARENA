@@ -1493,6 +1493,16 @@ cyst:
     housing: 88
     jobs: 0
 
+dermis:
+  name: Dermis
+  category: production
+  exclusive_races:
+    - Growth
+  perks:
+    growth_units_production: 1,0.5 # slots;slots or slot, amount
+    housing: 88
+    jobs: 0
+
 hide:
   name: Hide
   category: military

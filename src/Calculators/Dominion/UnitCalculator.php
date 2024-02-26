@@ -49,21 +49,31 @@ class UnitCalculator
         $units = $this->getDominionUnitBlankArray($dominion);
         $unitsGenerated = $units;
 
-        if($raceUnitsGenerationBuildingPerk = $dominion->getBuildingPerkValue($dominion->race->key . '_units_production'))
+        if($raceUnitsGenerationBuildingPerks = $dominion->getBuildingPerkValue($dominion->race->key . '_units_production'))
         {
-            $buildingAmount = (float)$raceUnitsGenerationBuildingPerk['buildings_amount'];
-            $amountPerBuilding = (float)$raceUnitsGenerationBuildingPerk['amount_per_building'];
-            $generatedUnitSlots = (array)$raceUnitsGenerationBuildingPerk['generated_unit_slots'];
-
-            foreach($generatedUnitSlots as $key => $slot)
+            foreach($raceUnitsGenerationBuildingPerks as $key => $raceUnitsGenerationBuildingPerkData)
             {
-                $multiplier = 1;
-                $multiplier += $dominion->getImprovementPerkMultiplier($dominion->race->key . '_unit' . $slot . '_generation_mod');
-
-                $amountGenerated = $buildingAmount * $amountPerBuilding;
-                $amountGenerated *= $multiplier;
-                $unitsGenerated[$slot] += (int)floor($amountGenerated);
+                if(is_array($raceUnitsGenerationBuildingPerkData))
+                {
+                    foreach($raceUnitsGenerationBuildingPerkData as $raceUnitsGenerationBuildingPerk)
+                    {
+                        $buildingAmount = (float)$raceUnitsGenerationBuildingPerk['buildings_amount'];
+                        $amountPerBuilding = (float)$raceUnitsGenerationBuildingPerk['amount_per_building'];
+                        $generatedUnitSlots = (array)$raceUnitsGenerationBuildingPerk['generated_unit_slots'];
+            
+                        foreach($generatedUnitSlots as $key => $slot)
+                        {
+                            $multiplier = 1;
+                            $multiplier += $dominion->getImprovementPerkMultiplier($dominion->race->key . '_unit' . $slot . '_generation_mod');
+            
+                            $amountGenerated = $buildingAmount * $amountPerBuilding;
+                            $amountGenerated *= $multiplier;
+                            $unitsGenerated[$slot] += (int)floor($amountGenerated);
+                        }
+                    }
+                }
             }
+
         }
 
         foreach($units as $slot => $zero)
