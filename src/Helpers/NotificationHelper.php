@@ -17,9 +17,13 @@ class NotificationHelper
     /** @var MilitaryHelper */
     protected $militaryHelper;
 
+    /** @var RaceHelper */
+    protected $raceHelper;
+
     public function __construct()
     {
         $this->militaryHelper = app(MilitaryHelper::class);
+        $this->raceHelper = app(RaceHelper::class);
     }
 
     public function getNotificationCategories(): array
@@ -494,7 +498,7 @@ class NotificationHelper
 
             case 'hourly_dominion.summoning_completed':
                 $units = array_sum($data);
-                $term = isset($dominion) ? ($dominion->race->key == 'growth' ? 'mutated' : 'summoned') : 'summoned';
+                $term = $this->raceHelper->getSummoningTermVerb($dominion->race);
 
                 return sprintf(
                     '%s %s %s',
@@ -505,7 +509,7 @@ class NotificationHelper
 
             case 'hourly_dominion.evolution_completed':
                 $units = array_sum($data);
-                $term = isset($dominion) ? ($dominion->race->key == 'vampires' ? 'aged' : 'evolved') : 'evolved';
+                $term = $this->raceHelper->getEvolutionTermVerb($dominion->race);
 
                 return sprintf(
                     '%s %s %s',
@@ -669,10 +673,13 @@ class NotificationHelper
 
             case 'hourly_dominion.attrition_occurred':
                 $units = array_sum($data);
+                $term = $this->raceHelper->getAttritionTermVerb($dominion->race);
+
                 return sprintf(
-                    '%s %s have disappeared.',
+                    '%s %s %s',
                     number_format($units),
-                    str_plural('unit', $units)
+                    str_plural('unit', $units),
+                    $term
                 );
 
             case 'irregular_dominion.enthralling_occurred':

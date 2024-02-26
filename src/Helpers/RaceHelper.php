@@ -902,6 +902,54 @@ class RaceHelper
         return $this->hasDrafteesAlias($race) ? ucwords($race->draftees_alias) : 'Draftee';
     }
 
+    public function getAttritionTermVerb(?Race $race): string
+    {
+        $defaultValue = 'disappeared';
+
+        if ($race === null) {
+            return $defaultValue;
+        }
+
+        $lookup = [
+            'snow_elf' => 'left us',
+        ];
+
+        return $lookup[$race->key] ?? $defaultValue;
+
+    }
+
+    public function getEvolutionTermVerb(?Race $race): string
+    {
+        $defaultValue = 'evolved';
+
+        if ($race === null) {
+            return $defaultValue;
+        }
+
+        $lookup = [
+            'vampires' => 'aged',
+        ];
+
+        return $lookup[$race->key] ?? $defaultValue;
+
+    }
+
+    public function getSummoningTermVerb(?Race $race): string
+    {
+        $defaultValue = 'summoned';
+
+        if ($race === null) {
+            return $defaultValue;
+        }
+    
+        $lookup = [
+            'snow_elf' => 'arrived',
+            'growth' => 'mutated',
+        ];
+    
+        return $lookup[$race->key] ?? $defaultValue;
+    }
+
     public function getSpyCost(Race $race): array
     {
         $cost = explode(',', $race->spies_cost);

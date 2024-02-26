@@ -206,7 +206,7 @@ class TickService
                     $this->temporaryData[$round->id][$dominion->id] = [];
 
                     $this->temporaryData[$round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
-                    $this->temporaryData[$round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsGenerated($dominion);
+                    $this->temporaryData[$round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($dominion);
 
                     if(
                         ($dominion->round->ticks % 4 == 0) and
@@ -303,6 +303,7 @@ class TickService
                     }
 
                     if(static::EXTENDED_LOGGING) { Log::debug('** Handle unit attrition for ' . $dominion->name); }
+                    
                     if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
                     {
                         $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']);
