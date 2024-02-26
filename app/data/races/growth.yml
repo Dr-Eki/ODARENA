@@ -45,7 +45,7 @@ perks:
 
 units:
   - name: Scute
-    training_time: 9
+    training_time: 12
     type:
       - living
       - mindless
@@ -59,7 +59,7 @@ units:
       cannot_be_released: 1
 
   - name: Incisor
-    training_time: 9
+    training_time: 12
     type:
       - living
       - mindless

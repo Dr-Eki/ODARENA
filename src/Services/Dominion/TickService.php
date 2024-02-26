@@ -290,7 +290,7 @@ class TickService
                     {
                         if(!empty($dominion->tick->{'generated_unit' . $unit->slot}))
                         {
-                            $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], 12);
+                            $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 1)); # +1 because it's ticking
                         }
                     }
 
@@ -1055,7 +1055,7 @@ class TickService
             $this->temporaryData[$dominion->round->id][$dominion->id] = [];
 
             $this->temporaryData[$dominion->round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
-            $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsGenerated($dominion);
+            $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($dominion);
 
             # Queue starvation notification.
             if($dominion->tick->starvation_casualties and !$dominion->isAbandoned())
@@ -1089,7 +1089,7 @@ class TickService
                 {
                     if(!empty($dominion->tick->{'generated_unit' . $unit->slot}) and $dominion->protection_ticks > 0)
                     {
-                        $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], 12);
+                        $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 1));
                     }
                 }
             }
