@@ -102,7 +102,7 @@ class PopulationCalculator
             $unitAmount = 0;
             if (!$dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'does_not_count_as_population'))
             {
-                $unitAmount += $this->unitCalculator->getUnitTypeTotal($dominion, $unitKey);
+                $unitAmount += $this->unitCalculator->getUnitTypeTotal($dominion, $unit->slot);
 
                 # Check for housing_count
                 if($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'housing_count'))

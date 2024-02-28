@@ -512,6 +512,12 @@ class RaceHelper
                 $description = 'All workers (including unemployed) produce';
                 $booleanValue = true;
                 break;
+            case 'draftees_produce_food':
+                $negativeBenefit = false;
+                $description = 'Draftees produce food';
+                $valueType = ' food/tick';
+                $booleanValue = false;
+            break;
             case 'draftees_produce_mana':
                 $negativeBenefit = false;
                 $description = 'Draftees produce mana';
