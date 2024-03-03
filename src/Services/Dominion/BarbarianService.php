@@ -454,16 +454,14 @@ class BarbarianService
         $this->improvementCalculator->createOrIncrementImprovements($barbarian, ['tribalism' => $amount]);
     }
 
-    public function createBarbarian(Round $round): void
+    public function createBarbarian(Round $round): ?Dominion
     {
-        $barbarianUsers = User::where('email', 'like', 'barbarian%@odarena.com')
-            ->orWhere('email', 'like', 'barbarian%@odarena.local')
-            ->whereDoesntHave('dominions', function ($query) use ($round) {
+        $barbarianUsers = User::where(function ($query) {
+            $query->where('email', 'like', 'barbarian%@odarena.local');
+            })->whereDoesntHave('dominions', function ($query) use ($round) {
                 $query->where('round_id', $round->id);
-            })
-            ->pluck('id')
-            ->toArray();
-    
+            })->pluck('id')->toArray();
+                
         if (!empty($barbarianUsers)) {
             $barbarianUserId = $barbarianUsers[array_rand($barbarianUsers, 1)];
     
@@ -499,6 +497,8 @@ class BarbarianService
                 'data' => NULL,
                 'tick' => $barbarian->round->ticks
             ]);
+
+            return $barbarian;
         }
     }
 
