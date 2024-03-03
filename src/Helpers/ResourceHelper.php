@@ -5,7 +5,7 @@ namespace OpenDominion\Helpers;
 use Illuminate\Support\Collection;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Resource;
-use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Deity;
 
 class ResourceHelper
 {
@@ -118,7 +118,7 @@ class ResourceHelper
 
     public function getRacesByResource(Resource $resource): Collection
     {
-        return Race::where('playable',1)->where('resources', 'LIKE', ('%' . $resource->key .'%'))->get();
+        return Race::wherein('playable',[1,2])->where('resources', 'LIKE', ('%' . $resource->key .'%'))->get();
     }
 
 }

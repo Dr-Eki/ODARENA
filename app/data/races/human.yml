@@ -2,7 +2,7 @@ name: Human
 alignment: good
 description: >-
 home_terrain: plains
-playable: 0 # Replaced with Cires
+playable: 2 # Dev only
 skill_level: 1
 
 resources:
@@ -13,6 +13,37 @@ resources:
   - mana
   - gems
   - horse
+
+terrain_perks:
+  badlands:
+    defensive_power_mod: 1
+    food_production_mod: -0.25
+  desert:
+    defensive_power_mod: 1
+    food_production_mod: -0.25
+  forest:
+    lumber_production_mod: 1
+  glacier:
+    defensive_power_mod: 0.125
+    food_production_mod: -0.05
+  hills:
+    gems_production_mod: 0.50
+    ore_production_mod: 0.50
+  jungle:
+    lumber_production_mod: 1
+  mountains:
+    gems_production_mod: 0.75
+    ore_production_mod: 0.25
+  plains:
+    population_mod: 0.50
+  swamps:
+    mana_production_mod: 1
+  volcanic:
+    offensive_power_mod: 0.20
+  water:
+    food_production_mod: 2
+  wetlands:
+    food_production_mod: 2
 
 perks:
   food_production_mod: 15
@@ -31,24 +62,37 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 340
-      lumber: 15
+      gold: 550
+      lumber: 50
     power:
       offense: 0
       defense: 4
 
   - name: Spearguard
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 800
+      ore: 220
+    power:
+      offense: 0
+      defense: 6
+
+  - name: Foot Soldier
     training_time: 9
     type:
       - living
       - sentient
       - intelligent
     cost:
-      gold: 680
-      ore: 90
+      gold: 1000
+      ore: 160
     power:
-      offense: 0
-      defense: 7
+      offense: 5
+      defense: 4
 
   - name: Knight
     training_time: 12
@@ -57,32 +101,13 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1050
-      ore: 170
+      gold: 1500
+      ore: 300
       horse: 1
     power:
-      offense: 8
-      defense: 6
+      offense: 6
+      defense: 4
     perks:
-      casualties: -25
+      casualties: -20
       faster_return: 3
 
-  - name: Scythed Chariot
-    training_time: 12
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      gold: 300
-      ore: 250
-      lumber: 250
-      horse: 3
-    power:
-      offense: 10
-      defense: 0
-    perks:
-      casualties_on_offense: -50
-      increases_enemy_casualties_on_offense: 1
-      faster_return: 3
-      plunders: gold;4,ore;2,gems;1

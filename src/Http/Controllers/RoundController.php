@@ -67,8 +67,6 @@ class RoundController extends AbstractController
         }
 
         $races = $this->roundHelper->getRoundRaces($round);
-
-        
         
         $countAlignment = DB::table('dominions')
                             ->join('races', 'dominions.race_id', '=', 'races.id')
@@ -322,7 +320,7 @@ class RoundController extends AbstractController
                             $pack
                         );
         
-                        $this->newDominionEvent = GameEvent::create([
+                        GameEvent::create([
                             'round_id' => $dominion->round_id,
                             'source_type' => Dominion::class,
                             'source_id' => $dominion->id,
@@ -408,13 +406,13 @@ class RoundController extends AbstractController
             elseif(in_array($round->mode,['packs','packs-duration','artefacts-packs']))
             {
                 $races = $this->roundHelper->getRoundRaces($round)
-                    ->where('playable', 1)
+                ->where('playable', 1)
                     ->pluck('id')->all();
             }
             elseif(in_array($round->mode,['deathmatch','deathmatch-duration']))
             {
                 $races = $this->roundHelper->getRoundRaces($round)
-                    ->where('playable', 1)
+                ->where('playable', 1)
                     ->pluck('id')->all();
             }
             else
@@ -583,7 +581,7 @@ class RoundController extends AbstractController
                     'peasants' => $startingPeasants,
                 ]);
 
-                $this->newDominionEvent = GameEvent::create([
+                GameEvent::create([
                     'round_id' => $dominion->round_id,
                     'source_type' => Dominion::class,
                     'source_id' => $dominion->id,

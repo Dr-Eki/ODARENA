@@ -157,7 +157,7 @@
                                     @endforeach
                                 </optgroup>
 
-                        </select>
+                            </select>
                             <small class="help-block">Consult <a href="{{ route('scribes.factions') }}" target="_blank">The Scribes</a> for details about each faction and ruler titles.</small>
                             <small class="help-block">Factions labelled <span class="label label-danger">Experimental</span> have significant changes that have been deemed at risk of being overpowered. If you play such a faction, you understand that if the community agrees (or if admin decides) that it is overpowered or unfit, the dominion will be locked. Not for violating any rules; but to keep the round fun and exciting. &mdash; When permitted, we recommend playing at least one additional dominion, just in case.</small>
                         </div>

@@ -322,11 +322,12 @@ class BuildingHelper
 
             'afflicted_unit_housing' => 'Houses %1$s %2$s.',
             'arwe_unit_housing' => 'Houses %1$s %2$s.',
+            'aurei_unit_housing' => 'Houses %1$s %2$s.',
             'dwarg_unit_housing' => 'Houses %1$s %2$s.',
             'gorm_unit_housing' => 'Houses %1$s %2$s.',
-            'therozou_unit_housing' => 'Houses %1$s %2$s.',
-            'aurei_unit_housing' => 'Houses %1$s %2$s.',
+            'human_unit_housing' => 'Houses %1$s %2$s.',
             'snow_elf_unit_housing' => 'Houses %1$s %2$s.',
+            'therozou_unit_housing' => 'Houses %1$s %2$s.',
             'vampires_unit_housing' => 'Houses %1$s %2$s.',
 
             'growth_units_production' => 'Produces %s per tick.',
@@ -395,7 +396,7 @@ class BuildingHelper
                 $nestedArrays = false;
             }
 
-            foreach(Race::where('playable', 1)->pluck('key')->toArray() as $raceKey)
+            foreach(Race::wherein('playable', [1,2])->pluck('key')->toArray() as $raceKey)
             {
                 if($perk->key == ($raceKey . '_unit_housing'))
                 {

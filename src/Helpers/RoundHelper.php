@@ -282,11 +282,11 @@ class RoundHelper
 
     public function getRoundRaces(Round $round): Collection
     {
-        $races = Race::all()->where('playable', 1);
+        $races = Race::all()->wherein('playable', 1);
 
         if(env('APP_ENV') == 'local' or request()->getHost() == 'sim.odarena.com')
         {
-            return $races;
+            return Race::all()->wherein('playable', [1,2]);
         }
         else
         {

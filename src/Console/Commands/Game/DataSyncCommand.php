@@ -1811,7 +1811,7 @@ class DataSyncCommand extends Command implements CommandInterface
         DB::transaction( function ()
         {
             $sortingArray = Terrain::all()->sortBy('order')->pluck('key','order')->toArray();
-            foreach(Race::all()->where('playable',1) as $race)
+            foreach(Race::all()->wherein('playable', [1, 2]) as $race)
             {
                 $terrainKeys = [];
                 $this->info("\t $race->name");
