@@ -457,13 +457,12 @@ class BarbarianService
     public function createBarbarian(Round $round): ?Dominion
     {
         $barbarianUsers = User::where(function ($query) {
-            $query->where('email', 'like', 'barbarian%@odarena.local');
+            $query->where('email', 'like', 'barbarian%@odarena.com')
+                    ->orWhere('email', 'like', 'barbarian%@odarena.local');
             })->whereDoesntHave('dominions', function ($query) use ($round) {
                 $query->where('round_id', $round->id);
             })->pluck('id')->toArray();
-
-        dd($barbarianUsers);
-                
+            
         if (!empty($barbarianUsers)) {
             $barbarianUserId = $barbarianUsers[array_rand($barbarianUsers, 1)];
     
@@ -502,8 +501,6 @@ class BarbarianService
 
             return $barbarian;
         }
-
-        return NULL;
     }
 
 }
