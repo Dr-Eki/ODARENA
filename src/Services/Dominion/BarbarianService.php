@@ -462,8 +462,6 @@ class BarbarianService
             })->whereDoesntHave('dominions', function ($query) use ($round) {
                 $query->where('round_id', $round->id);
             })->pluck('id')->toArray();
-            
-        dd($barbarianUsers);
 
         if (!empty($barbarianUsers)) {
             $barbarianUserId = $barbarianUsers[array_rand($barbarianUsers, 1)];
