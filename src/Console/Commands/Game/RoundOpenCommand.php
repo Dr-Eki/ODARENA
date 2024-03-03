@@ -199,7 +199,7 @@ class RoundOpenCommand extends Command implements CommandInterface
                 {
                     $this->info("Creating a Barbarian...");
                     $barbarian = $this->barbarianService->createBarbarian($round);
-                    $this->inf("* Barbarian {$barbarian->id} created: {$barbarian->name})");
+                    $this->info("* Barbarian {$barbarian->id} created: {$barbarian->name})");
                 }
             }
             else
