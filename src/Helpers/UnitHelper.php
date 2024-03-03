@@ -1313,7 +1313,7 @@ class UnitHelper
             return true;
 
     }
-
+    /*
     public function unitHasCapacityLimit(Dominion $dominion, int $slot): bool
     {
         if(
@@ -1495,7 +1495,7 @@ class UnitHelper
 
         return true;
     }
-
+    */  
 
     public function getSpiesHelpString(Dominion $dominion): string
     {
@@ -1522,59 +1522,7 @@ class UnitHelper
         })->first();
     }
 
-    # This does not take cost into consideration
-    public function isUnitTrainableByDominion($unit, Dominion $dominion): bool
-    {
 
-        if(is_a($unit, 'OpenDominion\Models\Unit', true))
-        {
-            if($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'cannot_be_trained'))
-            {
-                return false;
-            }
-
-            if(isset($unit->deity))
-            {
-                if(!$dominion->hasDeity())
-                {
-                    return false;
-                }
-                elseif($dominion->deity->id !== $unit->deity->id)
-                {
-                    return false;
-                }
-            }
-        }
-        elseif($dominion->race->getPerkValue('cannot_train_' . $unit))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    # This does not take cost or pairing limits into consideration
-    public function isUnitSendableByDominion(Unit $unit, Dominion $dominion): bool
-    {
-        if($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'cannot_be_sent'))
-        {
-            return false;
-        }
-
-        if(isset($unit->deity))
-        {
-            if(!$dominion->hasDeity())
-            {
-                return false;
-            }
-            elseif($dominion->deity->id !== $unit->deity->id)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
 
     public function getUnitAttributePsionicStrengthValue(string $attribute): float
     {

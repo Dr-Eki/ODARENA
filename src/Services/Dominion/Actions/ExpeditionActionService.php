@@ -23,6 +23,7 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\TerrainCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
@@ -44,6 +45,7 @@ class ExpeditionActionService
     protected $militaryCalculator;
     protected $spellCalculator;
     protected $terrainCalculator;
+    protected $unitCalculator;
 
     protected $landHelper;
     protected $raceHelper;
@@ -54,7 +56,6 @@ class ExpeditionActionService
     protected $notificationService;
     protected $protectionService;
     protected $statsService;
-    #protected $terrainService;
     protected $queueService;
 
 
@@ -81,7 +82,7 @@ class ExpeditionActionService
         $this->queueService = app(QueueService::class);
         $this->spellCalculator = app(SpellCalculator::class);
         $this->terrainCalculator = app(TerrainCalculator::class);
-        #$this->terrainService = app(TerrainService::class);
+        $this->unitCalculator = app(UnitCalculator::class);
     }
 
     /**
@@ -174,7 +175,7 @@ class ExpeditionActionService
                 return ($unit->slot === $slot);
                 })->first();
 
-                if(!$this->unitHelper->isUnitSendableByDominion($unit, $dominion))
+                if(!$this->unitCalculator->isUnitSendableByDominion($unit, $dominion))
                 {
                     throw new GameException('You cannot send ' . $unit->name . ' on expeditions.');
                 }

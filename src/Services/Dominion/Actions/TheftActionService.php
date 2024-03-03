@@ -22,6 +22,7 @@ use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\TheftCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\HistoryService;
@@ -34,12 +35,49 @@ class TheftActionService
 {
     use DominionGuardsTrait;
 
+    /** @var MilitaryCalculator */
+    protected $militaryCalculator;
+
+    /** @var RangeCalculator */
+    protected $rangeCalculator;
+
+    /** @var ResourceCalculator */
+    protected $resourceCalculator;
+
+    /** @var TheftCalculator */
+    protected $theftCalculator;
+
+    /** @var UnitCalculator */
+    protected $unitCalculator;
+
+    /** @var NotificationService */
+    protected $notificationService;
+
+    /** @var ProtectionService */
+    protected $protectionService;
+
+    /** @var QueueService */
+    protected $queueService;
+
+    /** @var ResourceService */
+    protected $resourceService;
+
+    /** @var StatsService */
+    protected $statsService;
+
+    /** @var TheftHelper */
+    protected $theftHelper;
+
+    /** @var UnitHelper */
+    protected $unitHelper;
+
     public function __construct()
     {
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->rangeCalculator = app(RangeCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
         $this->theftCalculator = app(TheftCalculator::class);
+        $this->unitCalculator = app(UnitCalculator::class);
 
         $this->notificationService = app(NotificationService::class);
         $this->protectionService = app(ProtectionService::class);
@@ -165,12 +203,12 @@ class TheftActionService
                     }
 
                     # OK, unit can be trained. Let's check for pairing limits.
-                    if($this->unitHelper->unitHasCapacityLimit($thief, $slot) and !$this->unitHelper->checkUnitLimitForInvasion($thief, $slot, $amount))
+                    if($this->unitCalculator->unitHasCapacityLimit($thief, $slot) and !$this->unitCalculator->checkUnitLimitForInvasion($thief, $slot, $amount))
                     {
-                        throw new GameException('You can at most control ' . number_format($this->unitHelper->getUnitMaxCapacity($thief, $slot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                        throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($thief, $slot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
                     }
 
-                    if(!$this->unitHelper->isUnitSendableByDominion($unit, $thief))
+                    if(!$this->unitCalculator->isUnitSendableByDominion($unit, $thief))
                     {
                         throw new GameException('You cannot send ' . $unit->name . ' on invasion.');
                     }

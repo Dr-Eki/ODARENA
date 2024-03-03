@@ -27,6 +27,7 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Helpers\MilitaryHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\ResourceHelper;
@@ -53,6 +54,7 @@ class TrainActionService
     protected $militaryHelper;
     protected $landCalculator;
     protected $populationCalculator;
+    protected $unitCalculator;
     protected $spellHelper;
 
     public function __construct(
@@ -73,7 +75,8 @@ class TrainActionService
         MilitaryHelper $militaryHelper,
         MagicCalculator $magicCalculator,
         LandCalculator $landCalculator,
-        PopulationCalculator $populationCalculator
+        PopulationCalculator $populationCalculator,
+        UnitCalculator $unitCalculator
     )
     {
         $this->queueService = $queueService;
@@ -95,6 +98,7 @@ class TrainActionService
         $this->magicCalculator = $magicCalculator;
         $this->landCalculator = $landCalculator;
         $this->populationCalculator = $populationCalculator;
+        $this->unitCalculator = $unitCalculator;
     }
 
     /**
@@ -228,15 +232,15 @@ class TrainActionService
             {
               throw new GameException('This unit cannot be trained.');
             }
-
+            
             # OK, unit can be trained. Let's check for pairing limits.
-            if(!$this->unitHelper->checkUnitLimitForTraining($dominion, $unitSlot, $amountToTrain))
+            if(!$this->unitCalculator->checkUnitLimitForTraining($dominion, $unitSlot, $amountToTrain))
             {
                 $unit = $dominion->race->units->filter(function ($unit) use ($unitSlot) {
                     return ($unit->slot === $unitSlot);
                 })->first();
 
-                throw new GameException('You can at most control ' . number_format($this->unitHelper->getUnitMaxCapacity($dominion, $unitSlot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($dominion, $unitSlot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
             }
 
             # Check for minimum WPA to train.

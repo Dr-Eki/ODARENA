@@ -8,14 +8,11 @@ use Illuminate\Support\Facades\Cache;
 use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Models\Dominion;
-#use OpenDominion\Models\DominionSpell;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\GameEvent;
-#use OpenDominion\Models\GameEventStory;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
-#use OpenDominion\Models\WatchedDominion;
 
 use OpenDominion\Traits\DominionGuardsTrait;
 
@@ -38,6 +35,7 @@ use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\ResourceConversionCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\TerrainCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 
 use OpenDominion\Services\NotificationService;
@@ -119,6 +117,7 @@ class InvadeActionService
     private $terrainService;
     private $trainingCalculator;
     private $unitHelper;
+    private $unitCalculator;
 
     public function __construct()
     {
@@ -149,6 +148,7 @@ class InvadeActionService
         $this->trainingCalculator = app(TrainingCalculator::class);
         $this->raceHelper = app(RaceHelper::class);
         $this->unitHelper = app(UnitHelper::class);
+        $this->unitCalculator = app(UnitCalculator::class);
     }
 
     /**
@@ -336,7 +336,7 @@ class InvadeActionService
                     return ($unit->slot === $slot);
                 })->first();
 
-                if(!$this->unitHelper->isUnitSendableByDominion($unit, $attacker))
+                if(!$this->unitCalculator->isUnitSendableByDominion($unit, $attacker))
                 {
                     throw new GameException('You cannot send ' . $unit->name . ' on invasion.');
                 }
@@ -347,10 +347,10 @@ class InvadeActionService
                 }
 
                 # OK, unit can be trained. Let's check for pairing limits.
-                if($this->unitHelper->unitHasCapacityLimit($attacker, $slot) and !$this->unitHelper->checkUnitLimitForInvasion($attacker, $slot, $amount))
+                if($this->unitCalculator->unitHasCapacityLimit($attacker, $slot) and !$this->unitCalculator->checkUnitLimitForInvasion($attacker, $slot, $amount))
                 {
 
-                    throw new GameException('You can at most control ' . number_format($this->unitHelper->getUnitMaxCapacity($attacker, $slot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                    throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($attacker, $slot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
                 }
 
                 # Check for spends_resource_on_offense
@@ -2539,7 +2539,7 @@ class InvadeActionService
                             $fasterReturningTicks = min(max(1, ($ticks - $ticksFaster), 12));
 
                             $unitsWithFasterReturnTime = round($amountReturning * $buildingFasterReturnPerk);
-                            $unitsWithRegularReturnTime = round($amountReturning - $amountWithFasterReturn);
+                            #$unitsWithRegularReturnTime = round($amountReturning - $amountWithFasterReturn);
 
                             $returningUnits[$unitKey][$fasterReturningTicks] += $unitsWithFasterReturnTime;
                             $returningUnits[$unitKey][$ticks] -= $unitsWithFasterReturnTime;

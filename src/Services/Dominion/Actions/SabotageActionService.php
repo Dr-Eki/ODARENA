@@ -24,6 +24,8 @@ use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SabotageCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
+
 
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\HistoryService;
@@ -37,6 +39,22 @@ class SabotageActionService
 
     use DominionGuardsTrait;
 
+    protected $buildingCalculator;
+    protected $improvementCalculator;
+    protected $militaryCalculator;
+    protected $rangeCalculator;
+    protected $resourceCalculator;
+    protected $sabotageCalculator;
+    protected $unitCalculator;
+
+    protected $notificationService;
+    protected $protectionService;
+    protected $queueService;
+    protected $resourceService;
+    protected $statsService;
+
+    protected $unitHelper;
+
     public function __construct()
     {
         $this->buildingCalculator = app(BuildingCalculator::class);
@@ -45,6 +63,7 @@ class SabotageActionService
         $this->rangeCalculator = app(RangeCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
         $this->sabotageCalculator = app(SabotageCalculator::class);
+        $this->unitCalculator = app(UnitCalculator::class);
 
         $this->notificationService = app(NotificationService::class);
         $this->protectionService = app(ProtectionService::class);
@@ -139,18 +158,18 @@ class SabotageActionService
 
                 if($slot !== 'spies')
                 {
-                    if(!$this->unitHelper->isUnitOffensiveSpy($unit))
+                    if(!$this->unitCalculator->isUnitOffensiveSpy($unit))
                     {
                         throw new GameException($unit->name . ' is not a spy unit and cannot be sent on sabotage missions.');
                     }
 
                     # OK, unit can be trained. Let's check for pairing limits.
-                    if($this->unitHelper->unitHasCapacityLimit($saboteur, $slot) and !$this->unitHelper->checkUnitLimitForInvasion($saboteur, $slot, $amount))
+                    if($this->unitCalculator->unitHasCapacityLimit($saboteur, $slot) and !$this->unitCalculator->checkUnitLimitForInvasion($saboteur, $slot, $amount))
                     {
-                        throw new GameException('You can at most control ' . number_format($this->unitHelper->getUnitMaxCapacity($saboteur, $slot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                        throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($saboteur, $slot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
                     }
 
-                    if(!$this->unitHelper->isUnitSendableByDominion($unit, $saboteur))
+                    if(!$this->unitCalculator->isUnitSendableByDominion($unit, $saboteur))
                     {
                         throw new GameException('You cannot send ' . $unit->name . ' on sabotage.');
                     }

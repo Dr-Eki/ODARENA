@@ -14,6 +14,35 @@ resources:
   - gems
   - mana
 
+terrain_perks:
+  badlands:
+    food_production_mod: -0.05
+  desert:
+    food_production_mod: -0.10
+  forest:
+    lumber_production_mod: 0.10
+  glacier:
+    population_mod: -0.20
+    defensive_power_mod: 0.05
+  hills:
+    defensive_power_mod: 0.025
+    gems_production_mod: 0.05
+  jungle:
+    lumber_production_mod: 0.05
+    food_production_mod: 0.05
+  mountains:
+    gems_production_mod: 0.10
+  plains:
+    population_mod: 0.15 
+  swamps:
+    population_mod: 0.1
+  volcanic:
+    population_mod: -0.20
+  water:
+    food_production_mod: 0.1
+  wetlands:
+    food_production_mod: 0.1 
+
 perks:
   max_population: 20
   food_consumption_mod: -50
@@ -42,14 +71,14 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1000
+      gold: 900
       draftees: 1
     power:
       offense: 3
       defense: 3
     perks:
       offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP
-      evolves_into_unit: 3,0.1,12 # 0.001% of this unit become unit3, taking 12 ticks to complete
+      evolves_into_unit: 3,0.10,12 # 0.001% of this unit become unit3, taking 12 ticks to complete
 
   - name: Magistrate
     type:
@@ -67,6 +96,7 @@ units:
       evolves_into_unit: 4,0.05,12 # 0.001% of this unit become unit3, taking 12 ticks to complete
       faster_return_from_time: 18,06,2 # Between the hours 18:00 and 06:00, returns 4 ticks faster
       casualties: -20
+      pairing_limit: 2,0.333 # Unit slot, amount
 
   - name: Noble
     training_time: 12
@@ -84,3 +114,4 @@ units:
       offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP
       faster_return_from_time: 18,06,4 # Between the hours 18:00 and 06:00, returns 4 ticks faster
       casualties: -40
+      pairing_limit: 3,0.333 # Unit slot, amount

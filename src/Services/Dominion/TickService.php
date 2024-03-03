@@ -1538,6 +1538,9 @@ class TickService
     
         foreach($units as $slot => $zero)
         {
+
+            $unitCapacityAvailable = $this->unitCalculator->getUnitCapacityAvailable($dominion, $slot);
+
             if($unitEvolutionPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'evolves_into_unit'))
             {
                 $targetSlot = (int)$unitEvolutionPerk[0];
@@ -1548,6 +1551,11 @@ class TickService
                 $unitsEvolved = $unitCount * ($evolutionRatio / 100);
                 $unitsEvolved = floor($unitsEvolved * $evolutionMultiplier);
                 $unitsEvolved = (int)min($unitCount, $unitsEvolved);
+
+                if($this->unitCalculator->unitHasCapacityLimit($dominion, $slot))
+                {
+                    $unitsEvolved = min($unitsEvolved, $unitCapacityAvailable);
+                }
     
                 if($unitsEvolved > 0)
                 {

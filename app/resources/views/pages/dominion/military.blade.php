@@ -103,7 +103,7 @@
                                           @endif
 
                                         <td class="text-center" style="min-width: 150px">
-                                            @if (!$unitHelper->isUnitTrainableByDominion($unit, $selectedDominion))
+                                            @if (!$unitCalculator->isUnitTrainableByDominion($unit, $selectedDominion))
                                                 &mdash;
                                             @else
                                                 <div class="input-group">
@@ -116,7 +116,7 @@
                                         </td>
 
                                         <td class="text-center">  <!-- Cost -->
-                                            @if (!$unitHelper->isUnitTrainableByDominion($unit, $selectedDominion))
+                                            @if (!$unitCalculator->isUnitTrainableByDominion($unit, $selectedDominion))
                                                 &mdash;
                                             @else
                                                 {!! $unitHelper->getUnitCostString($selectedDominion->race, $trainingCalculator->getTrainingCostsPerUnit($selectedDominion)[$unitType]) !!}

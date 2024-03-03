@@ -933,7 +933,7 @@ class RaceHelper
         }
 
         $lookup = [
-            'vampires' => 'aged',
+            'vampires' => 'advanced',
         ];
 
         return $lookup[$race->key] ?? $defaultValue;

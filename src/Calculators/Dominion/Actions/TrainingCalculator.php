@@ -16,6 +16,7 @@ use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\ResourceHelper;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
@@ -62,6 +63,9 @@ class TrainingCalculator
     /** @var StatsService */
     protected $statsService;
 
+    /** @var UnitCalculator */
+    protected $unitCalculator;
+
 
 
     /**
@@ -85,6 +89,7 @@ class TrainingCalculator
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
         $this->statsService = app(StatsService::class);
+        $this->unitCalculator = app(UnitCalculator::class);
     }
 
     /**
@@ -310,9 +315,9 @@ class TrainingCalculator
 
             $slot = intval(str_replace('unit','',$unitType));
 
-            if($this->unitHelper->unitHasCapacityLimit($dominion, $slot))
+            if($this->unitCalculator->unitHasCapacityLimit($dominion, $slot))
             {
-                $maxCapacity = $this->unitHelper->getUnitMaxCapacity($dominion, $slot);
+                $maxCapacity = $this->unitCalculator->getUnitMaxCapacity($dominion, $slot);
                 $availableCapacity = $maxCapacity - ($this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot) + $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot) + $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slot) + $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit' . $slot) + $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot));
                 $trainable[$unitType] = max(0, min($trainable[$unitType], $availableCapacity));
             }

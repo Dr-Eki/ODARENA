@@ -25,12 +25,42 @@ improvement_resources:
 peasants_production:
   food: 0.5
 
+terrain_perks:
+  badlands:
+    defensive_power_mod: 0.10
+  desert:
+    defensive_power_mod: 0.10
+  forest:
+    lumber_production_raw: 3 
+    lumber_production_mod: 0.10
+  glacier:
+    defensive_power_mod: 0.125
+    food_production_mod: -0.05
+  hills:
+    defensive_power_mod: 0.10
+  jungle:
+    lumber_production_raw: 1
+    lumber_production_mod: 3 
+  mountains:
+    defensive_power_mod: 0.10
+  plains:
+    population_mod: 0.15 
+  swamps:
+    population_mod: 0.1
+  volcanic:
+    offensive_power_mod: 0.20
+  water:
+    population_growth_mod: 1
+  wetlands:
+    population_mod: 0.1 
+
 perks:
   no_food_consumption: 1
   cannot_train_spies: 1
   cannot_train_wizards: 1
   cannot_train_archmages: 1
   cannot_perform_sorcery: 1
+  #cannot_rezone: 1 # Yes, they can
   cannot_sabotage: 1
   population_growth: 200
   #reduced_conversions: 100

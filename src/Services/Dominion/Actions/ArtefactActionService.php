@@ -35,6 +35,7 @@ use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\ResourceConversionCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\TerrainCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Calculators\Dominion\UnitReturnCalculator;
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 
@@ -119,6 +120,7 @@ class ArtefactActionService
     private $terrainCalculator;
     private $terrainService;
     private $trainingCalculator;
+    private $unitCalculator;
     private $unitReturnCalculator;
     private $unitHelper;
 
@@ -151,6 +153,7 @@ class ArtefactActionService
         $this->terrainCalculator = app(TerrainCalculator::class);
         $this->terrainService = app(TerrainService::class);
         $this->trainingCalculator = app(TrainingCalculator::class);
+        $this->unitCalculator = app(UnitCalculator::class);
         $this->unitReturnCalculator = app(UnitReturnCalculator::class);
         $this->raceHelper = app(RaceHelper::class);
         $this->unitHelper = app(UnitHelper::class);
@@ -276,7 +279,7 @@ class ArtefactActionService
                     return ($unit->slot === $slot);
                 })->first();
 
-                if(!$this->unitHelper->isUnitSendableByDominion($unit, $attacker))
+                if(!$this->unitCalculator->isUnitSendableByDominion($unit, $attacker))
                 {
                     throw new GameException('You cannot send ' . $unit->name . ' on invasion.');
                 }
@@ -287,10 +290,10 @@ class ArtefactActionService
                 }
 
                 # OK, unit can be trained. Let's check for pairing limits.
-                if($this->unitHelper->unitHasCapacityLimit($attacker, $slot) and !$this->unitHelper->checkUnitLimitForInvasion($attacker, $slot, $amount))
+                if($this->unitCalculator->unitHasCapacityLimit($attacker, $slot) and !$this->unitCalculator->checkUnitLimitForInvasion($attacker, $slot, $amount))
                 {
 
-                    throw new GameException('You can at most control ' . number_format($this->unitHelper->getUnitMaxCapacity($attacker, $slot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                    throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($attacker, $slot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
                 }
 
                 # Check for spends_resource_on_offense
@@ -353,33 +356,6 @@ class ArtefactActionService
                 else
                 {
                     throw new GameException('A magical state surrounds the lands, making it impossible for you to invade.');
-                }
-            }
-
-
-            # Artillery: land gained plus current total land cannot exceed 133% of protector's land.
-            if($attacker->race->name == 'Artillery' and $attacker->hasProtector())
-            {
-                $landGained = 0;
-
-                $data['land_conquered'] = $this->militaryCalculator->getLandConquered($attacker, $target, $landRatio);
-                $data['land_discovered'] = 0;
-                if($this->militaryCalculator->checkDiscoverLand($attacker, $target, $data['land_conquered'], $this->attack['attacker']['capture_buildings']))
-                {
-                    $this->attack['data']['land_discovered'] = $data['land_conquered'] / ($target->race->name == 'Barbarian' ? 3 : 1);
-                }
-                $data['extra_land_discovered'] = $this->militaryCalculator->getExtraLandDiscovered($attacker, $target, $data['land_discovered'], $data['land_conquered']);
-    
-
-                $landGained += $data['land_conquered'];
-                $landGained += $data['land_discovered'];
-                $landGained += $data['extra_land_discovered'];
-                
-                $newLand = $attacker->land + $landGained;
-
-                if($newLand > ($attacker->protector->land) * (4/3))
-                {
-                    throw new GameException('You cannot invade this target because your land gained plus current total land exceeds 133% of your protector\'s land.');
                 }
             }
 
