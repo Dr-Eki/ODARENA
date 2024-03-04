@@ -93,7 +93,7 @@ units:
     perks:
       offense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 OP
       defense_from_time: 18,06,2 # Between the hours 18:00 and 06:00, gains +2 DP
-      evolves_into_unit: 4,0.05,12 # 0.001% of this unit become unit3, taking 12 ticks to complete
+      evolves_into_unit: 4,0.10,12 # 0.001% of this unit become unit3, taking 12 ticks to complete
       faster_return_from_time: 18,06,2 # Between the hours 18:00 and 06:00, returns 4 ticks faster
       casualties: -20
       pairing_limit: 2,0.333 # Unit slot, amount
