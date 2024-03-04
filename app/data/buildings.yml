@@ -83,16 +83,6 @@ training_grounds:
   perks:
     offensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
 
-turret:
-  name: Turret
-  category: military
-  excluded_races:
-    - Human
-  perks:
-    multiple_pairing_limit: 10,wall;stone_wall # amount, buildings;buildings
-    defensive_power: 1,2,10 # Every 1% gives 2% DP, max +10% DP
-    human_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
-
 wall:
   name: Wall
   category: military
