@@ -150,8 +150,8 @@ class BuildActionService
             {
                 $pairingLimit = explode(',', $pairingLimit);
 
-                $pairingBuilding = Building::where('key', $pairingLimit[0])->firstOrFail();
-                $chunkSize = (int)$pairingLimit[1];
+                $pairingBuilding = Building::where('key', $pairingLimit[1])->firstOrFail();
+                $chunkSize = (int)$pairingLimit[0];
 
                 # Get amount owned of $pairingBuilding
                 $pairingBuildingRecord = $dominion->buildings()->where('key', $pairingBuilding->key)->first();

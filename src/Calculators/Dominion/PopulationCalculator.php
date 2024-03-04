@@ -512,7 +512,7 @@ class PopulationCalculator
     */
     public function getUnitsHousedInMilitaryHousing(Dominion $dominion): int
     {
-        $units = 0;
+        $units = $this->getPopulationMilitary($dominion);
         #$units -= $this->getUnitsHousedInUnits($dominion);
         $units -= $this->getUnitsHousedInUnitSpecificBuildings($dominion);
         $units -= $this->getUnitsHousedInUnitAttributeSpecificBuildings($dominion);
@@ -520,8 +520,7 @@ class PopulationCalculator
         $units -= $this->getUnitsHousedInSpyHousing($dominion);
         $units -= $this->getUnitsHousedInWizardHousing($dominion);
 
-        $units = $this->getPopulationMilitary($dominion);
-
+        
         $units = max(0, $units);
 
         return min($units, $this->getAvailableHousingFromMilitaryHousing($dominion));

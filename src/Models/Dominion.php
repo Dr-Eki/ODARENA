@@ -341,6 +341,17 @@ class Dominion extends AbstractModel
             ->withPivot('amount');
     }
 
+    public function units()
+    {
+        return $this->hasMany(DominionUnit::class);
+    }
+
+    # Get units by state
+    public function getUnitsByState(int $state)
+    {
+        return $this->units->where('state', $state);
+    }
+
     # This code enables the following syntax:
     # $dominion->{'terrain_' . $terrainKey} and similar
 
@@ -768,43 +779,42 @@ class Dominion extends AbstractModel
                 }
 
                 # Check if building has perk pairing_limit
-                if(($pairingLimit = $building->getPerkValue('pairing_limit')))
-                {
+                if (($pairingLimit = $building->getPerkValue('pairing_limit'))) {
                     $pairingLimit = explode(',', $pairingLimit);
-
-                    $buildingKey = $pairingLimit[0];
-                    $pairedBuilding = Building::where('key', $buildingKey)->firstOrFail();
-                    $chunkSize = (int)$pairingLimit[1];
-
-                    # Get amount owned of $pairedBuilding
-                    $pairedBuildingOwned = $this->buildings()->where('building_id', $pairedBuilding->id)->first()->pivot->owned;
-                    unset($pairedBuilding);
-
-                    # $buildingOwned is the minimum of the two
+            
+                    $buildingKey = (string)$pairingLimit[1];
+                    $pairedBuilding = $this->buildings->firstWhere('key',$buildingKey);
+                    $chunkSize = (int)$pairingLimit[0];
+            
+                    // Get amount owned of $pairedBuilding
+                    $pairedBuildingOwned = $this->buildings->firstWhere('id', $pairedBuilding->id)->pivot->owned;
+            
+                    // $buildingOwned is the minimum of the two
                     $buildingOwned = min($buildingOwned, floor($pairedBuildingOwned / $chunkSize));
-
+            
                     $buildingOwned = intval($buildingOwned);
                 }
 
                 # Check if building has perk pairing_limit
+                # SAMPLE: multiple_pairing_limit: 50,wall;bastion # amount, buildings
                 if(($multiplePairingLimit = $building->getPerkValue('multiple_pairing_limit')))
                 {
                     $multiplePairingLimit = explode(',', $multiplePairingLimit);
                     $pairedBuildingKeys = explode(';', $multiplePairingLimit[1]);
-
+                
                     $pairedBuildingsOwned = 0;
                     $chunkSize = (int)$multiplePairingLimit[0];
-
+                
+                    // Convert buildings to a key-value pair array
+                    $buildingsOwned = $this->buildings->pluck('pivot.owned', 'key');
+                
                     foreach($pairedBuildingKeys as $buildingKey)
                     {
-                        if($hasBuilding = $this->buildings->firstWhere('key', $buildingKey))
-                        {
-                            $pairedBuildingsOwned += $hasBuilding->pivot->owned;
-                        }
+                        $pairedBuildingsOwned += $buildingsOwned[$buildingKey] ?? 0;
                     }
-
+                
                     $buildingOwned = min($buildingOwned, floor($pairedBuildingsOwned / $chunkSize));
-
+                
                     $buildingOwned = intval($buildingOwned);
                 }
 

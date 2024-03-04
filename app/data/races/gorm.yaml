@@ -28,7 +28,7 @@ perks:
   draftee_dp: 1.5
 
 units:
-- name: Mauler
+- name: Gormish Mauler
   training_time: 8
   type:
     - living
@@ -41,7 +41,7 @@ units:
     offense: 3.5
     defense: 1.5
 
-- name: Ogre
+- name: Gormish Ogre
   training_time: 12
   type:
     - living
@@ -54,7 +54,7 @@ units:
     offense: 0
     defense: 6
 
-- name: Basher
+- name: Gormish Basher
   training_time: 12
   type:
     - living

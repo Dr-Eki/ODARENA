@@ -29,7 +29,7 @@ improvement_resources:
   pearls: 16
 
 units:
-  - name: Manta
+  - name: Merfolk Manta
     training_time: 9
     type:
       - living
@@ -41,7 +41,7 @@ units:
       offense: 0
       defense: 11
 
-  - name: Sea Serpent
+  - name: Merfolk Sea Serpent
     training_time: 9
     type:
       - living
@@ -53,7 +53,7 @@ units:
       offense: 12
       defense: 7
 
-  - name: Leviathan
+  - name: Merfolk Leviathan
     training_time: 12
     type:
       - living
@@ -68,7 +68,7 @@ units:
     perks:
       food_consumption_raw: 40
 
-  - name: Kraken
+  - name: Merfolk Kraken
     training_time: 12
     type:
       - living

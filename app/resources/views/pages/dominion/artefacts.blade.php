@@ -349,7 +349,7 @@
         <div class="col-sm-12 col-md-9">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="ra ra-castle"></i> Realm Artefacts</h3>
+                    <h3 class="box-title"><i class="ra ra-castle-emblem"></i> Realm Artefacts</h3>
                 </div>
                 <div class="box-body">
                     @foreach($realmArtefacts as $realmArtefact)
@@ -427,7 +427,7 @@
         <div class="col-sm-12 col-md-9">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="ra ra-castle-emblem"></i> World Artefacts</h3>
+                    <h3 class="box-title"><i class="ra ra-circle-of-circles"></i> World Artefacts</h3>
                 </div>
                 <div class="box-body">
                     @foreach($discoveredArtefacts as $artefact)

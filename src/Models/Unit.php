@@ -26,6 +26,7 @@ class Unit extends AbstractModel
 {
     protected $casts = [
         'slot' => 'integer',
+        'key' => 'string',
         'power_offense' => 'float',
         'power_defense' => 'float',
         'cost' => 'array',

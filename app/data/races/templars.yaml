@@ -9,7 +9,7 @@ skill_level: 2
 perks:
   gems_production_mod: 10
 units:
-  - name: Crusader
+  - name: Templar Crusader
     training_time: 9
     cost:
       gold: 350
@@ -20,7 +20,7 @@ units:
     perks:
       faster_return: 3
 
-  - name: Follower
+  - name: Templar Follower
     training_time: 6
     power:
       offense: 0
@@ -29,7 +29,7 @@ units:
       reduces_casualties: 1
       mana_production_raw: 0.05
 
-  - name: Pikeman
+  - name: Templar Pikeman
     training_time: 12
     cost:
       gold: 900
@@ -38,7 +38,7 @@ units:
       offense: 0
       defense: 6
 
-  - name: Paladin
+  - name: Templar Paladin
     training_time: 12
     cost:
       gold: 1150

@@ -24,7 +24,7 @@ perks:
   salvage: 50
 
 units:
-- name: Ranger
+- name: Elven Ranger
   training_time: 9
   type:
     - living
@@ -39,7 +39,7 @@ units:
   perks:
     lumber_production_raw: 1
 
-- name: Sentinel
+- name: Elven Sentinel
   training_time: 9
   type:
     - living
@@ -52,7 +52,7 @@ units:
     offense: 3
     defense: 1
 
-- name: Aegis
+- name: Elven Aegis
   training_time: 12
   type:
     - living
@@ -65,7 +65,7 @@ units:
     offense: 0
     defense: 6
 
-- name: Blade Weaver
+- name: Elven Blade Weaver
   training_time: 12
   type:
     - living

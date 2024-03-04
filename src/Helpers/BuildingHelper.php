@@ -366,9 +366,10 @@ class BuildingHelper
             # SPECIAL DESCRIPTION PERKS
             if($perk->key == 'pairing_limit')
             {
-                $buildingKey = $perkValue[0];
+
+                $buildingKey = $perkValue[1];
                 $pairedBuilding = Building::where('key', $buildingKey)->firstOrFail();
-                $amount = (int)$perkValue[1];
+                $amount = (int)$perkValue[0];
 
                 $perkValue = [str_plural($pairedBuilding->name, $amount), $amount];
 
@@ -628,9 +629,26 @@ class BuildingHelper
             case 'holy':
                 return '<i class="fas fa-pray fa-fw text-purple"></i>';
 
+            case 'castle':
+                return '<i class="ra ra-castle"></i>';
+
             default:
                 return '';
         }
+    }
+
+    public function getBuildingCategorySortOrder(string $category): int
+    {
+        $sortOrder = [
+            'castle' => 1,
+            'production' => 2,
+            'military' => 3,
+            'housing' => 4,
+            'other' => 5,
+            'holy' => 6,
+        ];
+
+        return $sortOrder[$category];
     }
 
 }

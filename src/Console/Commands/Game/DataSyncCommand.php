@@ -281,7 +281,7 @@ class DataSyncCommand extends Command implements CommandInterface
 
                 $where = [
                     'race_id' => $race->id,
-                    'slot' => $slot,
+                    'slot' => $slot
                 ];
 
                 $unit = Unit::where($where)->first();
@@ -292,6 +292,7 @@ class DataSyncCommand extends Command implements CommandInterface
 
                 $unit->fill([
                     'name' => $unitName,
+                    'key' => generateKeyFromNameString($unitName),
                     'type' => object_get($unitData, 'type'),
                     'cost' => object_get($unitData, 'cost', []),
                     'power_offense' => object_get($unitData, 'power.offense', 0),
@@ -301,8 +302,8 @@ class DataSyncCommand extends Command implements CommandInterface
                     'deity_id' => $deityId,
                 ]);
 
-                if ($unit->exists) {
-                    $newValues = $unit->getDirty();
+                #if ($unit->exists) {
+                    #$newValues = $unit->getDirty();
                     /*
                     foreach ($newValues as $key => $newValue)
                     {
@@ -320,7 +321,7 @@ class DataSyncCommand extends Command implements CommandInterface
                         $this->info("[Change] {$key}: {$originalValue} -> {$newValue}");
                     }
                     */
-                }
+                #}
 
                 $unit->save();
                 $unit->refresh();
@@ -330,7 +331,7 @@ class DataSyncCommand extends Command implements CommandInterface
 
                 foreach (object_get($unitData, 'perks', []) as $perk => $value)
                 {
-                    $value = (string)$value; // Can have multiple values for a perk, comma separated. todo: Probably needs a refactor later to JSON
+                    $value = (string)$value;
 
                     $unitPerkType = UnitPerkType::firstOrCreate(['key' => $perk]);
 
@@ -400,10 +401,8 @@ class DataSyncCommand extends Command implements CommandInterface
                             'value' => $terrainPerkValue
                         ]);
                     }
-
                 }
             }
-
         }
 
         $this->info('Races and units synced.');

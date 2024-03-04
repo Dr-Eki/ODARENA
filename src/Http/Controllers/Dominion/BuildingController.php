@@ -33,6 +33,13 @@ class BuildingController extends AbstractDominionController
 
         $categories = $buildings->groupBy('category');
 
+        $buildingHelper = app(BuildingHelper::class);
+
+        # Sort the categories according to $buildingHelper->getBuildingCategorySortOrder()
+        $categories = $categories->sort(function ($a, $b) use ($buildingHelper) {
+            return $buildingHelper->getBuildingCategorySortOrder($a->first()->category) - $buildingHelper->getBuildingCategorySortOrder($b->first()->category);
+        });
+
         return view('pages.dominion.buildings', [
 
             'buildings' => $buildings,

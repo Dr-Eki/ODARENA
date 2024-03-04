@@ -360,24 +360,21 @@ class BuildingCalculator
         return $maxCapacity - $owned;
     }
 
+    public function getBuildingCategoryAmount(Dominion $dominion, string $category): int
+    {
+        return $dominion->buildings->sum(function ($dominionBuilding) use ($category) {
+            return $dominionBuilding->category == $category ? $dominionBuilding->pivot->owned : 0;
+        });
+    }
+
+    public function getBuildingCategoryRatio(Dominion $dominion, string $category): float
+    {
+        return $this->getBuildingCategoryAmount($dominion, $category) / $dominion->land;
+    }
+
     public function getHolyLandAmount(Dominion $dominion): int
     {
-        $holyLandCount = 0;
-
-        foreach($dominion->buildings as $dominionBuilding)
-        {
-            $building = Building::where('key', $dominionBuilding->key)->first();
-
-            if(isset($building->deity) and $dominion->hasDeity())
-            {
-                if($dominion->deity->id == $building->deity->id)
-                {
-                    $holyLandCount += $dominionBuilding->pivot->owned;
-                }
-            }
-        }
-
-        return $holyLandCount;
+        return $this->getBuildingCategoryAmount($dominion, 'holy');
     }
 
     public function getHolyLandRatio(Dominion $dominion): float

@@ -81,7 +81,7 @@ units:
       kills_into_resource_per_casualty: 1,soul
       no_draftee: 1
 
-  - name: Phantom
+  - name: Phantasm
     training_time: 12
     type:
       - living

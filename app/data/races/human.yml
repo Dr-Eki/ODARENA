@@ -4,6 +4,7 @@ description: >-
 home_terrain: plains
 playable: 2 # Dev only
 skill_level: 1
+magic_level: 3
 
 resources:
   - gold
@@ -16,43 +17,49 @@ resources:
 
 terrain_perks:
   badlands:
-    defensive_power_mod: 1
-    food_production_mod: -0.25
+    xp_generation_mod: 0.25
+    food_production_mod: -0.10
   desert:
-    defensive_power_mod: 1
-    food_production_mod: -0.25
+    defensive_power_mod: 0.25
+    food_production_mod: -0.10
   forest:
-    lumber_production_mod: 1
+    lumber_production_mod: 0.50
   glacier:
-    defensive_power_mod: 0.125
+    defensive_power_mod: 0.10
+    gems_production_mod: 0.25
     food_production_mod: -0.05
+    lumber_production_mod: -0.05
   hills:
-    gems_production_mod: 0.50
-    ore_production_mod: 0.50
-  jungle:
-    lumber_production_mod: 1
-  mountains:
-    gems_production_mod: 0.75
+    gems_production_mod: 0.25
     ore_production_mod: 0.25
+  jungle:
+    lumber_production_mod: 0.50
+  mountains:
+    gems_production_mod: 0.35
+    ore_production_mod: 0.15
   plains:
-    population_mod: 0.50
+    population_mod: 0.10
   swamps:
-    mana_production_mod: 1
+    mana_production_mod: 0.50
+    xp_generation_mod: 0.15
   volcanic:
     offensive_power_mod: 0.20
   water:
-    food_production_mod: 2
+    food_production_mod: 0.25
   wetlands:
-    food_production_mod: 2
+    food_production_mod: 0.35
 
 perks:
-  food_production_mod: 15
-  xp_gains: 100
-  salvaging: 75
-  construction_cost: -20
-  rezone_cost: -20
-  increased_construction_speed: 4
+  construction_cost: -10
+  food_production_mod: 10
+  improvement_points: 10
+  improvements: 10
   prestige_gains: 20
+  rezone_cost: -10
+  salvaging: 50
+  xp_generation: 10
+  xp_gains: 100
+  morale_per_percentage_castle_buildings: 1
 
 units:
   - name: Archer
@@ -68,7 +75,7 @@ units:
       offense: 0
       defense: 4
 
-  - name: Spearguard
+  - name: Halberdier
     training_time: 12
     type:
       - living
@@ -108,6 +115,6 @@ units:
       offense: 6
       defense: 4
     perks:
-      casualties: -20
+      casualties_on_offense: -20
       faster_return: 3
 

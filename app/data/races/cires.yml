@@ -50,7 +50,7 @@ units:
       attrition: 100
       attrition_protection_from_net_victories: 1 # 1 unit spared from attrition per net victory
 
-  - name: Archer
+  - name: Ciresine Archer
     training_time: 8
     type:
       - living

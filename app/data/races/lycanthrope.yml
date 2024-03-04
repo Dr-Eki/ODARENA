@@ -8,7 +8,7 @@ skill_level: 2
 perks:
   max_population: 20
 units:
-  - name: Warg
+  - name: Lycanthrope Warg
     training_time: 9
     type:
       - living
@@ -19,7 +19,7 @@ units:
       offense: 3
       defense: 0
 
-  - name: Ratman
+  - name: Lycanthrope Ratman
     training_time: 9
     type:
       - living
@@ -30,7 +30,7 @@ units:
       offense: 0
       defense: 3
 
-  - name: Werewolf
+  - name: Lycanthrope Werewolf
     training_time: 12
     type:
       - living
@@ -46,7 +46,7 @@ units:
       offense_from_pairing: 4,1 # slot, amount
       conversion: 3 # Werewolves
 
-  - name: Garou
+  - name: Lycanthrope Garou
     training_time: 12
     type:
       - living

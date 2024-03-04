@@ -26,7 +26,7 @@ perks:
   extra_barren_housing_per_net_victory: 0.50
 
 units:
-  - name: Halberdier
+  - name: Camp Guard
     training_time: 9
     type:
       - living

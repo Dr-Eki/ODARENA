@@ -154,6 +154,15 @@
                 and can afford to construct <strong>{{ number_format($constructionCalculator->getMaxAfford($selectedDominion)) }} {{ str_plural('building', $constructionCalculator->getMaxAfford($selectedDominion)) }}</strong>.</p>
                 <p>You may also <a href="{{ route('dominion.demolish') }}">demolish buildings</a> if you wish.</p>
 
+                @if($moraleFromCastleRatioPerk = $selectedDominion->race->getPerkValue('morale_per_percentage_castle_buildings'))
+                    @php
+                        $castleAmount = $buildingCalculator->getBuildingCategoryAmount($selectedDominion, 'castle');
+                        $castleRatio = $buildingCalculator->getBuildingCategoryRatio($selectedDominion, 'castle') * 100;
+                    @endphp
+                    <h4>Castle</h4>
+                    <p>You have {{ number_format($castleAmount) }} ({{ number_format($castleRatio, 2) }}%) castle buildings, increasing your morale by {{ floor($castleRatio * $moraleFromCastleRatioPerk) }}. </p>
+                @endif
+
                 <h4>Holy Buildings</h4>
                 <p>Holy buildings require devotion to a specific deity to build.</p>
                 <p>If you are not devoted to the deity of a building, you do not gain any production, perks, or other effects from that building.</p>

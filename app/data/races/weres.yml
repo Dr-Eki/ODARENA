@@ -23,7 +23,7 @@ improvement_resources:
   lumber: 3.5
 
 units:
-  - name: Wolf
+  - name: Weren Wolf
     training_time: 0
     type:
       - living
@@ -39,7 +39,7 @@ units:
       conversion: 4
       displaced_peasants_random_split_conversion: 80,90,1,4
 
-  - name: Bear
+  - name: Weren Bear
     training_time: 0
     type:
       - living
@@ -54,7 +54,7 @@ units:
       cannot_be_trained: 1
       conversion: 3
 
-  - name: Werebear
+  - name: Weren Werebear
     training_time: 12
     type:
       - living
@@ -69,7 +69,7 @@ units:
     perks:
       strength_conversion: 5,4,3 #  threshold,under,over
 
-  - name: Werewolf
+  - name: Weren Werewolf
     training_time: 12
     type:
       - living

@@ -65,10 +65,17 @@ military_academy:
 stone_wall:
   name: Stone Wall
   category: military
-  exclusive_races:
+  excluded_races:
+    - Barbarian
     - Dragons
+    - Glimjir
+    - Growth
+    - Human
+    - Reptilians
+    - Sylvan
+    - Swarm
   perks:
-    defensive_power: 1,1.25,50 # Every 1% gives 1.5% DP, max +60% DP
+    defensive_power: 1,1.25,50 # Every 1% gives 1.25% DP, max +50% DP
     raw_defense: 12
 
 training_grounds:
@@ -82,31 +89,6 @@ training_grounds:
     - Nox
   perks:
     offensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
-
-turret:
-  name: Turret
-  category: military
-  excluded_races:
-    - Human
-  perks:
-    multiple_pairing_limit: 10,wall;stone_wall # amount, buildings;buildings
-    defensive_power: 1,2,10 # Every 1% gives 2% DP, max +10% DP
-    human_unit_housing: 1,20 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
-
-wall:
-  name: Wall
-  category: military
-  excluded_races:
-    - Barbarian
-    - Dragons
-    - Glimjir
-    - Growth
-    - Reptilians
-    - Sylvan
-    - Swarm
-  perks:
-    defensive_power: 1,1,100 # Every 1% gives 1% DP, max +100% DP
-    raw_defense: 6
 
 watch_tower:
   name: Watch Tower
@@ -248,6 +230,7 @@ ore_mine:
     - Dragons
     - Dwarg
     - Goblin
+    - Human
     - Kobold
     - Qur
     - Snow Elf
@@ -268,15 +251,6 @@ saw_mill:
     - Vampires
   perks:
     lumber_production_raw: 35
-
-stable:  
-  name: Stable
-  category: production
-  exclusive_races:
-    - Human
-  perks:
-    horse_production_raw: 1
-    horse_theft_reduction: 1,10,100  # Every 1% reduces plat stolen by 10%, max 100% reduction
 
 tower:
   name: Tower
@@ -918,6 +892,88 @@ wharf:
     exchange_rate: 1,6,30 # Every 1% gives +5% exchange rate, max +25%
 
 # END GLIMJIR
+
+# BEGIN HUMAN
+
+bastion:  
+  name: Bastion
+  category: castle
+  exclusive_races:
+    - Human
+  perks:
+    pairing_limit: 40,wall # amount, buildings
+    defensive_power: 1,1,20 # Every 1% gives 2% DP, max +10% DP
+    human_unit_housing: 2,30 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    raw_defense: 12
+    housing: 0
+
+casern:  
+  name: Casern
+  category: castle
+  exclusive_races:
+    - Human
+  perks:
+    pairing_limit: 20,wall # amount, buildings
+    military_housing: 60
+    draftee_housing: 60
+    housing: 0
+    jobs: 0
+
+keep:
+  name: Keep
+  category: castle
+  exclusive_races:
+    - Human
+  perks:
+    pairing_limit: 50,wall # amount, buildings
+    housing: 200
+    jobs: 80
+
+parapet:
+  name: Parapet
+  category: castle
+  exclusive_races:
+    - Human
+  perks:
+    pairing_limit: 20,wall # amount, buildings
+    defensive_power: 1,1,20 # Every 1% gives 2% DP, max +10% DP
+    human_unit_housing: 1,30 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    housing: 0
+
+stable:  
+  name: Stable
+  category: castle
+  exclusive_races:
+    - Human
+  perks:
+    pairing_limit: 10,wall # amount, buildings
+    horse_production_raw: 1
+    horse_theft_reduction: 1,10,100  # Every 1% reduces plat stolen by 10%, max 100% reduction
+    human_unit_housing: 2,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    housing: 10
+
+turret:
+  name: Turret
+  category: castle
+  exclusive_races:
+    - Human
+  perks:
+    pairing_limit: 1,bastion # amount, buildings
+    defensive_power: 1,10,100 # Every 1% gives 10% DP, max +20% DP
+    human_unit_housing: 1,10 #($race->key . '_unit_housing'): slot,amount - also supports multiple units: 1;20,2;20
+    housing: 20
+
+wall:
+  name: Wall
+  category: castle
+  exclusive_races:
+    - Human
+  perks:
+    defensive_power: 1,1,20 # Every 1% gives 1% DP, max +20% DP
+    raw_defense: 8
+    housing: 0
+
+# END HUMAN
 
 # BEGIN ICEKIN
 

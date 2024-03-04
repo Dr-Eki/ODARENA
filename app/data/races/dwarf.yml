@@ -26,7 +26,7 @@ perks:
   salvaging: 25
 
 units:
-  - name: Thundermaul
+  - name: Dwarven Thundermaul
     training_time: 12
     static_networth: 120
     type:
@@ -47,7 +47,7 @@ units:
       no_draftee: 1
       immortal_on_fending_off: 1
 
-  - name: Miner
+  - name: Dwarven Miner
     training_time: 9
     type:
       - living
@@ -62,7 +62,7 @@ units:
     perks:
       ore_production_raw: 2
 
-  - name: Cleric
+  - name: Dwarven Cleric
     training_time: 12
     type:
       - living
@@ -78,7 +78,7 @@ units:
       reduces_casualties: 1
       counts_as_wizard_defense: 0.5
 
-  - name: Hammerer
+  - name: Dwarven Hammerer
     training_time: 12
     type:
       - living

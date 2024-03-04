@@ -25,7 +25,7 @@ perks:
   #
 
 units:
-- name: Guard
+- name: Arwae Guard
   training_time: 9
   type:
     - living
@@ -40,7 +40,7 @@ units:
   perks:
     fixed_casualties: 25
 
-- name: Foot Soldier
+- name: Arwae Foot Soldier
   training_time: 9
   type:
     - living
@@ -55,7 +55,7 @@ units:
   perks:
     fixed_casualties: 25
 
-- name: Archer
+- name: Arwae Archer
   training_time: 12
   type:
     - living
@@ -69,7 +69,7 @@ units:
     offense: 0
     defense: 5
 
-- name: Mounted Blade
+- name: Arwae Mounted Blade
   training_time: 12
   type:
     - living
