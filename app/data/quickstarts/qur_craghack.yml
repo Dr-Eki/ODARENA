@@ -1,0 +1,115 @@
+name: Qur (Surveyor) Quickstart by Craghack
+description: 
+race: Qur
+title: Surveyor
+deity: Ix
+land: 1000
+offensive_power: 10k
+defensive_power: 22k
+draft_rate: 100
+morale: 100
+prestige: 600
+peasants: 16107
+protection_ticks: 0
+devotion_ticks: 49
+spy_strength: 100
+wizard_strength: 100
+xp: 12662
+
+buildings:
+    aqueduct: 0
+    barracks: 0
+    battery: 0
+    bazaar: 0
+    constabulary: 0
+    estate: 230
+    gem_mine: 400
+    gold_mine: 0
+    granary: 0
+    guard_tower: 0
+    harbour: 50
+    hunting_lodge: 30
+    infirmary: 0
+    lapidary: 0
+    lumberyard: 30
+    military_academy: 0
+    monument: 0
+    ore_mine: 40
+    redoubt: 0
+    school: 0
+    spire: 0
+    syndicate_quarters: 0
+    tower: 95
+    training_grounds: 0
+    turret: 0
+    university: 0
+    vault: 0
+    wall: 0
+    watch_tower: 0
+    wizard_guild: 0
+    workshop: 125
+
+improvements:
+    agriculture: 0
+    conduits: 0
+    construction: 0
+    defenses: 0
+    education: 0
+    espionage: 0
+    housing: 0
+    leadership: 0
+    markets: 0
+    mining: 0
+    sabotage: 0
+    science: 0
+    sorcery: 0
+    tactics: 0
+    warding: 0
+    warfare: 0
+    wizardry: 0
+
+resources:
+    gold: 243340
+    food: 373765
+    lumber: 6930
+    ore: 23640
+    gems: 10500
+    mana: 59752
+
+spells:
+    sazals_charge: 0,96
+    fog: 0,96
+    miners_fortune: 0,22
+    mining_strength: 0,22
+    arboreal_abundance: 0,55
+
+advancements:
+    anvils: 5
+    drills: 2
+
+techs:
+
+terrains:
+   jungle: 0
+   mountains: 1000
+
+decree_states:
+
+units:
+    draftees: 166
+    unit1: 1850
+    unit2: 11100
+    unit3: 0
+    unit4: 1200
+    unit5: 0
+    unit6: 0
+    unit7: 0
+    unit8: 0
+    unit9: 0
+    unit10: 0
+    spies: 0
+    wizards: 0
+    archmages: 0
+
+queues:
+    - training,military_unit3,11,400
