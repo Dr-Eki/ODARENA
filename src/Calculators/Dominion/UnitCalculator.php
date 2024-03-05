@@ -603,7 +603,7 @@ class UnitCalculator
             $buildingKeyLimitedTo = (string)$pairingLimit[0];
             $perBuildingLimitedTo = (float)$pairingLimit[1];
 
-            $limitingBuildings = $dominion->{'building' . $buildingKeyLimitedTo};
+            $limitingBuildings = $dominion->{'building_' . $buildingKeyLimitedTo};
 
             # SNOW ELF
             if($dominion->getBuildingPerkValue($raceKey . '_unit' . $slotLimited . '_production_raw_capped') and $dominion->race->name == 'Snow Elf')
