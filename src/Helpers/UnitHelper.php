@@ -507,8 +507,6 @@ class UnitHelper
             // Limits
             'pairing_limit' => 'You can at most have %2$g of this unit per %1$s. Training is limited to number of %1$s at home.',
             'pairing_limit_including_away' => 'You can at most have %2$g of this unit per %1$s.',
-            'land_limit' => 'You can at most have %2$g of this unit per acre of %1$s.',
-            'total_land_limit' => 'You can at most have %2$g of this unit %1$s land.',
             'building_limit' => 'You can at most have %2$g of this unit per %1$s.',
             'building_limit_fixed' => 'You can at most have %2$g of this unit per %1$s.',
             'building_limit_prestige' => 'You can at most have %2$g of this unit per %1$s. Increased by prestige multiplier.',

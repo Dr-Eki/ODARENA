@@ -401,7 +401,7 @@ class Dominion extends AbstractModel
         return 0;
     }
 
-    protected function getBuildingAmount($buildingKey)
+    public function getBuildingAmount(string $buildingKey)
     {
         $buildingKey = strtolower($buildingKey);
     
@@ -410,7 +410,7 @@ class Dominion extends AbstractModel
             ->first();
     
         if ($building) {
-            return $building->pivot->amount;
+            return $building->pivot->owned;
         }
     
         return 0;
