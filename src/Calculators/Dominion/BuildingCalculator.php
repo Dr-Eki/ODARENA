@@ -372,14 +372,4 @@ class BuildingCalculator
         return $this->getBuildingCategoryAmount($dominion, $category) / $dominion->land;
     }
 
-    public function getHolyLandAmount(Dominion $dominion): int
-    {
-        return $this->getBuildingCategoryAmount($dominion, 'holy');
-    }
-
-    public function getHolyLandRatio(Dominion $dominion): float
-    {
-        return $this->getHolyLandAmount($dominion) / $dominion->land;
-    }
-
 }
