@@ -10,7 +10,6 @@ use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\SelectorService;
 use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
-use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Services\Dominion\QueueService;
 
 /**
@@ -565,7 +564,7 @@ class Dominion extends AbstractModel
     {
         if($this->isAbandoned())
         {
-            return "abandoned-{$dominion->id}@odarena.com";
+            return "abandoned-{$this->id}@odarena.com";
         }
         return $this->user->email;
     }
@@ -762,704 +761,711 @@ class Dominion extends AbstractModel
 
     public function getBuildingPerkValue(string $perkKey)
     {
-        #return Cache::remember("dominion.{$this->id}.buildingPerkValue.{$perkKey}", 5, function () use ($perkKey) {
-            
-            $landSize = $this->land;#$this->land_plain + $this->land_mountain + $this->land_swamp + $this->land_forest + $this->land_hill + $this->land_water;
-            $perk = 0;
+        $perk = 0;
 
-            foreach ($this->buildings as $building)
+        if(in_array($perkKey, ['housing','jobs']))
+        {
+            $defaultValue = ($perkKey == 'housing') ? 15 : 20;
+
+            # Grab buildings with the perk
+            $perkedBuildings = $this->buildings->filter(function ($building) use ($perkKey) {
+                return $building->perks->contains('key', $perkKey);
+            });
+
+            # Grab buildings without the perk
+            $unperkedBuildings = $this->buildings->filter(function ($building) use ($perkKey) {
+                return !$building->perks->contains('key', $perkKey);
+            });
+
+            # Add the default value for each building without the perk
+            $perk += $unperkedBuildings->sum('pivot.owned') * $defaultValue;
+
+            # Add the perk value for each building with the perk
+            foreach($perkedBuildings as $building)
             {
+                $perk += $building->pivot->owned * $building->getPerkValue($perkKey);
+            }
+            
+            return $perk;
+        }
 
-                $buildingOwned = $building->pivot->owned;
+        // Filter out buildings that require a deity unless the dominion has a deity, and buildings that are disabled
+        $buildings = $this->buildings->filter(function ($building) use ($perkKey) {
+            return (!isset($building->deity) || ($this->hasDeity() && $this->deity->id === $building->deity->id)) 
+                && $building->enabled 
+                && $building->perks->contains('key', $perkKey);
+        });
+        
+        foreach ($buildings as $building)
+        {
+            $buildingOwned = $building->pivot->owned;
 
-                # Ignore buildings that require a deity unless the dominion has a deity
-                if(isset($building->deity) && (!$this->hasDeity() || $this->deity->id !== $building->deity->id))
+            if($maxBuildingRatio = $building->getPerkValue('max_effective_building_ratio'))
+            {
+                $buildingOwned = min($buildingOwned, $this->land * ($maxBuildingRatio / 100));
+            }
+
+            # Check if building has perk pairing_limit
+            if ($pairingLimit = $building->getPerkValue('pairing_limit')) {
+                $pairingLimit = explode(',', $pairingLimit);
+        
+                $chunkSize = (int)$pairingLimit[0];
+                $buildingKey = (string)$pairingLimit[1];
+
+                // Get amount owned of $pairedBuilding
+                $pairedBuildingOwned = $this->{'building_' . $buildingKey};# buildings->firstWhere('id', $pairedBuilding->id)->pivot->owned;
+        
+                // $buildingOwned is the minimum of the two
+                $buildingOwned = min($buildingOwned, floor($pairedBuildingOwned / $chunkSize));
+        
+                $buildingOwned = intval($buildingOwned);
+            }
+
+            # Check if building has perk pairing_limit
+            # SAMPLE: multiple_pairing_limit: 50,wall;bastion # amount, buildings
+            if($multiplePairingLimit = $building->getPerkValue('multiple_pairing_limit'))
+            {
+                $multiplePairingLimit = explode(',', $multiplePairingLimit);
+                $pairedBuildingKeys = explode(';', $multiplePairingLimit[1]);
+            
+                $pairedBuildingsOwned = 0;
+                $chunkSize = (int)$multiplePairingLimit[0];
+            
+                // Convert buildings to a key-value pair array
+                $buildingsOwned = $this->buildings->pluck('pivot.owned', 'key');
+            
+                foreach($pairedBuildingKeys as $buildingKey)
                 {
-                    continue;
+                    $pairedBuildingsOwned += $buildingsOwned[$buildingKey] ?? 0;
+                }
+            
+                $buildingOwned = min($buildingOwned, floor($pairedBuildingsOwned / $chunkSize));
+            
+                $buildingOwned = intval($buildingOwned);
+            }
+
+            $perkValueString = $building->getPerkValue($perkKey);
+
+            $perkValueString = is_numeric($perkValueString) ? (float)$perkValueString : $perkValueString;
+            
+            #elseif(!in_array($perkKey,['jobs','housing']) and $perkValueString)
+            #{
+                # Basic production and other single-value perks
+                $singleValuePerks = [
+                    'gold_production_raw',
+                    'food_production_raw',
+                    'ore_production_raw',
+                    'lumber_production_raw',
+                    'mana_production_raw',
+                    'gems_production_raw',
+                    'blood_production_raw',
+                    'soul_production_raw',
+                    'pearls_production_raw',
+                    'horse_production_raw',
+                    'mud_production_raw',
+                    'swamp_gas_production_raw',
+                    'marshling_production_raw',
+                    'thunderstone_production_raw',
+                    'miasma_production_raw',
+                    'yak_production_raw',
+                    'kelp_production_raw',
+                    'gunpowder_production_raw',
+                    'magma_production_raw',
+                    'obsidian_production_raw',
+                
+                    'gunpowder_storage_raw',
+                    'sapling_storage_raw',
+                
+                    'gold_upkeep_raw',
+                    'food_upkeep_raw',
+                    'ore_upkeep_raw',
+                    'lumber_upkeep_raw',
+                    'mana_upkeep_raw',
+                    'blood_upkeep_raw',
+                    'soul_upkeep_raw',
+                    'pearls_upkeep_raw',
+                    'prisoner_upkeep_raw',
+                    'mana_upkeep_raw_per_artefact',
+                
+                    'gold_theft_protection',
+                    'food_theft_protection',
+                    'ore_theft_protection',
+                    'lumber_theft_protection',
+                    'mana_theft_protection',
+                    'gems_theft_protection',
+                    'blood_theft_protection',
+                    'soul_theft_protection',
+                    'pearls_theft_protection',
+                
+                    'xp_generation_raw',
+                
+                    // Building-specific housing
+                    'artillery_unit1_housing',
+                    'afflicted_unit1_housing',
+                    'aurei_unit1_housing',
+                    'dwarg_unit1_housing',
+                    'cires_unit1_housing',
+                    'cires_unit2_housing',
+                    'norse_unit1_housing',
+                    'sacred_order_unit2_housing',
+                    'sacred_order_unit3_housing',
+                    'sacred_order_unit4_housing',
+                    'snow_elf_unit1_housing',
+                    'troll_unit2_housing',
+                    'troll_unit4_housing',
+                    'vampires_unit1_housing',
+                    'revenants_unit1_housing',
+                    'revenants_unit2_housing',
+                    'revenants_unit3_housing',
+                
+                    'spy_housing',
+                    'wizard_housing',
+                    'military_housing',
+                    'draftee_housing',
+                
+                    'ammunition_units_housing',
+                
+                    // Military
+                    'raw_defense',
+                    'dimensionalists_unit1_production_raw',
+                    'dimensionalists_unit2_production_raw',
+                    'dimensionalists_unit3_production_raw',
+                    'dimensionalists_unit4_production_raw',
+                
+                    'snow_elf_unit4_production_raw',
+                
+                    'unit_send_capacity',
+                
+                    // Uncategorised
+                    'crypt_bodies_decay_protection',
+                    'faster_returning_units',
+                ];
+
+                $ratioMultiplierMaxPerks = [
+                    // OP/DP mods
+                    'defensive_power',
+                    'offensive_power',
+                    'attacker_offensive_power_mod',
+                    'target_defensive_power_mod',
+                    'casualties',
+                    'casualties_on_offense',
+                    'casualties_on_defense',
+                    'increases_enemy_casualties',
+                    'increases_enemy_casualties_on_offense',
+                    'increases_enemy_casualties_on_defense',
+                    'morale_gains',
+                    'prestige_gains',
+                    'base_morale',
+                    'faster_return',
+                
+                    // Production and Resources mods
+                    'gold_production_mod',
+                    'food_production_mod',
+                    'lumber_production_mod',
+                    'ore_production_mod',
+                    'gems_production_mod',
+                    'mana_production_mod',
+                    'xp_generation_mod',
+                    'pearls_production_mod',
+                    'blood_production_mod',
+                    'mud_production_mod',
+                    'swamp_gas_production_mod',
+                    'miasma_production_mod',
+                    'exchange_rate',
+
+                    'blood_resource_conversion_mod',
+                
+                    // Unit costs
+                    'unit_gold_costs',
+                    'unit_ore_costs',
+                    'unit_lumber_costs',
+                    'unit_mana_costs',
+                    'unit_food_costs',
+                    'unit_blood_costs',
+
+                    'machine_unit_costs',
+                
+                    // Unit training
+                    'extra_units_trained',
+                    'drafting',
+                    'snow_elf_unit4_production_mod',
+                    'training_time_mod',
+                    'spy_training_time_mod',
+                    'wizards_training_time_mod',
+                
+                    'dimensionalists_unit1_production_mod',
+                    'dimensionalists_unit2_production_mod',
+                    'dimensionalists_unit3_production_mod',
+                    'dimensionalists_unit4_production_mod',
+                
+                    // Spy/wizard
+                    'spell_cost',
+                    'spy_losses',
+                    'spy_strength_recovery',
+                    'wizard_losses',
+                    'wizard_strength',
+                    'wizard_strength_recovery',
+                    'wizard_cost',
+                    'sorcery_damage_suffered',
+                    'spy_cost',
+                    'spell_duration_mod',
+                
+                    // Construction/Rezoning and Land
+                    'construction_cost',
+                    'rezone_cost',
+                    'land_discovered',
+                    'construction_time',
+                
+                    // Espionage
+                    'gold_theft_reduction',
+                    'gems_theft_reduction',
+                    'lumber_theft_reduction',
+                    'ore_theft_reduction',
+                    'food_theft_reduction',
+                    'horse_theft_reduction',
+                    'magma_theft_reduction',
+                    'obsidian_theft_reduction',
+
+                    'amount_stolen',
+                
+                    // Improvements
+                    'improvements_capped',
+                    'improvements_interest',
+                    'invest_bonus',
+                    'gold_invest_bonus',
+                    'food_invest_bonus',
+                    'ore_invest_bonus',
+                    'gems_invest_bonus',
+                    'lumber_invest_bonus',
+                    'mana_invest_bonus',
+                    'blood_invest_bonus',
+                    'soul_invest_bonus',
+                    'obsidian_invest_bonus',
+                    'miasma_invest_bonus',
+                
+                    // Other/special
+                    'deity_power',
+                    'population_capped',
+                    'population_growth_capped',
+                    'unit_pairing',
+                    'unit_pairing_capped'
+                ];
+
+                if(in_array($perkKey, $singleValuePerks))
+                {
+                    $perk += $perkValueString * $buildingOwned;
                 }
 
-                # Check if building has perk pairing_limit
-                if (($pairingLimit = $building->getPerkValue('pairing_limit'))) {
-                    $pairingLimit = explode(',', $pairingLimit);
-            
-                    $buildingKey = (string)$pairingLimit[1];
-                    $pairedBuilding = $this->buildings->firstWhere('key',$buildingKey);
-                    $chunkSize = (int)$pairingLimit[0];
-            
-                    // Get amount owned of $pairedBuilding
-                    $pairedBuildingOwned = $this->buildings->firstWhere('id', $pairedBuilding->id)->pivot->owned;
-            
-                    // $buildingOwned is the minimum of the two
-                    $buildingOwned = min($buildingOwned, floor($pairedBuildingOwned / $chunkSize));
-            
-                    $buildingOwned = intval($buildingOwned);
-                }
-
-                # Check if building has perk pairing_limit
-                # SAMPLE: multiple_pairing_limit: 50,wall;bastion # amount, buildings
-                if(($multiplePairingLimit = $building->getPerkValue('multiple_pairing_limit')))
+                # Mods with ratio, multiplier, and max
+                elseif(in_array($perkKey, $ratioMultiplierMaxPerks))
                 {
-                    $multiplePairingLimit = explode(',', $multiplePairingLimit);
-                    $pairedBuildingKeys = explode(';', $multiplePairingLimit[1]);
-                
-                    $pairedBuildingsOwned = 0;
-                    $chunkSize = (int)$multiplePairingLimit[0];
-                
-                    // Convert buildings to a key-value pair array
-                    $buildingsOwned = $this->buildings->pluck('pivot.owned', 'key');
-                
-                    foreach($pairedBuildingKeys as $buildingKey)
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+                    $ratio = (float)$perkValues[0];
+                    $multiplier = (float)$perkValues[1];
+                    $max = (float)$perkValues[2] / 100;
+                    $owned = $buildingOwned;
+
+                    if($multiplier < 0)
                     {
-                        $pairedBuildingsOwned += $buildingsOwned[$buildingKey] ?? 0;
-                    }
-                
-                    $buildingOwned = min($buildingOwned, floor($pairedBuildingsOwned / $chunkSize));
-                
-                    $buildingOwned = intval($buildingOwned);
-                }
-
-                $perkValueString = $building->getPerkValue($perkKey);
-
-                $perkValueString = is_numeric($perkValueString) ? (float)$perkValueString : $perkValueString;
-                
-                if(in_array($perkKey, ['housing','jobs']))
-                {
-                    if(is_numeric($perkValueString))
-                    {
-                        $perk += $perkValueString * $buildingOwned;
+                        $perk += max($owned / $this->land * $ratio * $multiplier, $max*-1) * 100;
                     }
                     else
                     {
-                        $defaultPerkValueString = ($perkKey == 'housing') ? 15 : 20;
-                        $perk += $defaultPerkValueString * $buildingOwned;
+                        $perk += min($owned / $this->land * $ratio * $multiplier, $max) * 100;
+                    }
+
+                }
+                # Mods with ratio, multiplier, and no max
+                elseif(
+                        # OP/DP mods
+                        $perkKey == 'improvements'
+                        or $perkKey == 'damage_from_lightning_bolt'
+                        or $perkKey == 'damage_from_fireball'
+                        or $perkKey == 'population_growth'
+                        or $perkKey == 'reduces_conversions'
+                        or $perkKey == 'reduces_attrition'
+                        or $perkKey == 'unit_pairing'
+
+                        # Spy/wizard
+                        or $perkKey == 'wizard_strength'
+                        or $perkKey == 'spy_strength'
+                        or $perkKey == 'wizard_strength_on_defense'
+                        or $perkKey == 'spy_strength_on_defense'
+                        or $perkKey == 'wizard_strength_on_offense'
+                        or $perkKey == 'spy_strength_on_offense'
+
+                        # Other/special
+                        or $perkKey == 'population_uncapped'
+                    )
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+                    $ratio = (float)$perkValues[0];
+                    $multiplier = (float)$perkValues[1];
+                    $owned = $buildingOwned;
+
+                    $perk += ($owned / $this->land * $ratio * $multiplier) * 100;
+                }
+                # Production depleting
+                elseif(
+                        # OP/DP mods
+                        $perkKey == 'gold_production_depleting_raw'
+                        or $perkKey == 'gems_production_depleting_raw'
+                        or $perkKey == 'ore_production_depleting_raw'
+                        or $perkKey == 'mana_production_depleting_raw'
+                        or $perkKey == 'lumber_production_depleting_raw'
+                        or $perkKey == 'food_production_depleting_raw'
+                    )
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+                    $baseProduction = (float)$perkValues[0];
+                    $ticklyReduction = (float)$perkValues[1];
+                    $ticks = $this->round->ticks;
+                    $buildingOwned = $buildingOwned;
+
+                    $perk += $buildingOwned * max(0, ($baseProduction - ($ticklyReduction * $ticks)));
+                }
+                # Production/housing increasing
+                elseif(
+                        # OP/DP mods
+                        $perkKey == 'gold_production_increasing_raw'
+                        or $perkKey == 'gems_production_increasing_raw'
+                        or $perkKey == 'ore_production_increasing_raw'
+                        or $perkKey == 'mana_production_increasing_raw'
+                        or $perkKey == 'lumber_production_increasing_raw'
+                        or $perkKey == 'food_production_increasing_raw'
+
+                        or $perkKey == 'housing_increasing'
+                        or $perkKey == 'military_housing_increasing'
+                        or $perkKey == 'faster_returning_units_increasing'
+                    )
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+                    $baseValue = (float)$perkValues[0];
+                    $ticklyIncrease = (float)$perkValues[1];
+                    $ticks = $this->round->ticks;
+                    $buildingOwned = $buildingOwned;
+
+                    $perk += $buildingOwned * ($baseValue + ($ticklyIncrease * $ticks));
+
+                }
+                # Resource conversion
+                elseif($perkKey == 'resource_conversion')
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+
+                    $sourceAmount = (float)$perkValues[0];
+                    $sourceResourceKey = (string)$perkValues[1];
+                    $targetAmount = (float)$perkValues[2];
+                    $targetResourceKey = (string)$perkValues[3];
+                    $buildingOwned = $buildingOwned;
+
+                    $maxAmountConverted = min($this->{'resource_' . $sourceResourceKey}, $buildingOwned * $sourceAmount);
+                    $amountCreated = $maxAmountConverted / ($sourceAmount / $targetAmount);
+
+                    return ['from' => [$sourceResourceKey => $maxAmountConverted], 'to' => [$targetResourceKey => $amountCreated]];
+
+                }
+
+                # Peasants conversion (single resource)
+                elseif($perkKey == 'peasants_conversion')
+                {
+
+                    $availablePeasants = max($this->peasants-1000, 0); #min($this->peasants, max(1000, $this->peasants-1000));
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+
+                    $sourceAmount = (float)$perkValues[0];
+                    $sourceResourceAmount = $availablePeasants;
+                    $targetAmount = (float)$perkValues[1];
+                    $targetResourceKey = (string)$perkValues[2];
+                    $buildingOwned = $buildingOwned;
+
+                    $maxAmountConverted = min($sourceResourceAmount, $buildingOwned * $sourceAmount);
+                    $amountCreated = $maxAmountConverted / ($sourceAmount / $targetAmount);
+
+                    return ['from' => ['peasants' => $maxAmountConverted], 'to' => [$targetResourceKey => $amountCreated]];
+                }
+
+                # Peasants conversion (multiple resources)
+                elseif($perkKey == 'peasants_conversions')
+                {
+
+                    $availablePeasants = max($this->peasants-1000, 0); #min($this->peasants, max(1000, $this->peasants-1000));
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+
+                    $sourceAmount = (float)$perkValues[0];
+                    $sourceResourceAmount = $availablePeasants;
+                    $buildingOwned = $buildingOwned;
+                    $maxAmountConverted = min($sourceResourceAmount, $buildingOwned * $sourceAmount);
+
+                    $result['from']['peasants'] = $maxAmountConverted;
+
+                    foreach($perkValues as $perkValue)
+                    {
+                        if(is_array($perkValue))
+                        {
+                            $targetAmount = (float)$perkValue[0];
+                            $targetResourceKey = (string)$perkValue[1];
+                            $amountCreated = $maxAmountConverted / ($sourceAmount / $targetAmount);
+                            $result['to'][$targetResourceKey] = $amountCreated;
+                        }
+                    }
+
+                    return $result;
+                }
+                # Dark Elven slave workers
+                elseif(in_array($perkKey, ['ore_production_raw_from_prisoner', 'gold_production_raw_from_prisoner', 'gems_production_raw_from_prisoner']))
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+
+                    $prisoners = $this->{'resource_prisoner'};
+                    $productionPerPrisoner = (float)$perkValues[0];
+                    $maxResourcePerBuilding = (float)$perkValues[1];
+                    $buildingOwned = $buildingOwned;
+
+                    $maxPrisonersWorking = $buildingOwned * $maxResourcePerBuilding;
+
+                    $prisonersWorking = min($maxPrisonersWorking, $prisoners);
+
+                    $perk += floor($prisonersWorking * $productionPerPrisoner);
+                }
+                elseif($perkKey == 'thunderstone_production_raw_random')
+                {
+                    $randomlyGenerated = 0;
+                    $randomChance = (float)$perkValueString / 100;
+                    $buildingOwned = $buildingOwned;
+
+                    for ($trials = 1; $trials <= $buildingOwned; $trials++)
+                    {
+                        if(random_chance($randomChance))
+                        {
+                            $randomlyGenerated += 1;
+                        }
+                    }
+
+                    $perk += $randomlyGenerated;
+                }
+                elseif(in_array($perkKey, [
+                        'dimensionalists_unit1_production_raw_capped',
+                        'dimensionalists_unit2_production_raw_capped',
+                        'dimensionalists_unit3_production_raw_capped',
+                        'dimensionalists_unit4_production_raw_capped',
+                        'snow_elf_unit4_production_raw_capped',
+                        'aurei_unit2_production_raw_capped'
+                    ]))
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+
+                    $unitPerBuilding = (float)$perkValues[0];
+                    $maxBuildingRatio = (float)$perkValues[1] / 100;
+
+                    $availableBuildings = (int)min($buildingOwned, floor($this->land * $maxBuildingRatio));
+
+                    $unitsGenerated = $availableBuildings * $unitPerBuilding;
+                    $unitsGeneratedInt = (int)$unitsGenerated;
+                    $unitsGeneratedFloat = $unitsGenerated - $unitsGeneratedInt;
+                    $unitsGeneratedInt = $unitsGeneratedInt + (random_chance($unitsGeneratedFloat) ? 1 : 0);
+
+                    $perk += (int)$unitsGeneratedInt;
+                }
+                # Buildings where we only ever want a single value
+                elseif(in_array($perkKey, ['unit_production_from_wizard_ratio','unit_production_from_spy_ratio']))
+                {
+                    $perk = (float)$perkValueString;
+                }
+
+                # Attrition protection
+                elseif($perkKey == 'attrition_protection')
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+                    $amount = (float)$perkValues[0];
+                    $slot = (int)$perkValues[1];
+                    $raceName = (string)$perkValues[2];
+
+                    if($this->race->name == $raceName)
+                    {
+                        return [$buildingOwned * $amount, $slot];
                     }
                 }
-                elseif(!in_array($perkKey,['jobs','housing']) and $perkValueString)
+
+                # Building self-destruction
+                elseif($perkKey == 'destroys_itself_and_land')
                 {
-                    # Basic production and other single-value perks
-                    $singleValuePerks = [
-                        'gold_production_raw',
-                        'food_production_raw',
-                        'ore_production_raw',
-                        'lumber_production_raw',
-                        'mana_production_raw',
-                        'gems_production_raw',
-                        'blood_production_raw',
-                        'soul_production_raw',
-                        'pearls_production_raw',
-                        'horse_production_raw',
-                        'mud_production_raw',
-                        'swamp_gas_production_raw',
-                        'marshling_production_raw',
-                        'thunderstone_production_raw',
-                        'miasma_production_raw',
-                        'yak_production_raw',
-                        'kelp_production_raw',
-                        'gunpowder_production_raw',
-                        'magma_production_raw',
-                        'obsidian_production_raw',
-                    
-                        'gunpowder_storage_raw',
-                        'sapling_storage_raw',
-                    
-                        'gold_upkeep_raw',
-                        'food_upkeep_raw',
-                        'ore_upkeep_raw',
-                        'lumber_upkeep_raw',
-                        'mana_upkeep_raw',
-                        'blood_upkeep_raw',
-                        'soul_upkeep_raw',
-                        'pearls_upkeep_raw',
-                        'prisoner_upkeep_raw',
-                        'mana_upkeep_raw_per_artefact',
-                    
-                        'gold_theft_protection',
-                        'food_theft_protection',
-                        'ore_theft_protection',
-                        'lumber_theft_protection',
-                        'mana_theft_protection',
-                        'gems_theft_protection',
-                        'blood_theft_protection',
-                        'soul_theft_protection',
-                        'pearls_theft_protection',
-                    
-                        'xp_generation_raw',
-                    
-                        // Building-specific housing
-                        'artillery_unit1_housing',
-                        'afflicted_unit1_housing',
-                        'aurei_unit1_housing',
-                        'dwarg_unit1_housing',
-                        'cires_unit1_housing',
-                        'cires_unit2_housing',
-                        'norse_unit1_housing',
-                        'sacred_order_unit2_housing',
-                        'sacred_order_unit3_housing',
-                        'sacred_order_unit4_housing',
-                        'snow_elf_unit1_housing',
-                        'troll_unit2_housing',
-                        'troll_unit4_housing',
-                        'vampires_unit1_housing',
-                        'revenants_unit1_housing',
-                        'revenants_unit2_housing',
-                        'revenants_unit3_housing',
-                    
-                        'spy_housing',
-                        'wizard_housing',
-                        'military_housing',
-                        'draftee_housing',
-                    
-                        'ammunition_units_housing',
-                    
-                        // Military
-                        'raw_defense',
-                        'dimensionalists_unit1_production_raw',
-                        'dimensionalists_unit2_production_raw',
-                        'dimensionalists_unit3_production_raw',
-                        'dimensionalists_unit4_production_raw',
-                    
-                        'snow_elf_unit4_production_raw',
-                    
-                        'unit_send_capacity',
-                    
-                        // Uncategorised
-                        'crypt_bodies_decay_protection',
-                        'faster_returning_units',
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+
+                    $amountToDestroyPerBuilding = (float)$perkValues[0];
+                    $landTypeToDestroy = (string)$perkValues[1];
+                    $buildingOwned = $buildingOwned;
+
+                    $amountToDestroy = $buildingOwned * $amountToDestroyPerBuilding;
+                    #$amountToDestroy = intval($amountToDestroy) + (rand()/getrandmax() < fmod($amountToDestroy, 1) ? 1 : 0);
+                    $amountToDestroy = (int)floor($amountToDestroy);
+
+                    $result = ['building_key' => $building->key, 'amount' => $amountToDestroy, 'land_type' => $landTypeToDestroy];
+
+                    return $result;
+                }
+
+                # Building self-destruction
+                elseif($perkKey == 'destroys_itself')
+                {
+                    $perkValues = (float)$perkValueString;#$this->extractBuildingPerkValues($perkValueString);
+
+                    $amountToDestroyPerBuilding = $perkValues;
+                    $buildingOwned = $buildingOwned;
+
+                    $amountToDestroy = $buildingOwned * $amountToDestroyPerBuilding;
+                    $amountToDestroy = (int)floor($amountToDestroy);
+
+                    $result = ['building_key' => $building->key, 'amount' => $amountToDestroy];
+
+                    return $result;
+                }
+
+                # Time-based production (which is always on during protection but at half speed)
+                elseif(in_array($perkKey, ['gloom_production_raw_from_time','light_production_raw_from_time','mana_production_raw_from_time']))
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+                    $amountProduced = (float)$perkValues[2];
+                    $hourFrom = $perkValues[0];
+                    $hourTo = $perkValues[1];
+    
+                    if($this->isUnderProtection())
+                    {
+                        $perk += ($amountProduced * $buildingOwned) / 2;
+                    }
+                    elseif (
+                        (($hourFrom < $hourTo) and (now()->hour >= $hourFrom and now()->hour < $hourTo)) or
+                        (($hourFrom > $hourTo) and (now()->hour >= $hourFrom or now()->hour < $hourTo))
+                    )
+                    {
+                        $perk += $amountProduced * $buildingOwned;
+                    }
+                }
+
+                # Mana production based on WPA
+                elseif(in_array($perkKey, ['mana_production_raw_from_wizard_ratio']))
+                {
+                    $magicCalculator = app(MagicCalculator::class);
+                
+                    $perk = max(log($magicCalculator->getWizardRatio($this, 'defense')), 0) * (float)$perkValueString * $buildingOwned;
+
+                    unset($magicCalculator);
+                }
+
+                elseif($perkKey == ($this->race->key . '_unit_housing'))
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+                    $buildingsOwned = $buildingOwned;
+
+                    $result = [];
+
+                    if(!is_array($perkValues[0]))
+                    {
+                        $perkValues[0] = [$perkValues[0], $perkValues[1]];
+                        unset($perkValues[1]);
+                    }
+
+                    foreach($perkValues as $key => $perkValue)
+                    {
+                        $unitSlot = (int)$perkValue[0];
+                        $amountHoused = (float)$perkValue[1];
+                            
+                        $amountHousable = $amountHoused * $buildingsOwned;
+                        $amountHousable = intval($amountHousable);
+
+                        $result[$unitSlot] = (isset($result[$unitSlot]) ? $result[$unitSlot] + $amountHousable : $amountHousable);
+                    }
+
+                    return $result;
+                }
+
+                elseif($perkKey == ($this->race->key . '_units_production'))
+                {
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+
+                    if(!is_array($perkValues[0]))
+                    {
+                        $perkValues[0] = [$perkValues[0]];
+                    }
+
+                    $data[$building->key] = [
+                        'buildings_amount' => $buildingOwned,
+                        'amount_per_building' => (float)$perkValues[1],
+                        'generated_unit_slots' => (array)$perkValues[0]
                     ];
 
-                    $ratioMultiplierMaxPerks = [
-                        // OP/DP mods
-                        'defensive_power',
-                        'offensive_power',
-                        'attacker_offensive_power_mod',
-                        'target_defensive_power_mod',
-                        'casualties',
-                        'casualties_on_offense',
-                        'casualties_on_defense',
-                        'increases_enemy_casualties',
-                        'increases_enemy_casualties_on_offense',
-                        'increases_enemy_casualties_on_defense',
-                        'morale_gains',
-                        'prestige_gains',
-                        'base_morale',
-                        'faster_return',
-                    
-                        // Production and Resources mods
-                        'gold_production_mod',
-                        'food_production_mod',
-                        'lumber_production_mod',
-                        'ore_production_mod',
-                        'gems_production_mod',
-                        'mana_production_mod',
-                        'xp_generation_mod',
-                        'pearls_production_mod',
-                        'blood_production_mod',
-                        'mud_production_mod',
-                        'swamp_gas_production_mod',
-                        'miasma_production_mod',
-                        'exchange_rate',
-
-                        'blood_resource_conversion_mod',
-                    
-                        // Unit costs
-                        'unit_gold_costs',
-                        'unit_ore_costs',
-                        'unit_lumber_costs',
-                        'unit_mana_costs',
-                        'unit_food_costs',
-                        'unit_blood_costs',
-
-                        'machine_unit_costs',
-                    
-                        // Unit training
-                        'extra_units_trained',
-                        'drafting',
-                        'snow_elf_unit4_production_mod',
-                        'training_time_mod',
-                        'spy_training_time_mod',
-                        'wizards_training_time_mod',
-                    
-                        'dimensionalists_unit1_production_mod',
-                        'dimensionalists_unit2_production_mod',
-                        'dimensionalists_unit3_production_mod',
-                        'dimensionalists_unit4_production_mod',
-                    
-                        // Spy/wizard
-                        'spell_cost',
-                        'spy_losses',
-                        'spy_strength_recovery',
-                        'wizard_losses',
-                        'wizard_strength',
-                        'wizard_strength_recovery',
-                        'wizard_cost',
-                        'sorcery_damage_suffered',
-                        'spy_cost',
-                        'spell_duration_mod',
-                    
-                        // Construction/Rezoning and Land
-                        'construction_cost',
-                        'rezone_cost',
-                        'land_discovered',
-                        'construction_time',
-                    
-                        // Espionage
-                        'gold_theft_reduction',
-                        'gems_theft_reduction',
-                        'lumber_theft_reduction',
-                        'ore_theft_reduction',
-                        'food_theft_reduction',
-                        'horse_theft_reduction',
-                        'magma_theft_reduction',
-                        'obsidian_theft_reduction',
-
-                        'amount_stolen',
-                    
-                        // Improvements
-                        'improvements_capped',
-                        'improvements_interest',
-                        'invest_bonus',
-                        'gold_invest_bonus',
-                        'food_invest_bonus',
-                        'ore_invest_bonus',
-                        'gems_invest_bonus',
-                        'lumber_invest_bonus',
-                        'mana_invest_bonus',
-                        'blood_invest_bonus',
-                        'soul_invest_bonus',
-                        'obsidian_invest_bonus',
-                        'miasma_invest_bonus',
-                    
-                        // Other/special
-                        'deity_power',
-                        'population_capped',
-                        'population_growth_capped',
-                        'unit_pairing',
-                        'unit_pairing_capped'
-                    ];
-
-                    if(in_array($perkKey, $singleValuePerks))
+                    if(!is_array($perk))
                     {
-                        $perk += $perkValueString * $buildingOwned;
+                        $perk = [$perk];
                     }
 
-                    # Mods with ratio, multiplier, and max
-                    elseif(in_array($perkKey, $ratioMultiplierMaxPerks))
-                    {
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-                        $ratio = (float)$perkValues[0];
-                        $multiplier = (float)$perkValues[1];
-                        $max = (float)$perkValues[2] / 100;
-                        $owned = $buildingOwned;
-
-                        if($multiplier < 0)
-                        {
-                            $perk += max($owned / $landSize * $ratio * $multiplier, $max*-1) * 100;
-                        }
-                        else
-                        {
-                            $perk += min($owned / $landSize * $ratio * $multiplier, $max) * 100;
-                        }
-
-                    }
-                    # Mods with ratio, multiplier, and no max
-                    elseif(
-                            # OP/DP mods
-                            $perkKey == 'improvements'
-                            or $perkKey == 'damage_from_lightning_bolt'
-                            or $perkKey == 'damage_from_fireball'
-                            or $perkKey == 'population_growth'
-                            or $perkKey == 'reduces_conversions'
-                            or $perkKey == 'reduces_attrition'
-                            or $perkKey == 'unit_pairing'
-
-                            # Spy/wizard
-                            or $perkKey == 'wizard_strength'
-                            or $perkKey == 'spy_strength'
-                            or $perkKey == 'wizard_strength_on_defense'
-                            or $perkKey == 'spy_strength_on_defense'
-                            or $perkKey == 'wizard_strength_on_offense'
-                            or $perkKey == 'spy_strength_on_offense'
-
-                            # Other/special
-                            or $perkKey == 'population_uncapped'
-                        )
-                    {
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-                        $ratio = (float)$perkValues[0];
-                        $multiplier = (float)$perkValues[1];
-                        $owned = $buildingOwned;
-
-                        $perk += ($owned / $landSize * $ratio * $multiplier) * 100;
-                    }
-                    # Production depleting
-                    elseif(
-                            # OP/DP mods
-                            $perkKey == 'gold_production_depleting_raw'
-                            or $perkKey == 'gems_production_depleting_raw'
-                            or $perkKey == 'ore_production_depleting_raw'
-                            or $perkKey == 'mana_production_depleting_raw'
-                            or $perkKey == 'lumber_production_depleting_raw'
-                            or $perkKey == 'food_production_depleting_raw'
-                        )
-                    {
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-                        $baseProduction = (float)$perkValues[0];
-                        $ticklyReduction = (float)$perkValues[1];
-                        $ticks = $this->round->ticks;
-                        $buildingOwned = $buildingOwned;
-
-                        $perk += $buildingOwned * max(0, ($baseProduction - ($ticklyReduction * $ticks)));
-                    }
-                    # Production/housing increasing
-                    elseif(
-                            # OP/DP mods
-                            $perkKey == 'gold_production_increasing_raw'
-                            or $perkKey == 'gems_production_increasing_raw'
-                            or $perkKey == 'ore_production_increasing_raw'
-                            or $perkKey == 'mana_production_increasing_raw'
-                            or $perkKey == 'lumber_production_increasing_raw'
-                            or $perkKey == 'food_production_increasing_raw'
-
-                            or $perkKey == 'housing_increasing'
-                            or $perkKey == 'military_housing_increasing'
-                            or $perkKey == 'faster_returning_units_increasing'
-                        )
-                    {
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-                        $baseValue = (float)$perkValues[0];
-                        $ticklyIncrease = (float)$perkValues[1];
-                        $ticks = $this->round->ticks;
-                        $buildingOwned = $buildingOwned;
-
-                        $perk += $buildingOwned * ($baseValue + ($ticklyIncrease * $ticks));
-
-                    }
-                    # Resource conversion
-                    elseif($perkKey == 'resource_conversion')
-                    {
-                        $resourceCalculator = app(ResourceCalculator::class);
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-
-                        $sourceAmount = (float)$perkValues[0];
-                        $sourceResourceKey = (string)$perkValues[1];
-                        $targetAmount = (float)$perkValues[2];
-                        $targetResourceKey = (string)$perkValues[3];
-                        $buildingOwned = $buildingOwned;
-
-                        $maxAmountConverted = min($resourceCalculator->getAmount($this, $sourceResourceKey), $buildingOwned * $sourceAmount);
-                        $amountCreated = $maxAmountConverted / ($sourceAmount / $targetAmount);
-
-                        return ['from' => [$sourceResourceKey => $maxAmountConverted], 'to' => [$targetResourceKey => $amountCreated]];
-
-                    }
-
-                    # Peasants conversion (single resource)
-                    elseif($perkKey == 'peasants_conversion')
-                    {
-
-                        $availablePeasants = max($this->peasants-1000, 0); #min($this->peasants, max(1000, $this->peasants-1000));
-                        $resourceCalculator = app(ResourceCalculator::class);
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-
-                        $sourceAmount = (float)$perkValues[0];
-                        $sourceResourceAmount = $availablePeasants;
-                        $targetAmount = (float)$perkValues[1];
-                        $targetResourceKey = (string)$perkValues[2];
-                        $buildingOwned = $buildingOwned;
-
-                        $maxAmountConverted = min($sourceResourceAmount, $buildingOwned * $sourceAmount);
-                        $amountCreated = $maxAmountConverted / ($sourceAmount / $targetAmount);
-
-                        return ['from' => ['peasants' => $maxAmountConverted], 'to' => [$targetResourceKey => $amountCreated]];
-                    }
-
-                    # Peasants conversion (multiple resources)
-                    elseif($perkKey == 'peasants_conversions')
-                    {
-
-                        $availablePeasants = max($this->peasants-1000, 0); #min($this->peasants, max(1000, $this->peasants-1000));
-                        $resourceCalculator = app(ResourceCalculator::class);
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-
-                        $sourceAmount = (float)$perkValues[0];
-                        $sourceResourceAmount = $availablePeasants;
-                        $buildingOwned = $buildingOwned;
-                        $maxAmountConverted = min($sourceResourceAmount, $buildingOwned * $sourceAmount);
-
-                        $result['from']['peasants'] = $maxAmountConverted;
-
-                        foreach($perkValues as $perkValue)
-                        {
-                            if(is_array($perkValue))
-                            {
-                                $targetAmount = (float)$perkValue[0];
-                                $targetResourceKey = (string)$perkValue[1];
-                                $amountCreated = $maxAmountConverted / ($sourceAmount / $targetAmount);
-                                $result['to'][$targetResourceKey] = $amountCreated;
-                            }
-                        }
-
-                        return $result;
-                    }
-                    # Dark Elven slave workers
-                    elseif(in_array($perkKey, ['ore_production_raw_from_prisoner', 'gold_production_raw_from_prisoner', 'gems_production_raw_from_prisoner']))
-                    {
-                        $resourceCalculator = app(ResourceCalculator::class);
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-
-                        $prisoners = $resourceCalculator->getAmount($this, 'prisoner');
-                        $productionPerPrisoner = (float)$perkValues[0];
-                        $maxResourcePerBuilding = (float)$perkValues[1];
-                        $buildingOwned = $buildingOwned;
-
-                        $maxPrisonersWorking = $buildingOwned * $maxResourcePerBuilding;
-
-                        $prisonersWorking = min($maxPrisonersWorking, $prisoners);
-
-                        $perk += floor($prisonersWorking * $productionPerPrisoner);
-                    }
-                    elseif($perkKey == 'thunderstone_production_raw_random')
-                    {
-                        $randomlyGenerated = 0;
-                        $randomChance = (float)$perkValueString / 100;
-                        $buildingOwned = $buildingOwned;
-
-                        for ($trials = 1; $trials <= $buildingOwned; $trials++)
-                        {
-                            if(random_chance($randomChance))
-                            {
-                                $randomlyGenerated += 1;
-                            }
-                        }
-
-                        $perk += $randomlyGenerated;
-                    }
-                    elseif(in_array($perkKey, [
-                            'dimensionalists_unit1_production_raw_capped',
-                            'dimensionalists_unit2_production_raw_capped',
-                            'dimensionalists_unit3_production_raw_capped',
-                            'dimensionalists_unit4_production_raw_capped',
-                            'snow_elf_unit4_production_raw_capped',
-                            'aurei_unit2_production_raw_capped'
-                        ]))
-                    {
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-
-                        $unitPerBuilding = (float)$perkValues[0];
-                        $maxBuildingRatio = (float)$perkValues[1] / 100;
-
-                        $availableBuildings = (int)min($buildingOwned, floor($landSize * $maxBuildingRatio));
-
-                        $unitsGenerated = $availableBuildings * $unitPerBuilding;
-                        $unitsGeneratedInt = (int)$unitsGenerated;
-                        $unitsGeneratedFloat = $unitsGenerated - $unitsGeneratedInt;
-                        $unitsGeneratedInt = $unitsGeneratedInt + (random_chance($unitsGeneratedFloat) ? 1 : 0);
-
-                        $perk += (int)$unitsGeneratedInt;
-                    }
-                    # Buildings where we only ever want a single value
-                    elseif(in_array($perkKey, ['unit_production_from_wizard_ratio','unit_production_from_spy_ratio']))
-                    {
-                        $perk = (float)$perkValueString;
-                    }
-
-                    # Attrition protection
-                    elseif($perkKey == 'attrition_protection')
-                    {
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-                        $amount = (float)$perkValues[0];
-                        $slot = (int)$perkValues[1];
-                        $raceName = (string)$perkValues[2];
-
-                        if($this->race->name == $raceName)
-                        {
-                            return [$buildingOwned * $amount, $slot];
-                        }
-                    }
-
-                    # Building self-destruction
-                    elseif($perkKey == 'destroys_itself_and_land')
-                    {
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-
-                        $amountToDestroyPerBuilding = (float)$perkValues[0];
-                        $landTypeToDestroy = (string)$perkValues[1];
-                        $buildingOwned = $buildingOwned;
-
-                        $amountToDestroy = $buildingOwned * $amountToDestroyPerBuilding;
-                        #$amountToDestroy = intval($amountToDestroy) + (rand()/getrandmax() < fmod($amountToDestroy, 1) ? 1 : 0);
-                        $amountToDestroy = (int)floor($amountToDestroy);
-
-                        $result = ['building_key' => $building->key, 'amount' => $amountToDestroy, 'land_type' => $landTypeToDestroy];
-
-                        return $result;
-                    }
-
-                    # Building self-destruction
-                    elseif($perkKey == 'destroys_itself')
-                    {
-                        $perkValues = (float)$perkValueString;#$this->extractBuildingPerkValues($perkValueString);
-
-                        $amountToDestroyPerBuilding = $perkValues;
-                        $buildingOwned = $buildingOwned;
-
-                        $amountToDestroy = $buildingOwned * $amountToDestroyPerBuilding;
-                        $amountToDestroy = (int)floor($amountToDestroy);
-
-                        $result = ['building_key' => $building->key, 'amount' => $amountToDestroy];
-
-                        return $result;
-                    }
-
-                    # Time-based production (which is always on during protection but at half speed)
-                    elseif(in_array($perkKey, ['gloom_production_raw_from_time','light_production_raw_from_time','mana_production_raw_from_time']))
-                    {
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-                        $amountProduced = (float)$perkValues[2];
-                        $hourFrom = $perkValues[0];
-                        $hourTo = $perkValues[1];
-        
-                        if($this->isUnderProtection())
-                        {
-                            $perk += ($amountProduced * $buildingOwned) / 2;
-                        }
-                        elseif (
-                            (($hourFrom < $hourTo) and (now()->hour >= $hourFrom and now()->hour < $hourTo)) or
-                            (($hourFrom > $hourTo) and (now()->hour >= $hourFrom or now()->hour < $hourTo))
-                        )
-                        {
-                            $perk += $amountProduced * $buildingOwned;
-                        }
-                    }
-
-                    # Mana production based on WPA
-                    elseif(in_array($perkKey, ['mana_production_raw_from_wizard_ratio']))
-                    {
-                        $magicCalculator = app(MagicCalculator::class);
-                    
-                        $perk = max(log($magicCalculator->getWizardRatio($this, 'defense')), 0) * (float)$perkValueString * $buildingOwned;
-
-                        unset($magicCalculator);
-                    }
-
-                    elseif($perkKey == ($this->race->key . '_unit_housing'))
-                    {
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-                        $buildingsOwned = $buildingOwned;
-
-                        $result = [];
-
-                        if(!is_array($perkValues[0]))
-                        {
-                            $perkValues[0] = [$perkValues[0], $perkValues[1]];
-                            unset($perkValues[1]);
-                        }
-
-                        foreach($perkValues as $key => $perkValue)
-                        {
-                            $unitSlot = (int)$perkValue[0];
-                            $amountHoused = (float)$perkValue[1];
-                                
-                            $amountHousable = $amountHoused * $buildingsOwned;
-                            $amountHousable = intval($amountHousable);
-
-                            $result[$unitSlot] = (isset($result[$unitSlot]) ? $result[$unitSlot] + $amountHousable : $amountHousable);
-                        }
-
-                        return $result;
-                    }
-
-                    elseif($perkKey == ($this->race->key . '_units_production'))
-                    {
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-
-                        if(!is_array($perkValues[0]))
-                        {
-                            $perkValues[0] = [$perkValues[0]];
-                        }
-
-                        $data[$building->key] = [
-                            'buildings_amount' => $buildingOwned,
-                            'amount_per_building' => (float)$perkValues[1],
-                            'generated_unit_slots' => (array)$perkValues[0]
-                        ];
-
-                        if(!is_array($perk))
-                        {
-                            $perk = [$perk];
-                        }
-
-                        $perk[] = $data;
-                    }
-
-                    elseif($perkKey == 'quadratic_improvements_mod')
-                    {
-
-                        $effectFromPerk = 0;
-
-                        $perkValues = $this->extractBuildingPerkValues($perkValueString);
-
-                        $perkRatio = (float)$perkValues[0];
-                        $perkMultiplier = (float)$perkValues[1];
-                        $perkMax = isset($perkValues[2]) ? (float)$perkValues[2] / 100 : null;
-
-                        $buildingRatio = $buildingOwned / $landSize;
-
-                        $effectFromPerk += $buildingRatio * $perkRatio * ($perkMultiplier + $buildingRatio) * 100;
-
-                        if($perkMax)
-                        {
-                            $effectFromPerk = min($perk, $perkMax);
-                        }
-
-                        $perk += $effectFromPerk;
-
-                    }
-
-                    elseif($perkKey == 'artefact_aegis_restoration')
-                    {
-                        $buildingOwnedForThisPerk = $buildingOwned;
-
-                        if($maxBuildingRatio = $building->getPerkValue('max_effective_building_ratio'))
-                        {
-                            $buildingOwnedForThisPerk = min($buildingOwned, $this->land * ($maxBuildingRatio / 100));
-                        }
-
-                        $perk += $perkValueString * $buildingOwnedForThisPerk;
-                    }
-
-                    elseif($perkKey !== 'jobs' and $perkKey !== 'housing')
-                    {
-                        dd("[Error] Undefined building perk key (\$perkKey): $perkKey");
-                    }
-
-                    # Build-specific perks
-                    $buildingSpecificMultiplier = 1;
-                    #$originalPerk = $perk;
-
-                    if($perkKey == 'gold_production_raw')
-                    {
-                        #isset($iterations) ? $iterations += 1 : $iterations = 1;
-                        $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_production_mod');
-                        $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_production_mod');
-                    }
-
-                    if($perkKey == 'extra_units_trained' or $perkKey == 'improvements')
-                    {
-                        $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_perk_mod');
-                        $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_perk_mod');
-                        $buildingSpecificMultiplier += $this->getTechPerkMultiplier('building_' . $building->key . '_perk_mod');
-                    }
-
+                    $perk[] = $data;
                 }
-                if(is_numeric($perk))
+
+                elseif($perkKey == 'quadratic_improvements_mod')
                 {
-                    $perk *= $buildingSpecificMultiplier ?? 1;
+
+                    $effectFromPerk = 0;
+
+                    $perkValues = $this->extractBuildingPerkValues($perkValueString);
+
+                    $perkRatio = (float)$perkValues[0];
+                    $perkMultiplier = (float)$perkValues[1];
+                    $perkMax = isset($perkValues[2]) ? (float)$perkValues[2] / 100 : null;
+
+                    $buildingRatio = $buildingOwned / $this->land;
+
+                    $effectFromPerk += $buildingRatio * $perkRatio * ($perkMultiplier + $buildingRatio) * 100;
+
+                    if($perkMax)
+                    {
+                        $effectFromPerk = min($perk, $perkMax);
+                    }
+
+                    $perk += $effectFromPerk;
+
                 }
-                $buildingSpecificMultiplier = null;
+
+                elseif($perkKey == 'artefact_aegis_restoration')
+                {
+                    $buildingOwnedForThisPerk = $buildingOwned;
+
+                    $perk += $perkValueString * $buildingOwnedForThisPerk;
+                }
+
+                elseif($perkKey !== 'jobs' and $perkKey !== 'housing')
+                {
+                    dd("[Error] Undefined building perk key (\$perkKey): $perkKey");
+                }
+
+                # Build-specific perks
+                $buildingSpecificMultiplier = 1;
+                #$originalPerk = $perk;
+
+                if($perkKey == 'gold_production_raw')
+                {
+                    #isset($iterations) ? $iterations += 1 : $iterations = 1;
+                    $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_production_mod');
+                    $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_production_mod');
+                }
+
+                if($perkKey == 'extra_units_trained' or $perkKey == 'improvements')
+                {
+                    $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_perk_mod');
+                    $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_perk_mod');
+                    $buildingSpecificMultiplier += $this->getTechPerkMultiplier('building_' . $building->key . '_perk_mod');
+                }
+
+            #}
+
+            if(is_numeric($perk))
+            {
+                $perk *= $buildingSpecificMultiplier ?? 1;
             }
-            return $perk;
-        #});
+
+            $buildingSpecificMultiplier = null;
+        }
+        return $perk;
     }
 
     /**
@@ -1545,10 +1551,17 @@ class Dominion extends AbstractModel
             $spells = $this->spells()->with(['perks', 'deity'])->get();
 
             # We're only interested in spells that have the perk we're looking for
+            /*
             $spells = $spells->filter(function (Spell $spell) use ($perkKey) {
                 return $spell->perks->contains(function (SpellPerkType $spellPerkType) use ($perkKey) {
                     return $spellPerkType->key === $perkKey;
                 });
+            });
+            */
+
+            // Filter out spells that don't contain the perk key
+            $spells = $this->spells->filter(function ($spell) use ($perkKey) {
+                return $spell->perks->contains('key', $perkKey);
             });
 
             # Check each spell
@@ -1566,7 +1579,7 @@ class Dominion extends AbstractModel
                 # Ignore spells that require a deity unless the dominion has a deity
                 if(isset($spell->deity) && (!$this->hasDeity() || $spell->deity->id !== $this->deity->id))
                 {
-                    $perk = 0;
+                    continue;
                 }
 
                 # Basic spells with just a numeric value
@@ -1590,14 +1603,13 @@ class Dominion extends AbstractModel
                 }
                 elseif($perkKey == 'defense_from_resource')
                 {
-                    $resourceCalculator = app(ResourceCalculator::class);
 
                     $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
 
                     $dpPerResource = (float)$perkValueArray[0];
                     $resourceKey = (string)$perkValueArray[1];
 
-                    $perk = $resourceCalculator->getAmount($this, $resourceKey) * $dpPerResource;
+                    $perk = $this->{'resource_'.$resourceKey} * $dpPerResource;
                 }
                 elseif($perkKey == 'resource_lost_on_invasion')
                 {
@@ -1727,8 +1739,7 @@ class Dominion extends AbstractModel
 
         if($this->race->getPerkValue('improvements_from_souls'))
         {
-            $resourceCalculator = app(ResourceCalculator::class);
-            $multiplier += $resourceCalculator->getAmount($this, 'soul') / ($this->land * 1000);
+            $multiplier += $this->resource_soul / ($this->land * 1000);
         }
 
         if($improvementsPerVictoryPerk = $this->race->getPerkValue('improvements_per_net_victory'))
