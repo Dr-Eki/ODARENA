@@ -37,7 +37,7 @@
                             <div class="row">
                                 @foreach($availableBuildings->where('category', $categoryKey)->sortBy('name') as $building)
                                     @php
-                                        $amountOwned = $buildingCalculator->getBuildingAmountOwned($selectedDominion, $building);
+                                        $amountOwned = $selectedDominion->{'building_' . $building->key};
                                         $constructionAmount = $queueService->getConstructionQueueTotalByResource($selectedDominion, "building_{$building->key}");
                                         $constructionAmount += $queueService->getRepairQueueTotalByResource($selectedDominion, "building_{$building->key}");
                                         $constructionAmount += $queueService->getInvasionQueueTotalByResource($selectedDominion, "building_{$building->key}");
