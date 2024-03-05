@@ -308,7 +308,6 @@ class TrainingCalculator
             if(empty($trainableByCost))
             {
                 $trainableByCost[$type] = 0;
-                #dd('$trainableByCost is empty.', $costsPerUnit, $unitType, $trainableByCost);
             }
 
             $trainable[$unitType] = min($trainableByCost);
@@ -317,8 +316,8 @@ class TrainingCalculator
 
             if($this->unitCalculator->unitHasCapacityLimit($dominion, $slot))
             {
-                $maxCapacity = $this->unitCalculator->getUnitMaxCapacity($dominion, $slot);
-                $availableCapacity = $maxCapacity - ($this->militaryCalculator->getTotalUnitsForSlot($dominion, $slot) + $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot) + $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slot) + $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit' . $slot) + $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot));
+                $availableCapacity = $this->unitCalculator->getUnitCapacityAvailable($dominion, $slot);
+                
                 $trainable[$unitType] = max(0, min($trainable[$unitType], $availableCapacity));
             }
 
