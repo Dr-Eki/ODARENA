@@ -400,7 +400,7 @@ class Dominion extends AbstractModel
             ->first();
     
         if ($building) {
-            return $building->pivot->amount;
+            return $building->pivot->owned;
         }
     
         return 0;
