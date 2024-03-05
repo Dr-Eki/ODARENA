@@ -124,7 +124,7 @@ class UnitCalculator
                 {
                     $maxCapacity = $this->getUnitMaxCapacity($dominion, $slot);
     
-                    $usedCapacity = $this->getUnitTypeTotalPaid($dominion, 'military_unit' . $slot);
+                    $usedCapacity = $this->getUnitTypeTotalPaid($dominion, $slot);
 
                     /*
                     $usedCapacity = $dominion->{'military_unit' . $slot};
@@ -537,8 +537,6 @@ class UnitCalculator
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'pairing_limit') or
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'pairing_limit_including_away') or
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'building_limit') or
-            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'land_limit') or
-            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'total_land_limit') or
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'archmage_limit') or
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'net_victories_limit') or
             $dominion->race->getUnitPerkValueForUnitSlot($slot, 'stat_pairing_limit') or
@@ -552,18 +550,22 @@ class UnitCalculator
         return false;
     }
 
-    public function getUnitMaxCapacity(Dominion $dominion, int $slotLimited): int
+    public function getUnitMaxCapacityMultiplier(Dominion $dominion, int $slotLimited): float
     {
-        $maxCapacity = 0;
-
-        $raceKey = str_replace(' ', '_', strtolower($dominion->race->name));
-
         $limitMultiplier = 1;
         $limitMultiplier += $dominion->getImprovementPerkMultiplier('unit_pairing');
         $limitMultiplier += $dominion->getBuildingPerkMultiplier('unit_pairing');
         $limitMultiplier += $dominion->getBuildingPerkMultiplier('unit_pairing_capped');
         $limitMultiplier += $dominion->getSpellPerkMultiplier('unit_pairing');
         $limitMultiplier += $dominion->getTerrainPerkMultiplier('unit_pairing_mod');
+
+        return $limitMultiplier;
+    }
+
+    public function getUnitMaxCapacity(Dominion $dominion, int $slotLimited): int
+    {
+
+        $limitMultiplier = $this->getUnitMaxCapacityMultiplier($dominion, $slotLimited);
 
         # Unit:unit limit
         if($pairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slotLimited, 'pairing_limit'))
@@ -573,7 +575,7 @@ class UnitCalculator
 
             $limitingUnits = $dominion->{'military_unit' . $slotLimitedTo};
 
-            $maxCapacity = floor($limitingUnits * $perUnitLimitedTo * $limitMultiplier);
+            return floor($limitingUnits * $perUnitLimitedTo * $limitMultiplier);
         }
 
         # Unit:unit limit (including_away)
@@ -582,19 +584,9 @@ class UnitCalculator
             $slotLimitedTo = (int)$pairingLimit[0];
             $perUnitLimitedTo = (float)$pairingLimit[1];
 
-            $limitingUnits = $dominion->{'military_unit' . $slotLimited};
-            $limitingUnits += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
-            $limitingUnits += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
-            $limitingUnits += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
-            $limitingUnits += $this->queueService->getInvasionQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
-            $limitingUnits += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
-            $limitingUnits += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
-            $limitingUnits += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
-            $limitingUnits += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
-            $limitingUnits += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
-            $limitingUnits += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slotLimitedTo);
+            $limitingUnits = $this->getUnitTypeTotalPaid($dominion, $slotLimited);
 
-            $maxCapacity = floor($limitingUnits * $perUnitLimitedTo * $limitMultiplier);
+            return floor($limitingUnits * $perUnitLimitedTo * $limitMultiplier);
         }
 
         # Unit:building limit
@@ -604,42 +596,23 @@ class UnitCalculator
             $perBuildingLimitedTo = (float)$pairingLimit[1];
 
             $limitingBuildings = $dominion->{'building_' . $buildingKeyLimitedTo};
-
+            
             # SNOW ELF
-            if($dominion->getBuildingPerkValue($raceKey . '_unit' . $slotLimited . '_production_raw_capped') and $dominion->race->name == 'Snow Elf')
+            if($dominion->getBuildingPerkValue($dominion->race->key . '_unit' . $slotLimited . '_production_raw_capped') and $dominion->race->name == 'Snow Elf')
             {
                 # Hardcoded 20% production cap
                 $limitingBuildings = min($limitingBuildings, $dominion->land * 0.20);
             }
 
-            $maxCapacity = floor($limitingBuildings * $perBuildingLimitedTo * $limitMultiplier);
+            return floor($limitingBuildings * $perBuildingLimitedTo * $limitMultiplier);
 
-        }
-
-        # Unit:land limit
-        if($pairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slotLimited, 'land_limit'))
-        {
-            $landTypeLimitedTo = (string)$pairingLimit[0];
-            $perLandLimitedTo = (float)$pairingLimit[1];
-
-            $limitingLand = $dominion->{'land_' . $landTypeLimitedTo};
-
-            $maxCapacity = floor($limitingLand * $perLandLimitedTo * $limitMultiplier);
-        }
-
-        # Unit:total land limit
-        if($pairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slotLimited, 'total_land_limit'))
-        {
-            $landAmountPerUnit = (int)$pairingLimit[0];
-
-            $maxCapacity = floor($dominion->land / $landAmountPerUnit * $limitMultiplier);
         }
 
         # Unit:archmages limit
         if($pairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slotLimited, 'archmage_limit'))
         {
             $perArchmage = (float)$pairingLimit;
-            $maxCapacity = floor($perArchmage * $dominion->military_archmages * $limitMultiplier);
+            return floor($perArchmage * $dominion->military_archmages * $limitMultiplier);
         }
 
         # Unit:net_victories limit
@@ -649,7 +622,7 @@ class UnitCalculator
 
             $netVictories = $this->statsService->getStat($dominion, 'invasion_victories') - $this->statsService->getStat($dominion, 'defense_failures');
 
-            $maxCapacity = floor($perNetVictory * $netVictories);
+            return floor($perNetVictory * $netVictories);
         }
 
 
@@ -661,16 +634,14 @@ class UnitCalculator
 
             $statValue = $this->statsService->getStat($dominion, $statKey);
 
-            $maxCapacity = floor($statValue * $perStat);
+            return floor($statValue * $perStat);
         }
 
         # Unit limit
         if($pairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slotLimited, 'amount_limit'))
         {
-            $maxCapacity = $pairingLimit;
+            return $pairingLimit;
         }
-
-        return $maxCapacity;
 
     }
 
