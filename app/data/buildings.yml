@@ -1530,6 +1530,7 @@ abscess:
 
 cartilage:
   name: Cartilage
+  enabled: 0
   category: military
   exclusive_races:
     - Growth
