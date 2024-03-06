@@ -83,6 +83,14 @@ training_grounds:
   perks:
     offensive_power: 1,1.5,30 # Every 1% gives 1.8% DP, max +36% DP
 
+turret:
+  name: Turret
+  enabled: 0
+  category: military
+  perks:
+    defensive_power: 1,10,100 # Every 1% gives 10% DP, max +20% DP
+    housing: 20
+
 wall:
   name: Wall
   category: military
