@@ -330,7 +330,7 @@ class BuildingHelper
             'therozou_unit_housing' => 'Houses %1$s %2$s.',
             'vampires_unit_housing' => 'Houses %1$s %2$s.',
 
-            'growth_units_production' => 'Produces %s per tick.',
+            'growth_units_production' => 'Produces %1$s %2$s per tick.',
 
         ];
 
@@ -447,6 +447,8 @@ class BuildingHelper
 
                         $perkValue = [$amountProduced, str_plural($unitGenerated, $amountProduced)];
                     }
+
+                    $nestedArrays = false;
                 }
             }
 
