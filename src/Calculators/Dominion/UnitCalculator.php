@@ -52,25 +52,24 @@ class UnitCalculator
 
         if($raceUnitsGenerationBuildingPerks = $dominion->getBuildingPerkValue($dominion->race->key . '_units_production'))
         {
-            foreach($raceUnitsGenerationBuildingPerks as $key => $raceUnitsGenerationBuildingPerkData)
+            foreach($raceUnitsGenerationBuildingPerks as $raceUnitsGenerationBuildingPerk)
             {
-                if(is_array($raceUnitsGenerationBuildingPerkData))
+                foreach($raceUnitsGenerationBuildingPerk as $buildingKey => $raceUnitsGenerationBuildingPerkData)
                 {
-                    foreach($raceUnitsGenerationBuildingPerkData as $raceUnitsGenerationBuildingPerk)
+                    
+                    $buildingAmount = (float)$raceUnitsGenerationBuildingPerkData['buildings_amount'];
+                    $amountPerBuilding = (float)$raceUnitsGenerationBuildingPerkData['amount_per_building'];
+                    $generatedUnitSlots = (array)$raceUnitsGenerationBuildingPerkData['generated_unit_slots'];
+        
+                    foreach($generatedUnitSlots as $key => $slot)
                     {
-                        $buildingAmount = (float)$raceUnitsGenerationBuildingPerk['buildings_amount'];
-                        $amountPerBuilding = (float)$raceUnitsGenerationBuildingPerk['amount_per_building'];
-                        $generatedUnitSlots = (array)$raceUnitsGenerationBuildingPerk['generated_unit_slots'];
-            
-                        foreach($generatedUnitSlots as $key => $slot)
-                        {
-                            $multiplier = 1;
-                            $multiplier += $dominion->getImprovementPerkMultiplier($dominion->race->key . '_unit' . $slot . '_generation_mod');
-            
-                            $amountGenerated = $buildingAmount * $amountPerBuilding;
-                            $amountGenerated *= $multiplier;
-                            $unitsGenerated[$slot] += (int)floor($amountGenerated);
-                        }
+                        $multiplier = 1;
+                        $multiplier += $dominion->getImprovementPerkMultiplier($dominion->race->key . '_unit' . $slot . '_generation_mod');
+        
+                        $amountGenerated = $buildingAmount * $amountPerBuilding;
+
+                        $amountGenerated *= $multiplier;
+                        $unitsGenerated[$slot] += (int)floor($amountGenerated);
                     }
                 }
             }
