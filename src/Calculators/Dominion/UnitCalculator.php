@@ -52,25 +52,25 @@ class UnitCalculator
 
         if($raceUnitsGenerationBuildingPerks = $dominion->getBuildingPerkValue($dominion->race->key . '_units_production'))
         {
-            foreach($raceUnitsGenerationBuildingPerks as $key => $raceUnitsGenerationBuildingPerkData)
+            #dd($raceUnitsGenerationBuildingPerks);
+            foreach($raceUnitsGenerationBuildingPerks as $raceUnitsGenerationBuildingPerk)
             {
-                if(is_array($raceUnitsGenerationBuildingPerkData))
+                foreach($raceUnitsGenerationBuildingPerk as $buildingKey => $raceUnitsGenerationBuildingPerkData)
                 {
-                    foreach($raceUnitsGenerationBuildingPerkData as $raceUnitsGenerationBuildingPerk)
+                    
+                    $buildingAmount = (float)$raceUnitsGenerationBuildingPerkData['buildings_amount'];
+                    $amountPerBuilding = (float)$raceUnitsGenerationBuildingPerkData['amount_per_building'];
+                    $generatedUnitSlots = (array)$raceUnitsGenerationBuildingPerkData['generated_unit_slots'];
+        
+                    foreach($generatedUnitSlots as $key => $slot)
                     {
-                        $buildingAmount = (float)$raceUnitsGenerationBuildingPerk['buildings_amount'];
-                        $amountPerBuilding = (float)$raceUnitsGenerationBuildingPerk['amount_per_building'];
-                        $generatedUnitSlots = (array)$raceUnitsGenerationBuildingPerk['generated_unit_slots'];
-            
-                        foreach($generatedUnitSlots as $key => $slot)
-                        {
-                            $multiplier = 1;
-                            $multiplier += $dominion->getImprovementPerkMultiplier($dominion->race->key . '_unit' . $slot . '_generation_mod');
-            
-                            $amountGenerated = $buildingAmount * $amountPerBuilding;
-                            $amountGenerated *= $multiplier;
-                            $unitsGenerated[$slot] += (int)floor($amountGenerated);
-                        }
+                        $multiplier = 1;
+                        $multiplier += $dominion->getImprovementPerkMultiplier($dominion->race->key . '_unit' . $slot . '_generation_mod');
+        
+                        $amountGenerated = $buildingAmount * $amountPerBuilding;
+
+                        $amountGenerated *= $multiplier;
+                        $unitsGenerated[$slot] += (int)floor($amountGenerated);
                     }
                 }
             }
@@ -82,15 +82,16 @@ class UnitCalculator
             $unitsToSummon = 0;
             $raceKey = $dominion->race->key;
 
-            // Original line:
-            // $availablePopulation = $this->populationCalculator->getMaxPopulation($dominion) - $this->getMilitaryUnitsTotal($dominion);
-
-            // Modified to use the getter method:
-            $availablePopulation = $this->getPopulationCalculator()->getMaxPopulation($dominion) - $this->getMilitaryUnitsTotal($dominion);
-
             // Myconid and Cult: Unit generation
             if($unitGenerationPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'unit_production'))
             {
+
+                // Original line:
+                // $availablePopulation = $this->populationCalculator->getMaxPopulation($dominion) - $this->getMilitaryUnitsTotal($dominion);
+
+                // Modified to use the getter method:
+                $availablePopulation = $this->getPopulationCalculator()->getMaxPopulation($dominion) - $this->getMilitaryUnitsTotal($dominion);
+                
                 $unitToGenerateSlot = $unitGenerationPerk[0];
                 $unitAmountToGeneratePerGeneratingUnit = $unitGenerationPerk[1];
                 $unitAmountToGenerate = $dominion->{'military_unit'.$slot} * $unitAmountToGeneratePerGeneratingUnit;
@@ -126,21 +127,6 @@ class UnitCalculator
     
                     $usedCapacity = $this->getUnitTypeTotalPaid($dominion, $slot);
 
-                    /*
-                    $usedCapacity = $dominion->{'military_unit' . $slot};
-                    $usedCapacity += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getInvasionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    $usedCapacity += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slot);
-                    */
-    
                     $availableCapacity = max(0, $maxCapacity - $usedCapacity);
     
                     $unitsToSummon = floor(min($unitSummoning, $availableCapacity));
@@ -157,6 +143,7 @@ class UnitCalculator
 
             $unitsGenerated[$slot] += $unitsToSummon;
         }
+
 
         return $unitsGenerated;
     }

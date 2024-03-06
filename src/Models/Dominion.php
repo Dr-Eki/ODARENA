@@ -1363,23 +1363,24 @@ class Dominion extends AbstractModel
                     {
                         $perkValues = $this->extractBuildingPerkValues($perkValueString);
 
-                        if(!is_array($perkValues[0]))
-                        {
-                            $perkValues[0] = [$perkValues[0]];
-                        }
+                        #if(!is_array($perkValues[0]))
+                        #{
+                        #    $perkValues[0] = [$perkValues[0]];
+                        #}
 
                         $data[$building->key] = [
                             'buildings_amount' => $buildingOwned,
-                            'amount_per_building' => (float)$perkValues[1],
-                            'generated_unit_slots' => (array)$perkValues[0]
+                            'generated_unit_slots' => (array)$perkValues[0],
+                            'amount_per_building' => (float)$perkValues[1]
                         ];
 
                         if(!is_array($perk))
                         {
-                            $perk = [$perk];
+                            $perk = [];
                         }
 
                         $perk[] = $data;
+                        unset($data);
                     }
 
                     elseif($perkKey == 'quadratic_improvements_mod')
