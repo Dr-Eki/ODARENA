@@ -59,12 +59,12 @@ class MoraleCalculator
         {
             if($increasesMorale = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'increases_morale_by_population') * 100)
             {
-                $baseModifier += ($this->unitCalculator->getTotalUnitsForSlot($dominion, $slot) / $this->populationCalculator->getPopulation($dominion)) * $increasesMorale;
+                $baseModifier += ($this->unitCalculator->getUnitTypeTotalTrained($dominion, $slot) / $this->populationCalculator->getPopulation($dominion)) * $increasesMorale;
             }
 
             if($increasesMoraleFixed = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'increases_morale_fixed') * 100)
             {
-                $amountOfThisUnit = $this->unitCalculator->getTotalUnitsForSlot($dominion, $slot);
+                $amountOfThisUnit = $this->unitCalculator->getUnitTypeTotalTrained($dominion, $slot);
 
                 # Is the unit limited to a building?
                 if($buildingPairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'building_limit'))
