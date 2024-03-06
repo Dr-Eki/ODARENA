@@ -448,6 +448,8 @@ class BuildingHelper
 
                         $perkValue = [$amountProduced, str_plural($unitGenerated, $amountProduced)];
                     }
+
+                    $nestedArrays = false;
                 }
             }
 
