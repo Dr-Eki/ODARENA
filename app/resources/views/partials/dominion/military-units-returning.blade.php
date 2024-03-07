@@ -50,14 +50,14 @@
                             <td>Spies</td>
                             @for ($i = 1; $i <= 12; $i++)
                                 @php
-                                    $unitTickAmount = $unitCalculator->getQueuedReturningUnitTypeAtTick($selectedDominion, $unitType, $i);
+                                    $unitTickAmount = $unitCalculator->getQueuedReturningUnitTypeAtTick($selectedDominion, 'spies', $i);
                                 @endphp
                                 <td class="text-center">
                                     {{ ($unitTickAmount > 0) ? number_format($unitTickAmount) : '-' }}
                                 </td>
                             @endfor
                             <td class="text-center">
-                                {{ number_format($unitCalculator->getUnitTypeTotalReturning($selectedDominion, $unitType)) }}
+                                {{ number_format($unitCalculator->getUnitTypeTotalReturning($selectedDominion, 'spies')) }}
                             </td>
                         </tr>
                     @endif
@@ -66,14 +66,14 @@
                             <td>Wizards</td>
                             @for ($i = 1; $i <= 12; $i++)
                                 @php
-                                    $unitTickAmount = $unitCalculator->getQueuedReturningUnitTypeAtTick($selectedDominion, $unitType, $i);
+                                    $unitTickAmount = $unitCalculator->getQueuedReturningUnitTypeAtTick($selectedDominion, 'wizards', $i);
                                 @endphp
                                 <td class="text-center">
                                     {{ ($unitTickAmount > 0) ? number_format($unitTickAmount) : '-' }}
                                 </td>
                             @endfor
                             <td class="text-center">
-                                {{ number_format($unitCalculator->getUnitTypeTotalReturning($selectedDominion, $unitType)) }}
+                                {{ number_format($unitCalculator->getUnitTypeTotalReturning($selectedDominion, 'wizards')) }}
                             </td>
                         </tr>
                     @endif
@@ -82,14 +82,14 @@
                             <td>Archmages</td>
                             @for ($i = 1; $i <= 12; $i++)
                                 @php
-                                    $unitTickAmount = $unitCalculator->getQueuedReturningUnitTypeAtTick($selectedDominion, $unitType, $i);
+                                    $unitTickAmount = $unitCalculator->getQueuedReturningUnitTypeAtTick($selectedDominion, 'archmages', $i);
                                 @endphp
                                 <td class="text-center">
                                     {{ ($unitTickAmount > 0) ? number_format($unitTickAmount) : '-' }}
                                 </td>
                             @endfor
                             <td class="text-center">
-                                {{ number_format($unitCalculator->getUnitTypeTotalReturning($selectedDominion, $unitType)) }}
+                                {{ number_format($unitCalculator->getUnitTypeTotalReturning($selectedDominion, 'archmages')) }}
                             </td>
                         </tr>
                     @endif
