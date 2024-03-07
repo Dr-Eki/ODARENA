@@ -3,6 +3,7 @@
 # app/config/units.php
 
 $states = [
+    0 => 'none', # Default state
     1 => 'home',
     2 => 'training',
     3 => 'invasion',
