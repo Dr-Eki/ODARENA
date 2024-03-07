@@ -1299,6 +1299,16 @@ class Dominion extends AbstractModel
         return $this->hasMany(DominionSpell::class, 'caster_id');
     }
 
+    protected function getRacePerkValue(string $perkKey): float
+    {
+        return $this->race->getPerkValue($perkKey);
+    }
+
+    protected function getRacePerkMultiplier(string $perkKey): float
+    {
+        return ($this->getRacePerkValue($perkKey) / 100);
+    }
+
     protected function getSpellPerks()
     {
       return $this->spells->flatMap(

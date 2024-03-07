@@ -77,5 +77,22 @@ class ResourceService
         }
     }
 
+    public function changeUnitsState(Dominion $dominion, array $units, int $state): void
+    {
+        foreach($units as $unitKey => $amount)
+        {
+            $unit = Unit::where('key', $unitKey)->first();
+            $amount = (int)abs($amount);
+            $state = (int)$state;
+
+            # Update DominionUnit
+            DominionUnit::updateOrCreate([
+                'dominion_id' => $dominion->id,
+                'unit_id' => $unit->id,
+                'amount' => $amount,
+                'state' => $state,
+            ]);
+        }
+    }
 
 }

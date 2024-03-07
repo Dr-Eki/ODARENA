@@ -1,5 +1,5 @@
 @if(isset($selectedDominion))
-<li data-toggle="tooltip" data-placement="bottom" title="Tick: <strong>{{ number_format($selectedDominion->round->ticks) }}</strong><br><em><small class='text-muted'>At page load</small></em>">
+<li data-toggle="tooltip" data-placement="bottom" title="<small class='text-muted'>Tick</small>: <strong>{{ number_format($selectedDominion->round->ticks) }}</strong><br><em><small class='text-muted'>At page load</small></em>">
 @else
 <li>
 @endif

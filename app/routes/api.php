@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Routing\Router;
+use OpenDominion\Models\Round;
 
 /** @var Router $router */
 $router->group(['prefix' => 'v1', 'as' => 'api.'], static function (Router $router) {
@@ -20,6 +21,14 @@ $router->group(['prefix' => 'v1', 'as' => 'api.'], static function (Router $rout
     $router->group(['prefix' => 'calculator', 'middleware' => ['api', 'auth'], 'as' => 'calculator.'], static function (Router $router) {
         $router->get('defense')->uses('Dominion\APIController@calculateDefense')->name('defense');
         $router->get('offense')->uses('Dominion\APIController@calculateOffense')->name('offense');
+    });
+
+    $router->get('/is-round-ticking', function () {
+        $round = Round::latest()->first();
+    
+        return response()->json([
+            'is_ticking' => $round->is_ticking,
+        ]);
     });
 
 });

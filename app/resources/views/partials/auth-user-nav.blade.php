@@ -15,17 +15,11 @@
             <li class="user-footer">
                 <div class="row">
                     <div class="col-md-12">
-                        <a href="{{ route('dashboard') }}" class="btn btn-primary btn-flat btn-block"><i class="fas fa-columns fa-fw"></i> Dashboard</a>
+                        <a href="{{ route('dashboard') }}" class="btn btn-info btn-flat btn-block"><i class="fas fa-columns fa-fw"></i> Dashboard</a>
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-md-12">
-                          <a href="{{ route('settings') }}" class="btn btn-default btn-flat btn-block"><i class="fas fa-sliders-h fa-fw"></i> Settings</a>
+                          <a href="{{ route('settings') }}" class="btn btn-flat btn-block"><i class="fas fa-sliders-h fa-fw"></i> Settings</a>
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-md-12">
                         <form action="{{ route('auth.logout') }}" method="post">
                             @csrf

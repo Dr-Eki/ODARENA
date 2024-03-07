@@ -1,7 +1,13 @@
+
 <aside class="main-sidebar">
     <section class="sidebar">
 
         @if (isset($selectedDominion))
+            @php
+                $roundSettings = $selectedDominion->round->settings;            
+            @endphp
+    
+
             <div class="user-panel">
                 <div class="pull-left image">
                     <img src="{{ Auth::user()->getAvatarUrl() }}" class="img-circle" alt="{{ Auth::user()->display_name }}">
@@ -50,7 +56,7 @@
                     </a>
                 </li>
 
-                @if ($selectedDominion->round->getSetting('buildings') and !$selectedDominion->race->getPerkValue('cannot_build'))
+                @if ($roundSettings['buildings'] and !$selectedDominion->race->getPerkValue('cannot_build'))
                     <li class="{{ Route::is('dominion.buildings') ? 'active' : null }}">
                         <a href="{{ route('dominion.buildings') }}">
                             <i class="fa fa-home fa-fw"></i>
@@ -63,7 +69,7 @@
                 @endif
 
 
-                @if ($selectedDominion->round->getSetting('improvements') and !$selectedDominion->race->getPerkValue('cannot_improve'))
+                @if ($roundSettings['improvements'] and !$selectedDominion->race->getPerkValue('cannot_improve'))
                     <li class="{{ Route::is('dominion.improvements') ? 'active' : null }}">
                         <a href="{{ route('dominion.improvements') }}">
                             <i class="fas fa-arrow-up fa-fw"></i><span>Improvements</span>
@@ -71,7 +77,7 @@
                     </li>
                 @endif
 
-                @if ($selectedDominion->round->getSetting('advancements') and !$selectedDominion->race->getPerkValue('cannot_tech'))
+                @if ($roundSettings['advancements'] and !$selectedDominion->race->getPerkValue('cannot_tech'))
                     <li class="{{ Route::is('dominion.advancements') ? 'active' : null }}">
                         <a href="{{ route('dominion.advancements') }}"><i class="fas fa-layer-group fa-fw"></i> <span>Advancements</span>
 
@@ -83,7 +89,7 @@
                     </li>
                 @endif
 
-                @if ($selectedDominion->round->getSetting('research') and !$selectedDominion->race->getPerkValue('cannot_research'))
+                @if ($roundSettings['research'] and !$selectedDominion->race->getPerkValue('cannot_research'))
                     <li class="{{ Route::is('dominion.research') ? 'active' : null }}">
                         <a href="{{ route('dominion.research') }}"><i class="fas fa-flask fa-fw"></i> <span>Research</span>
 
@@ -98,13 +104,11 @@
 
                 <li class="{{ Route::is('dominion.military') ? 'active' : null }}"><a href="{{ route('dominion.military') }}"><i class="ra ra-sword ra-fw"></i> <span>Military</span></a></li>
 
-                <!-- Hide Invade from cannot_invade races -->
-                @if ($selectedDominion->round->getSetting('invasions') and !$selectedDominion->race->getPerkValue('cannot_invade'))
+                @if ($roundSettings['invasions'] and !$selectedDominion->race->getPerkValue('cannot_invade'))
                     <li class="{{ Route::is('dominion.invade') ? 'active' : null }}"><a href="{{ route('dominion.invade') }}"><i class="ra ra-crossed-swords ra-fw"></i> <span>Invade</span></a></li>
                 @endif
 
-                <!-- Hide Invade from cannot_invade races -->
-                @if ($selectedDominion->round->getSetting('invasions') and $selectedDominion->race->getPerkValue('can_desecrate'))
+                @if ($roundSettings['invasions'] and $selectedDominion->race->getPerkValue('can_desecrate'))
                     <li class="{{ Route::is('dominion.desecrate') ? 'active' : null }}"><a href="{{ route('dominion.desecrate') }}"><i class="ra ra-tombstone ra-fw"></i> <span>Desecrate</span></a></li>
                 @endif
 
@@ -112,41 +116,39 @@
                     <li class="{{ Route::is('dominion.artefacts') ? 'active' : null }}"><a href="{{ route('dominion.artefacts') }}"><i class="ra ra-alien-fire"></i> <span>Artefacts</span></a></li>
                 @endif
 
-                @if ($selectedDominion->round->getSetting('expeditions') and !$selectedDominion->race->getPerkValue('cannot_send_expeditions') and !$selectedDominion->getDeityPerkValue('cannot_send_expeditions'))
+                @if ($roundSettings['expeditions'] and !$selectedDominion->race->getPerkValue('cannot_send_expeditions'))
                     <li class="{{ Route::is('dominion.expedition') ? 'active' : null }}"><a href="{{ route('dominion.expedition') }}"><i class="fas fa-drafting-compass fa-fw"></i> <span>Expedition</span></a></li>
                 @endif
 
-                @if ($selectedDominion->round->getSetting('theft') and !$selectedDominion->race->getPerkValue('cannot_steal'))
+                @if ($roundSettings['theft'] and !$selectedDominion->race->getPerkValue('cannot_steal'))
                     <li class="{{ Route::is('dominion.theft') ? 'active' : null }}"><a href="{{ route('dominion.theft') }}"><i class="fas fa-hand-lizard fa-fw"></i> <span>Theft</span></a></li>
                 @endif
 
-                @if ($selectedDominion->round->getSetting('sabotage') and !$selectedDominion->race->getPerkValue('cannot_sabotage'))
+                @if ($roundSettings['sabotage'] and !$selectedDominion->race->getPerkValue('cannot_sabotage'))
                     <li class="{{ Route::is('dominion.sabotage') ? 'active' : null }}"><a href="{{ route('dominion.sabotage') }}"><i class="fa fa-user-secret fa-fw"></i> <span>Sabotage</span></a></li>
                 @endif
 
-                @if ($selectedDominion->round->getSetting('sorcery') and !$selectedDominion->race->getPerkValue('cannot_perform_sorcery'))
+                @if ($roundSettings['sorcery'] and !$selectedDominion->race->getPerkValue('cannot_perform_sorcery'))
                     <li class="{{ Route::is('dominion.sorcery') ? 'active' : null }}"><a href="{{ route('dominion.sorcery') }}"><i class="fas fa-hat-wizard fa-fw"></i> <span>Sorcery</span></a></li>
                 @endif
 
-                @if($selectedDominion->round->getSetting('spells'))
+                @if($roundSettings['spells'])
                     <li class="{{ Route::is('dominion.magic') ? 'active' : null }}"><a href="{{ route('dominion.magic') }}"><i class="ra ra-fairy-wand ra-fw"></i> <span>Magic</span></a></li>
                 @endif
 
                 <li class="{{ Route::is('dominion.search') ? 'active' : null }}"><a href="{{ route('dominion.search') }}"><i class="fa fa-search fa-fw"></i> <span>Search</span></a></li>
 
-                @if ($selectedDominion->round->getSetting('decrees') and !$selectedDominion->race->getPerkValue('cannot_issue_decrees'))
+                @if ($roundSettings['decrees'] and !$selectedDominion->race->getPerkValue('cannot_issue_decrees'))
                     <li class="{{ Route::is('dominion.decrees') ? 'active' : null }}"><a href="{{ route('dominion.decrees') }}"><i class="fas fa-gavel fw-fw"></i> <span>Decrees</span></a></li>
                 @endif
 
-
-                @if($selectedDominion->round->getSetting('deities') and !$selectedDominion->race->getPerkValue('cannot_submit_to_deity'))
+                @if($roundSettings['deities'] and !$selectedDominion->race->getPerkValue('cannot_submit_to_deity'))
                     <li class="{{ Route::is('dominion.deity') ? 'active' : null }}"><a href="{{ route('dominion.deity') }}"><i class="fas fa-pray fa-fw"></i> <span>Deity</span></a></li>
                 @endif
 
                 @if(!$selectedDominion->race->getPerkValue('cannot_vote'))
                     <li class="{{ Route::is('dominion.government') ? 'active' : null }}"><a href="{{ route('dominion.government') }}"><i class="fa fa-university fa-fw"></i> <span>Government</span></a></li>
                 @endif
-
 
                 <li class="{{ Route::is('dominion.realm') ? 'active' : null }}">
                     <a href="{{ route('dominion.realm') }}">
@@ -168,7 +170,7 @@
                     </a>
                 </li>
 
-                <li class="{{ Route::is('dominion.world-news') ? 'active' : null }}">
+                <li id="world-news" class="{{ Route::is('dominion.world-news') ? 'active' : null }}">
                     <a href="{{ route('dominion.world-news') }}">
                         <i class="far fa-newspaper fa-fw"></i>
                         <span>World News</span>
@@ -180,6 +182,7 @@
                         @endif
                     </a>
                 </li>
+
                 <li class="{{ Route::is('dominion.council*') ? 'active' : null }}"><a href="{{ route('dominion.council') }}"><i class="fas fa-comments ra-fw"></i>
                     <span>{{ $realmHelper->getAlignmentCouncilTerm($selectedDominion->realm->alignment) }}</span>&nbsp;
                     {!! $councilUnreadCount > 0 ? ('<span class="pull-right-container"><small class="label pull-right bg-green">' . $councilUnreadCount . '</small></span>') : null !!}</a>
@@ -198,19 +201,6 @@
                         </a>
                     </li>
                 @endif
-
-                {{--
-                <li class="{{ Route::is('dominion.calculations') ? 'active' : null }}">
-                    <a href="{{ route('dominion.calculations') }}">
-                        <i class="fas fa-square-root-alt fa-fw"></i>
-                        <span>Calculations</span>
-                        <span class="pull-right-container">
-                            <small class="label pull-right">Experimental</small>
-                        </span>
-                    </a>
-                </li>
-                --}}
-
             @else
 
                 <li class="{{ Route::is('dashboard') ? 'active' : null }}"><a href="{{ route('dashboard') }}"><i class="ra ra-capitol ra-fw"></i> <span>Select your Dominion</span></a></li>
