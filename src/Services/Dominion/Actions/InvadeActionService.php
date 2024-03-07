@@ -53,19 +53,9 @@ class InvadeActionService
     use DominionGuardsTrait;
 
     /**
-     * @var int The minimum morale required to initiate an invasion
-     */
-    protected const MIN_MORALE = 50;
-
-    /**
      * @var float Failing an invasion by this percentage (or more) results in 'being overwhelmed'
      */
     protected const OVERWHELMED_PERCENTAGE = 20.0;
-
-    /**
-     * @var float Lowest possible DPA.
-     */
-    protected const MINIMUM_DPA = 10;
 
     /** @var array Invasion result array. todo: Should probably be refactored later to its own class */
     protected $invasion = [
@@ -294,7 +284,7 @@ class InvadeActionService
 
             if ($attacker->race->name !== 'Barbarian')
             {
-                if ($attacker->morale < static::MIN_MORALE and !$attacker->race->getPerkValue('can_invade_at_any_morale'))
+                if ($attacker->morale < config('military.minimum_morale_to_invade') and !$attacker->race->getPerkValue('can_invade_at_any_morale'))
                 {
                     throw new GameException('You do not have enough morale to invade.');
                 }
@@ -306,7 +296,7 @@ class InvadeActionService
 
                 if (!$this->passesMinimumDpaCheck($attacker, $defender, $landRatio, $units))
                 {
-                    throw new GameException('You are sending less than the lowest possible DP of the target. Minimum DPA (Defense Per Acre) is ' . static::MINIMUM_DPA . '. Double check your calculations and units sent.');
+                    throw new GameException('You are sending less than the lowest possible DP of the target. Minimum DPA (Defense Per Acre) is ' . config('military.minimum_dpa') . '. Double check your calculations and units sent.');
                 }
 
                 if (!$this->passesUnitSendableCapacityCheck($attacker, $units))
@@ -3616,7 +3606,7 @@ class InvadeActionService
     {
         $attackingForceOP = $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $units);
 
-        return ($attackingForceOP > $target->land * static::MINIMUM_DPA);
+        return ($attackingForceOP > $target->land * config('military.minimum_dpa'));
     }
 
 

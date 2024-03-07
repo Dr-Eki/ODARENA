@@ -4,6 +4,8 @@
 
 return [
 
+    'extended_logging' => false,
+
     'defaults' => [
         'unit_return_ticks' => 12,
         'unit_training_ticks' => 12,

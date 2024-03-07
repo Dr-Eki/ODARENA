@@ -1,6 +1,6 @@
 <?php
 
-# app/config/game.php
+# app/config/buildings.php
 
 return [
 

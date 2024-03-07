@@ -23,7 +23,7 @@
                       0
                   @endif
                   @if($race->getPerkValue('max_per_round') > 0)
-                      (Max {{ $race->getPerkValue('max_per_round') }} per round)
+                      (Max {{ number_format($race->getPerkValue('max_per_round')) }} per round)
                   @endif
                   </li>
                 </ul>

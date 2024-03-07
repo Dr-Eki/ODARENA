@@ -59,11 +59,6 @@ class ArtefactActionService
      */
     protected const MIN_MORALE = 100;
 
-    /**
-     * @var float Lowest possible DPA.
-     */
-    protected const MINIMUM_DPA = 10;
-
     /** @var array Invasion result array. todo: Should probably be refactored later to its own class */
     protected $attack = [
         'result' => [],

@@ -9,6 +9,8 @@ use Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 
+use OpenDominion\Jobs\ProcessDominionJob;
+
 use OpenDominion\Calculators\RealmCalculator;
 use OpenDominion\Calculators\Dominion\BarbarianCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
@@ -202,6 +204,9 @@ class TickService
                 if(static::EXTENDED_LOGGING) { Log::debug('* Going through all dominions'); }
                 foreach ($dominions as $dominion)
                 {
+                    dump("Processing dominion {$dominion->id}");
+                    ProcessDominionJob::dispatch($dominion);
+                    continue;
 
                     $this->temporaryData[$round->id][$dominion->id] = [];
 

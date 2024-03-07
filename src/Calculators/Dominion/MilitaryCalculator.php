@@ -337,7 +337,10 @@ class MilitaryCalculator
         $dp = $this->getDefensivePowerRaw($defender, $attacker, $landRatio, $units, $multiplierReduction, $isAmbush, $ignoreRawDpFromBuildings, $invadingUnits, $ignoreRawDpFromAnnexedDominions);
         $dp *= $this->getDefensivePowerMultiplier($defender, $attacker, $multiplierReduction);
 
-        return ($dp * $defender->getMoraleMultiplier());
+
+        $minDPPerAcre= (float)config('military.minimum_dpa');
+
+        return max($dp * $defender->getMoraleMultiplier(), $minDPPerAcre * $defender->land);
     }
 
     /**
@@ -373,7 +376,6 @@ class MilitaryCalculator
         $dp = 0;
 
         // Values
-        $minDPPerAcre = 10; # LandDP
         $dpPerDraftee = ($defender->race->getPerkValue('draftee_dp') + $defender->getTechPerkValue('draftee_dp')) ?: 1;
 
         # If DP per draftee is 0, ignore them (no casualties).
@@ -463,8 +465,6 @@ class MilitaryCalculator
         {
             return $dp;
         }
-
-        $dp = max($dp, $minDPPerAcre * $defender->land);
 
         return $dp;
     }

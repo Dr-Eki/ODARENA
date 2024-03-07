@@ -1,6 +1,7 @@
 FROM php:7.4.33-fpm
 ARG user
 ARG uid
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
@@ -14,7 +15,8 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     libmemcached-dev \
     libmemcached11 \
-    libmemcachedutil2
+    libmemcachedutil2 
+    #supervisor
 
 # Clear Cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -36,5 +38,8 @@ RUN mkdir -p /home/$user/.composer && chown -R $user:$user /home/$user
 
 # Set working directory
 WORKDIR /var/www
+RUN mkdir /var/www/html/storage
 RUN chown -R www-data:www-data /var/www
+
+# Switch to the non-root user
 USER $user

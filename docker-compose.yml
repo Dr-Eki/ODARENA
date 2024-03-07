@@ -35,6 +35,7 @@ services:
       - odarena-network
     depends_on:
       - database
+    #command: ["/usr/bin/supervisord"]
 
   database:
     image: mariadb:latest
