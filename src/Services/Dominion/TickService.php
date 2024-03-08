@@ -207,6 +207,7 @@ class TickService
                     dump("Processing dominion {$dominion->id}");
                     ProcessDominionJob::dispatch($dominion);
                     continue;
+                    /*
 
                     $this->temporaryData[$round->id][$dominion->id] = [];
 
@@ -325,6 +326,7 @@ class TickService
 
                     if(static::EXTENDED_LOGGING) { Log::debug('** Precalculate tick'); }
                     $this->precalculateTick($dominion, true);
+                    */
                 }
 
                 if(static::EXTENDED_LOGGING) { Log::debug('* Update all dominions'); }
@@ -364,118 +366,16 @@ class TickService
                 {
                     $this->barbarianService->createBarbarian($round);
                 }
-
-                #if(static::EXTENDED_LOGGING){ Log::debug('* Going through all dominions again'); }
-                /*
-                foreach ($dominions as $dominion)
-                {
-
-                    $this->temporaryData[$round->id][$dominion->id] = [];
-
-                    $this->temporaryData[$round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
-                    $this->temporaryData[$round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsGenerated($dominion);
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle Pestilence'); }
-                    // Afflicted: Abomination generation
-                    if(!empty($dominion->tick->pestilence_units))
-                    {
-                        $caster = Dominion::findorfail($dominion->tick->pestilence_units['caster_dominion_id']);
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('*** ' . $dominion->name . ' has pestilence from ' . $caster->name); }
-
-                        if ($caster)
-                        {
-                            $this->queueService->queueResources('summoning', $caster, ['military_unit1' => $dominion->tick->pestilence_units['units']['military_unit1']], 12);
-                        }
-                    }
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle land generation'); }
-                    // Myconid: Land generation
-                    if(!empty($dominion->tick->generated_land) and $dominion->protection_ticks == 0)
-                    {
-                        $this->queueService->queueResources('exploration', $dominion, ['land' => $dominion->tick->generated_land], 12);
-                    }
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle unit generation'); }
-                    // Unit generation
-                    foreach($dominion->race->units as $unit)
-                    {
-                        if(!empty($dominion->tick->{'generated_unit' . $unit->slot}) and $dominion->protection_ticks == 0)
-                        {
-                            $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], 12);
-                        }
-                    }
-
-                    DB::transaction(function () use ($dominion)
-                    {
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Handle starvation for ' . $dominion->name); }
-                        
-                        if($this->resourceCalculator->isOnBrinkOfStarvation($dominion) and !$dominion->isAbandoned())
-                        {
-                            $this->notificationService->queueNotification('starvation_occurred');
-                            Log::info('[STARVATION] ' . $dominion->name . ' (# ' . $dominion->realm->number . ') is starving.');
-                        }
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Handle unit attrition for ' . $dominion->name); }
-                        if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
-                        {
-                            $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']);
-                        }
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Cleaning up active spells'); }
-                        $this->cleanupActiveSpells($dominion);
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Cleaning up queues'); }
-                        $this->cleanupQueues($dominion);
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Sending notifications (hourly_dominion)'); }
-                        $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Precalculate tick'); }
-                        $this->precalculateTick($dominion, true);
-
-                    });
-                }
-                */
-
-                /*
-                foreach($realms as $realm)
-                {
-                    $bodiesAmount = $this->resourceCalculator->getRealmAmount($realm, 'body');
-                    if($bodiesAmount > 0)
-                    {
-                        $bodiesSpent = DB::table('dominion_tick')
-                            ->join('dominions', 'dominion_tick.dominion_Id', '=', 'dominions.id')
-                            ->join('races', 'dominions.race_id', '=', 'races.id')
-                            ->select(DB::raw("SUM(crypt_bodies_spent) as cryptBodiesSpent"))
-                            ->where('dominions.round_id', '=', $realm->round->id)
-                            ->where('races.name', '=', 'Undead')
-                            ->where('dominions.protection_ticks', '=', 0)
-                            ->where('dominions.is_locked', '=', 0)
-                            ->first();
-
-                        $bodiesToRemove = intval($bodiesSpent->cryptBodiesSpent);
-                        $bodiesToRemove = max(0, min($bodiesToRemove, $bodiesAmount));
-
-                        $cryptLogString = '[CRYPT] ';
-                        $cryptLogString .= "Current: " . number_format($this->resourceCalculator->getRealmAmount($realm, 'body')) . ". ";
-                        $cryptLogString .= "Spent: " . number_format($bodiesSpent->cryptBodiesSpent) . ". ";
-                        $cryptLogString .= "Removed: " . number_format($bodiesToRemove) . ". ";
-
-                        $this->resourceService->updateRealmResources($realm, ['body' => (-$bodiesToRemove)]);
-
-                        Log::info($cryptLogString);
-                    }
-                }
-                */
             });
         
             # Run audit functions after tick transaction is completed.
+            /*
             if(static::EXTENDED_LOGGING) { Log::debug('** Audit and repair terrain'); }
             foreach($round->activeDominions as $dominion)
             {
                 $this->terrainService->auditAndRepairTerrain($dominion);
             }
+            */
 
             Log::info(sprintf(
                 '[QUEUES] Cleaned up queues, sent notifications, and precalculated %s dominions in %s ms in %s',

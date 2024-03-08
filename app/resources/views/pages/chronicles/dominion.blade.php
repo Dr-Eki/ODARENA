@@ -547,7 +547,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($buildingHelper->getBuildingsByRace($dominion->race) as $building)
+                    @foreach ($buildingCalculator->getDominionBuildingsAvailableAndOwned($dominion) as $building)
                         @php
                             $amount = $buildingCalculator->getBuildingAmountOwned($dominion, $building);
                         @endphp
@@ -593,7 +593,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($buildingHelper->getBuildingsByRace($dominion->race) as $building)
+                    @foreach ($buildingController->getDominionBuildingsAvailableAndOwned($dominion) as $building)
                         <tr>
                             <td>
                                 <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">

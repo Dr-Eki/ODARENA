@@ -715,15 +715,15 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>Building Type</th>
+                        <th>Building</th>
                         <th class="text-center">Amount</th>
                         <th class="text-center">% of land</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($buildingHelper->getBuildingsByRace($dominion->race) as $building)
+                    @foreach ($buildingCalculator->getDominionBuildingsAvailableAndOwned($dominion) as $building)
                         @php
-                            $amount = $buildingCalculator->getBuildingAmountOwned($dominion, $building);
+                            $amount = $dominion->{'building_' . $building->key}; #$buildingCalculator->getBuildingAmountOwned($dominion, $building);
                         @endphp
                         <tr>
                             <td>
@@ -759,7 +759,7 @@
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>Building Type</th>
+                        <th>Building </th>
                         @for ($i = 1; $i <= 12; $i++)
                             <th class="text-center">{{ $i }}</th>
                         @endfor
@@ -767,7 +767,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($buildingHelper->getBuildingsByRace($dominion->race) as $building)
+                    @foreach ($buildingCalculator->getDominionBuildingsAvailableAndOwned($dominion) as $building)
                         <tr>
                             <td>
                                 <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">

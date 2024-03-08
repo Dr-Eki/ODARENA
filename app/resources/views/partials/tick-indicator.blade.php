@@ -1,3 +1,5 @@
+@if(isset($selectedDominion))
+
 <div id="spinner" class="bg-purple" style="padding: 10px 15px; z-index: 999999; font-size: 14px; font-weight: 400; color: #fff; display: {{ $selectedDominion->round->is_ticking ? 'block' : 'none' }};" data-is-ticking="{{ $selectedDominion->round->is_ticking }}">
     <i class="fa fa-solid fa-spinner fa-spin"></i> The World Spinner is currently spinning the world. No actions can be performed until the world has finished spinning.
 </div>
@@ -35,3 +37,5 @@
             });
     }
 </script>
+
+@endif
