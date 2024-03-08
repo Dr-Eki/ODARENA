@@ -80,8 +80,9 @@ class TerrainCalculator
                 Log::error('Terrain lost: ' . print_r($terrainLost, true));
                 Log::error('Rezoning queue total: ' . $rezoningQueueTotal);
                 Log::error('Rezoning queue: ' . print_r($this->queueService->getRezoningQueue($dominion), true));
+                Log::error('An error occurred while calculating terrain lost. This may fix itself after next tick. Please report it as a bug.');
 
-                throw new GameException('An error occurred while calculating terrain lost. This may fix itself after next tick. Please report it as a bug.');
+                #throw new GameException('An error occurred while calculating terrain lost. This may fix itself after next tick. Please report it as a bug.');
             }
     
             $terrainLeftToLose = $landLost - array_sum($terrainLost['available']);
