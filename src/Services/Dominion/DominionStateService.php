@@ -426,9 +426,9 @@ ticks: %s
           );
 
         $buildings = "\nbuildings:\n";
-        foreach ($this->buildingHelper->getBuildingsByRace($dominion->race) as $building)
+        foreach ($this->buildingCalculator->getDominionBuildingsAvailableAndOwned($dominion) as $building)
         {
-            $buildings .= "    {$building->key}: {$this->buildingCalculator->getBuildingAmountOwned($dominion, $building)}\n";
+            $buildings .= "    {$building->key}: " . $dominion->{'building_' . $building->key} . "\n";# {$this->buildingCalculator->getBuildingAmountOwned($dominion, $building)}\n";
         }
 
         $improvements = "\nimprovements:\n";
