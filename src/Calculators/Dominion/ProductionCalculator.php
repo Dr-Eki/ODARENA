@@ -82,6 +82,9 @@ class ProductionCalculator
         // Improvements
         $multiplier += $dominion->getImprovementPerkMultiplier('xp_generation_mod');
 
+        // Improvements
+        $multiplier += $dominion->getTerrainPerkMultiplier('xp_generation_mod');
+
         return (1 + $multiplier);
     }
 
