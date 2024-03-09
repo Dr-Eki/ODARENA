@@ -30,7 +30,7 @@ class GameEventStory extends AbstractModel
     protected $table = 'game_event_stories';
     
     protected $casts = [
-        'story' => 'text',
+        'story' => 'string',
     ];
 
     public function gameEvent()

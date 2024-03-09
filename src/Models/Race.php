@@ -23,18 +23,18 @@ class Race extends AbstractModel
 {
 
     protected $casts = [
-        'key' => 'text',
+        'key' => 'string',
         'resources' => 'array',
         'improvement_resources' => 'array',
         'peasants_production' => 'array',
-        'home_terrain' => 'text',
-        'peasants_alias' => 'text',
-        'draftees_alias' => 'text',
+        'home_terrain' => 'string',
+        'peasants_alias' => 'string',
+        'draftees_alias' => 'string',
         'construction_materials' => 'array',
         'round_modes' => 'array',
-        'spies_cost' => 'text',
-        'wizards_cost' => 'text',
-        'archmages_cost' => 'text',
+        'spies_cost' => 'string',
+        'wizards_cost' => 'string',
+        'archmages_cost' => 'string',
 
         'psionic_strength' => 'float',
         'magic_level' => 'integer',

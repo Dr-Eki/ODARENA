@@ -20,7 +20,7 @@ class Decree extends AbstractModel
     protected $table = 'decrees';
 
     protected $casts = [
-        'key' => 'text',
+        'key' => 'string',
         'enabled' => 'integer',
         'cooldown' => 'integer',
         'default' => 'string',

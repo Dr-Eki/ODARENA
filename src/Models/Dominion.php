@@ -161,7 +161,7 @@ class Dominion extends AbstractModel
 
         'protection_ticks' => 'integer',
 
-        'notes' => 'text',
+        'notes' => 'string',
     ];
 
     // Relations

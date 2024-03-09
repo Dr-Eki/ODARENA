@@ -22,7 +22,7 @@ class Building extends AbstractModel
     protected $casts = [
         'excluded_races' => 'array',
         'exclusive_races' => 'array',
-        'category' => 'text',
+        'category' => 'string',
         'round_modes' => 'array',
         'enabled' => 'integer',
     ];
