@@ -42,6 +42,6 @@
 
     </div>
 
-    <i class="ra ra-campfire ra-fw"></i><a href="https://lounge.odarena.com/" target="_blank">Lounge</a> | <i class="fa fa-file-text-o"></i> <a href="{{ route('legal.privacypolicy') }}">Privacy Policy</a> / <a href="{{ route('legal.termsandconditions') }}">Terms and Conditions</a> | <i class="fab fa-discord fa-fw"></i><a href="{{ config('app.discord_invite_link') }}">Discord</a>
+    <i class="ra ra-campfire ra-fw"></i><a href="https://lounge.odarena.com/" target="_blank">Lounge</a> | <i class="fa fa-file-text-o"></i> <a href="{{ route('legal.privacy-policy') }}">Privacy Policy</a> / <a href="{{ route('legal.terms-and-conditions') }}">Terms and Conditions</a> | <i class="fab fa-discord fa-fw"></i><a href="{{ config('app.discord_invite_link') }}">Discord</a>
 
 </footer>

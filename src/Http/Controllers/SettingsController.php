@@ -9,7 +9,10 @@ use Image;
 use OpenDominion\Helpers\NotificationHelper;
 use OpenDominion\Helpers\WorldNewsHelper;
 use OpenDominion\Helpers\SettingHelper;
+use OpenDominion\Models\Race;
 use OpenDominion\Models\User;
+use OpenDominion\Services\Dominion\OpenAIService;
+use OpenDominion\Services\Dominion\StabilityAIService;
 use RuntimeException;
 use Storage;
 use Throwable;
@@ -76,7 +79,7 @@ class SettingsController extends AbstractController
 
         // Convert image
         $image = Image::make($file)
-            ->fit(200, 200)
+            ->fit(config('user.avatar.fit_x'), config('user.avatar.fit_y'))
             ->encode('png');
 
         $data = (string)$image;
@@ -89,6 +92,77 @@ class SettingsController extends AbstractController
 
         $user->avatar = $fileName;
         $user->save();
+    }
+
+    protected function getDeleteAvatar(Request $request)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        if ($user->avatar) {
+            Storage::disk('public')->delete('uploads/avatars/' . $user->avatar);
+            $user->avatar = null;
+            $user->save();
+        }
+
+        return redirect()->route('settings');
+    }
+
+    protected function getGenerateAvatar(Request $request)
+    {
+        $user = Auth::user();
+        $stabilityAIService = app(StabilityAIService::class);
+        $dimensions = config('user.avatar.generate_x') . 'x' . config('user.avatar.generate_y');
+
+
+        if(config('user.avatar.generator') == 'stability')
+        {
+            $randomRace = Race::all()->whereIn('playable', [1,2])->random();
+            $prompt = "Draw an avatar of a $randomRace warrior. There should be no text in the image.";
+            $result = $stabilityAIService->generateImagesFromText($prompt);
+        }
+        elseif(config('user.avatar.generator') == 'openai')
+        {
+            $openAiService = app(OpenAIService::class);
+            $result = $openAiService->generateAvatar($user, 1, $dimensions, ['fantasy', 'warrior', 'wizard', 'hero', 'champion']);
+            $imageBase64 = $result['data'][0]['b64_json'];
+        }
+        else
+        {
+            throw new RuntimeException('Invalid avatar generator');
+        }
+
+        if(!isset($result['artifacts'][0]['base64']))
+        {
+            throw new RuntimeException('Failed to generate avatar');
+        }
+
+
+        if(!isset($result['artifacts'][0]['base64']))
+        {
+            throw new RuntimeException('Failed to generate avatar');
+        }
+
+        $imageBase64 = $result['artifacts'][0]['base64'];
+
+        // Convert $image into an image and save it
+        $image = Image::make(base64_decode($imageBase64))
+            ->fit(config('user.avatar.generate_x'), config('user.avatar.generate_y'))
+            ->encode('png');
+
+           
+        $data = (string)$image;
+        $path = 'uploads/avatars';
+        $fileName = (str_slug($user->display_name) . '.png');
+
+        if (!Storage::disk('public')->put(($path . '/' . $fileName), $data)) {
+            throw new RuntimeException('Failed to upload avatar');
+        }
+
+        $user->avatar = $fileName;
+        $user->save();
+
+        return redirect()->route('settings');
     }
 
     protected function updateUser(array $data)

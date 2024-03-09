@@ -3,6 +3,7 @@
 namespace OpenDominion\Services\Dominion;
 
 use GuzzleHttp\Client;
+use OpenDominion\Models\Race;
 use Exception;
 
 class StabilityAIService
@@ -45,7 +46,7 @@ class StabilityAIService
         ];
 
         try {
-            $response = $this->client->post("/v1/generation/stable-diffusion-v1-5/text-to-image", ['json' => $payload]);
+            $response = $this->client->post("/v1/generation/stable-diffusion-v1-6/text-to-image", ['json' => $payload]);
             $data = json_decode($response->getBody(), true);
 
             return $data;

@@ -2,8 +2,12 @@
 
 namespace OpenDominion\Services\Dominion;
 
-use GuzzleHttp\Client;
 use Exception;
+
+use GuzzleHttp\Client;
+use OpenDominion\Models\Race;
+use OpenDominion\Models\User;
+
 
 class OpenAIService
 {
@@ -58,10 +62,39 @@ class OpenAIService
         }
     }
 
-    public function generateImagesFromText(string $text, int $n = 1, string $size = "512x512"): array
+    public function generateImagesFromText(string $text, int $n = 1, string $size = '512x512'): array
     {
         $payload = [
             'prompt' => $text,
+            'n' => $n,
+            'size' => $size,
+            'response_format' => 'b64_json',
+        ];
+
+        try {
+            $response = $this->client->post('images/generations', ['json' => $payload]);
+            $data = json_decode($response->getBody(), true);
+
+            return $data;
+        } catch (Exception $e) {
+            return [
+                'error' => $e->getMessage(),
+            ];
+        }
+    }
+
+    public function generateAvatar(User $user, $n = 1, string $size = '512x512', array $keywords): array
+    {
+
+        if(empty($keywords)) {
+            $keywords = ['fantasy', 'warrior', 'wizard', 'hero', 'champion'];
+        }
+
+        # Get a random key from Race:all()
+        $randomRace = Race::all()->random();
+
+        $payload = [
+            'prompt' => "Draw an avatar of a $randomRace->name warrior. There should be no text in the image.",
             'n' => $n,
             'size' => $size,
             'response_format' => 'b64_json',

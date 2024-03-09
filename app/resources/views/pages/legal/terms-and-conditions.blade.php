@@ -103,7 +103,7 @@
         </li>
         <li>Privacy Policy
           <ol class="tc">
-            <li>These Terms also include the {{ $website_name }} Privacy Policy, available from this link: {{ route('legal.privacypolicy') }}</li>
+            <li>These Terms also include the {{ $website_name }} Privacy Policy, available from this link: {{ route('legal.privacy-policy') }}</li>
           </ol>
         </li>
         <li>Contact Us

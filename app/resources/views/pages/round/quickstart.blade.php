@@ -112,7 +112,7 @@
                     <div class="col-sm-offset-3 col-sm-6">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="terms" required> I have read, understood, and agree with the <a href="{{ route('legal.termsandconditions') }}">Terms and Conditions</a> and the <a href="{{ route('legal.privacypolicy') }}">Privacy Policy</a>
+                                <input type="checkbox" name="terms" required> I have read, understood, and agree with the <a href="{{ route('legal.termsandconditions') }}">Terms and Conditions</a> and the <a href="{{ route('legal.privacy-policy') }}">Privacy Policy</a>
                             </label>
                         </div>
                         @if($round->mode == 'deathmatch' or $round->mode == 'deathmatch-duration')

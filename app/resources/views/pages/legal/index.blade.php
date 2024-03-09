@@ -7,8 +7,8 @@
         </div>
         <div class="box-body">
             <ul>
-              <li><a href="{{ route('legal.termsandconditions') }}">Terms and Conditions</a></li>
-              <li><a href="{{ route('legal.privacypolicy') }}">Privacy Policy</a></li>
+              <li><a href="{{ route('legal.terms-and-conditions') }}">Terms and Conditions</a></li>
+              <li><a href="{{ route('legal.privacy-policy') }}">Privacy Policy</a></li>
               <li>Credits</li>
         </div>
     </div>

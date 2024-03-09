@@ -42,9 +42,6 @@ $router->group(['prefix' => 'auth', 'as' => 'auth.'], static function (Router $r
 
 $router->group(['middleware' => 'auth'], static function (Router $router) {
 
-    // Profile
-    // todo
-
     // Dashboard
     $router->get('dashboard')->uses('DashboardController@getIndex')->name('dashboard');
     $router->post('dashboard/delete-pack/{pack}')->uses('DashboardController@postDeletePack')->name('dashboard.delete-pack');
@@ -52,10 +49,8 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
     // Settings
     $router->get('settings')->uses('SettingsController@getIndex')->name('settings');
     $router->post('settings')->uses('SettingsController@postIndex');
-
-    // Settings
-    $router->get('patreon')->uses('PatreonController@getPatreonAccessToken')->name('patreon');
-    $router->get('patreon/pledge')->uses('PatreonController@getPatreonPledge')->name('patreon/pledge');
+    $router->get('settings/delete-avatar')->uses('SettingsController@getDeleteAvatar')->name('settings.delete-avatar');
+    $router->get('settings/generate-avatar')->uses('SettingsController@getGenerateAvatar')->name('settings.generate-avatar');
 
     // Round Register
     $router->get('round/{round}/register')->uses('RoundController@getRegister')->name('round.register');
@@ -64,7 +59,6 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
     // Round Create Pack
     $router->get('round/{round}/create-pack')->uses('RoundController@getCreatePack')->name('round.create-pack');
     $router->post('round/{round}/create-pack')->uses('RoundController@postCreatePack');
-
 
     $router->get('round/{round}/quickstart')->uses('RoundController@getQuickstart')->name('round.quickstart');
     $router->post('round/{round}/quickstart')->uses('RoundController@postQuickstart');
@@ -98,19 +92,6 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('advisors/military')->uses('Dominion\AdvisorsController@getAdvisorsMilitary')->name('advisors.military');
             $router->get('advisors/history')->uses('Dominion\AdvisorsController@getHistory')->name('advisors.history');
 
-            // Mentor
-            /*
-            $router->get('mentor')->uses('Dominion\MentorController@getMentor')->name('mentor');
-            $router->get('mentor/general')->uses('Dominion\MentorController@getMentorGeneral')->name('mentor.general');
-            $router->get('mentor/advancements')->uses('Dominion\MentorController@getMentorAdvancements')->name('mentor.advancements');
-            $router->get('mentor/buildings')->uses('Dominion\MentorController@getMentorBuildings')->name('mentor.buildings');
-            $router->get('mentor/espionage')->uses('Dominion\MentorController@getMentorEspionage')->name('mentor.espionage');
-            $router->get('mentor/explore')->uses('Dominion\MentorController@getMentorExplore')->name('mentor.explore');
-            $router->get('mentor/invade')->uses('Dominion\MentorController@getMentorInvade')->name('mentor.invade');
-            $router->get('mentor/magic')->uses('Dominion\MentorController@getMentorMagic')->name('mentor.magic');
-            $router->get('mentor/military')->uses('Dominion\MentorController@getMentorMilitary')->name('mentor.military');
-            */
-
             # Buildings
             $router->get('buildings')->uses('Dominion\BuildingController@getBuildings')->name('buildings');
             $router->post('buildings')->uses('Dominion\BuildingController@postBuildings');
@@ -119,7 +100,6 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
 
             # Land
             $router->get('land')->uses('Dominion\LandController@getLand')->name('land');
-            #$router->post('land')->uses('Dominion\LandController@postLand');
             $router->post('land/rezone')->uses('Dominion\LandController@postRezone')->name('land.rezone');
             $router->post('land/daily-bonus')->uses('Dominion\LandController@postDailyBonus')->name('land.daily-bonus');
 
@@ -267,8 +247,8 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
 $router->group(['prefix' => 'legal', 'as' => 'legal.'], static function (Router $router)
 {
   $router->get('/')->uses('LegalController@getIndex')->name('index');
-  $router->get('termsandconditions')->uses('LegalController@getTermsAndConditions')->name('termsandconditions');
-  $router->get('privacypolicy')->uses('LegalController@getPrivacyPolicy')->name('privacypolicy');
+  $router->get('terms-and-conditions')->uses('LegalController@getTermsAndConditions')->name('terms-and-conditions');
+  $router->get('privacy-policy')->uses('LegalController@getPrivacyPolicy')->name('privacy-policy');
 });
 
 // About
@@ -301,7 +281,6 @@ $router->group(['prefix' => 'scribes', 'as' => 'scribes.'], static function (Rou
 
     $router->get('{race}')->uses('ScribesController@getRace')->name('faction');
 });
-
 
 // Chronicles
 $router->group(['prefix' => 'chronicles', 'as' => 'chronicles.'], static function (Router $router) {

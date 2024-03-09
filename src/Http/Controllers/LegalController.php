@@ -15,7 +15,7 @@ class LegalController extends AbstractController
 
     public function getTermsAndConditions()
     {
-      return view('pages.legal.termsandconditions', [
+      return view('pages.legal.terms-and-conditions', [
         'company_name' => 'ODARENA',
         'website_name' => 'ODARENA',
         'website_url' => 'https://odarena.com/',
@@ -27,7 +27,7 @@ class LegalController extends AbstractController
 
     public function getPrivacyPolicy()
     {
-      return view('pages.legal.privacypolicy', [
+      return view('pages.legal.privacy-policy', [
           'company_name' => 'ODARENA',
           'website_name' => 'ODARENA',
           'website_url' => 'https://odarena.com/',

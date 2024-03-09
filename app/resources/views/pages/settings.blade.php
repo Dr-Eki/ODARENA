@@ -97,23 +97,31 @@
                                 {{-- Avatar --}}
                                 <div class="form-group">
                                     <div class="col-xs-12">
-                                        <div style="margin-bottom: 10px;">
-                                            <img src="{{ $user->getAvatarUrl() }}" class="img-responsive" alt="Avatar of {{ $user->display_name }}">
-                                        </div>
                                         @if ($user->avatar === null)
-                                            <p class="help-block">Your are currently using your <a href="https://en.gravatar.com/" target="_blank">Gravatar <i class="fa fa-external-link"></i></a>.</p>
-                                        {{--@else--}}
-                                            {{--<p class="help-block">You are using a custom uploaded avatar. <a href="#">Reset to Gravatar</a>.</p>--}}
+                                            <div style="margin-bottom: 10px; height: {{ config('user.avatar.display_x') }}px;">
+                                                <small class="text-muted">No avatar set</small>
+                                            </div>
+                                        @else
+                                            <div style="margin-bottom: 10px;">
+                                                <img src="{{ $user->getAvatarUrl() }}" class="img-responsive" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}" alt="Avatar of {{ $user->display_name }}">
+                                            </div>
                                         @endif
 
                                         <label class="btn btn-default btn-file">
                                             Upload new avatar <input type="file" name="account_avatar" accept="image/*">
                                         </label>
 
+                                        @if (!$user->avatar)
+                                            {{-- Generate avatar --}}
+                                            <a href="{{ route('settings.generate-avatar') }}" class="btn btn-primary">Generate avatar</a>
+                                        @else
+                                            {{-- Delete avatar --}}
+                                            <a href="{{ route('settings.delete-avatar') }}" class="btn btn-danger">Delete avatar</a>
+                                        @endif
+
                                         <span class="new-avatar-filename" style="padding-left: 8px;"></span>
 
-                                        <p class="help-block">Uploaded avatars will be cropped/resized to 200x200 pixels and converted to PNG. Upload a square image for best results.</p>
-                                        <p class="help-block">Supported formats are JPG, PNG, WebP and non-animated GIF.</p>
+                                        <p class="help-block">Uploaded avatars will be cropped/resized to 512x512 pixels and converted to PNG. Upload a square image for best results.</p>
                                     </div>
                                 </div>
 
