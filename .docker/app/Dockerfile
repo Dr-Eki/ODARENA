@@ -1,4 +1,4 @@
-FROM php:7.4.33-fpm
+FROM php:8.3-fpm
 ARG user
 ARG uid
 
@@ -23,7 +23,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-install sockets pdo_mysql intl mbstring exif pcntl bcmath gd zip
-RUN pecl install memcached && docker-php-ext-enable memcached
+#RUN pecl install memcached && docker-php-ext-enable memcached
 
 #Install Node Js and Npm
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
