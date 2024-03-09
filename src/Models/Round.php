@@ -48,6 +48,9 @@ class Round extends AbstractModel
         'mode' => 'string',
         'goal' => 'integer',
         'is_ticking' => 'boolean',
+
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     // Eloquent Relations
