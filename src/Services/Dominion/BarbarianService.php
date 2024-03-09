@@ -102,10 +102,7 @@ class BarbarianService
             return;
         }
     
-        foreach($this->landHelper->getLandTypes() as $landType)
-        {
-            $dominion->land += $this->queueService->getInvasionQueueTotalByResource($dominion, $landType);
-        }
+        #$dominion->land += $this->queueService->getInvasionQueueTotalByResource($dominion, 'land');
     
         $units = [
             'military_unit1' => 0,
@@ -149,12 +146,12 @@ class BarbarianService
 
     public function handleBarbarianInvasion(Dominion $dominion): void
     {
-        $invade = false;
-
         if($dominion->race->name !== 'Barbarian')
         {
             return;
         }
+
+        $invade = false;
 
         if($this->spellCalculator->isAnnexed($dominion))
         {

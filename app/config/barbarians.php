@@ -105,8 +105,8 @@ return [
         'SPECS_RATIO_MIN' => 50,
         'SPECS_RATIO_MAX' => 500,
         'CHANCE_TO_HIT_CONSTANT' => 14,
-        'LAND_GAIN_MIN' => 30,
-        'LAND_GAIN_MAX' => 10,
+        'LAND_GAIN_MIN' => 30, # was 300
+        'LAND_GAIN_MAX' => 10, # was 100
         'SENT_RATIO_MIN' => 800,
         'SENT_RATIO_MAX' => 1000,
         'CASUALTIES_MIN' => 50,
