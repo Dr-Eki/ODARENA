@@ -54,7 +54,7 @@ return [
              * If false, you have to do it manually for each request
              * Or you can use Analytics::disableAutoTracking(), Analytics::enableAutoTracking()
              */
-            'auto_track' => env('ANALYTICS_AUTO_TRACK', true),
+            'auto_track' => env('ANALYTICS_AUTO_TRACK', false),
 
             /**
              * Enable the debugging version of Google Analytics

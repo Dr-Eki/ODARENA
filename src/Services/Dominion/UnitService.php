@@ -11,7 +11,7 @@ use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Helpers\ResourceHelper;
 use OpenDominion\Services\Dominion\QueueService;
 
-class ResourceService
+class UnitService
 {
 
     /** @var ResourceHelper */

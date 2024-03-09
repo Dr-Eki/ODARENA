@@ -15,7 +15,7 @@
     <![endif]-->
 </head>
 <body class="hold-transition skin-red layout-top-nav">
-{!! Analytics::render() !!}
+{{-- Analytics::render() --}}
 
 <div class="wrapper">
 

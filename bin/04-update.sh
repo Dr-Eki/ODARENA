@@ -16,9 +16,9 @@ php artisan game:data:sync
 php artisan version:update
 
 # Generate new IDE helper files
-php artisan ide-helper:generate
-php artisan ide-helper:models -N
-php artisan ide-helper:meta
+#php artisan ide-helper:generate
+#php artisan ide-helper:models -N
+#php artisan ide-helper:meta
 
 # Update NPM packages
 yarn install

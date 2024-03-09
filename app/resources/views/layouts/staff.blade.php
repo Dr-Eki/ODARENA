@@ -26,7 +26,7 @@
     <![endif]-->
 </head>
 <body class="hold-transition {{ Auth::user() && Auth::user()->skin ? Auth::user()->skin : 'skin-red' }} sidebar-mini">
-{!! Analytics::render() !!}
+{{-- Analytics::render() --}}
 
 <div class="wrapper">
 

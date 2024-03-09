@@ -22,13 +22,14 @@ class FireAnalyticsFlashEvents
         // todo: if request method === GET?
 
         foreach ($this->analyticsService->getFlashEvents() as $event) {
-            /** @var AnalyticsEvent $event */
+            /*
             Analytics::trackEvent(
                 $event->getCategory(),
                 $event->getAction(),
                 $event->getLabel(),
                 $event->getValue()
             );
+            */
         }
 
         return $next($request);

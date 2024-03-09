@@ -3,7 +3,7 @@
 namespace OpenDominion\Models;
 
 use Carbon\Carbon;
-use Gravatar;
+#use Gravatar;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -91,7 +91,9 @@ class User extends AbstractModel implements AuthenticatableContract, Authorizabl
             return asset("storage/uploads/avatars/{$this->avatar}");
         }
 
-        return Gravatar::src($this->email, 200);
+        return '#';
+
+        #return Gravatar::src($this->email, 200);
 
     }
 
