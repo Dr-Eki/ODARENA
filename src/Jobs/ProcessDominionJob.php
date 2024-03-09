@@ -242,7 +242,6 @@ class ProcessDominionJob implements ShouldQueue
             if(config('game.extended_logging')) { Log::debug('** Precalculate tick'); }
             $this->precalculateTick($this->dominion, true);
 
-
         });
 
         if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }

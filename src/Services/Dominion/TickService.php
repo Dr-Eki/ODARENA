@@ -1408,6 +1408,11 @@ class TickService
 
     private function updateArtefactsAegises(Round $round): void
     {
+        if(!in_array($round->mode, ['artefacts', 'artefacts-pack']))
+        {
+            return;
+        }
+
         # Update artefact aegis
         foreach($round->realms as $realm)
         {
