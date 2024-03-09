@@ -7,35 +7,35 @@
 <script>
     var spinner = document.getElementById('spinner');
     var isTicking = spinner.getAttribute('data-is-ticking') === '1';
-    var intervalId = setInterval(checkIsTicking, isTicking ? 1000 : 10000);
-    var counter = 0;
 
     function checkIsTicking() {
-        counter++;
-        if (counter > 1800) {
-            clearInterval(intervalId);
-            return;
-        }
-
         fetch('/api/v1/is-round-ticking') // replace with your route
             .then(response => response.json())
             .then(data => {
                 if (data.is_ticking) {
                     spinner.style.display = 'block';
-                    if (!isTicking) {
-                        clearInterval(intervalId);
-                        intervalId = setInterval(checkIsTicking, 1000);
-                    }
                 } else {
                     spinner.style.display = 'none';
-                    if (isTicking) {
-                        clearInterval(intervalId);
-                        intervalId = setInterval(checkIsTicking, 10000);
-                    }
                 }
                 isTicking = data.is_ticking;
             });
     }
+
+    function scheduleNextCheck() {
+        var now = new Date();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+        var milliseconds = now.getMilliseconds();
+        var nextQuarterHour = 15 * Math.ceil(minutes / 15);
+        var remainingTime = ((nextQuarterHour - minutes) * 60 - seconds) * 1000 - milliseconds;
+
+        setTimeout(function() {
+            checkIsTicking();
+            scheduleNextCheck();
+        }, remainingTime);
+    }
+
+    scheduleNextCheck();
 </script>
 
 @endif

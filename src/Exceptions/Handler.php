@@ -2,11 +2,12 @@
 
 namespace OpenDominion\Exceptions;
 
-#use Exception;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Log;
 use Throwable;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -63,10 +64,12 @@ class Handler extends ExceptionHandler
     /**
      * {@inheritdoc}
      */
-    #public function render($request, Exception $exception)
+
     public function render($request, Throwable $exception)
     {
-        Log::error($exception);
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return response()->json(['error' => 'Method not allowed'], 405);
+        }
 
         return parent::render($request, $exception);
     }
