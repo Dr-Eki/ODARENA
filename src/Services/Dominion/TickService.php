@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Cache;
 use OpenDominion\Jobs\ProcessDominionJob;
 
 use OpenDominion\Calculators\RealmCalculator;
-use OpenDominion\Calculators\Dominion\BarbarianCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\ConversionCalculator;
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
@@ -49,7 +48,7 @@ use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
 use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\InsightService;
-use OpenDominion\Services\Dominion\ProtectionService;
+#use OpenDominion\Services\Dominion\ProtectionService;
 use Throwable;
 
 class TickService
@@ -60,7 +59,6 @@ class TickService
     protected $now;
     protected $temporaryData = [];
 
-    protected $barbarianCalculator;
     protected $buildingCalculator;
     protected $conversionCalculator;
     protected $espionageCalculator;
@@ -90,7 +88,7 @@ class TickService
     protected $deityService;
     protected $insightService;
     protected $queueService;
-    protected $protectionService;
+    #protected $protectionService;
     protected $researchService;
     protected $resourceService;
     protected $terrainService;
@@ -101,7 +99,6 @@ class TickService
     public function __construct()
     {
         $this->now = now();
-        $this->barbarianCalculator = app(BarbarianCalculator::class);
         $this->conversionCalculator = app(ConversionCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
@@ -111,7 +108,6 @@ class TickService
         $this->prestigeCalculator = app(PrestigeCalculator::class);
         $this->productionCalculator = app(ProductionCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
-        $this->queueService = app(QueueService::class);
         $this->spellCalculator = app(SpellCalculator::class);
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->espionageCalculator = app(EspionageCalculator::class);
@@ -127,15 +123,16 @@ class TickService
         $this->roundHelper = app(RoundHelper::class);
 
         $this->artefactService = app(ArtefactService::class);
+        $this->barbarianService = app(BarbarianService::class);
         $this->dominionStateService = app(DominionStateService::class);
         $this->deityService = app(DeityService::class);
         $this->insightService = app(InsightService::class);
-        $this->protectionService = app(ProtectionService::class);
+        #$this->protectionService = app(ProtectionService::class);
+        $this->queueService = app(QueueService::class);
         $this->researchService = app(ResearchService::class);
         $this->resourceService = app(ResourceService::class);
         $this->terrainService = app(TerrainService::class);
 
-        $this->barbarianService = app(BarbarianService::class);
 
         /* These calculators need to ignore queued resources for the following tick */
         $this->populationCalculator->setForTick(true);
@@ -358,7 +355,7 @@ class TickService
 
                 #$realms = $round->realms()->get();
 
-                $spawnBarbarian = rand(1, (int)$this->barbarianCalculator->getSetting('ONE_IN_CHANCE_TO_SPAWN'));
+                $spawnBarbarian = rand(1, (int)config('barbarians.settings.ONE_IN_CHANCE_TO_SPAWN'));
 
                 Log::Debug('[BARBARIAN] spawn chance value: '. $spawnBarbarian . ' (spawn if this value is 1).');
 

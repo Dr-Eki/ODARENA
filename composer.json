@@ -21,11 +21,12 @@
     "laravel/ui": "^4.5",
     "spatie/db-dumper": "^3.0",
     "spatie/laravel-backup": "^8.6",
-    "spatie/laravel-ignition": "^2.0",
     "spatie/laravel-honeypot": "^4.0",
+    "spatie/laravel-ignition": "^2.0",
     "spatie/laravel-permission": "^6.4",
     "symfony/yaml": "^7.0",
-    "webpatser/laravel-uuid": "^4.0"
+    "webpatser/laravel-uuid": "^4.0",
+    "zircote/swagger-php": "^4.8"
   },
   "require-dev": {
     "barryvdh/laravel-debugbar": "~3.6",

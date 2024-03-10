@@ -419,6 +419,8 @@ class TrainActionService
                         return ($unit->slot === $slot);
                     })->first();
 
+                    $ticks = 12;
+
                     $instantTraining = false;
 
                     if(isset($unit))
@@ -428,10 +430,6 @@ class TrainActionService
                         {
                             $instantTraining = true;
                         }
-                    }
-                    else
-                    {
-                        $ticks = 12; # WTF?
                     }
 
                     if($unitType == 'military_spies' and $dominion->race->getPerkValue('spies_training_time'))
@@ -457,7 +455,6 @@ class TrainActionService
                         $ticks += $dominion->getSpellPerkValue('training_time_raw_from_morale');
                         $ticks += ceil($dominion->title->getPerkValue('training_time_raw') * $dominion->getTitlePerkMultiplier());
                     }
-
 
                     // Spell: Spawning Pool (increase units trained, for free)
                     if ($this->spellCalculator->isSpellActive($dominion, 'spawning_pool') and $unitType == 'military_unit1')

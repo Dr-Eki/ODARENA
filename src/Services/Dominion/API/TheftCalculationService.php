@@ -15,7 +15,7 @@ class TheftCalculationService
 
     protected $calculationResult = [
         'spy_strength_cost' => 0,
-        'amount_stolen' => 0
+        'amount_stolen' => 0,
         'units_sent' => 0
     ];
 

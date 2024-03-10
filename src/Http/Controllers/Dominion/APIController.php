@@ -1,10 +1,20 @@
 <?php
+/**
+ * @OA\Info(
+ *     title="ODARENA API",
+ *     version="1.0.0",
+ *     description="API for various endpoints for ODARENA",
+ *     @OA\Contact(
+ *         email="dreki@odarena.com"
+ *     )
+ * )
+ */
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
 use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\Realm;
+use OpenDominion\Models\Round;
 use OpenDominion\Models\Spell;
 
 use OpenDominion\Exceptions\GameException;
@@ -23,6 +33,20 @@ use OpenDominion\Services\Dominion\API\SorceryCalculationService;
 
 class APIController extends AbstractDominionController
 {
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/dominion/invasion",
+     *     tags={"Calculators"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns an array with data for invasion",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="number"))
+     *         )
+     *     )
+     * )
+     */
     public function calculateInvasion(InvadeCalculationRequest $request): array
     {
         $dominion = $this->getSelectedDominion();
@@ -45,6 +69,19 @@ class APIController extends AbstractDominionController
         return $result;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/dominion/artefact-attack",
+     *     tags={"Calculators"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns an array with data for artefact attack",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="number"))
+     *         )
+     *     )
+     * )
+     */
     public function calculateArtefactAttack(ArtefactAttackCalculationRequest $request): array
     {
         $dominion = $this->getSelectedDominion();
@@ -67,6 +104,19 @@ class APIController extends AbstractDominionController
         return $result;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/dominion/expedition",
+     *     tags={"Calculators"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns an array with data for expedition",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="number"))
+     *         )
+     *     )
+     * )
+     */
     public function calculateExpedition(ExpeditionCalculationRequest $request): array
     {
         $dominion = $this->getSelectedDominion();
@@ -88,6 +138,19 @@ class APIController extends AbstractDominionController
         return $result;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/dominion/sorcery",
+     *     tags={"Calculators"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns an array with data for sorcery",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="number"))
+     *         )
+     *     )
+     * )
+     */
     public function calculateSorcery(SorceryCalculationRequest $request): array
     {
         $caster = $this->getSelectedDominion();
@@ -111,6 +174,19 @@ class APIController extends AbstractDominionController
         return $result;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/dominion/desecration",
+     *     tags={"Calculators"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns an array with data for desecration",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="number"))
+     *         )
+     *     )
+     * )
+     */
     public function calculateDesecration(ExpeditionCalculationRequest $request): array
     {
         $dominion = $this->getSelectedDominion();
@@ -132,6 +208,7 @@ class APIController extends AbstractDominionController
         return $result;
     }
 
+    /*
     public function calculateDefense(InvadeCalculationRequest $request): array
     {
         $calculatingDominion = $this->getSelectedDominion();
@@ -216,7 +293,8 @@ class APIController extends AbstractDominionController
 
         return $result;
     }
-
+    */
+    /*
     public function calculateOffense(InvadeCalculationRequest $request): array
     {
         $calc = $request->get('calc');
@@ -261,27 +339,27 @@ class APIController extends AbstractDominionController
             'land_hill' => 0,
             'land_water' => 0,
 
-            /*
-            'building_home' => 0,
-            'building_alchemy' => 0,
-            'building_farm' => 0,
-            'building_smithy' => 0,
-            'building_masonry' => 0,
-            'building_ore_mine' => 0,
-            'building_gryphon_nest' => 0,
-            'building_tower' => 0,
-            'building_wizard_guild' => 0,
-            'building_temple' => 0,
-            'building_gem_mine' => 0,
-            'building_school' => 0,
-            'building_lumberyard' => 0,
-            'building_forest_haven' => 0,
-            'building_factory' => 0,
-            'building_guard_tower' => 0,
-            'building_shrine' => 0,
-            'building_barracks' => 0,
-            'building_dock' => 0,
-            */
+            
+            #'building_home' => 0,
+            #'building_alchemy' => 0,
+            #'building_farm' => 0,
+            #'building_smithy' => 0,
+            #'building_masonry' => 0,
+            #'building_ore_mine' => 0,
+            #'building_gryphon_nest' => 0,
+            #'building_tower' => 0,
+            #'building_wizard_guild' => 0,
+            #'building_temple' => 0,
+            #'building_gem_mine' => 0,
+            #'building_school' => 0,
+            #'building_lumberyard' => 0,
+            #'building_forest_haven' => 0,
+            #'building_factory' => 0,
+            #'building_guard_tower' => 0,
+            #'building_shrine' => 0,
+            #'building_barracks' => 0,
+            #'building_dock' => 0,
+            
         ]);
         $offenseCalculationService = app(OffenseCalculationService::class);
 
@@ -301,6 +379,7 @@ class APIController extends AbstractDominionController
 
         return $result;
     }
+    */
 
 
 }

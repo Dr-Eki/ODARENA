@@ -507,30 +507,30 @@ class ResourceCalculator
             # Check each Unit for does_not_count_as_population perk.
             for ($slot = 1; $slot <= $dominion->race->units->count(); $slot++)
             {
-                  # Get the $unit
-                  $unit = $dominion->race->units->filter(function ($unit) use ($slot) {
-                          return ($unit->slot == $slot);
-                      })->first();
+                # Get the $unit
+                $unit = $dominion->race->units->filter(function ($unit) use ($slot) {
+                        return ($unit->slot == $slot);
+                    })->first();
 
-                  $amount = $dominion->{'military_unit'.$slot};
+                $amount = $dominion->{'military_unit'.$slot};
 
-                  # Check for housing_count
-                  if($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'housing_count'))
-                  {
-                      $amount *= $nonStandardHousing;
-                  }
+                # Check for housing_count
+                if($nonStandardHousing = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'housing_count'))
+                {
+                    $amount *= $nonStandardHousing;
+                }
 
-                  # Get the unit attributes
-                  $unitAttributes = $this->unitHelper->getUnitAttributes($unit);
+                # Get the unit attributes
+                $unitAttributes = $this->unitHelper->getUnitAttributes($unit);
 
-                  if (!$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population') and !$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_consume_food') and count(array_intersect($nonConsumingUnitAttributes, $unitAttributes)) === 0)
-                  {
-                      $consumers += $amount;
-                      $consumers += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
-                      #$consumers += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$slot}"); # Specifically and intentionally excluded
-                      #$consumers += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$slot}"); # Specifically and intentionally excluded
-                      $consumers += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$slot}");
-                  }
+                if (!$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population') and !$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_consume_food') and count(array_intersect($nonConsumingUnitAttributes, $unitAttributes)) === 0)
+                {
+                    $consumers += $amount;
+                    $consumers += $this->queueService->getTrainingQueueTotalByResource($dominion, "military_unit{$slot}");
+                    #$consumers += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$slot}"); # Specifically and intentionally excluded
+                    #$consumers += $this->queueService->getSummoningQueueTotalByResource($dominion, "military_unit{$slot}"); # Specifically and intentionally excluded
+                    $consumers += $this->queueService->getEvolutionQueueTotalByResource($dominion, "military_unit{$slot}");
+                }
             }
 
             $consumers += $dominion->military_draftees;
