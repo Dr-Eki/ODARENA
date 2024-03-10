@@ -450,10 +450,13 @@ class TrainActionService
                     }
 
                     // Spell
-                    $ticks += $dominion->getSpellPerkValue('training_time_raw');
-                    $ticks += $dominion->realm->getArtefactPerkValue('training_time_raw');
-                    $ticks += $dominion->getSpellPerkValue('training_time_raw_from_morale');
-                    $ticks += ceil($dominion->title->getPerkValue('training_time_raw') * $dominion->getTitlePerkMultiplier());
+                    if(!in_array($unitType, ['military_spies','military_wizards','military_archmages']))
+                    {
+                        $ticks += $dominion->getSpellPerkValue('training_time_raw');
+                        $ticks += $dominion->realm->getArtefactPerkValue('training_time_raw');
+                        $ticks += $dominion->getSpellPerkValue('training_time_raw_from_morale');
+                        $ticks += ceil($dominion->title->getPerkValue('training_time_raw') * $dominion->getTitlePerkMultiplier());
+                    }
 
                     // Spell: Spawning Pool (increase units trained, for free)
                     if ($this->spellCalculator->isSpellActive($dominion, 'spawning_pool') and $unitType == 'military_unit1')
@@ -466,7 +469,6 @@ class TrainActionService
                     {
                         $amountToTrain *= (1 + $dominion->getBuildingPerkMultiplier('extra_units_trained'));
                     }
-
 
                     # Multiplier
                     $ticksMultiplier = 1;
