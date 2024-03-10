@@ -14,6 +14,10 @@ use OpenDominion\Services\Dominion\StatsService;
 
 class RoundHelper
 {
+
+    protected $landCalculator;
+    protected $statsService;
+
     public function __construct()
     {
         $this->landCalculator = app(LandCalculator::class);

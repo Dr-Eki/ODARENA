@@ -1,17 +1,5 @@
 @extends('layouts.master')
 
-@if($selectedDominion->realm->alignment == 'evil')
-  @section('page-header', 'Senate')
-@elseif($selectedDominion->realm->alignment == 'good')
-  @section('page-header', 'Parliament')
-@elseif($selectedDominion->realm->alignment == 'independent')
-  @section('page-header', 'Assembly')
-@else
-  @section('page-header', 'Council')
-@endif
-
-
-
 @section('content')
     <div class="row">
 

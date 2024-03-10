@@ -417,7 +417,7 @@
 
                       <p class="text-center"><a href="{{ route('dominion.world-news', [$realm->number]) }}">Read the News from the {{ $alignmentNoun }}</a></p>
 
-                        @if(isset($realmDominionsStats) and array_sum($realmDominionsStats) > 0)
+                        @if(isset($realmDominionsStats))
                             <div class="col-xs-12">
                                 <div class="row">
                                     <strong>{{ $alignmentAdjective }} Lands</strong><br>

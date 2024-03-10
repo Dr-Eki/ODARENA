@@ -13,6 +13,9 @@ use OpenDominion\Models\ProtectorshipOffer;
 
 class GovernmentCalculator
 {
+
+    protected $governmentHelper;
+
     public function __construct()
     {
         $this->governmentHelper = app(GovernmentHelper::class);

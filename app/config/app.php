@@ -220,7 +220,7 @@ return [
         'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
         #'Gravatar' => Thomaswelton\LaravelGravatar\Facades\Gravatar::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
+        #'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,
 
     ],
 

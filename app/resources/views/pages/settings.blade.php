@@ -113,7 +113,9 @@
 
                                         @if (!$user->avatar)
                                             {{-- Generate avatar --}}
-                                            <a href="{{ route('settings.generate-avatar') }}" class="btn btn-primary">Generate avatar</a>
+                                            <span data-toggle="tooltip" data-placement="top" title="This uses an external AI to generate a random avatar. Results are unpredictable and may be offensive. Please delete any inappropriate avatars.">
+                                                <a href="{{ route('settings.generate-avatar') }}" class="btn btn-primary">Generate avatar</a>
+                                            </span>
                                         @else
                                             {{-- Delete avatar --}}
                                             <a href="{{ route('settings.delete-avatar') }}" class="btn btn-danger">Delete avatar</a>

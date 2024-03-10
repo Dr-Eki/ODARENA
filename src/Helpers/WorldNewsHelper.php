@@ -1084,7 +1084,7 @@ class WorldNewsHelper
         return $string;
     }
 
-    public function generateDominionString(Dominion $dominion, string $mode = "neutral", Dominion $viewer): string
+    public function generateDominionString(Dominion $dominion, string $mode = 'neutral', Dominion $viewer): string
     {
 
         $string = sprintf(

@@ -15,8 +15,9 @@ use OpenDominion\Helpers\WorldNewsHelper;
 
 class WorldNewsService
 {
-    /** @var array */
-    protected $activeDeitys = [];
+
+    protected $roundService;
+    protected $worldNewsHelper;
 
     public function __construct()
     {

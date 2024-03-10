@@ -1,7 +1,5 @@
 @extends('layouts.master')
 
-@section('page-header', 'Council')
-
 @section('content')
     <div class="box">
         <div class="box-header with-border">
@@ -23,7 +21,7 @@
             <h3 class="box-title">Thread: {{ $thread->title }}</h3>
         </div>
         <div class="box-body">
-            {!! Markdown::convertToHtml($thread->body) !!}
+            {!! Illuminate\Mail\Markdown::convertToHtml($thread->body) !!}
         </div>
         <div class="box-footer">
             <small>
@@ -44,7 +42,7 @@
         @foreach ($thread->posts as $post)
             <div class="box">
                 <div class="box-body">
-                    {!! Markdown::convertToHtml($post->body) !!}
+                    {!! Illuminate\Mail\Markdown::convertToHtml($post->body) !!}
                 </div>
                 <div class="box-footer">
                     <small>

@@ -49,6 +49,9 @@ class Round extends AbstractModel
         'goal' => 'integer',
         'is_ticking' => 'boolean',
 
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

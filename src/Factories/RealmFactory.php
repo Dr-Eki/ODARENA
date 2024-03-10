@@ -2,7 +2,6 @@
 
 namespace OpenDominion\Factories;
 
-#use Atrox\Haikunator;
 use DB;
 use LogicException;
 use OpenDominion\Models\Pack;

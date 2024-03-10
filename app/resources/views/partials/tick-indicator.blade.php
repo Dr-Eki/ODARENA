@@ -29,10 +29,14 @@
         var nextQuarterHour = 15 * Math.ceil(minutes / 15);
         var remainingTime = ((nextQuarterHour - minutes) * 60 - seconds) * 1000 - milliseconds;
 
+        // If isTicking is true, check every second
+        // If isTicking is false, check every quarter hour
+        var checkInterval = isTicking ? 1000 : remainingTime;
+
         setTimeout(function() {
             checkIsTicking();
             scheduleNextCheck();
-        }, remainingTime);
+        }, checkInterval);
     }
 
     scheduleNextCheck();

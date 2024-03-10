@@ -1,7 +1,5 @@
 @extends('layouts.master')
 
-@section('page-header', 'Council')
-
 @section('content')
     <div class="box">
         <div class="box-header with-border">

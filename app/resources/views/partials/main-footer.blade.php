@@ -3,17 +3,8 @@
     <div class="pull-right">
 
     @if (isset($selectedDominion) and $selectedDominion->round->isActive())
-    {{-- 
-        @php
-            if ($selectedDominion->round->start_date instanceof \Carbon\Carbon)
-            {
-                $diff = $selectedDominion->round->start_date->subDays(1)->diff(now());
-            }
-            else
-            {
-                #dd('This is no bueno');
-            }
 
+        @php
             $diff = $selectedDominion->round->start_date->subDays(1)->diff(now());
             $roundDay = $selectedDominion->round->start_date->subDays(1)->diffInDays(now());
             $currentHour = ($diff->h + 1);
@@ -27,7 +18,6 @@
         @else
             <span data-toggle="tooltip" data-placement="top" title="Start date: {{ $selectedDominion->round->start_date }}">Round {{ $selectedDominion->round->number }} starts in <strong>{{ number_format($selectedDominion->round->hoursUntilStart()) . ' ' . str_plural('hour', $selectedDominion->round->hoursUntilStart()) }}</strong>.</span>
         @endif
-    --}}
     @elseif (isset($selectedDominion) and !$selectedDominion->round->hasStarted())
         <span data-toggle="tooltip" data-placement="top" title="The round starts at {{ $selectedDominion->round->start_date }}">
             @if($selectedDominion->round->hoursUntilStart() > 0)

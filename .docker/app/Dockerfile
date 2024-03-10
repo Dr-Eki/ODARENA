@@ -15,8 +15,9 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     libmemcached-dev \
     libmemcached11 \
-    libmemcachedutil2 
-    #supervisor
+    libmemcachedutil2 \
+    nano \
+    cron
 
 # Clear Cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

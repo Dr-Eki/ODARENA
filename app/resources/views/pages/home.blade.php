@@ -79,8 +79,7 @@
                                 <tr>
                                     <td class="text-center">Day:</td>
                                     <td class="text-center">
-                                        {{ (int)floor($currentRound->ticks / 96) }}
-                                        {{-- number_format($currentRound->start_date->subDays(1)->diffInDays(now())) --}}
+                                        {{ number_format($currentRound->start_date->subDays(1)->diffInDays(now())) }}
                                     </td>
                                 </tr>
                                 <tr>

@@ -2,15 +2,16 @@
 
 namespace OpenDominion\Services\Dominion;
 
-use Carbon\Carbon;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Realm;
-use OpenDominion\Models\ProtectorshipOffer;
 use OpenDominion\Calculators\Dominion\GovernmentCalculator;
 
 class GovernmentService
 {
+
+    protected $governmentCalculator;
+
     public function __construct()
     {
         $this->governmentCalculator = app(GovernmentCalculator::class);

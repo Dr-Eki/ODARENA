@@ -47,7 +47,7 @@ class AdvancementCalculator
 
         $cost *= 1 + $this->getAdvancementCostMultiplier($dominion);
 
-        return $cost;
+        return (int)$cost;
     }
 
     public function getAdvancementCostMultiplier(Dominion $dominion)

@@ -139,7 +139,7 @@ class ResourceCalculator
         $production += $this->getInterest($dominion, $resourceKey);
 
         // Return
-        return max($production, 0);
+        return (int)max($production, 0);
     }
 
     public function getProductionRaw(Dominion $dominion, string $resourceKey): float
@@ -577,7 +577,7 @@ class ResourceCalculator
             $consumption += $this->getAmount($dominion, $consumedResourceKey) * $decayRate;
         }
 
-        return max(0, $consumption);
+        return (int)max(0, $consumption);
 
         #return min(max(0, $consumption), $this->getAmount($dominion, $consumedResourceKey));
 

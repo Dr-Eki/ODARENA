@@ -2,16 +2,6 @@
 @section('title', 'Notes')
 
 @section('content')
-    @php
-        Cache::put('test-key', 'test-value', 60);
-        $value = Cache::get('test-key');
-
-        if($value == 'test-value')
-            dump('Cache is working!');
-        else
-            dump('Cache is NOT working!');
-    @endphp
-
     <div class="row">
 
         <div class="col-sm-12 col-md-9">

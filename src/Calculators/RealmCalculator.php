@@ -2,12 +2,14 @@
 
 namespace OpenDominion\Calculators;
 
-use Illuminate\Support\Collection;
 use OpenDominion\Models\Realm;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 
 class RealmCalculator
 {
+
+    protected $resourceCalculator;
+
     public function __construct()
     {
         $this->resourceCalculator = app(ResourceCalculator::class);

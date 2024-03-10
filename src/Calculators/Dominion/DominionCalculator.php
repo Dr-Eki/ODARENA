@@ -18,6 +18,12 @@ class DominionCalculator
 {
 
     protected $militaryCalculator;
+    protected $populationCalculator;
+
+    protected $raceHelper;
+    protected $unitHelper;
+
+    protected $queueService;
     
 
     public function __construct()

@@ -188,11 +188,13 @@
                     {!! $councilUnreadCount > 0 ? ('<span class="pull-right-container"><small class="label pull-right bg-green">' . $councilUnreadCount . '</small></span>') : null !!}</a>
                 </li>
 
+                {{--
                 <li class="{{ Route::is('dominion.notes') ? 'active' : null }}">
                     <a href="{{ route('dominion.notes') }}">
                         <i class="ra ra-quill-ink ra-fw"></i>Notes
                     </a>
                 </li>
+                --}}
 
                 @if($selectedDominion->pack)
                     <li class="{{ Route::is('dominion.pack') ? 'active' : null }}">

@@ -11,11 +11,9 @@ use OpenDominion\Models\DominionImprovement;
 class ImprovementCalculator
 {
 
-    /**
-     * ImprovementCalculator constructor.
-     *
-     * @param LandCalculator $landCalculator
-     */
+    protected $landCalculator;
+    protected $spellCalculator;
+
     public function __construct()
     {
         $this->landCalculator = app(LandCalculator::class);
