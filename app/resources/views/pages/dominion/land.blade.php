@@ -154,7 +154,7 @@
                     by <strong>{{ number_format((abs(1-$rezoningCalculator->getCostMultiplier($selectedDominion)))*100, 2) }}%</strong>.</p>
                 @endif
 
-                <p>You can afford to re-zone <b>{{ number_format($rezoningCalculator->getMaxAfford($selectedDominion)) }} {{ str_plural('acre', $rezoningCalculator->getMaxAfford($selectedDominion)) }}</b>.</p>
+                <p>You can afford to re-zone <b>{{ number_format($rezoningCalculator->getMaxAfford($selectedDominion)) }} {{ Str::plural('acre', $rezoningCalculator->getMaxAfford($selectedDominion)) }}</b>.</p>
             </div>
         </div>
     </div>

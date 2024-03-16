@@ -2,7 +2,6 @@
 
 namespace OpenDominion\Providers;
 
-use Bugsnag;
 use Cache;
 use Illuminate\Pagination\Paginator;
 use OpenDominion\Calculators\Dominion\Actions\ConstructionCalculator;
@@ -44,7 +43,6 @@ use OpenDominion\Services\CouncilService;
 use OpenDominion\Services\Dominion\Actions\BankActionService;
 use OpenDominion\Services\Dominion\Actions\DailyBonusesActionService;
 use OpenDominion\Services\Dominion\Actions\DestroyActionService;
-use OpenDominion\Services\Dominion\Actions\EspionageActionService;
 use OpenDominion\Services\Dominion\Actions\ExploreActionService;
 use OpenDominion\Services\Dominion\Actions\ImproveActionService;
 use OpenDominion\Services\Dominion\Actions\InvadeActionService;
@@ -81,7 +79,7 @@ class AppServiceProvider extends AbstractServiceProvider
 
         // Set Bugsnag app version
         if (($appVersion = Cache::get('version')) !== null) {
-            Bugsnag::getConfig()->setAppVersion($appVersion);
+            #Bugsnag::getConfig()->setAppVersion($appVersion);
         }
     }
 
@@ -171,7 +169,6 @@ class AppServiceProvider extends AbstractServiceProvider
         $this->app->singleton(BankActionService::class);
         $this->app->singleton(DailyBonusesActionService::class);
         $this->app->singleton(DestroyActionService::class);
-        $this->app->singleton(EspionageActionService::class);
         $this->app->singleton(ExploreActionService::class);
         $this->app->singleton(ImproveActionService::class);
         $this->app->singleton(InvadeActionService::class);

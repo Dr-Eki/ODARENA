@@ -3,7 +3,7 @@
 namespace OpenDominion\Services\Dominion;
 
 use DB;
-use Carbon\Carbon;
+use Illuminate\Support\Str;
 use OpenDominion\Models\Decree;
 use OpenDominion\Models\DecreeState;
 use OpenDominion\Models\Dominion;
@@ -16,6 +16,16 @@ use OpenDominion\Models\GameEvent;
 
 class DecreeService
 {
+
+    /** @var DecreeHelper */
+    protected $decreeHelper;
+
+    /** @var DecreeCalculator */
+    protected $decreeCalculator;
+
+    /** @var QueueService */
+    protected $queueService;
+
     public function __construct()
     {
         $this->decreeHelper = app(DecreeHelper::class);
@@ -97,7 +107,7 @@ class DecreeService
         if(!$this->decreeCalculator->canDominionRevokeDecree($dominion, $decree))
         {
             $ticksUntilCanRevoke = $this->decreeCalculator->getTicksUntilDominionCanRevokeDecree($dominion, $decree);
-            throw new GameException('You cannot revoke this decree for another ' . $ticksUntilCanRevoke . ' ' . str_plural('tick', $ticksUntilCanRevoke) . '.');
+            throw new GameException('You cannot revoke this decree for another ' . $ticksUntilCanRevoke . ' ' . Str::plural('tick', $ticksUntilCanRevoke) . '.');
         }
 
         if($dominion->isAbandoned() or $dominion->round->hasEnded() or $dominion->isLocked())

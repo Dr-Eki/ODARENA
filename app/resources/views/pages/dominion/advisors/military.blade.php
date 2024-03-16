@@ -250,7 +250,7 @@
                             <tbody>
                                 @foreach($selectedDominion->race->units as $unit)
                                     <tr>
-                                        <td>{{ str_plural($unit->name) }}</td>
+                                        <td>{{ Str::plural($unit->name) }}</td>
                                         <td>
                                             <strong>{{ number_format($statsService->getStat($selectedDominion, ('unit' .$unit->slot . '_trained'))) }}</strong>
                                         </td>
@@ -756,7 +756,7 @@
                                     </tr>
                                     @if(!$selectedDominion->race->getPerkMultiplier('no_population'))
                                     <tr>
-                                        <td>{{ str_plural($raceHelper->getPeasantsTerm($selectedDominion->race)) }}</td>
+                                        <td>{{ Str::plural($raceHelper->getPeasantsTerm($selectedDominion->race)) }}</td>
                                         <td>
                                             <strong>{{ number_format($selectedDominion->peasants) }}</strong>
                                             <small class="text-muted">({{ number_format((($selectedDominion->peasants / $populationCalculator->getPopulation($selectedDominion)) * 100), 2) }}%)</small>

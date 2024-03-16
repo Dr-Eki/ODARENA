@@ -1,6 +1,6 @@
 @if($round->hasStarted())
     @if($round->hasCountdown())
-        <p><em>This round has already started and round ends in {{ number_format($round->ticksUntilEnd()) . ' ' . str_plural('tick', $round->ticksUntilEnd()) }}</em>.</p>
+        <p><em>This round has already started and round ends in {{ number_format($round->ticksUntilEnd()) . ' ' . Str::plural('tick', $round->ticksUntilEnd()) }}</em>.</p>
     @else
         <p>This round has already started!</p>
     @endif

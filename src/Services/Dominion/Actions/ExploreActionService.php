@@ -3,6 +3,7 @@
 namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
+use Illuminate\Support\Str;
 use OpenDominion\Calculators\Dominion\Actions\ExplorationCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\LandHelper;
@@ -44,6 +45,13 @@ class ExploreActionService
 
     /** @var ProtectionService */
     protected $protectionService;
+
+    /** @var ResourceService */
+    protected $resourceService;
+
+    /** @var StatsService */
+    protected $statsService;
+    
 
     /**
      * @var int The minimum morale required to explore
@@ -205,7 +213,7 @@ class ExploreActionService
                 'Exploration begun at a cost of %s gold and %s %s. When exploration is completed, you will earn %s XP. Your orders for exploration disheartens the military, and morale drops by %d%%.',
                 number_format($goldCost),
                 number_format($drafteeCost),
-                str_plural('draftee', $drafteeCost),
+                Str::plural('draftee', $drafteeCost),
                 number_format($researchPointsGained),
                 $moraleDrop
             ),

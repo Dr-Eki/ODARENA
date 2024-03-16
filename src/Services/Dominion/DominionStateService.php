@@ -2,8 +2,8 @@
 
 namespace OpenDominion\Services\Dominion;
 
-use Auth;
 use DB;
+use Illuminate\Support\Str;
 use Symfony\Component\Yaml\Yaml;
 use OpenDominion\Exceptions\GameException;
 
@@ -368,7 +368,7 @@ class DominionStateService
         return [
             'message' => sprintf('You have restored your dominion as it was when you had %s %s left.',
                     $dominionState->dominion_protection_tick,
-                    str_plural('tick', $dominionState->dominion_protection_tick)
+                    Str::plural('tick', $dominionState->dominion_protection_tick)
                 ),
             'alert-type' => 'success',
             'redirect' => route('dominion.status')

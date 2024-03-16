@@ -398,7 +398,7 @@
                                     <p><strong><em>You cannot attack while the caverns are flooded.</em></strong></p>
 
                               @elseif ($protectionService->isUnderProtection($selectedDominion))
-                              <p><strong><em>You are currently under protection for <b>{{ $selectedDominion->protection_ticks }}</b> {{ str_plural('tick', $selectedDominion->protection_ticks) }} and may not invade during that time.</em></strong></p>
+                              <p><strong><em>You are currently under protection for <b>{{ $selectedDominion->protection_ticks }}</b> {{ Str::plural('tick', $selectedDominion->protection_ticks) }} and may not invade during that time.</em></strong></p>
 
                               @elseif (!$selectedDominion->round->hasStarted())
                               <p><strong><em>You cannot invade until the round has started.</em></strong></p>
@@ -500,7 +500,7 @@
                                             <tr>
                                                 <td>Sazal's Fog:</td>
                                                 <td>
-                                                    {{ number_format($spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }} {{ str_plural('tick', $spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }}
+                                                    {{ number_format($spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }} {{ Str::plural('tick', $spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }}
                                                 </td>
                                             </tr>
                                         @endif

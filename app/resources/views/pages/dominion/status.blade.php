@@ -1,3 +1,9 @@
+@php
+    use Illuminate\Support\Arr;
+    use Illuminate\Support\Str;
+@endphp
+
+
 @extends('layouts.master')
 @section('title', 'Status')
 
@@ -292,7 +298,7 @@
                         </tr>
                         @if(!$selectedDominion->race->getPerkMultiplier('no_population'))
                         <tr>
-                            <td>{{ str_plural($raceHelper->getPeasantsTerm($selectedDominion->race)) }}:</td>
+                            <td>{{ Str::plural($raceHelper->getPeasantsTerm($selectedDominion->race)) }}:</td>
                             <td>
                                 {{ number_format($selectedDominion->peasants) }}
                                 <small class="text-muted">({{ number_format((($selectedDominion->peasants / $populationCalculator->getPopulation($selectedDominion)) * 100), 2) }}%)</small>
@@ -391,7 +397,7 @@
                         <h3 class="box-title"><i class="ra ra-shield text-aqua"></i> Protection</h3>
                     </div>
                     <div class="box-body">
-                        <p>You are under a magical state of protection. You have <b>{{ $selectedDominion->protection_ticks }}</b> protection {{ str_plural('tick', $selectedDominion->protection_ticks) }} left.</p>
+                        <p>You are under a magical state of protection. You have <b>{{ $selectedDominion->protection_ticks }}</b> protection {{ Str::plural('tick', $selectedDominion->protection_ticks) }} left.</p>
                         <p>During protection you cannot be attacked or attack other dominions. You can neither cast any offensive spells or engage in espionage.</p>
                         <p>Regularly scheduled ticks do not count towards your dominion while you are in protection.</p>
                         <p>Select number of ticks and click the button below to proceed that many ticks. <em>There is no undo or Go Back option so make sure you are ready to proceed.</em> </p>
@@ -409,7 +415,7 @@
                                 {{ $selectedDominion->isLocked() ? 'disabled' : null }}
                                 id="tick-button">
                             <i class="ra ra-shield"></i>
-                            Proceed tick(s) ({{ $selectedDominion->protection_ticks }} {{ str_plural('tick', $selectedDominion->protection_ticks) }} left)
+                            Proceed tick(s) ({{ $selectedDominion->protection_ticks }} {{ Str::plural('tick', $selectedDominion->protection_ticks) }} left)
                     </form>
                     </div>
                 </div>
@@ -551,7 +557,7 @@
                                 $isRead = ($notification->read_at !== null);
                                 $spanClass = ($isRead ? 'text-muted' : 'text-bold');
 
-                                $route = array_get($notificationHelper->getNotificationCategories(), "{$notification->data['category']}.{$notification->data['type']}.route", '#');
+                                $route = Arr::get($notificationHelper->getNotificationCategories(), "{$notification->data['category']}.{$notification->data['type']}.route", '#');
 
                                 if (is_callable($route)) {
                                     if (isset($notification->data['data']['_routeParams'])) {
@@ -568,7 +574,7 @@
                                 </td>
                                 <td>
                                     @if ($route !== '#')<a href="{{ $route }}">@endif
-                                        <i class="{{ array_get($notificationHelper->getNotificationCategories(), "{$notification->data['category']}.{$notification->data['type']}.iconClass", 'fa fa-question') }}"></i>
+                                        <i class="{{ Arr::get($notificationHelper->getNotificationCategories(), "{$notification->data['category']}.{$notification->data['type']}.iconClass", 'fa fa-question') }}"></i>
                                         {{ $notification->data['message'] }}
                                     @if ($route !== '#')</a>@endif
                                 </td>

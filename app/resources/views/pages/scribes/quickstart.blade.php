@@ -34,11 +34,11 @@
                     </tr>
                     <tr>
                         <td class="text-left">Deity</td>
-                        <td class="text-left">{{ isset($quickstart->deity) ? ($quickstart->deity->name . ' (' . number_format($quickstart->devotion_ticks) . ' ' . str_plural('tick', $quickstart->devotion_ticks) . ' devotion)' ): 'none' }}</td>
+                        <td class="text-left">{{ isset($quickstart->deity) ? ($quickstart->deity->name . ' (' . number_format($quickstart->devotion_ticks) . ' ' . Str::plural('tick', $quickstart->devotion_ticks) . ' devotion)' ): 'none' }}</td>
                     </tr>
                     <tr>
                         <td class="text-left">Ticks</td>
-                        <td class="text-left">{{ number_format($quickstart->protection_ticks) . ' (protection ' . str_plural('tick', $quickstart->protection_ticks) . ' remaining)'  }}</td>
+                        <td class="text-left">{{ number_format($quickstart->protection_ticks) . ' (protection ' . Str::plural('tick', $quickstart->protection_ticks) . ' remaining)'  }}</td>
                     </tr>
                     <tr>
                         <td class="text-left">Land</td>

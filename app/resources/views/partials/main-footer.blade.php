@@ -13,17 +13,17 @@
         @if($selectedDominion->round->hasStarted())
             <span data-toggle="tooltip" data-placement="top" title="Round target: {{ number_format($selectedDominion->round->goal) }} {{ $roundHelper->getRoundModeGoalString($selectedDominion->round) }}.">Tick <strong>{{ number_format($selectedDominion->round->ticks) }}</strong> / Day <strong>{{ $roundDay }}</strong> / Hour <strong>{{ $currentHour }}</strong></span>
             @if ($selectedDominion->round->hasCountdown())
-                | Round ends in <strong><span data-toggle="tooltip" data-placement="top" title="The round ends at tick {{ number_format($selectedDominion->round->end_tick) }}.<br>Current tick: {{ number_format($selectedDominion->round->ticks) }}.">{{ number_format($selectedDominion->round->ticksUntilEnd()) . ' ' . str_plural('tick', $selectedDominion->round->ticksUntilEnd()) }}</span></strong>.
+                | Round ends in <strong><span data-toggle="tooltip" data-placement="top" title="The round ends at tick {{ number_format($selectedDominion->round->end_tick) }}.<br>Current tick: {{ number_format($selectedDominion->round->ticks) }}.">{{ number_format($selectedDominion->round->ticksUntilEnd()) . ' ' . Str::plural('tick', $selectedDominion->round->ticksUntilEnd()) }}</span></strong>.
             @endif
         @else
-            <span data-toggle="tooltip" data-placement="top" title="Start date: {{ $selectedDominion->round->start_date }}">Round {{ $selectedDominion->round->number }} starts in <strong>{{ number_format($selectedDominion->round->hoursUntilStart()) . ' ' . str_plural('hour', $selectedDominion->round->hoursUntilStart()) }}</strong>.</span>
+            <span data-toggle="tooltip" data-placement="top" title="Start date: {{ $selectedDominion->round->start_date }}">Round {{ $selectedDominion->round->number }} starts in <strong>{{ number_format($selectedDominion->round->hoursUntilStart()) . ' ' . Str::plural('hour', $selectedDominion->round->hoursUntilStart()) }}</strong>.</span>
         @endif
     @elseif (isset($selectedDominion) and !$selectedDominion->round->hasStarted())
         <span data-toggle="tooltip" data-placement="top" title="The round starts at {{ $selectedDominion->round->start_date }}">
             @if($selectedDominion->round->hoursUntilStart() > 0)
-                Round {{ $selectedDominion->round->number }} starts in <strong>{{ number_format($selectedDominion->round->hoursUntilStart()) . ' ' . str_plural('hour', $selectedDominion->round->hoursUntilStart()) }}</strong>.
+                Round {{ $selectedDominion->round->number }} starts in <strong>{{ number_format($selectedDominion->round->hoursUntilStart()) . ' ' . Str::plural('hour', $selectedDominion->round->hoursUntilStart()) }}</strong>.
             @else
-                Round {{ $selectedDominion->round->number }} starts in <strong>{{ number_format($selectedDominion->round->minutesUntilStart()) . ' ' . str_plural('minutes', $selectedDominion->round->minutesUntilStart()) }}</strong>.
+                Round {{ $selectedDominion->round->number }} starts in <strong>{{ number_format($selectedDominion->round->minutesUntilStart()) . ' ' . Str::plural('minutes', $selectedDominion->round->minutesUntilStart()) }}</strong>.
             @endif
         </span>
     @endif

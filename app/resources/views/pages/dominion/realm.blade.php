@@ -241,7 +241,7 @@
                                         @if($dominion->hasDeity())
                                             @php
                                                 $perksList = '<ul>';
-                                                $perksList .= '<li>Devotion: ' . number_format($dominion->devotion->duration) . ' ' . str_plural('tick', $dominion->devotion->duration) . '</li>';
+                                                $perksList .= '<li>Devotion: ' . number_format($dominion->devotion->duration) . ' ' . Str::plural('tick', $dominion->devotion->duration) . '</li>';
                                                 $perksList .= '<li>Range multiplier: ' . $dominion->deity->range_multiplier . 'x</li>';
                                                 foreach($deityHelper->getDeityPerksString($dominion->deity, $dominion->getDominionDeity()) as $effect)
                                                 {
@@ -253,7 +253,7 @@
 
                                         @elseif($dominion->hasPendingDeitySubmission())
                                             @if($isOwnRealm)
-                                                <span data-toggle="tooltip" data-placement="top" title="{{ $dominion->getPendingDeitySubmission()->name }} in {{ $dominion->getPendingDeitySubmissionTicksLeft() }} {{ str_plural('tick', $dominion->getPendingDeitySubmissionTicksLeft()) }}" class="text-muted"><i class="fas fa-pray"></i></span>
+                                                <span data-toggle="tooltip" data-placement="top" title="{{ $dominion->getPendingDeitySubmission()->name }} in {{ $dominion->getPendingDeitySubmissionTicksLeft() }} {{ Str::plural('tick', $dominion->getPendingDeitySubmissionTicksLeft()) }}" class="text-muted"><i class="fas fa-pray"></i></span>
                                             @else
                                                 <span class="text-muted"><i class="fas fa-pray"></i></span>
                                             @endif

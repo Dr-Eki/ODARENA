@@ -3,6 +3,7 @@
 namespace OpenDominion\Helpers;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 #use OpenDominion\Models\Dominion;
 #use OpenDominion\Models\DominionTech;
 use OpenDominion\Models\Race;
@@ -379,7 +380,7 @@ class ResearchHelper
                         return ($unit->slot === $slot);
                     })->first();
 
-                    $unitNamesToConvertTo[] = str_plural($unitToConvertTo->name);
+                    $unitNamesToConvertTo[] = Str::plural($unitToConvertTo->name);
                 }
 
                 $perkValue = generate_sentence_from_array($unitNamesToConvertTo);
@@ -397,7 +398,7 @@ class ResearchHelper
                             return ($unit->slot === $slot);
                         })->first();
 
-                        $unitNamesToConvertTo[] = str_plural($unitToConvertTo->name);
+                        $unitNamesToConvertTo[] = Str::plural($unitToConvertTo->name);
                     }
 
                     $perkValue[$index][1] = generate_sentence_from_array($unitNamesToConvertTo);
@@ -419,7 +420,7 @@ class ResearchHelper
                         return ($unit->slot === $over);
                     })->first();
 
-                $perkValue = [$limit, str_plural($underLimitUnit->name), str_plural($overLimitUnit->name)];
+                $perkValue = [$limit, Str::plural($underLimitUnit->name), Str::plural($overLimitUnit->name)];
             }
             if($perk->key === 'passive_conversion')
             {
@@ -449,7 +450,7 @@ class ResearchHelper
                         return ($unit->slot === $convertToSlot);
                     })->first();
 
-                $perkValue = [$multiplier, str_plural($unitToConvertTo->name)];
+                $perkValue = [$multiplier, Str::plural($unitToConvertTo->name)];
             }
             if($perk->key == 'resource_conversion_capped')
             {
@@ -523,7 +524,7 @@ class ResearchHelper
                 $perkValue[0] = $pairedUnit->name;
                 if (isset($perkValue[1]) && $perkValue[1] > 0)
                 {
-                    $perkValue[0] = str_plural($perkValue[0]);
+                    $perkValue[0] = Str::plural($perkValue[0]);
                 }
                 else
                 {
@@ -540,7 +541,7 @@ class ResearchHelper
                     return ($unit->slot === $unitSlotToProduce);
                 })->first();
 
-                $unitNameToProduce[] = str_plural($unitToProduce->name);
+                $unitNameToProduce[] = Str::plural($unitToProduce->name);
 
                 $perkValue = generate_sentence_from_array($unitNameToProduce);
             }
@@ -560,7 +561,7 @@ class ResearchHelper
                         return ($unit->slot === $slot);
                     })->first();
 
-                $perkValue = [$faction, str_plural($unit->name), $percentage];
+                $perkValue = [$faction, Str::plural($unit->name), $percentage];
             }
 
             if($perk->key === 'aurei_unit_conversion')
@@ -631,7 +632,7 @@ class ResearchHelper
                         })->first();
 
 
-                    $units[$index] = str_plural($unit->name);
+                    $units[$index] = Str::plural($unit->name);
                 }
 
                 $unitsString = generate_sentence_from_array($units);
@@ -658,7 +659,7 @@ class ResearchHelper
                         })->first();
 
 
-                    $units[$index] = str_plural($unit->name);
+                    $units[$index] = Str::plural($unit->name);
                 }
 
                 $unitsString = generate_sentence_from_array($units);
@@ -687,12 +688,12 @@ class ResearchHelper
                             return ($unit->slot === $slot);
                         })->first();
 
-                    $units[$index] = str_plural($unit->name);
+                    $units[$index] = Str::plural($unit->name);
                 }
 
                 $unitsString = generate_sentence_from_array($units);
 
-                $perkValue = [$ratioPerWpa, $maxRatio, str_plural($resource->name), $unitsString];
+                $perkValue = [$ratioPerWpa, $maxRatio, Str::plural($resource->name), $unitsString];
                 $nestedArrays = false;
             }
 

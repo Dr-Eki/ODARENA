@@ -4,6 +4,7 @@ namespace OpenDominion\Http\Controllers;
 
 use Auth;
 use DB;
+use Illuminate\Support\Str;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use LogicException;
@@ -357,7 +358,7 @@ class RoundController extends AbstractController
         
                 $request->session()->flash(
                     'alert-success',
-                    ("You have successfully registered to round {$round->number} ({$round->name})! You have joined realm {$realm->number} ({$realm->name}) with " . ($realm->dominions()->count() - 1) . ' other ' . str_plural('dominion', ($realm->dominions()->count() - 1)) . '.')
+                    ("You have successfully registered to round {$round->number} ({$round->name})! You have joined realm {$realm->number} ({$realm->name}) with " . ($realm->dominions()->count() - 1) . ' other ' . Str::plural('dominion', ($realm->dominions()->count() - 1)) . '.')
                 );
 
                 $dominionStateService = app(DominionStateService::class);
@@ -618,7 +619,7 @@ class RoundController extends AbstractController
 
         $request->session()->flash(
             'alert-success',
-            ("You have successfully registered to round {$round->number} ({$round->name})! You have joined realm {$realm->number} ({$realm->name}) with " . ($realm->dominions()->count() - 1) . ' other ' . str_plural('dominion', ($realm->dominions()->count() - 1)) . '.')
+            ("You have successfully registered to round {$round->number} ({$round->name})! You have joined realm {$realm->number} ({$realm->name}) with " . ($realm->dominions()->count() - 1) . ' other ' . Str::plural('dominion', ($realm->dominions()->count() - 1)) . '.')
         );
 
         $dominionStateService = app(DominionStateService::class);

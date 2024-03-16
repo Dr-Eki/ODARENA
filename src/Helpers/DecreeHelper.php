@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Helpers;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Decree;
@@ -236,12 +237,12 @@ class DecreeHelper
                         return ($unit->slot === $slotProducing);
                     })->first();
 
-                $perkValue = [str_plural($unitProduced->name, $amountProduced), floatval($amountProduced), $unitProducing->name];
+                $perkValue = [Str::plural($unitProduced->name, $amountProduced), floatval($amountProduced), $unitProducing->name];
             }
 
             if($perk->key == 'wizards_count_as_spies')
             {
-                $perkValue = [$perkValue, str_plural('spy', $perkValue)];
+                $perkValue = [$perkValue, Str::plural('spy', $perkValue)];
             }
 
             if($perk->key == 'range_multiplier')

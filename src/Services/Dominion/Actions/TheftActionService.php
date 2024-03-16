@@ -3,15 +3,12 @@
 namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
-#use Log;
+use Illuminate\Support\Str;
 use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Models\Dominion;
-#use OpenDominion\Models\Building;
 use OpenDominion\Models\GameEvent;
-#use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Resource;
-#use OpenDominion\Models\Unit;
 
 use OpenDominion\Traits\DominionGuardsTrait;
 
@@ -205,7 +202,7 @@ class TheftActionService
                     # OK, unit can be trained. Let's check for pairing limits.
                     if($this->unitCalculator->unitHasCapacityLimit($thief, $slot) and !$this->unitCalculator->checkUnitLimitForInvasion($thief, $slot, $amount))
                     {
-                        throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($thief, $slot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                        throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($thief, $slot)) . ' ' . Str::plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
                     }
 
                     if(!$this->unitCalculator->isUnitSendableByDominion($unit, $thief))

@@ -411,7 +411,7 @@
                                                     <td>{{ $alliedRealm->name }} (# {{ $alliedRealm->number }})</td>
                                                     <td>{{ ucfirst($alliedRealm->alignment) }}</td>
                                                     <td>{{ $alliedRealm->monarch->name }}</td>
-                                                    <td>{{ number_format($selectedDominion->round->ticks - $realmAlliance->established_tick) . ' ' . str_plural('tick', ($selectedDominion->round->ticks - $realmAlliance->established_tick))}}</td>
+                                                    <td>{{ number_format($selectedDominion->round->ticks - $realmAlliance->established_tick) . ' ' . Str::plural('tick', ($selectedDominion->round->ticks - $realmAlliance->established_tick))}}</td>
                                                     <td>
                                                         <div class="form-group">
                                                             <form action="{{ route('dominion.government.break-alliance') }}" method="post" role="form">
@@ -542,7 +542,7 @@
                     @if($governmentCalculator->canVote($selectedDominion))
                         <p>You are currently able to vote.</p>
                     @else
-                        <p>You can vote again in <strong>{{ number_format($governmentCalculator->getTicksUntilCanVote($selectedDominion)) . ' ' . str_plural('tick', $governmentCalculator->getTicksUntilCanVote($selectedDominion)) }}</strong>.</p>
+                        <p>You can vote again in <strong>{{ number_format($governmentCalculator->getTicksUntilCanVote($selectedDominion)) . ' ' . Str::plural('tick', $governmentCalculator->getTicksUntilCanVote($selectedDominion)) }}</strong>.</p>
                     @endif
 
                 @elseif($governmentCalculator->canVote($selectedDominion))

@@ -204,7 +204,7 @@
                                             <tr>
                                                 <td>Sazal's Fog:</td>
                                                 <td>
-                                                    {{ number_format($spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }} {{ str_plural('tick', $spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }}
+                                                    {{ number_format($spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }} {{ Str::plural('tick', $spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }}
                                                 </td>
                                             </tr>
                                         @endif

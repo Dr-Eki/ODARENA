@@ -32,7 +32,7 @@
                             <div class="col-lg-4">
                                 {{-- <span class="label label-success">Issued on tick {{ number_format($dominionDecreeState->tick) }}</span> --}}
                                 @if($ticksUntilCanRevoke)
-                                    <span class="label label-danger">Cooldown: {{ $ticksUntilCanRevoke . ' ' . str_plural('tick', $ticksUntilCanRevoke) }}</span>
+                                    <span class="label label-danger">Cooldown: {{ $ticksUntilCanRevoke . ' ' . Str::plural('tick', $ticksUntilCanRevoke) }}</span>
                                 @endif
                             </div>
                             <div class="col-lg-4">
@@ -50,7 +50,7 @@
                             </div>
                                 
                             <div class="col-lg-4">
-                                <span class="label label-info">Cooldown: {{ $decree->cooldown . ' ' . str_plural('tick', $decree->cooldown) }}</span>
+                                <span class="label label-info">Cooldown: {{ $decree->cooldown . ' ' . Str::plural('tick', $decree->cooldown) }}</span>
                             </div>
                         @endif
                     </div>

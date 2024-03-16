@@ -11,7 +11,7 @@
     @endif
     @if ($selectedDominion->round->hasCountdown() and !$selectedDominion->round->hasEnded())
         <div class="alert alert-info">
-                <p><i class="fas fa-hourglass-end"></i> <em>The end is nigh!</em> Round {{ $selectedDominion->round->number }} ends in <strong>{{ number_format($selectedDominion->round->ticksUntilEnd()) . ' ' . str_plural('tick', $selectedDominion->round->ticksUntilEnd()) }}</strong>.</p>
+                <p><i class="fas fa-hourglass-end"></i> <em>The end is nigh!</em> Round {{ $selectedDominion->round->number }} ends in <strong>{{ number_format($selectedDominion->round->ticksUntilEnd()) . ' ' . Str::plural('tick', $selectedDominion->round->ticksUntilEnd()) }}</strong>.</p>
         </div>
     @endif
 

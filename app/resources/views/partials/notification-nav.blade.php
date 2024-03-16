@@ -15,10 +15,14 @@
                 <li class="header">You have {{ $selectedDominion->unreadNotifications->count() }} new notifications</li>
                 <li>
                     <ul class="menu">
+                        @php
+                            use Illuminate\Support\Arr;
+                        @endphp
+                        
                         @foreach ($selectedDominion->unreadNotifications as $notification)
                             @php
-                                $route = array_get($notificationHelper->getNotificationCategories(), "{$notification->data['category']}.{$notification->data['type']}.route", '#');
-
+                                $route = Arr::get($notificationHelper->getNotificationCategories(), "{$notification->data['category']}.{$notification->data['type']}.route", '#');
+                        
                                 if (is_callable($route)) {
                                     if (isset($notification->data['data']['_routeParams'])) {
                                         $route = $route($notification->data['data']['_routeParams']);
@@ -30,7 +34,7 @@
                             @endphp
                             <li>
                                 <a href="{{ $route }}">
-                                    <i class="{{ array_get($notificationHelper->getNotificationCategories(), "{$notification->data['category']}.{$notification->data['type']}.iconClass", 'fa fa-question') }}"></i>
+                                    <i class="{{ Arr::get($notificationHelper->getNotificationCategories(), "{$notification->data['category']}.{$notification->data['type']}.iconClass", 'fa fa-question') }}"></i>
                                     {{ $notification->data['message'] }}<br>
                                     <small class="text-muted">{{ $notification->created_at }}</small>
                                 </a>

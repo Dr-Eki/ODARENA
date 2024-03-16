@@ -85,7 +85,7 @@
                                                     $spanClass = ($currentAmount >= $protected ? 'text-red' : 'text-green');
                                                     $ticksProtected = $production > 0 ? ($protected/$production) : 0;
                                                 @endphp
-                                                <span class="{{ $spanClass }}" data-toggle="tooltip" data-placement="top" title="Amount protected from theft.<br>{{ number_format($ticksProtected, 1) . ' ' . str_plural('tick', $ticksProtected)}} worth ">{{ number_format($protected) }}</span>
+                                                <span class="{{ $spanClass }}" data-toggle="tooltip" data-placement="top" title="Amount protected from theft.<br>{{ number_format($ticksProtected, 1) . ' ' . Str::plural('tick', $ticksProtected)}} worth ">{{ number_format($protected) }}</span>
                                             @else
                                                 <span class="text-muted" data-toggle="tooltip" data-placement="top" title="Amount protected from theft">{{ number_format($protected) }}</span>
                                             @endif
@@ -173,7 +173,7 @@
                         <td>{{ number_format($populationCalculator->getPopulation($selectedDominion)) }} / {{ number_format($populationCalculator->getMaxPopulation($selectedDominion)) }}</td>
                     </tr>
                     <tr>
-                        <td>{{ str_plural($raceHelper->getPeasantsTerm($selectedDominion->race)) }}</span>:</td>
+                        <td>{{ Str::plural($raceHelper->getPeasantsTerm($selectedDominion->race)) }}</span>:</td>
                         <td>
 
                             @if ($annexedPeasants = $populationCalculator->getAnnexedPeasants($selectedDominion))

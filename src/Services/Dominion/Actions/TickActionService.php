@@ -4,6 +4,7 @@ namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
 use Auth;
+use Illuminate\Support\Str;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\ProtectionService;
@@ -88,7 +89,7 @@ class TickActionService
 
         $this->notificationService->sendNotifications($dominion, 'irregular_dominion');
         return [
-            'message' => 'Tick processed. You now have ' . $dominion->protection_ticks . ' ' . str_plural('tick', $dominion->protection_ticks) . ' left.',
+            'message' => 'Tick processed. You now have ' . $dominion->protection_ticks . ' ' . Str::plural('tick', $dominion->protection_ticks) . ' left.',
             'alert-type' => 'success',
             'redirect' => route('dominion.status')
         ];

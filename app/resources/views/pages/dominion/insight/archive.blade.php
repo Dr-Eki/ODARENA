@@ -74,7 +74,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>{{ str_plural($raceHelper->getPeasantsTerm($dominion->race)) }}:</td>
+                                <td>{{ Str::plural($raceHelper->getPeasantsTerm($dominion->race)) }}:</td>
                                 <td>{{ number_format($data['peasants']) }}</td>
                             </tr>
                             <tr>
@@ -200,7 +200,7 @@
                     <em>
                         Currently viewing insight archived at tick {{ number_format($dominionInsight->round_tick) }},
                         <span data-toggle="tooltip" data-placement="top" title="{{ $dominionInsight->created_at }} {{ isset($dominionInsight->source_dominion_id) ? 'by ' . OpenDominion\Models\Dominion::findOrFail($dominionInsight->source_dominion_id)->name : '' }}">
-                            {{ number_format($selectedDominion->round->ticks - $dominionInsight->round_tick) . ' ' . str_plural('tick', $selectedDominion->round->ticks - $dominionInsight->round_tick) }} ago</a>.
+                            {{ number_format($selectedDominion->round->ticks - $dominionInsight->round_tick) . ' ' . Str::plural('tick', $selectedDominion->round->ticks - $dominionInsight->round_tick) }} ago</a>.
                         </span>
                     </em>
                 </p>
@@ -271,7 +271,7 @@
                 @if(!$data['deity'])
                     <p>This dominion is not currently devoted to a deity.</p>
                 @else
-                    <p>This dominion has been devoted to <b>{{ $data['deity'] }}</b> for {{ $data['deity_devotion'] . ' ' . str_plural('tick', $data['deity_devotion'])}}.</p>
+                    <p>This dominion has been devoted to <b>{{ $data['deity'] }}</b> for {{ $data['deity_devotion'] . ' ' . Str::plural('tick', $data['deity_devotion'])}}.</p>
                 @endif
             </div>
         </div>
@@ -341,7 +341,7 @@
                                     @endforeach
                                     <ul>
                                 </td>
-                                <td class="text-center">{{ $spellData['remaining'] . ' ' . str_plural('tick', $spellData['remaining'])}} </td>
+                                <td class="text-center">{{ $spellData['remaining'] . ' ' . Str::plural('tick', $spellData['remaining'])}} </td>
                             </tr>
                         @endforeach
                     </tbody>

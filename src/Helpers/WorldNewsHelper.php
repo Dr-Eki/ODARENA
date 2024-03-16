@@ -2,7 +2,7 @@
 
 namespace OpenDominion\Helpers;
 
-use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 use OpenDominion\Models\Artefact;
 use OpenDominion\Models\DecreeState;
@@ -436,7 +436,7 @@ class WorldNewsHelper
                 '%s obtained %s or more %s and triggered the the countdown! The round ends in 96 ticks, at tick %s, unless another realm takes enough the artefact from them.',
                 $this->generateRealmOnlyString($realm),
                 $countdown->round->goal,
-                str_plural('artefact', $countdown->round->goal),
+                Str::plural('artefact', $countdown->round->goal),
                 $countdown->round->end_tick
             );
         }
@@ -452,7 +452,7 @@ class WorldNewsHelper
                 '%s have obtained %s or more %s and triggered the the countdown! The round ends in 96 ticks, at tick %s, unless another realm takes enough artefacts from them.',
                 generate_sentence_from_array($announcementRealms),
                 $countdown->round->goal,
-                str_plural('artefact', $countdown->round->goal),
+                Str::plural('artefact', $countdown->round->goal),
                 $countdown->round->end_tick
             );
         }

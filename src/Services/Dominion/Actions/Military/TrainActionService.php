@@ -240,7 +240,7 @@ class TrainActionService
                     return ($unit->slot === $unitSlot);
                 })->first();
 
-                throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($dominion, $unitSlot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($dominion, $unitSlot)) . ' ' . Str::plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
             }
 
             # Check for minimum WPA to train.
@@ -288,7 +288,7 @@ class TrainActionService
           {
             if($totalCosts['unit' . $unit->slot] > $dominion->{'military_unit' . $unit->slot})
             {
-                throw new GameException('Insufficient ' . str_plural($unit->name) .  ' to train ' . number_format($amountToTrain) . ' ' . str_plural($unitToTrain->name, $amountToTrain) . '.');
+                throw new GameException('Insufficient ' . Str::plural($unit->name) .  ' to train ' . number_format($amountToTrain) . ' ' . Str::plural($unitToTrain->name, $amountToTrain) . '.');
             }
           }
 
@@ -309,7 +309,7 @@ class TrainActionService
 
           if ($totalCosts['draftees'] > $dominion->military_draftees)
           {
-              throw new GameException('Training aborted due to lack of ' . str_plural($this->raceHelper->getDrafteesTerm($dominion->race)) . '.');
+              throw new GameException('Training aborted due to lack of ' . Str::plural($this->raceHelper->getDrafteesTerm($dominion->race)) . '.');
           }
 
           if($totalCosts['spy_strength'] > $dominion->spy_strength)
@@ -324,7 +324,7 @@ class TrainActionService
 
           if($totalCosts['crypt_body'] > $this->resourceCalculator->getRealmAmount($dominion->realm, 'body'))
           {
-              throw new GameException('Insufficient bodies in the crypt to train ' . number_format($amountToTrain) . ' ' . str_plural($unitToTrain->name, $amountToTrain) . '.');
+              throw new GameException('Insufficient bodies in the crypt to train ' . number_format($amountToTrain) . ' ' . Str::plural($unitToTrain->name, $amountToTrain) . '.');
           }
       }
 
@@ -526,7 +526,7 @@ class TrainActionService
             if ($amount > 0) {
                 $unitName = strtolower($this->unitHelper->getUnitName($unitType, $dominion->race));
 
-                // str_plural() isn't perfect for certain unit names. This array
+                // Str::plural() isn't perfect for certain unit names. This array
                 // serves as an override to use (see issue #607)
                 // todo: Might move this to UnitHelper, especially if more
                 //       locations need unit name overrides
@@ -563,7 +563,7 @@ class TrainActionService
                         $unitLabel = $overridePluralUnitNames[$unitName];
                     }
                 } else {
-                    $unitLabel = str_plural(str_singular($unitName), $amount);
+                    $unitLabel = Str::plural(str_singular($unitName), $amount);
                 }
 
                 $unitsToTrainStringParts[] = "{$amountLabel} {$unitLabel}";
@@ -590,7 +590,7 @@ class TrainActionService
                     return ($unit->slot === $slot);
                 })->first();
 
-                $costType = str_plural($unit->name, $cost);
+                $costType = Str::plural($unit->name, $cost);
             }
 
             $costWord = $costType;
@@ -602,7 +602,7 @@ class TrainActionService
 
             if (!in_array($costType, ['gold', 'ore', 'food', 'mana', 'gems', 'lumber', 'prestige', 'champion', 'soul', 'blood', 'morale', 'peasant', 'swamp_gas', 'lumber'], true))
             {
-                $costWord = str_plural($costWord, $cost);
+                $costWord = Str::plural($costWord, $cost);
             }
 
             if($costType == 'peasant' or $costType == 'peasants')

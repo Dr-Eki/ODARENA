@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Helpers;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Resource;
@@ -371,9 +372,9 @@ class BuildingHelper
                 $pairedBuilding = Building::where('key', $buildingKey)->firstOrFail();
                 $amount = (int)$perkValue[0];
 
-                $perkValue = [str_plural($pairedBuilding->name, $amount), $amount];
+                $perkValue = [Str::plural($pairedBuilding->name, $amount), $amount];
 
-                #$perkValue = [$amount, str_plural($building->name, $amount)];
+                #$perkValue = [$amount, Str::plural($building->name, $amount)];
                 
                 #$nestedArrays = false;
             }
@@ -387,7 +388,7 @@ class BuildingHelper
                 foreach ($buildingKeys as $index => $buildingKey)
                 {
                     $pairingBuilding = Building::where('key', $buildingKey)->firstOrFail();
-                    $pairingBuildings[$index] = str_plural($pairingBuilding->name, $perBuildings);
+                    $pairingBuildings[$index] = Str::plural($pairingBuilding->name, $perBuildings);
                 }
     
                 $buildingsString = generate_sentence_from_array($pairingBuildings);
@@ -412,7 +413,7 @@ class BuildingHelper
         
                             $unit = $race->units->firstWhere('slot', $unitSlot);
             
-                            $perkValue[$key] = [$amountHoused, str_plural($unit->name, $amountHoused)];
+                            $perkValue[$key] = [$amountHoused, Str::plural($unit->name, $amountHoused)];
                         }
                     }
                     else
@@ -422,7 +423,7 @@ class BuildingHelper
         
                         $unit = $race->units->firstWhere('slot', $unitSlot);
     
-                        $perkValue = [$amountHoused, str_plural($unit->name, $amountHoused)];
+                        $perkValue = [$amountHoused, Str::plural($unit->name, $amountHoused)];
                     }
                 }
 
@@ -437,7 +438,7 @@ class BuildingHelper
 
                         foreach($perkValue[0] as $key => $unitSlot)
                         {
-                            $unitsGenerated[] = str_plural($race->units->firstWhere('slot', (int)$unitSlot)->name, $amountProduced);
+                            $unitsGenerated[] = Str::plural($race->units->firstWhere('slot', (int)$unitSlot)->name, $amountProduced);
                         }
 
                         $perkValue = [$amountProduced, generate_sentence_from_array($unitsGenerated)];
@@ -446,7 +447,7 @@ class BuildingHelper
                     {
                         $unitGenerated = $race->units->firstWhere('slot', (int)$perkValue[0])->name;
 
-                        $perkValue = [$amountProduced, str_plural($unitGenerated, $amountProduced)];
+                        $perkValue = [$amountProduced, Str::plural($unitGenerated, $amountProduced)];
                     }
 
                     $nestedArrays = false;
@@ -470,7 +471,7 @@ class BuildingHelper
                 $buildingKey = (string)$perkValue[2];
                 $limitingBuilding = Building::where('key', $buildingKey)->firstOrFail();
 
-                $perkValue = [display_number_format($maxOfThisBuilding), display_number_format($perOfLimitingBuilding), str_plural($limitingBuilding->name, $perOfLimitingBuilding)];
+                $perkValue = [display_number_format($maxOfThisBuilding), display_number_format($perOfLimitingBuilding), Str::plural($limitingBuilding->name, $perOfLimitingBuilding)];
 
                 $nestedArrays = false;
             }
@@ -512,7 +513,7 @@ class BuildingHelper
                     return ($unit->slot === $slot);
                 })->first();
 
-                $perkValue = [$amount, str_plural($unit->name, $amount)];
+                $perkValue = [$amount, Str::plural($unit->name, $amount)];
                 $nestedArrays = false;
 
             }

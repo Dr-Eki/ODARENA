@@ -3,7 +3,7 @@
 namespace OpenDominion\Models;
 
 use Carbon\Carbon;
-#use Gravatar;
+use Illuminate\Support\Arr;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -99,12 +99,11 @@ class User extends AbstractModel implements AuthenticatableContract, Authorizabl
 
     public function getSetting(string $key)
     {
-        if (!array_has($this->settings, $key)) {
+        if (!Arr::has($this->settings, $key)) {
             return null;
         }
-
-        return array_get($this->settings, $key);
-
+    
+        return Arr::get($this->settings, $key);
     }
 
     /**

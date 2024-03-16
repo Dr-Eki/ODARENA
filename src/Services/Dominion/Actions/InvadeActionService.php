@@ -4,6 +4,7 @@ namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
 use Log;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use OpenDominion\Exceptions\GameException;
 
@@ -252,7 +253,7 @@ class InvadeActionService
                     if($this->resourceCalculator->getAmount($attacker, $resourceKey) < $resourceCostToInvade)
                     {
                         $resource = Resource::where('key', $resourceKey)->first();
-                        throw new GameException('You do not have enough ' . str_plural($resource->name, $resourceCostToInvade) . ' to invade. You have ' . number_format($this->resourceCalculator->getAmount($attacker, $resourceKey)) . ' and you need at least ' . number_format($resourceCostToInvade) . '.');
+                        throw new GameException('You do not have enough ' . Str::plural($resource->name, $resourceCostToInvade) . ' to invade. You have ' . number_format($this->resourceCalculator->getAmount($attacker, $resourceKey)) . ' and you need at least ' . number_format($resourceCostToInvade) . '.');
                     }
                     else
                     {
@@ -333,14 +334,14 @@ class InvadeActionService
 
                 if($amount < 0)
                 {
-                    throw new GameException('Invasion was canceled due to an invalid amount of ' . str_plural($unit->name, $amount) . '.');
+                    throw new GameException('Invasion was canceled due to an invalid amount of ' . Str::plural($unit->name, $amount) . '.');
                 }
 
                 # OK, unit can be trained. Let's check for pairing limits.
                 if($this->unitCalculator->unitHasCapacityLimit($attacker, $slot) and !$this->unitCalculator->checkUnitLimitForInvasion($attacker, $slot, $amount))
                 {
 
-                    throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($attacker, $slot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                    throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($attacker, $slot)) . ' ' . Str::plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
                 }
 
                 # Check for spends_resource_on_offense
@@ -355,7 +356,7 @@ class InvadeActionService
 
                     if($resourceAmountRequired > $resourceAmountOwned)
                     {
-                        throw new GameException('You do not have enough ' . $resource->name . ' to attack to send this many ' . str_plural($unit->name, $amount) . '. You need ' . number_format($resourceAmountRequired) . ' but only have ' . number_format($resourceAmountOwned) . '.');
+                        throw new GameException('You do not have enough ' . $resource->name . ' to attack to send this many ' . Str::plural($unit->name, $amount) . '. You need ' . number_format($resourceAmountRequired) . ' but only have ' . number_format($resourceAmountOwned) . '.');
                     }
                 }
              }

@@ -4,6 +4,8 @@ namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
 use LogicException;
+use Illuminate\Support\Str;
+
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MagicCalculator;
@@ -419,7 +421,7 @@ class SpellActionService
                             return ($unit->slot === $toSlot);
                         })->first();
 
-                    $extraLine = ', phasing ' . number_format($newToSlotUnits) . ' ' . str_plural($fromUnit->name, $newToSlotUnits) . ' into ' . str_plural($toUnit->name, $newToSlotUnits);
+                    $extraLine = ', phasing ' . number_format($newToSlotUnits) . ' ' . Str::plural($fromUnit->name, $newToSlotUnits) . ' into ' . Str::plural($toUnit->name, $newToSlotUnits);
                 }
                 if($perk->key === ($caster->race->key . '_unit_conversion_ratio'))
                 {
@@ -447,7 +449,7 @@ class SpellActionService
                             return ($unit->slot === $toSlot);
                         })->first();
 
-                    $extraLine = ', mending ' . number_format($unitsConvertedFrom) . ' ' . str_plural($fromUnit->name, $unitsConvertedFrom) . ' into ' . number_format($unitsConvertedTo) . ' '. str_plural($toUnit->name, $unitsConvertedTo);
+                    $extraLine = ', mending ' . number_format($unitsConvertedFrom) . ' ' . Str::plural($fromUnit->name, $unitsConvertedFrom) . ' into ' . number_format($unitsConvertedTo) . ' '. Str::plural($toUnit->name, $unitsConvertedTo);
                 }
 
                 # Resource conversion
@@ -520,7 +522,7 @@ class SpellActionService
 
                     $unitConvertedTo = $caster->race->units->where('slot', $slotConvertedTo)->first();
 
-                    $extraLine = ', converting ' . number_format($actualPeasantsConverted) . ' peasants into ' . number_format($actualUnitsConvertedTo) . ' ' . str_plural($unitConvertedTo->name, $unitsConvertedTo) . '.';
+                    $extraLine = ', converting ' . number_format($actualPeasantsConverted) . ' peasants into ' . number_format($actualUnitsConvertedTo) . ' ' . Str::plural($unitConvertedTo->name, $unitsConvertedTo) . '.';
 
                 }
 
@@ -624,12 +626,12 @@ class SpellActionService
                             return ($unit->slot == $slot);
                         })->first();
 
-                        $units[] = number_format($amountConjured) . ' ' . str_plural($unit->name, $amountConjured);
+                        $units[] = number_format($amountConjured) . ' ' . Str::plural($unit->name, $amountConjured);
                     }
 
                     $unitsString = generate_sentence_from_array($units);
 
-                    $extraLine = ', turning ' . number_format($resourceAmountConverted) . ' of your ' . str_plural($resource->name) . ' into ' . $unitsString;
+                    $extraLine = ', turning ' . number_format($resourceAmountConverted) . ' of your ' . Str::plural($resource->name) . ' into ' . $unitsString;
 
                 }
 

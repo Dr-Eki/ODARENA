@@ -154,7 +154,7 @@
 
                                         @if($round->hasCountdown())
                                             <small class="text-muted">
-                                            <br>The round ends in <strong>{{ number_format($round->ticksUntilEnd()) . ' ' . str_plural('tick', $round->ticksUntilEnd()) }}</strong>.
+                                            <br>The round ends in <strong>{{ number_format($round->ticksUntilEnd()) . ' ' . Str::plural('tick', $round->ticksUntilEnd()) }}</strong>.
                                             </small>
                                         @endif
                                         </p>
@@ -181,7 +181,7 @@
                                                         $canDelete = $packService->canDeletePack($user, $pack);
                                                         $members = $pack->dominions->count();
                                                     @endphp
-                                                        You are the Leader of a pack, which has {{ $members }} {{ str_plural('member', $members) }}.
+                                                        You are the Leader of a pack, which has {{ $members }} {{ Str::plural('member', $members) }}.
                                                         @if($canDelete)
                                                             <form action="{{ route('dashboard.delete-pack', $pack) }}" method="post">
                                                                 @csrf

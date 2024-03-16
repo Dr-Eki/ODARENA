@@ -209,7 +209,7 @@
                                     <p><strong><em>You cannot attack while the caverns are flooded.</em></strong></p>
 
                               @elseif ($protectionService->isUnderProtection($selectedDominion))
-                              <p><strong><em>You are currently under protection for <b>{{ $selectedDominion->protection_ticks }}</b> {{ str_plural('tick', $selectedDominion->protection_ticks) }} and may not invade during that time.</em></strong></p>
+                              <p><strong><em>You are currently under protection for <b>{{ $selectedDominion->protection_ticks }}</b> {{ Str::plural('tick', $selectedDominion->protection_ticks) }} and may not invade during that time.</em></strong></p>
 
                               @elseif (!$selectedDominion->round->hasStarted())
                               <p><strong><em>You cannot invade until the round has started.</em></strong></p>
@@ -299,7 +299,7 @@
                                             <tr>
                                                 <td>Sazal's Fog:</td>
                                                 <td>
-                                                    {{ number_format($spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }} {{ str_plural('tick', $spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }}
+                                                    {{ number_format($spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }} {{ Str::plural('tick', $spellCalculator->getSpellDuration($selectedDominion, $spell->key)) }}
                                                 </td>
                                             </tr>
                                         @endif
@@ -325,7 +325,7 @@
                 @endphp
                 <p>From this page, you can attack the aegis of other realms' artefacts.</p>
                 <p>To be worthy of attacking an artefact, you must have a certain number of hostile dominions in range. <span class="text-muted">Fogged dominions and Barbarians do not count.</span></p>
-                <p>You have <strong>{{ number_format($numberOfQualifyingDominionsInRange) }} {{ str_plural('dominion', $numberOfQualifyingDominionsInRange) }}</strong> out of the required <strong>{{ number_format($minimumNumberOfDominionsInRangeRequired) }}</strong> in range.</p>
+                <p>You have <strong>{{ number_format($numberOfQualifyingDominionsInRange) }} {{ Str::plural('dominion', $numberOfQualifyingDominionsInRange) }}</strong> out of the required <strong>{{ number_format($minimumNumberOfDominionsInRangeRequired) }}</strong> in range.</p>
                 <p>You can only perform one artefact attack per tick.</p>
                 @if($artefactCalculator->canAttackArtefacts($selectedDominion))
                     <p class="text-success">You meet the requirements to attack artefacts.</p>
@@ -409,7 +409,7 @@
                     <h3 class="box-title">Information</h3>
                 </div>
                 <div class="box-body">
-                    <p>Your realm has <strong>{{ number_format($realmArtefactsCount) }} {{ str_plural('artefact', $realmArtefactsCount) }}</strong>.</p>
+                    <p>Your realm has <strong>{{ number_format($realmArtefactsCount) }} {{ Str::plural('artefact', $realmArtefactsCount) }}</strong>.</p>
                 </div>
             </div>
         </div>
@@ -499,7 +499,7 @@
                                     @if($isQueued)
                                         <a href="{{ route('dominion.realm', $destinationRealm->number) }}">
                                             <small>
-                                                Arriving in Realm # {{ $destinationRealm->number }} in {{ number_format($ticksRemaining) . ' ' . str_plural('tick', $ticksRemaining) }} 
+                                                Arriving in Realm # {{ $destinationRealm->number }} in {{ number_format($ticksRemaining) . ' ' . Str::plural('tick', $ticksRemaining) }} 
                                             </small>
                                         </a>
                                     @else
@@ -542,7 +542,7 @@
                     <h3 class="box-title">Information</h3>
                 </div>
                 <div class="box-body">
-                    <p><strong>{{ number_format($discoveredArtefactsCount) . ' ' . str_plural('artefact', $discoveredArtefactsCount) }}</strong> discovered so far this round:</p>    
+                    <p><strong>{{ number_format($discoveredArtefactsCount) . ' ' . Str::plural('artefact', $discoveredArtefactsCount) }}</strong> discovered so far this round:</p>    
                     <p>{{ number_format($realmArtefacts->count()) }} currently held by realms and {{ number_format($queuedArtefacts->count()) }} in transit.</p>
                 </div>
             </div>

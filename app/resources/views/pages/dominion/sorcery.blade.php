@@ -304,7 +304,7 @@
                     @foreach($spellCalculator->getPassiveSpellsCastOnDominion($selectedDominion, 'hostile') as $activePassiveSpellCast)
                         <tr>
                             <td>{{ $activePassiveSpellCast->spell->name }}</td>
-                            <td>{{ $activePassiveSpellCast->duration . ' ' . str_plural('tick', $activePassiveSpellCast->duration)}}</td>
+                            <td>{{ $activePassiveSpellCast->duration . ' ' . Str::plural('tick', $activePassiveSpellCast->duration)}}</td>
                             <td>
                                 @if($activePassiveSpellCast->spell->class !== 'invasion')
                                     <form action="{{ route('dominion.sorcery') }}" method="post" role="form" id="break_spell" name="break_spell">

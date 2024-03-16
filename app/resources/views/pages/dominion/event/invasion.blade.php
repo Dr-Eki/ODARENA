@@ -379,14 +379,14 @@
                                     <th colspan="2">Population Eaten</th>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><small class="text-muted">A gruesome sight as {{ $raceHelper->getRaceAdjective($event->source->race) }} warriors eat some of the {{ $raceHelper->getRaceAdjective($event->target->race) }}  {{ strtolower(str_plural($raceHelper->getPeasantsTerm($event->target->race))) }} and {{ strtolower(str_plural($raceHelper->getDrafteesTerm($event->target->race))) }}.</small></td>
+                                    <td colspan="2"><small class="text-muted">A gruesome sight as {{ $raceHelper->getRaceAdjective($event->source->race) }} warriors eat some of the {{ $raceHelper->getRaceAdjective($event->target->race) }}  {{ strtolower(Str::plural($raceHelper->getPeasantsTerm($event->target->race))) }} and {{ strtolower(Str::plural($raceHelper->getDrafteesTerm($event->target->race))) }}.</small></td>
                                 </tr>
                                 <tr>
-                                    <td>{{ str_plural($raceHelper->getPeasantsTerm($event->target->race)) }}:</td>
+                                    <td>{{ Str::plural($raceHelper->getPeasantsTerm($event->target->race)) }}:</td>
                                     <td><span class="text-green">{{ number_format($event->data['attacker']['peasants_eaten']['peasants']) }}</span></td>
                                 </tr>
                                 <tr>
-                                    <td>{{ str_plural($raceHelper->getDrafteesTerm($event->target->race)) }}:</td>
+                                    <td>{{ Str::plural($raceHelper->getDrafteesTerm($event->target->race)) }}:</td>
                                     <td><span class="text-green">{{ number_format($event->data['attacker']['draftees_eaten']['draftees']) }}</span></td>
                                 </tr>
                                 @endif
@@ -396,10 +396,10 @@
                                     <th colspan="2">Population Burned</th>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><small class="text-muted">The charred bodies of burned {{ strtolower(str_plural($raceHelper->getPeasantsTerm($event->target->race))) }} emit a foul odour across the battlefield.</small></td>
+                                    <td colspan="2"><small class="text-muted">The charred bodies of burned {{ strtolower(Str::plural($raceHelper->getPeasantsTerm($event->target->race))) }} emit a foul odour across the battlefield.</small></td>
                                 </tr>
                                 <tr>
-                                    <td>{{ str_plural($raceHelper->getPeasantsTerm($event->target->race)) }}:</td>
+                                    <td>{{ Str::plural($raceHelper->getPeasantsTerm($event->target->race)) }}:</td>
                                     <td><span class="text-green">{{ number_format($event->data['attacker']['peasants_burned']['peasants']) }}</span></td>
                                 </tr>
                                 @endif
@@ -849,14 +849,14 @@
                                     </tr>
                                     </tr>
                                     <tr>
-                                        <td colspan="2"><small class="text-muted">The {{ $raceHelper->getRaceAdjective($event->source->race) }} warriors eat some of our {{ strtolower(str_plural($raceHelper->getPeasantsTerm($event->target->race))) }} and {{ strtolower(str_plural($raceHelper->getDrafteesTerm($event->target->race))) }}.</small></td>
+                                        <td colspan="2"><small class="text-muted">The {{ $raceHelper->getRaceAdjective($event->source->race) }} warriors eat some of our {{ strtolower(Str::plural($raceHelper->getPeasantsTerm($event->target->race))) }} and {{ strtolower(Str::plural($raceHelper->getDrafteesTerm($event->target->race))) }}.</small></td>
                                     </tr>
                                     <tr>
-                                        <td>{{ str_plural($raceHelper->getPeasantsTerm($event->target->race)) }}:</td>
+                                        <td>{{ Str::plural($raceHelper->getPeasantsTerm($event->target->race)) }}:</td>
                                         <td><span class="text-green">{{ number_format($event->data['attacker']['peasants_eaten']['peasants']) }}</span></td>
                                     </tr>
                                     <tr>
-                                        <td>{{ str_plural($raceHelper->getDrafteesTerm($event->target->race)) }}:</td>
+                                        <td>{{ Str::plural($raceHelper->getDrafteesTerm($event->target->race)) }}:</td>
                                         <td><span class="text-green">{{ number_format($event->data['attacker']['draftees_eaten']['draftees']) }}</span></td>
                                     </tr>
                                 @endif
@@ -866,10 +866,10 @@
                                         <th colspan="2">Population Burned</th>
                                     </tr>
                                     <tr>
-                                        <td colspan="2"><small class="text-muted">Our {{ strtolower(str_plural($raceHelper->getPeasantsTerm($event->target->race))) }} have been attacked with fire.</small></td>
+                                        <td colspan="2"><small class="text-muted">Our {{ strtolower(Str::plural($raceHelper->getPeasantsTerm($event->target->race))) }} have been attacked with fire.</small></td>
                                     </tr>
                                     <tr>
-                                        <td>{{ str_plural($raceHelper->getPeasantsTerm($event->target->race)) }} burned:</td>
+                                        <td>{{ Str::plural($raceHelper->getPeasantsTerm($event->target->race)) }} burned:</td>
                                         <td><span class="text-red">{{ number_format($event->data['attacker']['peasants_burned']['peasants']) }}</span></td>
                                     </tr>
                                 @endif

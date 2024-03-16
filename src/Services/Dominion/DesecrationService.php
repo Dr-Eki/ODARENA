@@ -3,6 +3,7 @@
 namespace OpenDominion\Services\Dominion;
 
 use DB;
+use Illuminate\Support\Str;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Traits\DominionGuardsTrait;
 use OpenDominion\Models\Dominion;
@@ -162,9 +163,9 @@ class DesecrationService
             $message = sprintf(
                 'Your units desecrate %s %s and begin their journey home with %s %s.',
                 number_format($this->desecration['bodies']['desecrated']),
-                str_plural('body', $this->desecration['bodies']['desecrated']),
+                Str::plural('body', $this->desecration['bodies']['desecrated']),
                 number_format($this->desecration['result']['amount']),
-                str_plural($this->desecration['result']['resource_name'], $this->desecration['result']['amount'])
+                Str::plural($this->desecration['result']['resource_name'], $this->desecration['result']['amount'])
             );
     
             $alertType = 'success';

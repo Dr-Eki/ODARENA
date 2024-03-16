@@ -152,7 +152,7 @@ return [
         /*
          * Package Service Providers...
          */
-        Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
+        #Bugsnag\BugsnagLaravel\BugsnagServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         #Superbalist\LaravelGoogleCloudStorage\GoogleCloudStorageServiceProvider::class,
 
@@ -217,7 +217,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Agent' => Jenssegers\Agent\Facades\Agent::class,
-        'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
+        #'Bugsnag' => Bugsnag\BugsnagLaravel\Facades\Bugsnag::class,
         #'Gravatar' => Thomaswelton\LaravelGravatar\Facades\Gravatar::class,
         'Image' => Intervention\Image\Facades\Image::class,
         #'Markdown' => GrahamCampbell\Markdown\Facades\Markdown::class,

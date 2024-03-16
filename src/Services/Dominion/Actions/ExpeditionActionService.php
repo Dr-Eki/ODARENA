@@ -4,6 +4,7 @@ namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
 use Log;
+use Illuminate\Support\Str;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Traits\DominionGuardsTrait;
 
@@ -233,7 +234,7 @@ class ExpeditionActionService
 
                     if($amount > $maxSendableOfThisUnit)
                     {
-                        throw new GameException('You can at most send ' . number_format($upperLimit) . ' ' . str_plural($this->unitHelper->getUnitName($unitSlot, $dominion->race), $upperLimit) . '. To send more, you must build more '. ucwords(str_plural($buildingLimit[0], 2)) .' or invest more in unit pairing improvements.');
+                        throw new GameException('You can at most send ' . number_format($upperLimit) . ' ' . Str::plural($this->unitHelper->getUnitName($unitSlot, $dominion->race), $upperLimit) . '. To send more, you must build more '. ucwords(Str::plural($buildingLimit[0], 2)) .' or invest more in unit pairing improvements.');
                     }
                 }
 

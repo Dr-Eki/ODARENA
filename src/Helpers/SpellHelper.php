@@ -2,7 +2,7 @@
 
 namespace OpenDominion\Helpers;
 
-use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
@@ -397,7 +397,7 @@ class SpellHelper
                         return ($unit->slot === $slot);
                     })->first();
 
-                $perkValue = [$faction, str_plural($unit->name), $percentage];
+                $perkValue = [$faction, Str::plural($unit->name), $percentage];
             }
 
             if($perk->key === 'aurei_unit_conversion')
@@ -468,7 +468,7 @@ class SpellHelper
                         })->first();
 
 
-                    $units[$index] = str_plural($unit->name);
+                    $units[$index] = Str::plural($unit->name);
                 }
 
                 $unitsString = generate_sentence_from_array($units);
@@ -495,7 +495,7 @@ class SpellHelper
                         })->first();
 
 
-                    $units[$index] = str_plural($unit->name);
+                    $units[$index] = Str::plural($unit->name);
                 }
 
                 $unitsString = generate_sentence_from_array($units);
@@ -524,12 +524,12 @@ class SpellHelper
                             return ($unit->slot === $slot);
                         })->first();
 
-                    $units[$index] = str_plural($unit->name);
+                    $units[$index] = Str::plural($unit->name);
                 }
 
                 $unitsString = generate_sentence_from_array($units);
 
-                $perkValue = [$ratioPerWpa, $maxRatio, str_plural($resource->name), $unitsString];
+                $perkValue = [$ratioPerWpa, $maxRatio, Str::plural($resource->name), $unitsString];
                 $nestedArrays = false;
             }
 
@@ -565,7 +565,7 @@ class SpellHelper
                     return ($unit->slot === $slotConvertedTo);
                 })->first();
 
-                $perkValue = [$peasantsConverted, $unitsConvertedTo, str_plural($unitToConvertTo->name, $unitsConvertedTo)];
+                $perkValue = [$peasantsConverted, $unitsConvertedTo, Str::plural($unitToConvertTo->name, $unitsConvertedTo)];
                 $nestedArrays = false;
 
             }

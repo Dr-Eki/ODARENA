@@ -11,7 +11,7 @@
                 </div>
                 <div class="col-xs-2">
                     <div class="row" data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Employment:</small> {{ number_format($populationCalculator->getEmploymentPercentage($selectedDominion), 2) }}%''>
-                        <div class="col-lg-6"><b>{{ str_plural($raceHelper->getPeasantsTerm($selectedDominion->race)) }}:</b></div>
+                        <div class="col-lg-6"><b>{{ Str::plural($raceHelper->getPeasantsTerm($selectedDominion->race)) }}:</b></div>
                         <div class="col-lg-6">{{ number_format($selectedDominion->peasants) }}</div>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                                 {{ $selectedDominion->isLocked() ? 'disabled' : null }}
                                 id="tick-button">
                             <i class="ra ra-shield"></i>
-                            Proceed tick(s) ({{ $selectedDominion->protection_ticks }} {{ str_plural('tick', $selectedDominion->protection_ticks) }} left)
+                            Proceed tick(s) ({{ $selectedDominion->protection_ticks }} {{ Str::plural('tick', $selectedDominion->protection_ticks) }} left)
                         </button>
                     </form>
                     </div>

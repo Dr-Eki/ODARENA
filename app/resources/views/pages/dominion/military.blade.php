@@ -138,7 +138,7 @@
                     <div class="pull-right">
 
                       @if(!$selectedDominion->race->getPerkValue('no_drafting'))
-                          {{ ucwords(str_plural($raceHelper->getDrafteesTerm($selectedDominion->race), $selectedDominion->military_draftees)) }}: <strong>{{ number_format($selectedDominion->military_draftees) }}</strong> 
+                          {{ ucwords(Str::plural($raceHelper->getDrafteesTerm($selectedDominion->race), $selectedDominion->military_draftees)) }}: <strong>{{ number_format($selectedDominion->military_draftees) }}</strong> 
                       @endif
 
                       @if ($dominionHelper->isEnraged($selectedDominion))
@@ -201,7 +201,7 @@
                             <form action="{{ route('dominion.military.release-draftees') }}" method="post" role="form" class="pull-right">
                                 @csrf
                                 <input type="hidden" style="display:none;" name="release[draftees]" value={{ intval($selectedDominion->military_draftees) }}>
-                                <button type="submit" class="btn btn-warning btn-small" {{ ($selectedDominion->isLocked() or $selectedDominion->military_draftees == 0) ? 'disabled' : null }}>Release {{ str_plural($raceHelper->getDrafteesTerm($selectedDominion->race)) }}</button>
+                                <button type="submit" class="btn btn-warning btn-small" {{ ($selectedDominion->isLocked() or $selectedDominion->military_draftees == 0) ? 'disabled' : null }}>Release {{ Str::plural($raceHelper->getDrafteesTerm($selectedDominion->race)) }}</button>
                             </form>
                         @endif
                     </div>
@@ -244,7 +244,7 @@
                                 <td>{{ $dominion->name }}</td>
                                 <td>{{ number_format($militaryCalculator->getRawMilitaryPowerFromAnnexedDominion($dominion)) }}</td>
                                 <td>{{ number_format($dominion->peasants) }}</td>
-                                <td>{{ number_format($spellCalculator->getTicksRemainingOfAnnexation($selectedDominion, $dominion)) . ' ' . str_plural('tick', $spellCalculator->getTicksRemainingOfAnnexation($selectedDominion, $dominion)) }}</td>
+                                <td>{{ number_format($spellCalculator->getTicksRemainingOfAnnexation($selectedDominion, $dominion)) . ' ' . Str::plural('tick', $spellCalculator->getTicksRemainingOfAnnexation($selectedDominion, $dominion)) }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -259,7 +259,7 @@
                 <h3 class="box-title">Information</h3>
             </div>
             <div class="box-body">
-                <p>You have annexed <b>{{ count($spellCalculator->getAnnexedDominions($selectedDominion)) . ' ' . str_plural('dominion', count($spellCalculator->getAnnexedDominions($selectedDominion))) }}</b>, providing you with an additional <b>{{ number_format($militaryCalculator->getRawMilitaryPowerFromAnnexedDominions($selectedDominion)) }}</b> raw offensive and defensive power.</p>
+                <p>You have annexed <b>{{ count($spellCalculator->getAnnexedDominions($selectedDominion)) . ' ' . Str::plural('dominion', count($spellCalculator->getAnnexedDominions($selectedDominion))) }}</b>, providing you with an additional <b>{{ number_format($militaryCalculator->getRawMilitaryPowerFromAnnexedDominions($selectedDominion)) }}</b> raw offensive and defensive power.</p>
             </div>
         </div>
     </div>

@@ -5,7 +5,7 @@
 
     @if($spell->class == 'passive')
         <div class="col-sm-12">
-            <small class="text-muted">Duration:</small> <span class="text-primary" data-toggle="tooltip" data-placement="top" title="Base duration">{{ floatval($spell->duration) . ' ' . str_plural('tick', $spell->duration)}}</span> <small class="text-muted">(base)</small>
+            <small class="text-muted">Duration:</small> <span class="text-primary" data-toggle="tooltip" data-placement="top" title="Base duration">{{ floatval($spell->duration) . ' ' . Str::plural('tick', $spell->duration)}}</span> <small class="text-muted">(base)</small>
         </div>
     @elseif($spell->class == 'active')
         <div class="col-sm-12">
@@ -20,7 +20,7 @@
             </div>
         @else
             <div class="col-sm-12">
-                <small class="text-muted">Cooldown:</small> <span class="text-info" data-toggle="tooltip" data-placement="top" title="Cooldown until spell can be cast again">{{ number_format($spell->cooldown) . ' ' . str_plural('tick', $spell->cooldown)}}</span>
+                <small class="text-muted">Cooldown:</small> <span class="text-info" data-toggle="tooltip" data-placement="top" title="Cooldown until spell can be cast again">{{ number_format($spell->cooldown) . ' ' . Str::plural('tick', $spell->cooldown)}}</span>
             </div>
         @endif
     @endif

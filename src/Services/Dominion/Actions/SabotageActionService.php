@@ -4,6 +4,8 @@ namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
 use Log;
+use Illuminate\Support\Str;
+
 use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Models\Dominion;
@@ -166,7 +168,7 @@ class SabotageActionService
                     # OK, unit can be trained. Let's check for pairing limits.
                     if($this->unitCalculator->unitHasCapacityLimit($saboteur, $slot) and !$this->unitCalculator->checkUnitLimitForInvasion($saboteur, $slot, $amount))
                     {
-                        throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($saboteur, $slot)) . ' ' . str_plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                        throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($saboteur, $slot)) . ' ' . Str::plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
                     }
 
                     if(!$this->unitCalculator->isUnitSendableByDominion($unit, $saboteur))

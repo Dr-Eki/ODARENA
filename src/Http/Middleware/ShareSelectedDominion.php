@@ -2,7 +2,6 @@
 
 namespace OpenDominion\Http\Middleware;
 
-use Bugsnag;
 use Closure;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use OpenDominion\Services\Dominion\SelectorService;
@@ -35,14 +34,6 @@ class ShareSelectedDominion
 
                 return redirect()->route('home');
             }
-
-            // Add dominion context to Bugsnag
-            Bugsnag::registerCallback(function (Bugsnag\Report $report) use ($dominion) {
-                /** @noinspection NullPointerExceptionInspection */
-                $report->setMetaData([
-                    'dominion' => array_except($dominion->toArray(), ['race', 'realm']),
-                ]);
-            });
 
             view()->share('selectedDominion', $dominion);
         }

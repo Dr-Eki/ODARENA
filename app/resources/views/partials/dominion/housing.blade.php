@@ -44,7 +44,7 @@
 
 @if($populationCalculator->getAvailableHousingFromDrafteeSpecificBuildings($selectedDominion) > 0)
 <tr>
-    <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by buildings for {{ str_plural($raceHelper->getDrafteesTerm($selectedDominion->race)) }}:<br>Filled / Available">{{ $raceHelper->getDrafteesTerm($selectedDominion->race) }} housing:</span></td>
+    <td><span data-toggle="tooltip" data-placement="top" title="Housing provided by buildings for {{ Str::plural($raceHelper->getDrafteesTerm($selectedDominion->race)) }}:<br>Filled / Available">{{ $raceHelper->getDrafteesTerm($selectedDominion->race) }} housing:</span></td>
     <td>{{ number_format($populationCalculator->getDrafteesHousedInDrafteeSpecificBuildings($selectedDominion)) }} / {{ number_format($populationCalculator->getAvailableHousingFromDrafteeSpecificBuildings($selectedDominion)) }}</td>
 </tr>
 @endif

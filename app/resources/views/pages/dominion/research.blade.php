@@ -123,7 +123,7 @@
                                                     @if(!$researchCalculator->isBeingResearched($selectedDominion, $tech))
                                                         <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="{{ $researchTime }}">Not researched</div>
                                                     @else
-                                                        <div class="progress-bar label-success" role="progressbar" style="width: {{ $progress }}%" aria-valuenow="25" aria-valuemin="25" aria-valuemax="{{ $researchTime }}">{{ $ticksRemaining . ' ' .str_plural('tick', $ticksRemaining)}} remaining</div>
+                                                        <div class="progress-bar label-success" role="progressbar" style="width: {{ $progress }}%" aria-valuenow="25" aria-valuemin="25" aria-valuemax="{{ $researchTime }}">{{ $ticksRemaining . ' ' .Str::plural('tick', $ticksRemaining)}} remaining</div>
                                                         <div class="progress-bar label-warning" role="progressbar" style="width: {{ $remaining }}%" aria-valuenow="25" aria-valuemin="25" aria-valuemax="{{ $researchTime }}"></div>
                                                     @endif
                                                 @endif
@@ -230,7 +230,7 @@
                 <h3 class="box-title">Information</h3>
             </div>
             <div class="box-body">
-                <p>You have {{ $researchCalculator->getFreeResearchSlots($selectedDominion) }} of {{ $researchCalculator->getResearchSlots($selectedDominion) }} research {{ str_plural('slot', $researchCalculator->getFreeResearchSlots($selectedDominion)) }} available.</p>
+                <p>You have {{ $researchCalculator->getFreeResearchSlots($selectedDominion) }} of {{ $researchCalculator->getResearchSlots($selectedDominion) }} research {{ Str::plural('slot', $researchCalculator->getFreeResearchSlots($selectedDominion)) }} available.</p>
                 <p>A new research project will take {{ number_format($researchCalculator->getResearchTime($selectedDominion)) }} ticks to complete.</p>
                 <p>If you have multiple technologies with the same perk, only the highest perk will apply.</p>
                 <p><span class="label label-warning">&nbsp;</span> Orange means currently being researched, or that a prerequisite is being researched.</p>
@@ -266,7 +266,7 @@
 
                             <li>
                                 <span data-toggle="tooltip" data-placement="top" title="{{ $perksString }}">
-                                    <a href="#{{ $tech->name }}">{{ $tech->name }}</a>: {{ number_format($currentResearchTech->hours) . ' ' . str_plural('tick', $currentResearchTech->hours) }} remaining
+                                    <a href="#{{ $tech->name }}">{{ $tech->name }}</a>: {{ number_format($currentResearchTech->hours) . ' ' . Str::plural('tick', $currentResearchTech->hours) }} remaining
                                 </span>
                             </li>
 

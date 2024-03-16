@@ -122,7 +122,7 @@
                             <tr>
                                 <td>
                                     <span class="">
-                                        {{ str_plural($raceHelper->getPeasantsTerm($dominion->race)) }}:</td>
+                                        {{ Str::plural($raceHelper->getPeasantsTerm($dominion->race)) }}:</td>
                                     </span>
                                 <td>{{ number_format($dominion->peasants) }}</td>
                             </tr>
@@ -369,7 +369,7 @@
                 @else
                     @php
                         $perksList = '<ul>';
-                        $perksList .= '<li>Devotion: ' . number_format($dominion->devotion->duration) . ' ' . str_plural('tick', $dominion->devotion->duration) . '</li>';
+                        $perksList .= '<li>Devotion: ' . number_format($dominion->devotion->duration) . ' ' . Str::plural('tick', $dominion->devotion->duration) . '</li>';
                         $perksList .= '<li>Range multiplier: ' . $dominion->deity->range_multiplier . 'x</li>';
                         foreach($deityHelper->getDeityPerksString($dominion->deity, $dominion->getDominionDeity()) as $effect)
                         {
@@ -380,7 +380,7 @@
                     <p>This dominion is devoted to <b>{{ $dominion->deity->name }}</b>.</p>
 
                     <ul>
-                    <li>Devotion: {{ number_format($dominion->devotion->duration) . ' ' . str_plural('tick', $dominion->devotion->duration) }}</li>
+                    <li>Devotion: {{ number_format($dominion->devotion->duration) . ' ' . Str::plural('tick', $dominion->devotion->duration) }}</li>
                     <li>Range multiplier: {{ $dominion->deity->range_multiplier }}x</li>
                     @foreach($deityHelper->getDeityPerksString($dominion->deity, $dominion->getDominionDeity()) as $effect)
 
@@ -403,7 +403,7 @@
 
                     <ul>
                     @foreach($spellCalculator->getAnnexedDominions($dominion) as $barbarian)
-                        <li><a href="{{ route('dominion.insight.show', $barbarian) }}">{{ $barbarian->name }}</a> ({{ $spellCalculator->getTicksRemainingOfAnnexation($dominion, $barbarian) . ' ' . str_plural('tick', $spellCalculator->getTicksRemainingOfAnnexation($dominion, $barbarian))}} remaining)</li>
+                        <li><a href="{{ route('dominion.insight.show', $barbarian) }}">{{ $barbarian->name }}</a> ({{ $spellCalculator->getTicksRemainingOfAnnexation($dominion, $barbarian) . ' ' . Str::plural('tick', $spellCalculator->getTicksRemainingOfAnnexation($dominion, $barbarian))}} remaining)</li>
                     @endforeach
                     </ul>
                 </div>
@@ -477,7 +477,7 @@
                                         @endforeach
                                         <ul>
                                     </td>
-                                    <td class="text-center">{{ $dominionSpell->duration . ' ' . str_plural('tick', $dominionSpell->duration)}} </td>
+                                    <td class="text-center">{{ $dominionSpell->duration . ' ' . Str::plural('tick', $dominionSpell->duration)}} </td>
                                 </tr>
                             @endif
                         @endforeach

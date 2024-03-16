@@ -2,6 +2,8 @@
 
 namespace OpenDominion\Helpers;
 
+use Illuminate\Support\Str;
+
 use OpenDominion\Models\Advancement;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Decree;
@@ -657,7 +659,7 @@ class UnitHelper
                     $perkValue[0] = $pairedUnit->name;
                     if (isset($perkValue[2]) && $perkValue[2] > 0)
                     {
-                        $perkValue[0] = str_plural($perkValue[0]);
+                        $perkValue[0] = Str::plural($perkValue[0]);
                     }
                     else
                     {
@@ -701,7 +703,7 @@ class UnitHelper
                         if (isset($pairing[2]) && $pairing[2] > 0)
                         {
                             $unitsNeeded = $pairing[2];
-                            $pairedUnitName = str_plural($pairedUnitName);
+                            $pairedUnitName = Str::plural($pairedUnitName);
                         }
                         else
                         {
@@ -764,7 +766,7 @@ class UnitHelper
                     $perkValue[0] = $pairedUnit->name;
                     if (isset($perkValue[2]) && $perkValue[2] > 0)
                     {
-                        $perkValue[0] = str_plural($perkValue[0]);
+                        $perkValue[0] = Str::plural($perkValue[0]);
                     }
                     else
                     {
@@ -794,7 +796,7 @@ class UnitHelper
                             return ($unit->slot === $slot);
                         })->first();
 
-                        $unitNamesToConvertTo[] = str_plural($unitToConvertTo->name);
+                        $unitNamesToConvertTo[] = Str::plural($unitToConvertTo->name);
                     }
 
                     $perkValue = generate_sentence_from_array($unitNamesToConvertTo);
@@ -843,7 +845,7 @@ class UnitHelper
                         return ($unit->slot === $fallbackSlotTo);
                     })->first();
 
-                    $perkValue = [$rangeMin, $rangeMax, str_plural($primaryUnitTo->name), str_plural($fallbackUnitTo->name)];
+                    $perkValue = [$rangeMin, $rangeMax, Str::plural($primaryUnitTo->name), Str::plural($fallbackUnitTo->name)];
                 }
                 if($perk->key === 'strength_conversion')
                 {
@@ -861,7 +863,7 @@ class UnitHelper
                             return ($unit->slot === $over);
                         })->first();
 
-                    $perkValue = [$limit, str_plural($underLimitUnit->name), str_plural($overLimitUnit->name)];
+                    $perkValue = [$limit, Str::plural($underLimitUnit->name), Str::plural($overLimitUnit->name)];
                 }
                 if($perk->key === 'passive_conversion')
                 {
@@ -879,7 +881,7 @@ class UnitHelper
                             return ($unit->slot === $slotTo);
                         })->first();
 
-                    $perkValue = [str_plural($unitFrom->name), str_plural($unitTo->name), $rate];
+                    $perkValue = [Str::plural($unitFrom->name), Str::plural($unitTo->name), $rate];
                 }
 
                 if($perk->key === 'evolves_into_unit')
@@ -891,7 +893,7 @@ class UnitHelper
 
                     $unitTo = $race->units->where('slot', $targetSlot)->first();
 
-                    $perkValue = [str_plural($unitTo->name), $evolutionRatio, $evolutionTicks];
+                    $perkValue = [Str::plural($unitTo->name), $evolutionRatio, $evolutionTicks];
                 }
 
                 if($perk->key === 'value_conversion')
@@ -904,7 +906,7 @@ class UnitHelper
                             return ($unit->slot === $convertToSlot);
                         })->first();
 
-                    $perkValue = [$multiplier, str_plural($unitToConvertTo->name)];
+                    $perkValue = [$multiplier, Str::plural($unitToConvertTo->name)];
                 }
                 if($perk->key === 'defense_from_buildings')
                 {
@@ -914,7 +916,7 @@ class UnitHelper
 
                     foreach ($buildings as $index => $building)
                     {
-                        $buildings[$index] = str_plural(ucwords(str_replace('_',' ', $building)));
+                        $buildings[$index] = Str::plural(ucwords(str_replace('_',' ', $building)));
                     }
 
                     $buildingsString = generate_sentence_from_array($buildings) . ' (total)';
@@ -946,7 +948,7 @@ class UnitHelper
                     }
                     else
                     {
-                        $perkValue = [str_plural($resource->name, $amount), $amount];
+                        $perkValue = [Str::plural($resource->name, $amount), $amount];
                     }
                 }
 
@@ -957,7 +959,7 @@ class UnitHelper
                     $resourceKey = (string)$perkValue[2];
                     $resource = Resource::where('key', $resourceKey)->firstOrFail();
 
-                    $perkValue = [$fromAmount, $toAmount, str_plural($resource->name, $toAmount)];
+                    $perkValue = [$fromAmount, $toAmount, Str::plural($resource->name, $toAmount)];
 
                 }
 
@@ -1006,7 +1008,7 @@ class UnitHelper
                     })->first();
 
                     $perkValue[0] = $ratio;
-                    $perkValue[1] = str_plural($unitToConvertTo->name);
+                    $perkValue[1] = Str::plural($unitToConvertTo->name);
                 }
 
                 $productionBuildingPairingPerks = [
@@ -1108,7 +1110,7 @@ class UnitHelper
                     $perkValue[0] = $pairedUnit->name;
                     if (isset($perkValue[1]) && $perkValue[1] > 0)
                     {
-                        $perkValue[0] = str_plural($perkValue[0]);
+                        $perkValue[0] = Str::plural($perkValue[0]);
                     }
                     else
                     {
@@ -1126,7 +1128,7 @@ class UnitHelper
                         return ($unit->slot === $unitSlotToProduce);
                     })->first();
 
-                    $unitNameToProduce[] = str_plural($unitToProduce->name);
+                    $unitNameToProduce[] = Str::plural($unitToProduce->name);
 
                     $perkValue[0] = generate_sentence_from_array($unitNameToProduce);
                     $perkValue[1] = $amountToProduce;
@@ -1166,7 +1168,7 @@ class UnitHelper
 
                 if($perk->key === 'victories_limit' or 'net_victories_limit')
                 {
-                #    $perkValue = [$perkValue, str_plural('victory', $perkValue)];
+                #    $perkValue = [$perkValue, Str::plural('victory', $perkValue)];
                 #    $nestedArrays = false;
                 }
                 
@@ -1557,16 +1559,16 @@ class UnitHelper
                 switch ($costType)
                 {
                     case 'gems':
-                        $costs[] = number_format($value) . ' ' . str_plural('gems', $value);
+                        $costs[] = number_format($value) . ' ' . Str::plural('gems', $value);
                         break;
 
                     case 'peasant':
-                        $costs[] = number_format($value) . ' ' . str_plural((isset($race->peasants_alias) ? $race->peasants_alias : 'peasant'), $value);
+                        $costs[] = number_format($value) . ' ' . Str::plural((isset($race->peasants_alias) ? $race->peasants_alias : 'peasant'), $value);
                         break;
 
                     case 'draftee':
                     case 'draftees':
-                        $costs[] = number_format($value) . ' ' . str_plural((isset($race->draftees_alias) ? $race->draftees_alias : 'draftee'), $value);
+                        $costs[] = number_format($value) . ' ' . Str::plural((isset($race->draftees_alias) ? $race->draftees_alias : 'draftee'), $value);
                         break;
 
                     case 'elk':
@@ -1575,7 +1577,7 @@ class UnitHelper
                     case 'prisoner':
                     case 'sapling':
                     case 'yak':
-                        $costs[] = number_format($value) . ' ' . str_plural($costType, $value);
+                        $costs[] = number_format($value) . ' ' . Str::plural($costType, $value);
                         break;
 
                     case 'prestige':
@@ -1583,7 +1585,7 @@ class UnitHelper
                         break;
 
                     case 'soul':
-                        $costs[] = number_format($value) . ' ' . str_plural('soul', $value);
+                        $costs[] = number_format($value) . ' ' . Str::plural('soul', $value);
                         break;
 
                     case 'unit1':
@@ -1596,7 +1598,7 @@ class UnitHelper
                     case 'unit8':
                     case 'unit9':
                     case 'unit10':
-                        $costs[] = number_format($value) . ' ' . str_plural($this->getUnitName($costType, $race), $value);
+                        $costs[] = number_format($value) . ' ' . Str::plural($this->getUnitName($costType, $race), $value);
                         break;
 
                     case 'morale':
@@ -1605,17 +1607,17 @@ class UnitHelper
 
                     case 'spy':
                     case 'spies':
-                        $costs[] = number_format($value) . ' ' . str_plural('Spy', $value);
+                        $costs[] = number_format($value) . ' ' . Str::plural('Spy', $value);
                         break;
 
                     case 'wizard':
                     case 'wizards':
-                        $costs[] = number_format($value) . ' ' . str_plural('Wizard', $value);
+                        $costs[] = number_format($value) . ' ' . Str::plural('Wizard', $value);
                         break;
 
                     case 'archmage':
                     case 'archmages':
-                        $costs[] = number_format($value) . ' ' . str_plural('Archmage', $value);
+                        $costs[] = number_format($value) . ' ' . Str::plural('Archmage', $value);
                         break;
 
                     case 'spy_strength':

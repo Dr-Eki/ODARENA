@@ -70,7 +70,7 @@
                                                           {{ $perkDamageData['resource_name'] }}
                                                       @endif
                                                   @elseif($spell->class == 'passive')
-                                                      {{ $perkDamageData  . ' ' . str_plural('tick', $perkDamageData)}}
+                                                      {{ $perkDamageData  . ' ' . Str::plural('tick', $perkDamageData)}}
                                                   @endif
 
                                               </span>

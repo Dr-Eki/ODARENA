@@ -93,7 +93,7 @@
                                         </tr>
                                         @if($event->data['bodies']['desecrated'] > 0)
                                             <tr>
-                                                <td>{{ str_plural($event->data['result']['resource_name'], $event->data['result']['amount']) }} returning</td>
+                                                <td>{{ Str::plural($event->data['result']['resource_name'], $event->data['result']['amount']) }} returning</td>
                                                 <td>{{ number_format($event->data['result']['amount']) }}</td>
                                             </tr>
                                         @endif

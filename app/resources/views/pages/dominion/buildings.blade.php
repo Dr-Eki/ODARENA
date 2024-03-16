@@ -150,8 +150,8 @@
                     @endif
                 </p>
 
-                <p>You have {{ number_format($landCalculator->getTotalBarrenLand($selectedDominion)) . ' ' . str_plural('acre', $landCalculator->getTotalBarrenLand($selectedDominion)) }} of barren land
-                and can afford to construct <strong>{{ number_format($constructionCalculator->getMaxAfford($selectedDominion)) }} {{ str_plural('building', $constructionCalculator->getMaxAfford($selectedDominion)) }}</strong>.</p>
+                <p>You have {{ number_format($landCalculator->getTotalBarrenLand($selectedDominion)) . ' ' . Str::plural('acre', $landCalculator->getTotalBarrenLand($selectedDominion)) }} of barren land
+                and can afford to construct <strong>{{ number_format($constructionCalculator->getMaxAfford($selectedDominion)) }} {{ Str::plural('building', $constructionCalculator->getMaxAfford($selectedDominion)) }}</strong>.</p>
                 <p>You may also <a href="{{ route('dominion.demolish') }}">demolish buildings</a> if you wish.</p>
 
                 @if($moraleFromCastleRatioPerk = $selectedDominion->race->getPerkValue('morale_per_percentage_castle_buildings'))

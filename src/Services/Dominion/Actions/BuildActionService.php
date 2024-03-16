@@ -3,6 +3,7 @@
 namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
+use Illuminate\Support\Str;
 use OpenDominion\Calculators\Dominion\Actions\ConstructionCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
@@ -170,7 +171,7 @@ class BuildActionService
 
                 if($amount > $availableCapacityForBuilding)
                 {
-                    #throw new GameException('You cannot build ' . number_format($amount) . ' more ' . str_plural($building->name, $amount) . ' because you only have enough ' . $pairingBuilding->name . ' for ' . number_format($availableCapacityForBuilding) . ' new ' . str_plural($building->name, $availableCapacityForBuilding) . '.');
+                    #throw new GameException('You cannot build ' . number_format($amount) . ' more ' . Str::plural($building->name, $amount) . ' because you only have enough ' . $pairingBuilding->name . ' for ' . number_format($availableCapacityForBuilding) . ' new ' . Str::plural($building->name, $availableCapacityForBuilding) . '.');
                 }
             }
             if(($multiplePairingLimit = $building->getPerkValue('multiple_pairing_limit')))
@@ -206,7 +207,7 @@ class BuildActionService
 
                 if($amount > $availableCapacityForBuilding)
                 {
-                    #throw new GameException('You cannot build ' . number_format($amount) . ' more ' . str_plural($building->name, $amount) . ' because you only have enough ' . generate_sentence_from_array($pairingBuildings) . ' for ' . number_format($availableCapacityForBuilding) . ' more ' . str_plural($building->name, $availableCapacityForBuilding) . '.');
+                    #throw new GameException('You cannot build ' . number_format($amount) . ' more ' . Str::plural($building->name, $amount) . ' because you only have enough ' . generate_sentence_from_array($pairingBuildings) . ' for ' . number_format($availableCapacityForBuilding) . ' more ' . Str::plural($building->name, $availableCapacityForBuilding) . '.');
                 }
             }
 

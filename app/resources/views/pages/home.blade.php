@@ -46,9 +46,9 @@
                         <p>
                             <span data-toggle="tooltip" data-placement="top" title="Start date: {{ $currentRound->start_date }}">
                                 @if($currentRound->hoursUntilStart() > 0)
-                                    Round {{ $currentRound->number }} starts in <strong>{{ number_format($currentRound->hoursUntilStart()) . ' ' . str_plural('hour', $currentRound->hoursUntilStart()) }}</strong>.
+                                    Round {{ $currentRound->number }} starts in <strong>{{ number_format($currentRound->hoursUntilStart()) . ' ' . Str::plural('hour', $currentRound->hoursUntilStart()) }}</strong>.
                                 @else
-                                    Round {{ $currentRound->number }} starts in <strong>{{ number_format($currentRound->minutesUntilStart()) . ' ' . str_plural('minutes', $currentRound->minutesUntilStart()) }}</strong>.
+                                    Round {{ $currentRound->number }} starts in <strong>{{ number_format($currentRound->minutesUntilStart()) . ' ' . Str::plural('minutes', $currentRound->minutesUntilStart()) }}</strong>.
                                 @endif
                             </span>
                         </p>
@@ -117,7 +117,7 @@
                     <div class="box-footer text-center">
                         @if ($currentRound->hasCountDown())
                             <p>
-                                <em class="text-red">The round ends in {{ $currentRound->ticksUntilEnd() }} {{ str_plural('tick', $currentRound->ticksUntilEnd()) }}.</em>
+                                <em class="text-red">The round ends in {{ $currentRound->ticksUntilEnd() }} {{ Str::plural('tick', $currentRound->ticksUntilEnd()) }}.</em>
                             </p>
                         @else
                             <p>

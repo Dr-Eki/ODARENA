@@ -177,7 +177,7 @@
 
                                         <option value="{{ $pack->id }}" {{ $isSelected }} {{ $pack->status == 2 ? 'disabled' : null }}>
                                             {{ $pack->user->display_name }}{{ $pack->user->display_name[strlen($pack->user->display_name) - 1] == 's' ? "'" : "'s" }} Pack
-                                            ({{ number_format($pack->dominions->count()) }} {{ str_plural('member', $pack->dominions->count()) }})
+                                            ({{ number_format($pack->dominions->count()) }} {{ Str::plural('member', $pack->dominions->count()) }})
                                             {{ $pack->status == 1 ? '(Public - No Password Needed)' : null }}
                                             {{ $pack->status == 2 ? '(Closed)' : null }}
                                         </option>

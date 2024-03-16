@@ -2,6 +2,8 @@
 
 namespace OpenDominion\Services\Dominion\Actions;
 
+use Illuminate\Support\Str;
+
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\UnitHelper;
 use OpenDominion\Models\Dominion;
@@ -266,8 +268,8 @@ class ReleaseActionService
 
             if($unitType == 'draftees')
             {
-                $releasedInto = str_plural($this->raceHelper->getPeasantsTerm($dominion->race), $amount);
-                $releasedUnitName = str_plural($this->raceHelper->getDrafteesTerm($dominion->race), $amount);
+                $releasedInto = Str::plural($this->raceHelper->getPeasantsTerm($dominion->race), $amount);
+                $releasedUnitName = Str::plural($this->raceHelper->getDrafteesTerm($dominion->race), $amount);
 
                 $unitStrings[] = sprintf('%s %s into %s', number_format($amount), $releasedUnitName, $releasedInto);
                 
@@ -278,12 +280,12 @@ class ReleaseActionService
 
                 if(isset($unit->cost['draftees']) and $unit->cost['draftees'] > 0)
                 {
-                    $releasedInto = str_plural($this->raceHelper->getDrafteesTerm($dominion->race), $amount);
+                    $releasedInto = Str::plural($this->raceHelper->getDrafteesTerm($dominion->race), $amount);
                     $releasedUnitName = $unit->name;
                 }
                 elseif(isset($unit->cost['peasant']) and $unit->cost['peasant'] > 0)
                 {
-                    $releasedInto = str_plural($this->raceHelper->getPeasantsTerm($dominion->race), $amount);
+                    $releasedInto = Str::plural($this->raceHelper->getPeasantsTerm($dominion->race), $amount);
                     $releasedUnitName = $unit->name;
                 }
                 else
@@ -296,14 +298,14 @@ class ReleaseActionService
                 {
                     $unitStrings[] = sprintf('%s %s into %s',
                         number_format($amount),
-                        str_plural($unit->name, $amount),
-                        str_plural($releasedInto, $amount));
+                        Str::plural($unit->name, $amount),
+                        Str::plural($releasedInto, $amount));
                 }
                 else
                 {
                     $unitStrings[] = sprintf('%s %s',
                         number_format($amount),
-                        str_plural($unit->name, $amount));
+                        Str::plural($unit->name, $amount));
                 }
             }
 

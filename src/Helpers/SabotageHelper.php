@@ -3,6 +3,7 @@
 namespace OpenDominion\Helpers;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Spyop;
 
@@ -10,6 +11,10 @@ use OpenDominion\Calculators\Dominion\EspionageCalculator;
 
 class SabotageHelper
 {
+
+    protected $espionageCalculator;
+    protected $raceHelper;
+
     public function __construct()
     {
         $this->espionageCalculator = app(EspionageCalculator::class);
@@ -36,11 +41,11 @@ class SabotageHelper
         switch($damageType)
         {
             case 'peasants':
-                return str_plural($this->raceHelper->getPeasantsTerm($targetRace), $damage) . ' killed';
+                return Str::plural($this->raceHelper->getPeasantsTerm($targetRace), $damage) . ' killed';
             
             case 'draftees':
             case 'military_draftees':
-                return str_plural($this->raceHelper->getDrafteesTerm($targetRace), $damage) . ' killed';
+                return Str::plural($this->raceHelper->getDrafteesTerm($targetRace), $damage) . ' killed';
 
             case 'convert_peasants_to_vampires_unit1':
                 return 'New Servants';

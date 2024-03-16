@@ -358,7 +358,7 @@ class SettingHelper
                 return sprintf(
                     'Exploration for %s %s of land completed',
                     number_format($acres),
-                    str_plural('acre', $acres)
+                    Str::plural('acre', $acres)
                 );
 
             case 'hourly_dominion.construction_completed':
@@ -367,7 +367,7 @@ class SettingHelper
                 return sprintf(
                     'Construction of %s %s completed',
                     number_format($buildings),
-                    str_plural('building', $buildings)
+                    Str::plural('building', $buildings)
                 );
 
             case 'hourly_dominion.training_completed':
@@ -377,7 +377,7 @@ class SettingHelper
                     '%s of %s %s completed',
                     ucfirst($this->militaryHelper->getTrainingTerm($dominion->race)),
                     number_format($units),
-                    str_plural('unit', $units)
+                    Str::plural('unit', $units)
                 );
 
             case 'hourly_dominion.summoning_completed':
@@ -387,7 +387,7 @@ class SettingHelper
                 return sprintf(
                     '%s %s %s',
                     number_format($units),
-                    str_plural('unit', $units),
+                    Str::plural('unit', $units),
                     $term
                 );
 
@@ -398,7 +398,7 @@ class SettingHelper
                 return sprintf(
                     '%s %s %s',
                     number_format($units),
-                    str_plural('unit', $units),
+                    Str::plural('unit', $units),
                     $term
                 );
 
@@ -408,7 +408,7 @@ class SettingHelper
                 return sprintf(
                     '%s %s have recovered from being stunned',
                     number_format($units),
-                    str_plural('unit', $units)
+                    Str::plural('unit', $units)
                 );
 
             case 'hourly_dominion.sabotage_completed':
@@ -455,7 +455,7 @@ class SettingHelper
                 return sprintf(
                     '%s beneficial magic %s dissipated',
                     number_format($effects),
-                    str_plural('effect', $effects)
+                    Str::plural('effect', $effects)
                 );
 
             case 'hourly_dominion.harmful_magic_dissipated':
@@ -464,7 +464,7 @@ class SettingHelper
                 return sprintf(
                     '%s harmful magic %s dissipated',
                     number_format($effects),
-                    str_plural('effect', $effects)
+                    Str::plural('effect', $effects)
                 );
 
             case 'hourly_dominion.starvation_occurred':
@@ -479,7 +479,7 @@ class SettingHelper
                 return sprintf(
                     '%s %s have %s.',
                     number_format($units),
-                    str_plural('unit', $units),
+                    Str::plural('unit', $units),
                     $term
                 );
 
@@ -489,7 +489,7 @@ class SettingHelper
                 return sprintf(
                     '%s %s have abandoned %s (# %s) to join us.',
                     number_format($units),
-                    str_plural('unit', $units),
+                    Str::plural('unit', $units),
                     $sourceDominion->name,
                     $sourceDominion->realm->number
                 );
@@ -500,7 +500,7 @@ class SettingHelper
                 return sprintf(
                     'We have persuaded %s %s captured from %s (# %s) to join us.',
                     number_format($units),
-                    str_plural('spy', $units),
+                    Str::plural('spy', $units),
                     $sourceDominion->name,
                     $sourceDominion->realm->number
                 );
@@ -511,7 +511,7 @@ class SettingHelper
                 return sprintf(
                     'We have rescued %s %s from %s (# %s).',
                     number_format($units),
-                    str_plural('spellcaster', $units),
+                    Str::plural('spellcaster', $units),
                     $sourceDominion->name,
                     $sourceDominion->realm->number
                 );

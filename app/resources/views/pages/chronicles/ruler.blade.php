@@ -38,7 +38,7 @@
             <div class="col-sm-3">
                 <img src="{{ $user->getAvatarUrl() }}"  class="img-responsive" style="width: 100%; max-width: 200px; display: inline; vertical-align: top; margin: 4px;">
                 <p>
-                    <strong>{{ $user->display_name }}</strong> joined ODARENA {{ $user->created_at->toFormattedDateString() }} and has played {{ number_format($userHelper->getRoundsPlayed($user)) . ' ' . str_plural('round',$userHelper->getRoundsPlayed($user)) }} in total since then, and {{ number_format($userHelper->getRoundsPlayed($user, false)) }} of the last {{ $chroniclesHelper->getDefaultRoundsAgo() }} rounds.
+                    <strong>{{ $user->display_name }}</strong> joined ODARENA {{ $user->created_at->toFormattedDateString() }} and has played {{ number_format($userHelper->getRoundsPlayed($user)) . ' ' . Str::plural('round',$userHelper->getRoundsPlayed($user)) }} in total since then, and {{ number_format($userHelper->getRoundsPlayed($user, false)) }} of the last {{ $chroniclesHelper->getDefaultRoundsAgo() }} rounds.
                 </p>
 
                 @if(count($topPlacements) > 0)
