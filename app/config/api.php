@@ -1,5 +1,7 @@
 <?php
 
+# app/config/api.php
+
 return [
     'models_allowed' => [
         'advancement',

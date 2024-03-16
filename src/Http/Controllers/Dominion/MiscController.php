@@ -22,9 +22,13 @@ use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\TickService;
 
+use OpenDominion\Traits\DominionGuardsTrait;
+
 // misc functions, probably could use a refactor later
 class MiscController extends AbstractDominionController
 {
+    use DominionGuardsTrait;
+    
     /** @var SelectorService */
     protected $dominionSelectorService;
 
@@ -201,6 +205,8 @@ class MiscController extends AbstractDominionController
         */
 
         $dominion = $this->getSelectedDominion();
+        
+        $this->guardActionsDuringTick($dominion);
 
         # Can only delete your own dominion.
         if($dominion->protection_ticks !== 0)

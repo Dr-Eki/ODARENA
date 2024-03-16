@@ -7,6 +7,9 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\User;
+use Illuminate\Http\JsonResponse;
+
+use OpenDominion\Services\Dominion\QueueService;
 
 use OpenApi\Attributes as OA;
 
@@ -112,13 +115,13 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getLatestRound(): array
+    public function getLatestRound(): JsonResponse
     {
         $round = Round::latest()->first();
 
-        return [
+        return response()->json([
             'round_id' => $round->id
-        ];
+        ]);
     }
 
     /**
@@ -133,11 +136,11 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getRounds(): array
+    public function getRounds(): JsonResponse
     {
-        return [
+        return response()->json([
             'rounds' => Round::all()->pluck('id')
-        ];
+        ]);
     }
 
     /**
@@ -165,7 +168,7 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getRound(): array
+    public function getRound(): JsonResponse
     {
         $round = Round::find(request('roundId'));
 
@@ -204,7 +207,7 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getRoundDominions(): array
+    public function getRoundDominions(): JsonResponse
     {
         $round = Round::find(request('roundId'));
 
@@ -212,9 +215,9 @@ class ApiController extends Controller
             return response()->json(['error' => 'Round not found, try another round ID'], 404);
         }
 
-        return [
+        return response()->json([
             'dominion_ids' => $round->dominions->pluck('id')
-        ];
+        ]);
     }
 
     /**
@@ -243,7 +246,7 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getRoundRealms(): array
+    public function getRoundRealms(): JsonResponse
     {
         $round = Round::find(request('roundId'));
 
@@ -251,9 +254,9 @@ class ApiController extends Controller
             return response()->json(['error' => 'Round not found, try another round ID'], 404);
         }
 
-        return [
+        return response()->json([
             'realm_ids' => $round->realms->pluck('id')
-        ];
+        ]);
     }
 
     /**
@@ -282,7 +285,7 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getRealmDominions(): array
+    public function getRealmDominions(): JsonResponse
     {
         $realm = Realm::find(request('realmId'));
 
@@ -290,9 +293,9 @@ class ApiController extends Controller
             return response()->json(['error' => 'Realm not found, try another realm ID'], 404);
         }
 
-        return [
+        return response()->json([
             'dominion_ids' => $realm->dominions->pluck('id')
-        ];
+        ]);
     }
 
     /**
@@ -328,7 +331,7 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getDominion(): array
+    public function getDominion(): JsonResponse
     {
         $dominion = Dominion::find(request('dominionId'));
 
@@ -340,10 +343,191 @@ class ApiController extends Controller
             return response()->json(['error' => 'Round has not ended'], 403);
         }
 
-        return [
-            'dominion' => $dominion
-        ];
+        return response()->json($dominion);
     }
+
+    # $router->get('/dominion/{dominionId}/queues')->uses('ApiController@getDominionQueues')->name('dominion-queues');
+    /**
+     * @OA\Get(
+     *     path="/api/v1/dominion/{dominionId}/queues",
+     *     @OA\Parameter(
+     *         name="dominionId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="The ID of the dominion"
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns the queues for a dominion as a JSON array",
+     *         @OA\JsonContent(
+     *           @OA\Property(property="queues", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Dominion not found, try another dominion ID",
+     *         @OA\JsonContent(
+     *           @OA\Property(property="error", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Round has not ended",
+     *         @OA\JsonContent(
+     *           @OA\Property(property="error", type="string")
+     *         )
+     *     )
+     * )
+     */
+    public function getDominionQueues($dominionId): JsonResponse
+    {
+        $dominion = Dominion::find($dominionId);
+
+        if ($dominion === null) {
+            return response()->json(['error' => 'Dominion not found'], 404);
+        }
+
+        if (!$dominion->round->hasEnded()) {
+            return response()->json(['error' => 'Round has not ended'], 403);
+        }
+
+        return response()->json($dominion->queues);
+    }
+
+    # $router->get('/dominion/{dominionId}/queues/{type}')->uses('ApiController@getDominionQueueByType')->name('dominion-queue-by-type');
+    /**
+     * @OA\Get(
+     *     path="/api/v1/dominion/{dominionId}/{type}",
+     *     @OA\Parameter(
+     *         name="dominionId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="The ID of the dominion"
+     *     ),
+     *     @OA\Parameter(
+     *         name="type",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="The type of the queue"
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns the queue for a dominion by type as a JSON object",
+     *         @OA\JsonContent(
+     *           @OA\Property(property="queue", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Queue not found, try another queue type or dominion ID",
+     *         @OA\JsonContent(
+     *           @OA\Property(property="error", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Round has not ended or queue type not permitted",
+     *         @OA\JsonContent(
+     *           @OA\Property(property="error", type="string")
+     *         )
+     *     )
+     * )
+     */
+    public function getDominionQueueByType($dominionId, $type): JsonResponse
+    {
+        $dominion = Dominion::find($dominionId);
+
+        if ($dominion === null) {
+            return response()->json(['error' => 'Dominion not found'], 404);
+        }
+
+        if (!$dominion->round->hasEnded()) {
+            return response()->json(['error' => 'Round has not ended'], 403);
+        }
+
+        if(!in_array($type, config('queues.types'))) {
+            return response()->json(['error' => "Queue type '$type' not permitted"], 403);
+        }
+
+        $queueService = app(QueueService::class);
+        $queue = $queueService->getQueue($type, $dominion);
+
+        if ($queue === null) {
+            return response()->json(['error' => "Queue not found with type '$type'"], 404);
+        }
+
+        return response()->json($queue);
+    }
+
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/dominion/{dominionId}/{model}",
+     *     @OA\Parameter(
+     *         name="dominionId",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="The ID of the dominion"
+     *     ),
+     *     @OA\Parameter(
+     *         name="model",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="The model name"
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns the model relationship for a dominion as a JSON object",
+     *         @OA\JsonContent(
+     *           @OA\Property(property="model", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Model not found, try another model name or dominion ID",
+     *         @OA\JsonContent(
+     *           @OA\Property(property="error", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="403",
+     *         description="Model not permitted",
+     *         @OA\JsonContent(
+     *           @OA\Property(property="error", type="string")
+     *         )
+     *     )
+     * )
+     */
+    public function getDominionModelRelationship($dominionId, $model): JsonResponse
+    {
+        $dominion = Dominion::find($dominionId);
+
+        if ($dominion === null) {
+            return response()->json(['error' => 'Dominion not found'], 404);
+        }
+
+        if(!$dominion->round->hasEnded()) {
+            return response()->json(['error' => 'Round has not ended'], 403);
+        }
+
+        if(!in_array($model, config('api.models_allowed'))) {
+            return response()->json(['error' => "Model '$model' not permitted"], 403);
+        }
+
+
+        $dominion = Dominion::find(request('dominionId'));
+        $model = ucfirst($model);
+        $class = "OpenDominion\Models\\Dominion$model";
+        $instances = $class::where('dominion_id', $dominion->id)->get();
+
+        return response()->json($instances);
+    }
+
 
     /**
      * @OA\Get(
@@ -357,453 +541,27 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getModels(): array
+    public function getModels(): JsonResponse
     {
         return config('api.models_allowed');
     }
 
+    # $router->get('/queue-types')->uses('ApiController@getQueueTypes')->name('queue-types');
     /**
      * @OA\Get(
-     *     path="/api/v1/advancement/{advancementId}",
-     *     @OA\Parameter(
-     *         name="advancementId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the advancement instance"
-     *     ),
+     *     path="/api/v1/queue-types",
      *     @OA\Response(
      *         response="200",
-     *         description="Returns an instance of the advancement by ID as a JSON object",
+     *         description="Returns the queue types as a JSON array",
      *         @OA\JsonContent(
-     *           @OA\Property(property="advancement", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Advancement instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
+     *           @OA\Property(property="queue_types", type="array", @OA\Items(type="string"))
      *         )
      *     )
      * )
      */
-    public function getAdvancement($id)
+    public function getQueueTypes(): JsonResponse
     {
-        $advancement = \OpenDominion\Models\Advancement::find($id);
-
-        if (!$advancement) {
-            return response()->json(['error' => "Advancement not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$advancement]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/artefact/{artefactId}",
-     *     @OA\Parameter(
-     *         name="artefactId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the artefact instance"
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Returns an instance of the artefact by ID as a JSON object",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="artefact", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Artefact instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getArtefact($id)
-    {
-        $artefact = \OpenDominion\Models\Artefact::find($id);
-
-        if (!$artefact) {
-            return response()->json(['error' => "Artefact not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$artefact]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/building/{buildingId}",
-     *     @OA\Parameter(
-     *         name="buildingId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the building instance"
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Returns an instance of the building by ID as a JSON object",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="building", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Building instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getBuilding($id)
-    {
-        $building = \OpenDominion\Models\Building::find($id);
-
-        if (!$building) {
-            return response()->json(['error' => "Building not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$building]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/decree/{decreeId}",
-     *     @OA\Parameter(
-     *         name="decreeId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the decree instance"
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Returns an instance of the decree by ID as a JSON object",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="decree", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Decree instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getDecree($id)
-    {
-        $decree = \OpenDominion\Models\Decree::find($id);
-
-        if (!$decree) {
-            return response()->json(['error' => "Decree not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$decree]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/deity/{deityId}",
-     *     @OA\Parameter(
-     *         name="deityId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the deity instance"
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Returns an instance of the deity by ID as a JSON object",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="deity", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Deity instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getDeity($id)
-    {
-        $deity = \OpenDominion\Models\Deity::find($id);
-
-        if (!$deity) {
-            return response()->json(['error' => "Deity not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$deity]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/improvement/{improvementId}",
-     *     @OA\Parameter(
-     *         name="improvementId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the improvement instance"
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Returns an instance of the improvement by ID as a JSON object",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="improvement", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Improvement instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getImprovement($id)
-    {
-        $improvement = \OpenDominion\Models\Improvement::find($id);
-
-        if (!$improvement) {
-            return response()->json(['error' => "Improvement not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$improvement]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/race/{raceId}",
-     *     @OA\Parameter(
-     *         name="raceId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the race instance"
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Returns an instance of the race by ID as a JSON object",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="race", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Race instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getRace($id)
-    {
-        $race = \OpenDominion\Models\Race::find($id);
-
-        if (!$race) {
-            return response()->json(['error' => "Race not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$race]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/realm/{realmId}",
-     *     @OA\Parameter(
-     *         name="realmId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the realm instance"
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Returns an instance of the realm by ID as a JSON object",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="realm", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Realm instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getRealm($id)
-    {
-        $realm = \OpenDominion\Models\Realm::find($id);
-
-        if (!$realm) {
-            return response()->json(['error' => "Realm not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$realm]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/spell/{spellId}",
-     *     @OA\Parameter(
-     *         name="spellId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the spell instance"
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Returns an instance of the spell by ID as a JSON object",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="spell", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Spell instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getSpell($id)
-    {
-        $spell = \OpenDominion\Models\Spell::find($id);
-
-        if (!$spell) {
-            return response()->json(['error' => "Spell not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$spell]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/tech/{techId}",
-     *     @OA\Parameter(
-     *         name="techId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the tech instance"
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Returns an instance of the tech by ID as a JSON object",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="tech", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Tech instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getTech($id)
-    {
-        $tech = \OpenDominion\Models\Tech::find($id);
-
-        if (!$tech) {
-            return response()->json(['error' => "Tech not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$tech]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/title/{titleId}",
-     *     @OA\Parameter(
-     *         name="titleId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the title instance"
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Returns an instance of the title by ID as a JSON object",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="title", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Title instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getTitle($id)
-    {
-        $title = \OpenDominion\Models\Title::find($id);
-
-        if (!$title) {
-            return response()->json(['error' => "Title not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$title]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/api/v1/unit/{unitId}",
-     *     @OA\Parameter(
-     *         name="unitId",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="integer"),
-     *         description="The ID of the unit instance"
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Returns an instance of the unit by ID as a JSON object",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="unit", type="object")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Unit instance not found, try another ID",
-     *         @OA\JsonContent(
-     *           @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-    public function getUnit($id)
-    {
-        $unit = \OpenDominion\Models\Unit::find($id);
-
-        if (!$unit) {
-            return response()->json(['error' => "Unit not found with ID '$id'"], 404);
-        }
-
-        return response()->json([$unit]);
+        return config('queues.types');
     }
 
     /**
@@ -846,7 +604,7 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getModel($model, $id)
+    public function getModel($model, $id): JsonResponse
     {
         $class = "OpenDominion\Models\\$model";
         $instance = $class::find($id);
@@ -895,7 +653,7 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getModelPerks($model, $id)
+    public function getModelPerks($model, $id): JsonResponse
     {
         $class = "OpenDominion\Models\\$model";
         $instance = $class::find($id);
@@ -930,7 +688,7 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getModelPerkTypes($model)
+    public function getModelPerkTypes($model): JsonResponse
     {
         $upperModel = ucfirst($model);
         $class = "OpenDominion\Models\\{$upperModel}PerkType";
@@ -976,7 +734,7 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function searchModelByKey($model, $key)
+    public function searchModelByKey($model, $key): JsonResponse
     {
         $class = "OpenDominion\Models\\$model";
         $instance = $class::where('key', $key)->first();

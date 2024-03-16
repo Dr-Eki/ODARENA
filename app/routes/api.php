@@ -53,12 +53,17 @@ $router->group(['prefix' => 'v1', 'as' => 'api.'], static function (Router $rout
 
         $router->get('/realm/{realmId}/dominions')->uses('ApiController@getRealmDominions')->name('realm-dominions');   
         $router->get('/dominion/{dominionId}')->uses('ApiController@getDominion')->name('dominion');
-    
+        $router->get('/dominion/{dominionId}/queues')->uses('ApiController@getDominionQueues')->name('dominion-queues');
+        $router->get('/dominion/{dominionId}/queues/{type}')->uses('ApiController@getDominionQueueByType')->name('dominion-queue-by-type');
+        $router->get('/dominion/{dominionId}/{model}')->uses('ApiController@getDominionModelRelationship')->name('dominion-model-relationship');
+         
         $router->get('/models')->uses('ApiController@getModels')->name('models');
         $router->get('/models/perk-types/{model}')->uses('ApiController@getModelPerkTypes')->name('model-perk-types');
         $router->get('/models/search/{model}/{key}')->uses('ApiController@searchModelKey')->name('model');
         $router->get('/models/{model}/{id}')->uses('ApiController@getModel')->name('model');
         $router->get('/models/{model}/{id}/perks')->uses('ApiController@getModelPerks')->name('model-perks');
+
+        $router->get('/queue-types')->uses('ApiController@getQueueTypes')->name('queue-types');
 
 
     });

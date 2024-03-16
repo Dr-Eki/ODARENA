@@ -146,7 +146,7 @@ class PopulationCalculator
             $maxPopulation *= ($dominion->npc_modifier / 1000);
         }
 
-        return $maxPopulation;
+        return (int)$maxPopulation;
     }
 
     /**

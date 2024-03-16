@@ -74,6 +74,20 @@ perks:
   cannot_change_draft_rate: 1
 
 units:
+  - name: Prion
+    training_time: 1
+    type:
+      - living
+      - mindless
+    cost:
+      food: 0
+    power:
+      offense: 1
+      defense: 1
+    perks:
+      cannot_be_released: 1
+
+
   - name: Scute
     training_time: 12
     type:
