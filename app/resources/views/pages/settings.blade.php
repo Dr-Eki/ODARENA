@@ -161,9 +161,6 @@
                                                     <input type="checkbox" data-check-all data-check-all-type="ingame" {{ collect($notificationSettings[$category] ?? [])->map(function ($notification) { return $notification['ingame'] ?? false; })->reduce(function ($carry, $item) { return (($carry || ($carry === null)) && $item); }) ? 'checked' : null }}>
                                                 </td>
                                             </tr>
-                                            @php
-                                                use Illuminate\Support\Arr;
-                                            @endphp
                                             @foreach ($notifications as $type => $notification)
                                                 <tr>
                                                     <td>{{ $notification['label'] }}</td>

@@ -621,13 +621,13 @@ class UnitHelper
 
                 // todo: refactor all of this
                 // partially copied from Race::getUnitPerkValueForUnitSlot
-                if (str_contains($perkValue, ','))
+                if (Str::contains($perkValue, ','))
                 {
                     $perkValue = explode(',', $perkValue);
 
                     foreach ($perkValue as $key => $value)
                     {
-                        if (!str_contains($value, ';'))
+                        if (!Str::contains($value, ';'))
                         {
                             continue;
                         }

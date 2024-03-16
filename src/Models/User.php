@@ -12,7 +12,6 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use OpenDominion\Notifications\User\ResetPasswordNotification;
-use Spatie\Permission\Traits\HasRoles;
 
 /**
  * OpenDominion\Models\User
@@ -43,7 +42,7 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends AbstractModel implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword, HasRoles, Notifiable;
+    use Authenticatable, Authorizable, CanResetPassword, Notifiable;
 
     protected $casts = [
         'settings' => 'array',
@@ -136,43 +135,4 @@ class User extends AbstractModel implements AuthenticatableContract, Authorizabl
         );
     }
 
-    /**
-     * Returns whether the user has any staff roll associated with it.
-     *
-     * @return bool
-     */
-    public function isStaff(): bool
-    {
-        return $this->hasRole(['Developer', 'Administrator', 'Moderator']);
-    }
-
-    /**
-     * Returns whether the user has a developer staff role.
-     *
-     * @return bool
-     */
-    public function isDeveloper(): bool
-    {
-        return $this->hasRole('Developer');
-    }
-
-    /**
-     * Returns whether the user has an administrator staff role.
-     *
-     * @return bool
-     */
-    public function isAdministrator(): bool
-    {
-        return $this->hasRole('Administrator');
-    }
-
-    /**
-     * Returns whether the user has a moderator staff role.
-     *
-     * @return bool
-     */
-    public function isModerator(): bool
-    {
-        return $this->hasRole('Moderator');
-    }
 }

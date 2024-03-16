@@ -5,6 +5,8 @@ namespace OpenDominion\Http\Controllers;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Image;
 use OpenDominion\Helpers\NotificationHelper;
 use OpenDominion\Helpers\WorldNewsHelper;
@@ -84,7 +86,7 @@ class SettingsController extends AbstractController
 
         $data = (string)$image;
         $path = 'uploads/avatars';
-        $fileName = (str_slug($user->display_name) . '.png');
+        $fileName = (Str::slug($user->display_name) . '.png');
 
         if (!Storage::disk('public')->put(($path . '/' . $fileName), $data)) {
             throw new RuntimeException('Failed to upload avatar');
@@ -153,7 +155,7 @@ class SettingsController extends AbstractController
            
         $data = (string)$image;
         $path = 'uploads/avatars';
-        $fileName = (str_slug($user->display_name) . '.png');
+        $fileName = (Str::slug($user->display_name) . '.png');
 
         if (!Storage::disk('public')->put(($path . '/' . $fileName), $data)) {
             throw new RuntimeException('Failed to upload avatar');
@@ -212,7 +214,7 @@ class SettingsController extends AbstractController
                 foreach ($channels as $channel => $enabled) {
                     if ($enabled === 'on') {
                         $enabledNotificationKeys["{$key}.{$type}.{$channel}"] = true;
-                        array_set($newNotifications, "{$key}.{$type}.{$channel}", true);
+                        Arr::set($newNotifications, "{$key}.{$type}.{$channel}", true);
                     }
                 }
             }
@@ -221,7 +223,7 @@ class SettingsController extends AbstractController
         // Set other types to false
         foreach ($notificationKeys as $key => $value) {
             if (!isset($enabledNotificationKeys[$key])) {
-                array_set($newNotifications, $key, false);
+                Arr::set($newNotifications, $key, false);
             }
         }
 
@@ -266,7 +268,7 @@ class SettingsController extends AbstractController
                     if ($enabled === 'on')
                     {
                         $enabledNotificationKeys["{$key}.{$type}.{$channel}"] = true;
-                        array_set($newNotifications, "{$key}.{$type}.{$channel}", true);
+                        Arr::set($newNotifications, "{$key}.{$type}.{$channel}", true);
                     }
                 }
             }
@@ -277,7 +279,7 @@ class SettingsController extends AbstractController
         {
             if (!isset($enabledNotificationKeys[$key]))
             {
-                array_set($newNotifications, $key, false);
+                Arr::set($newNotifications, $key, false);
             }
         }
 

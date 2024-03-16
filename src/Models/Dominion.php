@@ -2,7 +2,7 @@
 
 namespace OpenDominion\Models;
 
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use OpenDominion\Exceptions\GameException;
@@ -1255,11 +1255,11 @@ class Dominion extends AbstractModel
 
     public function extractBuildingPerkValues(string $perkValue)
     {
-        if (str_contains($perkValue, ',')) {
+        if (Str::contains($perkValue, ',')) {
             $perkValues = explode(',', $perkValue);
 
             foreach($perkValues as $key => $value) {
-                if (!str_contains($value, ';')) {
+                if (!Str::contains($value, ';')) {
                     continue;
                 }
 
@@ -1550,13 +1550,13 @@ class Dominion extends AbstractModel
 
     public function extractImprovementPerkValues(string $perkValue)
     {
-        if (str_contains($perkValue, ','))
+        if (Str::contains($perkValue, ','))
         {
             $perkValues = explode(',', $perkValue);
 
             foreach($perkValues as $key => $value)
             {
-                if (!str_contains($value, ';'))
+                if (!Str::contains($value, ';'))
                 {
                     continue;
                 }

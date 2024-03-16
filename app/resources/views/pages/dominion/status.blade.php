@@ -1,9 +1,3 @@
-@php
-    use Illuminate\Support\Arr;
-    use Illuminate\Support\Str;
-@endphp
-
-
 @extends('layouts.master')
 @section('title', 'Status')
 

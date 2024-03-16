@@ -208,7 +208,7 @@
 
                             <td>
                                 @if($dominion)
-                                    <a href="{{ route('scribes.faction', str_slug($dominion->race->name)) }}" target="_blank"><i class="fas fa-book"></i></a> {{ $dominion->race->name }}
+                                    <a href="{{ route('scribes.faction', Str::slug($dominion->race->name)) }}" target="_blank"><i class="fas fa-book"></i></a> {{ $dominion->race->name }}
                                 @else
                                     &mdash;
                                 @endif

@@ -71,13 +71,13 @@ class Building extends AbstractModel
         }
 
         $perkValue = $perk->first()->pivot->value;
-        if (str_contains($perkValue, ','))
+        if (Str::contains($perkValue, ','))
         {
             $perkValue = explode(',', $perkValue);
 
             foreach($perkValue as $key => $value)
             {
-                if (!str_contains($value, ';'))
+                if (!Str::contains($value, ';'))
                 {
                     continue;
                 }

@@ -153,13 +153,13 @@ class ImprovementHelper
 
     public function extractImprovementPerkValuesForScribes(string $perkValue)
     {
-        if (str_contains($perkValue, ','))
+        if (Str::contains($perkValue, ','))
         {
             $perkValues = explode(',', $perkValue);
 
             foreach($perkValues as $key => $value)
             {
-                if (!str_contains($value, ';'))
+                if (!Str::contains($value, ';'))
                 {
                     continue;
                 }

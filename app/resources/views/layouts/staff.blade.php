@@ -61,10 +61,6 @@
             @include('partials.alerts')
 
             <div class="row">
-
-                <div class="col-md-2">
-                    @include('partials.staff.nav')
-                </div>
                 <div class="col-md-10">
                     @yield('content')
                 </div>

@@ -3,6 +3,7 @@
 namespace OpenDominion\Helpers;
 
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Realm;
 use OpenDominion\Models\GameEvent;
 
 class EventHelper
@@ -17,10 +18,6 @@ class EventHelper
 
     public function canViewEvent(GameEvent $event, Dominion $dominion): bool
     {
-        if($dominion->user->isStaff()) {
-            return true;
-        }
-
         if($event->source_type === Dominion::class && $event->source->realm_id == $dominion->realm->id) {
             return true;
         }
