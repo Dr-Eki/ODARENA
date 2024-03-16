@@ -594,11 +594,6 @@ class MilitaryCalculator
         $unitPower += $this->getUnitPowerFromImprovementPoints($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromResearch($dominion, $unit, $powerType);
 
-        if ($landRatio !== null)
-        {
-            $unitPower += $this->getUnitPowerFromStaggeredLandRangePerk($dominion, $landRatio, $unit, $powerType);
-        }
-
         if ($target !== null || !empty($calc))
         {
             $unitPower += $this->getUnitPowerFromVersusBarrenLandPerk($dominion, $target, $unit, $powerType, $calc);
@@ -780,36 +775,6 @@ class MilitaryCalculator
         $max = (int)$prestigePerk[1];
 
         $powerFromPerk = min(floor($dominion->prestige) / $amount, $max);
-
-        return $powerFromPerk;
-    }
-
-    protected function getUnitPowerFromStaggeredLandRangePerk(Dominion $dominion, float $landRatio = null, Unit $unit, string $powerType): float
-    {
-        $staggeredLandRangePerk = $dominion->race->getUnitPerkValueForUnitSlot(
-            $unit->slot,
-            "{$powerType}_staggered_land_range");
-
-        if (!$staggeredLandRangePerk) {
-            return 0;
-        }
-
-        if ($landRatio === null) {
-            $landRatio = 0;
-        }
-
-        $powerFromPerk = 0;
-
-        foreach ($staggeredLandRangePerk as $rangePerk) {
-            $range = ((int)$rangePerk[0]) / 100;
-            $power = (float)$rangePerk[1];
-
-            if ($range > $landRatio) {
-                continue;
-            }
-
-            $powerFromPerk = $power;
-        }
 
         return $powerFromPerk;
     }

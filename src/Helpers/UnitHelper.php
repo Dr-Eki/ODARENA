@@ -142,7 +142,6 @@ class UnitHelper
         $perkTypeStrings = [
             // Conversions
             'conversion' => 'Converts enemy casualties into %s.',
-            'staggered_conversion' => 'Converts some enemy casualties into %2$s against dominions %1$s%%+ of your size.',
             'cannot_be_converted' => 'Unit cannot be converted.',
             'vampiric_conversion' => 'Spreads vampirism.',
             'psionic_conversion' => 'Psionically converts enemy units to %2$s.',
@@ -199,8 +198,6 @@ class UnitHelper
 
             'defense_vs_building' => 'Defense increased by 1 against every %2$s%% %1$ss of attacker (max +%3$s).',
             'offense_vs_building' => 'Offense increased by 1 against every %2$s%% %1$ss of target (max +%3$s).',
-
-            'offense_staggered_land_range' => 'Offense increased by %2$s against dominions %1$s%%+ of your size.',
 
             'offense_from_wizard_ratio' => 'Offense increased by %1$s * Wizard Ratio (offensive).',
             'defense_from_wizard_ratio' => 'Defense increased by %1$s * Wizard Ratio (defensive).',

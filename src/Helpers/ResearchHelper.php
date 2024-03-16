@@ -385,25 +385,7 @@ class ResearchHelper
 
                 $perkValue = generate_sentence_from_array($unitNamesToConvertTo);
             }
-            if($perk->key === 'staggered_conversion')
-            {
-                foreach ($perkValue as $index => $conversion) {
-                    [$convertAboveLandRatio, $slots] = $conversion;
 
-                    $unitSlotsToConvertTo = array_map('intval', str_split($slots));
-                    $unitNamesToConvertTo = [];
-
-                    foreach ($unitSlotsToConvertTo as $slot) {
-                        $unitToConvertTo = $race->units->filter(static function ($unit) use ($slot) {
-                            return ($unit->slot === $slot);
-                        })->first();
-
-                        $unitNamesToConvertTo[] = Str::plural($unitToConvertTo->name);
-                    }
-
-                    $perkValue[$index][1] = generate_sentence_from_array($unitNamesToConvertTo);
-                }
-            }
             if($perk->key === 'strength_conversion')
             {
                 $limit = (float)$perkValue[0];

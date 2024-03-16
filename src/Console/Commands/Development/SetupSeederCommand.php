@@ -4,6 +4,7 @@ namespace OpenDominion\Console\Commands\Development;
 
 use DB;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use OpenDominion\Console\Commands\CommandInterface;
 use OpenDominion\Helpers\BarbarianHelper;
 use OpenDominion\Models\Race;
@@ -44,7 +45,7 @@ class SetupSeederCommand extends Command implements CommandInterface
                 'password' => bcrypt('test1234'),
                 'display_name' => $barbarianName,
                 'activated' => true,
-                'activation_code' => str_random(),
+                'activation_code' => Str::random(),
             ]);
 
             $i++;
@@ -64,7 +65,7 @@ class SetupSeederCommand extends Command implements CommandInterface
                 'password' => bcrypt('test1234'),
                 'display_name' => $race->name,
                 'activated' => true,
-                'activation_code' => str_random(),
+                'activation_code' => Str::random(),
             ]);
         }
     }

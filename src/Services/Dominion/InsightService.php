@@ -240,7 +240,7 @@ class InsightService
         // Units returning from invasion
         $this->queueService->getInvasionQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'military_')) {
+            if (Str::startsWith($row->resource, 'military_')) {
                 $unitType = str_replace('military_', '', $row->resource);
                 $data['units']['returning'][$unitType][$row->hours] += $row->amount;
             }
@@ -249,7 +249,7 @@ class InsightService
         // Units returning from expedition
         $this->queueService->getExpeditionQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'military_')) {
+            if (Str::startsWith($row->resource, 'military_')) {
                 $unitType = str_replace('military_', '', $row->resource);
                 $data['units']['returning'][$unitType][$row->hours] += $row->amount;
             }
@@ -258,7 +258,7 @@ class InsightService
         // Units returning from theft
         $this->queueService->getTheftQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'military_')) {
+            if (Str::startsWith($row->resource, 'military_')) {
                 $unitType = str_replace('military_', '', $row->resource);
                 $data['units']['returning'][$unitType][$row->hours] += $row->amount;
             }
@@ -267,7 +267,7 @@ class InsightService
         // Units returning from sabotage
         $this->queueService->getSabotageQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'military_')) {
+            if (Str::startsWith($row->resource, 'military_')) {
                 $unitType = str_replace('military_', '', $row->resource);
                 $data['units']['returning'][$unitType][$row->hours] += $row->amount;
             }
@@ -276,7 +276,7 @@ class InsightService
         // Units returning from desecration
         $this->queueService->getDesecrationQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'military_')) {
+            if (Str::startsWith($row->resource, 'military_')) {
                 $unitType = str_replace('military_', '', $row->resource);
                 $data['units']['returning'][$unitType][$row->hours] += $row->amount;
             }
@@ -285,7 +285,7 @@ class InsightService
         // Units returning from stun
         $this->queueService->getStunQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'military_')) {
+            if (Str::startsWith($row->resource, 'military_')) {
                 $unitType = str_replace('military_', '', $row->resource);
                 $data['units']['returning'][$unitType][$row->hours] += $row->amount;
             }
@@ -294,7 +294,7 @@ class InsightService
         // Units returning from artefacts
         $this->queueService->getArtefactattackQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'military_')) {
+            if (Str::startsWith($row->resource, 'military_')) {
                 $unitType = str_replace('military_', '', $row->resource);
                 $data['units']['returning'][$unitType][$row->hours] += $row->amount;
             }
@@ -303,7 +303,7 @@ class InsightService
         // Units training
         $this->queueService->getTrainingQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'military_'))
+            if (Str::startsWith($row->resource, 'military_'))
             {
                 $unitType = str_replace('military_', '', $row->resource);
                 $data['units']['training'][$unitType][$row->hours] += $row->amount;
@@ -311,7 +311,7 @@ class InsightService
         });
         $this->queueService->getSummoningQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'military_'))
+            if (Str::startsWith($row->resource, 'military_'))
             {
                 $unitType = str_replace('military_', '', $row->resource);
                 $data['units']['training'][$unitType][$row->hours] += $row->amount;
@@ -319,7 +319,7 @@ class InsightService
         });
         $this->queueService->getEvolutionQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'military_'))
+            if (Str::startsWith($row->resource, 'military_'))
             {
                 $unitType = str_replace('military_', '', $row->resource);
                 $data['units']['training'][$unitType][$row->hours] += $row->amount;
@@ -460,7 +460,7 @@ class InsightService
 
         $this->queueService->getExplorationQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'terrain_'))
+            if (Str::startsWith($row->resource, 'terrain_'))
             {
                 $landType = str_replace('terrain_', '', $row->resource);
                 $data['terrain']['incoming'][$landType][$row->hours] += $row->amount;
@@ -469,7 +469,7 @@ class InsightService
 
         $this->queueService->getInvasionQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'terrain_'))
+            if (Str::startsWith($row->resource, 'terrain_'))
             {
                 $landType = str_replace('terrain_', '', $row->resource);
                 $data['terrain']['incoming'][$landType][$row->hours] += $row->amount;
@@ -478,7 +478,7 @@ class InsightService
 
         $this->queueService->getExpeditionQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'terrain_'))
+            if (Str::startsWith($row->resource, 'terrain_'))
             {
                 $landType = str_replace('terrain_', '', $row->resource);
                 $data['terrain']['incoming'][$landType][$row->hours] += $row->amount;
@@ -502,7 +502,7 @@ class InsightService
 
         $this->queueService->getExplorationQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'land_'))
+            if (Str::startsWith($row->resource, 'land_'))
             {
                 $landType = str_replace('land_', '', $row->resource);
                 $data['land']['incoming'][$landType][$row->hours] += $row->amount;
@@ -511,7 +511,7 @@ class InsightService
 
         $this->queueService->getInvasionQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'land_'))
+            if (Str::startsWith($row->resource, 'land_'))
             {
                 $landType = str_replace('land_', '', $row->resource);
                 $data['land']['incoming'][$landType][$row->hours] += $row->amount;
@@ -520,7 +520,7 @@ class InsightService
 
         $this->queueService->getExpeditionQueue($target)->each(static function ($row) use (&$data)
         {
-            if (starts_with($row->resource, 'land_'))
+            if (Str::startsWith($row->resource, 'land_'))
             {
                 $landType = str_replace('land_', '', $row->resource);
                 $data['land']['incoming'][$landType][$row->hours] += $row->amount;
