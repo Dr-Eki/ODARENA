@@ -63,7 +63,7 @@ perks:
   #cannot_rezone: 1 # Yes, they can
   cannot_sabotage: 1
   population_growth: 200
-  #reduced_conversions: 100
+  reduced_conversions: 100
   food_theft: -99.9999
   draftee_dp: 0.05
   #cannot_release_units: 1
@@ -74,75 +74,13 @@ perks:
   cannot_change_draft_rate: 1
 
 units:
-  - name: Prion
-    training_time: 1
+  - name: Tendril
+    training_time: 12
     type:
       - living
       - mindless
     cost:
-      food: 0
+      food: 500
     power:
       offense: 1
       defense: 1
-    perks:
-      cannot_be_released: 1
-
-
-  - name: Scute
-    training_time: 12
-    type:
-      - living
-      - mindless
-    cost:
-      food: 0
-    power:
-      offense: 0.25 
-      defense: 1.00
-    perks:
-      cannot_be_trained: 1
-      cannot_be_released: 1
-
-  - name: Incisor
-    training_time: 12
-    type:
-      - living
-      - mindless
-    cost:
-      food: 0
-    power:
-      offense: 1.00
-      defense: 0.75
-    perks:
-      cannot_be_trained: 1
-      cannot_be_released: 1
-      kills_into_resource_per_value: 10000,food
-
-  - name: Pincer
-    training_time: 12
-    type:
-      - living
-      - mindless
-    cost:
-      food: 0
-    power:
-      offense: 1.25
-      defense: 0.50
-    perks:
-      cannot_be_trained: 1
-      cannot_be_released: 1
-      plunder: lumber,10
-
-  - name: Quill
-    training_time: 12
-    type:
-      - living
-      - mindless
-    cost:
-      food: 0
-    power:
-      offense: 1.50
-      defense: 0.25
-    perks:
-      cannot_be_trained: 1
-      cannot_be_released: 1
-      casualties_on_offense: -20

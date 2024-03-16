@@ -2,6 +2,8 @@
 
 namespace OpenDominion\Models;
 
+use Illuminate\Support\Str;
+
 /**
  * OpenDominion\Models\Artefact
  *

@@ -2,10 +2,6 @@
 @section('title', 'Buildings')
 
 @section('content')
-@php
-    $availableBuildings = $buildingCalculator->getDominionBuildingsAvailableAndOwned($selectedDominion)->sortBy('category');
-@endphp
-
 <div class="row">
     <div class="col-md-9">
         <form action="{{ route('dominion.buildings') }}" method="post" role="form">
@@ -28,6 +24,11 @@
 
                     @foreach($categories as $categoryKey => $categoryBuildings)
                         @php
+                            if($availableBuildings->where('category', $categoryKey)->count() == 0)
+                            {
+                                continue;
+                            }
+
                             $rowCount = 0;
                         @endphp
                         <div class="box-body">

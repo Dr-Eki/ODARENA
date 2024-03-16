@@ -2,19 +2,13 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
-use Illuminate\Support\Collection;
-
 use OpenDominion\Calculators\Dominion\Actions\ConstructionCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\LandHelper;
-use OpenDominion\Http\Requests\Dominion\Actions\ConstructActionRequest;
 use OpenDominion\Http\Requests\Dominion\Actions\DemolishActionRequest;
-use OpenDominion\Services\Analytics\AnalyticsEvent;
-use OpenDominion\Services\Analytics\AnalyticsService;
-use OpenDominion\Services\Dominion\Actions\ConstructActionService;
 use OpenDominion\Services\Dominion\Actions\DemolishActionService;
 use OpenDominion\Services\Dominion\QueueService;
 
@@ -28,7 +22,9 @@ class BuildingController extends AbstractDominionController
 {
     public function getBuildings()
     {
-
+        $dominion = $this->getSelectedDominion();
+        $dominionBuildings = [];
+        $buildingCalculator = app(BuildingCalculator::class);
         $buildings = Building::all()->where('enabled',1);
 
         $categories = $buildings->groupBy('category');
@@ -40,8 +36,11 @@ class BuildingController extends AbstractDominionController
             return $buildingHelper->getBuildingCategorySortOrder($a->first()->category) - $buildingHelper->getBuildingCategorySortOrder($b->first()->category);
         });
 
+        $availableBuildings = $buildingCalculator->getDominionBuildingsAvailableAndOwned($dominion)->sortBy('category');
+
         return view('pages.dominion.buildings', [
 
+            'availableBuildings' => $availableBuildings,
             'buildings' => $buildings,
             'categories' => $categories,
 
@@ -69,7 +68,7 @@ class BuildingController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', $result['message']);
+        #$request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.buildings');
     }
 
@@ -100,7 +99,7 @@ class BuildingController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', $result['message']);
+        #$request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.demolish');
     }
 }

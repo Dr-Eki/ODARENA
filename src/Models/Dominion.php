@@ -1130,6 +1130,7 @@ class Dominion extends AbstractModel
                 elseif(in_array($perkKey, ['mana_production_raw_from_wizard_ratio']))
                 {
                     $magicCalculator = app(MagicCalculator::class);
+                    $perWpa = $perkValues[0];
                 
                     $perk = max(log($magicCalculator->getWizardRatio($this, 'defense')), 0) * (float)$perkValueString * $buildingOwned;
 

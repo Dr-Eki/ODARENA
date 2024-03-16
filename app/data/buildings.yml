@@ -1015,7 +1015,8 @@ dark_spire:
   exclusive_races:
     - Nox
   perks:
-    mana_production_raw_from_wizard_ratio: 33 # MAX(LOG([WPA]),0)*[Perk Value]
+    mana_production_raw: 25
+    mana_production_raw_from_wizard_ratio: 1 
 
 night_tower:
   name: Night Tower
@@ -1524,19 +1525,8 @@ abscess:
   exclusive_races:
     - Growth
   perks:
-    improvements: 1,3.33 # Every 1% gives 2.5% higher imps
-    housing: 88
-    jobs: 0
-
-cartilage:
-  name: Cartilage
-  enabled: 0
-  category: military
-  exclusive_races:
-    - Growth
-  land_type: mountain
-  perks:
-    raw_defense: 112
+    improvements: 1,3.33 # Every 1% gives 3.33% higher imps
+    growth_units_production: 1,0.36 # 0.1 unit 1 per tick
     housing: 88
     jobs: 0
 
@@ -1547,38 +1537,32 @@ cyst:
     - Growth
   perks:
     sorcery_damage_suffered: 1,-4,80 # 1% gives -4%, max -80%
+    growth_units_production: 1,0.36 # 0.1 unit 1 per tick
     housing: 88
     jobs: 0
 
-dermis:
-  name: Dermis
-  category: production
-  exclusive_races:
-    - Growth
-  perks:
-    growth_units_production: 1,0.5 # slots;slots or slot, amount
-    housing: 88
-    jobs: 0
-
-hide:
-  name: Hide
+scute:
+  name: Scute
   category: military
   exclusive_races:
     - Growth
   land_type: mountain
   perks:
     defensive_power: 1,1.2,120 # Every 1% gives 1% OP, max +40% OP
-    housing: 66
+    growth_units_production: 1,0.18 # 0.1 unit 1 per tick
+    housing: 88
     jobs: 0
 
-mutator:
-  name: Mutator
-  category: production
+quill:
+  name: Quill
+  category: military
   exclusive_races:
     - Growth
+  land_type: hill
   perks:
-    growth_units_production: 2;3;4,0.08 # slots;slots, amount
-    housing: 44
+    offensive_power: 1,1,100 # Every 1% gives 1% OP, max +40% OP
+    growth_units_production: 1,0.18 # 0.1 unit 1 per tick
+    housing: 88
     jobs: 0
 
 sinew:
@@ -1587,22 +1571,11 @@ sinew:
   exclusive_races:
     - Growth
   perks:
-    casualties_on_defense: 1,-4,60 # 1% gives -2% max -100%
-    casualties_on_offense: 1,-4,60 # 1% gives -2%, max -100%
+    casualties_on_defense: 1,-4,60 # 1% gives -4% max -60%
+    casualties_on_offense: 1,-4,60 # 1% gives -4%, max -60%
+    growth_units_production: 1,0.24 # 0.1 unit 1 per tick
     housing: 88
     jobs: 0
-
-teratoma:
-  name: Teratoma
-  category: military
-  exclusive_races:
-    - Growth
-  land_type: hill
-  perks:
-    offensive_power: 1,1,100 # Every 1% gives 1% OP, max +40% OP
-    housing: 88
-    jobs: 0
-
 
 tissue:
   name: Tissue
@@ -1611,11 +1584,9 @@ tissue:
     - Growth
   perks:
     food_production_raw: 12
-    housing: 176
+    housing: 212
+    growth_units_production: 1,0.06 # 0.1 unit 1 per tick
     jobs: 0
-
-
-
 
 # END GROWTH
 

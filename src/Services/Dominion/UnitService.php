@@ -17,9 +17,6 @@ class UnitService
     /** @var ResourceHelper */
     protected $resourceHelper;
 
-    /** @var ResourceCalculator */
-    protected $resourceCalculator;
-
     /** @var QueueService */
     protected $queueService;
 

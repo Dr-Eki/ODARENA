@@ -254,36 +254,8 @@ tissue:
   exclusive_races:
     - Growth
   perks:
-    population: 120,82000
-    food_production_mod: 120,82000
-
-calcification:
-  name: Calcification
-  exclusive_races:
-    - Growth
-  perks:
-    growth_unit2_generation_mod: -20,60000
-    growth_unit3_generation_mod: 50,60000
-    growth_unit4_generation_mod: -20,60000
-
-enamel:
-  name: Enamel
-  exclusive_races:
-    - Growth
-  perks:
-    growth_unit2_generation_mod: 50,60000
-    growth_unit3_generation_mod: -20,60000
-    growth_unit4_generation_mod: -20,60000
-
-
-keratin:
-  name: Keratin
-  exclusive_races:
-    - Growth
-  perks:
-    growth_unit2_generation_mod: -20,60000
-    growth_unit3_generation_mod: -20,60000
-    growth_unit4_generation_mod: 50,60000
+    population: 140,90000
+    food_production_mod: 140,90000
 
 # END GROWTH #
 

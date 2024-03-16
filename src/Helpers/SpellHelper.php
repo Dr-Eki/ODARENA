@@ -140,7 +140,6 @@ class SpellHelper
             'kills_faction_units_amount' => 'Kills %3$s%s of %1$s %2$s.',
 
             'summon_units_from_land' => 'Summon up to %2$s %1$s per acre of %3$s.',
-            'summon_weres_units_from_land_increasing' => 'Summon %2$s %1$s per acre of %4$s. Amount summoned increased by %3$s%% per tick into the round.',
 
             'marshling_random_resource_to_units_conversion' => 'Turns %1$s%% x Wizard Ratio (max %2$s%%) of your %3$s into random amounts of %4$s.',
 
@@ -282,6 +281,8 @@ class SpellHelper
             'construction_cost' => '%+g%% construction costs',
             'rezone_cost' => '%+g%% rezoning costs',
 
+            'convert_resource_to_land' => 'Gain 1 land per %1$s %2$s (all available resources consumed).',
+
             // Special
             'opens_portal' => 'Opens a portal required to teleport otherwordly units to enemy lands',
 
@@ -352,6 +353,16 @@ class SpellHelper
 
                 $perkValue = [$fromResource->name, $toResource->name, $fromRatio, $toRatio, $maxFrom];
 
+            }
+
+            if($perk->key === 'convert_resource_to_land')
+            {
+                $amount = (float)$perkValue[0];
+                $resourceKey = (string)$perkValue[1];
+
+                $fromResource = Resource::where('key', $resourceKey)->first();
+
+                $perkValue = [number_format($amount), $fromResource->name];
             }
 
             if($perk->key === 'plunders')
@@ -477,34 +488,6 @@ class SpellHelper
                 $nestedArrays = false;
             }
 
-            if($perk->key === 'summon_weres_units_from_land_increasing')
-            {
-                $unitSlots = (array)$perkValue[0];
-                $basePerAcre = (float)$perkValue[1];
-                $hourlyPercentIncrease = (float)$perkValue[2];
-                $landType = (string)$perkValue[3];
-
-                $race = Race::where('name', 'Weres')->firstOrFail();
-
-                foreach ($unitSlots as $index => $slot)
-                {
-                    $slot = (int)$slot;
-                    $unit = $race->units->filter(static function ($unit) use ($slot)
-                        {
-                            return ($unit->slot === $slot);
-                        })->first();
-
-
-                    $units[$index] = Str::plural($unit->name);
-                }
-
-                $unitsString = generate_sentence_from_array($units);
-
-                $perkValue = [$unitsString, $basePerAcre, $hourlyPercentIncrease, $landType];
-                $nestedArrays = false;
-
-            }
-
             if($perk->key === 'marshling_random_resource_to_units_conversion')
             {
                 $ratioPerWpa = (float)$perkValue[0];
@@ -543,7 +526,7 @@ class SpellHelper
                 foreach ($perkValue as $index => $resourcePair)
                 {
                     $resource = Resource::where('key', $resourcePair[1])->firstOrFail();
-                    $resources[$index] = $resourcePair[0] . ' ' . str_singular($resource->name);
+                    $resources[$index] = $resourcePair[0] . ' ' . Str::singular($resource->name);
                 }
 
                 $resourcesString = generate_sentence_from_array($resources);

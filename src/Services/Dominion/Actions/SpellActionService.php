@@ -541,6 +541,24 @@ class SpellActionService
                     $extraLine = ', gaining ' . number_format($prestigeGained) . ' prestige for sacrificing ' . number_format($peasantsSacrificed) . ' peasants.';
                 }
 
+                # Resource to land conversion
+                if($perk->key == 'convert_resource_to_land')
+                {
+                    $amountOfResourcePerLand = (float)$spellPerkValues[0];
+                    $resourceKey = (string)$spellPerkValues[1];
+
+                    $resourceAmount = $caster->{'resource_' . $resourceKey};
+                    $landGenerated = (int)floor($resourceAmount / $amountOfResourcePerLand);
+
+                    $resource = Resource::where('key', $resourceKey)->firstOrFail();
+                    $this->resourceService->updateResources($caster, [$resourceKey => ($resourceAmount * -1)]);
+
+                    $caster->land += $landGenerated;
+                    $caster->{'terrain_' . $caster->race->home_terrain} += $landGenerated;
+
+                    $extraLine = ', converting ' . number_format($resourceAmount) . ' ' . Str::plural($resource->name, $resourceAmount) . ' into ' . number_format($landGenerated) . ' acres of land.';
+                }
+
                 # Summon units
                 if($perk->key === 'summon_units_from_land')
                 {
@@ -561,26 +579,6 @@ class SpellActionService
                     $extraLine = ', summoning ' . number_format($totalUnitsSummoned) . ' new units to our military';
                 }
 
-                # Summon units (increased hourly)
-                if($perk->key === 'summon_weres_units_from_land_increasing')
-                {
-                    $unitSlots = (array)$spellPerkValues[0];
-                    $basePerAcre = (float)$spellPerkValues[1];
-                    $ticklyPercentIncrease = (float)$spellPerkValues[2] / 100;
-                    $landType = (string)$spellPerkValues[3];
-
-                    $totalUnitsSummoned = 0;
-
-                    foreach($unitSlots as $slot)
-                    {
-                        $amountPerAcre = $basePerAcre * (1 + $caster->round->ticks * $ticklyPercentIncrease);
-                        $unitsSummoned = floor($amountPerAcre * $caster->{'land_' . $landType});
-                        $caster->{'military_unit' . $slot} += $unitsSummoned;
-                        $totalUnitsSummoned += $unitsSummoned;
-                    }
-
-                    $extraLine = ', summoning ' . number_format($totalUnitsSummoned) . ' new units to our military';
-                }
 
                 # Summon units (increased hourly)
                 if($perk->key === 'marshling_random_resource_to_units_conversion')

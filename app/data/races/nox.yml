@@ -65,22 +65,19 @@ perks:
 units:
   - name: Phantom
     description: Small and devious creatures of pure magic. Stabs you in the back and disappears.
-    training_time: 0
     type:
       - magical
     cost:
-      mana: 60
+      mana: 100
     power:
       offense: 2
       defense: 0
     perks:
       does_not_count_as_population: 1
-      pairing_limit: 5,3 # Unit slot, amount
       counts_as_spy: 0.10
 
   - name: Shade
     description: An ephemereal creature of pure magic. Its presence is barely noticeable, but its touch is deadly.
-    training_time: 0
     type:
       - magical
     cost:
@@ -90,12 +87,10 @@ units:
       defense: 5
     perks:
       does_not_count_as_population: 1
-      pairing_limit: 5,6 # Unit slot, amount
       increases_enemy_casualties_on_defense: 1
 
   - name: Fiend
     description: A strong unit of pure magic, taking both defensive and offensive duties.
-    training_time: 0
     type:
       - magical
     cost:
@@ -110,7 +105,6 @@ units:
 
   - name: Nightmare
     description: A terrifying creature of pure magic, able to strike fear into the hearts of its enemies.
-    training_time: 0
     type:
       - magical
     cost:
@@ -122,7 +116,7 @@ units:
       does_not_count_as_population: 1
       lowers_target_morale_on_successful_invasion: 0.04
       offense_from_resource_capped_exhausting: 1,1,gloom # +1 OP if paired with 1 gloom
-      pairing_limit: 5,3 # Unit slot, amount
+      pairing_limit: 5,1 # Unit slot, amount
 
   - name: Evoker
     description: Evokers are the most powerful spellcasters in the world. They are able to summon and control powerful magical creatures.
@@ -134,7 +128,6 @@ units:
       - wise
     cost:
       wizard: 1
-      mana: 124
       gold: 4000
     power:
       offense: 0

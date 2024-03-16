@@ -3,7 +3,7 @@
 namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
-use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use OpenDominion\Calculators\Dominion\Actions\ConstructionCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
@@ -67,7 +67,7 @@ class BuildActionService
         $this->guardLockedDominion($dominion);
         $this->guardActionsDuringTick($dominion);
 
-        $data = array_only($data, array_map(function ($value) {
+        $data = Arr::only($data, array_map(function ($value) {
             return "building_{$value}";
         }, $this->buildingHelper->getBuildingKeys($dominion)->toArray()));
 

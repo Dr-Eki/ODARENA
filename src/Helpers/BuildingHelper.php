@@ -486,7 +486,7 @@ class BuildingHelper
                 foreach ($perkValue as $index => $resourcePair)
                 {
                     $resource = Resource::where('key', $resourcePair[1])->firstOrFail();
-                    $resources[$index] = $resourcePair[0] . ' ' . str_singular($resource->name);
+                    $resources[$index] = $resourcePair[0] . ' ' . Str::singular($resource->name);
                 }
 
                 $resourcesString = generate_sentence_from_array($resources);

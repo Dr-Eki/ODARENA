@@ -3,6 +3,7 @@
 namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use OpenDominion\Calculators\Dominion\Actions\ExplorationCalculator;
 use OpenDominion\Exceptions\GameException;
@@ -109,7 +110,7 @@ class ExploreActionService
             throw new GameException('You cannot explore while you are in stasis.');
         }
 
-        $data = array_only($data, array_map(function ($value) {
+        $data = Arr::only($data, array_map(function ($value) {
             return "land_{$value}";
         }, $this->landHelper->getLandTypes()));
 

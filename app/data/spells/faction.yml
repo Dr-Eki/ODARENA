@@ -50,6 +50,7 @@ maelstrom:
     - Glimjir
   perks:
     increases_enemy_casualties_on_defense: 50
+    food_consumption_mod: 20
 
 ## Growth
 
@@ -64,6 +65,18 @@ metabolism:
     - Growth
   perks:
     food_production_raw_mod: 100
+
+spurt:
+  name: Spurt
+  level: 0
+  scope: self
+  class: active
+  duration: 48
+  cooldown: 144
+  exclusive_races:
+    - Growth
+  perks:
+    convert_resource_to_land: 100000,food # amount, resource
 
 ## Kobold
 
@@ -763,18 +776,5 @@ voidspellmagicprotection:
     - Void
   perks:
     damage_from_spells: -50
-
-weren_wandering:  
-  enabled: 0
-  name: Weren Wandering
-  scope: self
-  class: active
-  cost: 1
-  duration: 0
-  cooldown: 92
-  exclusive_races:
-    - Weres
-  perks:
-    summon_weres_units_from_land_increasing: 1;2,2,0.08,forest # slots, base, extra percent per hour, land type
 
 # END FACTION SPECIFIC

@@ -623,34 +623,6 @@ class ResearchHelper
                 $nestedArrays = false;
             }
 
-            if($perk->key === 'summon_weres_units_from_land_increasing')
-            {
-                $unitSlots = (array)$perkValue[0];
-                $basePerAcre = (float)$perkValue[1];
-                $hourlyPercentIncrease = (float)$perkValue[2];
-                $landType = (string)$perkValue[3];
-
-                $race = Race::where('name', 'Weres')->firstOrFail();
-
-                foreach ($unitSlots as $index => $slot)
-                {
-                    $slot = (int)$slot;
-                    $unit = $race->units->filter(static function ($unit) use ($slot)
-                        {
-                            return ($unit->slot === $slot);
-                        })->first();
-
-
-                    $units[$index] = Str::plural($unit->name);
-                }
-
-                $unitsString = generate_sentence_from_array($units);
-
-                $perkValue = [$unitsString, $basePerAcre, $hourlyPercentIncrease, $landType];
-                $nestedArrays = false;
-
-            }
-
             if($perk->key === 'marshling_random_resource_to_units_conversion')
             {
                 $ratioPerWpa = (float)$perkValue[0];
@@ -677,27 +649,6 @@ class ResearchHelper
 
                 $perkValue = [$ratioPerWpa, $maxRatio, Str::plural($resource->name), $unitsString];
                 $nestedArrays = false;
-            }
-
-            if($perk->key === 'peasant_to_resources_conversion')
-            {
-                $ratio = (float)$perkValue[0];
-                unset($perkValue[0]);
-
-                // Rue the day this perk is used for other factions.
-
-                foreach ($perkValue as $index => $resourcePair)
-                {
-                    $resource = Resource::where('key', $resourcePair[1])->firstOrFail();
-                    $resources[$index] = $resourcePair[0] . ' ' . str_singular($resource->name);
-                }
-
-                $resourcesString = generate_sentence_from_array($resources);
-                $resourcesString = str_replace(' And ', ' and ', $resourcesString);
-
-                $perkValue = [$ratio, $resourcesString];
-                $nestedArrays = false;
-
             }
 
             if($perk->key === 'converts_crypt_bodies')

@@ -5,6 +5,9 @@ namespace OpenDominion\Services\Dominion\Actions\Military;
 use DB;
 use Throwable;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+
 use Illuminate\Support\Facades\Cache;
 
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
@@ -122,7 +125,7 @@ class TrainActionService
             throw new GameException('You cannot train while you are in stasis.');
         }
 
-        $data = array_only($data, array_map(function ($value) {
+        $data = Arr::only($data, array_map(function ($value) {
             return "military_{$value}";
         }, $this->unitHelper->getUnitTypes($dominion->race)));
 
@@ -563,7 +566,7 @@ class TrainActionService
                         $unitLabel = $overridePluralUnitNames[$unitName];
                     }
                 } else {
-                    $unitLabel = Str::plural(str_singular($unitName), $amount);
+                    $unitLabel = Str::plural(Str::singular($unitName), $amount);
                 }
 
                 $unitsToTrainStringParts[] = "{$amountLabel} {$unitLabel}";
@@ -579,8 +582,6 @@ class TrainActionService
             {
                 continue;
             }
-
-            #$costType = str_singular($costType);
 
             if(in_array($costType, ['unit1','unit2','unit3','unit4','unit5','unit6','unit7','unit8','unit9','unit10']))
             {
