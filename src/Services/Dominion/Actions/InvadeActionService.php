@@ -236,131 +236,6 @@ class InvadeActionService
                 throw new GameException('You can only invade other dominions in the same realm as you in deathmatch rounds.');
             }
 
-            if ($attacker->realm->getAllies()->contains($target->realm))
-            {
-                throw new GameException('You cannot invade dominions in allied realms.');
-            }
-
-            if ($attacker->id == $target->id)
-            {
-                throw new GameException('Nice try, but you cannot invade yourself.');
-            }
-
-            foreach($attacker->race->resources as $resourceKey)
-            {
-                if($resourceCostToInvade = $attacker->race->getPerkValue($resourceKey . '_to_invade'))
-                {
-                    if($this->resourceCalculator->getAmount($attacker, $resourceKey) < $resourceCostToInvade)
-                    {
-                        $resource = Resource::where('key', $resourceKey)->first();
-                        throw new GameException('You do not have enough ' . Str::plural($resource->name, $resourceCostToInvade) . ' to invade. You have ' . number_format($this->resourceCalculator->getAmount($attacker, $resourceKey)) . ' and you need at least ' . number_format($resourceCostToInvade) . '.');
-                    }
-                    else
-                    {
-                        $this->resourceService->updateResources($attacker, [$resourceKey => $resourceCostToInvade*-1]);
-                    }
-                }
-            }
-
-            // Sanitize input
-            $units = array_map('intval', array_filter($units));
-            $landRatio = $this->rangeCalculator->getDominionRange($attacker, $target);
-            $this->invasion['land_ratio'] = $landRatio;
-            $landRatio /= 100;
-
-            if (!$this->hasAnyOP($attacker, $units))
-            {
-                throw new GameException('You need to send at least some units.');
-            }
-
-            if (!$this->allUnitsHaveOP($attacker, $units, $target, $landRatio))
-            {
-                throw new GameException('You cannot send units that have no offensive power.');
-            }
-
-            if (!$this->hasEnoughUnitsAtHome($attacker, $units))
-            {
-                throw new GameException('You don\'t have enough units at home to send this many units.');
-            }
-
-            if ($attacker->race->name !== 'Barbarian')
-            {
-                if ($attacker->morale < config('military.minimum_morale_to_invade') and !$attacker->race->getPerkValue('can_invade_at_any_morale'))
-                {
-                    throw new GameException('You do not have enough morale to invade.');
-                }
-
-                if (!$this->passes43RatioRule($attacker, $defender, $landRatio, $units))
-                {
-                    throw new GameException('You are sending out too much OP, based on your new home DP (4:3 rule).');
-                }
-
-                if (!$this->passesMinimumDpaCheck($attacker, $defender, $landRatio, $units))
-                {
-                    throw new GameException('You are sending less than the lowest possible DP of the target. Minimum DPA (Defense Per Acre) is ' . config('military.minimum_dpa') . '. Double check your calculations and units sent.');
-                }
-
-                if (!$this->passesUnitSendableCapacityCheck($attacker, $units))
-                {
-                    throw new GameException('You do not have enough caverns to send out this many units.');
-                }
-            }
-
-            # Populate units defending
-            for ($slot = 1; $slot <= $defender->race->units->count(); $slot++)
-            {
-                $unit = $defender->race->units->filter(function ($unit) use ($slot) {
-                    return ($unit->slot === $slot);
-                })->first();
-
-                  if($this->militaryCalculator->getUnitPowerWithPerks($defender, null, null, $unit, 'defense') !== 0.0)
-                  {
-                      $this->invasion['defender']['units_defending'][$slot] = $defender->{'military_unit'.$slot};
-                  }
-
-                  $this->invasion['defender']['units_defending']['draftees'] = $defender->military_draftees;
-            }
-
-            foreach($units as $slot => $amount)
-            {
-                $unit = $attacker->race->units->filter(function ($unit) use ($slot) {
-                    return ($unit->slot === $slot);
-                })->first();
-
-                if(!$this->unitCalculator->isUnitSendableByDominion($unit, $attacker))
-                {
-                    throw new GameException('You cannot send ' . $unit->name . ' on invasion.');
-                }
-
-                if($amount < 0)
-                {
-                    throw new GameException('Invasion was canceled due to an invalid amount of ' . Str::plural($unit->name, $amount) . '.');
-                }
-
-                # OK, unit can be trained. Let's check for pairing limits.
-                if($this->unitCalculator->unitHasCapacityLimit($attacker, $slot) and !$this->unitCalculator->checkUnitLimitForInvasion($attacker, $slot, $amount))
-                {
-
-                    throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($attacker, $slot)) . ' ' . Str::plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
-                }
-
-                # Check for spends_resource_on_offense
-                if($spendsResourcesOnOffensePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'spends_resource_on_offense'))
-                {
-                    $resourceKey = (string)$spendsResourcesOnOffensePerk[0];
-                    $resourceAmount = (float)$spendsResourcesOnOffensePerk[1];
-                    $resource = Resource::where('key', $resourceKey)->firstOrFail();
-
-                    $resourceAmountRequired = ceil($resourceAmount * $amount);
-                    $resourceAmountOwned = $this->resourceCalculator->getAmount($attacker, $resourceKey);
-
-                    if($resourceAmountRequired > $resourceAmountOwned)
-                    {
-                        throw new GameException('You do not have enough ' . $resource->name . ' to attack to send this many ' . Str::plural($unit->name, $amount) . '. You need ' . number_format($resourceAmountRequired) . ' but only have ' . number_format($resourceAmountOwned) . '.');
-                    }
-                }
-             }
-
             if ($attacker->race->getPerkValue('cannot_invade'))
             {
                 throw new GameException($attacker->race->name . ' cannot invade other dominions.');
@@ -425,6 +300,137 @@ class InvadeActionService
                     throw new GameException('A magical state surrounds the lands, making it impossible for you to invade.');
                 }
             }
+
+            if ($attacker->realm->getAllies()->contains($target->realm))
+            {
+                throw new GameException('You cannot invade dominions in allied realms.');
+            }
+
+            if ($attacker->id == $target->id)
+            {
+                throw new GameException('Nice try, but you cannot invade yourself.');
+            }
+
+            // Sanitize input
+            $units = array_map('intval', array_filter($units));
+            $landRatio = $this->rangeCalculator->getDominionRange($attacker, $target);
+            $this->invasion['land_ratio'] = $landRatio;
+            $landRatio /= 100;
+
+            if (!$this->hasAnyOP($attacker, $units))
+            {
+                throw new GameException('You need to send at least some units.');
+            }
+
+            if (!$this->allUnitsHaveOP($attacker, $units, $target, $landRatio))
+            {
+                throw new GameException('You cannot send units that have no offensive power.');
+            }
+
+            if (!$this->hasEnoughUnitsAtHome($attacker, $units))
+            {
+                throw new GameException('You don\'t have enough units at home to send this many units.');
+            }
+
+            if ($attacker->race->name !== 'Barbarian')
+            {
+                if ($attacker->morale < config('military.minimum_morale_to_invade') and !$attacker->race->getPerkValue('can_invade_at_any_morale'))
+                {
+                    throw new GameException('You do not have enough morale to invade.');
+                }
+
+                if (!$this->passes43RatioRule($attacker, $defender, $landRatio, $units))
+                {
+                    throw new GameException('You are sending out too much OP, based on your new home DP (4:3 rule).');
+                }
+
+                if (!$this->passesMinimumDpaCheck($attacker, $defender, $landRatio, $units))
+                {
+                    throw new GameException('You are sending less than the lowest possible DP of the target. Minimum DPA (Defense Per Acre) is ' . config('military.minimum_dpa') . '. Double check your calculations and units sent.');
+                }
+
+                if (!$this->passesUnitSendableCapacityCheck($attacker, $units))
+                {
+                    throw new GameException('You do not have enough caverns to send out this many units.');
+                }
+                
+                if (!$this->passesWizardPointsCheck($attacker, $units))
+                {
+                    throw new GameException('You do not have enough wizard points to send out these units.');
+                }
+            }
+
+            foreach($attacker->race->resources as $resourceKey)
+            {
+                if($resourceCostToInvade = $attacker->race->getPerkValue($resourceKey . '_to_invade'))
+                {
+                    if($this->resourceCalculator->getAmount($attacker, $resourceKey) < $resourceCostToInvade)
+                    {
+                        $resource = Resource::where('key', $resourceKey)->first();
+                        throw new GameException('You do not have enough ' . Str::plural($resource->name, $resourceCostToInvade) . ' to invade. You have ' . number_format($this->resourceCalculator->getAmount($attacker, $resourceKey)) . ' and you need at least ' . number_format($resourceCostToInvade) . '.');
+                    }
+                    else
+                    {
+                        $this->resourceService->updateResources($attacker, [$resourceKey => $resourceCostToInvade*-1]);
+                    }
+                }
+            }
+
+
+            # Populate units defending
+            for ($slot = 1; $slot <= $defender->race->units->count(); $slot++)
+            {
+                $unit = $defender->race->units->filter(function ($unit) use ($slot) {
+                    return ($unit->slot === $slot);
+                })->first();
+
+                  if($this->militaryCalculator->getUnitPowerWithPerks($defender, null, null, $unit, 'defense') !== 0.0)
+                  {
+                      $this->invasion['defender']['units_defending'][$slot] = $defender->{'military_unit'.$slot};
+                  }
+
+                  $this->invasion['defender']['units_defending']['draftees'] = $defender->military_draftees;
+            }
+
+            foreach($units as $slot => $amount)
+            {
+                $unit = $attacker->race->units->filter(function ($unit) use ($slot) {
+                    return ($unit->slot === $slot);
+                })->first();
+
+                if(!$this->unitCalculator->isUnitSendableByDominion($unit, $attacker))
+                {
+                    throw new GameException('You cannot send ' . $unit->name . ' on invasion.');
+                }
+
+                if($amount < 0)
+                {
+                    throw new GameException('Invasion was canceled due to an invalid amount of ' . Str::plural($unit->name, $amount) . '.');
+                }
+
+                # OK, unit can be trained. Let's check for pairing limits.
+                if($this->unitCalculator->unitHasCapacityLimit($attacker, $slot) and !$this->unitCalculator->checkUnitLimitForInvasion($attacker, $slot, $amount))
+                {
+
+                    throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($attacker, $slot)) . ' ' . Str::plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                }
+
+                # Check for spends_resource_on_offense
+                if($spendsResourcesOnOffensePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'spends_resource_on_offense'))
+                {
+                    $resourceKey = (string)$spendsResourcesOnOffensePerk[0];
+                    $resourceAmount = (float)$spendsResourcesOnOffensePerk[1];
+                    $resource = Resource::where('key', $resourceKey)->firstOrFail();
+
+                    $resourceAmountRequired = ceil($resourceAmount * $amount);
+                    $resourceAmountOwned = $this->resourceCalculator->getAmount($attacker, $resourceKey);
+
+                    if($resourceAmountRequired > $resourceAmountOwned)
+                    {
+                        throw new GameException('You do not have enough ' . $resource->name . ' to attack to send this many ' . Str::plural($unit->name, $amount) . '. You need ' . number_format($resourceAmountRequired) . ' but only have ' . number_format($resourceAmountOwned) . '.');
+                    }
+                }
+             }
 
 
             # Artillery: land gained plus current total land cannot exceed 133% of protector's land.
@@ -721,7 +727,7 @@ class InvadeActionService
             ]);
 
             # Debug before saving:
-            #ldd($this->invasion);# dd('Safety!');
+            ldd($this->invasion);# dd('Safety!');
             
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
@@ -3596,6 +3602,11 @@ class InvadeActionService
         return (array_sum($units) <= $maxSendableUnits);
     }
 
+    protected function passesWizardPointsCheck(Dominion $attacker, array $units): bool
+    {
+        return ($this->magicCalculator->getWizardPoints($attacker) >= $this->magicCalculator->getWizardPointsRequiredToSendUnits($attacker, $units));
+    }
+
     /**
      * Check if an invasion passes the 4:3-rule.
      *
@@ -3607,7 +3618,7 @@ class InvadeActionService
     {
         $attackingForceOP = $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $units);
 
-        return ($attackingForceOP > $target->land * config('military.minimum_dpa'));
+        return ($attackingForceOP > ($target->land * config('military.minimum_dpa')));
     }
 
 

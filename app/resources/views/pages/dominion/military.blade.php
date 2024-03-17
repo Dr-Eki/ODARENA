@@ -149,9 +149,14 @@
             </form>
         </div>
 
+        @if($magicCalculator->getWizardPointsRequiredByAllUnits($selectedDominion))
+            @include('partials.dominion.military-units-wizard-points-requirements')
+        @endif
+
         @include('partials.dominion.military-units-training')
         @include('partials.dominion.military-units-returning')
     </div>
+
 
     <div class="col-sm-12 col-md-3" id="units_release_and_draft_rate">
         <div class="box">

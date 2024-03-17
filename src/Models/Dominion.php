@@ -1051,11 +1051,6 @@ class Dominion extends AbstractModel
 
                     $perk += (int)$unitsGeneratedInt;
                 }
-                # Buildings where we only ever want a single value
-                elseif(in_array($perkKey, ['unit_production_from_wizard_ratio','unit_production_from_spy_ratio']))
-                {
-                    $perk = (float)$perkValueString;
-                }
 
                 # Attrition protection
                 elseif($perkKey == 'attrition_protection')

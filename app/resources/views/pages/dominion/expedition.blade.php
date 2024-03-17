@@ -180,6 +180,14 @@
                                                 </td>
                                                 <td id="invasion-force-max-op" data-amount="0">0</td>
                                             </tr>
+                                            @if($magicCalculator->getWizardPointsRequiredByAllUnits($selectedDominion))
+                                                <tr>
+                                                    <td>
+                                                        Wizard points required:
+                                                    </td>
+                                                    <td id="wizard-points-required" data-amount="0">0</td>
+                                                </tr>
+                                            @endif
                                             <tr>
                                                 <td>Land discovered:</td>
                                                 <td id="invasion-land-discovered-amount" data-amount="0">0</td>
@@ -275,6 +283,14 @@
                                                     {{ number_format($militaryCalculator->getDefensivePower($selectedDominion) / $selectedDominion->land, 3) }}
                                                 </td>
                                             </tr>
+                                            @if($magicCalculator->getWizardPointsRequiredByAllUnits($selectedDominion))
+                                                <tr>
+                                                    <td>
+                                                        Wizard points:
+                                                    </td>
+                                                    <td id="wizard-points" data-amount="0">0</td>
+                                                </tr>
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -340,6 +356,8 @@
             var homeForcesDPAElement = $('#home-forces-dpa');
             var invasionLandDiscoveredElement = $('#invasion-land-discovered-amount');
             var artefactDiscoveryChanceElement = $('#artefact-discovery-chance');
+            var wizardPointsElement = $('#wizard-points');
+            var wizardPointsRequiredElement = $('#wizard-points-required');
 
             var invasionForceCountElement = $('#invasion-total-units');
 
@@ -386,6 +404,8 @@
                             homeForcesMinDPElement.data('amount', response.min_dp);
                             homeForcesDPAElement.data('amount', response.home_dpa);
                             artefactDiscoveryChanceElement.data('amount', response.artefact_discovery_chance);
+                            wizardPointsElement.data('amount', response.wizard_points);
+                            wizardPointsRequiredElement.data('amount', response.wizard_points_required);
 
                             // Update OP / DP display
                             invasionForceOPElement.text(response.away_offense.toLocaleString(undefined, {maximumFractionDigits: 2}));
@@ -398,6 +418,8 @@
                             homeForcesMinDPElement.text(response.min_dp.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             homeForcesDPAElement.text(response.home_dpa.toLocaleString(undefined, {maximumFractionDigits: 3}));
                             artefactDiscoveryChanceElement.text(response.artefact_discovery_chance.toLocaleString(undefined, {maximumFractionDigits: 2}) + '%');
+                            wizardPointsElement.text(response.wizard_points.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            wizardPointsRequiredElement.text(response.wizard_points_required.toLocaleString(undefined, {maximumFractionDigits: 2}));
 
                             invasionForceCountElement.text(response.units_sent);
 

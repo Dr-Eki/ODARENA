@@ -179,18 +179,14 @@
                                             </td>
                                             <td id="invasion-force-max-op" data-amount="0">0</td>
                                         </tr>
-                                        {{-- 
-                                        <tr>
-                                            <td>
-                                                Target DP:
-                                            </td>
-                                            <td id="target-dp" data-amount="0">0</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Land conquered:</td>
-                                            <td id="invasion-land-conquered" data-amount="0">0</td>
-                                        </tr>
-                                        --}}
+                                        @if($magicCalculator->getWizardPointsRequiredByAllUnits($selectedDominion))
+                                            <tr>
+                                                <td>
+                                                    Wizard points required:
+                                                </td>
+                                                <td id="wizard-points-required" data-amount="0">0</td>
+                                            </tr>
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -292,6 +288,14 @@
                                                 {{ number_format($militaryCalculator->getDefensivePower($selectedDominion) / $selectedDominion->land, 2) }}
                                             </td>
                                         </tr>
+                                        @if($magicCalculator->getWizardPointsRequiredByAllUnits($selectedDominion))
+                                            <tr>
+                                                <td>
+                                                    Wizard points:
+                                                </td>
+                                                <td id="wizard-points" data-amount="0">0</td>
+                                            </tr>
+                                        @endif
                                         @if($selectedDominion->getSpellPerkValue('fog_of_war'))
                                             @php
                                                 $spell = OpenDominion\Models\Spell::where('key', 'fog')->firstOrFail();
@@ -585,6 +589,8 @@
             var homeForcesMinDPElement = $('#home-forces-min-dp');
             var homeForcesDPAElement = $('#home-forces-dpa');
             var invasionLandConqueredElement = $('#invasion-land-conquered');
+            var wizardPointsElement = $('#wizard-points');
+            var wizardPointsRequiredElement = $('#wizard-points-required');
 
             var invasionForceCountElement = $('#invasion-total-units');
 
@@ -639,6 +645,8 @@
                             homeForcesDPRawElement.data('amount', response.home_defense_raw);
                             homeForcesMinDPElement.data('amount', response.min_dp);
                             homeForcesDPAElement.data('amount', response.home_dpa);
+                            wizardPointsElement.data('amount', response.wizard_points);
+                            wizardPointsRequiredElement.data('amount', response.wizard_points_required);
 
                             // Update OP / DP display
                             invasionForceOPElement.text(response.away_offense.toLocaleString(undefined, {maximumFractionDigits: 2}));
@@ -650,6 +658,8 @@
                             homeForcesDPRawElement.text(response.home_defense_raw.toLocaleString(undefined, {maximumFractionDigits: 0}));
                             homeForcesMinDPElement.text(response.min_dp.toLocaleString(undefined, {maximumFractionDigits: 0}));
                             homeForcesDPAElement.text(response.home_dpa.toLocaleString(undefined, {maximumFractionDigits: 0}));
+                            wizardPointsElement.text(response.wizard_points.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            wizardPointsRequiredElement.text(response.wizard_points_required.toLocaleString(undefined, {maximumFractionDigits: 2}));
 
                             invasionForceCountElement.text(response.units_sent);
 

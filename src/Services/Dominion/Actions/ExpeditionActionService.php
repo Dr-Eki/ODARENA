@@ -21,6 +21,7 @@ use OpenDominion\Calculators\Dominion\ArtefactCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\ExpeditionCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\TerrainCalculator;
@@ -43,6 +44,7 @@ class ExpeditionActionService
     protected $buildingCalculator;
     protected $expeditionCalculator;
     protected $landCalculator;
+    protected $magicCalculator;
     protected $militaryCalculator;
     protected $spellCalculator;
     protected $terrainCalculator;
@@ -69,6 +71,7 @@ class ExpeditionActionService
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->expeditionCalculator = app(ExpeditionCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
 
         $this->landHelper = app(LandHelper::class);
@@ -752,6 +755,11 @@ class ExpeditionActionService
         $maxSendableUnits = $this->militaryCalculator->getMaxSendableUnits($attacker);
 
         return (array_sum($units) <= $maxSendableUnits);
+    }
+
+    protected function passesWizardPointsCheck(Dominion $attacker, array $units): bool
+    {
+        return ($this->magicCalculator->getWizardPoints($attacker) >= $this->magicCalculator->getWizardPointsRequiredToSendUnits($attacker, $units));
     }
 
     protected function getUnitReturnTicksForSlot(Dominion $dominion, int $slot): int

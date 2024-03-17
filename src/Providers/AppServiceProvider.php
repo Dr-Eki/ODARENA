@@ -2,7 +2,8 @@
 
 namespace OpenDominion\Providers;
 
-use Cache;
+use Illuminate\Support\Str;
+
 use Illuminate\Pagination\Paginator;
 use OpenDominion\Calculators\Dominion\Actions\ConstructionCalculator;
 use OpenDominion\Calculators\Dominion\Actions\ExplorationCalculator;
@@ -14,7 +15,6 @@ use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Helpers\UnitHelper;
 
-use OpenDominion\Calculators\Dominion\BarbarianCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\CasualtiesCalculator;
 use OpenDominion\Calculators\Dominion\ConversionCalculator;
@@ -76,11 +76,14 @@ class AppServiceProvider extends AbstractServiceProvider
     {
         Paginator::useBootstrapThree();
         Schema::defaultStringLength(191);
+        Str::macro('unitPlural', function ($value) {
+            if (strtolower($value) === 'envoy of darkness') {
+                return 'Envoys of Darkness';
+            }
 
-        // Set Bugsnag app version
-        if (($appVersion = Cache::get('version')) !== null) {
-            #Bugsnag::getConfig()->setAppVersion($appVersion);
-        }
+            return Str::plural($value);
+        });
+
     }
 
     /**

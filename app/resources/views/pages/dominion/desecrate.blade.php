@@ -107,6 +107,14 @@
                                             </td>
                                             <td id="invasion-force-max-op" data-amount="0">0</td>
                                         </tr>
+                                        @if($magicCalculator->getWizardPointsRequiredByAllUnits($selectedDominion))
+                                            <tr>
+                                                <td>
+                                                    Wizard points required:
+                                                </td>
+                                                <td id="wizard-points-required" data-amount="0">0</td>
+                                            </tr>
+                                        @endif
                                         {{--
                                         <tr>
                                             <td>
@@ -197,6 +205,14 @@
                                                 {{ number_format($militaryCalculator->getDefensivePower($selectedDominion) / $selectedDominion->land, 2) }}
                                             </td>
                                         </tr>
+                                        @if($magicCalculator->getWizardPointsRequiredByAllUnits($selectedDominion))
+                                            <tr>
+                                                <td>
+                                                    Wizard points:
+                                                </td>
+                                                <td id="wizard-points" data-amount="0">0</td>
+                                            </tr>
+                                        @endif
                                         @if($selectedDominion->getSpellPerkValue('fog_of_war'))
                                             @php
                                                 $spell = OpenDominion\Models\Spell::where('key', 'fog')->firstOrFail();
@@ -424,6 +440,8 @@
                             homeForcesMinDPElement.data('amount', response.min_dp);
                             homeForcesDPAElement.data('amount', response.home_dpa);
                             //targetDpElement.data('amount', response.target_dp);
+                            wizardPointsElement.data('amount', response.wizard_points);
+                            wizardPointsRequiredElement.data('amount', response.wizard_points_required);
 
                             // Update OP / DP display
                             invasionForceOPElement.text(response.away_offense.toLocaleString(undefined, {maximumFractionDigits: 2}));
@@ -439,6 +457,8 @@
                             homeForcesMinDPElement.text(response.min_dp.toLocaleString(undefined, {maximumFractionDigits: 0}));
                             homeForcesDPAElement.text(response.home_dpa.toLocaleString(undefined, {maximumFractionDigits: 0}));
                             //targetDpElement.text(response.target_dp.toLocaleString(undefined, {maximumFractionDigits: 0}));
+                            wizardPointsElement.text(response.wizard_points.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            wizardPointsRequiredElement.text(response.wizard_points_required.toLocaleString(undefined, {maximumFractionDigits: 2}));
 
                             invasionForceCountElement.text(response.units_sent);
 

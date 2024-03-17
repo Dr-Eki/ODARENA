@@ -8,19 +8,18 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Artefact;
 
 use OpenDominion\Calculators\Dominion\ArtefactCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 
 class ArtefactAttackCalculationService
 {
     use DominionGuardsTrait;
-    /**
-     * @var int How many units can fit in a single boat
-     */
-
-    protected const UNITS_PER_BOAT = 30;
 
     /** @var ArtefactCalculator */
     protected $artefactCalculator;
+
+    /** @var MagicCalculator */
+    protected $magicCalculator;
 
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
@@ -28,8 +27,6 @@ class ArtefactAttackCalculationService
     /** @var array Calculation result array. */
     protected $calculationResult = [
         'result' => 'success',
-        #'boats_needed' => 0,
-        #'boats_remaining' => 0,
         'dp_multiplier' => 0,
         'op_multiplier' => 0,
         'away_defense' => 0,
@@ -53,6 +50,8 @@ class ArtefactAttackCalculationService
         'target_dp' => 0,
         'is_ambush' => 0,
         'target_fog' => 0,
+        'wizard_points' => 0,
+        'wizard_points_required' => 0,
     ];
 
     /**
@@ -160,6 +159,9 @@ class ArtefactAttackCalculationService
             $this->calculationResult['max_op'] = $this->calculationResult['away_offense'];    
             $this->calculationResult['min_dp'] = $this->calculationResult['home_defense'];         
         }
+
+        $this->calculationResult['wizard_points'] = $this->magicCalculator->getWizardPoints($dominion, 'offense');
+        $this->calculationResult['wizard_points_required'] = $this->magicCalculator->getWizardPointsRequiredToSendUnits($dominion, $units);
 
         return $this->calculationResult;
     }

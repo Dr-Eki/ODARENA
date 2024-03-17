@@ -2,10 +2,8 @@
 
 namespace OpenDominion\Services\Dominion;
 
-
-use DB;
-use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 use OpenDominion\Exceptions\GameException;
 

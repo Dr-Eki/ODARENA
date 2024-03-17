@@ -154,7 +154,7 @@ class SorceryActionService
                 throw new GameException("You must have at least 4% Wizard Strength to perform sorcery.");
             }
 
-            if ($this->magicCalculator->getWizardRatio($caster, 'offense') < 0.10)
+            if ($this->magicCalculator->getWizardRatio($caster, 'offense', 'sorcery') < 0.10)
             {
                 throw new GameException("You must have at least 0.10 Wizard Ratio to perform sorcery.");
             }
@@ -225,14 +225,14 @@ class SorceryActionService
                         'mana_current' => $casterManaAmount,
                         'wizard_strength_current' => $caster->wizard_strength,
                         'wizard_strength_spent' => $wizardStrength,
-                        'wizard_ratio' => $this->magicCalculator->getWizardRatio($caster, 'offense')
+                        'wizard_ratio' => $this->magicCalculator->getWizardRatio($caster, 'offense', 'sorcery')
                     ],
                 'target' => [
                         'crypt_bodies' => 0,
                         'fog' => $target->getSpellPerkValue('fog_of_war') ? true : false,
                         'reveal_ops' => $target->getSpellPerkValue('reveal_ops') ? true : false,
                         'wizard_strength_current' => $target->wizard_strength,
-                        'wizard_ratio' => $this->magicCalculator->getWizardRatio($target, 'defense')
+                        'wizard_ratio' => $this->magicCalculator->getWizardRatio($target, 'defense', 'sorcery')
                     ],
                 'damage' => [],
             ];

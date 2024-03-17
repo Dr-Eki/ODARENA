@@ -653,7 +653,7 @@ spire:
   deity: sazal
   perks:
     mana_production_raw: 20
-    spell_duration_mod: 1,2.5,50 # Every 1% gives +2.5% spell duration, max +50%
+    spell_duration_mod: 1,5,100 # Every 1% gives +2.5% spell duration, max +50%
 
 toxicarium:
   name: Toxicarium
@@ -1616,7 +1616,6 @@ portal:
     dimensionalists_unit2_production_raw_capped: 0.055,20
     dimensionalists_unit3_production_raw_capped: 0.055,20
     dimensionalists_unit4_production_raw_capped: 0.022,20
-    unit_production_from_wizard_ratio: 5
 
 observatory:  
   enabled: 0

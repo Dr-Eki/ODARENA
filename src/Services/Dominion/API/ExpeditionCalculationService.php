@@ -2,35 +2,35 @@
 
 namespace OpenDominion\Services\Dominion\API;
 
-use LogicException;
 use OpenDominion\Calculators\Dominion\ArtefactCalculator;
 use OpenDominion\Calculators\Dominion\ExpeditionCalculator;
-use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Models\Dominion;
 
 class ExpeditionCalculationService
 {
-    /**
-     * @var int How many units can fit in a single boat
-     */
 
-    protected const UNITS_PER_BOAT = 30;
+    /** @var ArtefactCalculator */
+    protected $artefactCalculator;
+
+    /** @var ExpeditionCalculator */
+    protected $expeditionCalculator;
+
+    /** @var MagicCalculator */
+    protected $magicCalculator;
 
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
 
     /** @var RangeCalculator */
     protected $rangeCalculator;
-
-    
+   
 
     /** @var array Calculation result array. */
     protected $calculationResult = [
         'result' => 'success',
-        #'boats_needed' => 0,
-        #'boats_remaining' => 0,
         'dp_multiplier' => 0,
         'op_multiplier' => 0,
         'away_defense' => 0,
@@ -52,25 +52,20 @@ class ExpeditionCalculationService
             '3' => ['dp' => 0, 'op' => 0],
             '4' => ['dp' => 0, 'op' => 0],
         ],
+        'wizard_points' => 0,
+        'wizard_points_required' => 0,
     ];
 
-    /**
-     * InvadeActionService constructor.
-     *
-     * @param MilitaryCalculator $militaryCalculator
-     * @param RangeCalculator $rangeCalculator
-     */
     public function __construct(
         ArtefactCalculator $artefactCalculator,
         ExpeditionCalculator $expeditionCalculator,
-        LandCalculator $landCalculator,
         MilitaryCalculator $militaryCalculator,
         RangeCalculator $rangeCalculator
     )
     {
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->artefactCalculator = $artefactCalculator;
         $this->expeditionCalculator = $expeditionCalculator;
-        $this->landCalculator = $landCalculator;
         $this->militaryCalculator = $militaryCalculator;
         $this->rangeCalculator = $rangeCalculator;
     }
@@ -147,10 +142,8 @@ class ExpeditionCalculationService
 
         $this->calculationResult['artefact_discovery_chance'] = $this->artefactCalculator->getChanceToDiscoverArtefactOnExpedition($dominion, $this->calculationResult) * 100;
 
-        #if(isset($target))
-        #{
-        #    $this->calculationResult['land_conquered'] = $this->militaryCalculator->getLandConquered($dominion, $target, $landRatio*100);
-        #}
+        $this->calculationResult['wizard_points'] = $this->magicCalculator->getWizardPoints($dominion, 'offense');
+        $this->calculationResult['wizard_points_required'] = $this->magicCalculator->getWizardPointsRequiredToSendUnits($dominion, $units);
 
         return $this->calculationResult;
     }

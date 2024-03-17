@@ -7,16 +7,12 @@ use OpenDominion\Models\Unit;
 
 use OpenDominion\Helpers\UnitHelper;
 
-use OpenDominion\Calculators\Dominion\MagicCalculator;
 
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\StatsService;
 
 class UnitCalculator
 {
-
-    /** @var MagicCalculator */
-    protected $magicCalculator;
 
     /** @var PopulationCalculator */
     protected $populationCalculator;
@@ -32,7 +28,6 @@ class UnitCalculator
 
     public function __construct()
     {
-        $this->magicCalculator = app(MagicCalculator::class);
         $this->queueService = app(QueueService::class);
         $this->statsService = app(StatsService::class);
         $this->unitHelper = app(UnitHelper::class);
@@ -115,12 +110,7 @@ class UnitCalculator
                 $unitSummoningMultiplier = 1;
                 $unitSummoningMultiplier += $dominion->getBuildingPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
                 $unitSummoningMultiplier += $dominion->getSpellPerkMultiplier($raceKey . '_unit' . $slot . '_production_mod');
-    
-                if($unitProductionFromWizardRatioPerk = $dominion->getBuildingPerkValue('unit_production_from_wizard_ratio'))
-                {
-                    $unitSummoningMultiplier += $this->magicCalculator->getWizardRatio($dominion) / $unitProductionFromWizardRatioPerk;
-                }
-    
+        
                 $unitSummoning = $buildingUnitSummoningRaw * $unitSummoningMultiplier;
     
                 # Check for capacity limit

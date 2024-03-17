@@ -5,19 +5,17 @@ namespace OpenDominion\Services\Dominion\API;
 use OpenDominion\Traits\DominionGuardsTrait;
 
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\Artefact;
 
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 
 class InvadeCalculationService
 {
     use DominionGuardsTrait;
-    /**
-     * @var int How many units can fit in a single boat
-     */
 
-    protected const UNITS_PER_BOAT = 30;
+    /** @var MagicCalculator */
+    protected $magicCalculator;
 
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
@@ -53,6 +51,8 @@ class InvadeCalculationService
         'target_dp' => 0,
         'is_ambush' => 0,
         'target_fog' => 0,
+        'wizard_points' => 0,
+        'wizard_points_required' => 0,
     ];
 
     /**
@@ -63,6 +63,7 @@ class InvadeCalculationService
      */
     public function __construct()
     {
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->rangeCalculator = app(RangeCalculator::class);
     }
@@ -211,6 +212,9 @@ class InvadeCalculationService
                 $this->calculationResult['target_dp'] = ceil($this->calculationResult['target_dp']);
             }
         }
+
+        $this->calculationResult['wizard_points'] = $this->magicCalculator->getWizardPoints($dominion, 'offense');
+        $this->calculationResult['wizard_points_required'] = $this->magicCalculator->getWizardPointsRequiredToSendUnits($dominion, $units);
 
         return $this->calculationResult;
     }

@@ -2,26 +2,27 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
-use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\CasualtiesCalculator;
+use OpenDominion\Calculators\Dominion\ImprovementCalculator;
+use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
+use OpenDominion\Calculators\Dominion\ResourceCalculator;
+use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
+use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Exceptions\GameException;
+use OpenDominion\Helpers\ArtefactHelper;
+use OpenDominion\Helpers\RaceHelper;
+use OpenDominion\Helpers\UnitHelper;
 use OpenDominion\Http\Requests\Dominion\Actions\InvadeActionRequest;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Services\Dominion\Actions\InvadeActionService;
 use OpenDominion\Services\Dominion\GovernmentService;
 use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Services\Dominion\QueueService;
-use OpenDominion\Calculators\Dominion\SpellCalculator;
-use OpenDominion\Calculators\NetworthCalculator;
-use OpenDominion\Calculators\Dominion\PrestigeCalculator;
-use OpenDominion\Calculators\Dominion\ResourceCalculator;
-use OpenDominion\Calculators\Dominion\ImprovementCalculator;
-use OpenDominion\Helpers\ArtefactHelper;
-use OpenDominion\Helpers\RaceHelper;
-use OpenDominion\Helpers\UnitHelper;
 
 class InvasionController extends AbstractDominionController
 {
@@ -38,6 +39,7 @@ class InvasionController extends AbstractDominionController
             'casualtiesCalculator' => app(CasualtiesCalculator::class),
             'improvementCalculator' => app(ImprovementCalculator::class),
             'landCalculator' => app(LandCalculator::class),
+            'magicCalculator' => app(MagicCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),
             'prestigeCalculator' => app(PrestigeCalculator::class),
@@ -76,7 +78,7 @@ class InvasionController extends AbstractDominionController
 
         // analytics event
 
-        $request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
+        #$request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
         return redirect()->to($result['redirect'] ?? route('dominion.invade'));
     }
 }

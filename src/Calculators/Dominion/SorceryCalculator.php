@@ -75,31 +75,26 @@ class SorceryCalculator
     public function getSpellDamageMultiplier(Dominion $caster, Dominion $target, Spell $spell, int $wizardStrength, Resource $enhancementResource = null, int $enhancementAmount = 0, string $perkKey = null): float
     {
         $multiplier = 1;
-        #dump("1/4 getSpellDamageMultiplier starting point: $multiplier");
 
         $multiplier *= $this->getDamageDealtMultiplier($caster, $target);
-        #dump("2/4 getSpellDamageMultiplier after getDamageDealtMultiplier: $multiplier");
 
         $multiplier *= $this->getyWizardStrengthMultiplier($wizardStrength);
-        #dump("3/4 getSpellDamageMultiplier after getyWizardStrengthMultiplier: $multiplier");
 
         $multiplier *= $this->getWizardRatioMultiplier($caster, $target);
-        #dump("4/4 getSpellDamageMultiplier after getWizardRatioMultiplier: $multiplier");
 
         return $multiplier;
     }
 
     public function getyWizardStrengthMultiplier(int $wizardStrength): float
     {
-        #dump("getyWizardStrengthMultiplier: " . $wizardStrength * (exp($wizardStrength/120)-1));
         return $wizardStrength * (exp($wizardStrength/120)-1);
     }
 
     public function getWizardRatioMultiplier(Dominion $caster, Dominion $target): float
     {
         $multiplier = 1;
-        $casterWpa = $this->magicCalculator->getWizardRatio($caster, 'offense');
-        $targetWpa = $this->magicCalculator->getWizardRatio($target, 'defense');
+        $casterWpa = $this->magicCalculator->getWizardRatio($caster, 'offense', 'sorcery');
+        $targetWpa = $this->magicCalculator->getWizardRatio($target, 'defense', 'sorcery');
 
         if($casterWpa <= 0)
         {
@@ -112,15 +107,13 @@ class SorceryCalculator
 
         $multiplier += max(min((($casterWpa - $targetWpa) / $casterWpa), 1.5), 0);
 
-        #dump("getWizardRatioMultiplier: $multiplier (casterWpa: $casterWpa / targetWpa: $targetWpa)");
-
         return $multiplier;
     }
 
     public function getDamageDealtMultiplier(Dominion $caster): float
     {
         $multiplier = 1;
-        $multiplier += $caster->getDecreePerkMultiplier('sorcery_damage_dealt_from_wizard_ratio') * $this->magicCalculator->getWizardRatio($caster, 'offense');
+        $multiplier += $caster->getDecreePerkMultiplier('sorcery_damage_dealt_from_wizard_ratio') * $this->magicCalculator->getWizardRatio($caster, 'offense', 'sorcery');
         $multiplier += $caster->getSpellPerkMultiplier('sorcery_damage_dealt');
         $multiplier += $caster->getImprovementPerkMultiplier('sorcery_damage_dealt');
         $multiplier += $caster->getBuildingPerkMultiplier('sorcery_damage_dealt');
@@ -155,7 +148,7 @@ class SorceryCalculator
         $multiplier += $dominion->getDeityPerkMultiplier('sorcery_cost');
         $multiplier += $dominion->getSpellPerkMultiplier('sorcery_cost');
 
-        $multiplier += $dominion->getDecreePerkMultiplier('sorcery_cost_from_wizard_ratio') * $this->magicCalculator->getWizardRatio($dominion);
+        $multiplier += $dominion->getDecreePerkMultiplier('sorcery_cost_from_wizard_ratio') * $this->magicCalculator->getWizardRatio($dominion, 'offense', 'sorcery');
 
         if(isset($dominion->title))
         {

@@ -201,7 +201,7 @@ class TickService
                 if(static::EXTENDED_LOGGING) { Log::debug('* Going through all dominions'); }
                 foreach ($dominions as $dominion)
                 {
-                    dump("Processing dominion {$dominion->id}");
+                    dump("Processing dominion {$dominion->id}: {$dominion->name}");
                     ProcessDominionJob::dispatch($dominion);
                     continue;
                     /*

@@ -93,8 +93,6 @@ class BuildingHelper
             'dimensionalists_unit3_production_mod' => '%2$s%% Ze\'Tk summoning rate for every %1$s%% (max %3$s%%).',
             'dimensionalists_unit4_production_mod' => '%2$s%% Frs\'Kl summoning rate for every %1$s%% (max %3$s%%).',
 
-            'unit_production_from_wizard_ratio' => 'Summoning increased by (Wizard Ratio / %g)%%.',
-
             'snow_elf_unit4_production_raw' => 'Attracts %g Gryphons per tick.',
             'snow_elf_unit4_production_raw_capped' => 'Summons %1$s Gryphons per tick (up to %2$s%% of your land).',
             'snow_elf_unit4_production_mod' => '%2$s%% Gryphon arrival rate for every %1$s%% (max %3$s%%).',

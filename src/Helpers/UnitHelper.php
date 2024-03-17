@@ -307,6 +307,11 @@ class UnitHelper
             'counts_as_wizard' => 'Counts as %s wizard.',
             'counts_as_wizard_defense' => 'Counts as %s of a wizard on defense.',
             'counts_as_wizard_offense' => 'Counts as %s of a wizard on offense.',
+           
+
+            'counts_as_wizard_from_time' => 'Counts as %3$s wizard(s) on defense between %1$s:00 and %2$s:00.',
+            'counts_as_wizard_defense_from_time' => 'Counts as %3$s wizard(s) on defense between %1$s:00 and %2$s:00.',
+            'counts_as_wizard_offense_from_time' => 'Counts as %3$s wizard(s) on offense between %1$s:00 and %2$s:00.',
 
             'counts_as_wizard_from_land' => 'Counts as %1$s wizard for every %2$s%% %3$s.',
             'counts_as_wizard_on_defense_from_terrain' => 'Counts as %1$s wizard on defense for every %2$s%% %3$s.',
@@ -315,6 +320,12 @@ class UnitHelper
             'immortal_wizard' => 'Immortal wizard (cannot be killed when casting spells).',
             'minimum_wpa_to_train' => 'Must have at least %s Wizard Ratio (on offense) to train.',
             'wizard_from_title' => 'Counts as additional %2$s of a wizard (offense and defense) if ruled by a %1$s.',
+
+            'wizard_points_required' => '%g wizard points required to train or send.',
+
+            'does_not_count_towards_sorcery' => 'Does not engage in sorcery.',
+            'does_not_count_towards_sorcery_on_defense' => 'Does not engage in warding off sorcery.',
+            'does_not_count_towards_sorcery_on_offense' => 'Does not engage in performing sorcery.',
 
             // Casualties and death related
             'casualties' => '%+g%% casualties.',

@@ -268,6 +268,11 @@ class ArtefactActionService
             {
                 throw new GameException('You do not have enough caverns to send out this many units.');
             }
+                
+            if (!$this->passesWizardPointsCheck($attacker, $units))
+            {
+                throw new GameException('You do not have enough wizard points to send out these units.');
+            }
 
             foreach($units as $slot => $amount)
             {
@@ -883,6 +888,11 @@ class ArtefactActionService
         $maxSendableUnits = $this->militaryCalculator->getMaxSendableUnits($attacker);
 
         return (array_sum($units) <= $maxSendableUnits);
+    }
+
+    protected function passesWizardPointsCheck(Dominion $attacker, array $units): bool
+    {
+        return ($this->magicCalculator->getWizardPoints($attacker) >= $this->magicCalculator->getWizardPointsRequiredToSendUnits($attacker, $units));
     }
 
     /**

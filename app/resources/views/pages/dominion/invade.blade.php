@@ -24,7 +24,7 @@
                                             data-networth="{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}"
                                             data-percentage="{{ $rangeCalculator->getDominionRange($selectedDominion, $dominion) }}"
                                             data-abandoned="{{ $dominion->isAbandoned() ? 1 : 0 }}"
-                                            data-fogged="{{ $dominion->getSpellPerkValue('fog_of_war') }}"
+                                            data-fogged="{{ $dominion->getSpellPerkValue('fog_of_war') ? 1 : 0 }}"
                                             >
                                         {{ $dominion->name }} (#{{ $dominion->realm->number }}) - {{ $dominion->race->name }}
                                     </option>
@@ -353,6 +353,14 @@
                                             </td>
                                             <td id="target-dp" data-amount="0">0</td>
                                         </tr>
+                                        @if($magicCalculator->getWizardPointsRequiredByAllUnits($selectedDominion))
+                                            <tr>
+                                                <td>
+                                                    Wizard points required:
+                                                </td>
+                                                <td id="wizard-points-required" data-amount="0">0</td>
+                                            </tr>
+                                        @endif
                                         <tr>
                                             <td>Land conquered:</td>
                                             <td id="invasion-land-conquered" data-amount="0">0</td>
@@ -493,6 +501,14 @@
                                                 {{ number_format($militaryCalculator->getDefensivePower($selectedDominion) / $selectedDominion->land, 2) }}
                                             </td>
                                         </tr>
+                                        @if($magicCalculator->getWizardPointsRequiredByAllUnits($selectedDominion))
+                                            <tr>
+                                                <td>
+                                                    Wizard points:
+                                                </td>
+                                                <td id="wizard-points" data-amount="0">0</td>
+                                            </tr>
+                                        @endif
                                         @if($selectedDominion->getSpellPerkValue('fog_of_war'))
                                             @php
                                                 $spell = OpenDominion\Models\Spell::where('key', 'fog')->firstOrFail();
@@ -581,6 +597,8 @@
             var homeForcesDPAElement = $('#home-forces-dpa');
             var invasionLandConqueredElement = $('#invasion-land-conquered');
             var targetDpElement = $('#target-dp');
+            var wizardPointsElement = $('#wizard-points');
+            var wizardPointsRequiredElement = $('#wizard-points-required');
 
             var invasionForceCountElement = $('#invasion-total-units');
 
@@ -636,6 +654,8 @@
                             homeForcesMinDPElement.data('amount', response.min_dp);
                             homeForcesDPAElement.data('amount', response.home_dpa);
                             targetDpElement.data('amount', response.target_dp);
+                            wizardPointsElement.data('amount', response.wizard_points);
+                            wizardPointsRequiredElement.data('amount', response.wizard_points_required);
 
                             // Update OP / DP display
                             invasionForceOPElement.text(response.away_offense.toLocaleString(undefined, {maximumFractionDigits: 2}));
@@ -648,6 +668,8 @@
                             homeForcesMinDPElement.text(response.min_dp.toLocaleString(undefined, {maximumFractionDigits: 0}));
                             homeForcesDPAElement.text(response.home_dpa.toLocaleString(undefined, {maximumFractionDigits: 0}));
                             targetDpElement.text(response.target_dp.toLocaleString(undefined, {maximumFractionDigits: 0}));
+                            wizardPointsElement.text(response.wizard_points.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            wizardPointsRequiredElement.text(response.wizard_points_required.toLocaleString(undefined, {maximumFractionDigits: 2}));
 
                             invasionForceCountElement.text(response.units_sent);
 
@@ -687,8 +709,31 @@
                     invasionForceOPElement.removeClass('text-danger');
                 }
 
+                // Check wizard points rule
+                var wizardPointsRule = parseFloat(wizardPointsElement.data('amount')) < parseFloat(wizardPointsRequiredElement.data('amount'));
+                if (wizardPointsRule) {
+                    wizardPointsRequiredElement.addClass('text-danger');
+                } else {
+                    wizardPointsRequiredElement.removeClass('text-danger');
+                }
+
+                // Check if invasion force OP is greater than target OP
+                var invasionSuccess = parseFloat(invasionForceOPElement.data('amount')) > parseFloat(targetDpElement.data('amount'));
+                console.log('invasionSuccess:', invasionSuccess); // Debug line
+
+                // Get the selected option element
+                var selectedOption = $('#target_dominion option:selected');
+
+                // Check if the selected target is fogged
+                var isFogged = selectedOption.data('fogged') === 1;
+                console.log('isFogged:', isFogged); // Debug line
+
+                invasionForceOPElement.toggleClass('text-warning', isFogged);
+                invasionForceOPElement.toggleClass('text-success', !isFogged && invasionSuccess);
+                invasionForceOPElement.toggleClass('text-danger', !isFogged && !invasionSuccess);
+
                 // Check if invade button should be disabled
-                if (minDefenseRule || maxOffenseRule) {
+                if (minDefenseRule || maxOffenseRule || wizardPointsRule) {
                     invadeButtonElement.attr('disabled', 'disabled');
                 } else {
                     invadeButtonElement.removeAttr('disabled');

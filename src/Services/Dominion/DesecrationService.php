@@ -10,6 +10,7 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Resource;
 use OpenDominion\Calculators\Dominion\DesecrationCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\ResourceService;
@@ -18,10 +19,11 @@ class DesecrationService
 {
     use DominionGuardsTrait;
 
+    protected $desecrationCalculator;
+    protected $magicCalculator;
+    protected $militaryCalculator;
     protected $queueService;
     protected $resourceService;
-    protected $desecrationCalculator;
-    protected $militaryCalculator;
 
     protected $desecrationEvent;
 
@@ -41,6 +43,7 @@ class DesecrationService
     public function __construct()
     {
         $this->desecrationCalculator = app(DesecrationCalculator::class);
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
 
         $this->queueService = app(QueueService::class);
@@ -77,6 +80,11 @@ class DesecrationService
             if(!$unitsWithDesecrationPerk)
             {
                 throw new GameException('At least some units sent must be capable of desecration.');
+            }
+
+            if($this->magicCalculator->getWizardPoints($desecrator) < $this->magicCalculator->getWizardPointsRequiredToSendUnits($desecrator, $desecratingUnits))
+            {
+                throw new GameException('You do not have enough wizard points to send these units.');
             }
 
             $this->desecration['units_sent'] = $desecratingUnits;
@@ -118,27 +126,24 @@ class DesecrationService
 
                 $queueDatas[] = ['resource_'.$this->desecration['result']['resource_key'] => $this->desecration['result']['amount']];
 
+                $ticks = 8;
+
+                foreach($queueDatas as $queueData)
+                {
+                    $this->queueService->queueResources(
+                        'desecration',
+                        $desecrator,
+                        $queueData,
+                        $ticks
+                    );    
+                }
+
+                # Update round resources (remove bodies)
+                $this->resourceService->updateRoundResources($desecrator->round, [
+                    'body' => -$this->desecration['bodies']['desecrated'],
+                ]);
 
             }
-
-            
-
-            $ticks = 8;
-
-            foreach($queueDatas as $queueData)
-            {
-                $this->queueService->queueResources(
-                    'desecration',
-                    $desecrator,
-                    $queueData,
-                    $ticks
-                );    
-            }
-
-            # Update round resources (remove bodies)
-            $this->resourceService->updateRoundResources($desecrator->round, [
-                'body' => -$this->desecration['bodies']['desecrated'],
-            ]);
 
             $this->desecrationEvent = GameEvent::create([
                 'round_id' => $desecrator->round_id,

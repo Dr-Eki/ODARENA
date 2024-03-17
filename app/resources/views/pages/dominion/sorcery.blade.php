@@ -14,7 +14,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title"><i class="ra ra-on-target"></i> Target</h3>
                         <small class="pull-right text-muted">
-                            <span data-toggle="tooltip" data-placement="top" title="Wizards Per Acre (Wizard Ratio) on offense">WPA</span>: {{ number_format($magicCalculator->getWizardRatio($selectedDominion, 'offense'),3) }},
+                            <span data-toggle="tooltip" data-placement="top" title="Wizards Per Acre (Wizard Ratio) on offense">WPA</span>: {{ number_format($magicCalculator->getWizardRatio($selectedDominion, 'offense', 'sorcery'),3) }},
                             <span data-toggle="tooltip" data-placement="top" title="Wizard Strength">WS</span>: {{ $selectedDominion->wizard_strength }}%
                         </small>
                     </div>
@@ -30,7 +30,7 @@
                                                     data-land="{{ number_format($dominion->land) }}"
                                                     data-networth="{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}"
                                                     data-percentage="{{ number_format($rangeCalculator->getDominionRange($selectedDominion, $dominion), 1) }}"
-                                                    data-wpa="{{ $dominion->getSpellPerkValue('fog_of_war') ? 'Unknown' : number_format($magicCalculator->getWizardRatio($dominion, 'defense'), 3) }}"
+                                                    data-wpa="{{ $dominion->getSpellPerkValue('fog_of_war') ? 'Unknown' : number_format($magicCalculator->getWizardRatio($dominion, 'defense', 'sorcery'), 3) }}"
                                                     data-abandoned="{{ $dominion->isAbandoned() ? 1 : 0 }}">
                                                 {{ $dominion->name }} (#{{ $dominion->realm->number }}) - {{ $dominion->race->name }}
                                             </option>

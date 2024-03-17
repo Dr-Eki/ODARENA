@@ -6,6 +6,7 @@ use Log;
 
 use Illuminate\Support\Collection;
 
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Services\Dominion\QueueService;
 
 use OpenDominion\Models\Dominion;
@@ -14,12 +15,14 @@ use OpenDominion\Models\Spell;
 class MagicCalculator
 {
 
-    /** @var QueueService */
     protected $queueService;
+    protected $unitCalculator;
+
 
     public function __construct()
     {
         $this->queueService = app(QueueService::class);
+        $this->unitCalculator = app(UnitCalculator::class);
     }
 
     /**
@@ -28,9 +31,9 @@ class MagicCalculator
      * @param Dominion $dominion
      * @return float
      */
-    public function getWizardRatio(Dominion $dominion, string $type = 'offense'): float
+    public function getWizardRatio(Dominion $dominion, string $type = 'offense', string $purpose = 'spells'): float
     {
-        return ($this->getWizardRatioRaw($dominion, $type) * $this->getWizardRatioMultiplier($dominion, $type) * (0.9 + $dominion->wizard_strength / 1000));
+        return ($this->getWizardRatioRaw($dominion, $type, $purpose) * $this->getWizardRatioMultiplier($dominion, $type) * (0.9 + $dominion->wizard_strength / 1000));
     }
 
     /**
@@ -39,7 +42,7 @@ class MagicCalculator
      * @param Dominion $dominion
      * @return float
      */
-    public function getWizardRatioRaw(Dominion $dominion, string $type = 'offense'): float
+    public function getWizardRatioRaw(Dominion $dominion, string $type = 'offense', string $purpose = 'spells'): float
     {
         $wizards = $this->getTotalUnitsForSlot($dominion, 'wizards');
         $wizards += $this->getTotalUnitsForSlot($dominion, 'archmages') * 2;
@@ -49,6 +52,12 @@ class MagicCalculator
         // Add units which count as (partial) spies (Dark Elf Adept)
         foreach ($dominion->race->units as $unit)
         {
+
+            if($unit->getPerkValue('does_not_count_towards_' . $purpose))
+            {
+                continue;
+            }
+
             if ($type === 'offense' && $countsAsWizardOffensePerk = $unit->getPerkValue('counts_as_wizard_offense'))
             {
                 $wizards += floor($dominion->{"military_unit{$unit->slot}"} * $countsAsWizardOffensePerk);
@@ -64,7 +73,29 @@ class MagicCalculator
                 $wizards += floor($dominion->{"military_unit{$unit->slot}"} * $countsAsWizardPerk);
             }
 
-            if ($timePerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ("counts_as_wizard_" . $type . "_from_time"), null))
+            if ($timePerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ("counts_as_wizard_from_time"), null))
+            {
+                $powerFromTime = (float)$timePerkData[2];
+
+                if($dominion->protection_ticks > 0)
+                {
+                    $wizards += floor($dominion->{"military_unit{$unit->slot}"} * ($powerFromTime / 2));
+                }
+                else
+                {
+                    $hourFrom = $timePerkData[0];
+                    $hourTo = $timePerkData[1];
+                    if (
+                        (($hourFrom < $hourTo) and (now()->hour >= $hourFrom and now()->hour < $hourTo)) or
+                        (($hourFrom > $hourTo) and (now()->hour >= $hourFrom or now()->hour < $hourTo))
+                    )
+                    {
+                        $wizards += floor($dominion->{"military_unit{$unit->slot}"} * $powerFromTime);
+                    }
+                }
+            }
+
+            if ($timePerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ("counts_as_wizard_on_" . $type . "_from_time"), null))
             {
                 $powerFromTime = (float)$timePerkData[2];
                 $hourFrom = $timePerkData[0];
@@ -184,42 +215,94 @@ class MagicCalculator
     public function getWizardPoints(Dominion $dominion, string $type = 'offense'): float
     {
         $wizardPoints = $dominion->military_wizards + ($dominion->military_archmages * 2);
-
-        // Add units which count as (partial) spies (Dark Elf Adept)
+    
         foreach ($dominion->race->units as $unit)
         {
-            if ($type === 'offense' && $unit->getPerkValue('counts_as_wizard_offense'))
-            {
-                $wizardPoints += floor($dominion->{"military_unit{$unit->slot}"} * (float) $unit->getPerkValue('counts_as_wizard_offense'));
-            }
-
-            if ($type === 'defense' && $unit->getPerkValue('counts_as_wizard_defense'))
-            {
-                $wizardPoints += floor($dominion->{"military_unit{$unit->slot}"} * (float) $unit->getPerkValue('counts_as_wizard_defense'));
-            }
-
-            if ($unit->getPerkValue('counts_as_wizard'))
-            {
-                $wizardPoints += floor($dominion->{"military_unit{$unit->slot}"} * (float) $unit->getPerkValue('counts_as_wizard'));
-            }
-
-            if ($timePerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ("counts_as_wizard_" . $type . "_from_time"), null))
-            {
-                $powerFromTime = (float)$timePerkData[2];
-                $hourFrom = $timePerkData[0];
-                $hourTo = $timePerkData[1];
-                if (
-                    (($hourFrom < $hourTo) and (now()->hour >= $hourFrom and now()->hour < $hourTo)) or
-                    (($hourFrom > $hourTo) and (now()->hour >= $hourFrom or now()->hour < $hourTo))
-                )
-                {
-                    $wizardPoints += floor($dominion->{"military_unit{$unit->slot}"} * $powerFromTime);
+            $unitCount = $dominion->{"military_unit{$unit->slot}"};
+            $perkTypes = ['counts_as_wizard', "counts_as_wizard_{$type}"];
+    
+            foreach ($perkTypes as $perkType) {
+                $perkValue = $unit->getPerkValue($perkType);
+                if ($perkValue) {
+                    $wizardPoints += ($unitCount * (float) $perkValue);
                 }
             }
         }
 
+        if($peasantsCountAsWizards = $dominion->race->getPerKValue('peasants_count_as_wizards'))
+        {
+            $wizardPoints += $dominion->peasants * $peasantsCountAsWizards;
+        }
+
+        if($drafteesCountAsWizards = $dominion->race->getPerKValue('draftees_count_as_wizards'))
+        {
+            $wizardPoints += $dominion->military_draftees * $drafteesCountAsWizards;
+        }
+    
         return $wizardPoints * $this->getWizardRatioMultiplier($dominion, $type);
     }
+
+    public function getWizardPointsRequiredByUnitTotal(Dominion $dominion, int $slot, string $mode = 'offense'): float
+    {
+        $wizardPointsRequiredByUnit = 0;
+
+        $unit = $dominion->race->units->where('slot', $slot)->first();
+        if($wizardPointsRequiredPerkValue = $unit->getPerkValue('wizard_points_required'))
+        {
+            $wizardPointsRequiredByUnit += $this->unitCalculator->getUnitTypeTotalPaid($dominion, $unit->slot) * $wizardPointsRequiredPerkValue;
+        }
+
+        return $wizardPointsRequiredByUnit;
+
+    }
+
+    public function getWizardPointsRequiredByUnit(Dominion $dominion, int $slot, string $mode = 'offense'): float
+    {
+        return $dominion->race->units->where('slot', $slot)->first()->getPerkValue('wizard_points_required');
+
+        #return $unit->getPerkValue('wizard_points_required');
+
+    }
+
+    public function getWizardPointsRequiredByAllUnits(Dominion $dominion, string $mode = 'offense'): float
+    {
+        # Check if any units in $dominion->race->units have perkValue 'wizard_points_required'
+        $wizardPointsRequiredByUnits = 0;
+        
+        foreach($dominion->race->units as $unit)
+        {
+            if($wizardPointsRequiredPerkValue = $unit->getPerkValue('wizard_points_required'))
+            {
+                $wizardPointsRequiredByUnits += $this->unitCalculator->getUnitTypeTotalPaid($dominion, $unit->slot) * $wizardPointsRequiredPerkValue;
+            }
+        }
+
+        return $wizardPointsRequiredByUnits;
+
+    }
+
+    public function getWizardPointsRequiredToSendUnits(Dominion $dominion, array $units): float
+    {
+        $wizardPointsRequired = 0;
+
+        foreach($units as $slot => $amount)
+        {
+            $wizardPointsRequired += $this->getWizardPointsRequiredByUnit($dominion, $slot) * $amount;
+        }
+
+        return $wizardPointsRequired;
+    }
+
+    public function getWizardPointsUsed(Dominion $dominion, string $mode = 'offense'): float
+    {
+        return min($this->getWizardPoints($dominion, $mode), $this->getWizardPointsRequiredByAllUnits($dominion, $mode));
+    }
+
+    public function getWizardPointsRemaining(Dominion $dominion, string $mode = 'offense'): float
+    {
+        return $this->getWizardPoints($dominion, $mode) - $this->getWizardPointsRequiredByAllUnits($dominion, $mode);
+    }
+
 
     public function getMagicLevel(Dominion $dominion): int
     {

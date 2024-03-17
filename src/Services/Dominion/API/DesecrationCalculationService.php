@@ -7,12 +7,16 @@ use OpenDominion\Traits\DominionGuardsTrait;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Resource;
 
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\DesecrationCalculator;
 
 class DesecrationCalculationService
 {
     use DominionGuardsTrait;
+
+    /** @var MagicCalculator */
+    protected $magicCalculator;
 
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
@@ -48,6 +52,9 @@ class DesecrationCalculationService
         'target_dp' => 0,
         'is_ambush' => 0,
         'target_fog' => 0,
+
+        'wizard_points' => 0,
+        'wizard_points_required' => 0,
          
         'bodies_amount' => 0,
         'resource_name' => '',
@@ -225,8 +232,8 @@ class DesecrationCalculationService
             $this->calculationResult['resource_amount'] = 'Unknown';
         }
 
-        #$this->calculationResult['resource_name'] = Resource::where('key', $resourceKey)->first()->name;
-        #$this->calculationResult['resource_amount'] = $desecrationResult[key($desecrationResult)];
+        $this->calculationResult['wizard_points'] = $this->magicCalculator->getWizardPoints($dominion, 'offense');
+        $this->calculationResult['wizard_points_required'] = $this->magicCalculator->getWizardPointsRequiredToSendUnits($dominion, $units);
 
         $this->calculationResult['bodies_amount'] = $dominion->getSpellPerkValue('can_see_battlefield_bodies') ? $dominion->round->resource_body : 'We are not sufficiently attuned to death to see how many ripe bodies are available on the battlefields. Numbers below are best case estimates.';
 
