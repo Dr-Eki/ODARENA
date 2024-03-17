@@ -74,7 +74,7 @@ units:
       attrition: 0.25 # 0.25% lost each tick.
       no_draftee_on_release: 1
       releases_into_resource: 10,food
-      desecration: 1,4,miasma # Can desecrate up to 1 bodies into 2 miasma each
+      desecration: 1,4,miasma # Can desecrate up to 1 bodies into 4 miasma each
 
   - name: Pest Rat
     training_time: 9

@@ -434,7 +434,7 @@ class SpellHelper
                         return ($unit->slot === $slot);
                     })->first();
 
-                $perkValue = [$faction, Str::plural($unit->name), $percentage];
+                $perkValue = [$faction, Str::unitPlural($unit->name), $percentage];
             }
 
             if($perk->key === 'aurei_unit_conversion')
@@ -505,7 +505,7 @@ class SpellHelper
                         })->first();
 
 
-                    $units[$index] = Str::plural($unit->name);
+                    $units[$index] = Str::unitPlural($unit->name);
                 }
 
                 $unitsString = generate_sentence_from_array($units);
@@ -533,7 +533,7 @@ class SpellHelper
                             return ($unit->slot === $slot);
                         })->first();
 
-                    $units[$index] = Str::plural($unit->name);
+                    $units[$index] = Str::unitPlural($unit->name);
                 }
 
                 $unitsString = generate_sentence_from_array($units);
@@ -574,7 +574,7 @@ class SpellHelper
                     return ($unit->slot === $slotConvertedTo);
                 })->first();
 
-                $perkValue = [$peasantsConverted, $unitsConvertedTo, Str::plural($unitToConvertTo->name, $unitsConvertedTo)];
+                $perkValue = [$peasantsConverted, $unitsConvertedTo, Str::unitPlural($unitToConvertTo->name, $unitsConvertedTo)];
                 $nestedArrays = false;
 
             }

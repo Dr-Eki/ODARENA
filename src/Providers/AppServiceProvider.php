@@ -76,11 +76,16 @@ class AppServiceProvider extends AbstractServiceProvider
     {
         Paginator::useBootstrapThree();
         Schema::defaultStringLength(191);
-        Str::macro('unitPlural', function ($value) {
-            if (strtolower($value) === 'envoy of darkness') {
-                return 'Envoys of Darkness';
-            }
 
+        Str::macro('unitPlural', function ($value) {
+            $unitSpecialPluralNames = config('units.special_plural_units');
+        
+            $lowerValue = strtolower($value);
+        
+            if (array_key_exists($lowerValue, $unitSpecialPluralNames)) {
+                return $unitSpecialPluralNames[$lowerValue];
+            }
+        
             return Str::plural($value);
         });
 

@@ -411,7 +411,7 @@ class BuildingHelper
         
                             $unit = $race->units->firstWhere('slot', $unitSlot);
             
-                            $perkValue[$key] = [$amountHoused, Str::plural($unit->name, $amountHoused)];
+                            $perkValue[$key] = [$amountHoused, Str::unitPlural($unit->name, $amountHoused)];
                         }
                     }
                     else
@@ -421,7 +421,7 @@ class BuildingHelper
         
                         $unit = $race->units->firstWhere('slot', $unitSlot);
     
-                        $perkValue = [$amountHoused, Str::plural($unit->name, $amountHoused)];
+                        $perkValue = [$amountHoused, Str::unitPlural($unit->name, $amountHoused)];
                     }
                 }
 
@@ -445,7 +445,7 @@ class BuildingHelper
                     {
                         $unitGenerated = $race->units->firstWhere('slot', (int)$perkValue[0])->name;
 
-                        $perkValue = [$amountProduced, Str::plural($unitGenerated, $amountProduced)];
+                        $perkValue = [$amountProduced, Str::unitPlural($unitGenerated, $amountProduced)];
                     }
 
                     $nestedArrays = false;
@@ -511,7 +511,7 @@ class BuildingHelper
                     return ($unit->slot === $slot);
                 })->first();
 
-                $perkValue = [$amount, Str::plural($unit->name, $amount)];
+                $perkValue = [$amount, Str::unitPlural($unit->name, $amount)];
                 $nestedArrays = false;
 
             }

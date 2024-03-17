@@ -49,5 +49,24 @@ return [
 
         'paid' => array_values($states)
 
-    ]
+    ],
+
+    'special_plural_units' => [
+        'berserk' => 'berserkir',
+        'cavalry' => 'cavalry',
+        'einherjar' => 'einherjar',
+        'envoy of darkness' => 'Envoys of Darkness',
+        'fallen' => 'fallen',
+        'goat witch' => 'goat witches',
+        'hex' => 'hex',
+        'huskarl' => 'huskarlar',
+        'lich' => 'liches',
+        'nix' => 'nix',
+        'pax' => 'pax',
+        'norn' => 'nornir',
+        'shaman' => 'shamans',
+        'snow witch' => 'snow witches',
+        'valkyrja' => 'valkyrjur',
+        'vex' => 'vex',
+    ],
 ];

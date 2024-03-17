@@ -237,7 +237,7 @@ class DecreeHelper
                         return ($unit->slot === $slotProducing);
                     })->first();
 
-                $perkValue = [Str::plural($unitProduced->name, $amountProduced), floatval($amountProduced), $unitProducing->name];
+                $perkValue = [Str::unitPlural($unitProduced->name, $amountProduced), floatval($amountProduced), $unitProducing->name];
             }
 
             if($perk->key == 'wizards_count_as_spies')

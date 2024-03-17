@@ -298,14 +298,14 @@ class ReleaseActionService
                 {
                     $unitStrings[] = sprintf('%s %s into %s',
                         number_format($amount),
-                        Str::plural($unit->name, $amount),
+                        Str::unitPlural($unit->name, $amount),
                         Str::plural($releasedInto, $amount));
                 }
                 else
                 {
                     $unitStrings[] = sprintf('%s %s',
                         number_format($amount),
-                        Str::plural($unit->name, $amount));
+                        Str::unitPlural($unit->name, $amount));
                 }
             }
 

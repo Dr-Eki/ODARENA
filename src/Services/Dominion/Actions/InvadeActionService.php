@@ -405,14 +405,14 @@ class InvadeActionService
 
                 if($amount < 0)
                 {
-                    throw new GameException('Invasion was canceled due to an invalid amount of ' . Str::plural($unit->name, $amount) . '.');
+                    throw new GameException('Invasion was canceled due to an invalid amount of ' . Str::unitPlural($unit->name, $amount) . '.');
                 }
 
                 # OK, unit can be trained. Let's check for pairing limits.
                 if($this->unitCalculator->unitHasCapacityLimit($attacker, $slot) and !$this->unitCalculator->checkUnitLimitForInvasion($attacker, $slot, $amount))
                 {
 
-                    throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($attacker, $slot)) . ' ' . Str::plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                    throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($attacker, $slot)) . ' ' . Str::unitPlural($unit->name) . '. To control more, you need to first have more of their superior unit.');
                 }
 
                 # Check for spends_resource_on_offense
@@ -427,7 +427,7 @@ class InvadeActionService
 
                     if($resourceAmountRequired > $resourceAmountOwned)
                     {
-                        throw new GameException('You do not have enough ' . $resource->name . ' to attack to send this many ' . Str::plural($unit->name, $amount) . '. You need ' . number_format($resourceAmountRequired) . ' but only have ' . number_format($resourceAmountOwned) . '.');
+                        throw new GameException('You do not have enough ' . $resource->name . ' to attack to send this many ' . Str::unitPlural($unit->name, $amount) . '. You need ' . number_format($resourceAmountRequired) . ' but only have ' . number_format($resourceAmountOwned) . '.');
                     }
                 }
              }

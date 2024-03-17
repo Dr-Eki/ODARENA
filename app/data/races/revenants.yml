@@ -64,7 +64,7 @@ units:
       displaced_peasants_random_split_conversion: 60,90,3,2
       strength_conversion: 6,2,3 # threshold,under,over
 
-  - name: Returner
+  - name: Necromancer
     training_time: 6
     type:
       - sentient

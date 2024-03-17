@@ -804,7 +804,7 @@ class UnitHelper
                             return ($unit->slot === $slot);
                         })->first();
 
-                        $unitNamesToConvertTo[] = Str::plural($unitToConvertTo->name);
+                        $unitNamesToConvertTo[] = Str::unitPlural($unitToConvertTo->name);
                     }
 
                     $perkValue = generate_sentence_from_array($unitNamesToConvertTo);
@@ -889,7 +889,7 @@ class UnitHelper
                             return ($unit->slot === $slotTo);
                         })->first();
 
-                    $perkValue = [Str::plural($unitFrom->name), Str::plural($unitTo->name), $rate];
+                    $perkValue = [Str::unitPlural($unitFrom->name), Str::unitPlural($unitTo->name), $rate];
                 }
 
                 if($perk->key === 'evolves_into_unit')
@@ -901,7 +901,7 @@ class UnitHelper
 
                     $unitTo = $race->units->where('slot', $targetSlot)->first();
 
-                    $perkValue = [Str::plural($unitTo->name), $evolutionRatio, $evolutionTicks];
+                    $perkValue = [Str::unitPlural($unitTo->name), $evolutionRatio, $evolutionTicks];
                 }
 
                 if($perk->key === 'value_conversion')
@@ -914,7 +914,7 @@ class UnitHelper
                             return ($unit->slot === $convertToSlot);
                         })->first();
 
-                    $perkValue = [$multiplier, Str::plural($unitToConvertTo->name)];
+                    $perkValue = [$multiplier, Str::unitPlural($unitToConvertTo->name)];
                 }
                 if($perk->key === 'defense_from_buildings')
                 {
@@ -1016,7 +1016,7 @@ class UnitHelper
                     })->first();
 
                     $perkValue[0] = $ratio;
-                    $perkValue[1] = Str::plural($unitToConvertTo->name);
+                    $perkValue[1] = Str::unitPlural($unitToConvertTo->name);
                 }
 
                 $productionBuildingPairingPerks = [
@@ -1136,7 +1136,7 @@ class UnitHelper
                         return ($unit->slot === $unitSlotToProduce);
                     })->first();
 
-                    $unitNameToProduce[] = Str::plural($unitToProduce->name);
+                    $unitNameToProduce[] = Str::unitPlural($unitToProduce->name);
 
                     $perkValue[0] = generate_sentence_from_array($unitNameToProduce);
                     $perkValue[1] = $amountToProduce;

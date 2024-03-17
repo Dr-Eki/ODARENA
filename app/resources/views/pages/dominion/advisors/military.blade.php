@@ -250,7 +250,7 @@
                             <tbody>
                                 @foreach($selectedDominion->race->units as $unit)
                                     <tr>
-                                        <td>{{ Str::plural($unit->name) }}</td>
+                                        <td>{{ Str::unitPlural($unit->name) }}</td>
                                         <td>
                                             <strong>{{ number_format($statsService->getStat($selectedDominion, ('unit' .$unit->slot . '_trained'))) }}</strong>
                                         </td>

@@ -243,7 +243,7 @@ class TrainActionService
                     return ($unit->slot === $unitSlot);
                 })->first();
 
-                throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($dominion, $unitSlot)) . ' ' . Str::plural($unit->name) . '. To control more, you need to first have more of their superior unit.');
+                throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($dominion, $unitSlot)) . ' ' . Str::unitPlural($unit->name) . '. To control more, you need to first have more of their superior unit.');
             }
 
             # Check for minimum WPA to train.
@@ -291,7 +291,7 @@ class TrainActionService
           {
             if($totalCosts['unit' . $unit->slot] > $dominion->{'military_unit' . $unit->slot})
             {
-                throw new GameException('Insufficient ' . Str::plural($unit->name) .  ' to train ' . number_format($amountToTrain) . ' ' . Str::plural($unitToTrain->name, $amountToTrain) . '.');
+                throw new GameException('Insufficient ' . Str::unitPlural($unit->name) .  ' to train ' . number_format($amountToTrain) . ' ' . Str::unitPlural($unitToTrain->name, $amountToTrain) . '.');
             }
           }
 
@@ -327,7 +327,7 @@ class TrainActionService
 
           if($totalCosts['crypt_body'] > $this->resourceCalculator->getRealmAmount($dominion->realm, 'body'))
           {
-              throw new GameException('Insufficient bodies in the crypt to train ' . number_format($amountToTrain) . ' ' . Str::plural($unitToTrain->name, $amountToTrain) . '.');
+              throw new GameException('Insufficient bodies in the crypt to train ' . number_format($amountToTrain) . ' ' . Str::unitPlural($unitToTrain->name, $amountToTrain) . '.');
           }
       }
 
@@ -529,10 +529,6 @@ class TrainActionService
             if ($amount > 0) {
                 $unitName = strtolower($this->unitHelper->getUnitName($unitType, $dominion->race));
 
-                // Str::plural() isn't perfect for certain unit names. This array
-                // serves as an override to use (see issue #607)
-                // todo: Might move this to UnitHelper, especially if more
-                //       locations need unit name overrides
                 $overridePluralUnitNames = [
                     'shaman' => 'shamans',
                     'abscess' => 'abscesses',
@@ -566,7 +562,7 @@ class TrainActionService
                         $unitLabel = $overridePluralUnitNames[$unitName];
                     }
                 } else {
-                    $unitLabel = Str::plural(Str::singular($unitName), $amount);
+                    $unitLabel = Str::unitPlural($unitName, $amount);
                 }
 
                 $unitsToTrainStringParts[] = "{$amountLabel} {$unitLabel}";
@@ -591,7 +587,7 @@ class TrainActionService
                     return ($unit->slot === $slot);
                 })->first();
 
-                $costType = Str::plural($unit->name, $cost);
+                $costType = Str::unitPlural($unit->name, $cost);
             }
 
             $costWord = $costType;
@@ -623,7 +619,7 @@ class TrainActionService
         $trainingCostsString = generate_sentence_from_array($trainingCostsStringParts);
 
         # Clean up formatting
-        $unitsToTrainString = ucwords($unitsToTrainString);
+        #$unitsToTrainString = ucwords($unitsToTrainString);
         $unitsToTrainString = str_replace('And', 'and', $unitsToTrainString);
 
         $trainingCostsString = ucwords($trainingCostsString);

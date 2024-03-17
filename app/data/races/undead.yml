@@ -47,12 +47,10 @@ terrain_perks:
 
 perks:
   can_desecrate: 1
-  cannot_train_archmages: 1
-  wizards_training_time: 6
 
 units:
   - name: Desecrator
-    training_time: 9
+    training_time: 6
     type:
       - mindless
     cost:
@@ -62,11 +60,11 @@ units:
       offense: 0
       defense: 4
     perks:
-      desecration: 8,1,body # Can desecrate up to 8 bodies into 1 body each
+      desecration: 1,1,body # Can desecrate up to 1 bodies into 1 body each
       kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
 
   - name: Ghoul
-    training_time: 0
+    training_time: 8
     type:
       - mindless
     cost:
@@ -77,31 +75,28 @@ units:
       defense: 2
     perks:
       kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
-      pairing_limit: 4,6 # Unit slot, amount
-      does_not_count_as_population: 1
+      casualties: -50
 
   - name: Wight
-    training_time: 0
+    training_time: 10
     type:
       - sentient
       - intelligent
     cost:
-      gold: 1000
-      mana: 210
+      gold: 1400
+      mana: 220
       body: 1
     power:
       offense: 6
-      defense: 3
+      defense: 4
     perks:
       dies_into: 3
-      #increases_enemy_casualties_on_offense: 1
       increases_enemy_casualties_on_defense: 1
       kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
-      pairing_limit: 4,4 # Unit slot, amount
-      does_not_count_as_population: 1
+      offense_from_deity: kinthys,1
 
-  - name: Necromancer
-    training_time: 6
+  - name: Lich
+    training_time: 12
     type:
       - sentient
       - intelligent
@@ -109,9 +104,10 @@ units:
     cost:
       gold: 1500
       lumber: 1
-      wizards: 1
+      body: 1
     power:
       offense: 0
       defense: 6
     perks:
-      counts_as_wizard: 2
+      counts_as_wizard: 1
+      defense_from_deity: zidur,1

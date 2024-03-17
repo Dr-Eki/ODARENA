@@ -522,7 +522,7 @@ class SpellActionService
 
                     $unitConvertedTo = $caster->race->units->where('slot', $slotConvertedTo)->first();
 
-                    $extraLine = ', converting ' . number_format($actualPeasantsConverted) . ' peasants into ' . number_format($actualUnitsConvertedTo) . ' ' . Str::plural($unitConvertedTo->name, $unitsConvertedTo) . '.';
+                    $extraLine = ', converting ' . number_format($actualPeasantsConverted) . ' peasants into ' . number_format($actualUnitsConvertedTo) . ' ' . Str::unitPlural($unitConvertedTo->name, $unitsConvertedTo) . '.';
 
                 }
 
@@ -624,7 +624,7 @@ class SpellActionService
                             return ($unit->slot == $slot);
                         })->first();
 
-                        $units[] = number_format($amountConjured) . ' ' . Str::plural($unit->name, $amountConjured);
+                        $units[] = number_format($amountConjured) . ' ' . Str::unitPlural($unit->name, $amountConjured);
                     }
 
                     $unitsString = generate_sentence_from_array($units);

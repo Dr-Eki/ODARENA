@@ -380,7 +380,7 @@ class ResearchHelper
                         return ($unit->slot === $slot);
                     })->first();
 
-                    $unitNamesToConvertTo[] = Str::plural($unitToConvertTo->name);
+                    $unitNamesToConvertTo[] = Str::unitPlural($unitToConvertTo->name);
                 }
 
                 $perkValue = generate_sentence_from_array($unitNamesToConvertTo);
@@ -432,7 +432,7 @@ class ResearchHelper
                         return ($unit->slot === $convertToSlot);
                     })->first();
 
-                $perkValue = [$multiplier, Str::plural($unitToConvertTo->name)];
+                $perkValue = [$multiplier, Str::unitPlural($unitToConvertTo->name)];
             }
             if($perk->key == 'resource_conversion_capped')
             {
@@ -523,7 +523,7 @@ class ResearchHelper
                     return ($unit->slot === $unitSlotToProduce);
                 })->first();
 
-                $unitNameToProduce[] = Str::plural($unitToProduce->name);
+                $unitNameToProduce[] = Str::unitPlural($unitToProduce->name);
 
                 $perkValue = generate_sentence_from_array($unitNameToProduce);
             }
@@ -543,7 +543,7 @@ class ResearchHelper
                         return ($unit->slot === $slot);
                     })->first();
 
-                $perkValue = [$faction, Str::plural($unit->name), $percentage];
+                $perkValue = [$faction, Str::unitPlural($unit->name), $percentage];
             }
 
             if($perk->key === 'aurei_unit_conversion')
@@ -614,7 +614,7 @@ class ResearchHelper
                         })->first();
 
 
-                    $units[$index] = Str::plural($unit->name);
+                    $units[$index] = Str::unitPlural($unit->name);
                 }
 
                 $unitsString = generate_sentence_from_array($units);
@@ -642,7 +642,7 @@ class ResearchHelper
                             return ($unit->slot === $slot);
                         })->first();
 
-                    $units[$index] = Str::plural($unit->name);
+                    $units[$index] = Str::unitPlural($unit->name);
                 }
 
                 $unitsString = generate_sentence_from_array($units);
