@@ -16,8 +16,7 @@ feast_of_azk_hurum:
   class: passive
   cost: 9
   duration: 48
-  exclusive_races:
-    - Demon
+  deity: azk_hurum
   perks:
     population_growth: 50
     food_consumption_mod: 25
@@ -30,8 +29,7 @@ fury_of_azk_hurum:
   cost: 7
   duration: 12
   cooldown: 92
-  exclusive_races:
-    - Demon
+  deity: azk_hurum
   perks:
     increases_enemy_casualties_on_offense: 25
     increases_enemy_casualties_on_defense: 25
@@ -43,10 +41,20 @@ sacrifice_to_azk_hurum:
   scope: self
   class: active
   cost: 9
-  exclusive_races:
-    - Demon
+  deity: azk_hurum
   perks:
     peasant_to_resources_conversion: 50,1;soul,10;blood
+
+barathu_bints_intuition:
+  name: Barathu Bint's Intuition
+  level: 0
+  scope: self
+  class: active
+  cooldown: 92
+  deity: barathu_bint
+  perks:
+    increase_morale: 20
+    add_resource_per_peasant: 1,gold
 
 bregons_muster:
   name: Bregon's Muster
@@ -65,7 +73,7 @@ bregons_muster:
 
 druvas_blessing:
   name: Druva's Blessing
-  level: 2
+  level: 1
   scope: self
   class: passive
   cost: 6
@@ -114,21 +122,30 @@ elskas_vision:
   perks:
     spy_strength_recovery: 3
 
-glimjs_treasures:  
-  enabled: 0
-  name: Glimj's Treasures
+glimjs_tide:
+  name: Glimj's Tide
+  level: 1
   scope: self
   class: passive
-  cost: 5
-  duration: 36
-  cooldown: 72
+  cost: 8
+  duration: 12
+  cooldown: 144
   deity: glimj
-  exclusive_races:
-    - Glimjir
   perks:
-    gold_theft: -100
-    kelp_theft: -100
-    pearls_theft: -100
+    defensive_power_from_terrain: water,0.12
+    offensive_power_from_terrain: water,0.08
+
+ixs_virtue:
+  name: Ix's Virtue
+  level: 0
+  scope: self
+  class: passive
+  cost: 6
+  duration: 12
+  cooldown: 92
+  deity: ix
+  perks:
+    improvement_points: 20
 
 mirnons_fortitude:
   name: Mirnon's Fortitude
@@ -159,31 +176,26 @@ mirnons_greed:
     building_gold_quarry_production_mod: 20
     food_consumption_mod: 25
 
-sazals_ward:  
-  enabled: 0
-  name: Sazal's Ward
+sazals_charge:
+  name: Sazal's Charge
   scope: self
-  class: passive
-  cost: 12
-  duration: 36
-  cooldown: 72
+  class: active
+  cost: 1
+  cooldown: 480
   deity: sazal
   perks:
-    sorcery_damage_suffered: -50
-    sorcery_damage_dealt: -75
+    reset_spell_cooldowns: 1
 
-sazals_wrath:  
-  enabled: 0
-  name: Sazal's Wrath
+sazals_vision:
+  name: Sazal's Vision
   scope: self
   class: passive
   cost: 6
-  duration: 12
-  cooldown: 92
+  duration: 48
+  cooldown: 480
   deity: sazal
   perks:
-    sorcery_damage_suffered: 50
-    sorcery_damage_dealt: 25
+    mana_production_mod: 15
 
 urugdakhs_benediction:  
   enabled: 0
@@ -211,15 +223,13 @@ urugdakhs_crusade:
     increases_enemy_casualties_on_offense: 25
     no_land_discovered: 1
 
-zidurs_bane:  
-  enabled: 0
+zidurs_bane:
   name: Zidur's Bane
   scope: self
   class: passive
-  cost: 6
-  duration: 0
+  cost: 9
+  duration: 12
   cooldown: 92
   deity: zidur
   perks:
-    casualties: 10
-    drafting: -10
+    increases_enemy_casualties: 10

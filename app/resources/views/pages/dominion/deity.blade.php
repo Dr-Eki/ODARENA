@@ -21,6 +21,7 @@
                                     <col width="200">
                                     <col>
                                     <col>
+                                    <col>
                                 </colgroup>
                                 <thead>
                                     <tr>
@@ -28,6 +29,7 @@
                                         <th>Deity</th>
                                         <th>Perks</th>
                                         <th>Spells</th>
+                                        <th>Holy Buildings</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -56,8 +58,15 @@
                                         </td>
                                         <td>
                                             <ul>
-                                                @foreach($deityHelper->getDeitySpells($deity) as $spell)
-                                                    <li><a href="{{ route('scribes.spells') }}#{{ $spell->name }}" target="_new">{{ $spell->name }}</a></li>
+                                                @foreach($deity->spells as $spell)
+                                                    <li><a href="{{ route('scribes.spells') }}#{{ $spell->key }}" target="_new">{{ $spell->name }}</a></li>
+                                                @endforeach
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <ul>
+                                                @foreach($deity->buildings as $building)
+                                                    <li><a href="{{ route('scribes.buildings') }}#{{ $building->key }}" target="_new">{{ $building->name }}</a></li>
                                                 @endforeach
                                             </ul>
                                         </td>
@@ -77,38 +86,50 @@
                     </div>
                 </form>
                 @elseif($selectedDominion->deity)
-                <form id="renounce-deity" action="{{ route('dominion.deity.renounce') }}" method="post" role="form">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-12">
-                            <form action="{{ route('dominion.deity.deity') }}" method="post" role="form">
-                            <p>You have been devoted to <strong>{{ $selectedDominion->deity->name }}</strong> for {{ $selectedDominion->devotion->duration }} ticks, granting you the following perks:</p>
-                            <ul>
-                                @foreach($deityHelper->getDeityPerksString($selectedDominion->deity, $selectedDominion->getDominionDeity()) as $effect)
-                                    <li>{{ ucfirst($effect) }}</li>
-                                @endforeach
-                                    <li>Range multiplier: {{ $selectedDominion->deity->range_multiplier }}x</li>
-                            </ul>
-                            @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity') and !$selectedDominion->getTechPerkValue('cannot_renounce_deity'))
-                                <p>If you wish to devote your dominion to another deity, you may renounce your devotion to {{ $selectedDominion->deity->name }} below.</p>
-                            @endif
-                        </div>
-                    </div>
+                    <form id="renounce-deity" action="{{ route('dominion.deity.renounce') }}" method="post" role="form">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form action="{{ route('dominion.deity.deity') }}" method="post" role="form">
+                                <p>You have been devoted to <strong>{{ $selectedDominion->deity->name }}</strong> for {{ $selectedDominion->devotion->duration }} ticks, granting you the following perks:</p>
+                                <ul>
+                                    @foreach($deityHelper->getDeityPerksString($selectedDominion->deity, $selectedDominion->getDominionDeity()) as $effect)
+                                        <li>{{ ucfirst($effect) }}</li>
+                                    @endforeach
+                                        <li>Range multiplier: {{ $selectedDominion->deity->range_multiplier }}x</li>
+                                </ul>
+                                
+                                <ul>
+                                    @foreach($deity->spells as $spell)
+                                        <li><a href="{{ route('scribes.spells') }}#{{ $spell->key }}" target="_new">{{ $spell->name }}</a></li>
+                                    @endforeach
+                                </ul>
+                                <ul>
+                                    @foreach($deity->buildings as $building)
+                                        <li><a href="{{ route('scribes.buildings') }}#{{ $building->key }}" target="_new">{{ $building->name }}</a></li>
+                                    @endforeach
+                                </ul>
 
-                    @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity') and !$selectedDominion->getTechPerkValue('cannot_renounce_deity'))
-                        <div class="col-sm-6 col-lg-6">
-                            <div class="form-group">
-                                <select id="renounce-deity"  class="form-control">
-                                    <option value="0">Renounce devotion?</option>
-                                    <option value="1">Confirm renounce</option>
-                                </select>
-                                <button id="renounce-deity" type="submit" class="btn btn-danger btn-block" disabled {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
-                                    Renounce This Deity
-                                </button>
+                                @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity') and !$selectedDominion->getTechPerkValue('cannot_renounce_deity'))
+                                    <p>If you wish to devote your dominion to another deity, you may renounce your devotion to {{ $selectedDominion->deity->name }} below.</p>
+                                @endif
                             </div>
                         </div>
-                    @endif
-                </form>
+
+                        @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity') and !$selectedDominion->getTechPerkValue('cannot_renounce_deity'))
+                            <div class="col-sm-6 col-lg-6">
+                                <div class="form-group">
+                                    <select id="renounce-deity"  class="form-control">
+                                        <option value="0">Renounce devotion?</option>
+                                        <option value="1">Confirm renounce</option>
+                                    </select>
+                                    <button id="renounce-deity" type="submit" class="btn btn-danger btn-block" disabled {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
+                                        Renounce This Deity
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
+                    </form>
                 @endif
             </div>
         </div>

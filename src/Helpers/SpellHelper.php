@@ -8,6 +8,7 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
+use OpenDominion\Models\Terrain;
 
 class SpellHelper
 {
@@ -105,6 +106,8 @@ class SpellHelper
 
             'resource_lost_on_invasion' => '%1s%% of %2$s if invaded (excluding overwhelmed invasions).',
 
+            'add_resource_per_peasant' => '%1$+g %2$s per peasant.',
+
             // Military
             'drafting' => '%+g%% drafting',
             'training_time_raw' => '%s ticks training time for military units (does not include Spies, Wizards, or Archmages)',
@@ -127,8 +130,8 @@ class SpellHelper
 
             'faster_return' => 'Units return %s ticks faster from invasions',
 
-            'increase_morale' => 'Restores target morale by %+g%% (up to maximum of 100%%).',
-            'decrease_morale' => 'Lowers target morale by %+g%% (minimum 0%%).',
+            'increase_morale' => '%+g morale.',
+            'decrease_morale' => '%+g morale.',
             'increase_morale_from_net_victories' => 'Gain %+g morale per net victory (minimum +0%%).',
             'morale_change_tick' => '%+g%% morale normalisation per tick (if morale is greater than base morale).',
             'no_morale_bonus_on_offense' => 'Morale does not affect offensive power.',
@@ -264,11 +267,14 @@ class SpellHelper
 
             'defensive_power_from_peasants' => '%s raw defensive power per peasant',
 
+            'offensive_power_from_terrain' => '%2$+g%% raw defensive power per 1%% of %1$s.',
+            'defensive_power_from_terrain' => '%2$+g%% raw defensive power per 1%% of %1$s.',
+
             'offensive_power_from_devotion' => '%2$s%% offensive power for every tick devoted to %1$s (max %3$s%%).',
             'defense_from_devotion' => '%2$s%% offensive power for every tick devoted to %1$s (max %3$s%%).',
 
             // Improvements
-            'invest_bonus' => '%+g%% improvement points from investments made while spell is active',
+            'improvement_points' => '%+g%% improvement points value',
             'improvements' => '%+g%% improvements',
 
             // Explore
@@ -355,6 +361,16 @@ class SpellHelper
 
             }
 
+            if($perk->key == 'add_resource_per_peasant')
+            {
+                $amount = (float)$perkValue[0];
+                $resourceKey = (string)$perkValue[1];
+
+                $resource = Resource::where('key', $resourceKey)->first();
+
+                $perkValue = [number_format($amount), $resource->name];
+            }
+
             if($perk->key === 'convert_resource_to_land')
             {
                 $amount = (float)$perkValue[0];
@@ -363,6 +379,16 @@ class SpellHelper
                 $fromResource = Resource::where('key', $resourceKey)->first();
 
                 $perkValue = [number_format($amount), $fromResource->name];
+            }
+
+            if(in_array($perk->key, ['defensive_power_from_terrain','offensive_power_from_terrain']))
+            {
+                $terrainKey = (string)$perkValue[0];
+                $ratio = (float)$perkValue[1];
+
+                $terrain = Terrain::where('key', $terrainKey)->first();
+
+                $perkValue = [$terrain->name, $ratio];
             }
 
             if($perk->key === 'plunders')

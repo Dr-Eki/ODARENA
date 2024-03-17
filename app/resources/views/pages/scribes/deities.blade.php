@@ -8,7 +8,7 @@
         <h3 class="box-title">Deities</h3>
     </div>
     <div class="box-body">
-        <p>You can devote your dominion to a deity in exchange for some perks (good and bad). For every tick that you remain devoted to a deity, the perks are increased by 0.10% per tick to a maximum of +100%, when the perk values are doubled.</p>
+        <p>You can devote your dominion to a deity in exchange for some perks. For every tick that you remain devoted to a deity, the perks are increased by 0.10% per tick to a maximum of +100%.</p>
         <p>It takes 48 ticks for a devotion to take effect. Your dominion can only be submitted to one deity at a time. However, you can renounce your deity to select a new one (which resets the ticks counter).</p>
         <p>The range multiplier is the maximum land size range the deity permits you to interact with, unless recently invaded, and takes effect immediately once you submit to a deity. A dominion with a wider range cannot take actions against a dominion with a more narrow range, unless the two ranges overlap.</p>
     </div>
@@ -26,12 +26,14 @@
                         <col width="200">
                         <col>
                         <col>
+                        <col>
                     </colgroup>
                     <thead>
                         <tr>
                             <th>Deity</th>
                             <th>Perks</th>
                             <th>Spells</th>
+                            <th>Holy Buildings</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,8 +53,15 @@
                             </td>
                             <td>
                                 <ul>
-                                    @foreach($deityHelper->getDeitySpells($deity) as $spell)
-                                        <li><a href="{{ route('scribes.spells') }}#{{ $spell->name }}" target="_new">{{ $spell->name }}</a></li>
+                                    @foreach($deity->spells as $spell)
+                                        <li><a href="{{ route('scribes.spells') }}#{{ $spell->key }}" target="_new">{{ $spell->name }}</a></li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    @foreach($deity->buildings as $building)
+                                        <li><a href="{{ route('scribes.buildings') }}#{{ $building->name }}" target="_new">{{ $building->name }}</a></li>
                                     @endforeach
                                 </ul>
                             </td>

@@ -68,8 +68,8 @@ class ImprovementCalculator
             $multiplier += $dominion->getTechPerkMultiplier($resourceKey . '_improvement_points');
 
             # Spells
-            $multiplier += $dominion->getSpellPerkMultiplier('invest_bonus');
-            $multiplier += $dominion->getSpellPerkMultiplier($resourceKey . '_invest_bonus');
+            $multiplier += $dominion->getSpellPerkMultiplier('improvement_points');
+            $multiplier += $dominion->getSpellPerkMultiplier($resourceKey . '_improvement_points');
 
             # Buildings
             $multiplier += $dominion->getBuildingPerkMultiplier('improvement_points');

@@ -1130,11 +1130,8 @@ class Dominion extends AbstractModel
                 elseif(in_array($perkKey, ['mana_production_raw_from_wizard_ratio']))
                 {
                     $magicCalculator = app(MagicCalculator::class);
-                    $perWpa = $perkValues[0];
-                
-                    $perk = max(log($magicCalculator->getWizardRatio($this, 'defense')), 0) * (float)$perkValueString * $buildingOwned;
-
-                    unset($magicCalculator);
+                    $wizardRatio = $magicCalculator->getWizardRatio($this, 'defense');
+                    $perk += $wizardRatio * $perkValueString * $buildingOwned;
                 }
 
                 elseif($perkKey == ($this->race->key . '_unit_housing'))
@@ -1387,6 +1384,19 @@ class Dominion extends AbstractModel
                     {
                         $perk += min($this->devotion->duration * $perTick, $max);
                     }
+                }
+                # Deity spells (no max): deityKey, perk, max
+                elseif(in_array($perkKey, ['defensive_power_from_terrain', 'offensive_power_from_terrain']))
+                {
+                    $perkValueArray = $spell->getActiveSpellPerkValues($spell->key, $perkKey);
+
+                    $terrainKey = (string)$perkValueArray[0];
+                    $ratio = (float)$perkValueArray[1];
+                    $terrainRatio = $this->{'terrain_' . $terrainKey} / $this->land;
+                    $terrainRatio *= 100;
+
+                    $perk += $terrainRatio * $ratio;
+
                 }
                 elseif($perkKey == 'defense_from_resource')
                 {

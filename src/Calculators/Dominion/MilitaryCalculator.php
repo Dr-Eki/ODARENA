@@ -2356,11 +2356,14 @@ class MilitaryCalculator
     public function getSpellMultiplier(Dominion $dominion, Dominion $target = null, string $power): float
     {
         $multiplier = 0;
+
+        $type = ($power === 'offense' ? 'offensive' : 'defensive');
+
+        $multiplier += $dominion->getSpellPerkMultiplier("{$type}_power");
+        $multiplier += $dominion->getSpellPerkMultiplier("{$type}_power_from_terrain");
     
         if ($power === 'offense')
-        {
-            $multiplier += $dominion->getSpellPerkMultiplier('offensive_power');
-    
+        {   
             $isRecentlyInvaded = in_array($dominion->round->mode, ['deathmatch', 'deathmatch-duration']) ?
                 $this->isSelfRecentlyInvadedByTarget($dominion, $target) :
                 $this->isOwnRealmRecentlyInvadedByTarget($dominion, $target);
@@ -2373,8 +2376,9 @@ class MilitaryCalculator
     
         if ($power === 'defense')
         {
-            $multiplier += $dominion->getSpellPerkMultiplier('defensive_power');
+
         }
+
     
         return $multiplier;
     }

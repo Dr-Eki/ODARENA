@@ -23,8 +23,7 @@ peasants_production:
   mana: 0.05
 
 improvement_resources:
-  gems: 18
-  gloom: 24
+  gloom: 36
 
 terrain_perks:
   badlands:
@@ -57,7 +56,7 @@ terrain_perks:
     defensive_power_mod: 0.08
 
 perks:
-  max_population: -25
+  max_population: -33
   draftees_count_as_wizards: 0.10
   draftee_dp: 0.5
   cannot_train_archmages: 1
@@ -81,7 +80,7 @@ units:
     type:
       - magical
     cost:
-      mana: 260
+      mana: 1000
     power:
       offense: 0
       defense: 5
@@ -94,7 +93,7 @@ units:
     type:
       - magical
     cost:
-      mana: 514
+      mana: 2000
     power:
       offense: 6
       defense: 6
@@ -108,7 +107,7 @@ units:
     type:
       - magical
     cost:
-      mana: 700
+      mana: 1000
     power:
       offense: 8
       defense: 5

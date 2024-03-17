@@ -166,6 +166,7 @@ gold_mine:
     - Dragons
     - Glimjir
     - Growth
+    - Nox
     - Spirit
     - Sylvan
     - Swarm
@@ -184,6 +185,7 @@ gem_mine:
     - Demon
     - Glimjir
     - Growth
+    - Nox
     - Reptilians
     - Simian
     - Swarm
@@ -624,6 +626,18 @@ redoubt:
     housing: 0
     jobs: 10
 
+sanctuary:
+  name: Sanctuary
+  category: holy
+  deity: druva
+  excluded_races:
+    - Growth
+  perks:
+    food_production_mod: 1,4,40 # Every 1% gives +8% food production, max +40%
+    lumber_production_mod: 1,4,40 # Every 1% gives +8% lumber production, max +40%
+    population_growth_capped: 1,4,40 # Every 1%, gives 6%, no max
+    casualties_on_defense: 1,-4,40 # 1% gives -3%, max -40%
+
 shrine:
   name: Shrine
   category: holy
@@ -639,7 +653,7 @@ spire:
   deity: sazal
   perks:
     mana_production_raw: 20
-    spell_duration_mod: 1,2,50 # Every 1% gives +2% spell duration, max +50%
+    spell_duration_mod: 1,2.5,50 # Every 1% gives +2.5% spell duration, max +50%
 
 toxicarium:
   name: Toxicarium
@@ -1024,7 +1038,7 @@ night_tower:
   exclusive_races:
     - Nox
   perks:
-    gloom_production_raw_from_time: 18,06,0.6 # Between the hours 18:00 and 06:00, produces 6 gloom
+    gloom_production_raw_from_time: 18,06,1 # Between the hours 18:00 and 06:00, produces 1 gloom
     mana_production_raw_from_time: 18,06,36 # Between the hours 18:00 and 06:00, produces 50 mana
 
 # END NOX

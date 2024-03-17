@@ -183,20 +183,6 @@ ward_of_protection:
 
 # BEGIN DISABLED
 
-sazals_charge:  
-  enabled: 0
-  name: Sazal's Charge
-  scope: self
-  class: active
-  cost: 1
-  cooldown: 480
-  excluded_races:
-    - Void
-    - Monster
-  perks:
-    reset_spell_cooldowns: 1
-
-
 surreal_perception:  
   enabled: 0
   name: Sazal's Perception

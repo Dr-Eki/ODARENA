@@ -88,4 +88,17 @@ class Deity extends AbstractModel
         return $perkValue;
     }
 
+    # Get spells where deity is $this
+    public function spells()
+    {
+        return $this->hasMany(Spell::class);
+    }
+
+    # Get buildings where building->deity is $this
+    public function buildings()
+    {
+        return $this->hasMany(Building::class);
+    }
+
+
 }

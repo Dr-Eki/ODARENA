@@ -25,6 +25,7 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\StatsService;
@@ -40,6 +41,7 @@ class ResourceCalculator
     protected $magicCalculator;
     protected $prestigeCalculator;
     protected $spellCalculator;
+    protected $unitCalculator;
     protected $queueService;
     protected $statsService;
 
@@ -49,8 +51,9 @@ class ResourceCalculator
         MagicCalculator $magicCalculator,
         PrestigeCalculator $prestigeCalculator,
         SpellCalculator $spellCalculator,
+        UnitCalculator $unitCalculator,
         QueueService $queueService,
-        StatsService $statsService
+        StatsService $statsService,
         )
     {
         $this->landHelper = app(LandHelper::class);
@@ -61,6 +64,7 @@ class ResourceCalculator
         $this->magicCalculator = $magicCalculator;
         $this->prestigeCalculator = $prestigeCalculator;
         $this->spellCalculator = $spellCalculator;
+        $this->unitCalculator = $unitCalculator;
 
         $this->queueService = $queueService;
         $this->statsService = $statsService;
@@ -148,6 +152,7 @@ class ResourceCalculator
               !in_array($resourceKey, $dominion->race->resources) or
               $dominion->race->getPerkValue('no_' . $resourceKey . '_production') or
               $dominion->getSpellPerkValue('no_' . $resourceKey . '_production') or
+              $dominion->getSpellPerkValue('no_production') or
               $dominion->getSpellPerkValue('stasis') or
               $dominion->isAbandoned() or
               $dominion->isLocked()
@@ -174,7 +179,7 @@ class ResourceCalculator
 
         if(isset($dominion->title))
         {
-            $production += $dominion->title->getPerkValue($resourceKey . '_production_raw') * $dominion->getTitlePerkMultiplier();;
+            $production += $dominion->title->getPerkValue($resourceKey . '_production_raw') * $dominion->getTitlePerkMultiplier();
         }
 
         if(isset($dominion->race->peasants_production[$resourceKey]))
@@ -184,6 +189,7 @@ class ResourceCalculator
             $productionPerPeasantMultiplier = 1;
             $productionPerPeasantMultiplier += $dominion->getTechPerkMultiplier('production_from_peasants_mod');
             $productionPerPeasantMultiplier += $dominion->getSpellPerkMultiplier('production_from_peasants_mod');
+            $productionPerPeasantMultiplier += $dominion->realm->getArtefactPerkMultiplier('production_from_peasants_mod');
 
             if($dominion->race->getPerkValue('unemployed_peasants_produce'))
             {
@@ -195,13 +201,13 @@ class ResourceCalculator
             }
 
             # Legion: annexed peasants
-            if($this->spellCalculator->hasAnnexedDominions($dominion))
-            {
+            #if($this->spellCalculator->hasAnnexedDominions($dominion))
+            #{
                 foreach($this->spellCalculator->getAnnexedDominions($dominion) as $annexedDominion)
                 {
                     $production += $annexedDominion->peasants * $productionPerPeasant;
                 }
-            }
+            #}
         }
 
         # Check for resource_conversion
@@ -346,11 +352,6 @@ class ResourceCalculator
                 $multiplier += $dominion->getBuildingPerkMultiplier('peasants_converted');
                 $multiplier += $dominion->getImprovementPerkMultiplier('peasants_converted');
 
-                #if(in_array($resourceKey, ['blood','soul']))
-                #{
-                #    dd($dominion->{'military_unit' . $slot} * $multiplier * $peasantsConvertedPerUnit, $dominion->peasants);
-                #}
-
                 $production += min($dominion->{'military_unit' . $slot} * $multiplier * $peasantsConvertedPerUnit, $dominion->peasants) * $amountPerPeasant;
             }
         }
@@ -379,14 +380,7 @@ class ResourceCalculator
 
             foreach($dominion->race->units as $unit)
             {
-                $population += $dominion->{'military_unit' . $unit->slot};
-                $population += $this->queueService->getInvasionQueueTotalByResource($dominion, "military_unit{$unit->slot}");
-                $population += $this->queueService->getExpeditionQueueTotalByResource($dominion, "military_unit{$unit->slot}");
-                $population += $this->queueService->getTheftQueueTotalByResource($dominion, "military_unit{$unit->slot}");
-                $population += $this->queueService->getSabotageQueueTotalByResource($dominion, "military_unit{$unit->slot}");
-                $population += $this->queueService->getStunQueueTotalByResource($dominion, "military_unit{$unit->slot}");
-                $population += $this->queueService->getDesecrationQueueTotalByResource($dominion, "military_unit{$unit->slot}");
-                $population += $this->queueService->getArtefactattackQueueTotalByResource($dominion, "military_unit{$unit->slot}");
+                $population += $this->unitCalculator->getUnitTypeTotalTrained($dominion, $unit->slot);
             }
 
             $production += $population * $productionFromPopulation;

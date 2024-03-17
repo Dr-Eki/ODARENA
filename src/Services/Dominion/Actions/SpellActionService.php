@@ -634,6 +634,22 @@ class SpellActionService
                 }
 
                 # Increase morale from net victories
+                if($perk->key === 'increase_morale')
+                {
+                    $caster->morale += (float)$spellPerkValues[0];
+                }
+
+                # Increase morale from net victories
+                if($perk->key === 'add_resource_per_peasant')
+                {
+                    $amount = (float)$spellPerkValues[0];
+                    $resourceKey = (string)$spellPerkValues[1];
+                    $amountToAdd = (int)floor($amount * $caster->peasants);
+
+                    $this->resourceService->updateResources($caster, [$resourceKey => $amountToAdd]);
+                }
+
+                # Increase morale from net victories
                 if($perk->key === 'increase_morale_from_net_victories')
                 {
                     $moralePerNetVictory = (float)$spellPerkValues[0];
