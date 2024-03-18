@@ -525,45 +525,13 @@ class TrainActionService
     {
         $unitsToTrainStringParts = [];
 
-        foreach ($unitsToTrain as $unitType => $amount) {
-            if ($amount > 0) {
+        foreach ($unitsToTrain as $unitType => $amount)
+        {
+            if ($amount > 0)
+            {
                 $unitName = strtolower($this->unitHelper->getUnitName($unitType, $dominion->race));
-
-                $overridePluralUnitNames = [
-                    'shaman' => 'shamans',
-                    'abscess' => 'abscesses',
-                    'werewolf' => 'werewolves',
-                    'snow witch' => 'snow witches',
-                    'lich' => 'liches',
-                    'fallen' => 'fallen',
-                    'goat witch' => 'goat witches',
-                    'phoenix' => 'phoenix',
-                    'master thief' => 'master thieves',
-                    'cavalry' => 'cavalries',
-                    'pikeman' => 'pikemen',
-                    'berserk' => 'berserkir',
-                    'norn' => 'nornir',
-                    'valkyrja' => 'valkyrjur',
-                    'einherjar' => 'einherjar',
-                    'huskarl' => 'huskarlar',
-                    'jötunn' => 'jötnar',
-                    'nix' => 'hex',
-                    'hex' => 'hex',
-                    'vex' => 'vex',
-                    'pax' => 'pax',
-                ];
-
                 $amountLabel = number_format($amount);
-
-                if (array_key_exists($unitName, $overridePluralUnitNames)) {
-                    if ($amount === 1) {
-                        $unitLabel = $unitName;
-                    } else {
-                        $unitLabel = $overridePluralUnitNames[$unitName];
-                    }
-                } else {
-                    $unitLabel = Str::unitPlural($unitName, $amount);
-                }
+                $unitLabel = Str::unitPlural($unitName, $amount);
 
                 $unitsToTrainStringParts[] = "{$amountLabel} {$unitLabel}";
             }

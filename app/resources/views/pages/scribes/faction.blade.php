@@ -401,7 +401,6 @@
     </div>
 </div>
 
-
 <div class="row">
     <a id="spells"></a>
     <div class="col-sm-12 col-md-12">
@@ -432,7 +431,7 @@
                     @foreach ($spells as $spell)
                         @if($spell->class == 'passive' and $spell->scope == 'friendly' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
-                            <td>{{ $spell->name }}</td>
+                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
                             <td>{{ $spell->deity ? $spell->deity->name : 'Any' }}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>{{ $spell->duration }} ticks</td>
@@ -478,7 +477,7 @@
                     @foreach ($spells as $spell)
                         @if($spell->class == 'passive' and $spell->scope == 'hostile' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
-                            <td>{{ $spell->name }}</td>
+                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
                             <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>{{ $spell->duration }} ticks</td>
@@ -524,7 +523,7 @@
                     @foreach ($spells as $spell)
                         @if($spell->class == 'passive' and $spell->scope == 'self' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
-                            <td>{{ $spell->name }}</td>
+                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
                             <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>{{ $spell->duration }} ticks</td>
@@ -569,7 +568,7 @@
                     @foreach ($spells as $spell)
                         @if($spell->class == 'active' and $spell->scope == 'friendly' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
-                            <td>{{ $spell->name }}</td>
+                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
                             <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>
@@ -612,7 +611,7 @@
                     @foreach ($spells as $spell)
                         @if($spell->class == 'active' and $spell->scope == 'hostile' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
-                            <td>{{ $spell->name }}</td>
+                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
                             <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>
@@ -655,7 +654,7 @@
                     @foreach ($spells as $spell)
                         @if($spell->class == 'active' and $spell->scope == 'self' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
-                            <td>{{ $spell->name }}</td>
+                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
                             <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>{{ $spell->cost }}x</td>
                             <td>
@@ -695,7 +694,7 @@
                     @foreach ($spells as $spell)
                         @if($spell->class == 'hostile' and $spell->scope == 'invasion' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
-                            <td>{{ $spell->name }}</td>
+                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
                             <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
                             <td>
                                 <ul>

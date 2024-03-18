@@ -74,6 +74,7 @@
                         @if($spell->class == 'passive' and $spell->scope == 'friendly')
                         <tr>
                             <td>
+                                <a id="{{ $spell->key }}"></a>
                                 {{ $spell->name }}
                                 {!! $spellHelper->getExclusivityString($spell) !!}
                             </td>
@@ -135,9 +136,9 @@
                     </thead>
                     @foreach ($spells as $spell)
                         @if($spell->class == 'passive' and $spell->scope == 'hostile')
-                        <a id="{{ $spell->key }}"></a>
                         <tr>
                             <td>
+                                <a id="{{ $spell->key }}"></a>
                                 {{ $spell->name }}
                                 {!! $spellHelper->getExclusivityString($spell) !!}
                             </td>
@@ -203,9 +204,9 @@
                             $excludes = count($spell->excluded_races);
                         @endphp
                         @if($spell->class == 'passive' and $spell->scope == 'self')
-                        <a id="{{ $spell->key }}"></a>
                         <tr>
                             <td>
+                                <a id="{{ $spell->key }}"></a>
                                 {{ $spell->name }}
                                 {!! $spellHelper->getExclusivityString($spell) !!}
                             </td>
@@ -272,9 +273,9 @@
                         </thead>
                         @foreach ($spells as $spell)
                             @if($spell->class == 'active' and $spell->scope == 'friendly')
-                            <a id="{{ $spell->key }}"></a>
                             <tr>
                                 <td>
+                                    <a id="{{ $spell->key }}"></a>
                                     {{ $spell->name }}
                                     {!! $spellHelper->getExclusivityString($spell) !!}
                                 </td>
@@ -333,9 +334,9 @@
                         </thead>
                         @foreach ($spells as $spell)
                             @if($spell->class == 'active' and $spell->scope == 'hostile')
-                            <a id="{{ $spell->key }}"></a>
                             <tr>
                                 <td>
+                                    <a id="{{ $spell->key }}"></a>
                                     {{ $spell->name }}
                                     {!! $spellHelper->getExclusivityString($spell) !!}
                                 </td>
@@ -394,9 +395,9 @@
                             </tr>
                         </thead>
                         @foreach ($spells->where('class','active')->where('scope','self') as $spell)
-                            <a id="{{ $spell->key }}"></a>
                             <tr>
                                 <td>
+                                    <a id="{{ $spell->key }}"></a>
                                     {{ $spell->name }}
                                     {!! $spellHelper->getExclusivityString($spell) !!}
                                 </td>
@@ -452,9 +453,9 @@
                             </tr>
                         </thead>
                         @foreach ($spells->where('class','invasion')->where('scope','hostile') as $spell)
-                            <a id="{{ $spell->key }}"></a>
                             <tr>
                                 <td>
+                                    <a id="{{ $spell->key }}"></a>
                                     {{ $spell->name }}
                                     {!! $spellHelper->getExclusivityString($spell) !!}
                                 </td>

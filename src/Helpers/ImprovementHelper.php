@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Helpers;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use OpenDominion\Models\Race;
 
 use OpenDominion\Models\Improvement;

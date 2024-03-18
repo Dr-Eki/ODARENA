@@ -103,6 +103,7 @@ units:
       - wise
     cost:
       gold: 1500
+      mana: 100
       lumber: 1
       body: 1
     power:

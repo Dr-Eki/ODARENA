@@ -2,7 +2,7 @@ name: Vampires
 alignment: independent
 description: Cursed with eternal life, Vampires are a powerful, hierarchical society. 
 home_terrain: forest
-playable: 1
+playable: 0 # Round 111 aging/advancing experiment failed, retiring until further notice
 skill_level: 2
 experimental: 1
 magic_level: 3

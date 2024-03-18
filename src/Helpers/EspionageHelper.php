@@ -3,7 +3,7 @@
 namespace OpenDominion\Helpers;
 
 use Log;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Resource;

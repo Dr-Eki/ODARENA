@@ -229,6 +229,28 @@ class MagicCalculator
             }
         }
 
+        if ($timePerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, ("counts_as_wizard_from_time"), null))
+        {
+            $powerFromTime = (float)$timePerkData[2];
+
+            if($dominion->protection_ticks > 0)
+            {
+                $wizardPoints += floor($dominion->{"military_unit{$unit->slot}"} * ($powerFromTime / 2));
+            }
+            else
+            {
+                $hourFrom = $timePerkData[0];
+                $hourTo = $timePerkData[1];
+                if (
+                    (($hourFrom < $hourTo) and (now()->hour >= $hourFrom and now()->hour < $hourTo)) or
+                    (($hourFrom > $hourTo) and (now()->hour >= $hourFrom or now()->hour < $hourTo))
+                )
+                {
+                    $wizardPoints += floor($dominion->{"military_unit{$unit->slot}"} * $powerFromTime);
+                }
+            }
+        }
+
         if($peasantsCountAsWizards = $dominion->race->getPerKValue('peasants_count_as_wizards'))
         {
             $wizardPoints += $dominion->peasants * $peasantsCountAsWizards;
