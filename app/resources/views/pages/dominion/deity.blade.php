@@ -100,12 +100,12 @@
                                 </ul>
                                 
                                 <ul>
-                                    @foreach($deity->spells as $spell)
+                                    @foreach($selectedDominion->deity->spells as $spell)
                                         <li><a href="{{ route('scribes.spells') }}#{{ $spell->key }}" target="_new">{{ $spell->name }}</a></li>
                                     @endforeach
                                 </ul>
                                 <ul>
-                                    @foreach($deity->buildings as $building)
+                                    @foreach($selectedDominion->deity->buildings as $building)
                                         <li><a href="{{ route('scribes.buildings') }}#{{ $building->key }}" target="_new">{{ $building->name }}</a></li>
                                     @endforeach
                                 </ul>
