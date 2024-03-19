@@ -401,8 +401,7 @@ class WorldNewsHelper
         if(in_array($round->mode, ['standard-duration', 'deathmatch-duration', 'factions-duration', 'packs-duration']))
         {
             return sprintf(
-                'Tick <strong>%s</strong> of %s is upon us. The countdown has begun! The round ends in 48 ticks.',
-                number_format($countdown->tick),
+                'Tick <strong>%s</strong> is nearly upon us. The countdown has begun! The round ends in 48 ticks.',
                 number_format($round->goal),
             );
         }
