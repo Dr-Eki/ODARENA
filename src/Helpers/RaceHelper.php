@@ -280,7 +280,6 @@ class RaceHelper
                 $negativeBenefit = false;
                 $description = 'Improvement points';
                 $valueType = '%';
-                $booleanValue = 'static';
                 break;
             case 'population_growth':
                 $negativeBenefit = false;
@@ -442,7 +441,7 @@ class RaceHelper
                 $negativeBenefit = false;
                 $description = 'Morale per percentage of castle buildings';
                 $valueType = '';
-            break;
+                break;
             case 'improvements':
                 $negativeBenefit = false;
                 $description = 'Improvements';
