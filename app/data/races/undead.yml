@@ -60,7 +60,7 @@ units:
       offense: 0
       defense: 4
     perks:
-      desecration: 1,1,body # Can desecrate up to 1 bodies into 1 body each
+      desecration: 8,1,body # Can desecrate up to 1 bodies into 1 body each
       kills_into_resource_per_casualty: 1,body # each 1 unit killed becomes 1 body
 
   - name: Ghoul
@@ -110,5 +110,5 @@ units:
       offense: 0
       defense: 6
     perks:
-      counts_as_wizard: 1
+      increases_enemy_casualties_on_defense: 1
       defense_from_deity: zidur,1

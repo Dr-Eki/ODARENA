@@ -45,7 +45,7 @@ class UnitCalculator
         $units = $this->getDominionUnitBlankArray($dominion);
         $unitsGenerated = $units;
 
-        if($dominion->isAbandoned() or $dominion->round->hasEnded())
+        if($dominion->isAbandoned() or $dominion->round->hasEnded() or $dominion->isLocked())
         {
             return $unitsGenerated;
         }
