@@ -442,6 +442,10 @@ class RaceHelper
                 $negativeBenefit = false;
                 $description = 'Morale per percentage of castle buildings';
                 $valueType = '';
+            break;
+            case 'improvements':
+                $negativeBenefit = false;
+                $description = 'Improvements';
                 break;
             case 'improvements_max':
                 $negativeBenefit = false;

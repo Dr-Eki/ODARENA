@@ -57,7 +57,7 @@ perks:
   prestige_gains: 20
   rezone_cost: -10
   salvaging: 50
-  xp_generation: 10
+  xp_generation_mod: 10
   xp_gains: 100
   morale_per_percentage_castle_buildings: 1
 
