@@ -1737,7 +1737,7 @@ class TickService
                     'winner_type' => Realm::class,
                     'winner_id' => $winnerRealm->id,
                     'type' => $data['count'] > 1 ? 'draw' : 'win',
-                    'data' => $data
+                    'data' => json_encode($data)
                 ];
             }
         }
@@ -1759,7 +1759,7 @@ class TickService
                     'winner_type' => Dominion::class,
                     'winner_id' => $winnerDominion->id,
                     'type' => $data['count'] > 1 ? 'draw' : 'win',
-                    'data' => $data
+                    'data' => json_encode($data)
                 ];
             }
         }
