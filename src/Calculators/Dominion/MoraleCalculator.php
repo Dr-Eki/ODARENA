@@ -98,6 +98,11 @@ class MoraleCalculator
             }
         }
 
+        if($moraleFromCastleRatioPerk = $dominion->race->getPerkValue('morale_per_percentage_castle_buildings'))
+        {
+            $baseModifier += floor($this->buildingCalculator->getBuildingCategoryRatio($dominion, 'castle') * 100 * $moraleFromCastleRatioPerk);
+        }
+
         $baseModifier += $dominion->getTechPerkValue('base_morale');
         $baseModifier += $dominion->realm->getArtefactPerkValue('base_morale');
 

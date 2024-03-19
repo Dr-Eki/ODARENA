@@ -2,7 +2,7 @@ name: Human
 alignment: good
 description: >-
 home_terrain: plains
-playable: 2 # Dev only
+playable: 1 # Dev only
 skill_level: 1
 magic_level: 3
 
