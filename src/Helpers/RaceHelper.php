@@ -438,6 +438,11 @@ class RaceHelper
                 $description = 'Morale changes on invasion';
                 $valueType = '% (gains and losses)';
                 break;
+            case 'morale_per_percentage_castle_buildings':
+                $negativeBenefit = false;
+                $description = 'Morale per percentage of castle buildings';
+                $valueType = '';
+                break;
             case 'improvements_max':
                 $negativeBenefit = false;
                 $description = 'Improvement bonuses max';
