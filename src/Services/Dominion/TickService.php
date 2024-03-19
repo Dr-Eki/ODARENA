@@ -1762,7 +1762,7 @@ class TickService
         elseif(!$round->hasCountdown())
         {
             # For fixed length rounds, show a countdown when there are COUNTDOWN_DURATION_TICKS ticks left.
-            if(in_array($round->mode, ['standard-duration', 'deathmatch-duration', 'factions-duration','packs-duration']))
+            if(in_array($round->mode, ['standard-duration', 'deathmatch-duration', 'factions-duration', 'packs-duration']))
             {
                 if($round->ticks >= ($round->end_tick - $this->roundHelper->getRoundCountdownTickLength()))
                 {
@@ -1852,7 +1852,7 @@ class TickService
                     'winner_type' => Dominion::class,
                     'winner_id' => $winnerDominion->id,
                     'type' => $data['count'] > 1 ? 'draw' : 'win',
-                    'data' => $data
+                    'data' => json_encode($data)
                 ];
             }
         }
