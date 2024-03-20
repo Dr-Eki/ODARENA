@@ -319,7 +319,7 @@
                                   <th>Perks</th>
                               </tr>
                           </thead>
-                          @foreach ($buildings as $building)
+                          @foreach ($race->getBuildings() as $building)
                               <tr>
                                   <td>{{ $building->name }}</td>
                                   <td>{!! $buildingHelper->getBuildingDescription($building) !!}</td>
@@ -356,7 +356,7 @@
                                   <th>Perks</th>
                               </tr>
                           </thead>
-                          @foreach ($improvements as $improvement)
+                          @foreach ($race->getImprovements() as $improvement)
                               <tr>
                                   <td>
                                       {{ $improvement->name }}
@@ -374,21 +374,21 @@
                                                   <td><u>Max</u></td>
                                                   <td><u>Coefficient</u></td>
                                               </tr>
-                                      @foreach($improvement->perks as $perk)
-                                          @php
-                                              $improvementPerkMax = number_format($improvementHelper->extractImprovementPerkValuesForScribes($perk->pivot->value)[0]);
-                                              $improvementPerkCoefficient = number_format($improvementHelper->extractImprovementPerkValuesForScribes($perk->pivot->value)[1]);
-                                              if($improvementPerkMax > 0)
-                                              {
-                                                  $improvementPerkMax = '+' . $improvementPerkMax;
-                                              }
-                                          @endphp
-                                          <tr>
-                                              <td>{{ ucwords($improvementHelper->getImprovementPerkDescription($perk->key)) }}</td>
-                                              <td>{{ $improvementPerkMax }}%</td>
-                                              <td>{{ $improvementPerkCoefficient }}</td>
-                                          <tr>
-                                      @endforeach
+                                            @foreach($improvement->perks as $perk)
+                                                @php
+                                                    $improvementPerkMax = number_format($improvementHelper->extractImprovementPerkValuesForScribes($perk->pivot->value)[0]);
+                                                    $improvementPerkCoefficient = number_format($improvementHelper->extractImprovementPerkValuesForScribes($perk->pivot->value)[1]);
+                                                    if($improvementPerkMax > 0)
+                                                    {
+                                                        $improvementPerkMax = '+' . $improvementPerkMax;
+                                                    }
+                                                @endphp
+                                                <tr>
+                                                    <td>{{ ucwords($improvementHelper->getImprovementPerkDescription($perk->key)) }}</td>
+                                                    <td>{{ $improvementPerkMax }}%</td>
+                                                    <td>{{ $improvementPerkCoefficient }}</td>
+                                                <tr>
+                                            @endforeach
                                       </table>
                                   </td>
                               </tr>
@@ -428,7 +428,7 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($spells as $spell)
+                    @foreach ($race->getSpells() as $spell)
                         @if($spell->class == 'passive' and $spell->scope == 'friendly' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
@@ -474,7 +474,7 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($spells as $spell)
+                    @foreach ($race->getSpells() as $spell)
                         @if($spell->class == 'passive' and $spell->scope == 'hostile' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
@@ -520,7 +520,7 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($spells as $spell)
+                    @foreach ($race->getSpells() as $spell)
                         @if($spell->class == 'passive' and $spell->scope == 'self' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
@@ -565,7 +565,7 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($spells as $spell)
+                    @foreach ($race->getSpells() as $spell)
                         @if($spell->class == 'active' and $spell->scope == 'friendly' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
@@ -608,7 +608,7 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($spells as $spell)
+                    @foreach ($race->getSpells() as $spell)
                         @if($spell->class == 'active' and $spell->scope == 'hostile' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
@@ -651,7 +651,7 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($spells as $spell)
+                    @foreach ($race->getSpells() as $spell)
                         @if($spell->class == 'active' and $spell->scope == 'self' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
@@ -691,7 +691,7 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($spells as $spell)
+                    @foreach ($race->getSpells() as $spell)
                         @if($spell->class == 'hostile' and $spell->scope == 'invasion' and $spellHelper->isSpellAvailableToRace($race, $spell))
                         <tr>
                             <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
@@ -733,7 +733,7 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($spyops as $spyop)
+                    @foreach ($race->getSpyops() as $spyop)
                         @if($spyop->scope == 'hostile' and $espionageCalculator->isSpyopAvailableToRace($race, $spyop))
                         <tr>
                             <td>

@@ -5,6 +5,7 @@ namespace OpenDominion\Console\Commands\Game;
 use DB;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use OpenDominion\Console\Commands\CommandInterface;
@@ -180,7 +181,7 @@ class DataSyncCommand extends Command implements CommandInterface
             // Race
             $race = Race::firstOrNew(['name' => $data->name])
                 ->fill([
-                    'key' => generateKeyFromNameString(object_get($data, 'name')),
+                    'key' => Str::slug(object_get($data, 'name')),
                     'alignment' => object_get($data, 'alignment'),
                     'description' => object_get($data, 'description'),
                     'home_terrain_id' => $terrainId,
@@ -292,7 +293,7 @@ class DataSyncCommand extends Command implements CommandInterface
 
                 $unit->fill([
                     'name' => $unitName,
-                    'key' => generateKeyFromNameString($unitName),
+                    'key' => Str::slug($unitName),
                     'type' => object_get($unitData, 'type'),
                     'cost' => object_get($unitData, 'cost', []),
                     'power_offense' => object_get($unitData, 'power.offense', 0),
@@ -1499,7 +1500,7 @@ class DataSyncCommand extends Command implements CommandInterface
             $decree = Decree::firstOrNew(['name' => $data->name])
                 ->fill([
                     'name' => object_get($data, 'name'),
-                    'key' => generateKeyFromNameString(object_get($data, 'name')),
+                    'key' => Str::slug(object_get($data, 'name')),
                     'enabled' => object_get($data, 'enabled', 1),
                     'cooldown' => object_get($data, 'cooldown', 96),
                     'deity' => $deityId,
@@ -1556,7 +1557,7 @@ class DataSyncCommand extends Command implements CommandInterface
 
                 $decreeState->fill([
                     'name' => $stateName,
-                    'key' => generateKeyFromNameString($decree->name . '_' . $stateName),
+                    'key' => Str::slug($decree->name . '-' . $stateName),
                     'enabled' => object_get($stateData, 'enabled', 1),
                 ]);
 

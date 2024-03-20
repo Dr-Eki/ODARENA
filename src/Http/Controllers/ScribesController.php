@@ -2,6 +2,8 @@
 
 namespace OpenDominion\Http\Controllers;
 
+use Illuminate\Support\Str;
+
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
 use OpenDominion\Calculators\Dominion\ResearchCalculator;
@@ -81,19 +83,15 @@ class ScribesController extends AbstractController
         ]);
     }
 
-    public function getRace(string $raceName)
+    public function getRace(string $raceKey)
     {
-        $raceName = ucwords(str_replace('-', ' ', $raceName));
+        #$raceKey = Str::slug($raceName);# ucwords(str_replace('-', ' ', $raceName));
 
-        $race = Race::where('name', $raceName)->firstOrFail();
-
-        $resources = Resource::orderBy('name')->get();
+        $race = Race::where('key', $raceKey)->firstOrFail();
 
         $buildingHelper = app(BuildingHelper::class);
-        $buildings = $buildingHelper->getBuildingsByRace($race)->sortBy('name');
 
         $improvementHelper = app(ImprovementHelper::class);
-        $improvements = $improvementHelper->getImprovementsByRace($race)->sortBy('name');
 
         return view('pages.scribes.faction', [
             'landHelper' => app(LandHelper::class),
@@ -103,19 +101,14 @@ class ScribesController extends AbstractController
             'unitHelper' => app(UnitHelper::class),
             'trainingCalculator' => app(TrainingCalculator::class),
             'race' => $race,
-            'buildings' => $buildings,
             'buildingHelper' => $buildingHelper,
             'landHelper' => app(LandHelper::class),
             'terrainHelper' => app(TerrainHelper::class),
-            'improvements' => $improvements,
             'improvementHelper' => $improvementHelper,
             'espionageHelper' => app(EspionageHelper::class),
             'espionageCalculator' => app(EspionageCalculator::class),
-            'spyops' => Spyop::all()->where('enabled',1)->keyBy('key')->sortBy('name'),
-            'spells' => Spell::all()->where('enabled',1)->keyBy('key')->sortBy('name'),
             'spellCalculator' => app(SpellCalculator::class),
-            'resourcespellCalculator' => app(ResourceCalculator::class),
-            'resources' => $resources,
+            'resourcespellCalculator' => app(ResourceCalculator::class)
         ]);
     }
 
