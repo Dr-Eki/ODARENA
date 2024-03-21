@@ -1144,7 +1144,7 @@ class Dominion extends AbstractModel
                     if(!is_array($perkValues[0]))
                     {
 
-                        dd($building->name, $perkValues);
+                        #dd($building->name, $perkValues);
                         $perkValues[0] = [$perkValues[0], $perkValues[1]];
                         unset($perkValues[1]);
                     }
