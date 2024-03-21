@@ -96,69 +96,54 @@ class Race extends AbstractModel
     public function getBuildings()
     {
         return Building::where(function ($query) {
-            if (empty($this->exclusive_races) && empty($this->excluded_races)) {
-                $query->where('exclusive_races', '=', null)
-                    ->orWhere('exclusive_races', '=', [])
-                    ->orWhere('exclusive_races', 'like', '%' . $this->name . '%')
-                    ->where('excluded_races', '=', null)
-                    ->orWhere('excluded_races', '=', [])
-                    ->orWhereNotIn('excluded_races', [$this->name]);
-            } else {
-                $query->where('exclusive_races', 'like', '%' . $this->name . '%')
-                    ->whereNotIn('excluded_races', [$this->name]);
-            }
-        })->get();
+            $query->whereNull('exclusive_races')
+                ->orWhere('exclusive_races', 'like', '%' . $this->name . '%');
+        })
+        ->where(function ($query) {
+            $query->whereNull('excluded_races')
+                ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
+        })
+        ->get();
     }
+    
     
     public function getImprovements()
     {
         return Improvement::where(function ($query) {
-            if (empty($this->exclusive_races) && empty($this->excluded_races)) {
-                $query->where('exclusive_races', '=', null)
-                    ->orWhere('exclusive_races', '=', [])
-                    ->orWhere('exclusive_races', 'like', '%' . $this->name . '%')
-                    ->where('excluded_races', '=', null)
-                    ->orWhere('excluded_races', '=', [])
-                    ->orWhereNotIn('excluded_races', [$this->name]);
-            } else {
-                $query->where('exclusive_races', 'like', '%' . $this->name . '%')
-                    ->whereNotIn('excluded_races', [$this->name]);
-            }
-        })->get();
+            $query->whereNull('exclusive_races')
+                ->orWhere('exclusive_races', 'like', '%' . $this->name . '%');
+        })
+        ->where(function ($query) {
+            $query->whereNull('excluded_races')
+                ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
+        })
+        ->get();
     }
 
     public function getSpyops()
     {
         return Spyop::where(function ($query) {
-            if (empty($this->exclusive_races) && empty($this->excluded_races)) {
-                $query->where('exclusive_races', '=', null)
-                    ->orWhere('exclusive_races', '=', [])
-                    ->orWhere('exclusive_races', 'like', '%' . $this->name . '%')
-                    ->where('excluded_races', '=', null)
-                    ->orWhere('excluded_races', '=', [])
-                    ->orWhereNotIn('excluded_races', [$this->name]);
-            } else {
-                $query->where('exclusive_races', 'like', '%' . $this->name . '%')
-                    ->whereNotIn('excluded_races', [$this->name]);
-            }
-        })->get();
+            $query->whereNull('exclusive_races')
+                ->orWhere('exclusive_races', 'like', '%' . $this->name . '%');
+        })
+        ->where(function ($query) {
+            $query->whereNull('excluded_races')
+                ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
+        })
+        ->get();
     }
 
     public function getSpells()
     {
         return Spell::where(function ($query) {
-            if (empty($this->exclusive_races) && empty($this->excluded_races)) {
-                $query->where('exclusive_races', '=', null)
-                    ->orWhere('exclusive_races', '=', [])
-                    ->orWhere('exclusive_races', 'like', '%' . $this->name . '%')
-                    ->where('excluded_races', '=', null)
-                    ->orWhere('excluded_races', '=', [])
-                    ->orWhereNotIn('excluded_races', [$this->name]);
-            } else {
-                $query->where('exclusive_races', 'like', '%' . $this->name . '%')
-                    ->whereNotIn('excluded_races', [$this->name]);
-            }
-        })->get();
+            $query->whereNull('exclusive_races')
+                ->orWhere('exclusive_races', 'like', '%' . $this->name . '%');
+        })
+        ->where(function ($query) {
+            $query->whereNull('excluded_races')
+                ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
+        })
+        ->get();
     }
 
     /**
