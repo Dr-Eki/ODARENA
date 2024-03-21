@@ -2,7 +2,8 @@
 @section('title', "Scribes | {$race->name}")
 
 @section('content')
-    @include('partials.scribes.nav')
+@include('partials.scribes.nav')
+
 <div class="row">
 
     <div class="col-sm-12 col-md-12">
@@ -474,8 +475,7 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($race->getSpells() as $spell)
-                        @if($spell->class == 'passive' and $spell->scope == 'hostile' and $spellHelper->isSpellAvailableToRace($race, $spell))
+                    @foreach ($race->getSpells()->where('class','passive')->where('scope','hostile') as $spell)
                         <tr>
                             <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
                             <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
@@ -496,7 +496,6 @@
                                 <ul>
                             </td>
                         </tr>
-                        @endif
                     @endforeach
                     </tbody>
                 </table>
@@ -520,30 +519,28 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($race->getSpells() as $spell)
-                        @if($spell->class == 'passive' and $spell->scope == 'self' and $spellHelper->isSpellAvailableToRace($race, $spell))
-                        <tr>
-                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
-                            <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
-                            <td>{{ $spell->cost }}x</td>
-                            <td>{{ $spell->duration }} ticks</td>
-                            <td>
-                                @if($spell->cooldown > 0)
-                                    {{ $spell->cooldown }} ticks
-                                @else
-                                    None
-                                @endif
-                            </td>
-                            <td>
-                                <ul>
-                                    @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
-                                        <li>{{ ucfirst($effect) }}</li>
-                                    @endforeach
-                                <ul>
-                            </td>
-                        </tr>
-                        @endif
-                    @endforeach
+                        @foreach ($race->getSpells()->where('class','passive')->where('scope','self') as $spell)
+                            <tr>
+                                <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
+                                <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
+                                <td>{{ $spell->cost }}x</td>
+                                <td>{{ $spell->duration }} ticks</td>
+                                <td>
+                                    @if($spell->cooldown > 0)
+                                        {{ $spell->cooldown }} ticks
+                                    @else
+                                        None
+                                    @endif
+                                </td>
+                                <td>
+                                    <ul>
+                                        @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
+                                            <li>{{ ucfirst($effect) }}</li>
+                                        @endforeach
+                                    <ul>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
 
@@ -565,29 +562,27 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($race->getSpells() as $spell)
-                        @if($spell->class == 'active' and $spell->scope == 'friendly' and $spellHelper->isSpellAvailableToRace($race, $spell))
-                        <tr>
-                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
-                            <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
-                            <td>{{ $spell->cost }}x</td>
-                            <td>
-                                @if($spell->cooldown > 0)
-                                    {{ $spell->cooldown }} ticks
-                                @else
-                                    None
-                                @endif
-                            </td>
-                            <td>
-                                <ul>
-                                    @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
-                                        <li>{{ ucfirst($effect) }}</li>
-                                    @endforeach
-                                <ul>
-                            </td>
-                        </tr>
-                        @endif
-                    @endforeach
+                        @foreach ($race->getSpells()->where('class','active')->where('scope','friendly') as $spell)
+                            <tr>
+                                <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
+                                <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
+                                <td>{{ $spell->cost }}x</td>
+                                <td>
+                                    @if($spell->cooldown > 0)
+                                        {{ $spell->cooldown }} ticks
+                                    @else
+                                        None
+                                    @endif
+                                </td>
+                                <td>
+                                    <ul>
+                                        @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
+                                            <li>{{ ucfirst($effect) }}</li>
+                                        @endforeach
+                                    <ul>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
 
@@ -608,29 +603,27 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($race->getSpells() as $spell)
-                        @if($spell->class == 'active' and $spell->scope == 'hostile' and $spellHelper->isSpellAvailableToRace($race, $spell))
-                        <tr>
-                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
-                            <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
-                            <td>{{ $spell->cost }}x</td>
-                            <td>
-                                @if($spell->cooldown > 0)
-                                    {{ $spell->cooldown }} ticks
-                                @else
-                                    None
-                                @endif
-                            </td>
-                            <td>
-                                <ul>
-                                    @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
-                                        <li>{{ ucfirst($effect) }}</li>
-                                    @endforeach
-                                <ul>
-                            </td>
-                        </tr>
-                        @endif
-                    @endforeach
+                        @foreach ($race->getSpells()->where('class','passive')->where('scope','hostile') as $spell)
+                            <tr>
+                                <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
+                                <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
+                                <td>{{ $spell->cost }}x</td>
+                                <td>
+                                    @if($spell->cooldown > 0)
+                                        {{ $spell->cooldown }} ticks
+                                    @else
+                                        None
+                                    @endif
+                                </td>
+                                <td>
+                                    <ul>
+                                        @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
+                                            <li>{{ ucfirst($effect) }}</li>
+                                        @endforeach
+                                    <ul>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
 
@@ -651,29 +644,27 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($race->getSpells() as $spell)
-                        @if($spell->class == 'active' and $spell->scope == 'self' and $spellHelper->isSpellAvailableToRace($race, $spell))
-                        <tr>
-                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
-                            <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
-                            <td>{{ $spell->cost }}x</td>
-                            <td>
-                                @if($spell->cooldown > 0)
-                                    {{ $spell->cooldown }} ticks
-                                @else
-                                    None
-                                @endif
-                            </td>
-                            <td>
-                                <ul>
-                                    @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
-                                        <li>{{ ucfirst($effect) }}</li>
-                                    @endforeach
-                                <ul>
-                            </td>
-                        </tr>
-                        @endif
-                    @endforeach
+                        @foreach ($race->getSpells()->where('class','active')->where('scope','hostile') as $spell)
+                            <tr>
+                                <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
+                                <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
+                                <td>{{ $spell->cost }}x</td>
+                                <td>
+                                    @if($spell->cooldown > 0)
+                                        {{ $spell->cooldown }} ticks
+                                    @else
+                                        None
+                                    @endif
+                                </td>
+                                <td>
+                                    <ul>
+                                        @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
+                                            <li>{{ ucfirst($effect) }}</li>
+                                        @endforeach
+                                    <ul>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
 
@@ -691,21 +682,19 @@
                             <th>Effect</th>
                         </tr>
                     <tbody>
-                    @foreach ($race->getSpells() as $spell)
-                        @if($spell->class == 'hostile' and $spell->scope == 'invasion' and $spellHelper->isSpellAvailableToRace($race, $spell))
-                        <tr>
-                            <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
-                            <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
-                            <td>
-                                <ul>
-                                    @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
-                                        <li>{{ ucfirst($effect) }}</li>
-                                    @endforeach
-                                <ul>
-                            </td>
-                        </tr>
-                        @endif
-                    @endforeach
+                        @foreach ($race->getSpells()->where('class','hostile')->where('scope','invasion') as $spell)
+                            <tr>
+                                <td><a id="{{ $spell->key }}"></a>{{ $spell->name }}</td>
+                                <td>{!! $spell->deity ? $spell->deity->name : '<span class="text-muted">Any</span>' !!}</td>
+                                <td>
+                                    <ul>
+                                        @foreach($spellHelper->getSpellEffectsString($spell) as $effect)
+                                            <li>{{ ucfirst($effect) }}</li>
+                                        @endforeach
+                                    <ul>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
 

@@ -95,7 +95,7 @@
 
                     <div class="row">
 
-                        @foreach($spells as $spell)
+                        @foreach($selectedDominion->race->getSpells()->where('scope', 'hostile')->sortBy('class')->sortBy('level') as $spell)
                             @php
                                 $canCast = $spellCalculator->canCastSpell($selectedDominion, $spell, $resourceCalculator->getAmount($selectedDominion, 'mana'));
                             @endphp

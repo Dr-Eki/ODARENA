@@ -93,61 +93,49 @@ class Race extends AbstractModel
         return Terrain::where('id', $this->home_terrain_id)->first();
     }
 
-    public function getBuildings()
+    public function getEntities($model)
     {
-        return Building::where(function ($query) {
-            $query->whereNull('exclusive_races')
+        return $model::where(function ($query) {
+            $query->whereJsonLength('exclusive_races', '=', 0)
                 ->orWhere('exclusive_races', 'like', '%' . $this->name . '%');
         })
         ->where(function ($query) {
-            $query->whereNull('excluded_races')
+            $query->whereJsonLength('excluded_races', '=', 0)
                 ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
         })
+        ->where('enabled', true)
         ->get()
         ->sortBy('name');
     }
     
+    public function getAdvancements()
+    {
+        return $this->getEntities(Advancement::class);
+    }
+    
+    public function getBuildings()
+    {
+        return $this->getEntities(Building::class);
+    }
+    
+    public function getDeities()
+    {
+        return $this->getEntities(Deity::class);
+    }
     
     public function getImprovements()
     {
-        return Improvement::where(function ($query) {
-            $query->whereNull('exclusive_races')
-                ->orWhere('exclusive_races', 'like', '%' . $this->name . '%');
-        })
-        ->where(function ($query) {
-            $query->whereNull('excluded_races')
-                ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
-        })
-        ->get()
-        ->sortBy('name');
+        return $this->getEntities(Improvement::class);
     }
-
+    
     public function getSpyops()
     {
-        return Spyop::where(function ($query) {
-            $query->whereNull('exclusive_races')
-                ->orWhere('exclusive_races', 'like', '%' . $this->name . '%');
-        })
-        ->where(function ($query) {
-            $query->whereNull('excluded_races')
-                ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
-        })
-        ->get()
-        ->sortBy('name');
+        return $this->getEntities(Spyop::class);
     }
-
+    
     public function getSpells()
     {
-        return Spell::where(function ($query) {
-            $query->whereNull('exclusive_races')
-                ->orWhere('exclusive_races', 'like', '%' . $this->name . '%');
-        })
-        ->where(function ($query) {
-            $query->whereNull('excluded_races')
-                ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
-        })
-        ->get()
-        ->sortBy('name');
+        return $this->getEntities(Spell::class);
     }
 
     /**
