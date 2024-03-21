@@ -352,10 +352,34 @@ class PopulationCalculator
     *   If $slot is empty, return total available unit housing.
     *   If $slot is set, return unit housing for that slot.
     */
-    public function getAvailableHousingFromUnitSpecificBuildings(Dominion $dominion, int $slot = null, bool $returnDataArrayOnly = false)
+    public function getAvailableHousingFromUnitSpecificBuildings(Dominion $dominion/*, int $slot = null, bool $returnDataArrayOnly = false*/): array
     {
-        $unitSpecificBuildingHousing = 0;
-        $availableHousingFromUnitSpecificBuildings = [];
+        $unitSpecificBuildingHousingPerkData = $dominion->getBuildingPerkValue($dominion->race->key . '_unit_housing');
+
+        if(!$unitSpecificBuildingHousingPerkData)
+        {
+            return [];
+        }
+
+        $multiplier = 1;
+        $multiplier += $dominion->getImprovementPerkMultiplier('unit_specific_housing');
+        $multiplier += $dominion->getDeityPerkMultiplier('unit_specific_housing');
+
+        foreach ($unitSpecificBuildingHousingPerkData as $item) {
+            foreach ($item as $key => $value) {
+                if (!isset($merged[$key])) {
+                    $merged[$key] = 0;
+                }
+                $merged[$key] += $value * $multiplier;
+            }
+        }
+
+        return $merged;
+        /*
+        $unitSpecificBuildingHousingPerkData = $merged;
+        unset($merged);
+
+        #dd($unitSpecificBuildingHousingPerkData, $merged);
 
         # For each building
         foreach($dominion->buildings as $building)
@@ -404,6 +428,7 @@ class PopulationCalculator
                 $unitSpecificBuildingHousing += $amountHoused;
             }
         }
+        */
 
 
         $multiplier = 1;
@@ -532,47 +557,33 @@ class PopulationCalculator
     *   Units start to live in barracks as soon as their military training begins.
     *   Spy and wiz units prefer to live in FHs or WGs, and will only live in Barracks if FH/WG are full or unavailable.
     */
-    public function getUnitsHousedInUnitSpecificBuildings(Dominion $dominion, ?int $housedSlot = null): int
+    public function getUnitsHousedInUnitSpecificBuildings(Dominion $dominion, ?int $slot): int
     {
 
         $units = 0;
 
-        if($housedSlot)
+        $availableHousingFromUnitSpecificBuildings = $this->getAvailableHousingFromUnitSpecificBuildings($dominion);
+
+        # Return nothing if $availableHousingFromUnitSpecificBuildings is an empty array
+        if(!$availableHousingFromUnitSpecificBuildings)
         {
-            $slotUnits = 0;
-            if($unitSpecificBuildingHousing = $dominion->getBuildingPerkValue($dominion->race->key . '_unit_housing'))
-            {
-                $perkUnitSlot = (int)key($unitSpecificBuildingHousing);
-                if(!$dominion->race->getUnitPerkValueForUnitSlot($housedSlot, 'does_not_count_as_population') and $housedSlot == $perkUnitSlot)
-                {
-                    $slotUnits += $this->unitCalculator->getUnitTypeTotalPaid($dominion, $housedSlot);
-                }
-
-                $units += min($slotUnits, $this->getAvailableHousingFromUnitSpecificBuildings($dominion, $housedSlot));
-
-            }
+            return 0;
         }
-        else
+
+        if($slot)
         {
-            foreach($dominion->race->units as $unit)
-            {
-                $slot = $unit->slot;
-                $slotUnits = 0;
-                if($unitSpecificBuildingHousing = $dominion->getBuildingPerkValue($dominion->race->key . '_unit_housing'))
-                {
-                    $perkUnitSlot = (int)key($unitSpecificBuildingHousing);
-
-                    if(!$dominion->race->getUnitPerkValueForUnitSlot($slot, 'does_not_count_as_population') and $perkUnitSlot == $slot)
-                    {
-                        $slotUnits += $this->unitCalculator->getUnitTypeTotalPaid($dominion, $slot);
-                    }
-
-                    $units += min($slotUnits, $this->getAvailableHousingFromUnitSpecificBuildings($dominion, $slot));
-                }
-            }
+            $capacity = $availableHousingFromUnitSpecificBuildings[$slot];
+            return min($this->unitCalculator->getUnitTypeTotalPaid($dominion, $slot), $capacity);
         }
-        
-        return min($units, $this->getAvailableHousingFromUnitSpecificBuildings($dominion, $housedSlot));
+
+        foreach($availableHousingFromUnitSpecificBuildings as $slot => $capacity)
+        {
+            $usedCapacity = min($this->unitCalculator->getUnitTypeTotalPaid($dominion, $slot), $capacity);
+
+            $units += $usedCapacity;
+        }
+
+        return min($units, array_sum($availableHousingFromUnitSpecificBuildings));
     }
 
     /*

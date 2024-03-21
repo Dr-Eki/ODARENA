@@ -353,7 +353,6 @@ class TrainActionService
 
         DB::transaction(function () use ($dominion, $data, $totalCosts, $unitSlot, $unitAmountToTrain) {
             $dominion->military_draftees -= $totalCosts['draftees'];
-            $dominion->military_wizards -= $totalCosts['wizards'];
             $dominion->prestige -= $totalCosts['prestige'];
             $dominion->morale = max(0, ($dominion->morale - $totalCosts['morale']));
             $dominion->peasants -= $totalCosts['peasant'];
@@ -363,6 +362,7 @@ class TrainActionService
             $dominion->military_unit4 -= $totalCosts['unit4'];
             $dominion->military_spies -= $totalCosts['spy'];
             $dominion->military_wizards -= $totalCosts['wizard'];
+            $dominion->military_wizards -= $totalCosts['wizards'];
             $dominion->military_archmages -= $totalCosts['archmage'];
             $dominion->spy_strength -= $totalCosts['spy_strength'];
             $dominion->wizard_strength -= $totalCosts['wizard_strength'];

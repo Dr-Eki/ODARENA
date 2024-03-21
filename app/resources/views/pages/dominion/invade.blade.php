@@ -719,14 +719,12 @@
 
                 // Check if invasion force OP is greater than target OP
                 var invasionSuccess = parseFloat(invasionForceOPElement.data('amount')) > parseFloat(targetDpElement.data('amount'));
-                console.log('invasionSuccess:', invasionSuccess); // Debug line
 
                 // Get the selected option element
                 var selectedOption = $('#target_dominion option:selected');
 
                 // Check if the selected target is fogged
                 var isFogged = selectedOption.data('fogged') === 1;
-                console.log('isFogged:', isFogged); // Debug line
 
                 invasionForceOPElement.toggleClass('text-warning', isFogged);
                 invasionForceOPElement.toggleClass('text-success', !isFogged && invasionSuccess);

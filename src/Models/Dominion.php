@@ -1136,8 +1136,15 @@ class Dominion extends AbstractModel
 
                     $result = [];
 
+                    if(!is_array($perk))
+                    {
+                        $perk = [];
+                    }
+
                     if(!is_array($perkValues[0]))
                     {
+
+                        dd($building->name, $perkValues);
                         $perkValues[0] = [$perkValues[0], $perkValues[1]];
                         unset($perkValues[1]);
                     }
@@ -1153,7 +1160,7 @@ class Dominion extends AbstractModel
                         $result[$unitSlot] = (isset($result[$unitSlot]) ? $result[$unitSlot] + $amountHousable : $amountHousable);
                     }
 
-                    return $result;
+                    $perk[] = $result;
                 }
 
                 elseif($perkKey == ($this->race->key . '_units_production'))
