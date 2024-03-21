@@ -557,7 +557,7 @@ class PopulationCalculator
     *   Units start to live in barracks as soon as their military training begins.
     *   Spy and wiz units prefer to live in FHs or WGs, and will only live in Barracks if FH/WG are full or unavailable.
     */
-    public function getUnitsHousedInUnitSpecificBuildings(Dominion $dominion, ?int $slot): int
+    public function getUnitsHousedInUnitSpecificBuildings(Dominion $dominion, ?int $slot = null): int
     {
 
         $units = 0;
