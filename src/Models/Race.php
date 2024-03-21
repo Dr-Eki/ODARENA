@@ -103,7 +103,8 @@ class Race extends AbstractModel
             $query->whereNull('excluded_races')
                 ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
         })
-        ->get();
+        ->get()
+        ->sortBy('name');
     }
     
     
@@ -117,7 +118,8 @@ class Race extends AbstractModel
             $query->whereNull('excluded_races')
                 ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
         })
-        ->get();
+        ->get()
+        ->sortBy('name');
     }
 
     public function getSpyops()
@@ -130,7 +132,8 @@ class Race extends AbstractModel
             $query->whereNull('excluded_races')
                 ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
         })
-        ->get();
+        ->get()
+        ->sortBy('name');
     }
 
     public function getSpells()
@@ -143,7 +146,8 @@ class Race extends AbstractModel
             $query->whereNull('excluded_races')
                 ->orWhere('excluded_races', 'not like', '%' . $this->name . '%');
         })
-        ->get();
+        ->get()
+        ->sortBy('name');
     }
 
     /**
