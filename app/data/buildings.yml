@@ -67,7 +67,6 @@ stone_wall:
   category: military
   excluded_races:
     - Barbarian
-    - Dragons
     - Glimjir
     - Growth
     - Human

@@ -9,7 +9,7 @@
     var isTicking = spinner.getAttribute('data-is-ticking') === '1';
 
     function checkIsTicking() {
-        fetch('/api/v1/is-round-ticking') // replace with your route
+        fetch('/api/v1/is-round-ticking')
             .then(response => response.json())
             .then(data => {
                 if (data.is_ticking) {
@@ -39,7 +39,7 @@
         }, checkInterval);
     }
 
-    scheduleNextCheck();
+    //scheduleNextCheck();
 </script>
 
 @endif

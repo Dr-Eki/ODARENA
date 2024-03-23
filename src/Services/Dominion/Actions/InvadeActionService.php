@@ -15,6 +15,8 @@ use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Spell;
 
+use OpenDominion\Notifications\InvasionNotification;
+
 use OpenDominion\Traits\DominionGuardsTrait;
 
 use OpenDominion\Helpers\ConversionHelper;
@@ -725,6 +727,28 @@ class InvadeActionService
                 'data' => $this->invasion,
                 'tick' => $attacker->round->ticks
             ]);
+
+
+
+            // Send push notification
+            if($this->invasion['result']['success'])
+            {
+                $extraData = [
+                    'title' => 'You have been invaded!',
+                    'body' => sprintf('%s (# %s) conquered %s land from us.', $attacker->name, $attacker->realm->number, number_format($this->invasion['attacker']['land_conquered'])),
+                ];    
+            }
+            else
+            {
+                $extraData = [
+                    'title' => 'You fended off an invasion!',
+                    'body' => sprintf('%s (# %s) failed to conquer any land from us.', $attacker->name, $attacker->realm->number),
+                ];
+            }
+
+
+            $target->user->notify(new InvasionNotification($this->invasionEvent, $extraData));
+            
 
             # Debug before saving:
             ldd($this->invasion);# dd('Safety!');

@@ -11,6 +11,8 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
+use NotificationChannels\WebPush\HasPushSubscriptions;
+use NotificationChannels\WebPush\PushSubscription;
 use OpenDominion\Notifications\User\ResetPasswordNotification;
 
 /**
@@ -42,7 +44,7 @@ use OpenDominion\Notifications\User\ResetPasswordNotification;
  */
 class User extends AbstractModel implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword, Notifiable;
+    use Authenticatable, Authorizable, CanResetPassword, Notifiable, HasPushSubscriptions;
 
     protected $casts = [
         'settings' => 'array',
@@ -132,6 +134,24 @@ class User extends AbstractModel implements AuthenticatableContract, Authorizabl
         return (
             ($this->last_online !== null)
             && ($this->last_online < new Carbon('-72 hours'))
+        );
+    }
+
+    public function pushSubscriptions()
+    {
+        return $this->morphMany(PushSubscription::class, 'subscribable');
+    }
+
+    public function updatePushSubscription($subscription)
+    {
+        $this->pushSubscriptions()->updateOrCreate(
+            ['subscribable_id' => $this->id, 'subscribable_type' => get_class($this)],
+            [
+                'endpoint' => $subscription['endpoint'],
+                'public_key' => $subscription['keys']['p256dh'],
+                'auth_token' => $subscription['keys']['auth'],
+                'content_encoding' => 'aesgcm', // Check the content encoding from your JS code
+            ]
         );
     }
 

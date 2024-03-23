@@ -29,10 +29,10 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
-    'stripe' => [
-        'model' => OpenDominion\Models\User::class,
-        'key' => env('STRIPE_KEY'),
-        'secret' => env('STRIPE_SECRET'),
+    'webpush' => [
+        'vapid' => [
+            'public_key' => env('VAPID_PUBLIC_KEY'),
+        ],
     ],
 
 ];

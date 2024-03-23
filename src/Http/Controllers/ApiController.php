@@ -75,13 +75,13 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function isRoundTicking(): array
+    public function isRoundTicking(): JsonResponse
     {
         $round = Round::latest()->first();
 
-        return [
+        return response()->json([
             'is_ticking' => $round->is_ticking
-        ];
+        ]);
     }
 
     /**
@@ -96,11 +96,11 @@ class ApiController extends Controller
      *     )
      * )
      */
-    public function getServerTime(): array
+    public function getServerTime(): JsonResponse
     {
-        return [
+        return response()->json([
             'time' => now()->toIso8601String()
-        ];
+        ]);
     }
 
     /**

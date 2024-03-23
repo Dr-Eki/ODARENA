@@ -37,6 +37,60 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    @if(Auth::user())
+        <script type="text/javascript">
+
+            function urlBase64ToUint8Array(base64String) {
+                const padding = '='.repeat((4 - base64String.length % 4) % 4);
+                const base64 = (base64String + padding)
+                    .replace(/\-/g, '+')
+                    .replace(/_/g, '/');
+
+                const rawData = window.atob(base64);
+                const outputArray = new Uint8Array(rawData.length);
+
+                for (let i = 0; i < rawData.length; ++i) {
+                    outputArray[i] = rawData.charCodeAt(i);
+                }
+                return outputArray;
+            }
+
+            // Check if the browser supports service workers and push notifications
+            if ('serviceWorker' in navigator && 'PushManager' in window) {
+                navigator.serviceWorker.register('/serviceworker.js')
+                    .then(function(swReg) {
+                        console.log('Service Worker is registered', swReg);
+
+                        swReg.pushManager.subscribe({
+                            userVisibleOnly: true,
+                            applicationServerKey: '{{ config('services.webpush.vapid.public_key') }}'
+                        })
+                        .then(function(subscription) {
+                            // Send the subscription object to the server
+                            fetch('{{ url('/api/v1/push-subscription') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(subscription)
+                            });
+                        })
+                        .catch(function(error) {
+                            console.error('Error subscribing to push notifications', error);
+                        });
+                    })
+                    .catch(function(error) {
+                        console.error('Service Worker Error', error);
+                    });
+            }
+            else
+            {
+                console.warn('Service workers are not supported in this browser');
+            }
+        </script>
+    @endif
+
 </head>
 <body class="hold-transition {{ Auth::user() && Auth::user()->skin ? Auth::user()->skin : 'skin-red' }}  sidebar-mini">
 {{-- Analytics::render() --}}

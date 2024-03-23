@@ -1,10 +1,7 @@
 <?php
 
 use Illuminate\Routing\Router;
-use OpenDominion\Models\Dominion;
-use OpenDominion\Models\Realm;
-use OpenDominion\Models\Round;
-
+use Illuminate\Http\Request;
 
 /** @var Router $router */
 $router->group(['prefix' => 'v1', 'as' => 'api.'], static function (Router $router) {
@@ -23,7 +20,18 @@ $router->group(['prefix' => 'v1', 'as' => 'api.'], static function (Router $rout
         $router->get('expedition')->uses('Dominion\APIController@calculateExpedition')->name('expedition');
         $router->get('sorcery')->uses('Dominion\APIController@calculateSorcery')->name('sorcery');
         $router->get('desecration')->uses('Dominion\APIController@calculateDesecration')->name('desecration');
+
     });
+
+    $router->post('/push-subscription', function (Request $request) {
+        #Log::info('Request body:', $request->json()->all()); // Log the request body
+    
+        $user = Auth::user(); // Get the authenticated user
+    
+        $user->updatePushSubscription($request->json()->all());
+    
+        return response()->json(null, 204);
+    })->middleware('api', 'auth');
 
     /*
     $router->group(['prefix' => 'calculator', 'middleware' => ['api', 'auth'], 'as' => 'calculator.'], static function (Router $router) {

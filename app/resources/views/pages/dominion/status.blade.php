@@ -528,9 +528,9 @@
                 <div class="pull-right">
                     <form action="{{ route('dominion.misc.clear-notifications') }}" method="post" id="clear-notifications-form">
                         @csrf
-                            <button type="submit" class="btn btn-primary">
-                                <i class="far fa-envelope-open"></i>&nbsp;Mark read
-                            </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="far fa-envelope-open"></i>&nbsp;Mark read
+                        </button>
                     </form>
                 </div>
             </div>

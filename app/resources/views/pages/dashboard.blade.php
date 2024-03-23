@@ -10,6 +10,9 @@
                 <div class="box-body">
                     <h4>Welcome {{ $dominions->isEmpty() ? '' : 'back' }} to ODARENA, <strong>{{ Auth::user()->display_name }}</strong></h4> 
                     <p>You have been playing since {{ $user->created_at }} and have participated in {{ number_format($dominions->count()) }} of {{ number_format($rounds->where('end_date', '>=', $user->created_at)->count()) }} completed rounds since joining. <a href="{{ route('chronicles.ruler', $user->display_name) }}">View the Chronicles of {{ $user->display_name }}</a> for your full stats.</p>
+
+
+
                 </div>
             </div>
         </div>

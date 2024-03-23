@@ -126,7 +126,6 @@
                                         <p class="help-block">Uploaded avatars will be cropped/resized to 512x512 pixels and converted to PNG. Upload a square image for best results.</p>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
