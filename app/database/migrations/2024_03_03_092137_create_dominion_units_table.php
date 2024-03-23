@@ -13,7 +13,7 @@ class CreateDominionUnitsTable extends Migration
      */
     public function up()
     {
-        DB::transaction(function () {
+        #DB::transaction(function () {
             Schema::create('dominion_units', function (Blueprint $table) {
                 $table->id();
 
@@ -30,7 +30,7 @@ class CreateDominionUnitsTable extends Migration
                 $table->timestamps();
 
             });
-        });
+        #});
     }
 
     /**
