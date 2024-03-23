@@ -113,39 +113,40 @@ class SettingsController extends AbstractController
     protected function getGenerateAvatar(Request $request)
     {
         $user = Auth::user();
-        $stabilityAIService = app(StabilityAIService::class);
         $dimensions = config('user.avatar.generate_x') . 'x' . config('user.avatar.generate_y');
 
 
         if(config('user.avatar.generator') == 'stability')
         {
+            $stabilityAIService = app(StabilityAIService::class);
             $randomRace = Race::all()->whereIn('playable', [1,2])->random();
             $prompt = "Draw an avatar of a $randomRace warrior. There should be no text in the image.";
             $result = $stabilityAIService->generateImagesFromText($prompt);
+
+            if(!isset($result['artifacts'][0]['base64']))
+            {
+                throw new RuntimeException('Failed to generate avatar');
+            }
+
+            $imageBase64 = $result['artifacts'][0]['base64'];
+
         }
         elseif(config('user.avatar.generator') == 'openai')
         {
             $openAiService = app(OpenAIService::class);
             $result = $openAiService->generateAvatar($user, 1, $dimensions, ['fantasy', 'warrior', 'wizard', 'hero', 'champion']);
+
+            if(!isset($result['data'][0]['b64_json']))
+            {
+                throw new RuntimeException('Failed to generate avatar');
+            }
+
             $imageBase64 = $result['data'][0]['b64_json'];
         }
         else
         {
             throw new RuntimeException('Invalid avatar generator');
         }
-
-        if(!isset($result['artifacts'][0]['base64']))
-        {
-            throw new RuntimeException('Failed to generate avatar');
-        }
-
-
-        if(!isset($result['artifacts'][0]['base64']))
-        {
-            throw new RuntimeException('Failed to generate avatar');
-        }
-
-        $imageBase64 = $result['artifacts'][0]['base64'];
 
         // Convert $image into an image and save it
         $image = Image::make(base64_decode($imageBase64))
