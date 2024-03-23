@@ -728,26 +728,26 @@ class InvadeActionService
                 'tick' => $attacker->round->ticks
             ]);
 
-
-
             // Send push notification
-            if($this->invasion['result']['success'])
+            if($target->race->key !== 'barbarian')
             {
-                $extraData = [
-                    'title' => 'You have been invaded!',
-                    'body' => sprintf('%s (# %s) conquered %s land from us.', $attacker->name, $attacker->realm->number, number_format($this->invasion['attacker']['land_conquered'])),
-                ];    
-            }
-            else
-            {
-                $extraData = [
-                    'title' => 'You fended off an invasion!',
-                    'body' => sprintf('%s (# %s) failed to conquer any land from us.', $attacker->name, $attacker->realm->number),
-                ];
-            }
+                if($this->invasion['result']['success'])
+                {
+                    $extraData = [
+                        'title' => 'You have been invaded!',
+                        'body' => sprintf('%s (# %s) conquered %s land from us.', $attacker->name, $attacker->realm->number, number_format($this->invasion['attacker']['land_conquered'])),
+                    ];    
+                }
+                else
+                {
+                    $extraData = [
+                        'title' => 'You fended off an invasion!',
+                        'body' => sprintf('%s (# %s) failed to conquer any land from us.', $attacker->name, $attacker->realm->number),
+                    ];
+                }
 
-
-            $target->user->notify(new InvasionNotification($this->invasionEvent, $extraData));
+                $target->user->notify(new InvasionNotification($this->invasionEvent, $extraData));
+            }
             
 
             # Debug before saving:
