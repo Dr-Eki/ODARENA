@@ -321,7 +321,6 @@ class TrainingCalculator
                 $trainable[$unitType] = max(0, min($trainable[$unitType], $availableCapacity));
             }
 
-
             # Unit:minimum_victories limit
             if($minimumVictoriesPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'minimum_victories'))
             {
@@ -336,12 +335,21 @@ class TrainingCalculator
                 return ($unit->slot === $slot);
             })->first();
 
-            if(isset($unit->deity) and (!$dominion->hasDeity() or $dominion->deity->id !== $unit->deity->id))
+            if($unit)
             {
-                $trainable[$unitType] = 0;
+                if(isset($unit->deity) and (!$dominion->hasDeity() or $dominion->deity->id !== $unit->deity->id))
+                {
+                    $trainable[$unitType] = 0;
+                }
+    
+                # Check wizard point requirements
+                if($wizardPointsRequiredPerkValue = $unit->getPerkValue('wizard_points_required'))
+                {
+                    $trainable[$unitType] = max($this->magicCalculator->getWizardPointsRemaining($dominion) / $wizardPointsRequiredPerkValue, 0);
+                }
             }
 
-            $trainable[$unitType] = max(0, $trainable[$unitType]);
+            $trainable[$unitType] = (int)floor(max(0, $trainable[$unitType]));
 
         }
         return $trainable;

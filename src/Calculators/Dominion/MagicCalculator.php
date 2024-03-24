@@ -315,6 +315,11 @@ class MagicCalculator
         return $wizardPointsRequired;
     }
 
+    public function getWizardPointsRequiredByUnitsToBeTrained(Dominion $dominion, array $units): float
+    {
+        return $this->getWizardPointsRequiredToSendUnits($dominion, $units);
+    }
+
     public function getWizardPointsUsed(Dominion $dominion, string $mode = 'offense'): float
     {
         return min($this->getWizardPoints($dominion, $mode), $this->getWizardPointsRequiredByAllUnits($dominion, $mode));

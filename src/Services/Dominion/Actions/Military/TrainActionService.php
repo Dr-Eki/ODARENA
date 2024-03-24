@@ -230,6 +230,16 @@ class TrainActionService
                 return ($unit->slot === $unitSlot);
             })->first();
 
+            # Check wizard point requirements
+            if($wizardPointsRequiredPerkValue = $unitToTrain->getPerkValue('wizard_points_required'))
+            {
+                $newWizardPointsRequired = $wizardPointsRequiredPerkValue * $amountToTrain;
+                if($newWizardPointsRequired > $this->magicCalculator->getWizardPointsRemaining($dominion))
+                {
+                    throw new GameException('You do not have enough wizard points to train that many ' . Str::unitPlural($unitToTrain->name, $amountToTrain) . '.');
+                }
+            }
+
             # Cannot be trained
             if($dominion->race->getUnitPerkValueForUnitSlot($unitSlot,'cannot_be_trained') and $amountToTrain > 0)
             {

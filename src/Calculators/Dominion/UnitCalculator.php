@@ -527,20 +527,23 @@ class UnitCalculator
 
     public function unitHasCapacityLimit(Dominion $dominion, int $slot): bool
     {
-        if(
-            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'pairing_limit') or
-            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'pairing_limit_including_away') or
-            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'building_limit') or
-            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'archmage_limit') or
-            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'net_victories_limit') or
-            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'stat_pairing_limit') or
-            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'amount_limit') or
-            $dominion->race->getUnitPerkValueForUnitSlot($slot, 'minimum_victories')
-          )
-          {
-              return true;
-          }
-
+        $perkKeys = [
+            'pairing_limit',
+            'pairing_limit_including_away',
+            'building_limit',
+            'archmage_limit',
+            'net_victories_limit',
+            'stat_pairing_limit',
+            'amount_limit',
+            'minimum_victories'
+        ];
+    
+        foreach ($perkKeys as $perkKey) {
+            if ($dominion->race->getUnitPerkValueForUnitSlot($slot, $perkKey)) {
+                return true;
+            }
+        }
+    
         return false;
     }
 
