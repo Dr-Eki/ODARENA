@@ -629,8 +629,6 @@ sanctuary:
   name: Sanctuary
   category: holy
   deity: druva
-  excluded_races:
-    - Growth
   perks:
     food_production_mod: 1,4,40 # Every 1% gives +8% food production, max +40%
     lumber_production_mod: 1,4,40 # Every 1% gives +8% lumber production, max +40%
