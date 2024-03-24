@@ -8,6 +8,9 @@ use Exception;
 use Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
+
+use Laravel\Horizon\Horizon;
 
 use OpenDominion\Jobs\ProcessDominionJob;
 
@@ -384,10 +387,33 @@ class TickService
 
             $this->now = now();
 
-             $round->fill([
-                 'ticks' => ($round->ticks + 1),
-                 'is_ticking' => 0
-             ])->save();
+            $attempts = 40;
+            $delay = 1000; // milliseconds
+            
+            retry($attempts, function () use ($round, $attempts, $delay) {
+                $i = isset($i) ? $i + 1 : 1;
+
+                if (Redis::llen('queues:tick') === 0) {
+                    $round->fill([
+                        'ticks' => ($round->ticks + 1),
+                        'is_ticking' => 0
+                    ])->save();
+                    return;
+                }
+            
+                $infoString = sprintf(
+                    '[%s] Waiting for tick queue to finish. Check %s of %s. Currently: %s. Trying again in %s ms.',
+                    now()->format('Y-m-d H:i:s'),
+                    $i,
+                    $attempts,
+                    Redis::llen('queues:tick'),
+                    number_format($delay)
+                );
+
+                Log::info($infoString);
+                dump($infoString);
+                throw new Exception('Tick queue not finish');
+            }, $delay);
 
              unset($this->temporaryData[$round->id]);
         }
