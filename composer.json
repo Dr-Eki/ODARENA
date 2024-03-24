@@ -16,6 +16,7 @@
     "jenssegers/agent": "^2.6",
     "laravel-notification-channels/webpush": "^8.0",
     "laravel/framework": "^11.0",
+    "laravel/horizon": "^5.23",
     "laravel/tinker": "^2.9",
     "laravel/ui": "^4.5",
     "spatie/db-dumper": "^3.4",

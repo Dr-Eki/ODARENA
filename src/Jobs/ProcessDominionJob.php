@@ -50,8 +50,6 @@ class ProcessDominionJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected const EXTENDED_LOGGING = false;
-
     protected $dominion;
     protected $temporaryData = [];
 
@@ -381,44 +379,26 @@ class ProcessDominionJob implements ShouldQueue
     # Take resources that are one tick away from finished and create or increment DominionImprovements.
     private function handleResources(Dominion $dominion): void
     {
-        $resourcesProduced = [];
-        $resourcesConsumed = [];
         $resourcesNetChange = [];
-    
-        foreach($dominion->race->resources as $resourceKey)
-        {
-            $resourcesProduced[$resourceKey] = 0;
-            $resourcesConsumed[$resourceKey] = 0;
-            $resourcesNetChange[$resourceKey] = 0;
-        }
-    
+
         $finishedResourcesInQueue = DB::table('dominion_queue')
-                                        ->where('dominion_id',$dominion->id)
-                                        ->where('resource', 'like', 'resource%')
-                                        ->whereIn('source', ['exploration', 'invasion', 'expedition', 'theft', 'desecration'])
-                                        ->where('hours',1)
-                                        ->get();
-    
-        foreach($finishedResourcesInQueue as $finishedResourceInQueue)
-        {
-            $resourceKey = str_replace('resource_', '', $finishedResourceInQueue->resource);
-            $amount = intval($finishedResourceInQueue->amount);
-    
-            # Silently discard resources this faction doesn't use, if we somehow have any incoming from queue.
-            if(in_array($resourceKey, $dominion->race->resources))
-            {
-                $resourcesProduced[$resourceKey] += $amount;
-            }
+            ->where('dominion_id', $dominion->id)
+            ->where('resource', 'like', 'resource%')
+            ->whereIn('source', ['exploration', 'invasion', 'expedition', 'theft', 'desecration'])
+            ->where('hours', 1)
+            ->get();
+
+        foreach ($dominion->race->resources as $resourceKey) {
+            $resourcesProduced = $finishedResourcesInQueue
+                ->where('resource', 'resource_' . $resourceKey)
+                ->sum('amount');
+
+            $resourcesProduced += $this->resourceCalculator->getProduction($dominion, $resourceKey);
+            $resourcesConsumed = $this->resourceCalculator->getConsumption($dominion, $resourceKey);
+
+            $resourcesNetChange[$resourceKey] = $resourcesProduced - $resourcesConsumed;
         }
-    
-        # Add production.
-        foreach($dominion->race->resources as $resourceKey)
-        {
-            $resourcesProduced[$resourceKey] += $this->resourceCalculator->getProduction($dominion, $resourceKey);
-            $resourcesConsumed[$resourceKey] += $this->resourceCalculator->getConsumption($dominion, $resourceKey);
-            $resourcesNetChange[$resourceKey] += $resourcesProduced[$resourceKey] - $resourcesConsumed[$resourceKey];
-        }
-    
+
         $this->resourceService->updateResources($dominion, $resourcesNetChange);
     }
 
@@ -465,18 +445,20 @@ class ProcessDominionJob implements ShouldQueue
     private function handleTerrain(Dominion $dominion): void
     {
         $finishedTerrainsInQueue = DB::table('dominion_queue')
-                                        ->where('dominion_id',$dominion->id)
-                                        ->where('resource', 'like', 'terrain%')
-                                        ->where('hours',1)
-                                        ->get();
-
-        foreach($finishedTerrainsInQueue as $finishedTerrainInQueue)
-        {
+            ->where('dominion_id', $dominion->id)
+            ->where('resource', 'like', 'terrain%')
+            ->where('hours', 1)
+            ->get();
+    
+        $terrainChanges = [];
+    
+        foreach ($finishedTerrainsInQueue as $finishedTerrainInQueue) {
             $terrainKey = str_replace('terrain_', '', $finishedTerrainInQueue->resource);
             $amount = intval($finishedTerrainInQueue->amount);
-            #$terrain = Terrain::where('key', $terrainKey)->first();
-            $this->terrainService->update($dominion, [$terrainKey => $amount]);
+            $terrainChanges[$terrainKey] = $amount;
         }
+    
+        $this->terrainService->update($dominion, $terrainChanges);
     }
 
     # This function handles queuing of evolved units (Vampires)
@@ -688,6 +670,11 @@ class ProcessDominionJob implements ShouldQueue
 
     protected function cleanupQueues(Dominion $dominion)
     {
+        if($dominion->isAbandoned())
+        {
+            return;
+        }
+
         $finished = DB::table('dominion_queue')
             ->where('dominion_id', $dominion->id)
             ->where('hours', '<=', 0)
@@ -695,25 +682,22 @@ class ProcessDominionJob implements ShouldQueue
 
         foreach ($finished->groupBy('source') as $source => $group)
         {
-            if(!$dominion->isAbandoned())
+            $resources = [];
+            foreach ($group as $row)
             {
-                $resources = [];
-                foreach ($group as $row)
-                {
-                    $resources[$row->resource] = $row->amount;
-                }
-
-                if ($source === 'invasion')
-                {
-                    $notificationType = 'returning_completed';
-                }
-                else
-                {
-                    $notificationType = "{$source}_completed";
-                }
-
-                $this->notificationService->queueNotification($notificationType, $resources);
+                $resources[$row->resource] = $row->amount;
             }
+
+            if ($source === 'invasion')
+            {
+                $notificationType = 'returning_completed';
+            }
+            else
+            {
+                $notificationType = "{$source}_completed";
+            }
+
+            $this->notificationService->queueNotification($notificationType, $resources);
         }
 
         DB::transaction(function () use ($dominion)
@@ -725,8 +709,6 @@ class ProcessDominionJob implements ShouldQueue
         }, 10);
 
     }
-
-
 
     public function precalculateTick(Dominion $dominion, ?bool $saveHistory = false): void
     {

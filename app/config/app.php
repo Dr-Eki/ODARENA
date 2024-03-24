@@ -164,6 +164,7 @@ return [
         // OpenDominion\Providers\BroadcastServiceProvider::class,
         OpenDominion\Providers\ComposerServiceProvider::class,
         OpenDominion\Providers\EventServiceProvider::class,
+        OpenDominion\Providers\HorizonServiceProvider::class,
         #OpenDominion\Providers\TelescopeServiceProvider::class,
         OpenDominion\Providers\RouteServiceProvider::class,
 

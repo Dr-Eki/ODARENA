@@ -13,9 +13,6 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libzip-dev \
     zlib1g-dev \
-    libmemcached-dev \
-    libmemcached11 \
-    libmemcachedutil2 \
     nano \
     cron
 
@@ -24,11 +21,19 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-install sockets pdo_mysql intl mbstring exif pcntl bcmath gd zip
-#RUN pecl install memcached && docker-php-ext-enable memcached
+
+# Install Redis extension
+RUN pecl install redis && docker-php-ext-enable redis
+
+# Install Supervisord
+RUN apt-get update && apt-get install -y supervisor
 
 #Install Node Js and Npm
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
 RUN apt-get install -y nodejs
+
+# Install procps
+RUN apt-get update && apt-get install -y procps
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -37,10 +42,22 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && chown -R $user:$user /home/$user
 
+# Create log directories for PHP-FPM
+RUN mkdir -p /var/log/php-fpm && chown -R www-data:www-data /var/log/php-fpm
+
 # Set working directory
 WORKDIR /var/www
 RUN mkdir /var/www/html/storage
 RUN chown -R www-data:www-data /var/www
 
-# Switch to the non-root user
+RUN mkdir -p /var/log/supervisor && \
+    chmod -R 755 /var/log/supervisor && \
+    chown -R www-data:www-data /var/log/supervisor
+
+# Copy Supervisord configuration file
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Set Supervisord as the entry point or command, which will manage starting PHP-FPM
+# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
 USER $user

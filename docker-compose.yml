@@ -5,7 +5,7 @@ services:
     container_name: odarena-nginx
     restart: unless-stopped
     ports:
-      - 8008:80
+      - 80:80 # change this to 80:80 if you don't have anything running on port 80, otherwise change it to 8080:80
     volumes:
       - ./:/var/www/html:cached
       - ./.docker/nginx:/etc/nginx/conf.d
@@ -35,7 +35,7 @@ services:
       - odarena-network
     depends_on:
       - database
-    #command: ["/usr/bin/supervisord"]
+    #command: ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
   database:
     image: mariadb:latest
@@ -60,7 +60,7 @@ services:
     depends_on:
       - database
     ports:
-      - 8081:80
+      - 81:80 # change this to 81:80 if you don't have anything running on port 80, otherwise change it to 8081:80
     environment:
       PMA_HOST: database
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -68,10 +68,14 @@ services:
     networks:
       - odarena-network
 
-  memcached:
-    image: memcached:latest
+  # Redis
+  redis:
+    image: redis:alpine
+    container_name: odarena-redis
     ports:
-      - "11211:11211"
+      - 6379:6379
+    networks:
+      - odarena-network
 
 networks:
   odarena-network:

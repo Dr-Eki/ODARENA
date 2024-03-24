@@ -1,0 +1,227 @@
+2024-03-24 06:07:18,295 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-03-24 06:07:18,317 INFO supervisord started with pid 1
+2024-03-24 06:07:19,320 INFO spawned: 'horizon' with pid 7
+2024-03-24 06:07:20,814 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-03-24 06:09:36,504 INFO reaped unknown pid 35 (terminated by SIGKILL)
+2024-03-24 06:09:40,525 INFO reaped unknown pid 36 (terminated by SIGKILL)
+2024-03-24 06:12:14,388 WARN received SIGQUIT indicating exit request
+2024-03-24 06:12:14,389 INFO waiting for horizon to die
+2024-03-24 06:12:17,404 INFO waiting for horizon to die
+2024-03-24 06:12:20,423 INFO waiting for horizon to die
+2024-03-24 06:12:23,449 INFO waiting for horizon to die
+2024-03-24 06:15:27,786 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-03-24 06:15:27,789 INFO supervisord started with pid 1
+2024-03-24 06:15:28,795 INFO spawned: 'horizon' with pid 7
+2024-03-24 06:15:30,608 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-03-24 06:25:06,882 WARN received SIGQUIT indicating exit request
+2024-03-24 06:25:06,884 INFO waiting for horizon to die
+2024-03-24 06:25:09,900 INFO waiting for horizon to die
+2024-03-24 06:25:12,922 INFO waiting for horizon to die
+2024-03-24 06:25:15,952 INFO waiting for horizon to die
+2024-03-24 06:30:54,728 INFO supervisord started with pid 1
+2024-03-24 06:30:55,732 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 06:30:56,743 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 06:30:58,756 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 06:31:01,780 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 06:31:01,781 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 06:32:22,274 WARN received SIGQUIT indicating exit request
+2024-03-24 06:32:30,944 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-03-24 06:32:30,946 INFO supervisord started with pid 1
+2024-03-24 06:32:31,964 INFO spawned: 'horizon' with pid 7
+2024-03-24 06:32:33,475 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-03-24 06:33:59,985 WARN received SIGQUIT indicating exit request
+2024-03-24 06:33:59,985 INFO waiting for horizon to die
+2024-03-24 06:34:03,002 INFO waiting for horizon to die
+2024-03-24 06:34:06,018 INFO waiting for horizon to die
+2024-03-24 06:34:09,041 INFO waiting for horizon to die
+2024-03-24 06:34:14,098 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-03-24 06:34:14,099 INFO supervisord started with pid 1
+2024-03-24 06:34:15,106 INFO spawned: 'horizon' with pid 7
+2024-03-24 06:34:16,478 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-03-24 06:46:51,572 WARN received SIGQUIT indicating exit request
+2024-03-24 06:46:51,574 INFO waiting for horizon to die
+2024-03-24 06:46:54,588 INFO waiting for horizon to die
+2024-03-24 06:46:57,606 INFO waiting for horizon to die
+2024-03-24 06:47:00,626 INFO waiting for horizon to die
+2024-03-24 06:47:17,407 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-03-24 06:47:17,410 INFO supervisord started with pid 1
+2024-03-24 06:47:18,413 INFO spawned: 'horizon' with pid 7
+2024-03-24 06:47:19,885 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-03-24 06:48:07,089 WARN received SIGQUIT indicating exit request
+2024-03-24 06:48:07,091 INFO waiting for horizon to die
+2024-03-24 06:48:10,109 INFO waiting for horizon to die
+2024-03-24 06:48:13,153 INFO waiting for horizon to die
+2024-03-24 06:48:24,236 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-03-24 06:48:24,238 INFO supervisord started with pid 1
+2024-03-24 06:48:25,248 INFO spawned: 'horizon' with pid 7
+2024-03-24 06:48:26,650 INFO success: horizon entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-03-24 06:49:20,944 INFO reaped unknown pid 41 (terminated by SIGINT)
+2024-03-24 06:49:20,945 INFO reaped unknown pid 42 (terminated by SIGINT)
+2024-03-24 06:53:39,385 WARN received SIGQUIT indicating exit request
+2024-03-24 06:53:39,388 INFO waiting for horizon to die
+2024-03-24 06:53:42,410 INFO waiting for horizon to die
+2024-03-24 06:53:45,427 INFO waiting for horizon to die
+2024-03-24 06:53:48,448 INFO waiting for horizon to die
+2024-03-24 06:53:54,897 INFO supervisord started with pid 1
+2024-03-24 06:53:55,901 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 06:53:56,910 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 06:53:58,918 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 06:54:01,928 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 06:54:01,928 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 07:45:02,791 WARN received SIGQUIT indicating exit request
+2024-03-24 07:46:45,352 INFO supervisord started with pid 1
+2024-03-24 07:46:46,356 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:46:46,360 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:46:47,363 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:46:47,366 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:46:49,376 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:46:49,376 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:46:52,382 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:46:52,383 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 07:46:52,383 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:46:52,384 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 07:50:19,464 WARN received SIGQUIT indicating exit request
+2024-03-24 07:55:08,363 INFO supervisord started with pid 1
+2024-03-24 07:55:09,371 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:55:09,373 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:55:10,382 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:55:10,389 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:55:12,409 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:55:12,410 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:55:15,428 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:55:15,434 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 07:55:15,435 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:55:15,435 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 07:55:50,650 WARN received SIGQUIT indicating exit request
+2024-03-24 07:55:52,171 INFO supervisord started with pid 1
+2024-03-24 07:55:53,179 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:55:53,182 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:55:54,190 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:55:54,192 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:55:56,205 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:55:56,207 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:55:59,224 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:55:59,224 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 07:55:59,224 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:55:59,225 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 07:57:51,863 WARN received SIGQUIT indicating exit request
+2024-03-24 07:57:55,237 INFO supervisord started with pid 1
+2024-03-24 07:57:56,272 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:57:56,276 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:57:57,283 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:57:57,285 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:57:59,297 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:57:59,299 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:58:02,320 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 07:58:02,322 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 07:58:02,323 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 07:58:02,324 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 07:58:48,572 WARN received SIGQUIT indicating exit request
+2024-03-24 09:17:11,425 INFO supervisord started with pid 1
+2024-03-24 09:17:12,434 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:17:12,442 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:17:13,451 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:17:13,454 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:17:15,470 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:17:15,471 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:17:18,494 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:17:18,496 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 09:17:18,498 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:17:18,498 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 09:17:20,509 WARN received SIGQUIT indicating exit request
+2024-03-24 09:18:14,848 INFO supervisord started with pid 1
+2024-03-24 09:18:15,853 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:18:15,856 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:18:16,864 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:18:16,867 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:18:18,884 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:18:18,885 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:18:21,906 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:18:21,908 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 09:18:21,910 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:18:21,910 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 09:19:03,128 WARN received SIGQUIT indicating exit request
+2024-03-24 09:21:57,346 INFO supervisord started with pid 1
+2024-03-24 09:21:58,353 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:21:58,355 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:21:59,363 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:21:59,366 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:22:01,381 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:22:01,386 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:22:04,405 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:22:04,406 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 09:22:04,406 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:22:04,407 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 09:36:10,186 WARN received SIGQUIT indicating exit request
+2024-03-24 09:36:13,986 INFO supervisord started with pid 1
+2024-03-24 09:36:14,995 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:36:14,998 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:36:16,003 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:36:16,003 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:36:18,053 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:36:18,054 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:36:21,077 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:36:21,078 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 09:36:21,079 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:36:21,079 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 09:36:42,222 WARN received SIGQUIT indicating exit request
+2024-03-24 09:36:44,859 INFO supervisord started with pid 1
+2024-03-24 09:36:45,869 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:36:45,870 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:36:46,875 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:36:46,876 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:36:48,888 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:36:48,890 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:36:51,914 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:36:51,914 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 09:36:51,915 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:36:51,915 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 09:38:01,334 WARN received SIGQUIT indicating exit request
+2024-03-24 09:38:03,790 INFO supervisord started with pid 1
+2024-03-24 09:38:04,801 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:38:04,808 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:38:05,818 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:38:05,821 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:38:07,837 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:38:07,839 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:38:10,850 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:38:10,850 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 09:38:10,850 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:38:10,850 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 09:48:21,341 WARN received SIGQUIT indicating exit request
+2024-03-24 09:48:24,716 INFO supervisord started with pid 1
+2024-03-24 09:48:25,723 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:48:25,724 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:48:26,737 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:48:26,744 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:48:28,760 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:48:28,761 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:48:31,774 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:48:31,775 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 09:48:31,775 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:48:31,775 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 09:51:02,573 WARN received SIGQUIT indicating exit request
+2024-03-24 09:51:05,099 INFO supervisord started with pid 1
+2024-03-24 09:51:06,105 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:51:06,107 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:51:07,114 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:51:07,122 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:51:09,135 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:51:09,137 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:51:12,151 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:51:12,152 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 09:51:12,153 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:51:12,153 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 09:52:09,464 WARN received SIGQUIT indicating exit request
+2024-03-24 09:52:09,789 INFO supervisord started with pid 1
+2024-03-24 09:52:10,794 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:52:10,795 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:52:11,802 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:52:11,803 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:52:14,803 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:52:14,804 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:52:17,820 INFO spawnerr: unknown error making dispatchers for 'horizon': EACCES
+2024-03-24 09:52:17,827 INFO gave up: horizon entered FATAL state, too many start retries too quickly
+2024-03-24 09:52:17,828 INFO spawnerr: unknown error making dispatchers for 'php-fpm': EACCES
+2024-03-24 09:52:17,828 INFO gave up: php-fpm entered FATAL state, too many start retries too quickly
+2024-03-24 09:54:58,563 WARN received SIGQUIT indicating exit request

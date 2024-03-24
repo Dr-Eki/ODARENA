@@ -201,8 +201,9 @@ class TickService
                 if(static::EXTENDED_LOGGING) { Log::debug('* Going through all dominions'); }
                 foreach ($dominions as $dominion)
                 {
-                    dump("Processing dominion {$dominion->id}: {$dominion->name}");
-                    ProcessDominionJob::dispatch($dominion);
+                    Log::info("Queueing up dominion {$dominion->id}: {$dominion->name}");
+                    dump("Queuing up dominion {$dominion->id}: {$dominion->name}");
+                    ProcessDominionJob::dispatch($dominion)->onQueue('tick');
                     continue;
                     /*
 
@@ -1334,6 +1335,31 @@ class TickService
     # Take resources that are one tick away from finished and create or increment DominionImprovements.
     private function handleResources(Dominion $dominion): void
     {
+        $resourcesNetChange = [];
+
+        $finishedResourcesInQueue = DB::table('dominion_queue')
+            ->where('dominion_id', $dominion->id)
+            ->where('resource', 'like', 'resource%')
+            ->whereIn('source', ['exploration', 'invasion', 'expedition', 'theft', 'desecration'])
+            ->where('hours', 1)
+            ->get();
+
+        foreach ($dominion->race->resources as $resourceKey) {
+            $resourcesProduced = $finishedResourcesInQueue
+                ->where('resource', 'resource_' . $resourceKey)
+                ->sum('amount');
+
+            $resourcesProduced += $this->resourceCalculator->getProduction($dominion, $resourceKey);
+            $resourcesConsumed = $this->resourceCalculator->getConsumption($dominion, $resourceKey);
+
+            $resourcesNetChange[$resourceKey] = $resourcesProduced - $resourcesConsumed;
+        }
+
+        $this->resourceService->updateResources($dominion, $resourcesNetChange);
+    }
+    /*
+    private function handleResources(Dominion $dominion): void
+    {
         $resourcesProduced = [];
         $resourcesConsumed = [];
         $resourcesNetChange = [];
@@ -1374,6 +1400,7 @@ class TickService
     
         $this->resourceService->updateResources($dominion, $resourcesNetChange);
     }
+    */
 
     # Take artefacts that are one tick away from finished and create or increment RealmArtefact.
     private function handleArtefacts(Dominion $dominion): void
