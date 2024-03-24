@@ -7,15 +7,18 @@
 <script>
     var spinner = document.getElementById('spinner');
     var isTicking = spinner.getAttribute('data-is-ticking') === '1';
+    var tickCheckCount = 0;
 
     function checkIsTicking() {
-        fetch('/api/v1/is-round-ticking')
+        fetch('/api/v1/dominion/is-ticking')
             .then(response => response.json())
             .then(data => {
                 if (data.is_ticking) {
                     spinner.style.display = 'block';
+                    tickCheckCount = 0;
                 } else {
                     spinner.style.display = 'none';
+                    tickCheckCount = 0;
                 }
                 isTicking = data.is_ticking;
             });
@@ -26,20 +29,24 @@
         var minutes = now.getMinutes();
         var seconds = now.getSeconds();
         var milliseconds = now.getMilliseconds();
-        var nextQuarterHour = 15 * Math.ceil(minutes / 15);
+        var nextQuarterHour = 15 * Math.ceil((minutes + 1) / 15);
         var remainingTime = ((nextQuarterHour - minutes) * 60 - seconds) * 1000 - milliseconds;
 
-        // If isTicking is true, check every second
+        // If isTicking is true, check every second for up to 60 seconds
         // If isTicking is false, check every quarter hour
-        var checkInterval = isTicking ? 1000 : remainingTime;
+        var checkInterval = isTicking && tickCheckCount < 60 ? 1000 : remainingTime;
 
         setTimeout(function() {
             checkIsTicking();
             scheduleNextCheck();
+            if (isTicking) {
+                tickCheckCount++;
+            }
         }, checkInterval);
     }
 
-    //scheduleNextCheck();
+    checkIsTicking();
+    scheduleNextCheck();
 </script>
 
 @endif
