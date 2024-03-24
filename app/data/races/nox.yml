@@ -13,10 +13,9 @@ draftees_alias: neophyte
 resources:
   - gold
   - food
+  - lumber
   - mana
   - gloom
-  - lumber
-  - gems
 
 peasants_production:
   gold: 2.5
@@ -146,8 +145,8 @@ units:
     cost:
       unit5: 1
       mana: 1000
-      gloom: 100
-      gold: 2000
+      gloom: 10
+      gold: 1000
     power:
       offense: 0
       defense: 0
