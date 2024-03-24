@@ -31,7 +31,7 @@ terrain_perks:
   desert:
     defensive_power_mod: 0.10
   forest:
-    lumber_production_raw: 3 
+    lumber_production_raw: 3
     lumber_production_mod: 0.10
   glacier:
     defensive_power_mod: 0.125
@@ -44,9 +44,9 @@ terrain_perks:
   mountains:
     defensive_power_mod: 0.10
   plains:
-    population_mod: 0.15 
+    population_mod: 0.10
   swamps:
-    population_mod: 0.1
+    population_mod: 0.15
   volcanic:
     offensive_power_mod: 0.20
   water:

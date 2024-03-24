@@ -55,6 +55,12 @@
                                                   $hasDynamicDefensivePower = $unit->perks->filter(static function ($perk) {
                                                       return Str::startsWith($perk->key, ['defense_from_', 'defense_vs_']);
                                                   })->count() > 0;
+
+                                                
+                                                  $incomingAmount = $unitCalculator->getUnitTypeTotalIncoming($selectedDominion, $unitType);
+                                                  $unitTypeTotalTrained = $unitCalculator->getUnitTypeTotalTrained($selectedDominion, $unitType);
+                                                  $unitTypeTotalPaid = $unitCalculator->getUnitTypeTotalPaid($selectedDominion, $unitType);
+
                                               @endphp
                                               <td class="text-center">  <!-- OP / DP -->
                                                   @if ($offensivePower === 0)
@@ -70,32 +76,28 @@
                                                   @endif
                                               </td>
                                               <td class="text-center">  <!-- Trained -->
-                                                    @php
-                                                        $incomingAmount = $unitCalculator->getUnitTypeTotalIncoming($selectedDominion, $unitType);
-                                                    @endphp
-                                                  {{ number_format($unitCalculator->getUnitTypeTotalTrained($selectedDominion, $unitType)) }}
+                                                  {{ number_format($unitTypeTotalTrained) }}
                                                   <!-- Incoming -->
-                                                  @if($incomingAmount > 0)
+                                                  @if($incomingAmount)
                                                     <br>
-                                                    <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($unitCalculator->getUnitTypeTotalPaid($selectedDominion, $unitType)) }}">
+                                                    <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($unitTypeTotalPaid) }}">
                                                         ({{ number_format($incomingAmount) }})
                                                     </span>
                                                   @endif
                                               </td>
                                           @else
                                               @php
-                                                  $unit = $unitType;
+                                                    $unit = $unitType;
+                                                    $incomingAmount = $unitCalculator->getUnitTypeTotalIncoming($selectedDominion, $unitType);
+                                                    $unitTypeTotalTrained = $unitCalculator->getUnitTypeTotalTrained($selectedDominion, $unitType);
+                                                    $unitTypeTotalPaid = $unitCalculator->getUnitTypeTotalPaid($selectedDominion, $unitType);
                                               @endphp
                                               <td class="text-center">&mdash;</td>
                                               <td class="text-center">  <!-- If Spy/Wiz/AM -->
-                                                @php
-                                                    $incomingAmount = $unitCalculator->getUnitTypeTotalIncoming($selectedDominion, $unitType);
-                                                @endphp
+                                                  {{ number_format($unitTypeTotalTrained) }}
 
-                                                  {{ number_format($unitCalculator->getUnitTypeTotalTrained($selectedDominion, $unitType)) }}
-
-                                                  @if($incomingAmount > 0)
-                                                      <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($unitCalculator->getUnitTypeTotalPaid($selectedDominion, $unitType)) }}">
+                                                  @if($incomingAmount)
+                                                      <span data-toggle="tooltip" data-placement="top" title="<small class='text-muted'>Paid:</small> {{ number_format($unitTypeTotalPaid) }}">
                                                           <br>({{ number_format($incomingAmount) }})
                                                       </span>
                                                   @endif

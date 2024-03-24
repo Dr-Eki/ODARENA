@@ -33,8 +33,7 @@ terrain_perks:
   forest:
     lumber_production_mod: 0.20
   glacier:
-    mana_production_mod: 0.12
-    defensive_power_mod: 0.08
+    mana_production_mod: 0.10
   hills:
     defensive_power_mod: 0.10
   jungle:
@@ -44,7 +43,8 @@ terrain_perks:
   plains:
     gold_production_mod: 0.10
   swamps:
-    mana_production_mod: 0.10
+    mana_production_mod: 0.12
+    defensive_power_mod: 0.08
   volcanic:
     mana_production_mod: 0.10
     gloom_production_mod: 0.10
