@@ -204,7 +204,7 @@ class TerrainService
                 foreach($dominion->terrains as $dominionTerrain)
                 {
                     # Craghack bug 
-                    if($terrainedLand == 0 and $dominionTerrain->key !== $dominion->race->home_terrain)
+                    if($terrainedLand == 0 and $dominionTerrain->key !== $dominion->race->homeTerrain()->key)
                     {
                         continue;
                     }

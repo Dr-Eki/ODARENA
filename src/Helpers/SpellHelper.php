@@ -240,6 +240,7 @@ class SpellHelper
 
             // Casualties
             'increases_enemy_draftee_casualties' => '%+g%% enemy draftee casualties',
+            'increases_enemy_casualties' => '%+g%% enemy casualties',
             'increases_enemy_casualties_on_offense' => '%+g%% enemy casualties when invading',
             'increases_enemy_casualties_on_defense' => '%+g%% enemy casualties when defending',
 

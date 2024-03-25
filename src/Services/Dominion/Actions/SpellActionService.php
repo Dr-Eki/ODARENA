@@ -554,7 +554,7 @@ class SpellActionService
                     $this->resourceService->updateResources($caster, [$resourceKey => ($resourceAmount * -1)]);
 
                     $caster->land += $landGenerated;
-                    $caster->{'terrain_' . $caster->race->home_terrain} += $landGenerated;
+                    $caster->{'terrain_' . $caster->race->homeTerrain()->key} += $landGenerated;
 
                     $extraLine = ', converting ' . number_format($resourceAmount) . ' ' . Str::plural($resource->name, $resourceAmount) . ' into ' . number_format($landGenerated) . ' acres of land.';
                 }
