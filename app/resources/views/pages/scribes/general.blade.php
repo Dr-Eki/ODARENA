@@ -9,7 +9,6 @@
         <div class="box">
             <ul style="list-style-type: none; margin:0; padding:0;">
                 <li><a class="btn btn-block" href="#casualties">Casualties</a></li>
-                <li><a class="btn btn-block" href="#community">Community</a></li>
                 <li><a class="btn btn-block" href="#conversions">Conversions</a></li>
                 {{--
                 <li><a class="btn btn-block" href="#crypt">Crypt</a></li>
@@ -43,7 +42,12 @@
             <div class="box-body">
                 <p>This page contains information about several aspects of the game. It can at times be technical, but it is also a useful resource for players to learn about the game.</p>
                 <p>Other pages in the Scribes go into detail about specific aspects of the game. This page is focused on broader topics or game mechanics not elsewhere documented.</p>
-                <p>Questions are best asked on Discord, where other players can help give clarity on the game and its inner workings.</p>
+                <p>Come join us on Discord!</p>
+                <p style="padding: 0 20px;">
+                    <a href="{{ config('app.discord_invite_link') }}" target="_blank">
+                        <img src="{{ asset('assets/app/images/join-the-discord.png') }}" alt="Join the Discord" class="img-responsive" style="max-height: 80px;">
+                    </a>
+                </p>
             </div>
         </div>
     </div>
@@ -98,24 +102,6 @@
             </div>
         </div>
     </div>
-
-    <div class="col-sm-12 col-md-12">
-        <a id="community"></a>
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h2 class="box-title">Community</h2>
-            </div>
-
-            <div class="box-body">
-                <p>Come join us on Discord!</p>
-                <p style="padding: 0 20px;">
-                    <a href="{{ config('app.discord_invite_link') }}" target="_blank">
-                        <img src="{{ asset('assets/app/images/join-the-discord.png') }}" alt="Join the Discord" class="img-responsive" style="max-height: 80px;">
-                    </a>
-                </p>
-            </div>
-        </div>
-    </div>
     
     <div class="col-sm-12 col-md-12">
         <a id="conversions"></a>
@@ -133,18 +119,18 @@
                     <div class="col-sm-12 col-md-6">
                         <p><strong>Attributes</strong></p>
                         <ul>
-                        @foreach($conversionHelper->getUnconvertibleAttributes() as $attribute)
-                            <li>{{ ucwords($attribute) }}</li>
-                        @endforeach
+                            @foreach($conversionHelper->getUnconvertibleAttributes() as $attribute)
+                                <li>{{ ucwords($attribute) }}</li>
+                            @endforeach
                         </ul>
                     </div>
 
                     <div class="col-sm-12 col-md-6">
                         <p><strong>Perks</strong></p>
                         <ul>
-                        @foreach($conversionHelper->getUnconvertiblePerks() as $perk)
-                            <li><samp>{{ ($perk) }}</samp></li>
-                        @endforeach
+                            @foreach($conversionHelper->getUnconvertiblePerks() as $perk)
+                                <li><samp>{{ ($perk) }}</samp></li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
@@ -291,8 +277,8 @@
             <div class="box-body">
                 <h4>Multiplier</h4>
                 <p>Offensive Power, Military Power, Wizard Ratio, Spy Ratio, and Production are modified by the Morale Multiplier.</p>
-                <p>Morale Multiplier: <code>0.9 + [Morale]/1000</code>. 120% morale yields a Morale Multiplier of: <code>0.9+120/1000=1.02</code>. The already modified power, ratio, or production is multiplied by this multiplier.</p>
-                <p>10,000 raw DP with 25% DP mod and 120% morale yields: <code>10000 * (1+0.25) * (0.9+120/1000)=12,750</code>.</p>
+                <p>Morale Multiplier: <code>0.9 + [Morale]/1000</code>. 120 morale yields a Morale Multiplier of: <code>0.9+120/1000=1.02</code>. The already modified power, ratio, or production is multiplied by this multiplier.</p>
+                <p>10,000 raw DP with 25% DP mod and 120 morale yields: <code>10000 * (1+0.25) * (0.9+120/1000)=12,750</code>.</p>
 
                 <h4>Gains and Losses</h4>
                 <p>Morale is gained and lost primarily through invasions. On invasions, attacker's morale change is calculated as follows:</p>
@@ -443,7 +429,7 @@
             </div>
 
             <div class="box-body">
-                <p>Artillery dominions no longer have any DP of their own. Instead, a protectorship is established whereby another dominion act as as the protector of the Artillery. The protector is responsible for defending the Artillery dominion over which it has protectorship.</p>
+                <p>Artillery dominions do not have any DP of their own. Instead, a protectorship is established whereby another dominion act as as the protector of the Artillery. The protector is responsible for defending the Artillery dominion over which it has protectorship.</p>
                 <p>Only Black Orc, Dark Elf, Orc, and Reptilians can be protectors.</p>
                 <p>Potential protectors can submit protectorship offers to any unprotected Artillery dominions from the Government page. It is also possible to rescind offers. Artillery dominions can accept or decline offers from the Government page. Accepting an offer automatically deletes any other offers. It is not possible to cancel a protectorship once it has been established. Protectorships are permanent.</p>
                 <p>Each Artillery dominion must have a protector in order to leave magical protection.</p>
@@ -480,16 +466,16 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><i class="fas fa-users fa-fw text-green"></i> Standard</td>
+                            <td><i class="ra ra-alien-fire text-orange"></i> Artefacts</td>
                             <td>Four realms: one per alignment.</td>
-                            <td>The first dominion to a certain land size triggers a 48-tick countdown.</td>
+                            <td>The first realm to obtain a certain number of artefacts trigger a 96-tick countdown. The countdown is reset if the realm loses artefacts and drops under the number of artefacts required.</td>
                             <td>Indefinite</td>
                         </tr>
                         <tr>
-                            <td><i class="fas fa-users fa-fw text-green"></i> Standard (Duration)</td>
-                            <td>Four realms: one per alignment.</td>
-                            <td>The round lasts a certain number of ticks.</td>
-                            <td>Fixed</td>
+                            <td><i class="ra ra-alien-fire text-orange"></i> Artefacts (Packs)</td>
+                            <td>One realm per pack. Pack leaders create packs that can be public (anyone can join), private (password required to join), or closed (no one can join).</td>
+                            <td>The first realm to obtain a certain number of artefacts trigger a 96-tick countdown. The countdown is reset if the realm loses artefacts and drops under the number of artefacts required.</td>
+                            <td>Indefinite</td>
                         </tr>
 
                         <tr>
@@ -504,10 +490,51 @@
                             <td>The round lasts a certain number of ticks.</td>
                             <td>Fixed</td>
                         </tr>
+
+                        <tr>
+                            <td><i class="ra ra-crossed-swords ra-fw text-purple"></i> Factions</td>
+                            <td>One realm per faction.</td>
+                            <td>The first dominion to a certain land size triggers a 48-tick countdown.</td>
+                            <td>Indefinite</td>
+                        </tr>
+                        <tr>
+                            <td><i class="ra ra-crossed-swords ra-fw text-purple"></i> Factions (Duration)</td>
+                            <td>One realm per faction.</td>
+                            <td>The round lasts a certain number of ticks.</td>
+                            <td>Fixed</td>
+                        </tr>
+
+                        <tr>
+                            <td><i class="ra ra-double-team ra-fw text-blue"></i> Packs</td>
+                            <td>One realm per pack. Pack leaders create packs that can be public (anyone can join), private (password required to join), or closed (no one can join).</td>
+                            <td>The first dominion to a certain land size triggers a 48-tick countdown.</td>
+                            <td>Indefinite</td>
+                        </tr>
+                        <tr>
+                            <td><i class="ra ra-double-team ra-fw text-blue"></i> Packs (Duration)</td>
+                            <td>One realm per pack. Pack leaders create packs that can be public (anyone can join), private (password required to join), or closed (no one can join).</td>
+                            <td>The round lasts a certain number of ticks.</td>
+                            <td>Fixed</td>
+                        </tr>
+                            
+                        <tr>
+                            <td><i class="fas fa-users fa-fw text-green"></i> Standard</td>
+                            <td>Four realms: one per alignment.</td>
+                            <td>The first dominion to a certain land size triggers a 48-tick countdown.</td>
+                            <td>Indefinite</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-users fa-fw text-green"></i> Standard (Duration)</td>
+                            <td>Four realms: one per alignment.</td>
+                            <td>The round lasts a certain number of ticks.</td>
+                            <td>Fixed</td>
+                        </tr>
                     </tbody>
                 </table>
-                <p>In Standard and Standard (Duration) rounds, multis are allowed as long as they are all played with equal efforts and are all of the same alignment (same realm).</p>
-                <p>In Deathmatch and Deathmatch (Duration) rounds, multis are not allowed.</p>
+                <p>Multis are not allowed in Deathmatch and Deathmatch (Duration) rounds.</p>
+                <p>One multi is allowed in Artefacts and Artefacts (Packs) rounds.</p>
+                <p>Any number of multis are allowed in other rounds.</p>
+                <p>Remember that multis must all be played with reasonable and equal effort.</p>
                 <p>Unless otherwise announced, even numbered rounds start at 16:00 UTC and odd numbered rounds start at 04:00 UTC.</p>
             </div>
         </div>
@@ -618,8 +645,9 @@
 
             <div class="box-body">
                 <p>The game ticks four times per hour, every 15 minutes at xx:00, xx:15, xx:30, xx:45.</p>
-                <p>When the round begins, there is an immediate tick.</p>
+                <p>Most actions are disabled while the game is ticking.</p>
                 <p>You start with 96 protection ticks, during which you can manually tick yourself forward at your own leisure.</p>
+                <p>When the round begins, there is an immediate tick.</p>
             </div>
         </div>
     </div>
