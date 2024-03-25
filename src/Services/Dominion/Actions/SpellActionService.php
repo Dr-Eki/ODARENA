@@ -24,9 +24,10 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionSpell;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\ProtectionService;
+use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\StatsService;
-use OpenDominion\Services\Dominion\QueueService;
+use OpenDominion\Services\Dominion\TerrainService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Traits\DominionGuardsTrait;
 
@@ -91,6 +92,9 @@ class SpellActionService
     /** @var StatsService */
     protected $statsService;
 
+    /** @var TerrainService */
+    protected $terrainService;
+
     /**
      * SpellActionService constructor.
      */
@@ -114,6 +118,7 @@ class SpellActionService
         $this->spellCalculator = app(SpellCalculator::class);
         $this->spellHelper = app(SpellHelper::class);
         $this->statsService = app(StatsService::class);
+        $this->terrainService = app(TerrainService::class);
     }
 
     /**
@@ -554,7 +559,10 @@ class SpellActionService
                     $this->resourceService->updateResources($caster, [$resourceKey => ($resourceAmount * -1)]);
 
                     $caster->land += $landGenerated;
-                    $caster->{'terrain_' . $caster->race->homeTerrain()->key} += $landGenerated;
+
+                    $this->terrainService->update($caster, [
+                        $caster->race->homeTerrain()->key => $landGenerated
+                    ]);
 
                     $extraLine = ', converting ' . number_format($resourceAmount) . ' ' . Str::plural($resource->name, $resourceAmount) . ' into ' . number_format($landGenerated) . ' acres of land.';
                 }
