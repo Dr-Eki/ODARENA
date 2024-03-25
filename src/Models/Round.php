@@ -271,7 +271,8 @@ class Round extends AbstractModel
      */
     public function hoursUntilStart()
     {
-        return $this->start_date->diffInHours(now());
+        #return $this->start_date->diffInHours(now());
+        return now()->diffInHours($this->start_date);
     }
 
     /**
@@ -281,7 +282,8 @@ class Round extends AbstractModel
      */
     public function minutesUntilStart()
     {
-        return $this->start_date->diffInMinutes(now());
+        #return $this->start_date->diffInMinutes(now());
+        return now()->diffInMinutes($this->start_date);
     }
 
     public function getSetting(string $key, $default = false)
