@@ -207,7 +207,6 @@ class TickService
                     Log::info("Queueing up dominion {$dominion->id}: {$dominion->name}");
                     dump("Queuing up dominion {$dominion->id}: {$dominion->name}");
                     ProcessDominionJob::dispatch($dominion)->onQueue('tick');
-                    continue;
                     /*
 
                     $this->temporaryData[$round->id][$dominion->id] = [];

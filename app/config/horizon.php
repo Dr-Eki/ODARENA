@@ -201,7 +201,7 @@ return [
         'production' => [
             'supervisor-1' => [
                 'queue' => ['tick'],
-                'maxProcesses' => 20,
+                'maxProcesses' => 24,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
             ],
