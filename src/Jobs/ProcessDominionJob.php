@@ -125,7 +125,7 @@ class ProcessDominionJob implements ShouldQueue
             $this->temporaryData[$round->id][$this->dominion->id] = [];
 
             #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
-            #$this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
+            $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
 
             if(
                 ($this->dominion->round->ticks % 4 == 0) and
