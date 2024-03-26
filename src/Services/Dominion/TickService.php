@@ -983,8 +983,8 @@ class TickService
 
             $this->temporaryData[$dominion->round->id][$dominion->id] = [];
 
-            $this->temporaryData[$dominion->round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
-            $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($dominion);
+            #$this->temporaryData[$dominion->round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
+            #$this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($dominion);
 
             # Queue starvation notification.
             if($dominion->tick->starvation_casualties and !$dominion->isAbandoned())

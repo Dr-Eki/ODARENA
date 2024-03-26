@@ -124,8 +124,8 @@ class ProcessDominionJob implements ShouldQueue
             
             $this->temporaryData[$round->id][$this->dominion->id] = [];
 
-            $this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
-            $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
+            #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
+            #$this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
 
             if(
                 ($this->dominion->round->ticks % 4 == 0) and
@@ -183,6 +183,7 @@ class ProcessDominionJob implements ShouldQueue
             $this->handleStasis($this->dominion);
 
             if(config('game.extended_logging')) { Log::debug('** Handle Pestilence'); }
+
             // Afflicted: Abomination generation
             if(!empty($this->dominion->tick->pestilence_units))
             {
@@ -209,7 +210,7 @@ class ProcessDominionJob implements ShouldQueue
             {
                 if(!empty($this->dominion->tick->{'generated_unit' . $unit->slot}))
                 {
-                    $this->queueService->queueResources('summoning', $this->dominion, [('military_unit' . $unit->slot) => $this->dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 1)); # +1 because it's ticking
+                    $this->queueService->queueResources('summoning', $this->dominion, [('military_unit' . $unit->slot) => $this->dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 0)); # trying +0, was +1 because it's ticking
                 }
             }
 
@@ -511,7 +512,7 @@ class ProcessDominionJob implements ShouldQueue
         {
             $evolvedUnit = $dominion->race->units->where('slot', $targetSlot)->first();
     
-            $this->queueService->queueResources('evolution', $dominion, ['military_unit' . $targetSlot => $evolvedUnitAmount], ($evolvedUnit->training_time + 1)); # +1 because 12 becomes 11 otherwise
+            $this->queueService->queueResources('evolution', $dominion, ['military_unit' . $targetSlot => $evolvedUnitAmount], ($evolvedUnit->training_time + 0)); # trying +0, was +1 because 12 becomes 11 otherwise
         }
 
         foreach($evolvedUnitsFrom as $sourceSlot => $amountEvolved)
