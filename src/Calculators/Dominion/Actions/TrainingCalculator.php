@@ -345,7 +345,7 @@ class TrainingCalculator
                 # Check wizard point requirements
                 if($wizardPointsRequiredPerkValue = $unit->getPerkValue('wizard_points_required'))
                 {
-                    $trainable[$unitType] = max($this->magicCalculator->getWizardPointsRemaining($dominion) / $wizardPointsRequiredPerkValue, 0);
+                    $trainable[$unitType] = min($trainable[$unitType], max($this->magicCalculator->getWizardPointsRemaining($dominion) / $wizardPointsRequiredPerkValue, 0));
                 }
             }
 
