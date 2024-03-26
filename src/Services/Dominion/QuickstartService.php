@@ -152,7 +152,7 @@ xp: %s\n",
           );
 
         $buildings = "\nbuildings:\n";
-        foreach ($this->buildingCalculator->getDominionBuildingsAvailableAndOwned($dominion->race) as $building)
+        foreach ($this->buildingCalculator->getDominionBuildingsAvailableAndOwned($dominion) as $building)
         {
             $buildings .= "    {$building->key}: " . $dominion->{'building_' . $building->key} . "\n";# {$this->buildingCalculator->getBuildingAmountOwned($dominion, $building)}\n";
         }
