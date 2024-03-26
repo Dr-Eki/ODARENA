@@ -153,7 +153,7 @@ class BuildingHelper
 
             'defensive_power' => 'Defensive power DP).',
 
-            'resource_conversion' => 'Converts %1$s %2$s into %3$s %4$s per tick.',
+            'resource_conversion' => 'Converts %1$s %2$s into %3$s %4$s per tick (converts from stockpile, not production).',
             'peasants_conversion' => 'Converts %1$s peasants into %2$s %3$s per tick.',
             'peasants_conversions' => 'Converts %1$s of your peasants into %2$s per tick.',
 
