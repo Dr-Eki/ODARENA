@@ -593,7 +593,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($buildingController->getDominionBuildingsAvailableAndOwned($dominion) as $building)
+                    @foreach ($buildingHelper->getDominionBuildingsAvailableAndOwned($dominion) as $building)
                         <tr>
                             <td>
                                 <span data-toggle="tooltip" data-placement="top" title="{!! $buildingHelper->getBuildingDescription($building) !!}">
