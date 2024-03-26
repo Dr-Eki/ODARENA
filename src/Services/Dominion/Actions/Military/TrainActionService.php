@@ -230,6 +230,11 @@ class TrainActionService
                 return ($unit->slot === $unitSlot);
             })->first();
 
+            if(!$unitToTrain)
+            {
+                continue;
+            }
+
             # Check wizard point requirements
             if($wizardPointsRequiredPerkValue = $unitToTrain->getPerkValue('wizard_points_required'))
             {
