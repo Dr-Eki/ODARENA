@@ -147,7 +147,7 @@ class Round extends AbstractModel
                      })
                      ->where(function ($query) {
                          $query->whereNull('end_tick')
-                               ->orWhere('end_tick', '>', 'ticks');
+                               ->orWhere('end_tick', '>', $this->ticks);
                      });
     }
 
