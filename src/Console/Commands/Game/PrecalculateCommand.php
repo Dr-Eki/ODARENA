@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Console\Commands\Game;
 
+use Log;
 use Illuminate\Console\Command;
 use OpenDominion\Console\Commands\CommandInterface;
 use OpenDominion\Services\Dominion\TickService;
@@ -30,18 +31,29 @@ class PrecalculateCommand extends Command implements CommandInterface
 
     public function handle(): void
     {
-        $activeRounds = Round::active()->get();
-        foreach ($activeRounds as $round)
+        $round = Round::latest()->first();
+
+        if($round->hasEnded())
         {
+            Log::info('Round ' . $round->number . ' has ended.');
+            return;
+        }
+
+        if(!$round->hasStarted())
+        {
+            Log::info('Round ' . $round->number . ' has not started yet.');
+            return;
+        }
+
+        #foreach ($activeRounds as $round)
+        #{
             $dominions = $round->activeDominions()->get();
             foreach($dominions as $dominion)
             {
                 $this->info("[Round {$round->number}, Tick {$round->ticks}] Precalculating {$dominion->name}");
                 $this->tickService->precalculateTick($dominion);
             }
-        }
-
-
+        #}
     }
 
 
