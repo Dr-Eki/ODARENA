@@ -384,6 +384,8 @@
             var invasionResourceName = $('#invasion-resource-name');
             var invasionResourceAmount = $('#invasion-resource-amount');
             //var targetDpElement = $('#target-dp');
+            var wizardPointsElement = $('#wizard-points');
+            var wizardPointsRequiredElement = $('#wizard-points-required');
 
             var invasionForceCountElement = $('#invasion-total-units');
 

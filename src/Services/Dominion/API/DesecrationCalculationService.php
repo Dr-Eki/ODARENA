@@ -63,6 +63,7 @@ class DesecrationCalculationService
 
     public function __construct()
     {
+        $this->magicCalculator = app(MagicCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->desecrationCalculator = app(DesecrationCalculator::class);
     }
