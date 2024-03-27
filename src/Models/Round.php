@@ -140,14 +140,20 @@ class Round extends AbstractModel
      */
     public function scopeActive(Builder $query): Builder
     {
+        $currentTickCount = $this->ticks;
+    
         return $query->where('start_date', '<=', now())
                      ->where(function ($query) {
                          $query->whereNull('end_date')
                                ->orWhere('end_date', '>', now());
                      })
-                     ->where(function ($query) {
-                         $query->whereNull('end_tick')
-                               ->orWhere('end_tick', '>', $this->ticks);
+                     ->where(function ($query) use ($currentTickCount) {
+                         if ($currentTickCount !== null) {
+                             $query->whereNull('end_tick')
+                                   ->orWhere('end_tick', '>', $currentTickCount);
+                         } else {
+                             $query->whereNull('end_tick');
+                         }
                      });
     }
 
