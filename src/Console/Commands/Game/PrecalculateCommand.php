@@ -31,29 +31,16 @@ class PrecalculateCommand extends Command implements CommandInterface
 
     public function handle(): void
     {
-        $round = Round::latest()->first();
 
-        if($round->hasEnded())
+        foreach(Round::active()->get() as $round)
         {
-            Log::info('Round ' . $round->number . ' has ended.');
-            return;
-        }
-
-        if(!$round->hasStarted())
-        {
-            Log::info('Round ' . $round->number . ' has not started yet.');
-            return;
-        }
-
-        #foreach ($activeRounds as $round)
-        #{
             $dominions = $round->activeDominions()->get();
             foreach($dominions as $dominion)
             {
                 $this->info("[Round {$round->number}, Tick {$round->ticks}] Precalculating {$dominion->name}");
                 $this->tickService->precalculateTick($dominion);
             }
-        #}
+        }
     }
 
 

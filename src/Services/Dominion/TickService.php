@@ -163,23 +163,8 @@ class TickService
 
         Log::debug('Scheduled tick started');
 
-        $activeRounds = Round::active()->get();
-        $round = Round::latest()->first();
-
-        if($round->hasEnded())
+        foreach (Round::active()->get() as $round)
         {
-            Log::info('Round ' . $round->number . ' has ended.');
-            return;
-        }
-
-        if(!$round->hasStarted())
-        {
-            Log::info('Round ' . $round->number . ' has not started yet.');
-            return;
-        }
-
-        #foreach ($activeRounds as $round)
-        #{
             $this->temporaryData[$round->id] = [];
 
             $round->is_ticking = 1;
@@ -367,10 +352,6 @@ class TickService
                     $round->name
                 ));
 
-                $this->now = now();
-
-                #$realms = $round->realms()->get();
-
                 $spawnBarbarian = rand(1, (int)config('barbarians.settings.ONE_IN_CHANCE_TO_SPAWN'));
 
                 Log::Debug('[BARBARIAN] spawn chance value: '. $spawnBarbarian . ' (spawn if this value is 1).');
@@ -408,7 +389,8 @@ class TickService
                 if (Redis::llen('queues:tick') === 0) {
                     $round->fill([
                         'ticks' => ($round->ticks + 1),
-                        'is_ticking' => 0
+                        'is_ticking' => 0,
+                        'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
                     ])->save();
                     return;
                 }
@@ -428,7 +410,7 @@ class TickService
             }, $delay);
 
              unset($this->temporaryData[$round->id]);
-        #}
+        }
     }
 
     /**

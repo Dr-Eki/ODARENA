@@ -47,6 +47,7 @@ class Round extends AbstractModel
         'mode' => 'string',
         'goal' => 'integer',
         'is_ticking' => 'boolean',
+        'has_ended' => 'boolean',
 
         'start_date' => 'datetime',
         'end_date' => 'datetime',
@@ -140,6 +141,8 @@ class Round extends AbstractModel
      */
     public function scopeActive(Builder $query): Builder
     {
+        return $query->where('has_ended', false);
+        /*
         $currentTickCount = $this->ticks;
     
         return $query->where('start_date', '<=', now())
@@ -155,6 +158,7 @@ class Round extends AbstractModel
                              $query->whereNull('end_tick');
                          }
                      });
+        */
     }
 
     /**
