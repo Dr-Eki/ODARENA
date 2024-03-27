@@ -125,11 +125,11 @@ class ConversionCalculator
         {
             if($slot === 'draftees')
             {
-                $rawDpLost += $defender->military_draftees;
+                $rawDpLost += $amount;
             }
             elseif($slot === 'peasants')
             {
-                $rawDpLost += $defender->peasants;
+                $rawDpLost += $amount;
             }
             else
             {
@@ -823,6 +823,7 @@ class ConversionCalculator
 
     }
 
+    /*
     public function getPsionicConversions(Dominion $cult, Dominion $enemy, array $invasion, string $mode): array
     {
         $conversions['psionic_conversions'] = [1 => 0];
@@ -947,6 +948,7 @@ class ConversionCalculator
 
         return $conversions;
     }
+    */
 
     public function getPassiveConversions(Dominion $dominion): array
     {

@@ -94,13 +94,7 @@ class DesecrationCalculationService
         }
 
         $target = null;
-
-        if ($target !== null) {
-            $landRatio = $this->rangeCalculator->getDominionRange($dominion, $target) / 100;
-            $this->calculationResult['land_ratio'] = $landRatio;
-        } else {
-            $landRatio = 0.5;
-        }
+        $landRatio = 0.5;
 
         // Calculate unit stats
         foreach ($dominion->race->units as $unit) {
