@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
-use Laravel\Horizon\Horizon;
+#use Laravel\Horizon\Horizon;
 
 use OpenDominion\Jobs\ProcessDominionJob;
 
