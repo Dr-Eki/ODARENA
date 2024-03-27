@@ -247,6 +247,9 @@ class Round extends AbstractModel
      */
     public function hasEnded()
     {
+        return $this->has_ended;
+
+        /*
         if(isset($this->end_tick))
         {
             return ($this->ticks >= $this->end_tick);
@@ -258,6 +261,7 @@ class Round extends AbstractModel
         }
 
         return false;
+        */
     }
 
     /**
@@ -277,7 +281,7 @@ class Round extends AbstractModel
      */
     public function daysUntilStart()
     {
-        return $this->start_date->diffInDays(today());
+        return today()->diffInDays($this->start_date);
     }
 
     /**
@@ -287,7 +291,6 @@ class Round extends AbstractModel
      */
     public function hoursUntilStart()
     {
-        #return $this->start_date->diffInHours(now());
         return now()->diffInHours($this->start_date);
     }
 

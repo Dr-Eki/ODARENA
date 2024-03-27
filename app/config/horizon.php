@@ -202,15 +202,15 @@ return [
             'supervisor-1' => [
                 'queue' => ['tick'],
                 'maxProcesses' => 24,
-                'balanceMaxShift' => 1,
-                'balanceCooldown' => 3,
+                'balanceMaxShift' => 24,
+                'balanceCooldown' => 1,
             ],
         ],
 
         'local' => [
             'supervisor-1' => [
                 'queue' => ['tick'],
-                'maxProcesses' => 10,
+                'maxProcesses' => 24,
             ],
         ],
     ],
