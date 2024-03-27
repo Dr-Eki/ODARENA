@@ -38,8 +38,22 @@ class GameEventService
     public function generateStories(): void
     {
 
-        foreach (Round::active()->get() as $round)
+        $round = Round::latest()->first();
+
+        if($round->hasEnded())
         {
+            Log::info('Round ' . $round->number . ' has ended.');
+            return;
+        }
+
+        if(!$round->hasStarted())
+        {
+            Log::info('Round ' . $round->number . ' has not started yet.');
+            return;
+        }
+
+        #foreach (Round::active()->get() as $round)
+        #{
             Log::info('Generating stories for round ' . $round->number . ' (' . $round->id . ')');
 
             $gameEvents = $round->gameEvents()->where('type', 'invasion')->get();
@@ -83,7 +97,7 @@ class GameEventService
                     });
                 }
             }
-        }
+        #}
     }
 
     public function generateInvasionStory(GameEvent $invasion): string
