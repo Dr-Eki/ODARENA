@@ -164,9 +164,22 @@ class TickService
         Log::debug('Scheduled tick started');
 
         $activeRounds = Round::active()->get();
+        $round = Round::latest()->first();
 
-        foreach ($activeRounds as $round)
+        if($round->hasEnded())
         {
+            Log::info('Round ' . $round->number . ' has ended.');
+            return;
+        }
+
+        if(!$round->hasStarted())
+        {
+            Log::info('Round ' . $round->number . ' has not started yet.');
+            return;
+        }
+
+        #foreach ($activeRounds as $round)
+        #{
             $this->temporaryData[$round->id] = [];
 
             $round->is_ticking = 1;
@@ -415,7 +428,7 @@ class TickService
             }, $delay);
 
              unset($this->temporaryData[$round->id]);
-        }
+        #}
     }
 
     /**
