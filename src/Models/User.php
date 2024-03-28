@@ -98,6 +98,11 @@ class User extends AbstractModel implements AuthenticatableContract, Authorizabl
 
     }
 
+    public function hasAvatar()
+    {
+        return ($this->avatar !== null);
+    }
+
     public function getSetting(string $key)
     {
         if (!Arr::has($this->settings, $key)) {

@@ -1126,13 +1126,29 @@
                 <div class="box-footer">
                     <div class="row">
                         <div class="col-sm-4">
+                            <a href="{{ route('dominion.insight.show', [$event->source->id]) }}"><i class="fa fa-eye"></i> {{ $event->source->name }} (# {{ $event->source->realm->number }})</a>
+                            @if($event->source->user->hasAvatar())
+                                <img src="{{ $event->source->user->getAvatarUrl() }}" class="img-responsive" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}" alt="Avatar of {{ $event->source->user->display_name }}">
+                            @elseif($event->source->race->key === 'barbarian')
+                                <img src="{{ asset('assets/app/images/barbarian.svg') }}" class="img-responsive" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}" alt="Avatar of {{ $event->source->user->display_name }}">
+                            @else
+                                <img src="{{ asset('img/no_avatar.png') }}" class="img-responsive" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}" alt="Avatar of {{ $event->source->user->display_name }}">
+                            @endif
                             <small class="text-muted">
-                                <a href="{{ route('dominion.insight.show', [$event->source->id]) }}"><i class="fa fa-eye"></i> {{ $event->source->name }} (# {{ $event->source->realm->number }})</a>
+                                &mdash; <em>{{ $event->source->title->name }}</em> <strong>{{ $event->source->user->display_name }}</strong>
                             </small>
                         </div>
                         <div class="col-sm-4">
+                            <a href="{{ route('dominion.insight.show', [$event->target->id]) }}"><i class="fa fa-eye"></i> {{ $event->target->name }} (# {{ $event->target->realm->number }})</a>
+                            @if($event->target->user->hasAvatar())
+                                <img src="{{ $event->target->user->getAvatarUrl() }}" class="img-responsive" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}" alt="Avatar of {{ $event->target->user->display_name }}">
+                            @elseif($event->target->race->key === 'barbarian')
+                                <img src="{{ asset('assets/app/images/barbarian.svg') }}" class="img-responsive" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}" alt="Avatar of {{ $event->target->user->display_name }}">
+                            @else
+                                <img src="{{ asset('img/no_avatar.png') }}" class="img-responsive" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}" alt="Avatar of {{ $event->target->user->display_name }}">
+                            @endif
                             <small class="text-muted">
-                                <a href="{{ route('dominion.insight.show', [$event->target->id]) }}"><i class="fa fa-eye"></i> {{ $event->target->name }} (# {{ $event->target->realm->number }})</a>
+                                <em>{{ $event->target->title->name }}</em> <strong>{{ $event->target->user->display_name }}</strong>
                             </small>
                         </div>
                         <div class="col-sm-4">
