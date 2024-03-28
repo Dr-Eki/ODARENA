@@ -215,6 +215,7 @@ class QueueService
      * @param array $data In format: [$resource => $amount, $resource2 => $amount2] etc
      * @param int $hours
      */
+    /*
     public function queueResources(string $source, Dominion $dominion, array $data, int $hours = 12): void
     {
         $data = array_map('\intval', $data);
@@ -253,6 +254,31 @@ class QueueService
                     'amount' => DB::raw("amount + $amount"),
                 ]);
             }
+        }
+    }
+    */
+    public function queueResources(string $source, Dominion $dominion, array $data, int $ticks = 12): void
+    {
+        $data = array_map('\intval', $data);
+        $now = now();
+
+        foreach ($data as $resource => $amount) {
+            if ($amount === 0) {
+                continue;
+            }
+
+            DB::table('dominion_queue')->updateOrInsert(
+                [
+                    'dominion_id' => $dominion->id,
+                    'source' => $source,
+                    'resource' => $resource,
+                    'hours' => $ticks,
+                ],
+                [
+                    'amount' => DB::raw("amount + $amount"),
+                    'created_at' => $now,
+                ]
+            );
         }
     }
 

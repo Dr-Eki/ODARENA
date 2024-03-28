@@ -4,6 +4,7 @@ namespace OpenDominion\Http\Controllers\Dominion;
 
 use OpenDominion\Calculators\Dominion\ExpeditionCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
+use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\UnitHelper;
@@ -22,6 +23,7 @@ class ExpeditionController extends AbstractDominionController
 
             'expeditionCalculator' => app(ExpeditionCalculator::class),
             'landCalculator' => app(LandCalculator::class),
+            'magicCalculator' => app(MagicCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'spellCalculator' => app(SpellCalculator::class),
 
