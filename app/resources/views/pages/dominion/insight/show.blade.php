@@ -90,16 +90,23 @@
                             <tr>
                                 <td>Ruler:</td>
                                 <td>
-                                    @if(isset($dominion->title->name))
-                                          <em>
-                                              <span data-toggle="tooltip" data-placement="top" title="{!! $titleHelper->getRulerTitlePerksForDominion($dominion) !!}">
-                                                  {{ $dominion->title->name }}
-                                              </span>
-                                          </em>
+                                    @if($dominion->user->hasAvatar())
+                                        <img style="display: inline; vertical-align: middle; height: 1em;" src="{{ $dominion->user->getAvatarUrl() }}" alt="Avatar of {{ $dominion->user->display_name }}">
+                                    @elseif($dominion->race->key === 'barbarian')
+                                        <img style="display: inline; vertical-align: middle; height: 1em;" src="{{ asset('assets/app/images/barbarian.svg') }}" alt="Avatar of {{ $dominion->user->display_name }}">
+                                    @else
+                                        <img style="display: inline; vertical-align: middle; height: 1em;" src="{{ asset('img/no_avatar.png') }}" alt="Avatar of {{ $dominion->user->display_name }}">
                                     @endif
-
+                                    @if(isset($dominion->title->name))
+                                        <em>
+                                            <span data-toggle="tooltip" data-placement="top" title="{!! $titleHelper->getRulerTitlePerksForDominion($dominion) !!}">
+                                                {{ $dominion->title->name }}
+                                            </span>
+                                        </em>
+                                    @endif
+                                
                                     {{ $dominion->ruler_name }}
-
+                                
                                 </td>
                             </tr>
                             <tr>
