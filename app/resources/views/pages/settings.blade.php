@@ -103,7 +103,7 @@
                                             </div>
                                         @else
                                             <div style="margin-bottom: 10px;">
-                                                <img src="{{ $user->getAvatarUrl() }}" class="img-responsive" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}" alt="Avatar of {{ $user->display_name }}">
+                                                <img src="{{ $user->getAvatarUrl() }}" class="img-responsive" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}">
                                             </div>
                                         @endif
 

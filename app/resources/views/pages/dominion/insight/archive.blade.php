@@ -51,11 +51,11 @@
                                 <td>Ruler:</td>
                                 <td>
                                     @if($dominion->user->hasAvatar())
-                                        <img style="display: inline; vertical-align: middle; height: 1em;" src="{{ $dominion->user->getAvatarUrl() }}" alt="Avatar of {{ $dominion->user->display_name }}">
+                                        <img style="display: inline; vertical-align: middle; height: 1em;" src="{{ $dominion->user->getAvatarUrl() }}">
                                     @elseif($dominion->race->key === 'barbarian')
-                                        <img style="display: inline; vertical-align: middle; height: 1em;" src="{{ asset('assets/app/images/barbarian.svg') }}" alt="Avatar of {{ $dominion->user->display_name }}">
+                                        <img style="display: inline; vertical-align: middle; height: 1em;" src="{{ asset('assets/app/images/barbarian.svg') }}">
                                     @else
-                                        <img style="display: inline; vertical-align: middle; height: 1em;" src="{{ asset('img/no_avatar.png') }}" alt="Avatar of {{ $dominion->user->display_name }}">
+                                        <img style="display: inline; vertical-align: middle; height: 1em;" src="{{ asset('img/no_avatar.png') }}">
                                     @endif
                                     @if(isset($dominion->title->name))
                                         <em>
