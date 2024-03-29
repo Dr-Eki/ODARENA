@@ -375,6 +375,12 @@ class TrainActionService
             $dominion->military_unit2 -= $totalCosts['unit2'];
             $dominion->military_unit3 -= $totalCosts['unit3'];
             $dominion->military_unit4 -= $totalCosts['unit4'];
+            $dominion->military_unit5 -= $totalCosts['unit5'];
+            $dominion->military_unit6 -= $totalCosts['unit6'];
+            $dominion->military_unit7 -= $totalCosts['unit7'];
+            $dominion->military_unit8 -= $totalCosts['unit8'];
+            $dominion->military_unit9 -= $totalCosts['unit9'];
+            $dominion->military_unit10 -= $totalCosts['unit10'];
             $dominion->military_spies -= $totalCosts['spy'];
             $dominion->military_wizards -= $totalCosts['wizard'];
             $dominion->military_wizards -= $totalCosts['wizards'];
@@ -382,10 +388,10 @@ class TrainActionService
             $dominion->spy_strength -= $totalCosts['spy_strength'];
             $dominion->wizard_strength -= $totalCosts['wizard_strength'];
 
-            if($totalCosts['crypt_body'] > 0)
-            {
-                $this->resourceService->updateRealmResources($dominion->realm, ['body' => (-$totalCosts['crypt_body'])]);
-            }
+            #if($totalCosts['crypt_body'] > 0)
+            #{
+            #    $this->resourceService->updateRealmResources($dominion->realm, ['body' => (-$totalCosts['crypt_body'])]);
+            #}
 
             # Update spending statistics.
             foreach($totalCosts as $resource => $amount)
