@@ -132,11 +132,9 @@
                     </table>
                 </div>
                 <div class="box-footer">
-                    @if($selectedDominion->race->key !== 'growth')
-                        <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }} id="submit">
+                    <button type="submit" class="btn btn-primary" {{ $selectedDominion->isLocked() ? 'disabled' : null }} id="submit">
                         {{ $militaryHelper->getTrainingButtonLabel($selectedDominion->race) }}
-                        </button>
-                    @endif
+                    </button>
                     <div class="pull-right">
 
                       @if(!$selectedDominion->race->getPerkValue('no_drafting'))

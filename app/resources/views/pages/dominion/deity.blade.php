@@ -93,11 +93,17 @@
                                 <form action="{{ route('dominion.deity.deity') }}" method="post" role="form">
                                 <p>You have been devoted to <strong>{{ $selectedDominion->deity->name }}</strong> for {{ $selectedDominion->devotion->duration }} ticks, granting you the following perks:</p>
                                 <ul>
-                                    @foreach($deityHelper->getDeityPerksString($selectedDominion->deity, $selectedDominion->getDominionDeity()) as $effect)
-                                        <li>{{ ucfirst($effect) }}</li>
-                                    @endforeach
-                                        <li>Range multiplier: {{ $selectedDominion->deity->range_multiplier }}x</li>
-                                
+
+                                    <li>Divine Traits:</li>
+
+                                    <li style="list-style-type: none;">
+                                        <ul>
+                                        @foreach($deityHelper->getDeityPerksString($selectedDominion->deity, $selectedDominion->getDominionDeity()) as $effect)
+                                            <li>{{ ucfirst($effect) }}</li>
+                                        @endforeach
+                                            <li>Range multiplier: {{ $selectedDominion->deity->range_multiplier }}x</li>
+                                        </ul>
+                                    </li>
                                     <li>Holy Spells:</li>
                                     <li style="list-style-type: none;">
                                         <ul>
@@ -126,7 +132,7 @@
                         @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity') and !$selectedDominion->getTechPerkValue('cannot_renounce_deity'))
                             <div class="col-sm-6 col-lg-6">
                                 <div class="form-group">
-                                    <select id="renounce-deity"  class="form-control">
+                                    <select id="renounce-deity" class="form-control">
                                         <option value="0">Renounce devotion?</option>
                                         <option value="1">Confirm renounce</option>
                                     </select>

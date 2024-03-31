@@ -13,7 +13,7 @@ class MilitaryHelper
     }
 
     protected $terminology = [
-        #'growth' => ['label' => 'Mutate', 'term' => 'mutation'],
+        'growth' => ['label' => 'Grow', 'term' => 'growing'],
         'myconid' => ['label' => 'Grow', 'term' => 'growth'],
         'swarm' => ['label' => 'Hatch', 'term' => 'hatching'],
         'lux' => ['label' => 'Ascend', 'term' => 'ascension'],
