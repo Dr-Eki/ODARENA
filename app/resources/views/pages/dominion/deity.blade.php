@@ -97,18 +97,25 @@
                                         <li>{{ ucfirst($effect) }}</li>
                                     @endforeach
                                         <li>Range multiplier: {{ $selectedDominion->deity->range_multiplier }}x</li>
-                                </ul>
                                 
-                                <ul>
-                                    @foreach($selectedDominion->deity->spells as $spell)
-                                        <li><a href="{{ route('scribes.spells') }}#{{ $spell->key }}" target="_new">{{ $spell->name }}</a></li>
-                                    @endforeach
+                                    <li>Holy Spells:</li>
+                                    <li style="list-style-type: none;">
+                                        <ul>
+                                            @foreach($selectedDominion->deity->spells as $spell)
+                                                <li><a href="{{ route('scribes.spells') }}#{{ $spell->key }}" target="_new">{{ $spell->name }}</a></li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
+                                    <li>Holy Buildings:</li>
+                                    <li style="list-style-type: none;">
+                                        <ul>
+                                            @foreach($selectedDominion->deity->buildings as $building)
+                                                <li><a href="{{ route('scribes.buildings') }}#{{ $building->key }}" target="_new">{{ $building->name }}</a></li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
                                 </ul>
-                                <ul>
-                                    @foreach($selectedDominion->deity->buildings as $building)
-                                        <li><a href="{{ route('scribes.buildings') }}#{{ $building->key }}" target="_new">{{ $building->name }}</a></li>
-                                    @endforeach
-                                </ul>
+                                <p>Renouncing your deity will remove these perks and you will no longer be able to cast the deity's spells or build the deity's buildings.</p>
 
                                 @if(!$selectedDominion->race->getPerkValue('cannot_renounce_deity') and !$selectedDominion->getTechPerkValue('cannot_renounce_deity'))
                                     <p>If you wish to devote your dominion to another deity, you may renounce your devotion to {{ $selectedDominion->deity->name }} below.</p>
