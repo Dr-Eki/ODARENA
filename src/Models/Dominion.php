@@ -336,8 +336,8 @@ class Dominion extends AbstractModel
             'dominion_id',
             'terrain_id'
         )
-            ->orderBy('order')
-            ->withPivot('amount');
+        ->orderBy('order')
+        ->withPivot('amount');
     }
 
     public function units()
@@ -375,12 +375,12 @@ class Dominion extends AbstractModel
     {
         $terrainKey = strtolower($terrainKey);
     
-        $terrain = $this->terrains()
+        $dominionTerrain = $this->terrains()
             ->where('terrains.key', $terrainKey)
             ->first();
     
-        if ($terrain) {
-            return $terrain->pivot->amount;
+        if ($dominionTerrain) {
+            return $dominionTerrain->pivot->amount;
         }
     
         return 0;

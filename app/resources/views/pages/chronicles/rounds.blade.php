@@ -14,7 +14,9 @@
             <table class="table table-striped">
                 <colgroup>
                     <col width="50">
-                    <col >
+                    <col>
+                    <col width="150">
+                    <col width="150">
                     <col width="150">
                     <col width="150">
                 </colgroup>
@@ -23,6 +25,8 @@
                         <th class="text-center">#</th>
                         <th>Chapter</th>
                         <th class="text-center">Era</th>
+                        <th class="text-center">Round Mode</th>
+                        <th class="text-center">Goal</th>
                         <th class="text-center">Start</th>
                     </tr>
                 </thead>
@@ -42,6 +46,8 @@
                                 @endif
                             </td>
                             <td class="text-center">{{ $round->league->description }}</td>
+                            <td class="text-center">{{ $roundHelper->getRoundModeString($round) }}</td>
+                            <td class="text-center">{{ number_format($round->goal) }}</td>
                             <td class="text-center">{{ $round->start_date->toFormattedDateString() }}</td>
                         </tr>
                     @endforeach

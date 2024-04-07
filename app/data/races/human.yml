@@ -15,40 +15,6 @@ resources:
   - gems
   - horse
 
-terrain_perks:
-  badlands:
-    xp_generation_mod: 0.25
-    food_production_mod: -0.10
-  desert:
-    defensive_power_mod: 0.25
-    food_production_mod: -0.10
-  forest:
-    lumber_production_mod: 0.50
-  glacier:
-    defensive_power_mod: 0.10
-    gems_production_mod: 0.25
-    food_production_mod: -0.05
-    lumber_production_mod: -0.05
-  hills:
-    gems_production_mod: 0.25
-    ore_production_mod: 0.25
-  jungle:
-    lumber_production_mod: 0.50
-  mountains:
-    gems_production_mod: 0.35
-    ore_production_mod: 0.15
-  plains:
-    population_mod: 0.10
-  swamps:
-    mana_production_mod: 0.50
-    xp_generation_mod: 0.15
-  volcanic:
-    offensive_power_mod: 0.20
-  water:
-    food_production_mod: 0.25
-  wetlands:
-    food_production_mod: 0.35
-
 perks:
   construction_cost: -10
   food_production_mod: 10

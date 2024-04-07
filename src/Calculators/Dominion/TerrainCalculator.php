@@ -152,6 +152,7 @@ class TerrainCalculator
 
     public function getTerrainLandAmountDifference(Dominion $dominion, bool $returnAbsolute): int
     {
+        #$difference = ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) - $dominion->land;
         $difference = ($this->getTotalTerrainedAmount($dominion) + $this->getTotalTerrainedRezoning($dominion)) - $dominion->land;
 
         if($returnAbsolute)
@@ -167,30 +168,53 @@ class TerrainCalculator
         $terrains = Terrain::all();
         $landLeftToDistribute = $startingLand;
 
-        foreach($terrains as $terrain)
-        {
-            $startingTerrain[$terrain->key] = 0;
-        }
+        $startingTerrain = [];
+
+        #foreach($terrains as $terrain)
+        #{
+        #    $startingTerrain[$terrain->key] = 0;
+        #}
 
         if($race->key == 'barbarian')
         {
-            foreach($terrains->where('key', '!=', $race->homeTerrain()->key) as $terrain)
-            {
-                $startingTerrain[$terrain->key] = ($startingLand * (13/14)) * (1 / (count($terrains->where('key', '!=', $race->homeTerrain()->key)) - 0));
-                $startingTerrain[$terrain->key] = (int)round($startingTerrain[$terrain->key]);
-                $landLeftToDistribute -= $startingTerrain[$terrain->key];
+
+            $startingTerrainKeys = array_keys($startingTerrain);
+            $startingTerrainRatios = [];
+            $sum = 0;
+
+            // Generate a random ratio for each terrain
+            foreach ($startingTerrainKeys as $terrainKey) {
+                $ratio = mt_rand(5, 20) / 100;
+                $startingTerrainRatios[$terrainKey] = $ratio;
+                $sum += $ratio;
             }
-    
-            $startingTerrain[$race->homeTerrain()->key] = max(0, $landLeftToDistribute);
+
+            // Normalize the ratios so their sum is exactly 1
+            foreach ($startingTerrainRatios as $terrainKey => $ratio) {
+                $startingTerrainRatios[$terrainKey] = $ratio / $sum;
+            }
+            
+            // Apply the ratio to all terrains
+            foreach($startingTerrain as $terrainKey => $terrainAmount)
+            {
+                $startingTerrain[$terrainKey] = (int)round($startingLand * $startingTerrainRatios[$terrainKey]);
+                $landLeftToDistribute -= $startingTerrain[$terrainKey];
+            }
+
+            // Distribute any remaining land to home terrain
+            if($landLeftToDistribute > 0)
+            {
+                $startingTerrain[$race->homeTerrain()->key] += max(0, $landLeftToDistribute);
+            }
         }
         else
         {
             $startingTerrain[$race->homeTerrain()->key] = $startingLand;
-
-            $startingTerrain = array_filter($startingTerrain, function($value) {
-                return $value !== 0;
-            });
         }
+
+        #$startingTerrain = array_filter($startingTerrain, function($value) {
+        #    return $value !== 0;
+        #});
 
         return $startingTerrain;
     }

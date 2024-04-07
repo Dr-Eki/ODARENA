@@ -15,8 +15,10 @@
                     <table class="table">
                         <colgroup>
                             <col width="100">
+                            {{--
                             <col width="100">
                             <col width="100">
+                            --}}
                             <col width="100">
                             @for ($i = 1; $i <= 12; $i++)
                                 <col>
@@ -27,8 +29,10 @@
                             <tr>
                                 <th>Terrain</th>
                                 <th class="text-center">Current</th>
+                                {{-- 
                                 <th class="text-center">Rezone From</th>
                                 <th class="text-center">Rezone Into</th>
+                                --}}
                                 @for ($i = 1; $i <= 12; $i++)
                                     <th class="text-center">{{ $i }}</th>
                                 @endfor
@@ -49,6 +53,8 @@
                                         {{ number_format($selectedDominion->{'terrain_' . $terrain->key}) }}
                                         <small class="text-muted">({{ number_format(($selectedDominion->{'terrain_' . $terrain->key} / $selectedDominion->land)*100,2) }}%)</small>
                                     </td>
+
+                                    {{-- 
                                     <td class="text-center">
                                         <input name="remove[{{ $terrain->key }}]" type="number"
                                             class="form-control text-center" placeholder="0" min="0"
@@ -62,6 +68,7 @@
                                             max="{{ $rezoningCalculator->getMaxAfford($selectedDominion) }}"
                                             value="{{ old('add.' . $terrain->key) }}" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
                                     </td>
+                                    --}}
                                     @for ($i = 1; $i <= 12; $i++)
                                         @php
                                             $land = (
@@ -89,6 +96,7 @@
                             <tr>
                                 <td><strong>Total</strong></td>
                                 <td class="text-center"><strong>{{ number_format($selectedDominion->land) }}</strong></td>
+                                {{--
                                 <td colspan="2">
                                     @if ((bool)$selectedDominion->race->getPerkValue('cannot_rezone'))
                                         <span class="label label-danger">{{ $selectedDominion->race->name }} dominions cannot rezone</span>
@@ -96,6 +104,7 @@
                                         <button type="submit" class="btn btn-primary btn-block" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>Rezone</button>
                                     @endif
                                 </td>
+                                --}}
                                 @for ($i = 1; $i <= 12; $i++)
                                     <td class="text-center">
                                         <em>
@@ -127,7 +136,6 @@
                 <h3 class="box-title">Information</h3>
             </div>
             <div class="box-body">
-                <h4>Land</h4>
                 <p>
                     You have <strong>{{ number_format($selectedDominion->land) }}</strong> acres of land.
                     @if(($incomingLand = $queueService->getInvasionQueueTotalByResource($selectedDominion, 'land') + $queueService->getExpeditionQueueTotalByResource($selectedDominion, 'land')))
@@ -135,6 +143,26 @@
                     @endif
                 </p>
 
+                @if(!$terrainCalculator->hasTerrainAmountEqualToLand($selectedDominion))
+                    <hr />
+                    <p><span class="label label-warning">Warning!</span> 
+                        @if($terrainCalculator->hasMoreTerrainThanLand($selectedDominion))
+                            You have more land than terrain.
+                        @elseif($terrainCalculator->hasLessTerrainThanLand($selectedDominion))
+                            You have less terrain than land.
+                        @endif
+                    </p>
+                    <p>Use the button below to repair your terrain. Even if you don't, your terrain will be automatically repaired next tick.</p>
+                    <form action="{{ route('dominion.land.repair-terrain') }}" method="post" role="form">
+                        @csrf
+                        <button type="submit" name="land" class="btn btn-warning btn-block">
+                            <i class="ra ra-wrench"></i> Repair Terrain
+                        </button>
+                    </form>
+                    <hr />
+                @endif
+
+                {{-- 
                 <h4>Rezone</h4>
                 <p>You can rezone from one terrain to another. 
                     @if($selectedDominion->protection_ticks >= 96)
@@ -155,6 +183,7 @@
                 @endif
 
                 <p>You can afford to re-zone <b>{{ number_format($rezoningCalculator->getMaxAfford($selectedDominion)) }} {{ Str::plural('acre', $rezoningCalculator->getMaxAfford($selectedDominion)) }}</b>.</p>
+                --}}
             </div>
         </div>
     </div>
@@ -171,7 +200,7 @@
                 <p>The Daily Land Bonus instantly gives you some land with <strong>{{ $selectedDominion->race->homeTerrain()->name }}</strong> terrain.</p>
                 <p>You have a 0.50% chance to get 100 acres, and a 99.50% chance to get a random amount between 10 and 40 acres.</p>
                 @if ($selectedDominion->protection_ticks > 0 or !$selectedDominion->round->hasStarted())
-                <p><strong>You cannot claim daily bonus while you are in protection or before the round has started.</strong></p>
+                    <p><strong>You cannot claim daily bonus while you are in protection or before the round has started.</strong></p>
                 @endif
                 <form action="{{ route('dominion.land.daily-bonus') }}" method="post" role="form">
                     @csrf
@@ -203,9 +232,17 @@
                     <thead>
                         <tr>
                             <th>Terrain</th>
-                            <th>Current</th>
-                            <th>Current Total</th>
-                            <th>Base Perks</th>
+                            <th class="text-center">Current</th>
+                            <th>
+                                <span data-toggle="tooltip" data-placement="top" title="<strong>Current Perks</strong> show you what perks (if any) you are getting from the different terrains of your dominion. If multiple terrains share a perk, the <em>sum</em> of that perk across all terrains is shown.">
+                                    Current Perks
+                                </span>
+                            </th>
+                            <th>
+                                <span data-toggle="tooltip" data-placement="top" title="<strong>Base Perks</strong> are the perk available by the different terrain types. See <strong>Current Perks</strong> for how terrains are actually, currently affecting your dominion.">
+                                    Base Perks
+                                </span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>

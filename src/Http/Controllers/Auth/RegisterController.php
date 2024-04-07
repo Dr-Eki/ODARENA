@@ -5,6 +5,7 @@ namespace OpenDominion\Http\Controllers\Auth;
 use Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\RedirectsUsers;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use OpenDominion\Events\UserActivatedEvent;
@@ -113,7 +114,7 @@ class RegisterController extends AbstractController
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'display_name' => $data['display_name'],
-            'activation_code' => str_random(),
+            'activation_code' => Str::random(),
             'activated' => $activate,#in_array(request()->getHost(), ['odarena.local','odarena.virtual']),
         ]);
     }

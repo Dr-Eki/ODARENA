@@ -20,37 +20,8 @@ peasants_production:
 improvement_resources:
   blood: 6
 
-terrain_perks:
-  badlands:
-    population_mod: -0.10
-  desert:
-    food_production_mod: -0.10
-  forest:
-    lumber_production_mod: 0.08
-    population_mod: 0.12
-  glacier:
-    food_production_mod: -0.04
-    population_mod: -0.04
-  hills:
-    defensive_power_mod: 0.04
-  jungle:
-    lumber_production_mod: 0.12
-    population_mod: 0.08
-  mountains:
-    gold_production_mod: 0.08
-  plains:
-    offensive_power_mod: 0.05
-  swamps:
-    mana_production_mod: 0.10
-  volcanic:
-    food_production_mod: -0.25
-  water:
-    food_production_mod: 0.08
-  wetlands:
-    food_production_mod: 0.14
-
 perks:
-  # None
+  prestige_effect: 100
 
 units:
   - name: Goat Witch

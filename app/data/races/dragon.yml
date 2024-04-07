@@ -24,32 +24,6 @@ peasants_production:
   gold: 2.50
   food: 0.35
 
-terrain_perks:
-  badlands:
-    population_mod: -0.20
-  desert:
-    food_production_mod: -0.20
-  forest:
-    population_growth_mod: -0.20
-  glacier:
-    gems_production_mod: 0.20
-  hills:
-    ore_production_mod: 0.20
-  jungle:
-    population_growth_mod: -0.20
-  mountains:
-    gems_production_mod: 0.20
-  plains:
-    exchange_rate_mod: 0.25
-  swamps:
-    population_growth_mod: -0.20
-  volcanic:
-    food_production_mod: -0.20
-  water:
-    food_production_mod: 0.10
-  wetlands:
-    food_production_mod: 0.10
-
 perks:
   max_population: -10
   population_growth: -10

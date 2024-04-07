@@ -17,7 +17,11 @@ class PrestigeCalculator
      */
     public function getPrestigeMultiplier(Dominion $dominion): float
     {
-        return (floor($dominion->prestige) / 10000);
+
+        $prestigeEffectMultiplier = 1;
+        $prestigeEffectMultiplier += $dominion->race->getPerkMultiplier('prestige_effect');
+
+        return (floor($dominion->prestige * $prestigeEffectMultiplier) / 10000);
     }
 
 }

@@ -178,6 +178,7 @@ mirnons_greed:
 
 sazals_charge:
   name: Sazal's Charge
+  level: 1
   scope: self
   class: active
   cost: 1
@@ -188,6 +189,7 @@ sazals_charge:
 
 sazals_vision:
   name: Sazal's Vision
+  level: 1
   scope: self
   class: passive
   cost: 6
@@ -206,21 +208,22 @@ urugdakhs_benediction:
   duration: 48
   cooldown: 92
   deity: urugdakh
+  exclusive_races:
+    - Black Orc
   perks:
     convert_peasants_to_prestige: 5000,50 # 5,000 peasants become 50 prestige
 
-urugdakhs_crusade:  
-  enabled: 0
+urugdakhs_crusade:
   name: Urugdakh's Crusade
+  level: 0
   scope: self
   class: passive
-  cost: 8
   duration: 1
-  cooldown: 92
+  cooldown: 48
   deity: urugdakh
   perks:
-    offensive_power_from_devotion: urugdakh,0.02,40
-    increases_enemy_casualties_on_offense: 25
+    offensive_power_from_devotion: urugdakh,0.02,20
+    increases_enemy_casualties_on_offense: 10
     no_land_discovered: 1
 
 zidurs_bane:

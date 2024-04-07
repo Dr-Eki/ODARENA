@@ -102,6 +102,7 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('land')->uses('Dominion\LandController@getLand')->name('land');
             $router->post('land/rezone')->uses('Dominion\LandController@postRezone')->name('land.rezone');
             $router->post('land/daily-bonus')->uses('Dominion\LandController@postDailyBonus')->name('land.daily-bonus');
+            $router->post('land/repair-terrain')->uses('Dominion\LandController@postRepairTerrain')->name('land.repair-terrain');
 
             // Improvements
             $router->get('improvements')->uses('Dominion\ImprovementController@getImprovements')->name('improvements');

@@ -114,8 +114,7 @@ tiranthaels_blade:
 
 urugdakhs_axe:
   name: Urugdakh's Axe
-  enabled: 0
-  description: A holy symbol to Black Orcs.
+  description: A holy symbol to Orcs and especially Black Orcs, this is the axe that clove a moon.
   deity: urugdakh
   base_power: 250000
   perks:

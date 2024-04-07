@@ -59,7 +59,7 @@ class SettingsController extends AbstractController
                 $this->handleAvatarUpload($newAvatar);
 
             } catch (Throwable $e) {
-                $request->session()->flash('alert-danger', $e->getMessage());
+                #$request->session()->flash('alert-danger', $e->getMessage());
                 return redirect()->back();
             }
         }
@@ -70,7 +70,7 @@ class SettingsController extends AbstractController
         $this->updateNotificationSettings($request->input());
         $this->updateWorldNewsSettings($request->input());
 
-        $request->session()->flash('alert-success', 'Your settings have been updated.');
+        #$request->session()->flash('alert-success', 'Your settings have been updated.');
         return redirect()->route('settings');
     }
 
@@ -115,12 +115,11 @@ class SettingsController extends AbstractController
         $user = Auth::user();
         $dimensions = config('user.avatar.generate_x') . 'x' . config('user.avatar.generate_y');
 
-
         if(config('user.avatar.generator') == 'stability')
         {
             $stabilityAIService = app(StabilityAIService::class);
-            $randomRace = Race::all()->whereIn('playable', [1,2])->random();
-            $prompt = "Draw an avatar of a $randomRace warrior. There should be no text in the image.";
+            $randomRace = Race::all()->whereIn('playable', [1,2])->random()->name;
+            $prompt = "Draw an avatar of a $randomRace warrior. There musy be no text in the image.";
             $result = $stabilityAIService->generateImagesFromText($prompt);
 
             if(!isset($result['artifacts'][0]['base64']))
@@ -244,7 +243,7 @@ class SettingsController extends AbstractController
         $user = Auth::user();
 
         $settingHelper = app(SettingHelper::class);
-        $settingCategories = $settingHelper->getSettingCategories();
+        $settingCategories = [];#$settingHelper->getSettingCategories();
 
         $settingKeys = [];
         $enabledSettingKeys = [];

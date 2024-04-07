@@ -1,0 +1,63 @@
+plains:
+  perks:
+    population_mod: 0.04
+
+forest:
+  perks:
+    lumber_production_mod: 0.12
+    food_production_mod: 0.06
+    defensive_power_mod: 0.04
+
+mountains:
+  perks:
+    ore_production_mod: 0.08
+    gems_production_mod: 0.12
+
+hills:
+  perks:
+    ore_production_mod: 0.10
+    gems_production_mod: 0.08
+    gold_production_mod: 0.02
+
+swamps:
+  perks:
+    food_production_mod: 0.08
+    defensive_power_mod: 0.08
+
+water:
+  perks:
+    food_production_mod: 0.08
+    lumber_production_mod: 0.01
+    defensive_power_mod: 0.08
+
+jungle:
+  perks:
+    lumber_production_mod: 0.12
+    food_production_mod: 0.04
+    defensive_power_mod: 0.06
+
+desert:
+  perks:
+    gold_production_mod: 0.04
+    defensive_power_mod: 0.04
+
+badlands:
+  perks:
+    gems_production_mod: 0.04
+    defensive_power_mod: 0.04
+
+glacier:
+  perks:
+    mana_production_mod: 0.15
+
+volcanic:
+  perks:
+    ore_production_mod: 0.06
+    gems_production_mod: 0.04
+    defensive_power_mod: 0.02
+
+wetlands:
+  perks:
+    food_production_mod: 0.05
+    lumber_production_mod: 0.05
+    defensive_power_mod: 0.04

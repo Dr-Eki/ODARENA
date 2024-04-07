@@ -16,6 +16,10 @@ class DominionTerrain extends AbstractModel
 {
     protected $table = 'dominion_terrains';
 
+    protected $casts = [
+        'amount' => 'integer',
+    ];
+
     public function dominion()
     {
         return $this->belongsTo(Dominion::class, 'dominion_id');

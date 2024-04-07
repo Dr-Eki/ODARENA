@@ -24,36 +24,6 @@ peasants_production:
 improvement_resources:
   gloom: 36
 
-terrain_perks:
-  badlands:
-    population_mod: -0.04
-  desert:
-    food_production_mod: -0.10
-  forest:
-    lumber_production_mod: 0.20
-  glacier:
-    mana_production_mod: 0.10
-  hills:
-    defensive_power_mod: 0.10
-  jungle:
-    lumber_production_mod: 0.20
-  mountains:
-    gems_production_mod: 0.10
-  plains:
-    gold_production_mod: 0.10
-  swamps:
-    mana_production_mod: 0.12
-    defensive_power_mod: 0.08
-  volcanic:
-    mana_production_mod: 0.10
-    gloom_production_mod: 0.10
-  water:
-    food_production_mod: 0.12
-    defensive_power_mod: 0.08
-  wetlands:
-    food_production_mod: 0.12
-    defensive_power_mod: 0.08
-
 perks:
   max_population: -25
   draftees_count_as_wizards: 0.10

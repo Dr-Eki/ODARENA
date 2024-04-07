@@ -22,34 +22,6 @@ perks:
   food_consumption_mod: -20
   salvaging: 50
 
-terrain_perks:
-  badlands:
-    population_mod: -0.04
-  desert:
-    food_production_mod: -0.10
-  forest:
-    casualties_on_defense_mod: -0.10
-  glacier:
-    food_production_mod: -0.04
-    population_mod: -0.04
-  hills:
-    defensive_power_mod: 0.04
-  jungle:
-    casualties_on_defense_mod: -0.10
-  mountains:
-    gems_production_mod: 0.10
-  plains:
-    casualties_on_offense_mod: -0.10
-  swamps:
-    mana_production_mod: 0.12
-  volcanic:
-    mana_production_mod: 0.20
-    prisoner_upkeep_mod: 0.20
-  water:
-    food_production_mod: 0.12
-  wetlands:
-    food_production_mod: 0.12
-
 units:
   - name: Slave Soldier
     training_time: 3

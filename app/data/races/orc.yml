@@ -2,12 +2,11 @@ name: Orc
 alignment: evil
 description:
 home_terrain: forest
-playable: 0 # Round 88
+playable: 1 # Back as of round 113
 experimental: 1
 skill_level: 2
 
-
-draftees_alias: Guard
+draftees_alias: guard
 
 resources:
   - gold
@@ -21,23 +20,10 @@ resources:
 perks:
   food_consumption_mod: 20
   lumber_production_mod: 50
+  title_bonus: 100
   starts_devoted_to_urugdakh: 1
-  draftee_dp: 3
-
-#land_improvements:
-#  plain:
-#    yak_production_raw: 0.002
-#  mountain:
-#    yak_production_raw: 0.006
-#  swamp:
-#    yak_production_raw: 0.001
-#  forest:
-#    yak_production_raw: 0.002
-#  hill:
-#    yak_production_raw: 0.004
-#  water:
-#    yak_production_raw: 0.001
-
+  cannot_renounce_deity: 1
+  draftee_dp: 2
 
 units:
   - name: Impaler
@@ -47,15 +33,14 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 460
-      ore: 50
+      gold: 740
+      ore: 200
       peasant: 1
     power:
-      offense: 4
-      defense: 3
+      offense: 3
+      defense: 2
     perks:
-      offense_from_pairing: 4,2,0.05 # slot, amount, num required
-      no_draftee: 1
+      offense_from_pairing: 4,2,0.025 # slot, amount, num required
 
   - name: Shieldbearer
     training_time: 6
@@ -64,15 +49,14 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 460
-      ore: 50
+      gold: 450
+      ore: 150
       peasant: 1
     power:
       offense: 0
-      defense: 4
+      defense: 3
     perks:
-      defense_from_pairing: 4,2,0.05 # slot, amount
-      no_draftee: 1
+      defense_from_pairing: 4,2,0.025 # slot, amount, num required
 
   - name: Doomrider
     training_time: 12
@@ -82,19 +66,17 @@ units:
       - intelligent
       - mounted
     cost:
-      gold: 2000
-      ore: 400
+      gold: 1300
+      ore: 300
       yak: 1
       peasant: 1
     power:
       offense: 0
-      defense: 8
+      defense: 6
     perks:
-      offense_from_pairing: 4,20,0.10 # slot, amount, num required
-      defense_from_pairing: 4,8,0.10 # slot, amount, num required
-      dies_into_resource: 0.90,yak
-      sendable_with_zero_op: 1
-      no_draftee: 1
+      offense_from_pairing: 4,6,0.01 # slot, amount, num required
+      defense_from_pairing: 4,2,0.01 # slot, amount, num required
+      dies_into_resource: 0.66,yak
 
   - name: Warboss
     training_time: 12
@@ -104,14 +86,10 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1200
-      ore: 200
-      gems: 1
-      peasant: 1
+      gold: 1500
+      ore: 300
+      draftees: 1
     power:
-      offense: 9
-      defense: 8
-    perks:
-      reduces_casualties: 1
-      offense_from_pairing: 1,2,20 # slot, amount, num required
-      no_draftee: 1
+      offense: 7
+      defense: 6
+

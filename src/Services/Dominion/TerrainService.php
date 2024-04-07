@@ -25,62 +25,40 @@ class TerrainService
         $this->terrainHelper = app(TerrainHelper::class);
     }
 
-    public function update(Dominion $dominion, array $terrainKeys): void
+    public function update(Dominion $dominion, array $data): void
     {
-        foreach($terrainKeys as $terrainKey => $amount)
+        foreach($data as $terrainKey => $amount)
         {
-            # Positive values: create or update DominionTerrain
-            if($amount > 0)
-            {
-                $terrain = Terrain::where('key', $terrainKey)->first();
-                $amount = intval(max(0, $amount));
-                $dominionTerrain = DominionTerrain::where(['dominion_id' => $dominion->id, 'terrain_id' => $terrain->id])->first();
-
-                if($dominionTerrain)
-                {
-                    $dominionTerrain->increment('amount', $amount);
-                }
-                else
-                {
-                    DB::transaction(function () use ($dominion, $terrain, $amount)
-                    {
-                        DominionTerrain::create([
-                            'dominion_id' => $dominion->id,
-                            'terrain_id' => $terrain->id,
-                            'amount' => $amount
-                        ]);
-                    });
-                }
+            $terrain = Terrain::where('key', $terrainKey)->first();
+    
+            if (!$terrain or $amount == 0) {
+                continue;
             }
-            # Negative values: update or delete DominionTerrain
+    
+            $dominionTerrain = DominionTerrain::firstOrNew([
+                'dominion_id' => $dominion->id,
+                'terrain_id' => $terrain->id,
+            ]);
+            
+            $dominionTerrain->save();
+    
+            if ($amount > 0)
+            {
+                $dominionTerrain->increment('amount', $amount);
+            }
             else
             {
-                $terrain = Terrain::where('key', $terrainKey)->first();
-
-                $owned = $dominion->{'terrain_' . $terrainKey};
-
-                $amountToRemove = min(abs($amount), $owned);
-
-                if($owned)
-                {
-                    if($amountToRemove)
-                    {
-                        DB::transaction(function () use ($dominion, $terrain, $amountToRemove)
-                        {
-                            DominionTerrain::where('dominion_id', $dominion->id)->where('terrain_id', $terrain->id)
-                            ->decrement('amount', $amountToRemove);
-                        });
-                    }
-                    else
-                    {
-                        DB::transaction(function () use ($dominion, $terrain)
-                        {
-                            DominionTerrain::where('dominion_id', $dominion->id)->where('terrain_id', $terrain->id)
-                            ->delete();
-                        });
-                    }
-                }
+                $amount = abs($amount);
+                $amount = min($amount, $dominionTerrain->amount);
+                $dominionTerrain->decrement('amount', $amount);
             }
+
+            if ($dominionTerrain->amount <= 0)
+            {
+                $dominionTerrain->delete();
+            }
+    
+            $dominionTerrain->save();
         }
     }
 
@@ -88,14 +66,15 @@ class TerrainService
     {
         /* These are the cases when repairing should be done cases that should be repaired:
         * 1. Dominion has more terrain than land: remove terrain
-        * 2. Dominion has more terrain land plus terrain being rezoned than land: remove terrain (rezoned terrain first, then existing terrain)
-        * 3. Dominion has less terrain than land and no terrain being rezoned: add terrain
-        * 4. Dominion has less terrain than land and terrain being rezoned: add terrain but consider land+rezoned terrain as total land
+        * 2. Dominion has less terrain than land: add terrain
         *
-        * If the amount of terrain owned (meaning terrain attached and terrain rezoned) is equal to land, the audit is passed.
+        * If the amount of terrain owned is equal to land, the audit is passed.
         *
         * Turn off logging in the future.
         */
+
+
+        Log::info("[TERRAIN AUDIT] Auditing {$dominion->name} (# {$dominion->realm->number}).");
 
         if($this->terrainCalculator->hasTerrainAmountEqualToLand($dominion))
         {
@@ -104,24 +83,8 @@ class TerrainService
             return;
         }
 
-        $unterrainedLand = $this->terrainCalculator->getUnterrainedLand($dominion);
+
         $terrainedLand = $this->terrainCalculator->getTotalTerrainedAmount($dominion);
-        $totalTerrainBeingRezoned = 0;
-        $queueData = [];
-
-        foreach($dominion->queues as $queue)
-        {
-            if($queue->source == 'rezoning')
-            {
-                $terrainKey = str_replace('terrain_', '', $queue->resource);
-                if(Terrain::where('key', $terrainKey)->first())
-                {
-                    $queueData[$queue->resource] = ($queueData[$queue->resource] ?? 0) + $queue->amount;
-                }
-            }
-        }
-
-        $totalTerrainBeingRezoned = array_sum($queueData);
 
         # If has MoreTerrainThanLand
         if($this->terrainCalculator->hasMoreTerrainThanLand($dominion))
@@ -129,112 +92,116 @@ class TerrainService
             Log::info("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
             #ldump("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
 
-            $difference = $this->terrainCalculator->getTerrainLandAmountDifference($dominion, true);
-            $amountLeftToRemove = $difference;
-            $differenceMinusRezoning = $difference - $totalTerrainBeingRezoned;
-
-            // Begin with total terrain being rezoned
-            if($totalTerrainBeingRezoned > 0)
+            DB::transaction(function () use ($dominion, $terrainedLand)
             {
-                foreach($queueData as $queuedTerrainKey => $queuedAmount)
+                $difference = $this->terrainCalculator->getTerrainLandAmountDifference($dominion, true);
+                $amountLeftToRemove = $difference;
+
+                # Move on to existing terrain
+                if($amountLeftToRemove > 0)
                 {
-                    if($queuedAmount == 0)
+                    foreach($dominion->terrains->sortByDesc('pivot.amount') as $dominionTerrain)
                     {
-                        continue;
-                    }
+                        $terrainRatio = $dominionTerrain->pivot->amount / $terrainedLand;
+                        $amountToRemove = (int)round($difference * $terrainRatio);
+                        $amountToRemove = min($amountToRemove, $amountLeftToRemove);
 
-                    $queuedTerrainRatio = $queuedAmount / $totalTerrainBeingRezoned;
-                    $amountToRemove = (int)round($totalTerrainBeingRezoned * $queuedTerrainRatio);
-                    $amountToRemove = min($amountToRemove, $amountLeftToRemove);
-                    
-                    if($amountLeftToRemove > 0 and $amountToRemove > 0)
-                    {
-                        $this->queueService->dequeueResource('rezoning', $dominion, $queuedTerrainKey, $amountToRemove);
-                        Log::info("[TERRAIN AUDIT] Dequeued {$amountToRemove} {$queuedTerrainKey} terrain from {$dominion->name} (# {$dominion->realm->number})");
-                        #ldump("[TERRAIN AUDIT] Dequeued {$amountToRemove} {$queuedTerrainKey} terrain from {$dominion->name} (# {$dominion->realm->number})");
+                        if($amountLeftToRemove > 0 and $amountToRemove > 0)
+                        {
+                            $this->update($dominion, [$dominionTerrain->key => ($amountToRemove * -1)]);
+                            Log::info("[TERRAIN AUDIT] Removed {$amountToRemove} {$dominionTerrain->key} terrain from {$dominion->name} (# {$dominion->realm->number})");
+                            #ldump("[TERRAIN AUDIT] Removed {$amountToRemove} {$dominionTerrain->key} terrain from {$dominion->name} (# {$dominion->realm->number})");
 
-                        $amountLeftToRemove -= $amountToRemove;
-                    }
+                            $amountLeftToRemove -= $amountToRemove;
+                        }
 
-                    $amountLeftToRemove = max(0, $amountLeftToRemove);
-
-                    if($amountLeftToRemove == 0)
-                    {
-                        break;
+                        $amountLeftToRemove = max(0, $amountLeftToRemove);
                     }
                 }
-            }
 
-            // Move on to existing terrain
-            if($amountLeftToRemove > 0)
-            {
-                foreach($dominion->terrains->sortByDesc('pivot.amount') as $dominionTerrain)
+                if($amountLeftToRemove > 0)
                 {
-                    $terrainRatio = $dominionTerrain->pivot->amount / $terrainedLand;
-                    $amountToRemove = (int)round($differenceMinusRezoning * $terrainRatio);
-                    $amountToRemove = min($amountToRemove, $amountLeftToRemove);
-
-                    if($amountLeftToRemove > 0 and $amountToRemove > 0)
-                    {
-                        $this->update($dominion, [$dominionTerrain->key => ($amountToRemove * -1)]);
-                        Log::info("[TERRAIN AUDIT] Removed {$amountToRemove} {$dominionTerrain->key} terrain from {$dominion->name} (# {$dominion->realm->number})");
-                        #ldump("[TERRAIN AUDIT] Removed {$amountToRemove} {$dominionTerrain->key} terrain from {$dominion->name} (# {$dominion->realm->number})");
-
-                        $amountLeftToRemove -= $amountToRemove;
-                    }
-
-                    $amountLeftToRemove = max(0, $amountLeftToRemove);
+                    $this->update($dominion, [$dominion->race->homeTerrain()->key => ($amountLeftToRemove * -1)]);
+                    Log::info("[TERRAIN AUDIT] Rounding correction: {$amountLeftToRemove} {$dominion->race->homeTerrain()->key} removed.");
+                    #ldump("[TERRAIN AUDIT] Rounding correction: {$amountLeftToRemove} {$dominion->race->homeTerrain()->key} removed.");
                 }
-            }
 
-            #ldd('hasMoreTerrainThanLand');
+            });
+
             return;
         }
 
         if($this->terrainCalculator->hasLessTerrainThanLand($dominion))
         {
-            Log::info("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has less terrain than land.");
+            Log::info("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
+            #ldump("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
 
-            DB::transaction(function () use ($dominion, $unterrainedLand, $terrainedLand, $totalTerrainBeingRezoned)
+
+            DB::transaction(function () use ($dominion, $terrainedLand)
             {
-                $totalTerrainToAdd = abs($unterrainedLand - $totalTerrainBeingRezoned);
-                $terrainLeftToAdd = $totalTerrainToAdd;
+                $difference = $this->terrainCalculator->getTerrainLandAmountDifference($dominion, true);
+                $amountLeftToAdd = $difference;
+                $terrainKeys = Terrain::inRandomOrder()->pluck('key')->toArray();
+
+                #ldump('Terrain missing: ' . $difference);
                 $terrainAdded = 0;
 
-                foreach($dominion->terrains as $dominionTerrain)
+                # Move on to existing terrain
+                if($amountLeftToAdd > 0)
                 {
-                    # Craghack bug 
-                    if($terrainedLand == 0 and $dominionTerrain->key !== $dominion->race->homeTerrain()->key)
+                    foreach($terrainKeys as $terrainKey)
                     {
-                        continue;
-                    }
+                        $dominionTerrain = $dominion->terrains->where('key', $terrainKey)->first();
 
-                    $terrainRatio = $dominionTerrain->pivot->amount / $terrainedLand;
-                    $amountToAdd = (int)round($totalTerrainToAdd * $terrainRatio);
-    
-                    if($totalTerrainToAdd > 0)
-                    {
-
-                        # Check to not over round
-                        if($terrainAdded + $amountToAdd > $totalTerrainToAdd)
+                        if($dominionTerrain and $dominionTerrain->pivot->amount > 0)
                         {
-                            $amountToAdd = $totalTerrainToAdd - $terrainAdded;
+                            $terrainRatio = $dominionTerrain->pivot->amount / $terrainedLand;
+                        }
+                        elseif(!isset($dominionTerrain))
+                        {
+                            $terrainRatio = 1 / count($terrainKeys);
+                        }
+                        else
+                        {
+                            Log::info("[TERRAIN AUDIT] Skipping {$terrainKey} terrain for {$dominion->name} (# {$dominion->realm->number}): no ratio available.");
+                            #ldump("[TERRAIN AUDIT] Skipping {$terrainKey} terrain for {$dominion->name} (# {$dominion->realm->number}): no ratio available.");
+                            continue;
                         }
 
-                        $this->update($dominion, [$dominionTerrain->key => $amountToAdd]);
-                        Log::info("[TERRAIN AUDIT] Added {$amountToAdd} {$dominionTerrain->key} terrain to {$dominion->name} (# {$dominion->realm->number})");
-                        #ldump("[TERRAIN AUDIT] Added {$amountToAdd} {$dominionTerrain->key} terrain to {$dominion->name} (# {$dominion->realm->number})");
-                    }
+                        #ldump('Terrain ratio: ' . $terrainRatio . ' for ' . $terrainKey);
 
-                    $terrainLeftToAdd -= $amountToAdd;
-                    $terrainLeftToAdd = max(0, $terrainLeftToAdd);
-                    $terrainAdded += $amountToAdd;
+                        $amountToAdd = (int)round($difference * $terrainRatio);
+                        $amountToAdd = min($amountToAdd, $amountLeftToAdd);
+
+                        if($amountToAdd > 0)
+                        {
+                            $this->update($dominion, [$terrainKey => $amountToAdd]);
+                            Log::info("[TERRAIN AUDIT] Added {$amountToAdd} {$terrainKey} terrain to {$dominion->name} (# {$dominion->realm->number})");
+                            #ldump("[TERRAIN AUDIT] Added {$amountToAdd} {$terrainKey} terrain to {$dominion->name} (# {$dominion->realm->number})");
+
+                            $amountLeftToAdd -= $amountToAdd;
+                        }
+
+                        $amountLeftToAdd = max(0, $amountLeftToAdd);
+                        $terrainAdded += $amountToAdd;
+
+                        #ldump('* Difference: ' . $difference . ' / Terrained Land: ' . $terrainedLand . ' / Amount Left to Add: ' . $amountLeftToAdd);
+                    }
                 }
+
+                if($amountLeftToAdd > 0)
+                {
+                    $terrainAdded += $amountLeftToAdd;
+                    $this->update($dominion, [$dominion->race->homeTerrain()->key => $amountLeftToAdd]);
+                    Log::info("[TERRAIN AUDIT] Rounding correction: {$amountLeftToAdd} {$dominion->race->homeTerrain()->key} added.");
+                    #ldump("[TERRAIN AUDIT] Rounding correction: {$amountLeftToAdd} {$dominion->race->homeTerrain()->key} added.");
+                }
+
+                #ldd('Total terrain added: '. $terrainAdded);
+
             });
 
-            #ldd('hasLessTerrainThanLand');
             return;
-            
         }
 
         Log::info("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): unknown error.");

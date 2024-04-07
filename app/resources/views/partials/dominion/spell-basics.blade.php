@@ -6,7 +6,7 @@
     M: <span class="{{ $manaAfforded }}"  data-toggle="tooltip" data-placement="top" title="Mana cost to cast spell">{{ number_format($spellCalculator->getManaCost($selectedDominion, $spell->key)) }}</span> 
 @endif
 
-@if($spell->duration > 0)
+@if($spell->duration > 0 and $spell->class != 'active')
   <span data-toggle="tooltip" data-placement="top" title="Duration (ticks)">
         <i class="fas fa-hourglass-start"></i>:
         @if(isset($isActive) and $isActive)

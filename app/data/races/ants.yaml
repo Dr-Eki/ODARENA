@@ -19,36 +19,6 @@ resources:
 peasants_production:
   gold: 3
 
-terrain_perks:
-  badlands:
-    population_mod: -0.10 # -0.10% population per 1% badlands
-  desert:
-    population_mod: -0.25 # -0.25% population per 1% desert
-    lumber_production_mod: -0.25 # -0.25% lumber per 1% desert
-  forest:
-    lumber_production_mod: 0.10 # +0.10% lumber per 1% forest
-    population_mod: 0.10 # +0.10% population per 1% forest
-  glacier:
-    population_mod: -0.25 # -0.25% population per 1% glacier
-    lumber_production_mod: -0.25 # -0.25% lumber per 1% glacier
-  hills:
-    population_mod: 0.075 # +0.075% population per 1% hills
-  jungle:
-    lumber_production_mod: 0.20 # +0.20% lumber per 1% jungle
-    population_mod: 0.05 # +0.05% population per 1% jungle
-  mountains:
-    lumber_production_mod: -0.10 # -0.10% lumber per 1% mountains
-  plains:
-    population_mod: 0.15 # +0.15% population per 1% plains
-  swamps:
-    mana_production_mod: 0.25 # +0.25% mana per 1% swamps
-  volcanic:
-    food_production_mod: -0.33 # -0.33% lumber per 1% volcanic
-  water:
-    food_production_mod: 0.25 # +0.25% food per 1% water
-  wetlands:
-    food_production_mod: 0.125 # +0.25% food per 1% water
-
 perks:
   spy_strength: 25
   construction_cost: -25

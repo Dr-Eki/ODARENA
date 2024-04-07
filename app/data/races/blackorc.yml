@@ -27,6 +27,7 @@ resources:
 perks:
   food_consumption_mod: 20
   lumber_production_mod: 50
+  title_bonus: 150
   starts_devoted_to_urugdakh: 1
   cannot_renounce_deity: 1
   peasant_dp: 1
@@ -34,6 +35,7 @@ perks:
   gold_production_raw_from_draftees: 1
   ore_production_raw_from_draftees: 0.2
   ash_production_raw_from_draftees: 0.05
+  max_per_round: 1
 
 units:
   - name: Ashmarked

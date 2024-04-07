@@ -20,35 +20,6 @@ resources:
 peasants_production:
   gold: 3
 
-terrain_perks:
-  badlands:
-    population_mod: -0.18
-  desert:
-    food_production_mod: -0.18
-  forest:
-    lumber_production_mod: 0.12
-  glacier:
-    population_mod: -0.18
-  hills:
-    casualties_on_defense_mod: -0.08
-  jungle:
-    lumber_production_mod: 0.12
-  mountains:
-    casualties_on_defense_mod: -0.08
-  plains:
-    casualties_on_defense_mod: -0.08
-  swamps:
-    population_mod: 0.12
-    mana_production_mod: 0.08
-  volcanic:
-    food_production_mod: -0.10
-    population_growth_mod: 0.25
-  water:
-    offensive_power_mod: 0.05
-  wetlands:
-    defensive_power_mod: 0.04
-
-
 perks:
   #population_growth: 20
   #extra_barren_housing: 5

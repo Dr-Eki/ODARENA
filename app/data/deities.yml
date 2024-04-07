@@ -148,7 +148,6 @@ tiranthael:
 
 urugdakh:
   name: Urugdakh
-  enabled: 0
   range_multiplier: 0.75
   exclusive_races:
     - Black Orc
@@ -156,8 +155,6 @@ urugdakh:
   perks:
     offensive_power: 5
     offensive_power_on_retaliation: 5
-    casualties: 10
-    construction_cost: 7.5
 
 zidur:
   name: Zidur

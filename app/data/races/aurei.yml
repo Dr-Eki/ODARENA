@@ -24,44 +24,6 @@ construction_materials:
 improvement_resources:
   gold: 1
 
-terrain_perks:
-  badlands:
-    gold_production_mod: 0.08
-    mana_production_mod: 0.02
-  desert:
-    gold_production_mod: 0.05
-    mana_production_mod: 0.05
-  forest:
-    gold_production_mod: 0.06
-    mana_production_mod: 0.04
-  glacier:
-    gold_production_mod: 0.02
-    mana_production_mod: 0.08
-  hills:
-    gold_production_mod: 0.04
-    mana_production_mod: 0.06
-  jungle:
-    gold_production_mod: 0.04
-    mana_production_mod: 0.06
-  mountains:
-    gold_production_mod: 0.04
-    mana_production_mod: 0.06
-  plains:
-    gold_production_mod: 0.08
-    mana_production_mod: 0.02
-  swamps:
-    gold_production_mod: 0.00
-    mana_production_mod: 0.10
-  volcanic:
-    gold_production_mod: 0.00
-    mana_production_mod: 0.10
-  water:
-    gold_production_mod: 0.05
-    mana_production_mod: 0.05
-  wetlands:
-    gold_production_mod: 0.05
-    mana_production_mod: 0.05
-
 perks:
   draftee_dp: 1.25
   food_consumption_mod: -20

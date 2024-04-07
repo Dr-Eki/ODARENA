@@ -36,7 +36,11 @@
                         <tr>
                             <td>{{ $roundHelper->getRoundPlacementEmoji($key) }}</td>
                             <td class="text-left"><a href="{{ route('chronicles.dominion', $dominionId) }}">{{ $dominion->name }}</a></td>
-                            <td class="text-left"><a href="{{ route('chronicles.ruler', $dominion->user->display_name) }}">{{ $dominion->user->display_name }}</a></td>
+                            @if(!isset($dominion->user->display_name))
+                                <td class="text-left"><em class="text-muted">Abandoned</em></td>
+                            @else
+                                <td class="text-left"><a href="{{ route('chronicles.ruler', $dominion->user->display_name) }}">{{ $dominion->user->display_name }}</a></td>
+                            @endif
                             <td class="text-left">{{ $dominion->race->name }}</td>
                             <td class="text-left">{{ number_format($dominion->land) }}</td>
                         </tr>

@@ -17,11 +17,11 @@ use OpenDominion\Calculators\Dominion\Actions\RezoningCalculator;
 use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Http\Requests\Dominion\Actions\RezoneActionRequest;
-#use OpenDominion\Http\Requests\Dominion\Actions\DailyBonusesLandActionRequest;
 
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\Actions\DailyBonusesActionService;
 use OpenDominion\Services\Dominion\Actions\RezoneActionService;
+use OpenDominion\Services\Dominion\TerrainService;
 
 class LandController extends AbstractDominionController
 {
@@ -44,6 +44,8 @@ class LandController extends AbstractDominionController
     public function postRezone(RezoneActionRequest $request)
     {
 
+        return redirect()->route('dominion.land');
+
         $dominion = $this->getSelectedDominion();
         
         $rezoneActionService = app(RezoneActionService::class);
@@ -61,9 +63,25 @@ class LandController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.land');
         
+    }
+
+    public function postRepairTerrain(RezoneActionRequest $request)
+    {
+        $dominion = $this->getSelectedDominion();
+        
+        $terrainService = app(TerrainService::class);
+
+        try {
+            $terrainService->auditAndRepairTerrain($dominion);
+        } catch (GameException $e) {
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        return redirect()->route('dominion.land');
     }
 
     public function postDailyBonus(RezoneActionRequest $request)
@@ -73,14 +91,13 @@ class LandController extends AbstractDominionController
         $dailyBonusesActionService = app(DailyBonusesActionService::class);
 
         try {
-            $result = $dailyBonusesActionService->claimLand($dominion);
+            $dailyBonusesActionService->claimLand($dominion);
         } catch (GameException $e) {
             return redirect()->back()
                 ->withInput($request->all())
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.land');
     }
 }

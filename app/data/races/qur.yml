@@ -10,40 +10,6 @@ magic_level: 4
 peasants_alias: forager
 draftees_alias: hunter
 
-terrain_perks:
-  badlands:
-    population_mod: -0.04
-  desert:
-    food_production_mod: -0.10
-  forest:
-    improvement_points_mod: 0.15
-    food_production_mod: 0.35
-  glacier:
-    mana_production_mod: 0.20
-    xp_generation_mod: 0.25
-    construction_costs_mod: 0.15
-  hills:
-    defensive_power_mod: 0.20
-  jungle:
-    improvement_points_mod: 0.20
-    food_production_mod: 0.20
-  mountains:
-    gems_production_mod: 0.30
-  plains:
-    casualties_mod: -0.25
-  swamps:
-    mana_production_mod: 0.40
-  volcanic:
-    mana_production_mod: 0.30
-    defensive_power_mod: 0.15
-    construction_costs_mod: 0.10
-  water:
-    food_production_mod: 0.25
-    defensive_power_mod: 0.10
-  wetlands:
-    food_production_mod: 0.25
-    enemy_casualties_mod: 0.125
-
 resources:
   - gold
   - food

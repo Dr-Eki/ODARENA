@@ -27,7 +27,6 @@ use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\LandImprovementHelper;
 use OpenDominion\Helpers\RaceHelper;
-use OpenDominion\Helpers\RealmHelper;
 use OpenDominion\Helpers\RoundHelper;
 use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Helpers\StatsHelper;
@@ -49,6 +48,7 @@ class ChroniclesController extends AbstractController
         $users = User::orderBy('display_name')->get();
 
         return view('pages.chronicles.index', [
+            'roundHelper' => app(RoundHelper::class),
             'userHelper' => app(UserHelper::class),
             'rounds' => $rounds,
             'users' => $users,
@@ -58,6 +58,7 @@ class ChroniclesController extends AbstractController
     public function getRounds()
     {
         return view('pages.chronicles.rounds', [
+            'roundHelper' => app(RoundHelper::class),
             'rounds' => Round::with('league')->orderBy('start_date', 'desc')->get(),
         ]);
     }

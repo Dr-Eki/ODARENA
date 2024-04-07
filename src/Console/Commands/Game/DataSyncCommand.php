@@ -107,6 +107,8 @@ class DataSyncCommand extends Command implements CommandInterface
     {
         $start = now();
         DB::transaction(function () {
+            $this->syncRaceTerrains();
+
             $this->syncResources();
             $this->syncTerrains();
             $this->syncDeities();
@@ -194,7 +196,6 @@ class DataSyncCommand extends Command implements CommandInterface
                     'magic_level' => object_get($data, 'magic_level', 0),
                     'resources' => object_get($data, 'resources', $defaultResources),
                     'improvement_resources' => object_get($data, 'improvement_resources', $defaultImprovementResources),
-                    'land_improvements' => NULL,#object_get($data, 'land_improvements', NULL),
                     'construction_materials' => object_get($data, 'construction_materials', ['gold','lumber']),
                     'peasants_production' => object_get($data, 'peasants_production', ['gold' => 3]),
                     'peasants_alias' => object_get($data, 'peasants_alias', null),
@@ -380,7 +381,36 @@ class DataSyncCommand extends Command implements CommandInterface
             }
 
             // Terrain Perks
-            foreach (object_get($data, 'terrain_perks', []) as $terrainKey => $terrainPerks)
+            $raceTerrainPerksData = object_get($data, 'terrain_perks', []);
+            $defaultTerrainPerks = $this->filesystem->get(base_path('app/data/default_terrain_perks.yml'));
+            $defaultTerrainPerks = Yaml::parse($defaultTerrainPerks, Yaml::PARSE_OBJECT_FOR_MAP);
+            $raceTerrainPerksToSet = [];
+
+            $raceTerrainPerksData = json_decode(json_encode($raceTerrainPerksData), true);
+            $defaultTerrainPerks = json_decode(json_encode($defaultTerrainPerks), true);
+
+            foreach($defaultTerrainPerks as $terrainKey => $terrainPerks)
+            {
+                # Check if $raceTerrainPerks exist for this $terrainKey
+                if(isset($raceTerrainPerksData[$terrainKey]))
+                {
+                    $raceTerrainPerksToSet[$terrainKey] = $raceTerrainPerksData[$terrainKey];
+                }
+                else
+                {
+                    $raceTerrainPerksToSet[$terrainKey] = $terrainPerks['perks'];
+                }
+            }
+
+            # Delete as RaceTerrainPerks
+            RaceTerrainPerk::whereIn('race_terrain_id', function ($query) use ($race) {
+                $query->select('id')
+                    ->from(with(new RaceTerrain)->getTable())
+                    ->where('race_id', $race->id);
+            })->delete();
+            
+            #foreach (object_get($data, 'terrain_perks', []) as $terrainKey => $terrainPerks)
+            foreach ($raceTerrainPerksToSet as $terrainKey => $terrainPerks)
             {
                 $terrain = Terrain::where('key', $terrainKey)->first();
                 $raceTerrain = RaceTerrain::where('race_id', $race->id)->where('terrain_id', $terrain->id)->first();
