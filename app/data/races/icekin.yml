@@ -67,6 +67,7 @@ perks:
   title_bonus: 50
   wizards_training_time: 6
   cannot_train_archmages: 1
+  turns_terrain_to_glacier: 5
 
 units:
   - name: Ice Beast

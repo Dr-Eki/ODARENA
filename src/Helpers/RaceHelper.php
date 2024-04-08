@@ -149,6 +149,11 @@ class RaceHelper
                 $booleanValue = 'static';
                 $valueType = ' / tick';
                 break;
+            case 'cannot_change_draft_rate':
+                $negativeBenefit = true;
+                $description = 'Cannot change draft rate';
+                $booleanValue = true;
+                break;
             case 'immortal_wizards':
                 $negativeBenefit = false;
                 $description = 'Immortal wizards';
@@ -310,7 +315,7 @@ class RaceHelper
                 break;
             case 'cannot_train_archmages':
                 $negativeBenefit = true;
-                $description = 'Cannot train Archmages';
+                $description = 'Cannot train archmages';
                 $booleanValue = true;
                 break;
             case 'spell_cost':
@@ -397,6 +402,11 @@ class RaceHelper
             case 'drafting':
                 $negativeBenefit = false;
                 $description = 'Peasants drafted per tick';
+                $valueType = '%';
+                break;
+            case 'food_theft':
+                $negativeBenefit = false;
+                $description = 'Food lost to theft';
                 $valueType = '%';
                 break;
             case 'amount_stolen':

@@ -1,6 +1,7 @@
 name: Dragons
 alignment: evil
 description: A once peaceful mountain village, now dominated by the majestic presence of dragons, drawn by the allure of gems hidden within the mountains. With enough experience fighting, some of these once poor farmers can become Dragon Knights.
+notes: null
 home_terrain: mountains
 playable: 1
 skill_level: 3
@@ -30,6 +31,7 @@ perks:
 
 units:
   - name: Mercenary
+    description: A hired sword, willing to fight for the highest bidder.
     training_time: 3
     type:
       - living
@@ -44,6 +46,7 @@ units:
       gold_upkeep_raw: 3
 
   - name: Driller
+    description: A miner, skilled in extracting ore from the mountains, strong and sturdy enough to put up defense.
     training_time: 6
     type:
       - living
@@ -60,6 +63,7 @@ units:
       gems_production_raw_from_building_pairing: 0.05,gem_mine,1.2
 
   - name: Dragon Knight
+    description: A once poor farmer, now a skilled warrior, clad in dragonscale armour, wielding weapons forged from dragon bones.
     training_time: 12
     type:
       - living
@@ -80,6 +84,7 @@ units:
       immortal_on_overwhelming_victory: 1.10 # OP:DP ratio required to be immortal
 
   - name: Dragon
+    description: A majestic beast, drawn by the allure of gems hidden within the mountains.
     training_time: 12
     type:
       - living

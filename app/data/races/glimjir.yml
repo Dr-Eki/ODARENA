@@ -1,7 +1,7 @@
 name: Glimjir
 alignment: independent
 description:
-home_terrain: water
+home_terrain: wetlands
 playable: 1 # Round 88
 magic_level: 4
 skill_level: 1
@@ -28,47 +28,11 @@ improvement_resources:
   pearls: 20
 
 terrain_perks:
-  badlands:
-    food_production_mod: -1
-    kelp_production_mod: -1
-    fixed_barren_housing_raw: 0
-  desert:
-    food_production_mod: -1
-    kelp_production_mod: -1
-    fixed_barren_housing_raw: 0
-  forest:
-    food_production_mod: -1
-    kelp_production_mod: -1
-    fixed_barren_housing_raw: 0
-  glacier:
-    food_production_mod: -1
-    kelp_production_mod: -1
-    fixed_barren_housing_raw: 0
-  hills:
-    food_production_mod: -1
-    kelp_production_mod: -1
-    fixed_barren_housing_raw: 0
-  jungle:
-    food_production_mod: -1
-    kelp_production_mod: -1
-    fixed_barren_housing_raw: 0
-  mountains:
-    food_production_mod: -1
-    kelp_production_mod: -1
-    fixed_barren_housing_raw: 0
-  plains:
-    food_production_mod: -1
-    kelp_production_mod: -1
-    fixed_barren_housing_raw: 0
   swamps:
     defensive_power_mod: 0.08
     casualties_mod: -0.08
     mana_production_mod: 0.12
     fixed_barren_housing_raw: 7
-  volcanic:
-    food_production_mod: -1
-    kelp_production_mod: -1
-    fixed_barren_housing_raw: 0
   water:
     population_mod: 0.10
     population_growth_mod: 0.10
@@ -88,10 +52,11 @@ perks:
   cannot_train_archmages: 1
   sabotage_damage_suffered: -50
   sabotage_damage_dealt: -25
-  increased_rezoning_speed: 6
+  turns_terrain_to_wetlands: 1
 
 units:
   - name: Weaver
+    description: Skilled in both combat and magic, Weavers protect the Glimjir both on the battlefield and against sorcery.
     training_time: 12
     type:
       - living
@@ -108,6 +73,7 @@ units:
       counts_as_wizard_on_offense_from_terrain: 0.002,1,water # Counts as 0.002 wizard on offense per 1% water
 
   - name: Reaver
+    description: A formidable warrior, the Reaver is a force to be reckoned with on the battlefield.
     training_time: 12
     type:
       - living
@@ -123,6 +89,7 @@ units:
       casualties_from_victories: -1.5
 
   - name: Kraken
+    description: Krakens are massive, intelligent creatures that help protect the Glimjir depths and lands with their far reaching tentacles.
     training_time: 12
     type:
       - living

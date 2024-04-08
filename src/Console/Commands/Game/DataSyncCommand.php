@@ -186,6 +186,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'key' => Str::slug(object_get($data, 'name')),
                     'alignment' => object_get($data, 'alignment'),
                     'description' => object_get($data, 'description'),
+                    'notes' => object_get($data, 'notes'),
                     'home_terrain_id' => $terrainId,
                     'playable' => object_get($data, 'playable', 0),
                     'skill_level' => object_get($data, 'skill_level'),

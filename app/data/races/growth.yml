@@ -1,6 +1,6 @@
 name: Growth
 alignment: independent
-description: 
+description: Growth is not a society or a people; it's simply a growth. It grows, and it grows. It grows in the swamps, it grows in the forests, it grows in the mountains. It grows everywhere. It grows.
 home_terrain: swamps
 playable: 1
 skill_level: 2
@@ -63,7 +63,7 @@ perks:
   cannot_sabotage: 1
   population_growth: 200
   reduced_conversions: 100
-  food_theft: -99.9999
+  food_theft: -99.99
   draftee_dp: 0.05
   #cannot_release_units: 1
   unemployed_peasants_produce: 1
@@ -74,6 +74,7 @@ perks:
 
 units:
   - name: Tendril
+    description: Extending out from the growth to protect it and reach new lands to grow.
     training_time: 12
     type:
       - living

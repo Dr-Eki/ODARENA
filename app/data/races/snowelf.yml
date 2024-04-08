@@ -78,6 +78,7 @@ units:
       offense_from_pairing: 4,1,0.01 # slot, amount, num required
 
   - name: Hailstorm Cannon
+    description: A massive, immobile weapon that fires bolts of frozen mana at enemy units.
     training_time: 12
     type:
       - machine

@@ -47,6 +47,12 @@
                 {!! $race->description !!}
                 </div>
             @endif
+
+            @if($race->notes)
+                <div class="box-body">
+                {!! $race->notes !!}
+                </div>
+            @endif
         </div>
     </div>
 </div>
