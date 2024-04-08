@@ -148,7 +148,7 @@ tiranthael:
 
 urugdakh:
   name: Urugdakh
-  range_multiplier: 0.75
+  range_multiplier: 0.70
   exclusive_races:
     - Black Orc
     - Orc

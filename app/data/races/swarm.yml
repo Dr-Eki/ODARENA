@@ -51,7 +51,7 @@ terrain_perks:
 
 perks:
   #no_construction_costs: 1
-  rezoning_costs: -20
+  #rezoning_costs: -20
   #immortal_spies: 1
   #immortal_wizards: 1
   #damage_from_lightning_bolt: -75

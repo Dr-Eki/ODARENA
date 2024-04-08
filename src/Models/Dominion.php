@@ -1509,6 +1509,9 @@ class Dominion extends AbstractModel
                 {
                     $perkValues = $this->extractImprovementPerkValues($perkValueString);
                     $max = (float)$perkValues[0];
+
+                    $max += $this->race->getPerkValue('improvements_max');
+
                     $coefficient = (float)$perkValues[1];
                     $invested = (float)$improvement->pivot->invested;
 

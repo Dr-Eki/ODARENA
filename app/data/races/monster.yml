@@ -41,7 +41,6 @@ perks:
   no_population: 1
   no_prestige: 1
   no_ruler_title_perks: 1
-  gains_strength: 1
 
 units:
   - name: Carapace

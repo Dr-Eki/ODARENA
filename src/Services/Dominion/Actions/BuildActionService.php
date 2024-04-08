@@ -96,7 +96,7 @@ class BuildActionService
             throw new GameException('You do not have enough barren land to construct ' . number_format($totalBuildingsToConstruct) . ' buildings.');
         }
 
-        if ($dominion->race->getPerkValue('cannot_build') or $dominion->getSpellPerkValue('cannot_build') or $dominion->race->getPerkValue('growth_cannot_build'))
+        if ($dominion->race->getPerkValue('cannot_build') or $dominion->getSpellPerkValue('cannot_build'))
         {
             throw new GameException('Your faction is unable to construct buildings.');
         }

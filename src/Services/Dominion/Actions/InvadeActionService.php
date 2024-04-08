@@ -579,15 +579,6 @@ class InvadeActionService
                 #$this->statsService->updateStat($defender, 'units_converted', array_sum($conversions['defender']));
             }
 
-            if($attacker->race->name == 'Cult')
-            {
-                $this->handlePsionicConversions($attacker, $defender, 'offense');
-            }
-            elseif($defender->race->name == 'Cult')
-            {
-                $this->handlePsionicConversions($defender, $attacker, 'defense');
-            }
-
             # Resource conversions
             $resourceConversions['attacker'] = $this->resourceConversionCalculator->getResourceConversions($attacker, $defender, $this->invasion, 'offense');
             $resourceConversions['defender'] = $this->resourceConversionCalculator->getResourceConversions($defender, $attacker, $this->invasion, 'defense');
@@ -1302,13 +1293,15 @@ class InvadeActionService
         # Check if the attacker has land discovered perks and, if so, how much land is discovered.
         $extraLandDiscovered = (int)$this->militaryCalculator->getExtraLandDiscovered($attacker, $target, $discoverLand, $landConquered);
 
+        $this->invasion['attacker']['land_conquered'] = $landConquered;
+        $this->invasion['attacker']['terrain_conquered'] = $this->terrainCalculator->getDominionTerrainChange($target, $landConquered);
+
         $this->invasion['defender']['land_lost'] = $landConquered;
-        $this->invasion['defender']['terrain_lost'] = $this->terrainCalculator->getTerrainLost($target, $landConquered);
+        $this->invasion['defender']['terrain_lost'] = array_map(function($value) {
+                return -$value;
+            }, $this->invasion['attacker']['terrain_conquered']);
         $this->invasion['defender']['buildings_lost'] = $this->buildingCalculator->getBuildingsLost($target, $landConquered);
 
-        $this->invasion['attacker']['land_conquered'] = $landConquered;
-        $this->invasion['attacker']['terrain_conquered']['available'] = array_map('abs', $this->invasion['defender']['terrain_lost']['available']);
-        $this->invasion['attacker']['terrain_conquered']['queued'] = array_map('abs', $this->invasion['defender']['terrain_lost']['queued']);
 
         if($captureBuildings)
         {
@@ -1328,17 +1321,7 @@ class InvadeActionService
         $target->land -= $landConquered;
 
         # Remove terrain
-        ## Start with available terrain
-        $this->terrainService->update($target, $this->invasion['defender']['terrain_lost']['available']);
-
-        ## Then look through queued terrain to remove (dequeue)
-        foreach($this->invasion['defender']['terrain_lost']['queued'] as $terrainKey => $amount)
-        {
-            if($amount > 0)
-            {
-                $this->queueService->dequeueResource('rezoning', $target, ('terrain_' . $terrainKey), $amount);
-            }
-        }
+        $this->terrainService->update($target, $this->invasion['defender']['terrain_lost']);
 
         # Remove buildings
         ## Start with available buildings
@@ -1374,7 +1357,7 @@ class InvadeActionService
             $landDiscovered = (int)floor($landDiscovered);
 
             $this->invasion['attacker']['land_discovered'] = $landDiscovered;
-            $this->invasion['attacker']['terrain_discovered'] = $this->terrainCalculator->getTerrainDiscovered($attacker, $landDiscovered);
+            $this->invasion['attacker']['terrain_discovered'] = $this->terrainCalculator->getDominionTerrainChange($attacker, $landDiscovered);
 
             $this->invasion['attacker']['extra_land_discovered'] = (int)$extraLandDiscovered;
         }
@@ -1383,8 +1366,7 @@ class InvadeActionService
         $queueData['land'] = ($this->invasion['attacker']['land_conquered'] + $this->invasion['attacker']['land_discovered'] + $this->invasion['attacker']['extra_land_discovered']);
 
         $allArrays = [
-            $this->invasion['attacker']['terrain_conquered']['available'],
-            $this->invasion['attacker']['terrain_conquered']['queued'],
+            $this->invasion['attacker']['terrain_conquered'],
             $this->invasion['attacker']['terrain_discovered']
         ];
         
@@ -2227,6 +2209,7 @@ class InvadeActionService
 
     }
 
+    /*
     public function handlePsionicConversions(Dominion $cult, Dominion $enemy, string $mode = 'offense'): void
     {
 
@@ -2310,6 +2293,7 @@ class InvadeActionService
         }
         
     }
+    */
 
     # Unit Return 2.0
     protected function handleReturningUnits(Dominion $attacker, array $units, array $convertedUnits): void

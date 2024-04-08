@@ -39,6 +39,9 @@ terrain_perks:
   wetlands:
     food_production_mod: 0.04
 
+perks:
+  turns_terrain_to_glacier: 0.02
+
 units:
   - name: Arbalist
     training_time: 9

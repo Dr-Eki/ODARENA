@@ -52,13 +52,13 @@ class TerrainService
                 $amount = min($amount, $dominionTerrain->amount);
                 $dominionTerrain->decrement('amount', $amount);
             }
+    
+            $dominionTerrain->save();
 
             if ($dominionTerrain->amount <= 0)
             {
                 $dominionTerrain->delete();
             }
-    
-            $dominionTerrain->save();
         }
     }
 
@@ -205,6 +205,65 @@ class TerrainService
         }
 
         Log::info("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): unknown error.");
+
+    }
+
+
+    public function handleTerrainTransformation(Dominion $dominion): void
+    {
+        $continue = false;
+        $toTerrainKey = null;
+        foreach(Terrain::all()->pluck('key') as $terrainKey)
+        {
+            if($transformationPerkRatio = $dominion->race->getPerkMultiplier('turns_terrain_to_' . $terrainKey))
+            {
+
+                $maxTerrainToTransform = $dominion->land * $transformationPerkRatio;
+                $amountOfTerrainToTransformTo = $dominion->{'terrain_' . $terrainKey};
+                $amountOfTerrainToTransformFrom = $dominion->land - $amountOfTerrainToTransformTo;
+                $maxTerrainToTransform = min($amountOfTerrainToTransformFrom, $maxTerrainToTransform);
+                $maxTerrainToTransform += intval($maxTerrainToTransform) + (rand()/getrandmax() < fmod($maxTerrainToTransform, 1) ? 1 : 0);
+
+                if($maxTerrainToTransform > 0)
+                {
+                    $continue = true;
+                    $toTerrainKey = $terrainKey;
+                    break;
+                }
+
+            }
+        }
+
+        if(!$continue)
+        {
+            return;
+        }
+
+        $terrainToRemove = $maxTerrainToTransform;
+
+        DB::transaction(function () use ($dominion, $toTerrainKey, $terrainToRemove)
+        {
+            while($terrainToRemove > 0)
+            {
+                $terrainKey = $dominion->terrains->filter(function ($terrain) use ($toTerrainKey) {
+                    return $terrain->key !== $toTerrainKey;
+                })->random()->key;
+    
+                $terrainAmount = $dominion->{'terrain_' . $terrainKey};
+    
+                if($terrainAmount > 0)
+                {
+                    $amountToRemove = (int)min($terrainToRemove, $terrainAmount);
+                    $this->update($dominion, [$terrainKey => ($amountToRemove * -1)]);
+                    $this->update($dominion, [$toTerrainKey => $amountToRemove]);
+                    $terrainToRemove -= $amountToRemove;
+                }
+    
+                #dump('Removed ' . $amountToRemove . ' ' . $terrainKey . ' terrain and added ' . $amountToRemove . ' ' . $toTerrainKey . ' terrain.');
+                unset($terrainKey);
+            }
+        });
+
 
     }
 }

@@ -1472,14 +1472,18 @@ class TickService
                                         ->where('resource', 'like', 'terrain%')
                                         ->where('hours',1)
                                         ->get();
-
-        foreach($finishedTerrainsInQueue as $finishedTerrainInQueue)
-        {
+    
+        $terrainChanges = [];
+    
+        foreach ($finishedTerrainsInQueue as $finishedTerrainInQueue) {
             $terrainKey = str_replace('terrain_', '', $finishedTerrainInQueue->resource);
             $amount = intval($finishedTerrainInQueue->amount);
-            #$terrain = Terrain::where('key', $terrainKey)->first();
-            $this->terrainService->update($dominion, [$terrainKey => $amount]);
+            $terrainChanges[$terrainKey] = $amount;
         }
+
+        $this->terrainService->update($dominion, $terrainChanges);
+
+        $this->terrainService->handleTerrainTransformation($dominion);
     }
 
     # This function handles queuing of evolved units (Vampires)

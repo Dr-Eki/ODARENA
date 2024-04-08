@@ -346,11 +346,11 @@ class DataSyncCommand extends Command implements CommandInterface
 
                     if ($unitPerk === null)
                     {
-                        $this->info("[Add Unit Perk] {$perk}: {$value}");
+                        #$this->info("[Add Unit Perk] {$perk}: {$value}");
                     }
                     elseif ($unitPerk->value != $value)
                     {
-                        $this->info("[Change Unit Perk] {$perk}: {$unitPerk->value} -> {$value}");
+                        #$this->info("[Change Unit Perk] {$perk}: {$unitPerk->value} -> {$value}");
                     }
                 }
 

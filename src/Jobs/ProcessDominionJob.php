@@ -19,6 +19,7 @@ use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Tech;
+use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Dominion\Tick;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
@@ -458,8 +459,10 @@ class ProcessDominionJob implements ShouldQueue
             $amount = intval($finishedTerrainInQueue->amount);
             $terrainChanges[$terrainKey] = $amount;
         }
-    
+
         $this->terrainService->update($dominion, $terrainChanges);
+
+        $this->terrainService->handleTerrainTransformation($dominion);
     }
 
     # This function handles queuing of evolved units (Vampires)

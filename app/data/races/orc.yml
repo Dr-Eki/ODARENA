@@ -69,10 +69,10 @@ units:
       gold: 1300
       ore: 300
       yak: 1
-      peasant: 1
+      draftees: 1
     power:
       offense: 0
-      defense: 6
+      defense: 5
     perks:
       offense_from_pairing: 4,6,0.01 # slot, amount, num required
       defense_from_pairing: 4,2,0.01 # slot, amount, num required

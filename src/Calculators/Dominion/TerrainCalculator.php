@@ -44,6 +44,34 @@ class TerrainCalculator
         return $this->queueService->getRezoningQueueTotal($dominion);
     }
 
+    # A general purpose function which returns an array of terrains and their amounts, relative to the dominion's current terrain.
+    # For invasions, this function should be used to calculate the defender's terrain lost (and the attacker's terrain gained).
+    # For expeditions, this function should be used to calculate the terrain discovered.
+
+    public function getDominionTerrainChange(Dominion $dominion, int $landChange): array
+    {
+        $terrainChanged = [];
+        foreach(Terrain::all() as $terrain)
+        {
+            $terrainRatio = $dominion->{'terrain_' . $terrain->key} / $dominion->land;
+            $terrainChanged[$terrain->key] = round($landChange * $terrainRatio); # floor() caused missing land
+        }
+    
+        if(array_sum($terrainChanged) !== $landChange)
+        {
+            $terrainChanged[$dominion->race->homeTerrain()->key] += ($landChange - array_sum($terrainChanged));
+        }
+
+        $terrainChanged = array_map('intval', $terrainChanged);
+
+        $terrainChanged = array_filter($terrainChanged, function($value) {
+            return $value !== 0;
+        });    
+    
+        return $terrainChanged;
+    }
+
+    /*
     public function getTerrainLost(Dominion $dominion, int $landLost): array
     {
         
@@ -132,6 +160,7 @@ class TerrainCalculator
     
         return $terrainChanged;
     }
+    */
 
     # Audit support functions
 

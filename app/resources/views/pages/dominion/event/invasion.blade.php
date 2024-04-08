@@ -1061,10 +1061,7 @@
                                         @php
                                             $terrainKey = str_replace('terrain_', '', $terrainKey);
                                             $terrain = OpenDominion\Models\Terrain::where('key', $terrainKey)->first();
-
-                                            $conqueredAmount = abs($event->data['attacker']['terrain_conquered']['available'][$terrainKey] ?? 0);
-                                            $conqueredAmount += abs($event->data['attacker']['terrain_conquered']['queued'][$terrainKey] ?? 0);
-
+                                            $conqueredAmount = abs($event->data['attacker']['terrain_conquered'][$terrainKey] ?? 0);
                                             $discoveredAmount = abs($event->data['attacker']['terrain_discovered'][$terrainKey] ?? 0);
                                         @endphp
                                         <tr>

@@ -63,21 +63,6 @@ class RaceHelper
                 $description = 'Extra housing from barren land';
                 $valueType = '';
                 break;
-            case 'extra_barren_housing_per_victory':
-                $negativeBenefit = false;
-                $description = 'Extra housing from barren land per victory';
-                $valueType = '';
-                break;
-            case 'extra_barren_forest_max_population':
-                $negativeBenefit = false;
-                $description = 'Population from barren forest';
-                $valueType = '';
-                break;
-            case 'extra_barren_forest_jobs':
-                $negativeBenefit = false;
-                $description = 'Jobs from barren forest';
-                $valueType = '';
-                break;
             case 'extra_research_slots':
                 $negativeBenefit = false;
                 $description = 'Extra research slot';
@@ -232,17 +217,7 @@ class RaceHelper
                 $description = 'Indestructible buildings';
                 $booleanValue = true;
                 break;
-            case 'no_lumber_theft':
-                $negativeBenefit = true;
-                $description = 'Cannot steal lumber';
-                $booleanValue = true;
-                break;
             case 'cannot_build':
-                $negativeBenefit = true;
-                $description = 'Cannot construct buildings';
-                $booleanValue = true;
-                break;
-            case 'growth_cannot_build':
                 $negativeBenefit = true;
                 $description = 'Cannot construct buildings';
                 $booleanValue = true;
@@ -251,6 +226,10 @@ class RaceHelper
                 $negativeBenefit = true;
                 $description = 'Cannot exchange resources';
                 $booleanValue = true;
+                break;
+            case 'improvements':
+                $negativeBenefit = false;
+                $description = 'Improvements';
                 break;
             case 'improvements_interest':
                 $negativeBenefit = false;
@@ -270,6 +249,10 @@ class RaceHelper
                 $valueType = '% / tick';
                 $booleanValue = 'static';
                 break;
+            case 'improvements_max': # This added on top of the max, not just increasing improvements
+                $negativeBenefit = false;
+                $description = 'Improvement bonuses max';
+                break;
             case 'improvements_per_net_victory':
                 $negativeBenefit = false;
                 $description = 'Improvements bonus';
@@ -284,11 +267,6 @@ class RaceHelper
             case 'population_growth':
                 $negativeBenefit = false;
                 $description = 'Population growth rate';
-                break;
-            case 'cannot_explore':
-                $negativeBenefit = true;
-                $description = 'Cannot explore';
-                $booleanValue = true;
                 break;
             case 'cannot_invade':
                 $negativeBenefit = true;
@@ -338,11 +316,6 @@ class RaceHelper
             case 'spell_cost':
                 $negativeBenefit = true;
                 $description = 'Spell costs';
-                break;
-            case 'explore_time':
-                $negativeBenefit = true;
-                $description = 'Exploration time:';
-                $valueType = ' ticks';
                 break;
             case 'spies_training_time':
                 $negativeBenefit = false;
@@ -446,14 +419,6 @@ class RaceHelper
                 $description = 'Morale per percentage of castle buildings';
                 $valueType = '';
                 break;
-            case 'improvements':
-                $negativeBenefit = false;
-                $description = 'Improvements';
-                break;
-            case 'improvements_max':
-                $negativeBenefit = false;
-                $description = 'Improvement bonuses max';
-                break;
             case 'improvements_decay':
                 $negativeBenefit = true;
                 $description = 'Improvements decay';
@@ -480,10 +445,6 @@ class RaceHelper
                 $negativeBenefit = true;
                 $description = 'Cost of technological advancements';
                 break;
-            case 'experience_points_per_acre':
-                $negativeBenefit = false;
-                $description = 'XP gained per acre on successful invasions';
-                break;
             case 'xp_gains':
                 $negativeBenefit = false;
                 $description = 'XP per acre on invasions';
@@ -500,18 +461,8 @@ class RaceHelper
                 break;
             case 'damage_from_blight':
                 $negativeBenefit = true;
-                $description = 'Effect from Insect Swarm';
+                $description = 'Effect from Blight';
                 $booleanValue = false;
-                break;
-            case 'no_gold_production':
-                $negativeBenefit = false;
-                $description = 'No gold production';
-                $booleanValue = true;
-                break;
-            case 'no_lumber_production':
-                $negativeBenefit = false;
-                $description = 'No lumber production';
-                $booleanValue = true;
                 break;
             case 'peasants_produce_food':
                 $negativeBenefit = true;
@@ -529,17 +480,12 @@ class RaceHelper
                 $description = 'Draftees produce food';
                 $valueType = ' food/tick';
                 $booleanValue = false;
-            break;
+                break;
             case 'draftees_produce_mana':
                 $negativeBenefit = false;
                 $description = 'Draftees produce mana';
                 $valueType = ' mana/tick';
                 $booleanValue = false;
-                break;
-            case 'cannot_join_guards':
-                $negativeBenefit = true;
-                $description = 'Cannot join guards';
-                $booleanValue = true;
                 break;
             case 'cannot_vote':
                 $negativeBenefit = true;
@@ -550,15 +496,6 @@ class RaceHelper
                 $negativeBenefit = true;
                 $description = 'Converts killed spies into souls';
                 $booleanValue = true;
-                break;
-            case 'mana_drain':
-                $negativeBenefit = true;
-                $description = 'Mana drain';
-                $booleanValue = false;
-                break;
-            case 'forest_construction_cost':
-                $negativeBenefit = true;
-                $description = 'Forest construction cost';
                 break;
             case 'salvaging':
                 $negativeBenefit = false;
@@ -602,12 +539,6 @@ class RaceHelper
                 $negativeBenefit = false;
                 $description = 'No perks from title';
                 $booleanValue = true;
-                break;
-            case 'gryphon_nests_generate_gryphons':
-                $negativeBenefit = false;
-                $description = 'Gryphon Nests produce Gryphons';
-                $valueType = ' per tick (max 20% of your land as nests are populated)';
-                $booleanValue = 'static';
                 break;
             case 'converts_assassinated_draftees':
                 $negativeBenefit = false;
@@ -679,16 +610,6 @@ class RaceHelper
                 $description = 'Starts devoted to Urugdakh';
                 $booleanValue = true;
                 break;
-            case 'gains_strength':
-                $negativeBenefit = false;
-                $description = 'Gains strength';
-                $booleanValue = true;
-                break;
-            case 'grows_bodyparts':
-                $negativeBenefit = false;
-                $description = 'Grows bodyparts';
-                $booleanValue = true;
-                break;
             case 'improvements_from_souls':
                 $negativeBenefit = false;
                 $description = 'Souls increase improvements';
@@ -742,10 +663,23 @@ class RaceHelper
                 $description = 'Enemy casualties';
                 $valueType = '%';
                 break;
-            case 'starting_land_only_home_terrain':
+            case 'turns_terrain_to_forest':
                 $negativeBenefit = false;
-                $description = 'Starting land is only home terrain';
-                $booleanValue = true;
+                $description = 'Terrain grows to forest';
+                $valueType = '% per tick';
+                $booleanValue = 'static';
+                break;
+            case 'turns_terrain_to_glacier':
+                $negativeBenefit = false;
+                $description = 'Terrain freezes to glacier';
+                $valueType = '% per tick';
+                $booleanValue = 'static';
+                break;
+            case 'turns_terrain_to_volcanic':
+                $negativeBenefit = false;
+                $description = 'Terrain collapses to volcanic';
+                $valueType = '% per tick';
+                $booleanValue = 'static';
                 break;
             default:
                 $negativeBenefit = false;

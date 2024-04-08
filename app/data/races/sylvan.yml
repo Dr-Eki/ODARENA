@@ -59,7 +59,7 @@ perks:
   cannot_train_archmages: 1
   unemployed_peasants_produce: 1
   saplings_per_forest: 2
-  starting_land_only_home_terrain: 1
+  turns_terrain_to_forest: 7.5
 
 units:
   - name: Leshy

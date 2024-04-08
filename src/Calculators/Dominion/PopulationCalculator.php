@@ -209,7 +209,6 @@ class PopulationCalculator
         $default = 5;
 
         $default += $dominion->race->getPerkValue('extra_barren_housing');
-        $default += $dominion->race->getPerkValue('extra_barren_housing_per_victory') * $this->statsService->getStat($dominion, 'invasion_victories');
         $default += $dominion->race->getPerkValue('extra_barren_housing_per_net_victory') * max(($this->statsService->getStat($dominion, 'invasion_victories') - $this->statsService->getStat($dominion, 'defense_failures')), 0);
 
         $terrainKey = $raceTerrain->terrain->key;
