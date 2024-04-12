@@ -53,14 +53,14 @@
                             </td>
                             <td>
                                 <ul>
-                                    @foreach($deity->spells as $spell)
+                                    @foreach($deity->spells->where('enabled',1) as $spell)
                                         <li><a href="{{ route('scribes.spells') }}#{{ $spell->key }}" target="_new">{{ $spell->name }}</a></li>
                                     @endforeach
                                 </ul>
                             </td>
                             <td>
                                 <ul>
-                                    @foreach($deity->buildings as $building)
+                                    @foreach($deity->buildings->where('enabled',1) as $building)
                                         <li><a href="{{ route('scribes.buildings') }}#{{ $building->name }}" target="_new">{{ $building->name }}</a></li>
                                     @endforeach
                                 </ul>

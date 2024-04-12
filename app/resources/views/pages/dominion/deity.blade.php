@@ -107,7 +107,7 @@
                                     <li>Holy Spells:</li>
                                     <li style="list-style-type: none;">
                                         <ul>
-                                            @foreach($selectedDominion->deity->spells as $spell)
+                                            @foreach($selectedDominion->deity->spells->where('enabled',1) as $spell)
                                                 <li><a href="{{ route('scribes.spells') }}#{{ $spell->key }}" target="_new">{{ $spell->name }}</a></li>
                                             @endforeach
                                         </ul>
@@ -115,7 +115,7 @@
                                     <li>Holy Buildings:</li>
                                     <li style="list-style-type: none;">
                                         <ul>
-                                            @foreach($selectedDominion->deity->buildings as $building)
+                                            @foreach($selectedDominion->deity->buildings->where('enabled',1) as $building)
                                                 <li><a href="{{ route('scribes.buildings') }}#{{ $building->key }}" target="_new">{{ $building->name }}</a></li>
                                             @endforeach
                                         </ul>

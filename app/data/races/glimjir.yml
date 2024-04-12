@@ -39,10 +39,10 @@ terrain_perks:
     fixed_barren_housing_raw: 10
     kelp_production_raw: 0.5
   wetlands:
-    defensive_power_mod: 0.08
-    casualties_mod: -0.08
-    food_production_mod: 0.08
+    population_mod: 0.10
+    population_growth_mod: 0.10
     fixed_barren_housing_raw: 7
+    kelp_production_raw: 0.5
 
 perks:
   starts_devoted_to_glimj: 1
@@ -69,8 +69,9 @@ units:
       offense: 0
       defense: 7
     perks:
-      counts_as_wizard_on_defense_from_terrain: 0.004,1,water # Counts as 0.004 wizard on defense per 1% water
-      counts_as_wizard_on_offense_from_terrain: 0.002,1,water # Counts as 0.002 wizard on offense per 1% water
+      counts_as_wizard: 0.10
+      counts_as_wizard_on_defense_from_terrain: 0.004,1,wetlands # Counts as 0.004 wizard on defense per 1% wetlands
+      counts_as_wizard_on_offense_from_terrain: 0.002,1,wetlands # Counts as 0.002 wizard on offense per 1% wetlands
 
   - name: Reaver
     description: A formidable warrior, the Reaver is a force to be reckoned with on the battlefield.
