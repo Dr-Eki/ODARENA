@@ -194,7 +194,7 @@ class TerrainCalculator
 
     public function getStartingTerrain(Race $race, int $startingLand = 1000): array
     {
-        $terrains = Terrain::all();
+        #$terrains = Terrain::all()->pluck('key')->toArray();
         $landLeftToDistribute = $startingLand;
 
         $startingTerrain = [];
@@ -207,13 +207,14 @@ class TerrainCalculator
         if($race->key == 'barbarian')
         {
 
-            $startingTerrainKeys = array_keys($startingTerrain);
+            $terrainKeys = Terrain::all()->where('enabled',1)->pluck('key')->toArray();
+
             $startingTerrainRatios = [];
             $sum = 0;
 
             // Generate a random ratio for each terrain
-            foreach ($startingTerrainKeys as $terrainKey) {
-                $ratio = mt_rand(5, 20) / 100;
+            foreach ($terrainKeys as $terrainKey) {
+                $ratio = 1 / count($terrainKeys);
                 $startingTerrainRatios[$terrainKey] = $ratio;
                 $sum += $ratio;
             }

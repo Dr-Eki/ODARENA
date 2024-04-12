@@ -54,6 +54,7 @@ class RoundFactory
             'ticks' => 0,
             'mode' => $gameMode,
             'start_date' => $startDate,
+            'has_ended' => 0,
             'end_date' => NULL,
             'end_tick' => $endTick,
             'offensive_actions_prohibited_at' => NULL,
