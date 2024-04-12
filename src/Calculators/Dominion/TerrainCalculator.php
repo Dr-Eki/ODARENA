@@ -195,13 +195,7 @@ class TerrainCalculator
     public function getStartingTerrain(Race $race, int $startingLand = 1000): array
     {
         $landLeftToDistribute = $startingLand;
-
         $startingTerrain = [];
-
-        #foreach($terrains as $terrain)
-        #{
-        #    $startingTerrain[$terrain->key] = 0;
-        #}
 
         if($race->key == 'barbarian')
         {
@@ -217,8 +211,6 @@ class TerrainCalculator
                 $landLeftToDistribute -= $landDistributed;
             }
 
-            dd($startingTerrain, $landLeftToDistribute);
-
             // Distribute any remaining land to home terrain
             if($landLeftToDistribute > 0)
             {
@@ -229,10 +221,6 @@ class TerrainCalculator
         {
             $startingTerrain[$race->homeTerrain()->key] = $startingLand;
         }
-
-        #$startingTerrain = array_filter($startingTerrain, function($value) {
-        #    return $value !== 0;
-        #});
 
         return $startingTerrain;
     }
