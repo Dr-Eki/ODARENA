@@ -216,6 +216,7 @@ class TerrainCalculator
             foreach ($terrainKeys as $terrainKey) {
                 $ratio = 1 / count($terrainKeys);
                 $startingTerrainRatios[$terrainKey] = $ratio;
+                $startingTerrain[$terrainKey] = 0;
                 $sum += $ratio;
             }
 
