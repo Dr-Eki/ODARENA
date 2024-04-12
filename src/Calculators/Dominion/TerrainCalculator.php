@@ -194,7 +194,6 @@ class TerrainCalculator
 
     public function getStartingTerrain(Race $race, int $startingLand = 1000): array
     {
-        #$terrains = Terrain::all()->pluck('key')->toArray();
         $landLeftToDistribute = $startingLand;
 
         $startingTerrain = [];
@@ -207,30 +206,18 @@ class TerrainCalculator
         if($race->key == 'barbarian')
         {
 
-            $terrainKeys = Terrain::all()->where('enabled',1)->pluck('key')->toArray();
-
-            $startingTerrainRatios = [];
-            $sum = 0;
+            $terrainKeys = Terrain::all()->pluck('key')->toArray();
 
             // Generate a random ratio for each terrain
-            foreach ($terrainKeys as $terrainKey) {
-                $ratio = 1 / count($terrainKeys);
-                $startingTerrainRatios[$terrainKey] = $ratio;
-                $startingTerrain[$terrainKey] = 0;
-                $sum += $ratio;
+            foreach ($terrainKeys as $index => $terrainKey)
+            {
+                $landDistributed = (int)round($startingLand * (1 / count($terrainKeys)));
+                $startingTerrain[$terrainKey] = $landDistributed;
+
+                $landLeftToDistribute -= $landDistributed;
             }
 
-            // Normalize the ratios so their sum is exactly 1
-            foreach ($startingTerrainRatios as $terrainKey => $ratio) {
-                $startingTerrainRatios[$terrainKey] = $ratio / $sum;
-            }
-            
-            // Apply the ratio to all terrains
-            foreach($startingTerrain as $terrainKey => $terrainAmount)
-            {
-                $startingTerrain[$terrainKey] = (int)round($startingLand * $startingTerrainRatios[$terrainKey]);
-                $landLeftToDistribute -= $startingTerrain[$terrainKey];
-            }
+            dd($startingTerrain, $landLeftToDistribute);
 
             // Distribute any remaining land to home terrain
             if($landLeftToDistribute > 0)
