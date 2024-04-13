@@ -141,7 +141,7 @@ class Round extends AbstractModel
      */
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('has_ended', false);
+        return $query->where('has_ended', false)->where('start_date', '<=', now());
         /*
         $currentTickCount = $this->ticks;
     
