@@ -347,7 +347,7 @@ class BarbarianService
                     $unitsReturning['military_unit1'] = intval(max($unitsSent['military_unit1'] - $unitsLost['military_unit1'],0));
                     $unitsReturning['military_unit4'] = intval(max($unitsSent['military_unit4'] - $unitsLost['military_unit4'],0));
 
-                    $terrainGained = $this->terrainCalculator->getTerrainDiscovered($dominion, $landGained);
+                    $terrainGained = $this->terrainCalculator->getDominionTerrainChange($dominion, $landGained);
 
                     # Queue the incoming land.
                     $this->queueService->queueResources(

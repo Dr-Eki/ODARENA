@@ -295,7 +295,7 @@ class ExpeditionActionService
                     ['land' => $this->expedition['land_discovered']]
                 );
 
-                foreach($this->terrainCalculator->getTerrainDiscovered($dominion, $this->expedition['land_discovered']) as $terrainKey => $amount)
+                foreach($this->terrainCalculator->getDominionTerrainChange($dominion, $this->expedition['land_discovered']) as $terrainKey => $amount)
                 {
                     $this->expedition['terrain_discovered']['terrain_' . $terrainKey] = $amount;
                 }
