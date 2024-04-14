@@ -34,9 +34,9 @@ use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
 
+use OpenDominion\Services\BarbarianService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
-use OpenDominion\Services\Dominion\BarbarianService;
 use OpenDominion\Services\Dominion\DeityService;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\InsightService;

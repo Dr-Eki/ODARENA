@@ -68,6 +68,19 @@
                     </li>
                 @endif
 
+                @if (isset($roundSettings['trade_routes']) and $roundSettings['trade_routes'] and !$selectedDominion->race->getPerkValue('cannot_trade'))
+                    <li class="{{ Route::is('dominion.trade-routes') ? 'active' : null }}">
+                        <a href="{{ route('dominion.trade-routes') }}">
+                            <i class="fa-solid fa-arrow-right-arrow-left fa-fw"></i>
+                            <span>Trade Routes</span>
+                            {{-- 
+                            @if(($unusedTradeRoutes = $tradeCalculator->getUnusedTradeRoutes($selectedDominion)))
+                                <span class="label label-warning pull-right">{{ number_format($unusedTradeRoutes) }}</span>
+                            @endif
+                            --}}
+                        </a>
+                    </li>
+                @endif
 
                 @if ($roundSettings['improvements'] and !$selectedDominion->race->getPerkValue('cannot_improve'))
                     <li class="{{ Route::is('dominion.improvements') ? 'active' : null }}">
@@ -199,7 +212,7 @@
                 @if($selectedDominion->pack)
                     <li class="{{ Route::is('dominion.pack') ? 'active' : null }}">
                         <a href="{{ route('dominion.pack') }}">
-                            <i class="ra ra-double-team ra-fw"></i>Pack
+                            <i class="fa fa-solid fa-people-group fa-fw"></i>Pack
                         </a>
                     </li>
                 @endif

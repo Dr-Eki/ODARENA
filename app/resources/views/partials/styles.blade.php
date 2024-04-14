@@ -1,6 +1,9 @@
 {{-- Vendor styles --}}
 <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}">
+{{--
 <link rel="stylesheet" href="{{ asset('assets/vendor/font-awesome/css/all.min.css') }}?v={!! $version !!}">
+--}}
+<link rel="stylesheet" href="{{ asset('assets/vendor/font-awesome/css/all.min.css?v=6.5.2') }}">
 <link rel="stylesheet" href="{{ asset('assets/vendor/rpg-awesome/css/rpg-awesome.min.css') }}?v={!! $version !!}">
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">

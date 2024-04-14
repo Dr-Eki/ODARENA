@@ -104,6 +104,13 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->post('land/daily-bonus')->uses('Dominion\LandController@postDailyBonus')->name('land.daily-bonus');
             $router->post('land/repair-terrain')->uses('Dominion\LandController@postRepairTerrain')->name('land.repair-terrain');
 
+            # Trade Routes
+            $router->get('trade-routes')->uses('Dominion\TradeController@getTradeRoutes')->name('trade-routes');
+            $router->get('trade-routes/holds')->uses('Dominion\TradeController@getHolds')->name('trade-routes/holds');
+            $router->post('trade-routes/create-trade-route')->uses('Dominion\TradeController@postCreateTradeRoute')->name('trade-routes.create-trade-route');
+            $router->post('trade-routes/attack-trade-route')->uses('Dominion\TradeController@postAttackTradeRoute')->name('trade-routes.attack-trade-route');
+            $router->post('trade-routes/delete-trade-route')->uses('Dominion\TradeController@postDeleteTradeRoute')->name('trade-routes.delete-trade-route');
+
             // Improvements
             $router->get('improvements')->uses('Dominion\ImprovementController@getImprovements')->name('improvements');
             $router->post('improvements')->uses('Dominion\ImprovementController@postImprovements');

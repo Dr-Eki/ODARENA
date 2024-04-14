@@ -9,17 +9,7 @@ use OpenDominion\Models\RoundLeague;
 class RoundFactory
 {
 
-    /**
-     * Creates and returns a new Round in a RoundLeague.
-     *
-     * @param RoundLeague $league
-     * @param Carbon $startDate
-     * @param int $realmSize
-     * @param int $packSize
-     * @param int $playersPerRace
-     * @param bool $mixedAlignment
-     * @return Round
-     */
+
     public function create(
         Carbon $startDate,
         string $gameMode,
@@ -62,12 +52,7 @@ class RoundFactory
         ]);
     }
 
-    /**
-     * Returns the last round number in a round league.
-     *
-     * @param RoundLeague $league
-     * @return int
-     */
+
     protected function getLastRoundNumber(): int
     {
         return Round::query()->max('number') ?? 0;

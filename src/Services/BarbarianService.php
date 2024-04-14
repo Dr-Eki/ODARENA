@@ -1,6 +1,6 @@
 <?php
 
-namespace OpenDominion\Services\Dominion;
+namespace OpenDominion\Services;
 
 Use DB;
 use Log;
@@ -26,6 +26,9 @@ use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\TerrainCalculator;
+
+use OpenDominion\Services\Dominion\HistoryService;
+use OpenDominion\Services\Dominion\QueueService;
 
 use OpenDominion\Http\Requests\Dominion\Actions\InvadeActionRequest;
 use OpenDominion\Services\Dominion\Actions\InvadeActionService;
@@ -347,7 +350,7 @@ class BarbarianService
                     $unitsReturning['military_unit1'] = intval(max($unitsSent['military_unit1'] - $unitsLost['military_unit1'],0));
                     $unitsReturning['military_unit4'] = intval(max($unitsSent['military_unit4'] - $unitsLost['military_unit4'],0));
 
-                    $terrainGained = $this->terrainCalculator->getTerrainDiscovered($dominion, $landGained);
+                    $terrainGained = $this->terrainCalculator->getDominionTerrainChange($dominion, $landGained);
 
                     # Queue the incoming land.
                     $this->queueService->queueResources(

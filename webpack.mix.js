@@ -4,7 +4,6 @@ let mix = require('laravel-mix');
 mix.setPublicPath('public');
 
 const vendorDirs = {
-
     // AdminLTE
     'node_modules/@opendominion/admin-lte/dist': 'public/assets/vendor/admin-lte',
     'node_modules/@opendominion/admin-lte/plugins': 'public/assets/vendor/admin-lte/plugins',
@@ -20,7 +19,7 @@ const vendorDirs = {
     'node_modules/datatables.net-bs/css': 'public/assets/vendor/datatables/css',
     'node_modules/datatables.net-bs/js': 'public/assets/vendor/datatables/js',
 
-    // Font Awesome
+    // Font Awesome 6
     'node_modules/@fortawesome/fontawesome-free/css': 'public/assets/vendor/font-awesome/css',
     'node_modules/@fortawesome/fontawesome-free/webfonts': 'public/assets/vendor/font-awesome/webfonts',
 
@@ -34,7 +33,6 @@ const vendorDirs = {
     // Select2
     'node_modules/select2/dist/css': 'public/assets/vendor/select2/css',
     'node_modules/select2/dist/js': 'public/assets/vendor/select2/js',
-
 };
 
 for (const dir in vendorDirs) {
@@ -45,7 +43,7 @@ mix.copy('app/resources/images', 'public/assets/app/images');
 mix.copy('app/resources/sounds', 'public/assets/app/sounds');
 
 mix.js('app/resources/js/app.js', 'public/assets/app/js')
-    .sass('app/resources/sass/app.scss', 'public/assets/app/css');
+   .sass('app/resources/sass/app.scss', 'public/assets/app/css');
 
 mix.copy('app/resources/css', 'public/assets/app/css');
 

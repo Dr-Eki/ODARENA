@@ -3,10 +3,7 @@
 # app/config/game.php
 
 return [
-
-    'extended_logging' => false,
-
-    'starting_land' => 1000,
+    'starting_land' => 100,
 
     'defaults' => [
         'unit_return_ticks' => 12,

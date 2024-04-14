@@ -25,7 +25,7 @@ use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\PackHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\RealmHelper;
-use OpenDominion\Services\Dominion\BarbarianService;
+use OpenDominion\Services\BarbarianService;
 
 class RealmController extends AbstractDominionController
 {

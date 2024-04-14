@@ -26,18 +26,7 @@ class RoundHelper
 
     public function getRoundModes(): array
     {
-        return [
-            'standard',
-            'standard-duration',
-            'deathmatch',
-            'deathmatch-duration',
-            'factions',
-            'factions-duration',
-            'packs',
-            'packs-duration',
-            'artefacts',
-            'artefacts-packs'
-        ];
+        return config('rounds.modes');
     }
 
     public function getRoundModeString(Round $round = null, string $roundModeKey = null, bool $detailed = false): string
@@ -314,22 +303,7 @@ class RoundHelper
 
     public function getRoundSettings(): array
     {
-        return [
-            'advancements' => 'Advancements',
-            'barbarians' => 'Barbarians',
-            'buildings' => 'Buildings',
-            'decrees' => 'Decrees',
-            'deities' => 'Deities',
-            'expeditions' => 'Expeditions',
-            'improvements' => 'Improvements',
-            'research' => 'Research',
-            'rezoning' => 'Rezoning',
-            'invasions' => 'Invasions',
-            'sabotage' => 'Sabotage',
-            'spells' => 'Spells',
-            'sorcery' => 'Sorcery',
-            'theft' => 'Theft',
-        ];
+        return config('rounds.round_settings');
     }
 
     public function getRoundDefaultSettings(): array

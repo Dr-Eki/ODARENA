@@ -8,7 +8,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 
-            <h3 class="box-title"><i class="ra ra-double-team ra-fw"></i>{{ $selectedDominion->pack->user->display_name }}{{ $selectedDominion->pack->user->display_name[strlen($selectedDominion->pack->user->display_name) - 1] == 's' ? "'" : "'s" }} Pack</h3>
+            <h3 class="box-title"><i class="fa fa-solid fa-people-group fa-fw"></i> {{ $selectedDominion->pack->user->display_name }}{{ $selectedDominion->pack->user->display_name[strlen($selectedDominion->pack->user->display_name) - 1] == 's' ? "'" : "'s" }} Pack</h3>
             </div>
                 <div class="box-body">
                     <table class="table">

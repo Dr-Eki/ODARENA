@@ -1,7 +1,9 @@
 name: Dimensionalists
 alignment: independent
-description: 
-notes: In order to send out units, Dimensionalists must have discovered a certain number of cosmic alignments. The number of cosmic alignments required is expended upon invasion (unused ones remain intact).
+description: >-
+  <p>Dimensionalists are a mysterious clan of wizards who have stared into the skies long and far enough to discover the cosmic alignments. By harnessing the power of these alignments, they are able to send out units to other dimensions and worlds.</p>
+notes: >-
+  <p>In order to send out units, Dimensionalists must have discovered a certain number of cosmic alignments. The number of cosmic alignments required is expended upon invasion.</p>
 home_terrain: swamps
 playable: 0 # Round 88
 skill_level: 3

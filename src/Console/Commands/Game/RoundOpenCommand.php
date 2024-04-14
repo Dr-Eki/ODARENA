@@ -113,7 +113,7 @@ class RoundOpenCommand extends Command implements CommandInterface
             $counting++;
         }
 
-        $startDate = new Carbon('+2 days midnight');
+        $startDate = new Carbon('+3 days midnight');
 
         /** @var RoundLeague $roundLeague */
         $roundLeague = RoundLeague::where('id', $leagueId)->firstOrFail();
@@ -138,7 +138,6 @@ class RoundOpenCommand extends Command implements CommandInterface
         }
 
         $this->info('Creating a new ' . $gameMode . ' round!');
-        #$this->info('The round will start at ' . $startDate->toDateTimeString() . ' in league ' . $roundLeague->description . '.');
 
         DB::transaction(function () use ($startDate, $gameMode, $goal, $roundLeague, $roundName, $settings) {
 
@@ -185,6 +184,7 @@ class RoundOpenCommand extends Command implements CommandInterface
                 $this->realmFactory->create($round, 'npc');
             }
 
+            // Spawn Barbarians
             if($round->getSetting('barbarians'))
             {
                 // Get starting barbarians (default 20) from user input
@@ -206,6 +206,18 @@ class RoundOpenCommand extends Command implements CommandInterface
             {
                 $this->info('Barbarians are disabled for this round.');
             }
+
+            // Spawn Trade Routes
+            if($round->getSetting('trade-routes'))
+            {
+                $this->info("Creating Holds...");
+                $this->realmFactory->createTradeRoutes($round);
+            }
+            else
+            {
+                $this->info('Trade Routes are disabled for this round.');
+            }
+
 
             // Done!
             $this->info('Done! Round has been created.');

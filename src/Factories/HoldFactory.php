@@ -98,12 +98,8 @@ class DominionFactory
         string $dominionName,
         Pack $pack = null
     ): Dominion {
-        $this->guardAgainstCrossRoundRegistration($user, $realm->round);
-        $this->guardAgainstMultipleDominionsInARound($user, $realm->round);
-        $this->guardAgainstMismatchedAlignments($race, $realm, $realm->round);
-
         // Starting resources are based on this.
-        $landBase = config('game.starting_land');
+        $landBase = config('holds.starting_land');
 
         $startingParameters = [];
         $startingResources = [];

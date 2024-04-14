@@ -47,6 +47,7 @@ use OpenDominion\Models\Spell;
 use OpenDominion\Models\Tech;
 use OpenDominion\Models\Dominion\Tick;
 
+use OpenDominion\Services\BarbarianService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
 use OpenDominion\Services\Dominion\DominionStateService;

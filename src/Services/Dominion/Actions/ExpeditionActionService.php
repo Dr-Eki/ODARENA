@@ -237,7 +237,7 @@ class ExpeditionActionService
 
                     if($amount > $maxSendableOfThisUnit)
                     {
-                        throw new GameException('You can at most send ' . number_format($upperLimit) . ' ' . Str::plural($this->unitHelper->getUnitName($unitSlot, $dominion->race), $upperLimit) . '. To send more, you must build more '. ucwords(Str::plural($buildingLimit[0], 2)) .' or invest more in unit pairing improvements.');
+                        throw new GameException('You can at most send ' . number_format($maxSendableOfThisUnit) . ' ' . Str::plural($this->unitHelper->getUnitName($unitSlot, $dominion->race), $maxSendableOfThisUnit) . '. To send more, you must build more '. ucwords(Str::plural($buildingLimit[0], 2)) .' or invest more in unit pairing improvements.');
                     }
                 }
 
@@ -295,7 +295,7 @@ class ExpeditionActionService
                     ['land' => $this->expedition['land_discovered']]
                 );
 
-                foreach($this->terrainCalculator->getTerrainDiscovered($dominion, $this->expedition['land_discovered']) as $terrainKey => $amount)
+                foreach($this->terrainCalculator->getDominionTerrainChange($dominion, $this->expedition['land_discovered']) as $terrainKey => $amount)
                 {
                     $this->expedition['terrain_discovered']['terrain_' . $terrainKey] = $amount;
                 }
