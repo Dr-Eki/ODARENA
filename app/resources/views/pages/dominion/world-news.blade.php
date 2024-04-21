@@ -7,7 +7,7 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title">
-                    <i class="fa fa-newspaper-o"></i> News from the
+                    <i class="fa-solid fa-scroll"></i> News from the
                     @if ($realm !== null)
 
                         @switch($realm->alignment)
@@ -40,8 +40,6 @@
                             Empire
                         @elseif($realm->alignment == 'independent')
                             Independent Realm
-                        @elseif($realm->alignment == 'npc')
-                            Barbarian Horde
                         @elseif($realm->alignment == 'npc')
                             Barbarian Horde
                         @endif

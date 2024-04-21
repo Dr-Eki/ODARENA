@@ -1,0 +1,505 @@
+verdant_veil:
+  name: Verdant Veil
+  ruler_name: Elara
+  description: A lush forest hold, known for its hidden groves and secretive denizens.
+  race: Wood Elf
+  desired_resources:
+    - gold
+  sold_resources:
+    - lumber
+    - food
+
+bragnahold:
+  name: Bragnahold
+  ruler_name: Thrain
+  description: A frigid, mountainous region renowned for its ancient forges and icy caves.
+  race: Norse
+  desired_resources:
+    - gold
+    - food
+  sold_resources:
+    - ore
+    - gems
+
+sunset_spire:
+  name: Sunset Spire
+  ruler_name: Lysandra
+  description: A city famous for a tall tower that catches the last light of the sun.
+  race: null
+  desired_resources:
+    - pearls
+    - spices
+  sold_resources:
+    - food
+    - gems
+    - gold
+    - lumber
+    - gunpowder
+
+twilight_hollow:
+  name: Twilight Hollow
+  ruler_name: Thaldir
+  description: A mysterious hold where day and night seem to blend known for its enigmatic, mist-covered swamp lands and eerie, glowing flora.
+  race: null
+  desired_resources:
+    - gems
+    - pearls
+    - thunderstone
+  sold_resources:
+    - kelp
+    - food
+    - mud
+
+crimson_sands:
+  name: Crimson Sands
+  ruler_name: Kharak
+  description: Dominated by vast deserts and inhabited by nomadic peoples, this hold is famed for its rich mineral deposits and harsh conditions.
+  race: Jagunii
+  desired_resources:
+    - gold
+    - food
+  sold_resources:
+    - gems
+    - prisoner
+
+onyx_saltfields:
+  name: Onyx Saltfields
+  ruler_name: Leader
+  description: Home to a mysterious Cult, known for producing some of the finest food.
+  race: Cult
+  desired_resources:
+    - gold
+    - prisoner
+  sold_resources:
+    - food
+    - spices
+
+brimstone_reach:
+  name: Brimstone Reach
+  ruler_name: Tkarr
+  description: A desolate volcanic wasteland, its air thick with sulfur and ash.
+  race: Firewalker
+  desired_resources:
+    - gems
+  sold_resources:
+    - ore
+    - obsidian
+
+elderwood_glade:
+  name: Elderwood Glade
+  ruler_name: Raên
+  description: An ancient forest where trees whisper secrets and time seems to flow differently, inhabited by Sylvans and other peoples.
+  race: null
+  desired_resources:
+    - gold
+    - gems
+  sold_resources:
+    - spices
+    - food
+
+serpent_marsh:
+  name: Serpent Marsh
+  ruler_name: Ssath Morm
+  description: A treacherous swampland where venomous creatures and carnivorous plants thrive. 
+  race: Lizardfolk
+  desired_resources:
+    - gold
+    - pearls
+    - thunderstone
+    - gems
+  sold_resources:
+    - swamp_gas
+    - mud
+    - kelp
+
+celros:
+  name: Celros
+  ruler_name: Thonduss Jomzai
+  description: A bustling industrial city with towering smokestacks and the relentless clang of hammers.
+  race: Gnome
+  desired_resources:
+    - ore
+    - gems
+    - pearls
+  sold_resources:
+    - thunderstone
+    - brimmer
+
+yllanalon:
+  name: Yllanalon
+  ruler_name: Yllana
+  description: A hold located in the deepest part of the forest, shrouded in mystery and ancient magic, where whispers are said to carry ancient secrets.
+  race: Elf
+  desired_resources:
+    - obsidian
+    - gold
+  sold_resources:
+    - lumber
+    - kelp
+
+sentalva:
+  name: Sentalva
+  ruler_name: Eqa
+  description: A fortified hold with imposing walls, serves as a military hub with disciplined guards.
+  race: Human
+  desired_resources:
+    - food
+    - horse
+  sold_resources:
+    - ore
+    - gems
+    - spices
+
+kemuhl:
+  name: Kemuhl
+  ruler_name: Arreng
+  description: Inhabited by Moon Elves and various nocturnal creatures, known for its mesmerizing dances and strong magical presence under the night sky.
+  race: Yeti
+  desired_resources:
+    - food
+    - lumber
+    - ore
+  sold_resources:
+    - gems
+
+argentel:
+  name: Argentel
+  ruler_name: Alais Palar
+  description: Towering high into the clouds, famous for its lofty architecture and aerial views.
+  race: Snow Elf
+  desired_resources:
+    - gold
+    - food
+  sold_resources:
+    - gems
+    - lumber
+
+forgeheart:
+  name: Brimforge
+  ruler_name: Bariluren Thunderhorn
+  description: The heart of blacksmithing and metalwork, populated by Fire Dwarves and Forge Spirits, known for its heat-intense workshops.
+  race: Dwarg
+  desired_resources:
+    - ore
+    - food
+  sold_resources:
+    - brimmer
+    - spices
+
+emerald_realm:
+  name: Ysilien
+  ruler_name: Ailre Iarmoira
+  description: A vibrant hold overflowing with lush vegetation and diverse wildlife, famous for its natural remedies and vibrant markets.
+  race: Elf
+  desired_resources:
+    - horse
+    - ore
+  sold_resources:
+    - food
+    - spices
+
+grunnminn:
+  name: Grunnminn
+  ruler_name: Qulumuq
+  description: A subterranean hold known for its extensive mines and caverns, central to mining and gemcraft. Once a Dwargen great hall, now a Swarm hive.
+  race: Swarm
+  desired_resources:
+    - food
+    - lumber
+  sold_resources:
+    - gems
+    - ore
+
+frost_moor:
+  name: Iceveil Glade
+  ruler_name: Cirog Xanlin
+  description: A tundra region with sparse vegetation, known for its hardy settlements and cold resistance.
+  race: Icekin
+  desired_resources:
+    - gems
+  sold_resources:
+    - gold
+    - yak
+
+dragon_eyrie:
+  name: Drakmount
+  ruler_name: Valtharax
+  description: High in the volcanic mountains, revered for its awe-inspiring scenery and danger, the nesting ground for Dragons.
+  race: Dragon
+  desired_resources:
+    - gold
+    - gems
+  sold_resources:
+    - body
+    - obsidian
+
+vas_nilghad:
+  name: Vas Nilghad
+  ruler_name: Dark One
+  description: One of the grimmest places in the world, a dark and foreboding hold where the dead are said to walk.
+  race: null
+  desired_resources:
+    - mana
+    - gems
+  sold_resources:
+    - body
+    - prisoner
+
+grimwater_marsh:
+  name: Grimwater Marsh
+  ruler_name: Villith
+  description: A murky expanse of stagnant water and twisted mangroves, said to be haunted by vengeful spirits.
+  race: Spirit
+  desired_resources:
+    - gems
+    - gold
+  sold_resources:
+    - swamp_gas
+    - mud
+
+bloodmoon_coven:
+  name: Bloodmoon Coven
+  ruler_name: Rirrur Ilgezan Wor'Axiug Thargrog Zolmollag
+  description: A secluded hold shrouded in blood-red mist, known for rituals rumored to involve dark pacts. 
+  race: Demon
+  desired_resources: 
+    - prisoner
+    - blood
+  sold_resources:
+    - obsidian
+    - thunderstone
+    - soul
+
+sootbarrow: 
+  name: Sootbarrow
+  ruler_name: Gnaz Kragg
+  description: A hold built into the side of a volcano, where the air is thick with ash and the ground is hot to the touch.
+  race: Goblin
+  desired_resources:
+    - food
+    - lumber
+    - spices
+  sold_resources:
+    - magma
+    - ore
+    - gems
+
+tjep_sfuo:
+  name: Tjep-Sfuo
+  ruler_name: Ma'at Tipzjej
+  description: A vast network of underground caverns teeming with phosphorescent fungi and strange creatures.
+  race: Myconid 
+  desired_resources:
+    - food
+    - mud
+  sold_resources:
+    - gems
+    - body
+    - blood
+
+shimmerstone_coast:
+  name: Shimmerstone Coast
+  ruler_name: Nalara
+  description: This coastal hold boasts beaches lined with iridescent stones and waters rich in marine life.
+  race: Glimjir
+  desired_resources:
+    - food
+    - lumber
+    - ore
+  sold_resources: 
+    - pearls
+    - kelp
+
+anureth:
+  name: Anureth
+  ruler_name: Alphonsus Khunzúr
+  description: A bustling trade hub, this desert oasis serves as a crossroads for caravaneers.
+  race: null
+  desired_resources:
+    - gems
+    - prisoner
+  sold_resources:
+    - yak
+    - spices
+    - prisoner
+
+abyssal_reach: 
+  name: Abyssal Reach
+  ruler_name: Vorcant
+  description: A hold submerged in the depths of the ocean, inhabited by enigmatic aquatic races. 
+  race: Glimjir
+  desired_resources:
+    - lumber
+    - ore 
+  sold_resources:
+    - pearls
+    - kelp
+
+fort_balor:
+  name: Fort Balor
+  ruler_name: Batul Kargoth
+  description: A stronghold infamous for housing the most dangerous criminals.
+  race: Orc
+  desired_resources:
+    - ore
+    - food
+  sold_resources:
+    - prisoner
+    - blood 
+
+gloomwood:
+  name: Gloomwood
+  ruler_name: Dhiervir Kriunzol III
+  description: An ancient forest cloaked in perpetual twilight, inhabited by reclusive shadow creatures.
+  race: Dark Elf
+  desired_resources:
+    - gold
+    - food
+  sold_resources:
+    - lumber 
+    - gems
+
+blackbriar_thicket:
+  name: Blackbriar Thicket
+  ruler_name: Krold Mogmol
+  description: A dense, thorny maze of vegetation, known to harbor outlaws and dangerous beasts.
+  race: Goblin
+  desired_resources:
+    - lumber
+    - ore
+  sold_resources:
+    - prisoner
+    - mud
+
+thulian_depths:
+  name: Thulian Depths
+  ruler_name: Pain-Giver
+  description: Ruins of a lost civilization, now haunted and filled with traps and undead horrors.
+  race: Afflicted
+  desired_resources:
+    - food 
+    - gold
+  sold_resources:
+    - body
+    - prisoner
+
+the_grotesque_citadel:
+  name: The Grotesque Citadel
+  ruler_name: The Unhealer
+  description: A fortress of shadowy spires and dark magic, home to an enigmatic society.
+  race: Revenants
+  desired_resources:
+    - mana
+    - prisoner
+  sold_resources:
+    - body
+    - blood
+    - obsidian
+
+glimmerforge:
+  name: Glimmerforge
+  ruler_name: Blomzes Cignin
+  description: A mountainous enclave known for its shimmering mines and the hardy Gnomes who dwell within, master craftsmen of gunpowder and mechanics.
+  race: Gnome
+  desired_resources:
+    - ore
+    - gold
+  sold_resources:
+    - gunpowder
+    - brimmer
+
+thornvale:
+  name: Thornvale
+  ruler_name: Death's Release
+  description: A dense thicket overrun by sinister plants and inhabited by the Afflicted, rumored to conduct forbidden experiments on prisoners.
+  race: Afflicted
+  desired_resources:
+    - body
+    - food
+  sold_resources:
+    - lumber
+    - miasma
+
+stormwatch_peak:
+  name: Stormwatch Peak
+  ruler_name: Elanil Sarven
+  description: Perched atop a storm-laden frozen volcano, this hold is the envy of many.
+  race: Snow Elf
+  desired_resources:
+    - food
+    - lumber
+  sold_resources:
+    - thunderstone
+    - ore
+
+shadowmire:
+  name: Shadowmire
+  ruler_name: Irrenu Aric
+  description: A murky, fog-bound hold where Dark Elves harness the power of obsidian to forge powerful magic artifacts.
+  race: Dark Elf
+  desired_resources:
+    - gems
+    - gold
+  sold_resources:
+    - obsidian
+    - kelp
+
+mournful_shallows:
+  name: Mournful Shallows
+  ruler_name: Wǒ
+  description: An underwater hold of the Glimjir, known for its vast pearl beds and the mysterious, silent trade with the surface.
+  race: Glimjir
+  desired_resources:
+    - food
+    - gems
+  sold_resources:
+    - pearls
+    - kelp
+
+roaring_fields:
+  name: Roaring Fields
+  ruler_name: Tolon Edigu
+  description: Sprawling savannahs roamed by large herds of yaks, governed by Nomads who value freedom and the wealth of nature.
+  race: Nomad
+  desired_resources:
+    - ore
+    - lumber
+  sold_resources:
+    - yak
+    - food
+
+ormundargard:
+  name: Ormundargard
+  ruler_name: Ivar Bloodaxe
+  description: A fortified wooden citadel nestled within an ancient grove, its Wood Elf guardians trade extensively in lumber and seek precious metals.
+  race: Norse
+  desired_resources:
+    - spices
+    - gold
+  sold_resources:
+    - ore
+    - gems
+
+everfrost_palace:
+  name: Everfrost Palace
+  ruler_name: Maholem Emdosa
+  description: An ice-encrusted palace where the Snow Elves refine the rare frost gems and crave warmth and provisions.
+  race: Snow Elf
+  desired_resources:
+    - food
+    - ore
+  sold_resources:
+    - gems
+    - pearls
+
+bleak_barrens:
+  name: Bleak Barrens
+  ruler_name: Xul
+  description: A desolate wasteland inhabited by the Demon folk, trading in the blood and body parts of their enemies for magical ingredients.
+  race: Demon
+  desired_resources:
+    - soul
+    - spices
+  sold_resources:
+    - blood
+    - body

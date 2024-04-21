@@ -181,6 +181,11 @@ class Dominion extends AbstractModel
         return $this->morphMany(GameEvent::class, 'target');
     }
 
+    public function sentimentsTarget()
+    {
+        return $this->morphMany(HoldSentiment::class, 'target');
+    }
+
     public function history()
     {
         return $this->hasMany(Dominion\History::class);
@@ -214,6 +219,11 @@ class Dominion extends AbstractModel
     public function round()
     {
         return $this->belongsTo(Round::class);
+    }
+
+    public function tradeRoutes()
+    {
+        return $this->hasMany(TradeRoute::class);
     }
 
     public function techs()
@@ -349,6 +359,15 @@ class Dominion extends AbstractModel
     public function getUnitsByState(int $state)
     {
         return $this->units->where('state', $state);
+    }
+
+    # Used for trade routes
+    public function resourceKeys(): array
+    {
+        $dominionResourceKeys = $this->resources->pluck('key')->toArray();
+        $dominionRaceResources = $this->race->resources;
+
+        return array_unique(array_merge($dominionResourceKeys, $dominionRaceResources));
     }
 
     # This code enables the following syntax:

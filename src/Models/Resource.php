@@ -27,4 +27,9 @@ class Resource extends AbstractModel
         'improvement_points' => 'float',
     ];
 
+    public static function fromKey($key)
+    {
+        return self::where('key', $key)->first();
+    }
+
 }

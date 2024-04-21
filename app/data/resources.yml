@@ -3,12 +3,18 @@ acid:
   description: A repulsive smelling dark liquid found percolating in some Growths.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 ash:
   name: Ash
   description: Called moon soot by some Orcs, this special type of ash which comes from the volcanoes on the Cloven Moon and reaches the world 
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 
 blood:
@@ -16,112 +22,171 @@ blood:
   description: Flowing in the veins of most living creatures, and collected by the most brutal to be used to fashion gruesome improvements and warriors.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 body:
   name: Body
   description: The body of a fallen warrior of normal stature.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 brimmer:
   name: Brimmer
   description: A thick liquid extracted from ore.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 champion:
   name: Champions
   description: The living, legendary souls of Norse warriors fallen in glory.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 cosmic_alignment:
   name: Cosmic Alignments
   description: Starcharts used by Dimensionalist Archmages to plot paths across the cosmos.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 elk:
   name: Elk
   description: Majestic wanderers of the forest, Druva's personal guards and messengers.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 food:
   name: Food
   description: While mostly functioning as a sustenance, some use food for especially exhausting training or even as organic building blocks.
   buy: 0.5
   sell: 0.10
+  trade:
+    buy: 1
+    sell: 1
 
 gems:
   name: Gems
   description: Precious stones of great value. Some have magical properties.
   buy: null
   sell: 2
+  trade:
+    buy: 1
+    sell: 1
 
 gloom:
   name: Gloom
   description: A dark, thick liquid produced bottling starlight and filtering the shine out of it.
+  buy: null
+  sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 gold:
   name: Gold
   description: Whether raw, in ingots, or in coins, gold is the foundation of most dominions' economies.
   buy: 1
   sell: 0.5
+  trade:
+    buy: 1
+    sell: 1
 
 gunpowder:
   name: Gunpowder
   description: Made from carefully following a Gnomish recipe, used to launch projectiles across vast distances at fantastic speed. Handle with care.
   buy: null
   sell: 2
+  trade:
+    buy: 1
+    sell: 1
 
 horse:
   name: Horse
   description: A fourlegged animal equally strong and loyal.
   buy: null
   sell: 2
+  trade:
+    buy: 1
+    sell: 1
 
 kelp:
   name: Kelp
   description: A superior form of rugged seaweed, used by Glimjir to build and popular in broth with some land dwellers.
   buy: 1.3
   sell: 0.65
+  trade:
+    buy: 1
+    sell: 1
 
 light:
   name: Light
   description: Bright energy of from the suns' rays, captured by Lucene Beacons.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 lumber:
   name: Lumber
   description: Some obtain it by cutting down trees, whereas gentler creatures collect fallen branches or trees and bushes that have expired.
   buy: 1
   sell: 0.5
+  trade:
+    buy: 1
+    sell: 1
 
 magma:
   name: Magma
   description: Molten rocks flowing in a thick viscuous liquid deep under ground.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 mana:
   name: Mana
   description: Cosmic energy used to weave spells and — by some — conjure magical warriors.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 marshling:
   name: Marshling
   description: A semiconscious entity born out of the strangest swamps.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 miasma:
   name: Miasma
   description: A foetid vapour emanating from Afflicted mass graves.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 mud:
   name: Mud
@@ -134,69 +199,115 @@ obsidian:
   description: An extremely hard form type of glass formed by rapidly cooling down magma.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 ore:
   name: Ore
   description: An encompassing term for various stones and metals.
   buy: 1
   sell: 0.5
+  trade:
+    buy: 1
+    sell: 1
 
 prayer:
   name: Prayer
   description: Elskas appreciates the devotion from her Chosen Ones and listens to their prayers.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 pearls:
   name: Pearls
   description: Gems of the sea, pearls are collected by dwellers of the depths.
   buy: null
   sell: 3
+  trade:
+    buy: 1
+    sell: 1
 
 prisoner:
   name: Prisoner
   description: Captured in war and kept alive only to serve.
   buy: null
   sell: 4
+  trade:
+    buy: 1
+    sell: 1
 
 rage:
   name: Rage
   description: Captured in war and kept alive only to serve.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 sapling:
   name: Sapling
   description: The beginnings of trees, imbued with magic life of Sylvans.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 soul:
   name: Souls
   description: Each living being has one. Azk'Hurum collects as many as he can.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
+
+spices:
+  name: Spices
+  category: luxury
+  description: Aromatic substances used to enhance the flavour of food.
+  buy: null
+  sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 strength:
   name: Strength
   description: The Monster gains strength from fighting.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 swamp_gas:
   name: Swamp Gas
   description: A pungent, greenish gas floating above certain swamps.
   buy: null
   sell: 1
+  trade:
+    buy: 1
+    sell: 1
 
 thunderstone:
   name: Thunderstone
   description: An extremely rare form of gem, about the size of a closed Dwargen fist, with a purple glimmer and slowly pulsating patterns that fade into black in the middle.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1
 
 yak:
   name: Yak
   description: Slower than horses but much stronger.
   buy: null
   sell: null
+  trade:
+    buy: 1
+    sell: 1

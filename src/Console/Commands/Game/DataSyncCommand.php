@@ -36,6 +36,7 @@ use OpenDominion\Models\DominionStat;
 use OpenDominion\Models\DominionSpell;
 use OpenDominion\Models\DominionTech;
 use OpenDominion\Models\DominionTerrain;
+use OpenDominion\Models\Hold;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\ImprovementPerk;
 use OpenDominion\Models\ImprovementPerkType;
@@ -1139,6 +1140,7 @@ class DataSyncCommand extends Command implements CommandInterface
             $resource = Resource::firstOrNew(['key' => $resourceKey])
                 ->fill([
                     'name' => $resourceData->name,
+                    'category' => object_get($resourceData, 'category', 'strategic'),
                     'enabled' => object_get($resourceData, 'enabled', 1),
                     'buy' => object_get($resourceData, 'buy', null),
                     'sell' => object_get($resourceData, 'sell', null),
@@ -1498,8 +1500,6 @@ class DataSyncCommand extends Command implements CommandInterface
 
         $this->info('Quickstarts synced.');
     }
-
-
 
     /**
      * Syncs race, unit and perk data from .yml files to the database.

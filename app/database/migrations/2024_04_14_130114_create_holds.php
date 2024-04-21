@@ -19,14 +19,21 @@ return new class extends Migration
             $table->unsignedInteger('race_id')->default(null)->nullable();
 
             $table->string('name');
+            $table->string('key');
             $table->string('ruler_name');
 
+            $table->text('description');
+
+            $table->unsignedInteger('status');
             $table->unsignedInteger('land');
             $table->unsignedInteger('morale');
             $table->unsignedInteger('peasants');
             $table->unsignedInteger('peasants_last_hour');
 
-            $table->boolean('is_locked')->default(false);
+            $table->json('desired_resources')->nullable();
+            $table->json('sold_resources')->nullable();
+
+            $table->unsignedInteger('tick_discovered')->default(0);
             $table->unsignedInteger('ticks')->default(0);
 
             $table->timestamps();

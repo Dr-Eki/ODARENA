@@ -6,6 +6,7 @@ use DB;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use OpenDominion\Console\Commands\CommandInterface;
+use OpenDominion\Factories\HoldFactory;
 use OpenDominion\Factories\RealmFactory;
 use OpenDominion\Factories\RoundFactory;
 use OpenDominion\Models\RoundLeague;
@@ -13,7 +14,7 @@ use OpenDominion\Models\Race;
 use OpenDominion\Helpers\RoundHelper;
 use RuntimeException;
 
-use OpenDominion\Services\Dominion\BarbarianService;
+use OpenDominion\Services\BarbarianService;
 
 class RoundOpenCommand extends Command implements CommandInterface
 {
@@ -22,6 +23,9 @@ class RoundOpenCommand extends Command implements CommandInterface
 
     /** @var string The console command description. */
     protected $description = 'Creates a new round and prompts for conditions and settings';
+
+    /** @var HoldFactory */
+    protected $holdFactory;
 
     /** @var RealmFactory */
     protected $realmFactory;
@@ -43,12 +47,14 @@ class RoundOpenCommand extends Command implements CommandInterface
      */
     public function __construct(
         BarbarianService $barbarianService,
+        HoldFactory $holdFactory,
         RealmFactory $realmFactory,
         RoundFactory $roundFactory,
         RoundHelper $roundHelper
     ) {
         parent::__construct();
 
+        $this->holdFactory = $holdFactory;
         $this->roundFactory = $roundFactory;
         $this->roundHelper = $roundHelper;
         $this->realmFactory = $realmFactory;
@@ -188,11 +194,7 @@ class RoundOpenCommand extends Command implements CommandInterface
             if($round->getSetting('barbarians'))
             {
                 // Get starting barbarians (default 20) from user input
-                $startingBarbarians = $this->ask('How many starting barbarians? [20]: ');
-                if(empty($startingBarbarians))
-                {
-                    $startingBarbarians = 20;
-                }
+                $startingBarbarians = $this->ask('How many starting barbarians? [20]: ') ?? 20;
                 
                 // Create Barbarians.
                 for ($slot = 1; $slot <= $startingBarbarians; $slot++)
@@ -207,11 +209,19 @@ class RoundOpenCommand extends Command implements CommandInterface
                 $this->info('Barbarians are disabled for this round.');
             }
 
-            // Spawn Trade Routes
+            // Spawn Holds
             if($round->getSetting('trade-routes'))
             {
-                $this->info("Creating Holds...");
-                $this->realmFactory->createTradeRoutes($round);
+                // Get starting barbarians (default 20) from user input
+                $startingHolds = $this->ask('How many starting holds? [10]: ') ?? 10;
+
+                // Create Holds.
+                for ($slot = 1; $slot <= $startingHolds; $slot++)
+                {
+                    $this->info("Creating a Hold...");
+                    $hold = $this->holdFactory->create($round);
+                    $this->info("* Hold created: {$hold->name} (ID {$hold->id})");
+                }
             }
             else
             {

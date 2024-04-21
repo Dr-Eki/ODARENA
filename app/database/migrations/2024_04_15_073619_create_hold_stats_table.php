@@ -11,22 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hold_prices', function (Blueprint $table) {
+        Schema::create('hold_stats', function (Blueprint $table) {
             $table->id();
 
             $table->unsignedBigInteger('hold_id');
-            $table->unsignedInteger('resource_id');
+            $table->unsignedInteger('stat_id');
+            $table->unsignedInteger('value');
 
-            $table->unsignedInteger('tick')->default(0);
-
-            $table->string('action');
-            $table->decimal('price', 8, 4);#->nullable();
- 
             $table->foreign('hold_id')->references('id')->on('holds');
-            $table->foreign('resource_id')->references('id')->on('resources');
-
-            $table->unique(['hold_id', 'resource_id', 'action']);
-
+            $table->foreign('stat_id')->references('id')->on('stats');
 
             $table->timestamps();
         });
@@ -37,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hold_prices');
+        Schema::dropIfExists('hold_stats');
     }
 };

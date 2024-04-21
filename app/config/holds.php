@@ -4,6 +4,8 @@
 
 return [
     'starting_land' => 100,
+    'starting_morale' => 100,
+    'starting_peasants' => 5000,
 
     'defaults' => [
         'unit_return_ticks' => 12,

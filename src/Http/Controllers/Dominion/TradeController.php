@@ -2,102 +2,54 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
+use OpenDominion\Models\Hold;
 
-use OpenDominion\Helpers\LandHelper;
-use OpenDominion\Helpers\TerrainHelper;
+use OpenDominion\Calculators\Dominion\TradeCalculator;
+use OpenDominion\Services\TradeCalculationService;
+use OpenDominion\Http\Requests\Dominion\TradeCalculationRequest;
+
+use OpenDominion\Helpers\HoldHelper;
 use OpenDominion\Helpers\RaceHelper;
 
-use OpenDominion\Calculators\Dominion\DominionCalculator;
-use OpenDominion\Calculators\Dominion\LandCalculator;
-use OpenDominion\Calculators\Dominion\ProductionCalculator;
-use OpenDominion\Calculators\Dominion\SpellCalculator;
-use OpenDominion\Calculators\Dominion\TerrainCalculator;
-use OpenDominion\Calculators\Dominion\Actions\RezoningCalculator;
-
-use OpenDominion\Exceptions\GameException;
-
-use OpenDominion\Http\Requests\Dominion\Actions\RezoneActionRequest;
-
-use OpenDominion\Services\Dominion\QueueService;
-use OpenDominion\Services\Dominion\Actions\DailyBonusesActionService;
-use OpenDominion\Services\Dominion\Actions\RezoneActionService;
-use OpenDominion\Services\Dominion\TerrainService;
 
 class TradeController extends AbstractDominionController
 {
-    public function getLand()
+    public function getTradeRoutes()
     {
-        return view('pages.dominion.land', [
-            'dominionCalculator' => app(DominionCalculator::class),
-            'terrainCalculator' => app(TerrainCalculator::class),
-            'landCalculator' => app(LandCalculator::class),
-            'rezoningCalculator' => app(RezoningCalculator::class),
-            'landHelper' => app(LandHelper::class),
-            'terrainHelper' => app(TerrainHelper::class),
-            'queueService' => app(QueueService::class),
-            'raceHelper' => app(RaceHelper::class),
-            'spellCalculator' => app(SpellCalculator::class),
-            'productionCalculator' => app(ProductionCalculator::class)
+        return view('pages.dominion.trade.routes', [
+            
+            'tradeCalculator' => app(TradeCalculator::class),
+            'holdHelper' => app(HoldHelper::class),
         ]);
     }
 
-    public function postRezone(RezoneActionRequest $request)
+    public function getHold(Hold $hold)
     {
+        return view('pages.dominion.trade.hold', [
+            'hold' => $hold,
+            
+            'tradeCalculator' => app(TradeCalculator::class),
 
-        return redirect()->route('dominion.land');
-
-        $dominion = $this->getSelectedDominion();
-        
-        $rezoneActionService = app(RezoneActionService::class);
-
-        try {
-            $result = $rezoneActionService->rezone(
-                $dominion,
-                $request->get('remove'),
-                $request->get('add')
-            );
-
-        } catch (GameException $e) {
-            return redirect()->back()
-                ->withInput($request->all())
-                ->withErrors([$e->getMessage()]);
-        }
-
-        return redirect()->route('dominion.land');
-        
+            'holdHelper' => app(HoldHelper::class),
+            'raceHelper' => app(RaceHelper::class),
+        ]);
     }
 
-    public function postRepairTerrain(RezoneActionRequest $request)
+    public function calculateTradeRoute(TradeCalculationRequest $request, TradeCalculationService $tradeCalculationService)
     {
         $dominion = $this->getSelectedDominion();
-        
-        $terrainService = app(TerrainService::class);
+        $holdId = $request->get('hold');
+        $soldResourceKey = $request->get('sold_resource');
+        $soldResourceAmount = $request->get('sold_resource_amount');
+        $boughtResourceKey = $request->get('bought_resource');
 
-        try {
-            $terrainService->auditAndRepairTerrain($dominion);
-        } catch (GameException $e) {
-            return redirect()->back()
-                ->withInput($request->all())
-                ->withErrors([$e->getMessage()]);
-        }
+        $result = $tradeCalculationService->calculate($dominion, $holdId, $soldResourceKey, $soldResourceAmount, $boughtResourceKey);
 
-        return redirect()->route('dominion.land');
+        #$result = $tradeCalculationService->calculate($request->all());
+    
+        return response()->json($result);
     }
 
-    public function postDailyBonus(RezoneActionRequest $request)
-    {
-        $dominion = $this->getSelectedDominion();
-        
-        $dailyBonusesActionService = app(DailyBonusesActionService::class);
-
-        try {
-            $dailyBonusesActionService->claimLand($dominion);
-        } catch (GameException $e) {
-            return redirect()->back()
-                ->withInput($request->all())
-                ->withErrors([$e->getMessage()]);
-        }
-
-        return redirect()->route('dominion.land');
-    }
 }
+
+

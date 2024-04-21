@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use OpenDominion\Exceptions\GameException;
-use OpenDominion\Services\Dominion\HistoryService;
+use OpenDominion\Services\Hold\HistoryService;
 use OpenDominion\Services\Dominion\SelectorService;
 use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Services\Dominion\QueueService;
@@ -16,11 +16,39 @@ class Hold extends AbstractModel
     use Notifiable;
 
     protected $casts = [
+        'key' => 'string',
         'peasants' => 'integer',
         'land' => 'integer',
+        'morale' => 'integer',
+        'peasants_last_hour' => 'integer',
+        'status' => 'integer',
+        'desired_resources' => 'array',
+        'sold_resources' => 'array',
+        'tick_discovered' => 'integer',
+        'ticks' => 'integer',
     ];
 
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->where('key', $value)->firstOrFail();
+    }
+
     // Relations
+    public function tradeRoutes()
+    {
+        return $this->hasMany(TradeRoute::class);
+    }
+
+    public function sentiments()
+    {
+        return $this->hasMany(HoldSentiment::class, 'hold_id');
+    }
+
+    public function prices()
+    {
+        return $this->hasMany(HoldPrice::class);
+    }
+
     public function gameEventsSource()
     {
         return $this->morphMany(GameEvent::class, 'source');
@@ -33,12 +61,7 @@ class Hold extends AbstractModel
 
     public function history()
     {
-        return $this->hasMany(Dominion\History::class);
-    }
-
-    public function stats()
-    {
-        return $this->hasMany(DominionStat::class);
+        return $this->hasMany(Hold\History::class);
     }
 
     public function race()
@@ -49,14 +72,25 @@ class Hold extends AbstractModel
         ]);
     }
 
+    public function resources()
+    {
+        return $this->belongsToMany(
+            Resource::class,
+            'hold_resources',
+            'hold_id',
+            'resource_id'
+        )
+            ->withPivot('amount');
+    }
+
+    public function stats()
+    {
+        return $this->hasMany(Hold\Stat::class);
+    }
+
     public function title()
     {
         return $this->belongsTo(Title::class);
-    }
-
-    public function realm()
-    {
-        return $this->belongsTo(Realm::class);
     }
 
     public function round()
@@ -112,15 +146,16 @@ class Hold extends AbstractModel
         );
     }
 
-    public function resources()
+    public function decreeStates()
     {
-        return $this->belongsToMany(
-            Resource::class,
-            'dominion_resources',
+        return $this->hasManyThrough(
+            DecreeState::class,
+            DominionDecreeState::class,
             'dominion_id',
-            'resource_id'
-        )
-            ->withPivot('amount');
+            'id',
+            'id',
+            'decree_state_id'
+        );
     }
 
     public function deity()
@@ -138,18 +173,6 @@ class Hold extends AbstractModel
     public function devotion() # basically $this->dominionDeity() but not really
     {
         return $this->hasOne(DominionDeity::class);
-    }
-
-    public function decreeStates()
-    {
-        return $this->hasManyThrough(
-            DecreeState::class,
-            DominionDecreeState::class,
-            'dominion_id',
-            'id',
-            'id',
-            'decree_state_id'
-        );
     }
 
     public function advancements()
@@ -186,6 +209,30 @@ class Hold extends AbstractModel
     {
         return $this->units->where('state', $state);
     }
+
+    public function resourceKeys(): array
+    {
+        $holdResourceKeys = $this->resources->pluck('key')->toArray();
+        $holdDesiredResourceKeys = $this->desired_resources;
+        $holdSoldResourceKeys = $this->sold_resources;
+
+        $merged = array_merge($holdResourceKeys, $holdDesiredResourceKeys, $holdSoldResourceKeys);
+      
+        return array_unique($merged);
+    }
+
+    public function buyPrice(string $resourceKey): float
+    {
+        $resource = Resource::where('key', $resourceKey)->firstOrFail();
+        return $this->prices->where('resource_id', $resource->id)->where('action','buy')->first()->price;
+    }
+
+    public function sellPrice(string $resourceKey): float
+    {
+        $resource = Resource::where('key', $resourceKey)->firstOrFail();
+        return $this->prices->where('resource_id', $resource->id)->where('action','sell')->first()->price;
+    }
+
 
     # This code enables the following syntax:
     # $dominion->{'terrain_' . $terrainKey} and similar
@@ -261,7 +308,7 @@ class Hold extends AbstractModel
 
     public function queues()
     {
-        return $this->hasMany(Dominion\Queue::class);
+        return $this->hasMany(Hold\Queue::class);
     }
 
     public function user()
@@ -271,7 +318,7 @@ class Hold extends AbstractModel
 
     public function tick()
     {
-        return $this->hasOne(Dominion\Tick::class);
+        return $this->hasOne(Hold\Tick::class);
     }
 
     // PROTECTORSHIP STUFF
@@ -366,8 +413,8 @@ class Hold extends AbstractModel
         }
 
         // Recalculate next tick
-        $tickService = app(\OpenDominion\Services\Dominion\TickService::class);
-        $tickService->precalculateTick($this);
+        #$tickService = app(\OpenDominion\Services\Dominion\TickService::class);
+        #$tickService->precalculateTick($this);
 
         return $saved;
     }
@@ -378,8 +425,8 @@ class Hold extends AbstractModel
 
         $query = $this->newModelQuery();
 
-        $dominionHistoryService = app(HistoryService::class);
-        $deltaAttributes = $dominionHistoryService->getDeltaAttributes($this);
+        $holdHistoryService = app(HistoryService::class);
+        $deltaAttributes = $holdHistoryService->getDeltaAttributes($this);
 
         foreach ($deltaAttributes as $attr => $value) {
             if (gettype($this->getAttribute($attr)) != 'boolean' and gettype($this->getAttribute($attr)) != 'string') {

@@ -12,35 +12,36 @@
                 <div class="col-sm-2 text-center">
                     <h2 class="box-title">{{ $race->name }}</h2>
 
-                    @if($race->experimental)
+                    @if(!$race->playable)
+                        <span class="label label-warning">Not Playable</span>
+                    @elseif($race->experimental)
                         <span class="label label-danger">Experimental</span>
                     @endif
+
                 </div>
 
-                <div class="col-sm-8 text-center">
-                    <a href="#units">Units</a> |
-                    <a href="#resources">Resources</a> |
-                    <a href="#buildings">Buildings</a> |
-                    <a href="#improvements">Improvements</a> |
-                    <a href="#spells">Spells</a> |
-                    <a href="#sabotage">Sabotage</a> |
-                    <a href="#terrains">Terrains</a>
-                </div>
+                @if($race->playable)
+                    <div class="col-sm-8 text-center">
+                        <a href="#units">Units</a> |
+                        <a href="#resources">Resources</a> |
+                        <a href="#buildings">Buildings</a> |
+                        <a href="#improvements">Improvements</a> |
+                        <a href="#spells">Spells</a> |
+                        <a href="#sabotage">Sabotage</a> |
+                        <a href="#terrains">Terrains</a>
+                    </div>
 
-                <div class="col-sm-2 text-center">
-                    Difficulty:
-                    @if($race->skill_level === 1)
-                        <span class="label label-success">Comfortable</span>
-                    @elseif($race->skill_level === 2)
-                        <span class="label label-warning">Challenging</span>
-                    @elseif($race->skill_level === 3)
-                        <span class="label label-danger">Advanced</span>
-                    @endif
-                </div>
-            </div>
-            <div>
-
-
+                    <div class="col-sm-2 text-center">
+                        Difficulty:
+                        @if($race->skill_level === 1)
+                            <span class="label label-success">Comfortable</span>
+                        @elseif($race->skill_level === 2)
+                            <span class="label label-warning">Challenging</span>
+                        @elseif($race->skill_level === 3)
+                            <span class="label label-danger">Advanced</span>
+                        @endif
+                    </div>
+                @endif
             </div>
             @if($race->description)
                 <div class="box-body">
@@ -56,6 +57,9 @@
         </div>
     </div>
 </div>
+
+@if($race->playable)
+
 <div class="row">
 
     <a id="units"></a>
@@ -815,4 +819,6 @@
 
 
 </div>
+
+@endif
 @endsection

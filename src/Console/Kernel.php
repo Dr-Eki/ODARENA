@@ -16,9 +16,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('game:tick')->everyFifteenMinutes();
-
-        #$schedule->command('backup:clean')->daily()->at('01:20');
-        #$schedule->command('backup:run')->daily()->at('01:50');
     }
 
     /**
@@ -29,7 +26,9 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__ . '/Commands');
-
+        
         require base_path('app/routes/console.php');
     }
+    
+    
 }

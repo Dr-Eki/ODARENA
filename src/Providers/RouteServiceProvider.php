@@ -24,7 +24,10 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Bind 'hold' to use the 'key' field instead of 'id'
+        Route::model('hold', \OpenDominion\Models\Hold::class, function ($value) {
+            return \OpenDominion\Models\Hold::where('key', $value)->firstOrFail();
+        });
 
         parent::boot();
     }

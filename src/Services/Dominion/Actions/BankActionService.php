@@ -18,6 +18,8 @@ class BankActionService
 {
     use DominionGuardsTrait;
 
+    protected $resourceCalculator;
+    protected $resourceService;
     protected $spellCalculator;
     protected $statsService;
 

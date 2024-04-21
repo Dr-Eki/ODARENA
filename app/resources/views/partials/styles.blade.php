@@ -10,6 +10,7 @@
 
 {{-- Page specific styles --}}
 @stack('page-styles')
+@stack('styles')
 
 {{-- Page specific inline styles --}}
 @stack('inline-styles')

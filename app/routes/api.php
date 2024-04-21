@@ -21,6 +21,8 @@ $router->group(['prefix' => 'v1', 'as' => 'api.'], static function (Router $rout
         $router->get('sorcery')->uses('Dominion\APIController@calculateSorcery')->name('sorcery');
         $router->get('desecration')->uses('Dominion\APIController@calculateDesecration')->name('desecration');
 
+        $router->get('trade')->uses('Dominion\APIController@calculateTrade')->name('trade');
+
     });
 
     $router->post('/push-subscription', function (Request $request) {
