@@ -74,7 +74,7 @@ class TerrainService
         */
 
 
-        Log::info("[TERRAIN AUDIT] Auditing {$dominion->name} (# {$dominion->realm->number}).");
+        #Log::info("[TERRAIN AUDIT] Auditing {$dominion->name} (# {$dominion->realm->number}).");
 
         if($this->terrainCalculator->hasTerrainAmountEqualToLand($dominion))
         {
@@ -89,7 +89,7 @@ class TerrainService
         # If has MoreTerrainThanLand
         if($this->terrainCalculator->hasMoreTerrainThanLand($dominion))
         {
-            Log::info("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
+            #Log::info("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
             #ldump("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
 
             DB::transaction(function () use ($dominion, $terrainedLand)
@@ -109,7 +109,7 @@ class TerrainService
                         if($amountLeftToRemove > 0 and $amountToRemove > 0)
                         {
                             $this->update($dominion, [$dominionTerrain->key => ($amountToRemove * -1)]);
-                            Log::info("[TERRAIN AUDIT] Removed {$amountToRemove} {$dominionTerrain->key} terrain from {$dominion->name} (# {$dominion->realm->number})");
+                            #Log::info("[TERRAIN AUDIT] Removed {$amountToRemove} {$dominionTerrain->key} terrain from {$dominion->name} (# {$dominion->realm->number})");
                             #ldump("[TERRAIN AUDIT] Removed {$amountToRemove} {$dominionTerrain->key} terrain from {$dominion->name} (# {$dominion->realm->number})");
 
                             $amountLeftToRemove -= $amountToRemove;
@@ -122,7 +122,7 @@ class TerrainService
                 if($amountLeftToRemove > 0)
                 {
                     $this->update($dominion, [$dominion->race->homeTerrain()->key => ($amountLeftToRemove * -1)]);
-                    Log::info("[TERRAIN AUDIT] Rounding correction: {$amountLeftToRemove} {$dominion->race->homeTerrain()->key} removed.");
+                    #Log::info("[TERRAIN AUDIT] Rounding correction: {$amountLeftToRemove} {$dominion->race->homeTerrain()->key} removed.");
                     #ldump("[TERRAIN AUDIT] Rounding correction: {$amountLeftToRemove} {$dominion->race->homeTerrain()->key} removed.");
                 }
 
@@ -133,7 +133,7 @@ class TerrainService
 
         if($this->terrainCalculator->hasLessTerrainThanLand($dominion))
         {
-            Log::info("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
+            #Log::info("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
             #ldump("[TERRAIN AUDIT] Audit failed for {$dominion->name} (# {$dominion->realm->number}): has more terrain than land.");
 
 
@@ -163,7 +163,7 @@ class TerrainService
                         }
                         else
                         {
-                            Log::info("[TERRAIN AUDIT] Skipping {$terrainKey} terrain for {$dominion->name} (# {$dominion->realm->number}): no ratio available.");
+                            #Log::info("[TERRAIN AUDIT] Skipping {$terrainKey} terrain for {$dominion->name} (# {$dominion->realm->number}): no ratio available.");
                             #ldump("[TERRAIN AUDIT] Skipping {$terrainKey} terrain for {$dominion->name} (# {$dominion->realm->number}): no ratio available.");
                             continue;
                         }
@@ -176,7 +176,7 @@ class TerrainService
                         if($amountToAdd > 0)
                         {
                             $this->update($dominion, [$terrainKey => $amountToAdd]);
-                            Log::info("[TERRAIN AUDIT] Added {$amountToAdd} {$terrainKey} terrain to {$dominion->name} (# {$dominion->realm->number})");
+                            #Log::info("[TERRAIN AUDIT] Added {$amountToAdd} {$terrainKey} terrain to {$dominion->name} (# {$dominion->realm->number})");
                             #ldump("[TERRAIN AUDIT] Added {$amountToAdd} {$terrainKey} terrain to {$dominion->name} (# {$dominion->realm->number})");
 
                             $amountLeftToAdd -= $amountToAdd;
@@ -193,7 +193,7 @@ class TerrainService
                 {
                     $terrainAdded += $amountLeftToAdd;
                     $this->update($dominion, [$dominion->race->homeTerrain()->key => $amountLeftToAdd]);
-                    Log::info("[TERRAIN AUDIT] Rounding correction: {$amountLeftToAdd} {$dominion->race->homeTerrain()->key} added.");
+                    #Log::info("[TERRAIN AUDIT] Rounding correction: {$amountLeftToAdd} {$dominion->race->homeTerrain()->key} added.");
                     #ldump("[TERRAIN AUDIT] Rounding correction: {$amountLeftToAdd} {$dominion->race->homeTerrain()->key} added.");
                 }
 

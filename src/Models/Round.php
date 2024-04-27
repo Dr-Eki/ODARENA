@@ -68,6 +68,11 @@ class Round extends AbstractModel
         return $this->hasMany(Hold::class);
     }
 
+    public function tradeRoutes()
+    {
+        return $this->hasMany(TradeRoute::class);
+    }
+
     public function activeDominions()
     {
         return $this->dominions()->where('is_locked', false);

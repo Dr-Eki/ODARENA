@@ -2,11 +2,22 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
-use OpenDominion\Models\Hold;
+use Session;
 
+use OpenDominion\Exceptions\GameException;
+
+use OpenDominion\Models\Hold;
+use OpenDominion\Models\Resource;
+
+#use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\TradeCalculator;
-use OpenDominion\Services\TradeCalculationService;
+
 use OpenDominion\Http\Requests\Dominion\TradeCalculationRequest;
+use OpenDominion\Http\Requests\Dominion\Actions\TradeActionRequest;
+
+use OpenDominion\Services\TradeCalculationService;
+use OpenDominion\Services\Dominion\Actions\TradeActionService;
+
 
 use OpenDominion\Helpers\HoldHelper;
 use OpenDominion\Helpers\RaceHelper;
@@ -14,17 +25,40 @@ use OpenDominion\Helpers\RaceHelper;
 
 class TradeController extends AbstractDominionController
 {
+
+    protected $resourceCalculator;
+    protected $tradeCalculator;
+
+    public function __construct()
+    {
+        #$this->resourceCalculator = app(ResourceCalculator::class);
+        #$this->tradeCalculator = app(TradeCalculator::class);
+    }
+
     public function getTradeRoutes()
     {
         return view('pages.dominion.trade.routes', [
-            
             'tradeCalculator' => app(TradeCalculator::class),
+            'holdHelper' => app(HoldHelper::class),
+        ]);
+    }
+
+    public function getTradesInProgress()
+    {
+        $tradeCalculator = app(TradeCalculator::class);
+
+        $tradeRoutesTickData = $tradeCalculator->getTradeRoutesTickData($this->getSelectedDominion());
+
+        return view('pages.dominion.trade.trades-in-progress', [
+            'tradeCalculator' => $tradeCalculator,
+            'tradeRoutesTickData' => $tradeRoutesTickData,
             'holdHelper' => app(HoldHelper::class),
         ]);
     }
 
     public function getHold(Hold $hold)
     {
+
         return view('pages.dominion.trade.hold', [
             'hold' => $hold,
             
@@ -33,6 +67,60 @@ class TradeController extends AbstractDominionController
             'holdHelper' => app(HoldHelper::class),
             'raceHelper' => app(RaceHelper::class),
         ]);
+    }
+
+    public function storeTradeDetails(TradeActionRequest $request)
+    {
+        Session::forget('trade_details'); // Clear any previous trade details
+        Session::put('trade_details', $request->all());
+
+        return redirect()->route('dominion.trade.routes.confirm-trade-route');
+    }
+    
+    public function clearTradeDetails()
+    {
+        Session::forget('trade_details'); // Clear any previous trade details
+        return redirect()->route('dominion.trade.routes');
+    }
+
+    public function getConfirmTradeRoute()
+    {
+        if(Session::has('trade_details'))
+        {
+            return view('pages.dominion.trade.confirm-trade-route',
+            [
+                'tradeDetails' => session('trade_details'),
+                'tradeCalculator' => app(TradeCalculator::class),
+                'holdHelper' => app(HoldHelper::class),
+            ]);
+        }
+        else
+        {
+            return redirect()->route('dominion.trade.routes');
+        }
+    }
+
+    public function postCreateTradeRoute(TradeActionRequest $request)
+    {
+        $dominion = $this->getSelectedDominion();
+        $tradeActionService = app(TradeActionService::class);
+
+        try {
+            $result = $tradeActionService->create(
+                $dominion,
+                Hold::findOrFail($request->get('hold')),
+                Resource::fromKey($request->get('sold_resource')),
+                $request->get('sold_resource_amount'),
+                Resource::fromKey($request->get('bought_resource'))
+            );
+
+        } catch (GameException $e) {
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        return redirect()->to($result['redirect'] ?? route('dominion.trade.routes'));
     }
 
     public function calculateTradeRoute(TradeCalculationRequest $request, TradeCalculationService $tradeCalculationService)

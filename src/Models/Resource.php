@@ -2,19 +2,6 @@
 
 namespace OpenDominion\Models;
 
-/**
- * OpenDominion\Models\Spell
- *
- * @property int $id
- * @property string $key
- * @property string $name
- * @property array $prerequisites
- * @property int $costMultiplier
- * @property int $enabled
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\OpenDominion\Models\SpellPerkType[] $perks
- */
 class Resource extends AbstractModel
 {
     protected $table = 'resources';
@@ -25,11 +12,16 @@ class Resource extends AbstractModel
         'buy_value' => 'float',
         'sell_value' => 'float',
         'improvement_points' => 'float',
+        'trade' => 'array',
     ];
+
+    public function getTradeAttribute($value)
+    {
+        return json_decode($value);
+    }
 
     public static function fromKey($key)
     {
         return self::where('key', $key)->first();
     }
-
 }

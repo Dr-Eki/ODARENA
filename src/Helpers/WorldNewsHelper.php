@@ -8,7 +8,7 @@ use OpenDominion\Models\Artefact;
 use OpenDominion\Models\DecreeState;
 use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
-use OpenDominion\Models\DominionDecreeState;
+use OpenDominion\Models\Hold;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\RealmArtefact;
@@ -151,6 +151,9 @@ class WorldNewsHelper
 
             case 'theft':
                 return $this->generateTheftString($event->source, $event->target, $event, $viewer);
+
+            case 'tradeRouteCreated':
+                return $this->generateTradeRouteCreatedString($event->source, $event->target, $viewer);
 
             default:
                 return 'No string defined for event type <code>' . $event->type . '</code>.';
@@ -1081,6 +1084,28 @@ class WorldNewsHelper
         return $string;
     }
 
+    public function generateTradeRouteCreatedString(Dominion $dominion, Hold $hold, Dominion $viewer): string
+    {
+        $viewerInvolved = ($dominion->realm->id == $viewer->realm->id);
+
+        if($viewerInvolved)
+        {
+            $string = sprintf(
+                '%s has established a trade route with %s.',
+                $this->generateDominionString($dominion, 'neutral', $viewer),
+                $this->generateHoldString($hold)
+              );
+        }
+        else
+        {
+            $string = sprintf(
+                'A trade route has been established.'
+              );
+        }
+
+        return $string;
+    }
+
     public function generateDominionString(Dominion $dominion, string $mode = 'neutral', Dominion $viewer): string
     {
 
@@ -1114,6 +1139,16 @@ class WorldNewsHelper
           );
 
         return $string;
+    }
+
+    public function generateHoldString(Hold $hold): string
+    {
+        return sprintf(
+            '<a href="%s"><span class="%s">%s</span></a>',
+            route('dominion.trade.hold', $hold->key),
+            $this->getSpanClass('purple'),
+            $hold->name
+          );
     }
 
     public function generateRealmOnlyString(Realm $realm, $mode = 'other'): string

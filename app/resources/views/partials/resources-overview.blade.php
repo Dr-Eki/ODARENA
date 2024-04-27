@@ -1,7 +1,6 @@
 @if (isset($selectedDominion) && !Route::is('dominion.status'))
     <div class="box">
         <div class="box-body">
-
             <div class="row">
                 <div class="col-xs-2">
                     <div class="row">
@@ -15,12 +14,14 @@
                         <div class="col-lg-6">{{ number_format($selectedDominion->peasants) }}</div>
                     </div>
                 </div>
+                {{--
                 <div class="col-xs-2">
                     <div class="row">
                       <div class="col-lg-6"><b>Networth:</b></div>
                       <div class="col-lg-6">{{ number_format($networthCalculator->getDominionNetworth($selectedDominion)) }}</div>
                   </div>
                 </div>
+                        --}}
                 <div class="col-xs-2">
                     @php
                         $dpFromUnitsWithoutSufficientResources = $militaryCalculator->dpFromUnitWithoutSufficientResources($selectedDominion);
@@ -38,7 +39,7 @@
                 </div>
 
                 <div class="col-xs-2">
-                    <div class="row" data-toggle="tooltip" data-placement="top" title='<small class="text-muted">XP:</small> {{ number_format($productionCalculator->getXpGeneration($selectedDominion)) }}/tick'>
+                    <div class="row"{{-- data-toggle="tooltip" data-placement="top" title='<small class="text-muted">XP:</small> {{ number_format($productionCalculator->getXpGeneration($selectedDominion)) }}/tick'--}}>
                         <div class="col-lg-6"><b>XP:</b></div>
                         <div class="col-lg-6">{{ number_format($selectedDominion->xp) }}</div>
                     </div>
@@ -55,15 +56,18 @@
             <div class="row">
                 @foreach ($selectedDominion->race->resources as $resourceKey)
                     @php
-                        $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                        $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->where('category', 'strategic')->first();
                     @endphp
+                    {{--
                     <div class="col-xs-2" data-toggle="tooltip" data-placement="top" title='<small class="text-muted">{{ $resource->name }}:</small> {{ number_format($resourceCalculator->getProduction($selectedDominion, $resourceKey) - $resourceCalculator->getConsumption($selectedDominion, $resourceKey)) }}/tick'>
+                    --}}
+                    <div class="col-xs-2">
                         <div class="row">
                             <div class="col-lg-6">
                                 <b>{{ $resource->name }}:</b>
                             </div>
                             <div class="col-lg-6">
-                                {{ number_format($resourceCalculator->getAmount($selectedDominion, $resourceKey)) }}
+                                {{ number_format($selectedDominion->{'resource_' . $resourceKey}) }}
                             </div>
                         </div>
                     </div>

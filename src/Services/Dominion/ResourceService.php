@@ -38,10 +38,10 @@ class ResourceService
     {
         foreach($resourceKeys as $resourceKey => $amount)
         {
+            $resource = Resource::where('key', $resourceKey)->first();
             # Positive values: create or update DominionResource
             if($amount > 0)
             {
-                $resource = Resource::where('key', $resourceKey)->first();
                 $amount = intval(max(0, $amount));
 
                 if($this->resourceCalculator->dominionHasResource($dominion, $resourceKey))
@@ -67,8 +67,6 @@ class ResourceService
             # Negative values: update or delete DominionResource
             else
             {
-                $resource = Resource::where('key', $resourceKey)->first();
-
                 $owned = $this->resourceCalculator->getAmount($dominion, $resource->key);
 
                 $amountToRemove = min(abs($amount), $owned);

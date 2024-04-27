@@ -19,6 +19,7 @@ use OpenDominion\Models\RealmResource;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\RoundResource;
+use OpenDominion\Models\TradeRoute;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
@@ -141,6 +142,9 @@ class ResourceCalculator
 
         // Add interest
         $production += $this->getInterest($dominion, $resourceKey);
+
+        // Add trade
+        $production += $this->getResourceDueFromTradeNextTick($dominion, $resourceKey);
 
         // Return
         return (int)max($production, 0);
@@ -448,6 +452,8 @@ class ResourceCalculator
             return 0;
         }
 
+        $consumedResource = Resource::where('key', $consumedResourceKey)->firstOrFail();
+
         $consumption = 0;
         $consumption += $dominion->getBuildingPerkValue($consumedResourceKey . '_upkeep_raw');
         $consumption += $dominion->getSpellPerkValue($consumedResourceKey . '_upkeep_raw');
@@ -467,7 +473,7 @@ class ResourceCalculator
         # Check for resource_conversion
         if($resourceConversionData = $dominion->getBuildingPerkValue('resource_conversion'))
         {
-            foreach($dominion->race->resources as $resourceKey)
+            foreach($dominion->resourceKeys() as $resourceKey)
             {
                 if(
                       isset($resourceConversionData['from'][$consumedResourceKey]) and
@@ -571,9 +577,31 @@ class ResourceCalculator
             $consumption += $this->getAmount($dominion, $consumedResourceKey) * $decayRate;
         }
 
+        $consumption += $this->getResourceTotalSoldPerTick($dominion, $consumedResource);
+
         return (int)max(0, $consumption);
 
-        #return min(max(0, $consumption), $this->getAmount($dominion, $consumedResourceKey));
+
+    }
+
+    public function getResourceTotalSoldPerTick(Dominion $dominion, Resource $resource): float
+    {
+        return TradeRoute::where('dominion_id', $dominion->id)->where('source_resource_id', $resource->id)->sum('source_amount');
+    }
+
+    public function getResourceDueFromTradeNextTick(Dominion $dominion, string $resourceKey): float
+    {
+        $resource = Resource::fromKey($resourceKey);
+
+        if($resource->id !== 10)
+        {
+            return 0;
+        }
+
+        $tradeRouteIds = $dominion->tradeRoutes()->where('target_resource_id', $resource->id)->pluck('id');
+        $queues = TradeRoute\Queue::whereIn('trade_route_id', $tradeRouteIds)->get();
+
+        return $queues->where('tick',1)->where('type', 'import')->sum('amount');
 
     }
 
@@ -870,4 +898,41 @@ class ResourceCalculator
         return $returningResources;
     }
 
+    public function getProductionPerResource(Dominion $dominion): array
+    {
+        $production = [];
+        foreach($dominion->resourceKeys() as $resourceKey)
+        {
+            $production[$resourceKey] = $this->getProduction($dominion, $resourceKey);
+        }
+
+        return $production;
+    }
+
+    public function getConsumptionPerResource(Dominion $dominion): array
+    {
+        $consumption = [];
+        foreach($dominion->resourceKeys() as $resourceKey)
+        {
+            $consumption[$resourceKey] = $this->getConsumption($dominion, $resourceKey);
+        }
+
+        return $consumption;
+    }
+
+    public function getNetProductionPerResource(Dominion $dominion): array
+    {
+        $netProduction = [];
+        foreach($dominion->resourceKeys() as $resourceKey)
+        {
+            $netProduction[$resourceKey] = $this->getProduction($dominion, $resourceKey) - $this->getConsumption($dominion, $resourceKey);
+        }
+
+        return $netProduction;
+    }
+    
+    public function getResourceNetProduction(Dominion $dominion, string $resourceKey): int
+    {
+        return $this->getProduction($dominion, $resourceKey) - $this->getConsumption($dominion, $resourceKey);
+    }
 }

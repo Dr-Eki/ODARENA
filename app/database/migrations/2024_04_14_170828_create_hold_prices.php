@@ -20,12 +20,12 @@ return new class extends Migration
             $table->unsignedInteger('tick')->default(0);
 
             $table->string('action');
-            $table->decimal('price', 8, 4);#->nullable();
+            $table->decimal('price', 12, 6);#->nullable();
  
             $table->foreign('hold_id')->references('id')->on('holds');
             $table->foreign('resource_id')->references('id')->on('resources');
 
-            $table->unique(['hold_id', 'resource_id', 'action']);
+            $table->unique(['hold_id', 'resource_id', 'action', 'tick']);
 
 
             $table->timestamps();

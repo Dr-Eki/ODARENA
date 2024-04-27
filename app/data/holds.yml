@@ -52,7 +52,7 @@ twilight_hollow:
 
 crimson_sands:
   name: Crimson Sands
-  ruler_name: Kharak
+  ruler_name: Sizamile Bwana-Akili
   description: Dominated by vast deserts and inhabited by nomadic peoples, this hold is famed for its rich mineral deposits and harsh conditions.
   race: Jagunii
   desired_resources:
@@ -503,3 +503,16 @@ bleak_barrens:
   sold_resources:
     - blood
     - body
+
+thelvethas:
+  name: Thelvethas
+  ruler_name: Lhoris Alassas
+  description: A beautiful island-city where the Elves of the Sea trade in pearls and kelp, and seek the rarest of gems.
+  race: Elf
+  desired_resources:
+    - gems
+    - spices
+  sold_resources:
+    - pearls
+    - kelp
+    - books

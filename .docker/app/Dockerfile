@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zlib1g-dev \
     nano \
-    cron
+    cron \
+    screen
 
 # Clear Cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

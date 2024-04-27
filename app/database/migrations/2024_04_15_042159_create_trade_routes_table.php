@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('trade_routes', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedInteger('round_id');
             $table->unsignedInteger('dominion_id');
             $table->unsignedBigInteger('hold_id');
             $table->unsignedInteger('source_resource_id');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->unsignedInteger('total_sold')->default(0);
             $table->unsignedInteger('status')->default(1);
 
+            $table->foreign('round_id')->references('id')->on('rounds');
             $table->foreign('dominion_id')->references('id')->on('dominions');
             $table->foreign('hold_id')->references('id')->on('holds');
             $table->foreign('source_resource_id')->references('id')->on('resources');

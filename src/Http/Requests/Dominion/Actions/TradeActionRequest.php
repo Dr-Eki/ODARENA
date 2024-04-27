@@ -17,9 +17,9 @@ class TradeActionRequest extends AbstractDominionRequest
 
         return [
             'hold' => 'required|integer|exists:holds,id',
-            'sold_resource' => 'required|string|exists:resources,key',  
-            'bought_resource' => 'required|string|exists:resources,key',
+            'sold_resource' => 'required|string|exists:resources,key',
             'sold_resource_amount' => 'required|integer|min:1',
+            'bought_resource' => 'required|string|exists:resources,key',
         ];
     }
 }

@@ -20,7 +20,8 @@
         <div class="box box-primary">
             <div class="box-header with-border">
                 <h3 class="box-title"><i class="fa-solid fa-arrow-right-arrow-left fa-fw"></i> Trade Routes</h3>
-            </div>           
+                <a class="pull-right btn btn-primary" href="{{ route('dominion.trade.trades-in-progress') }}">View Trades In Progress</a>
+            </div>
             <div class="box-body table-responsive box-border">
 
                 <table class="table table-hover">
@@ -28,29 +29,49 @@
                         <tr>
                             <th>Hold</th>
                             <th>Resource Sold</th>
-                            <th>Amount Sold Per Trade</th>
+                            <th>
+                                <span data-toggle="tooltip" data-placement="top" title="How much of the sold resource you are selling each tick.">
+                                    Amount Sold per Trade
+                                </span>
+                            </th>
                             <th>Resource Bought</th>
-                            <th>Current Price</th>
-                            <th>Next Trade Amount</th>
+                            <th>
+                                <span data-toggle="tooltip" data-placement="top" title="Hold price to buy the resource you are selling and hold price to sell the resource you are buying.">
+                                    Market Price
+                                </span>
+                            </th>
+                            <th>
+                                <span data-toggle="tooltip" data-placement="top" title="Actual amount is calculated each tick, using the prevailing market price and any modifiers such as sentiment and trade perks.">
+                                    Est. Amount Bought
+                                </span>
+                            </th>
                             <th>Trades</th>
                             <th>Total Bought</th>
                             <th>Total Sold</th>
-                            <th colspan="2">Action</th>
+                            <th colspan="2" class="text-center"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($selectedDominion->tradeRoutes() as $tradeRoute)
+                        @foreach ($selectedDominion->tradeRoutes as $tradeRoute)
                             <tr>
-                                <td>{{ $tradeRoute->hold->name }}</td>
-                                <td>{{ $tradeRoute->resourceSold->name }}</td>
-                                <td>{{ $tradeRoute->amount }}</td>
-                                <td>{{ $tradeRoute->hold->prices }}</td>
-                                <td>x</td>
-                                <td>{{ $tradeRoute->trades }}</td>
-                                <td>{{ $tradeRoute->total_bought }}</td>
-                                <td>{{ $tradeRoute->total_sold }}</td>
+                                <td><a href="{{ route('dominion.trade.hold', $tradeRoute->hold->key) }}"><strong>{{ $tradeRoute->hold->name }}</strong></a></td>
+                                <td>{{ $tradeRoute->soldResource->name }}</td>
+                                <td>{{ number_format($tradeRoute->source_amount) }}</td>
+                                <td>{{ $tradeRoute->boughtResource->name }}</td>
+                                <td>{{ $tradeRoute->hold->buyPrice($tradeRoute->soldResource->key) }}:{{ $tradeRoute->hold->sellPrice($tradeRoute->boughtResource->key) }}</td>
+                                <td>{{ number_format($tradeRoute->source_amount * $tradeRoute->hold->buyPrice($tradeRoute->soldResource->key) * $tradeRoute->hold->sellPrice($tradeRoute->boughtResource->key)) }}</td>
+                                <td>{{ number_format($tradeRoute->trades) }}</td>
+                                <td>{{ number_format($tradeRoute->total_bought) }}</td>
+                                <td>{{ number_format($tradeRoute->total_sold) }}</td>
                                 <td>
-                                    <a href="{{ route('dominion.trade/cancel-route', $tradeRoute->id) }}" class="btn btn-xs btn-danger">Cancel</a>
+                                    <form method="post" action="{{ route('dominion.trade.routes.delete-trade-route') }}">
+                                        @csrf
+                                        <input type="hidden" name="trade_route_id" value="{{ $tradeRoute->id }}">
+                                        <button type="submit" class="btn btn-xs btn-danger">Cancel</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <a href="{{ route('dominion.trade.routes.edit', $tradeRoute->id) }}" class="btn btn-xs btn-primary">Edit</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -61,26 +82,6 @@
         </div>
     </div>
 </div>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa-solid fa-arrow-right-arrow-left fa-fw"></i> Trade In Progress</h3>
-            </div>           
-            <div class="box-body table-responsive no-padding">
-
-                <table class="table table-hover">
-                    <!-- 
-                        Tables showing units returning and units sent
-                    -->
-                </table>
-                
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <div class="row">
     <div class="col-md-12">
@@ -103,7 +104,7 @@
                         @if(isset($user->settings['skip_trade_confirmation']) and $user->settings['skip_trade_confirmation'])
                             <form method="post" action="{{ route('dominion.trade.routes.create-trade-route') }}">
                         @else
-                            <form method="post" action="{{ route('dominion.trade.routes.confirm-trade-route') }}">
+                            <form method="post" action="{{ route('dominion.trade.routes.store-trade-details') }}">
                         @endif
                         @csrf
                     @endif
@@ -128,7 +129,7 @@
                                 </colgroup>
                                 <thead>
                                     <tr>
-                                        <th><em class="text-muted">Base prices</em></th>
+                                        <th><em class="text-muted">Hold prices</em></th>
                                         <th>Buy Price</th>
                                         <th>Sell Price</th>
                                     </tr>
@@ -149,54 +150,64 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-md-2">
-                            <h5>Resource Sold</h5>
-                            <div class="input-group">
+                        @if(!$canTradeWithHold)
+                            <div class="col-md-6">
+                                <p>You cannot trade with this hold. You do not have any resources the hold is interested in buying.</p>
+                            </div>
+                        @else
+                            <div class="col-md-2">
+                                <h5 data-toggle="tooltip" data-placement="top" title="Do not exceed current net production or current stockpile (whichever is highest).">You Sell</h5>
                                 <div class="input-group">
-                                    <select name="sold_resource" class="form-control" style="min-width:10em; width:100%;">
+                                    <select name="sold_resource" class="input-group form-control" style="min-width:10em; width:100%;">
                                         @foreach($hold->desired_resources as $resourceKey)
                                             @php 
                                                 $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                                $canTradeResource = $tradeCalculator->canDominionTradeResource($selectedDominion, $resource);
                                             @endphp
-                                            <option value="{{ $resource->key }}">{{ $resource->name }}</option>
+
+                                            @if($tradeCalculator->canDominionTradeResource($selectedDominion, $resource))
+                                                <option value="{{ $resource->key }}">{{ $resource->name }}</option>
+                                            @else
+                                                <option value="{{ $resource->key }}" disabled>{{ $resource->name }} (cannot trade)</option>
+                                            @endif
+
                                         @endforeach
                                     </select>
                                     <span class="input-group-btn">
-                                        <input type="number" name="sold_resource_amount" class="form-control text-center" placeholder="0" min="0" size="8" style="min-width:10em; width:100%;" value="{{ old('offer.' . $hold->key . '.' . $resource->key) }}" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
+                                        <input type="number" name="sold_resource_amount" class="form-control text-center" placeholder="0" min="1" size="5" style="min-width:5em; width:100%;" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
                                     </span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-2">
-                            <h5>Resource Bought</h5>
-                            <div class="input-group">
+                            <div class="col-md-2">
+                                <h5>You Buy</h5>
                                 <div class="input-group">
                                     <select name="bought_resource" class="form-control" style="min-width:10em; width:100%;">
                                         @foreach($hold->sold_resources as $resourceKey)
                                             @php 
                                                 $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
                                             @endphp
-                                            <option value="{{ $resource->key }}">{{ $resource->name }}</option>
+
+                                            @if($tradeCalculator->canDominionTradeResource($selectedDominion, $resource))
+                                                <option value="{{ $resource->key }}">{{ $resource->name }}</option>
+                                            @else
+                                                <option value="{{ $resource->key }}" disabled>{{ $resource->name }} (cannot trade)</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                     <span class="input-group-btn">
-                                        <input type="number" name="bought_resource_amount" class="form-control text-center" placeholder="0" min="0" size="8" style="min-width:10em; width:100%;" value="{{ old('offer.' . $hold->key . '.' . $resource->key) }}" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
+                                        <input type="number" name="bought_resource_amount" class="form-control text-center" placeholder="0" min="0" size="5" style="min-width:5em; width:100%;" disabled>
                                     </span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-2 text-center">
-                            <h5>&nbsp;</h5>
-                            @if($canTradeWithHold)
-                                <span data-toggle="tooltip" data-placement="top" title="Submit trade offer with {{ $hold->name }}">
-                            @else
-                                <span data-toggle="tooltip" data-placement="top" title="You cannot trade with {{ $hold->name }}">
-                            @endif
-                                <button type="submit" class="btn btn-block btn-primary" {{ !$canTradeWithHold ? 'disabled' : null  }}>
+                            <div class="col-md-2 text-center">
+                                <h5>&nbsp;</h5>
+                                <span data-toggle="tooltip" data-placement="top" title="Submit trade offer to {{ $hold->name }}">
+                                <button type="submit" class="btn btn-block btn-primary">
                                     Offer Trade
                                 </button>
-                            </span>
-                        </div>
+                                </span>
+                            </div>
+                        @endif
                     </div>
 
                     @if($canTradeWithHold)
@@ -212,16 +223,17 @@
 
 @push('page-scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const forms = document.querySelectorAll('.box-primary form');
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.box-primary form');
 
-            forms.forEach(form => {
-                const soldResourceSelect = form.querySelector('select[name="sold_resource"]');
-                const boughtResourceSelect = form.querySelector('select[name="bought_resource"]');
-                const soldResourceAmountInput = form.querySelector('input[name="sold_resource_amount"]');
-                const boughtResourceAmountInput = form.querySelector('input[name="bought_resource_amount"]');
+        forms.forEach(form => {
+            const soldResourceSelect = form.querySelector('select[name="sold_resource"]');
+            const boughtResourceSelect = form.querySelector('select[name="bought_resource"]');
+            const soldResourceAmountInput = form.querySelector('input[name="sold_resource_amount"]');
+            const boughtResourceAmountInput = form.querySelector('input[name="bought_resource_amount"]');
 
-                // Add event listeners
+            // Check if elements exist before adding event listeners
+            if (soldResourceSelect && boughtResourceSelect && soldResourceAmountInput && boughtResourceAmountInput) {
                 [soldResourceSelect, boughtResourceSelect, soldResourceAmountInput].forEach(input => {
                     input.addEventListener('change', function() {
                         const data = {
@@ -241,7 +253,6 @@
                         })
                         .then(response => response.json())
                         .then(data => {
-                            // Access the bought_resource_amount from the nested original object
                             if (data.original && data.original.bought_resource_amount) {
                                 boughtResourceAmountInput.value = data.original.bought_resource_amount;
                             } else {
@@ -252,10 +263,9 @@
                         .catch(error => console.error('Error:', error));
                     });
                 });
-            });
+            }
         });
-
-
+    });
     </script>
 @endpush
 

@@ -107,13 +107,17 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             # Trade Routes
             $router->redirect('trade', 'dominion/trade/routes');
             $router->get('trade/routes')->uses('Dominion\TradeController@getTradeRoutes')->name('trade.routes');
+            $router->get('trade/trades-in-progress')->uses('Dominion\TradeController@getTradesInProgress')->name('trade.trades-in-progress');
             $router->get('trade/holds')->uses('Dominion\TradeController@getHolds')->name('trade.holds');
             $router->get('trade/hold/{hold}')->uses('Dominion\TradeController@getHold')->name('trade.hold');
-            $router->post('trade/routes/confirm-trade-route')->uses('Dominion\TradeController@postConfirmTradeRoute')->name('trade.routes.confirm-trade-route');
+            $router->get('trade/routes/confirm-trade-route')->uses('Dominion\TradeController@getConfirmTradeRoute')->name('trade.routes.confirm-trade-route');
+            $router->get('trade/routes/clear-trade-route')->uses('Dominion\TradeController@clearTradeDetails')->name('trade.routes.clear-trade-route');
+            $router->get('trade/routes/edit/{tradeRoute}')->uses('Dominion\TradeController@getEditTradeRoute')->name('trade.routes.edit');
+            $router->post('trade/routes/store-trade-details')->uses('Dominion\TradeController@storeTradeDetails')->name('trade.routes.store-trade-details');
             $router->post('trade/routes/create-trade-route')->uses('Dominion\TradeController@postCreateTradeRoute')->name('trade.routes.create-trade-route');
             $router->post('trade/routes/attack-trade-route')->uses('Dominion\TradeController@postAttackTradeRoute')->name('trade.routes.attack-trade-route');
             $router->post('trade/routes/delete-trade-route')->uses('Dominion\TradeController@postDeleteTradeRoute')->name('trade.routes.delete-trade-route');
-            $router->post('trade/routes/calculate-trade-route')->uses('Dominion\TradeController@calculateTradeRoute')->name('trade.routes.calculate-trade-route');            
+            $router->post('trade/routes/calculate-trade-route')->uses('Dominion\TradeController@calculateTradeRoute')->name('trade.routes.calculate-trade-route');      
 
             // Improvements
             $router->get('improvements')->uses('Dominion\ImprovementController@getImprovements')->name('improvements');

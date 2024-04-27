@@ -35,6 +35,16 @@ body:
     buy: 1
     sell: 1
 
+books:
+  name: Books
+  category: luxury
+  description: A collection of knowledge, stories, and spells.
+  buy: null
+  sell: null
+  trade:
+    buy: 1
+    sell: 1
+
 brimmer:
   name: Brimmer
   description: A thick liquid extracted from ore.
@@ -77,8 +87,18 @@ food:
   buy: 0.5
   sell: 0.10
   trade:
-    buy: 1
-    sell: 1
+    buy: 0.5
+    sell: 0.1
+
+figurines:
+  name: Figurines
+  category: luxury
+  description: Small, carved figures of various creatures, some of which are imbued with magic.
+  buy: null
+  sell: null
+  trade:
+    buy: 2
+    sell: 3
 
 gems:
   name: Gems
@@ -113,14 +133,24 @@ gunpowder:
   buy: null
   sell: 2
   trade:
-    buy: 1
-    sell: 1
+    buy: 0.0002
+    sell: 4
 
 horse:
   name: Horse
   description: A fourlegged animal equally strong and loyal.
   buy: null
   sell: 2
+  trade:
+    buy: 1
+    sell: 1
+
+instruments:
+  name: Instruments
+  category: luxury
+  description: Musical instruments of various kinds, in the right hands capable of producing the finest melodies.
+  buy: null
+  sell: null
   trade:
     buy: 1
     sell: 1
@@ -193,6 +223,9 @@ mud:
   description: It's mud.
   buy: 1
   sell: 0.5
+  trade:
+    buy: 1
+    sell: 1
 
 obsidian:
   name: Obsidian
@@ -236,7 +269,7 @@ prisoner:
   buy: null
   sell: 4
   trade:
-    buy: 1
+    buy: 4
     sell: 1
 
 rage:
@@ -273,12 +306,22 @@ spices:
   buy: null
   sell: null
   trade:
-    buy: 1
-    sell: 1
+    buy: 20 # Resources per gold
+    sell: 0.05 # Gold per resource
 
 strength:
   name: Strength
   description: The Monster gains strength from fighting.
+  buy: null
+  sell: null
+  trade:
+    buy: 1
+    sell: 1
+
+sugar:
+  name: Sugar
+  category: luxury
+  description: A sweet substance extracted from plants.
   buy: null
   sell: null
   trade:
@@ -310,4 +353,4 @@ yak:
   sell: null
   trade:
     buy: 1
-    sell: 1
+    sell: 0.0001

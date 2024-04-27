@@ -7,7 +7,6 @@ use File;
 use Exception;
 use Log;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 
 use Laravel\Horizon\Horizon;
@@ -52,6 +51,7 @@ use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
 use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\InsightService;
+use OpenDominion\Services\Dominion\TradeService;
 #use OpenDominion\Services\Dominion\ProtectionService;
 use Throwable;
 
@@ -96,6 +96,7 @@ class TickService
     protected $researchService;
     protected $resourceService;
     protected $terrainService;
+    protected $tradeService;
 
     /**
      * TickService constructor.
@@ -136,7 +137,7 @@ class TickService
         $this->researchService = app(ResearchService::class);
         $this->resourceService = app(ResourceService::class);
         $this->terrainService = app(TerrainService::class);
-
+        $this->tradeService = app(TradeService::class);
 
         /* These calculators need to ignore queued resources for the following tick */
         $this->populationCalculator->setForTick(true);
@@ -151,8 +152,6 @@ class TickService
      */
     public function tickHourly()
     {
-        // Clear all cached values
-        Cache::flush();
         
         if(File::exists('storage/framework/down'))
         {
@@ -173,7 +172,6 @@ class TickService
 
             DB::transaction(function () use ($round, $tickTime)
             {
-
                 if(static::EXTENDED_LOGGING) { Log::debug('** Checking for win conditions'); }
                 $this->handleWinConditions($round);
 
@@ -206,127 +204,36 @@ class TickService
                     Log::info("Queueing up dominion {$dominion->id}: {$dominion->name}");
                     dump("Queuing up dominion {$dominion->id}: {$dominion->name}");
                     ProcessDominionJob::dispatch($dominion)->onQueue('tick');
-                    /*
-
-                    $this->temporaryData[$round->id][$dominion->id] = [];
-
-                    $this->temporaryData[$round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
-                    $this->temporaryData[$round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($dominion);
-
-                    if(
-                        ($dominion->round->ticks % 4 == 0) and
-                        !$this->protectionService->isUnderProtection($dominion) and
-                        $dominion->round->hasStarted() and
-                        !$dominion->getSpellPerkValue('fog_of_war') and
-                        !$dominion->isAbandoned()
-                        )
-                    {
-                        $this->queueService->setForTick(false); # Necessary as otherwise this-tick units are missing
-                        if(static::EXTENDED_LOGGING) { Log::debug('** Capturing insight for ' . $dominion->name); }
-                        $this->insightService->captureDominionInsight($dominion);
-                        $this->queueService->setForTick(true); # Reset
-                    }
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Updating buildings for ' . $dominion->name); }
-                    $this->handleBuildings($dominion);
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Updating terrain for ' . $dominion->name); }
-                    $this->handleTerrain($dominion);
-
-                    if(static::EXTENDED_LOGGING){ Log::debug('** Updating improvments for ' . $dominion->name); }
-                    $this->handleImprovements($dominion);
-
-                    if(static::EXTENDED_LOGGING){ Log::debug('** Updating deities for ' . $dominion->name); }
-                    $this->handleDeities($dominion);
-
-                    if(static::EXTENDED_LOGGING){ Log::debug('** Updating artefacts for ' . $dominion->name); }
-                    $this->handleArtefacts($dominion);
-
-                    if(static::EXTENDED_LOGGING){ Log::debug('** Updating research for ' . $dominion->name); }
-                    $this->handleResearch($dominion);
-
-                    if(static::EXTENDED_LOGGING){ Log::debug('** Updating units for ' . $dominion->name); }
-                    $this->handleUnits($dominion);
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Updating resources for ' . $dominion->name); }
-                    $this->handleResources($dominion);
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle Barbarians:'); }
-                    # NPC Barbarian: invasion, training, construction
-                    if($dominion->race->name === 'Barbarian')
-                    {
-                        if(static::EXTENDED_LOGGING) { Log::debug('*** Handle Barbarian invasions for ' . $dominion->name); }
-                        $this->barbarianService->handleBarbarianInvasion($dominion);
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('*** Handle Barbarian construction for ' . $dominion->name); }
-                        $this->barbarianService->handleBarbarianConstruction($dominion);
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('*** Handle Barbarian improvements for ' . $dominion->name); }
-                        $this->barbarianService->handleBarbarianImprovements($dominion);
-                    }
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('* Handle stasis'); }
-                    $this->handleStasis($dominion);
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle Pestilence'); }
-                    // Afflicted: Abomination generation
-                    if(!empty($dominion->tick->pestilence_units))
-                    {
-                        $caster = Dominion::findorfail($dominion->tick->pestilence_units['caster_dominion_id']);
-
-                        if(static::EXTENDED_LOGGING) { Log::debug('*** ' . $dominion->name . ' has pestilence from ' . $caster->name); }
-
-                        if ($caster)
-                        {
-                            $this->queueService->queueResources('summoning', $caster, ['military_unit1' => $dominion->tick->pestilence_units['units']['military_unit1']], 12);
-                        }
-                    }
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle land generation'); }
-                    // Myconid: Land generation
-                    if(!empty($dominion->tick->generated_land))
-                    {
-                        $this->queueService->queueResources('exploration', $dominion, ['land' => $dominion->tick->generated_land], 12);
-                    }
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle unit generation'); }
-                    // Unit generation
-                    foreach($dominion->race->units as $unit)
-                    {
-                        if(!empty($dominion->tick->{'generated_unit' . $unit->slot}))
-                        {
-                            $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 1)); # +1 because it's ticking
-                        }
-                    }
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle starvation for ' . $dominion->name); }
-                    
-                    if($this->resourceCalculator->isOnBrinkOfStarvation($dominion) and !$dominion->isAbandoned())
-                    {
-                        $this->notificationService->queueNotification('starvation_occurred');
-                        Log::info('[STARVATION] ' . $dominion->name . ' (# ' . $dominion->realm->number . ') is starving.');
-                    }
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Handle unit attrition for ' . $dominion->name); }
-                    
-                    if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
-                    {
-                        $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']);
-                    }
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Cleaning up active spells'); }
-                    $this->cleanupActiveSpells($dominion);
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Cleaning up queues'); }
-                    $this->cleanupQueues($dominion);
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Sending notifications (hourly_dominion)'); }
-                    $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
-
-                    if(static::EXTENDED_LOGGING) { Log::debug('** Precalculate tick'); }
-                    $this->precalculateTick($dominion, true);
-                    */
                 }
+
+                $attempts = 60;
+                $delay = 1000; // milliseconds
+                
+                retry($attempts, function () use ($round, $attempts, $delay) {
+                    $i = isset($i) ? $i + 1 : 1;
+
+                    if (Redis::llen('queues:tick') === 0) {
+                        $round->fill([
+                            'ticks' => ($round->ticks + 1),
+                            'is_ticking' => 0,
+                            'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
+                        ])->save();
+                        return;
+                    }
+                
+                    $infoString = sprintf(
+                        '[%s] Waiting for tick queue to finish. Check %s of %s. Currently: %s. Trying again in %s ms.',
+                        now()->format('Y-m-d H:i:s'),
+                        $i,
+                        $attempts,
+                        Redis::llen('queues:tick'),
+                        number_format($delay)
+                    );
+
+                    Log::info($infoString);
+                    dump($infoString);
+                    throw new Exception('Tick queue not finish');
+                }, $delay);
 
                 if(static::EXTENDED_LOGGING) { Log::debug('* Update all dominions'); }
                 $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
@@ -346,6 +253,9 @@ class TickService
                 if(static::EXTENDED_LOGGING) { Log::debug('* Update all artefact aegises'); }
                 $this->updateArtefactsAegises($round);
 
+                if(static::EXTENDED_LOGGING) { Log::debug('* Update all trade routes'); }
+                $this->handleTradeRoutes($round);
+
                 Log::info(sprintf(
                     '[TICK] Ticked %s dominions in %s ms in %s',
                     number_format($round->activeDominions->count()),
@@ -362,55 +272,17 @@ class TickService
                     $this->barbarianService->createBarbarian($round);
                 }
             });
-        
-            # Run audit functions after tick transaction is completed.
-            /*
-            if(static::EXTENDED_LOGGING) { Log::debug('** Audit and repair terrain'); }
-            foreach($round->activeDominions as $dominion)
-            {
-                $this->terrainService->auditAndRepairTerrain($dominion);
-            }
-            */
-
-            Log::info(sprintf(
-                '[QUEUES] Cleaned up queues, sent notifications, and precalculated %s dominions in %s ms in %s',
-                number_format($round->activeDominions->count()),
-                number_format($this->now->diffInMilliseconds(now())),
-                $round->name
-            ));
 
             $this->now = now();
 
-            $attempts = 40;
-            $delay = 1000; // milliseconds
-            
-            retry($attempts, function () use ($round, $attempts, $delay) {
-                $i = isset($i) ? $i + 1 : 1;
-
-                if (Redis::llen('queues:tick') === 0) {
-                    $round->fill([
-                        'ticks' => ($round->ticks + 1),
-                        'is_ticking' => 0,
-                        'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
-                    ])->save();
-                    return;
-                }
-            
-                $infoString = sprintf(
-                    '[%s] Waiting for tick queue to finish. Check %s of %s. Currently: %s. Trying again in %s ms.',
-                    now()->format('Y-m-d H:i:s'),
-                    $i,
-                    $attempts,
-                    Redis::llen('queues:tick'),
-                    number_format($delay)
-                );
-
-                Log::info($infoString);
-                dump($infoString);
-                throw new Exception('Tick queue not finish');
-            }, $delay);
-
              unset($this->temporaryData[$round->id]);
+
+             Log::info(sprintf(
+                 '[QUEUES] Cleaned up queues, sent notifications, and precalculated %s dominions in %s ms in %s',
+                 number_format($round->activeDominions->count()),
+                 number_format($this->now->diffInMilliseconds(now())),
+                 $round->name
+             ));
         }
     }
 
@@ -1817,6 +1689,11 @@ class TickService
         }
     
         RoundWinner::insert($winners);
+    }
+
+    public function handleTradeRoutes(Round $round)
+    {
+        $this->tradeService->handleTradeRoutesTick($round);
     }
 
 }

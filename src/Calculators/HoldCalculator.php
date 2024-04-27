@@ -16,7 +16,7 @@ class HoldCalculator
     }
 
 
-    public function calculateNewResourceBuyPrice(Hold $hold, string $resourceKey): float
+    public function getNewResourceBuyPrice(Hold $hold, string $resourceKey): float
     {
         if(!$this->canResourceBeTraded($resourceKey) || !$this->canResourceBeTradedByHold($hold, $resourceKey))
         {
@@ -24,12 +24,12 @@ class HoldCalculator
         }
 
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
-        $price = $resource->buy * (in_array($resource->key, $hold->desired_resources)) ? (4/3) : 1.0000;
 
-        return round($price, 4);
+        $price = $resource->trade->buy;# * (in_array($resource->key, $hold->desired_resources)) ? (4/3) : 1.0000;
+        return round($price, 6);
     }
 
-    public function calculateNewResourceSellPrice(Hold $hold, string $resourceKey): float
+    public function getNewResourceSellPrice(Hold $hold, string $resourceKey): float
     {
 
         if(!$this->canResourceBeTraded($resourceKey) || !$this->canResourceBeTradedByHold($hold, $resourceKey))
@@ -38,9 +38,9 @@ class HoldCalculator
         }
 
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
-        $price = $resource->sell * (in_array($resource->key, $hold->sold_resources)) ? (3/4) : 1.0000;
+        $price = $resource->trade->sell;# * (in_array($resource->key, $hold->sold_resources)) ? (3/4) : 1.0000;
 
-        return round($price, 4);
+        return round($price, 6);
     }
 
     public function canResourceBeTradedByHold(Hold $hold, string $resourceKey): bool
@@ -52,7 +52,7 @@ class HoldCalculator
     public function canResourceBeTraded(string $resourceKey): bool
     {
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
-        return ($resource->buy > 0 || $resource->sell > 0);
+        return ($resource->trade->buy > 0 || $resource->trade->sell > 0);
     }
 
 }

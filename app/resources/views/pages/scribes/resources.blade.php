@@ -21,12 +21,18 @@
             <div class="col-md-12">
                 <table class="table table-striped">
                     <colgroup>
-                        <col width="200">
+                        <col width="150">
+                        <col width="100">
+                        <col width="150">
+                        <col width="150">
                         <col>
                     </colgroup>
                     <thead>
                         <tr>
                             <th>Resource</th>
+                            <th>Category</th>
+                            <th>Exchange Values</th>
+                            <th>Trade Values</th>
                             <th>Description</th>
                         </tr>
                     </thead>
@@ -39,6 +45,9 @@
                         @endforeach
                         <tr>
                             <td>{{ $resource->name }}</td>
+                            <td>{{ $resource->category }}</td>
+                            <td>{{ $resource->buy ?? '–' }}:{{ $resource->sell ?? '–' }}</td>
+                            <td>{{ number_format($resource->trade->buy, 4) ?? 'N/A' }}:{{ number_format($resource->trade->sell,4) ?? 'N/A' }}</td>
                             <td>{{ $resource->description }}</td>
                         </tr>
                     @endforeach

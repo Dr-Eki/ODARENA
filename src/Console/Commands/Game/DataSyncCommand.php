@@ -1145,6 +1145,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'buy' => object_get($resourceData, 'buy', null),
                     'sell' => object_get($resourceData, 'sell', null),
                     'description' => object_get($resourceData, 'description', 'No description'),
+                    'trade' => object_get($resourceData, 'trade', ['buy' => 0, 'sell' => 0]),
                     'excluded_races' => object_get($resourceData, 'excluded_races', []),
                     'exclusive_races' => object_get($resourceData, 'exclusive_races', []),
                 ]);
@@ -1169,7 +1170,7 @@ class DataSyncCommand extends Command implements CommandInterface
                         $newValue = implode(',', $newValue);
                     }
 
-                    $this->info("[Change] {$key}: {$originalValue} -> {$newValue}");
+                   # $this->info("[Change] {$key}: {$originalValue} -> {$newValue}");
                 }
             }
 

@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('resources', function (Blueprint $table) {
-            //
+            $table->string('category')->default('strategic')->after('name');
+            $table->json('trade')->nullable()->after('description');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('resources', function (Blueprint $table) {
-            //
+            $table->dropColumn('category');
+            $table->dropColumn('trade');
         });
     }
 };
