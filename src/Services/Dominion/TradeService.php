@@ -4,6 +4,7 @@ namespace OpenDominion\Services\Dominion;
 
 use DB;
 use OpenDominion\Models\Round;
+use OpenDominion\Models\TradeLedger;
 use OpenDominion\Models\TradeRoute;
 
 use OpenDominion\Calculators\Dominion\TradeCalculator;
@@ -51,8 +52,8 @@ class TradeService
         }
     }
 
-    public function handleTradeRoute(TradeRoute $tradeRoute)
-    { 
+    public function handleTradeRoute(TradeRoute $tradeRoute): void
+    {
 
         $dominion = $tradeRoute->dominion;
         
@@ -76,6 +77,20 @@ class TradeService
         # Remove the resource from the hold
         $this->holdResourceService->update($hold, [$boughtResource->key => ($boughtResourceAmount * -1)]);
 
+        # Record trade ledger
+        TradeLedger::create([
+            'round_id' => $tradeRoute->round_id,
+            'dominion_id' => $dominion->id,
+            'hold_id' => $hold->id,
+            'tick' => $tradeRoute->round->ticks,
+            'return_tick' => $tradeRoute->round->ticks + 12, # Hardcoded for now
+            'return_ticks' => 12, # Hardcoded for now
+            'source_resource_id' => $soldResource->id,
+            'target_resource_id' => $boughtResource->id,
+            'source_amount' => $soldResourceAmount,
+            'target_amount' => $boughtResourceAmount,
+            'trade_dominion_sentiment' => optional($hold->sentiments->where('target_id', $dominion->id)->first())->sentiment ?? 0,
+        ]);
 
         $this->notificationService->queueNotification('trade_route_started', [
             'hold_id' => $hold->id,

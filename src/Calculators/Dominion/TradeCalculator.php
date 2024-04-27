@@ -38,7 +38,8 @@ class TradeCalculator
 
     public function canDominionTradeResource(Dominion $dominion, Resource $resource): bool
     {
-        return in_array($resource->key, $dominion->resourceKeys());
+        return true;
+        #return in_array($resource->key, $dominion->resourceKeys()) or $resource->category == 'luxury';
     }
 
     #$tradeData = $this->tradeCalculator->getTradeResult($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);

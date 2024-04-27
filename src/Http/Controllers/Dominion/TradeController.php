@@ -4,15 +4,20 @@ namespace OpenDominion\Http\Controllers\Dominion;
 
 use Session;
 
+use Illuminate\Http\Request;
+
 use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Models\Hold;
 use OpenDominion\Models\Resource;
+use OpenDominion\Models\TradeRoute;
 
 #use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\TradeCalculator;
 
 use OpenDominion\Http\Requests\Dominion\TradeCalculationRequest;
+use OpenDominion\Http\Requests\Dominion\TradeEditRequest;
+use OpenDominion\Http\Requests\Dominion\Actions\TradeEditActionRequest;
 use OpenDominion\Http\Requests\Dominion\Actions\TradeActionRequest;
 
 use OpenDominion\Services\TradeCalculationService;
@@ -22,9 +27,11 @@ use OpenDominion\Services\Dominion\Actions\TradeActionService;
 use OpenDominion\Helpers\HoldHelper;
 use OpenDominion\Helpers\RaceHelper;
 
+use OpenDominion\Traits\DominionGuardsTrait;
 
 class TradeController extends AbstractDominionController
 {
+    use DominionGuardsTrait;
 
     protected $resourceCalculator;
     protected $tradeCalculator;
@@ -45,9 +52,13 @@ class TradeController extends AbstractDominionController
 
     public function getTradesInProgress()
     {
+        $dominion = $this->getSelectedDominion();
+
+        $this->guardActionsDuringTick($dominion);
+
         $tradeCalculator = app(TradeCalculator::class);
 
-        $tradeRoutesTickData = $tradeCalculator->getTradeRoutesTickData($this->getSelectedDominion());
+        $tradeRoutesTickData = $tradeCalculator->getTradeRoutesTickData($dominion);
 
         return view('pages.dominion.trade.trades-in-progress', [
             'tradeCalculator' => $tradeCalculator,
@@ -67,6 +78,63 @@ class TradeController extends AbstractDominionController
             'holdHelper' => app(HoldHelper::class),
             'raceHelper' => app(RaceHelper::class),
         ]);
+    }
+
+    public function getLedger()
+    {
+        $tradeLedgerEntries = $this->getSelectedDominion()->tradeLedger()->orderByDesc('created_at')->paginate(50);
+        return view('pages.dominion.trade.ledger', ['tradeLedgerEntries' => $tradeLedgerEntries]);
+    }
+
+    public function getEditTradeRoute($hold, $resourceKey)
+    {
+        $resource = Resource::where('key', $resourceKey)->first();
+    
+        // Define the dominion
+        $dominion = $this->getSelectedDominion();
+
+        // Optionally handle the case where hold or resource doesn't exist
+        if (!$hold || !$resource) {
+            return redirect()->route('dominion.trade.routes');
+        }
+        
+        $tradeRoute = TradeRoute::where('dominion_id',$dominion->id)
+                                ->where('hold_id', $hold->id)
+                                ->where('source_resource_id', $resource->id)
+                                ->first();
+        
+        // Optionally handle the case where trade route doesn't exist or doesn't belong to this dominion
+        if (!$tradeRoute || $tradeRoute->dominion_id !== $this->getSelectedDominion()->id) {
+            return redirect()->route('dominion.trade.routes');
+        }
+    
+        return view('pages.dominion.trade.edit-trade-route', [
+            'tradeRoute' => $tradeRoute,
+            'tradeCalculator' => app(TradeCalculator::class),
+            'holdHelper' => app(HoldHelper::class),
+        ]);
+    }
+
+    public function postEditTradeRoute(TradeEditActionRequest $request)
+    {
+        $tradeRoute = TradeRoute::find($request->get('trade_route'));
+        $soldResourceAmount = $request->get('sold_resource_amount');
+
+        $tradeActionService = app(TradeActionService::class);
+
+        try {
+            $result = $tradeActionService->edit(
+                $tradeRoute,
+                $soldResourceAmount
+            );
+
+        } catch (GameException $e) {
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        return redirect()->to($result['redirect'] ?? route('dominion.trade.routes'));
     }
 
     public function storeTradeDetails(TradeActionRequest $request)

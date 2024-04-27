@@ -105,13 +105,13 @@ class QueueService
                 if($finishedQueue->type == 'import')
                 {
                     $this->dominionResourceService->updateResources($tradeRoute->dominion, [$finishedQueue->resource->key => $amount]);
-                    dump('* Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to dominion ' . $tradeRoute->dominion->name);
+                    dump('+ Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to dominion ' . $tradeRoute->dominion->name);
                 }
                 elseif($finishedQueue->type == 'export')
                 {
 
                     $this->holdResourceService->update($tradeRoute->hold, [$finishedQueue->resource->key => $amount]);
-                    dump('* Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to hold ' . $tradeRoute->hold->name);
+                    dump('+ Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to hold ' . $tradeRoute->hold->name);
                 }
 
                 $tradeRoute->save();

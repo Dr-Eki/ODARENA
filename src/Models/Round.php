@@ -68,6 +68,11 @@ class Round extends AbstractModel
         return $this->hasMany(Hold::class);
     }
 
+    public function tradeLedger()
+    {
+        return $this->hasMany(TradeLedger::class);
+    }
+
     public function tradeRoutes()
     {
         return $this->hasMany(TradeRoute::class);

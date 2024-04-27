@@ -34,22 +34,22 @@ class HoldPrice extends AbstractModel
 
     public function getBuyPriceAttribute($value)
     {
-        return round($value, 4);
+        return round($value, config('trade.price_decimals'));
     }
 
     public function getSellPriceAttribute($value)
     {
-        return round($value, 4);
+        return round($value, config('trade.price_decimals'));
     }
 
     public function setBuyPriceAttribute($value)
     {
-        $this->attributes['buy_price'] = round($value, 4);
+        $this->attributes['buy_price'] = round($value, config('trade.price_decimals'));
     }
 
     public function setSellPriceAttribute($value)
     {
-        $this->attributes['sell_price'] = round($value, 4);
+        $this->attributes['sell_price'] = round($value, config('trade.price_decimals'));
     }
 
     # Get the latest buy price for a resource

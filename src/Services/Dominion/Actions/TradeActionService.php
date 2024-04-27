@@ -20,7 +20,7 @@ class TradeActionService
 {
     use DominionGuardsTrait;
 
-    protected $tradeRoute;
+    protected $tradeRoute = null;
 
     protected $tradeCalculator;
 
@@ -80,16 +80,9 @@ class TradeActionService
             throw new GameException('You cannot trade this amount of this resource.');
         }
 
-        # Check if a trade route already exists for this dominion, hold, and resources
-        $existingTradeRoute = TradeRoute::where('dominion_id', $dominion->id)
-            ->where('hold_id', $hold->id)
-            ->where('source_resource_id', $soldResource->id)
-            ->where('target_resource_id', $boughtResource->id)
-            ->first();
-
-        if ($existingTradeRoute)
+        if($this->tradeCalculator->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource) <= 0)
         {
-            throw new GameException('You are already trading ' . $soldResource->name . ' for ' . $boughtResource->name . ' with ' . $hold->name . '.');
+            throw new GameException('Trade route could not be established as the expected return is 0.');
         }
 
         DB::transaction(function () use ($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource) {
@@ -101,24 +94,21 @@ class TradeActionService
                 'target_resource_id' => $boughtResource->id,
                 'source_amount' => $soldResourceAmount,
             ]);
-
-            if($this->tradeRoute)
-            {
-                $gameEvent = GameEvent::create([
-                    'round_id' => $dominion->round_id,
-                    'source_type' => Dominion::class,
-                    'source_id' => $dominion->id,
-                    'target_type' => Hold::class,
-                    'target_id' => $hold->id,
-                    'type' => 'tradeRouteCreated',
-                    'data' => $this->tradeRoute,
-                    'tick' => $dominion->round->ticks
-                ]);
-            }
         });
 
         if($this->tradeRoute)
         {
+            $gameEvent = GameEvent::create([
+                'round_id' => $dominion->round_id,
+                'source_type' => Dominion::class,
+                'source_id' => $dominion->id,
+                'target_type' => Hold::class,
+                'target_id' => $hold->id,
+                'type' => 'tradeRouteCreated',
+                'data' => $this->tradeRoute,
+                'tick' => $dominion->round->ticks
+            ]);
+
             $message = vsprintf('Trade route to trade %s for %s with %s has been created.', [
                 $soldResource->name,
                 $boughtResource->name,
@@ -131,7 +121,88 @@ class TradeActionService
                 'redirect' => route('dominion.trade.routes')
             ];
         }
+    }
 
+    public function edit(TradeRoute $tradeRoute, int $soldResourceAmount)
+    {
+        $dominion = $tradeRoute->dominion;
+        $hold = $tradeRoute->hold;
+        $soldResource = $tradeRoute->soldResource;
+        $boughtResource = $tradeRoute->boughtResource;
+
+        $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
+
+        if(!$hold)
+        {
+            throw new GameException('Invalid hold.');
+        }
+
+        if(!$soldResource)
+        {
+            throw new GameException('Invalid sold resource.');
+        }
+
+        if(!$boughtResource)
+        {
+            throw new GameException('Invalid bought resource.');
+        }
+
+        if($soldResourceAmount <= 0)
+        {
+            throw new GameException('Invalid amount. You must trade at least 1 of this resource.');
+        }
+
+        if ($dominion->round->id !== $hold->round->id)
+        {
+            throw new GameException('You cannot trade with holds from other rounds.');
+        }
+
+        if (!$this->tradeCalculator->canDominionTradeWithHold($dominion, $hold))
+        {
+            throw new GameException('You cannot trade with this hold.');
+        }
+
+        if (!$this->tradeCalculator->canDominionTradeResource($dominion, $soldResource))
+        {
+            throw new GameException('You cannot sell this resource.');
+        }
+
+        if (!$this->tradeCalculator->canDominionTradeResource($dominion, $boughtResource))
+        {
+            throw new GameException('You cannot buy this resource.');
+        }
+
+        if ($soldResourceAmount > $this->tradeCalculator->getResourceMaxOfferableAmount($dominion, $soldResource))
+        {
+            throw new GameException('You cannot trade this amount of this resource.');
+        }
+
+        if($this->tradeCalculator->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource) <= 0)
+        {
+            throw new GameException('Trade route could not be established as the expected return is 0.');
+        }
+
+        DB::transaction(function () use ($tradeRoute, $soldResourceAmount) {
+            $tradeRoute->update([
+                'source_amount' => $soldResourceAmount,
+            ]);
+        });
+
+        if($this->tradeRoute)
+        {
+            $message = vsprintf('Trade route to trade %s for %s with %s has been updated.', [
+                $soldResource->name,
+                $boughtResource->name,
+                $hold->name
+            ]);
+    
+            return [
+                'message' => $message,
+                'alert-type' => 'success',
+                'redirect' => route('dominion.trade.routes')
+            ];
+        }
 
     }
 

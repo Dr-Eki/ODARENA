@@ -39,6 +39,7 @@ class ResourceService
         foreach($resourceKeys as $resourceKey => $amount)
         {
             $resource = Resource::where('key', $resourceKey)->first();
+            
             # Positive values: create or update DominionResource
             if($amount > 0)
             {

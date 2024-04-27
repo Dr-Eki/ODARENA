@@ -44,43 +44,63 @@
                                     $exportTotal = 0;
                                 @endphp
 
-                                <tr>
-                                    <td><i class="fa-solid fa-arrow-left fa-fw"></i>{{ $resource->name }}</td>
+                                @php
+                                    $total = 0;
+                                    foreach ($holdTradeData as $tickData) {
+                                        if (isset($tickData[$resource->key]['import'])) {
+                                            $total += $tickData[$resource->key]['import'];
+                                        }
+                                    }
+                                @endphp
+                                @if($total)
+                                    <tr>
+                                        <td><i class="fa-solid fa-arrow-left fa-fw"></i>{{ $resource->name }}</td>
 
-                                    @for ($tick = 1; $tick <= 12; $tick++)
-                                        <td class="text-center">
-                                            @if(isset($holdTradeData[$tick][$resource->key]['import']))
-                                                {{ number_format($holdTradeData[$tick][$resource->key]['import']) }}
+                                        @for ($tick = 1; $tick <= 12; $tick++)
+                                            <td class="text-center">
+                                                @if(isset($holdTradeData[$tick][$resource->key]['import']))
+                                                    {{ number_format($holdTradeData[$tick][$resource->key]['import']) }}
 
-                                                @php
-                                                    $importTotal += $holdTradeData[$tick][$resource->key]['import'];
-                                                @endphp
-                                            @else
-                                                0
-                                            @endif
-                                        </td>
-                                    @endfor
-                                    <td>{{ number_format($importTotal) }}</td>
-                                </tr>
+                                                    @php
+                                                        $importTotal += $holdTradeData[$tick][$resource->key]['import'];
+                                                    @endphp
+                                                @else
+                                                    &mdash;
+                                                @endif
+                                            </td>
+                                        @endfor
+                                        <td>{{ number_format($importTotal) }}</td>
+                                    </tr>
+                                @endif
 
-                                <tr>
-                                    <td><i class="fa-solid fa-arrow-right fa-fw"></i>{{ $resource->name }}</td>
+                                @php
+                                    $total = 0;
+                                    foreach ($holdTradeData as $tickData) {
+                                        if (isset($tickData[$resource->key]['export'])) {
+                                            $total += $tickData[$resource->key]['export'];
+                                        }
+                                    }
+                                @endphp
+                                @if($total)
+                                    <tr>
+                                        <td><i class="fa-solid fa-arrow-right fa-fw"></i>{{ $resource->name }}</td>
 
-                                    @for ($tick = 1; $tick <= 12; $tick++)
-                                        <td class="text-center">
-                                            @if(isset($holdTradeData[$tick][$resource->key]['export']))
-                                                {{ number_format($holdTradeData[$tick][$resource->key]['export']) }}
-                                                
-                                                @php
-                                                    $exportTotal += $holdTradeData[$tick][$resource->key]['export'];
-                                                @endphp
-                                            @else
-                                                0
-                                            @endif
-                                        </td>
-                                    @endfor
-                                    <td>{{ number_format($exportTotal) }}</td>
-                                </tr>
+                                        @for ($tick = 1; $tick <= 12; $tick++)
+                                            <td class="text-center">
+                                                @if(isset($holdTradeData[$tick][$resource->key]['export']))
+                                                    {{ number_format($holdTradeData[$tick][$resource->key]['export']) }}
+                                                    
+                                                    @php
+                                                        $exportTotal += $holdTradeData[$tick][$resource->key]['export'];
+                                                    @endphp
+                                                @else
+                                                    &mdash;
+                                                @endif
+                                            </td>
+                                        @endfor
+                                        <td>{{ number_format($exportTotal) }}</td>
+                                    </tr>
+                                @endif
                             @endforeach
                         </tbody>
                     </table>

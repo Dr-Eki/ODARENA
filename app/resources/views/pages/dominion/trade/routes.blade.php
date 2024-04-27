@@ -36,11 +36,6 @@
                             </th>
                             <th>Resource Bought</th>
                             <th>
-                                <span data-toggle="tooltip" data-placement="top" title="Hold price to buy the resource you are selling and hold price to sell the resource you are buying.">
-                                    Market Price
-                                </span>
-                            </th>
-                            <th>
                                 <span data-toggle="tooltip" data-placement="top" title="Actual amount is calculated each tick, using the prevailing market price and any modifiers such as sentiment and trade perks.">
                                     Est. Amount Bought
                                 </span>
@@ -48,30 +43,30 @@
                             <th>Trades</th>
                             <th>Total Bought</th>
                             <th>Total Sold</th>
-                            <th colspan="2" class="text-center"></th>
+                            <th class="text-center"></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($selectedDominion->tradeRoutes as $tradeRoute)
                             <tr>
                                 <td><a href="{{ route('dominion.trade.hold', $tradeRoute->hold->key) }}"><strong>{{ $tradeRoute->hold->name }}</strong></a></td>
-                                <td>{{ $tradeRoute->soldResource->name }}</td>
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title='<span class="text-muted">Market sell price: </span>{{ number_format($tradeRoute->hold->buyPrice($tradeRoute->soldResource->key), config('trade.price_decimals')) }}'>
+                                        {{ $tradeRoute->soldResource->name }}
+                                    </span>
+                                </td>
                                 <td>{{ number_format($tradeRoute->source_amount) }}</td>
-                                <td>{{ $tradeRoute->boughtResource->name }}</td>
-                                <td>{{ $tradeRoute->hold->buyPrice($tradeRoute->soldResource->key) }}:{{ $tradeRoute->hold->sellPrice($tradeRoute->boughtResource->key) }}</td>
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title='<span class="text-muted">Market buy price: </span>{{ number_format($tradeRoute->hold->sellPrice($tradeRoute->boughtResource->key), config('trade.price_decimals')) }}'>
+                                        {{ $tradeRoute->boughtResource->name }}
+                                    </span>
+                                </td>
                                 <td>{{ number_format($tradeRoute->source_amount * $tradeRoute->hold->buyPrice($tradeRoute->soldResource->key) * $tradeRoute->hold->sellPrice($tradeRoute->boughtResource->key)) }}</td>
                                 <td>{{ number_format($tradeRoute->trades) }}</td>
                                 <td>{{ number_format($tradeRoute->total_bought) }}</td>
                                 <td>{{ number_format($tradeRoute->total_sold) }}</td>
                                 <td>
-                                    <form method="post" action="{{ route('dominion.trade.routes.delete-trade-route') }}">
-                                        @csrf
-                                        <input type="hidden" name="trade_route_id" value="{{ $tradeRoute->id }}">
-                                        <button type="submit" class="btn btn-xs btn-danger">Cancel</button>
-                                    </form>
-                                </td>
-                                <td>
-                                    <a href="{{ route('dominion.trade.routes.edit', $tradeRoute->id) }}" class="btn btn-xs btn-primary">Edit</a>
+                                    <a href="{{ route('dominion.trade.routes.edit', [$tradeRoute->hold->key, $tradeRoute->soldResource->key]) }}" class="btn btn-xs btn-primary">Edit</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -137,14 +132,14 @@
                                 <tbody>
                                     @foreach($hold->resourceKeys() as $resourceKey)
                                         @php 
-                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                            $resource = OpenDominion\Models\Resource::fromKey($resourceKey);
                                             $buyPrice = $hold->buyPrice($resourceKey);
                                             $sellPrice = $hold->sellPrice($resourceKey);
                                         @endphp
                                         <tr>
                                             <td>{{ $resource->name }}</td>
-                                            <td>{!! $buyPrice ? number_format($buyPrice, 4) : '&mdash;' !!}</td>
-                                            <td>{!! $sellPrice ? number_format($sellPrice, 4) : '&mdash;' !!}</td>
+                                            <td>{!! $buyPrice ? number_format($buyPrice, config('trade.price_decimals')) : '&mdash;' !!}</td>
+                                            <td>{!! $sellPrice ? number_format($sellPrice, config('trade.price_decimals')) : '&mdash;' !!}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -215,6 +210,50 @@
                     @endif
                 @endforeach
             </div>            
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa-solid fa-book"></i> Trade Ledger</h3>
+            </div>
+            <div class="box-body table-responsive box-border">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Hold</th>
+                            <th>Tick</th>
+                            <th>Resource Sold</th>
+                            <th>Resource Bought</th>
+                            <th>Amount Sold</th>
+                            <th>Amount Bought</th>
+                            <th>Return Tick</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($selectedDominion->tradeLedger->sortByDesc('created_at')->take(10) as $tradeLedgerEntry)
+                            <tr>
+                                <td><a href="{{ route('dominion.trade.hold', $tradeLedgerEntry->hold->key) }}"><strong>{{ $tradeLedgerEntry->hold->name }}</strong></a></td>
+                                <td>{{ number_format($tradeLedgerEntry->tick) }}</td>
+                                <td>{{ $tradeLedgerEntry->soldResource->name }}</td>
+                                <td>{{ $tradeLedgerEntry->boughtResource->name }}</td>
+                                <td>{{ number_format($tradeLedgerEntry->source_amount) }}</td>
+                                <td>{{ number_format($tradeLedgerEntry->target_amount) }}</td>
+                                <td>{{ number_format($tradeLedgerEntry->return_tick) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <div class="col-md-2 text-left">
+                    <small class="text-muted">Showing last 10 entries. </small>
+                </div>
+                <div class="col-md-10 text-right">
+                    <a href="{{ route('dominion.trade.ledger') }}" class="btn btn-primary">View Full Ledger</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

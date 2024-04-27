@@ -221,6 +221,11 @@ class Dominion extends AbstractModel
         return $this->belongsTo(Round::class);
     }
 
+    public function tradeLedger()
+    {
+        return $this->hasMany(TradeLedger::class);
+    }
+
     public function tradeRoutes()
     {
         return $this->hasMany(TradeRoute::class);

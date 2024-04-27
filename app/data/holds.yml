@@ -4,8 +4,12 @@ verdant_veil:
   description: A lush forest hold, known for its hidden groves and secretive denizens.
   race: Wood Elf
   desired_resources:
+    - books
+    - gems
     - gold
+    - mana
   sold_resources:
+    - gold
     - lumber
     - food
 
@@ -17,18 +21,22 @@ bragnahold:
   desired_resources:
     - gold
     - food
+    - instruments
   sold_resources:
-    - ore
     - gems
+    - gold
+    - ore
 
 sunset_spire:
   name: Sunset Spire
   ruler_name: Lysandra
-  description: A city famous for a tall tower that catches the last light of the sun.
+  description: A city famous for a tower so tall it touches the clouds, catching the last light of the sun.
   race: null
   desired_resources:
+    - gold
     - pearls
     - spices
+    - sugar
   sold_resources:
     - food
     - gems
@@ -42,12 +50,15 @@ twilight_hollow:
   description: A mysterious hold where day and night seem to blend known for its enigmatic, mist-covered swamp lands and eerie, glowing flora.
   race: null
   desired_resources:
+    - gold
     - gems
     - pearls
     - thunderstone
-  sold_resources:
-    - kelp
     - food
+  sold_resources:
+    - gold
+    - instruments
+    - kelp
     - mud
 
 crimson_sands:
@@ -58,9 +69,12 @@ crimson_sands:
   desired_resources:
     - gold
     - food
-  sold_resources:
     - gems
+  sold_resources:
+    - ash
+    - gold
     - prisoner
+    - figurines
 
 onyx_saltfields:
   name: Onyx Saltfields
@@ -72,6 +86,7 @@ onyx_saltfields:
     - prisoner
   sold_resources:
     - food
+    - gold
     - spices
 
 brimstone_reach:
@@ -81,7 +96,10 @@ brimstone_reach:
   race: Firewalker
   desired_resources:
     - gems
+    - gold
+    - mana
   sold_resources:
+    - gold
     - ore
     - obsidian
 
@@ -91,11 +109,13 @@ elderwood_glade:
   description: An ancient forest where trees whisper secrets and time seems to flow differently, inhabited by Sylvans and other peoples.
   race: null
   desired_resources:
+    - books
     - gold
     - gems
   sold_resources:
-    - spices
     - food
+    - gold
+    - spices
 
 serpent_marsh:
   name: Serpent Marsh
@@ -108,9 +128,10 @@ serpent_marsh:
     - thunderstone
     - gems
   sold_resources:
+    - gold
+    - kelp
     - swamp_gas
     - mud
-    - kelp
 
 celros:
   name: Celros
@@ -118,22 +139,30 @@ celros:
   description: A bustling industrial city with towering smokestacks and the relentless clang of hammers.
   race: Gnome
   desired_resources:
-    - ore
+    - books
+    - gold
     - gems
+    - ore
     - pearls
   sold_resources:
-    - thunderstone
     - brimmer
+    - gold
+    - thunderstone
+    - gunpowder
 
 yllanalon:
   name: Yllanalon
   ruler_name: Yllana
-  description: A hold located in the deepest part of the forest, shrouded in mystery and ancient magic, where whispers are said to carry ancient secrets.
+  description: A hold located in the deepest part of the forest, fully encircled by a riviar shrouded in mystery and ancient magic, where whispers are said to carry ancient secrets.
   race: Elf
   desired_resources:
-    - obsidian
     - gold
+    - obsidian
+    - ore
+    - books
   sold_resources:
+    - food
+    - gold
     - lumber
     - kelp
 
@@ -145,9 +174,12 @@ sentalva:
   desired_resources:
     - food
     - horse
+    - gold
+    - figurines
   sold_resources:
     - ore
     - gems
+    - gold
     - spices
 
 kemuhl:
@@ -158,9 +190,15 @@ kemuhl:
   desired_resources:
     - food
     - lumber
+    - gold
     - ore
+    - sugar
   sold_resources:
     - gems
+    - gold
+    - obsidian
+    - prisoner
+    - spices
 
 argentel:
   name: Argentel
@@ -172,6 +210,7 @@ argentel:
     - food
   sold_resources:
     - gems
+    - gold
     - lumber
 
 forgeheart:
@@ -180,10 +219,12 @@ forgeheart:
   description: The heart of blacksmithing and metalwork, populated by Fire Dwarves and Forge Spirits, known for its heat-intense workshops.
   race: Dwarg
   desired_resources:
-    - ore
     - food
+    - gold
+    - ore
   sold_resources:
     - brimmer
+    - gold
     - spices
 
 emerald_realm:
@@ -192,10 +233,14 @@ emerald_realm:
   description: A vibrant hold overflowing with lush vegetation and diverse wildlife, famous for its natural remedies and vibrant markets.
   race: Elf
   desired_resources:
+    - gems
+    - gold
     - horse
     - ore
   sold_resources:
     - food
+    - gold
+    - lumber
     - spices
 
 grunnminn:
@@ -205,10 +250,15 @@ grunnminn:
   race: Swarm
   desired_resources:
     - food
+    - gold
     - lumber
+    - mud
+    - sugar
   sold_resources:
     - gems
+    - gold
     - ore
+    - ash
 
 frost_moor:
   name: Iceveil Glade
@@ -216,12 +266,18 @@ frost_moor:
   description: A tundra region with sparse vegetation, known for its hardy settlements and cold resistance.
   race: Icekin
   desired_resources:
-    - gems
+    - books
+    - figurines
+    - gold
+    - lumber
+    - spices
+    - sugar
   sold_resources:
+    - gems
     - gold
     - yak
 
-dragon_eyrie:
+drakmount:
   name: Drakmount
   ruler_name: Valtharax
   description: High in the volcanic mountains, revered for its awe-inspiring scenery and danger, the nesting ground for Dragons.
@@ -229,8 +285,11 @@ dragon_eyrie:
   desired_resources:
     - gold
     - gems
+    - pearls
   sold_resources:
+    - ash
     - body
+    - gold
     - obsidian
 
 vas_nilghad:
@@ -239,10 +298,13 @@ vas_nilghad:
   description: One of the grimmest places in the world, a dark and foreboding hold where the dead are said to walk.
   race: null
   desired_resources:
-    - mana
     - gems
+    - gold
+    - mana
+    - spices
   sold_resources:
     - body
+    - gold
     - prisoner
 
 grimwater_marsh:
@@ -251,11 +313,15 @@ grimwater_marsh:
   description: A murky expanse of stagnant water and twisted mangroves, said to be haunted by vengeful spirits.
   race: Spirit
   desired_resources:
+    - figurines
     - gems
     - gold
   sold_resources:
-    - swamp_gas
+    - acid
+    - books
+    - gold
     - mud
+    - swamp_gas
 
 bloodmoon_coven:
   name: Bloodmoon Coven
@@ -265,10 +331,13 @@ bloodmoon_coven:
   desired_resources: 
     - prisoner
     - blood
+    - gold
+    - soul
   sold_resources:
+    - body
+    - gold
     - obsidian
     - thunderstone
-    - soul
 
 sootbarrow: 
   name: Sootbarrow
@@ -277,12 +346,16 @@ sootbarrow:
   race: Goblin
   desired_resources:
     - food
+    - gold
     - lumber
+    - sugar
     - spices
   sold_resources:
-    - magma
-    - ore
     - gems
+    - gold
+    - magma
+    - obsidian
+    - ore
 
 tjep_sfuo:
   name: Tjep-Sfuo
@@ -291,11 +364,14 @@ tjep_sfuo:
   race: Myconid 
   desired_resources:
     - food
+    - gold
+    - lumber
     - mud
   sold_resources:
-    - gems
-    - body
     - blood
+    - body
+    - gems
+    - gold
 
 shimmerstone_coast:
   name: Shimmerstone Coast
@@ -304,11 +380,13 @@ shimmerstone_coast:
   race: Glimjir
   desired_resources:
     - food
+    - gold
     - lumber
     - ore
   sold_resources: 
-    - pearls
+    - gold
     - kelp
+    - pearls
 
 anureth:
   name: Anureth
@@ -316,12 +394,18 @@ anureth:
   description: A bustling trade hub, this desert oasis serves as a crossroads for caravaneers.
   race: null
   desired_resources:
+    - books
+    - figurines
+    - gold
     - gems
-    - prisoner
+    - ore
+    - pearls
   sold_resources:
-    - yak
-    - spices
+    - gold
+    - horse
     - prisoner
+    - spices
+    - yak
 
 abyssal_reach: 
   name: Abyssal Reach
@@ -329,23 +413,31 @@ abyssal_reach:
   description: A hold submerged in the depths of the ocean, inhabited by enigmatic aquatic races. 
   race: Glimjir
   desired_resources:
+    - gems
+    - gold
     - lumber
-    - ore 
+    - ore
   sold_resources:
-    - pearls
+    - gold
     - kelp
+    - mud
+    - pearls
 
 fort_balor:
   name: Fort Balor
   ruler_name: Batul Kargoth
-  description: A stronghold infamous for housing the most dangerous criminals.
+  description: Roughly carved into the foot of a volcano, this is a stronghold infamous for housing the most dangerous criminals in dark, cramped cells with the walls dripping of despair.
   race: Orc
   desired_resources:
-    - ore
+    - gold
     - food
-  sold_resources:
+    - ore
     - prisoner
-    - blood 
+  sold_resources:
+    - body
+    - gold
+    - magma
+    - obsidian
 
 gloomwood:
   name: Gloomwood
@@ -353,9 +445,12 @@ gloomwood:
   description: An ancient forest cloaked in perpetual twilight, inhabited by reclusive shadow creatures.
   race: Dark Elf
   desired_resources:
-    - gold
     - food
+    - gold
+    - instruments
   sold_resources:
+    - books
+    - gold
     - lumber 
     - gems
 
@@ -365,11 +460,15 @@ blackbriar_thicket:
   description: A dense, thorny maze of vegetation, known to harbor outlaws and dangerous beasts.
   race: Goblin
   desired_resources:
+    - food
+    - gems
+    - gold
     - lumber
     - ore
   sold_resources:
-    - prisoner
+    - gold
     - mud
+    - prisoner
 
 thulian_depths:
   name: Thulian Depths
@@ -377,8 +476,10 @@ thulian_depths:
   description: Ruins of a lost civilization, now haunted and filled with traps and undead horrors.
   race: Afflicted
   desired_resources:
+    - acid
     - food 
     - gold
+    - miasma
   sold_resources:
     - body
     - prisoner
@@ -389,11 +490,14 @@ the_grotesque_citadel:
   description: A fortress of shadowy spires and dark magic, home to an enigmatic society.
   race: Revenants
   desired_resources:
+    - body
+    - gold
     - mana
     - prisoner
   sold_resources:
-    - body
     - blood
+    - gold
+    - miasma
     - obsidian
 
 glimmerforge:
@@ -402,9 +506,11 @@ glimmerforge:
   description: A mountainous enclave known for its shimmering mines and the hardy Gnomes who dwell within, master craftsmen of gunpowder and mechanics.
   race: Gnome
   desired_resources:
-    - ore
+    - food
     - gold
+    - ore
   sold_resources:
+    - gold
     - gunpowder
     - brimmer
 
@@ -416,7 +522,11 @@ thornvale:
   desired_resources:
     - body
     - food
+    - gold
+    - prisoner
   sold_resources:
+    - blood
+    - gold
     - lumber
     - miasma
 
@@ -427,10 +537,12 @@ stormwatch_peak:
   race: Snow Elf
   desired_resources:
     - food
+    - gold
     - lumber
   sold_resources:
-    - thunderstone
+    - gold
     - ore
+    - thunderstone
 
 shadowmire:
   name: Shadowmire
@@ -440,7 +552,10 @@ shadowmire:
   desired_resources:
     - gems
     - gold
+    - spices
   sold_resources:
+    - books
+    - gold
     - obsidian
     - kelp
 
@@ -452,9 +567,13 @@ mournful_shallows:
   desired_resources:
     - food
     - gems
+    - gold
+    - spices
   sold_resources:
-    - pearls
+    - gold
     - kelp
+    - mana
+    - pearls
 
 roaring_fields:
   name: Roaring Fields
@@ -462,23 +581,36 @@ roaring_fields:
   description: Sprawling savannahs roamed by large herds of yaks, governed by Nomads who value freedom and the wealth of nature.
   race: Nomad
   desired_resources:
+    - books
+    - food
+    - figurines
+    - gold
     - ore
+    - gems
     - lumber
   sold_resources:
+    - gold
+    - horse
+    - instruments
+    - prisoner
     - yak
-    - food
 
 ormundargard:
   name: Ormundargard
   ruler_name: Ivar Bloodaxe
-  description: A fortified wooden citadel nestled within an ancient grove, its Wood Elf guardians trade extensively in lumber and seek precious metals.
+  description: A fortified wooden citadel nestled within an ancient grove, it has emerged as a major Norse trading hub.
   race: Norse
   desired_resources:
-    - spices
     - gold
+    - magma
+    - spices
+    - sugar
+    - yak
   sold_resources:
-    - ore
+    - books
     - gems
+    - gold
+    - instruments
 
 everfrost_palace:
   name: Everfrost Palace
@@ -487,21 +619,27 @@ everfrost_palace:
   race: Snow Elf
   desired_resources:
     - food
+    - figurines
+    - gold
     - ore
+    - lumber
   sold_resources:
     - gems
-    - pearls
+    - gold
+    - mana
 
 bleak_barrens:
   name: Bleak Barrens
   ruler_name: Xul
-  description: A desolate wasteland inhabited by the Demon folk, trading in the blood and body parts of their enemies for magical ingredients.
+  description: A desolate wasteland inhabited by Demonic beings, trading in the blood and body parts of their enemies for magical ingredients.
   race: Demon
   desired_resources:
+    - gold
     - soul
     - spices
   sold_resources:
     - blood
+    - gold
     - body
 
 thelvethas:
@@ -511,8 +649,36 @@ thelvethas:
   race: Elf
   desired_resources:
     - gems
+    - gold
+    - lumber
     - spices
+    - sugar
   sold_resources:
-    - pearls
-    - kelp
     - books
+    - gold
+    - kelp
+    - pearls
+
+mistmoor:
+  name: Mistmoor
+  ruler_name: Dhas-Keth
+  description: A fog-shrouded hold where mildly reformed Barbarians dabble in less violent crimes such as smuggling and contraband.
+  race: Barbarian
+  desired_resources:
+    - books
+    - brimmer
+    - gold
+    - ore
+    - prisoner
+    - spices
+    - thunderstone
+  sold_resources:
+    - blood
+    - body
+    - figurines
+    - gems
+    - gold
+    - gunpowder
+    - instruments
+    - miasma
+

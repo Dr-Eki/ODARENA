@@ -3,17 +3,18 @@
 
 @section('content')
     @php
-        $holdId = $tradeDetails['hold'];
-        $hold = \OpenDominion\Models\Hold::find($holdId);
-        $soldResourceKey = $tradeDetails['sold_resource'];
-        $soldResourceAmount = $tradeDetails['sold_resource_amount'];
-        $boughtResourceKey = $tradeDetails['bought_resource'];
+        $holdId = request()->get('hold');
+        $hold = \OpenDominion\Models\Hold::where('id', $holdId)->firstOrFail();
 
-        $soldResource = \OpenDominion\Models\Resource::where('key', $soldResourceKey)->first();
+        $soldResourceKey = request()->get('sold_resource');
+        $soldResource = \OpenDominion\Models\Resource::where('key', $soldResourceKey)->firstOrFail();
 
-        $boughtResource = \OpenDominion\Models\Resource::where('key', $boughtResourceKey)->first();
+        $soldResourceAmount = request()->get('sold_resource_amount');
 
-        $boughtResourceAmount = $tradeCalculator->getBoughtResourceAmount($selectedDominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
+        $boughtResourceKey = request()->get('bought_resource');
+        $boughtResource = \OpenDominion\Models\Resource::where('key', $boughtResourceKey)->firstOrFail();
+
+        $boughtResourceAmount = request()->get('bought_resource_amount');
     @endphp
 
     @push('page-scripts')
@@ -63,22 +64,17 @@
                                 <small class="text-muted">Resource:</small> {{ $boughtResource->name }}<br>
                                 <small class="text-muted">Amount:</small> {{ number_format($boughtResourceAmount) }} per tick **<br>
                             </p>
-                            <p>
-                                <small class="text-muted">
-                                    
-                                </small>
-                            </p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
-                            <p>You have 20 seconds to confirm this trade. If you do not confirm, the trade offer will be cancelled. If you need more time, refresh the page.</p>
+                            <p>You have 20 seconds to confirm the cancellation of this trade. If you do not confirm, the trade offer will be cancelled. If you need more time, refresh the page.</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
                             <div id="progressBar">
-                                <div id="progress" style="height: 20px; width: 100%; background-color: #00a65a;"></div>
+                                <div id="progress" style="height: 20px; width: 100%; background-color: #dd4b39;"></div>
                             </div>
                         </div>
                     </div>
@@ -90,8 +86,8 @@
                                 <input type="hidden" name="sold_resource" value="{{ $soldResourceKey }}">
                                 <input type="hidden" name="sold_resource_amount" value="{{ $soldResourceAmount }}">
                                 <input type="hidden" name="bought_resource" value="{{ $boughtResourceKey }}">
-                                <button type="submit" class="btn btn-primary btn-block">
-                                    <i class="fa-solid fa-check fa-fw"></i> Confirm Trade
+                                <button type="submit" class="btn btn-danger btn-block">
+                                    <i class="fa-solid fa-check fa-fw"></i> Confirm Cancellation
                                 </button>
                             </form>
                         </div>
@@ -99,7 +95,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12">
                             <a href="{{ route('dominion.trade.routes.clear-trade-route') }}" class="btn btn-default btn-block">
-                                <i class="fa-solid fa-xmark"></i> Cancel
+                                <i class="fa-solid fa-xmark"></i> Do Nothing
                             </a>
                         </div>
                     </div>

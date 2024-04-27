@@ -1136,6 +1136,9 @@ class DataSyncCommand extends Command implements CommandInterface
 
             $resourcesToSync[] = $resourceData->name;
 
+            $trade = object_get($resourceData, 'trade', ['buy' => 0, 'sell' => 0]);
+            $trade->sell = $trade->buy > 0 ? 1/$trade->buy : 0;
+
             // Resource
             $resource = Resource::firstOrNew(['key' => $resourceKey])
                 ->fill([
@@ -1145,7 +1148,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'buy' => object_get($resourceData, 'buy', null),
                     'sell' => object_get($resourceData, 'sell', null),
                     'description' => object_get($resourceData, 'description', 'No description'),
-                    'trade' => object_get($resourceData, 'trade', ['buy' => 0, 'sell' => 0]),
+                    'trade' => $trade, #object_get($resourceData, 'trade', ['buy' => 0, 'sell' => 0]),
                     'excluded_races' => object_get($resourceData, 'excluded_races', []),
                     'exclusive_races' => object_get($resourceData, 'exclusive_races', []),
                 ]);

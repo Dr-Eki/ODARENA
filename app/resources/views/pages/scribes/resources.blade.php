@@ -45,9 +45,12 @@
                         @endforeach
                         <tr>
                             <td>{{ $resource->name }}</td>
-                            <td>{{ $resource->category }}</td>
-                            <td>{{ $resource->buy ?? '–' }}:{{ $resource->sell ?? '–' }}</td>
-                            <td>{{ number_format($resource->trade->buy, 4) ?? 'N/A' }}:{{ number_format($resource->trade->sell,4) ?? 'N/A' }}</td>
+                            <td>{{ ucwords($resource->category) }}</td>
+                            <td>{{ number_format($resource->buy, 4) ?? 'N/A' }}:{{ number_format($resource->sell,4) ?? 'N/A' }}</td>
+                            {{--
+                                <td>{{ number_format($resource->trade->buy, 4) ?? 'N/A' }}:{{ number_format($resource->trade->sell,4) ?? 'N/A' }}</td>
+                            --}}
+                            <td>{{ number_format($resource->trade->buy, 4) ?? 'N/A' }}</td>
                             <td>{{ $resource->description }}</td>
                         </tr>
                     @endforeach

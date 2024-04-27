@@ -196,8 +196,8 @@
                         <tr>
                             <td>{{ $resource->name }}</td>
                             <td>{{ number_format($hold->{'resource_' . $resourceKey}) }}</td>
-                            <td>{{ number_format($hold->sellPrice($resourceKey), 4) }}</td>
-                            <td>{{ number_format($hold->buyPrice($resourceKey), 4) }}</td>
+                            <td>{{ number_format($hold->sellPrice($resourceKey), config('trade.price_decimals')) }}</td>
+                            <td>{{ number_format($hold->buyPrice($resourceKey), config('trade.price_decimals')) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -211,18 +211,3 @@
 @endif
 
 @endsection
-
-@push('inline-scripts')
-    <script type="text/javascript">
-        document.querySelector("#words").onclick = function () {
-        document.querySelector("#text_copy").select();
-        document.execCommand("copy");
-        };
-
-        document.querySelector("#input-btn").onclick = function () {
-        document.querySelector("#input").select();
-        document.execCommand("copy");
-        };
-
-    </script>
-@endpush

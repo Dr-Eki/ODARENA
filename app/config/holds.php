@@ -1,6 +1,6 @@
 <?php
 
-# app/config/game.php
+# app/config/holds.php
 
 return [
     'starting_land' => 100,

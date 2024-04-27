@@ -144,7 +144,7 @@
                 </p>
 
                 @if(!$terrainCalculator->hasTerrainAmountEqualToLand($selectedDominion))
-                    <hr />
+                    <hr>
                     <p><span class="label label-warning">Warning!</span> 
                         @if($terrainCalculator->hasMoreTerrainThanLand($selectedDominion))
                             You have more land than terrain.
@@ -159,7 +159,7 @@
                             <i class="ra ra-wrench"></i> Repair Terrain
                         </button>
                     </form>
-                    <hr />
+                    <hr>
                 @endif
 
                 {{-- 
