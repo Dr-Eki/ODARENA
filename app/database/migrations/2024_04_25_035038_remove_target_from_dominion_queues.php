@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('dominion_queue', function (Blueprint $table) {
             if (Schema::hasColumn('dominion_queue', 'target_id')) {
-                #$table->dropForeign(['target_id']);
+                $table->dropForeign(['target_id']);
                 $table->dropColumn('target_id');
             }
 
