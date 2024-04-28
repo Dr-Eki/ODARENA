@@ -682,3 +682,19 @@ mistmoor:
     - instruments
     - miasma
 
+ak_nag_tafl:
+  name: Ak Nag Tafl
+  ruler_name: Queen
+  description: A great hive of the Ants, known for its intricate tunnels and vast underground chambers.
+  race: Ants
+  desired_resources:
+    - food
+    - gold
+    - lumber
+    - mud
+    - sugar
+  sold_resources:
+    - gems
+    - gold
+    - kelp
+

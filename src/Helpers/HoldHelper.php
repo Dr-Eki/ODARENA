@@ -10,6 +10,37 @@ class HoldHelper
     {
     }
 
+    function getSentimentDescription(int $sentiment) {
+        // Define the sentiment ranges and their corresponding descriptions
+        $sentimentRanges = [
+            -1000 => 'Despise',
+            -750  => 'Hate',
+            -500  => 'Dislike',
+            -100  => 'Avoidant',
+            -10   => 'Hesitant',
+            0     => 'Neutral',
+            10    => 'Interested',
+            100   => 'Respect',
+            500   => 'Like',
+            750   => 'Fond',
+            1000  => 'Admire'
+        ];
+    
+        // Sort the keys in descending order to prepare for comparison
+        krsort($sentimentRanges);
+    
+        // Determine the appropriate description based on the sentiment score
+        foreach ($sentimentRanges as $key => $description) {
+            if ($sentiment >= $key) {
+                return $description;
+            }
+        }
+    
+        // Default case if the sentiment is below the lowest range
+        return 'Unknown';
+    }
+    
+    /*
     public function getSentimentDescription(int $sentiment): string
     {
 
@@ -65,6 +96,7 @@ class HoldHelper
 
         return 'undefined';
     }
+    */
     
     public function getSentimentClass(string $description): string
     {
@@ -82,7 +114,7 @@ class HoldHelper
             'adore' =>      'success',
         ];
     
-        return $classes[$description] ?? '';
+        return $classes[$description] ?? 'primary';
     }
     
     
