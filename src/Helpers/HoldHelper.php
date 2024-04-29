@@ -13,17 +13,17 @@ class HoldHelper
     function getSentimentDescription(int $sentiment) {
         // Define the sentiment ranges and their corresponding descriptions
         $sentimentRanges = [
-            -1000 => 'Despise',
-            -750  => 'Hate',
-            -500  => 'Dislike',
-            -100  => 'Avoidant',
-            -10   => 'Hesitant',
-            0     => 'Neutral',
-            10    => 'Interested',
-            100   => 'Respect',
-            500   => 'Like',
-            750   => 'Fond',
-            1000  => 'Admire'
+            -1000 => 'despise',
+            -750  => 'hate',
+            -500  => 'dislike',
+            -100  => 'avoidant',
+            -10   => 'hesitant',
+            0     => 'neutral',
+            10    => 'interested',
+            100   => 'respect',
+            500   => 'like',
+            750   => 'fond',
+            1000  => 'admire'
         ];
     
         // Sort the keys in descending order to prepare for comparison

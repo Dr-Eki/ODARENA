@@ -11,6 +11,7 @@ use OpenDominion\Calculators\Dominion\TradeCalculator;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Hold;
+use OpenDominion\Models\HoldSentimentEvent;
 use OpenDominion\Models\TradeRoute;
 use OpenDominion\Models\Resource;
 
@@ -31,6 +32,11 @@ class TradeActionService
 
     public function create(Dominion $dominion, Hold $hold, Resource $soldResource, int $soldResourceAmount, Resource $boughtResource)
     {
+
+        if($dominion->protection_ticks > 0)
+        {
+            throw new GameException('You cannot trade while in protection.');
+        }
 
         $this->guardLockedDominion($dominion);
         $this->guardActionsDuringTick($dominion);
@@ -109,6 +115,8 @@ class TradeActionService
                 'tick' => $dominion->round->ticks
             ]);
 
+            HoldSentimentEvent::add($hold, $dominion, +10, 'trade_route_established');
+
             $message = vsprintf('Trade route to trade %s for %s with %s has been created.', [
                 $soldResource->name,
                 $boughtResource->name,
@@ -126,6 +134,13 @@ class TradeActionService
     public function edit(TradeRoute $tradeRoute, int $soldResourceAmount)
     {
         $dominion = $tradeRoute->dominion;
+
+        if($dominion->protection_ticks > 0)
+        {
+            throw new GameException('You cannot trade while in protection.');
+        }
+        
+
         $hold = $tradeRoute->hold;
         $soldResource = $tradeRoute->soldResource;
         $boughtResource = $tradeRoute->boughtResource;
@@ -184,6 +199,12 @@ class TradeActionService
         }
 
         DB::transaction(function () use ($tradeRoute, $soldResourceAmount) {
+
+            if($soldResourceAmount < $tradeRoute->source_amount)
+            {
+                HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, -20, 'sold_amount_reduced');
+            }
+
             $tradeRoute->update([
                 'source_amount' => $soldResourceAmount,
             ]);
@@ -206,5 +227,50 @@ class TradeActionService
 
     }
 
+    public function delete(TradeRoute $tradeRoute)
+    {
+        $dominion = $tradeRoute->dominion;
+
+        if($dominion->protection_ticks > 0)
+        {
+            throw new GameException('You cannot trade while in protection.');
+        }
+
+        $hold = $tradeRoute->hold;
+        $soldResource = $tradeRoute->soldResource;
+        $boughtResource = $tradeRoute->boughtResource;
+
+        $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
+
+        if(!$hold)
+        {
+            throw new GameException('Invalid hold.');
+        }
+
+        DB::transaction(function () use ($tradeRoute) {
+
+            $sentimentPenalty = $this->tradeCalculator->getTradeRouteCancellationSentimentPenalty($tradeRoute);
+
+            if($sentimentPenalty)
+            {
+                HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, -$sentimentPenalty, 'trade_route_cancelled_early');
+            }
+
+            $tradeRoute->delete();
+        });
+
+        $message = vsprintf('Trade route to trade %s for %s with %s has been cancelled.', [
+            $soldResource->name,
+            $boughtResource->name,
+            $hold->name
+        ]);
+
+        return [
+            'message' => $message,
+            'alert-type' => 'success',
+            'redirect' => route('dominion.trade.routes')
+        ];
+    }
 
 }

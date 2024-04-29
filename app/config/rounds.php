@@ -31,8 +31,8 @@ return [
         #'rezoning' => 'Rezoning',
         'trade_routes' => 'Trade Routes',
         'sabotage' => 'Sabotage',
-        'spells' => 'Spells',
-        'sorcery' => 'Sorcery',
+        #'spells' => 'Spells',
+        #'sorcery' => 'Sorcery',
         'theft' => 'Theft',
     ],
 

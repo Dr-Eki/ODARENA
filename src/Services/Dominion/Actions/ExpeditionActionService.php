@@ -12,11 +12,14 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\GameEvent;
 
+use OpenDominion\Factories\HoldFactory;
+
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Helpers\UnitHelper;
 
+use OpenDominion\Calculators\HoldCalculator;
 use OpenDominion\Calculators\Dominion\ArtefactCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\ExpeditionCalculator;
@@ -40,9 +43,12 @@ class ExpeditionActionService
 
     protected const MIN_MORALE = 50;
 
+    protected $holdFactory;
+
     protected $artefactCalculator;
     protected $buildingCalculator;
     protected $expeditionCalculator;
+    protected $holdCalculator;
     protected $landCalculator;
     protected $magicCalculator;
     protected $militaryCalculator;
@@ -67,9 +73,12 @@ class ExpeditionActionService
 
     public function __construct()
     {
+        $this->holdFactory = app(HoldFactory::class);
+
         $this->artefactCalculator = app(ArtefactCalculator::class);
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->expeditionCalculator = app(ExpeditionCalculator::class);
+        $this->holdCalculator = app(HoldCalculator::class);
         $this->landCalculator = app(LandCalculator::class);
         $this->magicCalculator = app(MagicCalculator::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
@@ -311,6 +320,7 @@ class ExpeditionActionService
             $this->handleXp($dominion, $this->expedition['land_discovered']);
             $this->handleResourceFinding($dominion, $units);
             $this->handleArtefactsDiscovery($dominion);
+            $this->handleHoldDiscovery($dominion);
             $this->handleReturningUnits($dominion, $units);
 
             $this->statsService->updateStat($dominion, 'land_discovered', $this->expedition['land_discovered']);
@@ -414,7 +424,7 @@ class ExpeditionActionService
 
         $this->expedition['artefact']['chance_to_find'] = $this->artefactCalculator->getChanceToDiscoverArtefactOnExpedition($dominion, $this->expedition);
      
-        if(random_chance($this->artefactCalculator->getChanceToDiscoverArtefactOnExpedition($dominion, $this->expedition)))
+        if(random_chance($this->expedition['artefact']['chance_to_find']))
         {
             if($artefact = $this->artefactService->getRandomUndiscoveredArtefact($dominion->round))
             {
@@ -438,7 +448,38 @@ class ExpeditionActionService
                 Log::info('Artefact was discovered but no random artefact could be found. Are all in play already?');
             }
         }
-    }
+    } 
+
+    protected function handleHoldDiscovery($dominion): void
+    {
+        $this->expedition['hold']['found'] = false;
+
+        if(in_array($dominion->round->mode, ['deathmatch', 'deathmatch-duration']))
+        {
+            return;
+        }
+
+        $this->expedition['hold']['chance_to_find'] = $this->holdCalculator->getChanceToDiscoverHoldOnExpedition($dominion, $this->expedition);
+     
+        if(random_chance($this->expedition['hold']['chance_to_find']))
+        {
+            if($hold = $this->holdFactory->create($dominion->round, $dominion))
+            {
+                $this->expedition['hold']['found'] = true;
+
+                $this->expedition['hold']['found'] = true;
+                $this->expedition['hold']['id'] = $hold->id;
+                $this->expedition['hold']['key'] = $hold->key;
+                $this->expedition['hold']['name'] = $hold->name;
+    
+                $this->statsService->updateStat($dominion, 'holds_discovered', 1);
+            }
+            else
+            {
+                Log::info('Hold was discovered but no random hold could be created. Are all in play already?');
+            }
+        }
+    }    
 
     protected function handleResourceFinding($dominion, $units): void
     {

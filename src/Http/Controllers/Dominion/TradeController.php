@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Models\Hold;
+use OpenDominion\Models\HoldSentimentEvent;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\TradeRoute;
 
@@ -113,6 +114,24 @@ class TradeController extends AbstractDominionController
             'tradeCalculator' => app(TradeCalculator::class),
             'holdHelper' => app(HoldHelper::class),
         ]);
+    }
+
+    public function postDeleteTradeRoute(TradeEditRequest $request)
+    {
+        $tradeRoute = TradeRoute::find($request->get('trade_route'));
+
+        $tradeActionService = app(TradeActionService::class);
+
+        try {
+            $result = $tradeActionService->delete($tradeRoute);
+
+        } catch (GameException $e) {
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        return redirect()->to($result['redirect'] ?? route('dominion.trade.routes'));
     }
 
     public function postEditTradeRoute(TradeEditActionRequest $request)

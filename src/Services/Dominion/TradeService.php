@@ -62,6 +62,9 @@ class TradeService
         $boughtResource = $tradeRoute->boughtResource;
         $soldResourceAmount = $tradeRoute->source_amount;
 
+        # Cap by what's available
+        $soldResourceAmount = min($soldResourceAmount, $dominion->{'resource_' . $soldResource->key});
+
         $tradeResult = $this->tradeCalculator->getTradeResult($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
         $boughtResourceAmount = $tradeResult['bought_resource_amount'];
 

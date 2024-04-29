@@ -4,9 +4,9 @@ namespace OpenDominion\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class HoldSentiment extends Model
+class HoldSentimentEvent extends Model
 {
-    protected $table = 'hold_sentiments';
+    protected $table = 'hold_sentiment_events';
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +17,8 @@ class HoldSentiment extends Model
         'hold_id',
         'target_id',
         'target_type',
-        'sentiment'
+        'sentiment',
+        'description'
     ];
 
     /**
@@ -43,5 +44,17 @@ class HoldSentiment extends Model
     public function target()
     {
         return $this->morphTo();
+    }
+
+
+    public static function add(Hold $hold, $target, int $sentiment, string $description)
+    {
+        return self::create([
+            'hold_id' => $hold->id,
+            'target_id' => $target->id,
+            'target_type' => get_class($target),
+            'sentiment' => $sentiment,
+            'description' => $description,
+        ]);
     }
 }

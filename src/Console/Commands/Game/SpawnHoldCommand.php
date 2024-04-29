@@ -6,6 +6,7 @@ use DB;
 use Illuminate\Console\Command;
 use OpenDominion\Factories\HoldFactory;
 use OpenDominion\Models\Round;
+use OpenDominion\Services\HoldService;
 
 class SpawnHoldCommand extends Command
 {
@@ -13,11 +14,13 @@ class SpawnHoldCommand extends Command
     protected $description = 'Spawns holds';
 
     private $holdFactory;
+    private $holdService;
 
-    public function __construct(HoldFactory $holdFactory)
+    public function __construct()
     {
         parent::__construct();
-        $this->holdFactory = $holdFactory;
+        $this->holdFactory = app(HoldFactory::class);
+        $this->holdService = app(HoldService::class);
     }
 
     public function handle()
@@ -29,6 +32,7 @@ class SpawnHoldCommand extends Command
             for ($i = 0; $i < $count; $i++) {
                 if($hold = $this->holdFactory->create($round))
                 {
+                    $this->holdService->setHoldPrices($hold, $round->ticks);
                     $this->info("Spawned hold: {$hold->name} (ID {$hold->id})");
                 }
                 else

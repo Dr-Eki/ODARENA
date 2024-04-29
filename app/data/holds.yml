@@ -123,15 +123,15 @@ serpent_marsh:
   description: A treacherous swampland where venomous creatures and carnivorous plants thrive. 
   race: Lizardfolk
   desired_resources:
+    - gems
     - gold
     - pearls
     - thunderstone
-    - gems
   sold_resources:
     - gold
     - kelp
-    - swamp_gas
     - mud
+    - swamp_gas
 
 celros:
   name: Celros

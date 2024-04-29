@@ -2,9 +2,9 @@
 
 namespace OpenDominion\Services;
 
-use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Hold;
 use OpenDominion\Models\HoldSentiment;
+use OpenDominion\Models\HoldSentimentEvent;
 use OpenDominion\Models\HoldPrice;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\Resource;
@@ -70,11 +70,54 @@ class HoldService
         return HoldPrice::updateOrCreate(['hold_id' => $hold->id, 'resource_id' => $resource->id, 'tick' => $tick, 'action' => 'sell'], ['price' => $price]);
     }
 
-    public function updateHoldSentiment(Hold $hold, Dominion $dominion, int $sentiment): void
+    /*
+    public function updateAllHoldSentiments(Round $round): void
     {
-        $holdSentiment = HoldSentiment::firstOrNew(['hold_id' => $hold->id, 'dominion_id' => $dominion->id]);
+        foreach ($round->holds as $hold)
+        {
+            foreach($round->dominions as $dominion)
+            {
+                $this->updateHoldSentiment($hold, $dominion);
+            }
+        }
+    }
 
-        $holdSentiment->sentiment += $sentiment;
+    public function updateHoldSentiment(Hold $hold, $target): void
+    {
+        $holdSentiment = HoldSentimentEvent::sum('sentiment', ['hold_id' => $hold->id, 'target_type' => get_class($target), 'target_id' => $target->id]);
+
+        HoldSentiment::updateOrCreate(['hold_id' => $hold->id, 'target_type' => get_class($target), 'target_id' => $target->id], ['sentiment' => $holdSentiment]);
+
+    }
+    */
+
+    public function updateAllHoldSentiments(Round $round): void
+    {
+        // Assuming that holds and dominions are related to round and are Eloquent collections
+        $holdIds = $round->holds->pluck('id');
+        $dominionIds = $round->dominions->pluck('id');
+    
+        // Pre-fetch all HoldSentimentEvents for these holds and dominions
+        $sentimentEvents = HoldSentimentEvent::whereIn('hold_id', $holdIds)
+                                             ->whereIn('target_id', $dominionIds)
+                                             ->get();
+    
+        // Group events by hold_id and target_id to process
+        $groupedEvents = $sentimentEvents->groupBy(function ($item) {
+            return $item->hold_id . '-' . $item->target_id;
+        });
+    
+        // Loop through grouped events and sum sentiments, then update/create records
+        foreach ($groupedEvents as $groupKey => $events) {
+            [$holdId, $dominionId] = explode('-', $groupKey);
+            $totalSentiment = $events->sum('sentiment');
+            $targetType = $events->first()->target_type; // Assuming all events in group have same target type
+    
+            HoldSentiment::updateOrCreate(
+                ['hold_id' => $holdId, 'target_id' => $dominionId, 'target_type' => $targetType],
+                ['sentiment' => $totalSentiment]
+            );
+        }
     }
 
 }

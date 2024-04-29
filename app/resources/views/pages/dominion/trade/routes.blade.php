@@ -28,6 +28,7 @@
                     <thead>
                         <tr>
                             <th>Hold</th>
+                            <th>Sentiment</th>
                             <th>Resource Sold</th>
                             <th>
                                 <span data-toggle="tooltip" data-placement="top" title="How much of the sold resource you are selling each tick.">
@@ -48,8 +49,22 @@
                     </thead>
                     <tbody>
                         @foreach ($selectedDominion->tradeRoutes as $tradeRoute)
+                            @php
+                                $sentiment = optional($tradeRoute->hold->sentiments->where('target_id', $selectedDominion->id)->first())->sentiment ?? 0;
+                                $sentimentDescription = $holdHelper->getSentimentDescription($sentiment);
+                                $sentimentClass = $holdHelper->getSentimentClass($sentimentDescription);
+                                $user = Auth::user();
+                            @endphp
+                        
                             <tr>
-                                <td><a href="{{ route('dominion.trade.hold', $tradeRoute->hold->key) }}"><strong>{{ $tradeRoute->hold->name }}</strong></a></td>
+                                <td>
+                                    <a href="{{ route('dominion.trade.hold', $tradeRoute->hold->key) }}"><strong>{{ $tradeRoute->hold->name }}</strong></a>
+                                </td>
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title='<span class="text-muted">Sentiment:</span>&nbsp;{{ number_format($sentiment) }}'>
+                                        <span class="label label-{{ $sentimentClass }}">{{ ucwords($sentimentDescription) }}</span>
+                                    </span>
+                                </td>
                                 <td>
                                     <span data-toggle="tooltip" data-placement="top" title='<span class="text-muted">Market sell price: </span>{{ number_format($tradeRoute->hold->buyPrice($tradeRoute->soldResource->key), config('trade.price_decimals')) }}'>
                                         {{ $tradeRoute->soldResource->name }}
@@ -130,7 +145,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($hold->resourceKeys() as $resourceKey)
+                                    @foreach(collect($hold->resourceKeys())->sort() as $resourceKey)
                                         @php 
                                             $resource = OpenDominion\Models\Resource::fromKey($resourceKey);
                                             $buyPrice = $hold->buyPrice($resourceKey);

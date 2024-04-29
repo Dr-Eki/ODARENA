@@ -10,13 +10,17 @@ use OpenDominion\Models\Hold;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\TradeRoute;
 
+use OpenDominion\Calculators\HoldCalculator;
+
 class TradeCalculator
 {
 
+    protected $holdCalculator;
     protected $resourceCalculator;
 
     public function __construct()
     {
+        $this->holdCalculator = app(HoldCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
     }
 
@@ -51,7 +55,6 @@ class TradeCalculator
         *   The dominion is BUYING $boughtResource from the hold.
         */
 
-
         $result = [
             'sold_resource_key' => $soldResource->key,
             'sold_resource_amount' => $soldResourceAmount,
@@ -66,7 +69,14 @@ class TradeCalculator
 
     public function getBoughtResourceAmount(Dominion $dominion, Hold $hold, Resource $soldResource, int $soldResourceAmount, Resource $boughtResource): int
     {
-        return ($soldResourceAmount * $hold->buyPrice($soldResource->key)) * $hold->sellPrice($boughtResource->key);
+        $baseAmount = $soldResourceAmount * $hold->buyPrice($soldResource->key) * $hold->sellPrice($boughtResource->key);
+        $multiplier = $this->holdCalculator->getSentimentMultiplier($hold, $dominion, $soldResource->key);
+
+        $netAmount = floor($baseAmount * $multiplier);
+
+        $netAmount = min($netAmount, $hold->{'resource_' . $boughtResource->key});
+
+        return $netAmount;
     }
 
     public function getResourceMaxOfferableAmount(Dominion $dominion, Resource $resource): int
@@ -144,6 +154,42 @@ class TradeCalculator
         return $resources->unique();
     }
 
+    // Sentiment
+    public function getTradeRouteCancellationSentimentPenalty(TradeRoute $tradeRoute): int
+    {
+        $tradeRouteTicks = $tradeRoute->ticks;
+        $currentTick = $tradeRoute->dominion->round->ticks;
+        $tradeRouteDuration = $tradeRouteTicks - $currentTick;
+
+        if ($tradeRouteDuration < 24)
+        {
+            return -48;
+        }
+        elseif($tradeRouteDuration < 48)
+        {
+            return -24;
+        }
+        elseif($tradeRouteDuration < 72)
+        {
+            return -12;
+        }
+        elseif($tradeRouteDuration > 192)
+        {
+            return -18;
+        }
+        elseif($tradeRouteDuration > 384)
+        {
+            return -24;
+        }
+        elseif($tradeRouteDuration > 480)
+        {
+            return -48;
+        }
+        else
+        {
+            return -6;
+        }
+    }
 
 
 }

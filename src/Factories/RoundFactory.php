@@ -9,7 +9,6 @@ use OpenDominion\Models\RoundLeague;
 class RoundFactory
 {
 
-
     public function create(
         Carbon $startDate,
         string $gameMode,

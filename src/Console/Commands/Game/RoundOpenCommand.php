@@ -108,11 +108,12 @@ class RoundOpenCommand extends Command implements CommandInterface
             return;
         }
 
-        $counter = count($this->roundHelper->getRoundSettings());
+        $counter = count(config('rounds.round_settings'));
         $counting = 1;
-        foreach($this->roundHelper->getRoundSettings() as $key => $name)
+
+        foreach(config('rounds.round_settings') as $key => $setting)
         {
-            $setting = $this->ask("[$counting / $counter] Enable $name (y/n) [y]: ");
+            $setting = $this->ask("[$counting / $counter] Enable $setting (y/n) [y]: ");
 
             $settings[$key] = ($setting == 'n' ? false : true);
 
@@ -210,7 +211,7 @@ class RoundOpenCommand extends Command implements CommandInterface
             }
 
             // Spawn Holds
-            if($round->getSetting('trade-routes'))
+            if($round->getSetting('trade_routes'))
             {
                 // Get starting barbarians (default 20) from user input
                 $startingHolds = $this->ask('How many starting holds? [10]: ') ?? 10;

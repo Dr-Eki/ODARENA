@@ -29,6 +29,9 @@ use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
+
+use OpenDominion\Factories\HoldFactory;
+
 use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RoundHelper;
@@ -39,7 +42,6 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Realm;
-#use OpenDominion\Models\Resource;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\RoundWinner;
 use OpenDominion\Models\Spell;
@@ -47,12 +49,12 @@ use OpenDominion\Models\Tech;
 use OpenDominion\Models\Dominion\Tick;
 
 use OpenDominion\Services\BarbarianService;
+use OpenDominion\Services\HoldService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
 use OpenDominion\Services\Dominion\DominionStateService;
 use OpenDominion\Services\Dominion\InsightService;
 use OpenDominion\Services\Dominion\TradeService;
-#use OpenDominion\Services\Dominion\ProtectionService;
 use Throwable;
 
 class TickService
@@ -90,6 +92,7 @@ class TickService
     protected $barbarianService;
     protected $dominionStateService;
     protected $deityService;
+    protected $holdService;
     protected $insightService;
     protected $queueService;
     #protected $protectionService;
@@ -131,6 +134,7 @@ class TickService
         $this->barbarianService = app(BarbarianService::class);
         $this->dominionStateService = app(DominionStateService::class);
         $this->deityService = app(DeityService::class);
+        $this->holdService = app(HoldService::class);
         $this->insightService = app(InsightService::class);
         #$this->protectionService = app(ProtectionService::class);
         $this->queueService = app(QueueService::class);
@@ -1691,9 +1695,25 @@ class TickService
         RoundWinner::insert($winners);
     }
 
-    public function handleTradeRoutes(Round $round)
+    public function handleTradeRoutes(Round $round): void
     {
-        $this->tradeService->handleTradeRoutesTick($round);
+
+        if(!$round->getSetting('trade_routes'))
+        {
+            return;
+        }
+
+        app(HoldService::class)->updateAllHoldSentiments($round);
+        app(TradeService::class)->handleTradeRoutesTick($round);
+
+        $spawnHold = rand(1, (int)config('barbarians.settings.ONE_IN_CHANCE_TO_SPAWN'));
+
+        Log::info('[BARBARIAN] spawn chance value: '. $spawnHold . ' (spawn if this value is 1).');
+
+        if($spawnHold)
+        {
+            app(HoldFactory::class)->create($round);
+        }
     }
 
 }

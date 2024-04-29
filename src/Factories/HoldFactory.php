@@ -8,8 +8,11 @@ use Illuminate\Support\Str;
 use Symfony\Component\Yaml\Yaml;
 use Illuminate\Filesystem\Filesystem;
 use OpenDominion\Exceptions\GameException;
+use OpenDominion\Models\Dominion;
+use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Hold;
 use OpenDominion\Models\Race;
+use OpenDominion\Models\Resource;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\Title;
 
@@ -37,10 +40,10 @@ class HoldFactory
      * @param string $rulerName
      * @param string $dominionName
      * @param Pack|null $pack
-     * @return Dominion
+     * @return Hold
      * @throws GameException
      */
-    public function create(Round $round): ?Hold
+    public function create(Round $round, Dominion $discoverer = null): ?Hold
     {
         $yamlHolds = $this->filesystem->get(base_path('app/data/holds.yml'));
         $parsedHolds = collect(Yaml::parse($yamlHolds, Yaml::PARSE_OBJECT_FOR_MAP));
@@ -66,7 +69,7 @@ class HoldFactory
     
         $hold = null;
     
-        DB::transaction(function () use ($round, $holdData, &$hold) {
+        DB::transaction(function () use ($round, $holdData, &$hold, $discoverer) {
             $race = $holdData->race ? Race::where('name', $holdData->race)->firstOrFail() : null;
     
             $hold = Hold::create([
@@ -87,59 +90,35 @@ class HoldFactory
                 'tick_discovered' => $round->ticks,
                 'ticks' => 0,
             ]);
+
+            foreach($hold->sold_resources as $resourceKey)
+            {
+                $resource = Resource::fromKey($resourceKey);
+                $amountToAdd = (int)floor(config('trade.sold_resource_start_value') / $resource->trade->buy);
+                $this->resourceService->update($hold, [$resourceKey => $amountToAdd]);
+            }
+
+            foreach($hold->desired_resources as $resourceKey)
+            {
+                $resource = Resource::fromKey($resourceKey);
+                $amountToAdd = (int)floor(config('trade.desired_resource_start_value') / $resource->trade->buy);
+                $this->resourceService->update($hold, [$resourceKey => $amountToAdd]);
+            }
+
+            GameEvent::create([
+                'round_id' => $hold->round_id,
+                'source_type' => Hold::class,
+                'source_id' => $hold->id,
+                'target_type' => $discoverer ? Dominion::class : null,
+                'target_id' => $discoverer ? $discoverer->id : null,
+                'type' => 'hold_discovered',
+                'data' => '',
+                'tick' => $hold->round->ticks
+            ]);
+
         });
     
         return $hold;
     }
-    
-
-    /**
-     * Get amount of buildings a new Dominion starts with.
-     *
-     * @return array
-     */
-    protected function getStartingBuildings($race, $landBase): array
-    {
-        # Default
-        $startingBuildings = [];
-
-        if($race->name == 'Kerranad')
-        {
-            $startingBuildings['aqueduct'] = 25;
-            $startingBuildings['constabulary'] = 25;
-            $startingBuildings['farm'] = 50;
-            $startingBuildings['gold_mine'] = 100;
-            $startingBuildings['harbour'] = 50;
-            $startingBuildings['infirmary'] = 50;
-            $startingBuildings['ore_mine'] = 100;
-            $startingBuildings['residence'] = 50;
-            $startingBuildings['saw_mill'] = 50;
-            $startingBuildings['tavern'] = 50;
-            $startingBuildings['tower'] = 50;
-            $startingBuildings['wizard_guild'] = 50;
-            $startingBuildings['syndicate_quarters'] = 50;
-            $startingBuildings['gem_mine'] = 300;
-        }
-        elseif($race->name == 'Growth')
-        {
-          $startingBuildings['tissue'] = $landBase;
-        }
-        elseif($race->name == 'Myconid')
-        {
-          $startingBuildings['mycelia'] = $landBase;
-        }
-        elseif($race->name == 'Barbarian')
-        {
-            $availableBuildings = $this->buildingHelper->getBuildingsByRace($race);
-
-            foreach($availableBuildings as $building)
-            {
-                $startingBuildings[$building->key] = round($landBase / count($availableBuildings));
-            }
-        }
-
-        return $startingBuildings;
-    }
-
 
 }
