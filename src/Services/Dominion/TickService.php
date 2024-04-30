@@ -1297,7 +1297,6 @@ class TickService
     
         $this->resourceService->updateResources($dominion, $resourcesNetChange);
     }
-    */
 
     # Take artefacts that are one tick away from finished and create or increment RealmArtefact.
     private function handleArtefacts(Dominion $dominion): void
@@ -1326,6 +1325,7 @@ class TickService
             ]);
         }
     }
+    */
 
     private function updateArtefactsAegises(Round $round): void
     {
@@ -1697,7 +1697,6 @@ class TickService
 
     public function handleTradeRoutes(Round $round): void
     {
-
         if(!$round->getSetting('trade_routes'))
         {
             return;

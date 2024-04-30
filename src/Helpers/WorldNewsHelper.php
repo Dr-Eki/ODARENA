@@ -109,6 +109,9 @@ class WorldNewsHelper
             case 'governor':
                 return $this->generateGovernorString($event->source, $event->target, $viewer);
 
+            case 'hold_discovered':
+                return $this->generateHoldDiscoveredString($event, $viewer);
+
             case 'invasion':
                 return $this->generateInvasionString($event->source, $event->target, $event, $viewer);
 
@@ -647,6 +650,31 @@ class WorldNewsHelper
           );
 
         return $string;
+    }
+
+    public function generateHoldDiscoveredString(GameEvent $event, Dominion $viewer): string
+    {
+        $hasDiscoverer = (bool)(isset($event->target_id) ?? false);
+
+        if($hasDiscoverer)
+        {
+            $string = sprintf(
+                '%s has been discovered by %s',
+                $this->generateHoldString($event->source, 'neutral', $viewer),
+                $this->generateDominionString($event->target, 'neutral', $viewer)
+                );
+
+        }
+        else
+        {
+            $string = sprintf(
+                '%s has been discovered.',
+                $this->generateHoldString($event->source, 'neutral', $viewer)
+                );
+        }
+
+        return $string;
+
     }
 
     public function generateInvasionSupportString(Dominion $supporter, Dominion $legion, GameEvent $invasion, Dominion $viewer): string

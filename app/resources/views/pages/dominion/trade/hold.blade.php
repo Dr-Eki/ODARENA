@@ -151,14 +151,50 @@
                 <thead>
                     <tr>
                         <th>Dominion</th>
-                        <th>Bought</th>
-                        <th>Sold</th>
+                        <th>Resource Bought</th>
+                        <th>Resource Sold</th>
                         <th class="text-center">Trades</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($hold->tradeRoutes as $tradeRoute)
-                        ...
+                    @foreach ($hold->tradeRoutes->where('status',1) as $tradeRoute)
+                        @php
+                            $canViewTradeRouteCounterparty = false;
+                            $canViewTradeRouteResources = false;
+
+                            if($tradeRoute->dominion->realm->id == $selectedDominion->realm->id)
+                            {
+                                $canViewTradeRouteResources = true;
+                            }
+
+                            if($hold->tradeRoutes->where('dominion_id',$selectedDominion->id)->count() > 0)
+                            {
+                                $canViewTradeRouteCounterparty = true;
+                            }
+
+                        @endphp
+
+                        <tr>
+                            @if($canViewTradeRouteCounterparty)
+                                <td>
+                                        {{ $tradeRoute->dominion->name }}
+                                        (# {{ $tradeRoute->dominion->realm->number }})
+                                </td>
+                            @else
+                                <td><em>Not disclosed</em></td>
+                            @endif
+
+                            @if($canViewTradeRouteResources)
+                                <td>{{ number_format($tradeRoute->bought_resource) }}</td>
+                                <td>{{ number_format($tradeRoute->sold_resource) }}</td>
+                                <td class="text-center">{{ number_format($tradeRoute->trades) }}</td>
+                            @else
+                                <td><em>Not disclosed</em></td>
+                                <td><em>Not disclosed</em></td>
+                                <td class="text-center"><em>Not disclosed</em></td>
+                            @endif
+                        </tr>
+
                     @endforeach
                 </tbody>
             </table>
@@ -196,8 +232,8 @@
                         <tr>
                             <td>{{ $resource->name }}</td>
                             <td>{{ number_format($hold->{'resource_' . $resourceKey}) }}</td>
-                            <td>{{ number_format($hold->sellPrice($resourceKey), config('trade.price_decimals')) }}</td>
-                            <td>{{ number_format($hold->buyPrice($resourceKey), config('trade.price_decimals')) }}</td>
+                            <td>{!! $hold->sellPrice($resourceKey) ? number_format($hold->sellPrice($resourceKey), config('trade.price_decimals')) : '&mdash;' !!}</td>
+                            <td>{!! $hold->buyPrice($resourceKey) ? number_format($hold->buyPrice($resourceKey), config('trade.price_decimals')) : '&mdash;' !!}</td>
                         </tr>
                     @endforeach
                 </tbody>

@@ -155,40 +155,60 @@ class TradeCalculator
     }
 
     // Sentiment
-    public function getTradeRouteCancellationSentimentPenalty(TradeRoute $tradeRoute): int
+    public function getTradeRouteCancellationSentimentPenalty(TradeRoute $tradeRoute, string $reason): int
     {
         $tradeRouteTicks = $tradeRoute->ticks;
         $currentTick = $tradeRoute->dominion->round->ticks;
         $tradeRouteDuration = $tradeRouteTicks - $currentTick;
 
-        if ($tradeRouteDuration < 24)
+        $penalty = 0;
+
+        if($reason == 'cancelled_by_dominion' or $reason == 'dominion_insufficient_resources')
         {
-            return -48;
+            if ($tradeRouteDuration < 24)
+            {
+                $penalty += -48;
+            }
+            elseif($tradeRouteDuration < 48)
+            {
+                $penalty += 24;
+            }
+            elseif($tradeRouteDuration < 72)
+            {
+                $penalty += 12;
+            }
+            elseif($tradeRouteDuration > 192)
+            {
+                $penalty += 18;
+            }
+            elseif($tradeRouteDuration > 384)
+            {
+                $penalty += 24;
+            }
+            elseif($tradeRouteDuration > 480)
+            {
+                $penalty += 48;
+            }
+            else
+            {
+                $penalty += 6;
+            }
+
+            # Does the hold have any resources left?
+            if($tradeRoute->hold->{'resource_' . $tradeRoute->boughtResource->key} == 0)
+            {
+                $penalty = 0;
+            }
+
         }
-        elseif($tradeRouteDuration < 48)
+        elseif($reason == 'hold_insufficient_resources')
         {
-            return -24;
+            $penalty -= 6; # The hold is sorry for not having enough resources
         }
-        elseif($tradeRouteDuration < 72)
-        {
-            return -12;
-        }
-        elseif($tradeRouteDuration > 192)
-        {
-            return -18;
-        }
-        elseif($tradeRouteDuration > 384)
-        {
-            return -24;
-        }
-        elseif($tradeRouteDuration > 480)
-        {
-            return -48;
-        }
-        else
-        {
-            return -6;
-        }
+
+
+
+        return $penalty;
     }
 
 

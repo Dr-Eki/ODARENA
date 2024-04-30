@@ -48,7 +48,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($selectedDominion->tradeRoutes as $tradeRoute)
+                        @foreach ($selectedDominion->tradeRoutes->where('status',1) as $tradeRoute)
                             @php
                                 $sentiment = optional($tradeRoute->hold->sentiments->where('target_id', $selectedDominion->id)->first())->sentiment ?? 0;
                                 $sentimentDescription = $holdHelper->getSentimentDescription($sentiment);
@@ -127,7 +127,7 @@
                             <small class="text-muted">Sentiment:</small> <span data-toggle="tooltip" data-placement="top" title='<span class="text-muted">Sentiment:</span>&nbsp;{{ number_format($sentiment) }}'>
                                     <span class="label label-{{ $sentimentClass }}">{{ ucwords($sentimentDescription) }}</span>
                                 </span><br>
-                            <small class="text-muted">Trade routes:</small> {{ number_format($hold->tradeRoutes->count()) }} ({{ number_format($hold->tradeRoutes->where('dominion_id', $selectedDominion->id)->count()) }})
+                            <small class="text-muted">Trade routes:</small> {{ number_format($hold->tradeRoutes->where('status',1)->count()) }} ({{ number_format($hold->tradeRoutes->where('status',1)->where('dominion_id', $selectedDominion->id)->count()) }})
                             <input type="hidden" name="hold" value="{{ $hold->id }}">
                         </div>
                         <div class="col-md-4">

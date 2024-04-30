@@ -2,13 +2,13 @@
 
 namespace OpenDominion\Services\Dominion;
 
-use DB;
+use Log;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\TradeLedger;
 use OpenDominion\Models\TradeRoute;
 
 use OpenDominion\Calculators\Dominion\TradeCalculator;
-
+use OpenDominion\Models\HoldSentimentEvent;
 use OpenDominion\Services\HoldService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\TradeRoute\QueueService;
@@ -62,11 +62,75 @@ class TradeService
         $boughtResource = $tradeRoute->boughtResource;
         $soldResourceAmount = $tradeRoute->source_amount;
 
+        if($soldResourceAmount <= 0)
+        {
+
+            $this->notificationService->queueNotification('trade_failed_and_cancelled', [
+                'hold_id' => $hold->id,
+                'hold_name' => $hold->name,
+                'sold_resource_id' => $soldResource->id,
+                'sold_resource_name' => $soldResource->name,
+                'sold_resource_amount' => $soldResourceAmount,
+                'bought_resource_id' => $boughtResource->id,
+                'bought_resource_name' => $boughtResource->bought_resource_name,
+                'bought_resource_amount' => null,
+            ]);
+
+            Log::info('[TRADE] Hold is out of resources. Trade failed. Cancel traderoute.', [
+                'trade_route_id' => $tradeRoute->id,
+                'dominion_id' => $dominion->id,
+                'hold_id' => $hold->id,
+                'sold_resource_id' => $soldResource->id,
+                'bought_resource_id' => $boughtResource->id,
+                'sold_resource_amount' => $soldResourceAmount,
+                'bought_resource_amount' => null,
+            ]);
+
+            # Send notifications
+            $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
+
+            $this->cancelTradeRoute($tradeRoute, 'dominion_insufficient_resources');
+
+            return;
+        }
+
+
         # Cap by what's available
         $soldResourceAmount = min($soldResourceAmount, $dominion->{'resource_' . $soldResource->key});
 
         $tradeResult = $this->tradeCalculator->getTradeResult($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
         $boughtResourceAmount = $tradeResult['bought_resource_amount'];
+
+        if($boughtResourceAmount <= 0)
+        {
+            $soldResourceAmount = 0;
+
+            $this->notificationService->queueNotification('trade_failed', [
+                'hold_id' => $hold->id,
+                'hold_name' => $hold->name,
+                'sold_resource_id' => $soldResource->id,
+                'sold_resource_name' => $soldResource->name,
+                'sold_resource_amount' => $soldResourceAmount,
+                'bought_resource_id' => $boughtResource->id,
+                'bought_resource_name' => $boughtResource->bought_resource_name,
+                'bought_resource_amount' => $boughtResourceAmount,
+            ]);
+
+            Log::info('[TRADE] Hold is out of resources. Trade failed', [
+                'trade_route_id' => $tradeRoute->id,
+                'dominion_id' => $dominion->id,
+                'hold_id' => $hold->id,
+                'sold_resource_id' => $soldResource->id,
+                'bought_resource_id' => $boughtResource->id,
+                'sold_resource_amount' => $soldResourceAmount,
+                'bought_resource_amount' => $boughtResourceAmount,
+            ]);
+
+            # Send notifications
+            $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
+
+            return;
+        }
 
         # Queue up outgoing
         $this->queueService->queueTrade($tradeRoute, 'export', $soldResource, $soldResourceAmount);
@@ -95,17 +159,17 @@ class TradeService
             'trade_dominion_sentiment' => optional($hold->sentiments->where('target_id', $dominion->id)->first())->sentiment ?? 0,
         ]);
 
-        $this->notificationService->queueNotification('trade_route_started', [
-            'hold_id' => $hold->id,
-            'hold_name' => $hold->name,
-            'sold_resource_id' => $soldResource->id,
-            'sold_resource_name' => $soldResource->name,
-            'sold_resource_amount' => $soldResourceAmount,
-            'bought_resource_id' => $boughtResource->id,
-            'bought_resource_name' => $boughtResource->bought_resource_name,
-            'bought_resource_amount' => $boughtResourceAmount,
-        ]);
+    }
 
+    public function cancelTradeRoute(TradeRoute $tradeRoute, string $reason): void
+    {
+        if($tradeCancellationSentimentPenalty = $this->tradeCalculator->getTradeRouteCancellationSentimentPenalty($tradeRoute, $reason))
+        {
+            HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, $tradeCancellationSentimentPenalty, $reason);
+        }
+
+        $tradeRoute->status = 0;
+        $tradeRoute->save();
     }
 
 }
