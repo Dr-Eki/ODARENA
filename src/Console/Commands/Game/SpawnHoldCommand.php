@@ -26,6 +26,14 @@ class SpawnHoldCommand extends Command
     public function handle()
     {
         $round = Round::active()->orderBy('number', 'desc')->first();
+
+        if(!$round)
+        {
+            $this->error('No active round found');
+            dd($round);
+            return;
+        }
+
         $count = $this->ask('Amount of holds to spawn [default 1]') ?? 1;
 
         DB::transaction(function () use ($round, $count) {
