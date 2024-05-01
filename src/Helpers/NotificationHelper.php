@@ -224,6 +224,18 @@ class NotificationHelper
                 'route' => route('dominion.status'),
                 'iconClass' => 'fas fa-user-shield text-red',
             ],
+            'trade_failed_and_cancelled' => [
+                'label' => 'A trade failed and the trade route has been cancelled',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.trade.routes'),
+                'iconClass' => 'fa fa-solid fa-arrow-right-arrow-left text-red',
+            ],
+            'trade_failed' => [
+                'label' => 'A trade failed because the hold has run out of resources',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.trade.routes'),
+                'iconClass' => 'fa fa-solid fa-arrow-right-arrow-left text-red',
+            ],
         ];
     }
 

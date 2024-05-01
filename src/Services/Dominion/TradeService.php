@@ -9,7 +9,7 @@ use OpenDominion\Models\TradeRoute;
 
 use OpenDominion\Calculators\Dominion\TradeCalculator;
 use OpenDominion\Models\HoldSentimentEvent;
-use OpenDominion\Services\HoldService;
+#use OpenDominion\Services\HoldService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\TradeRoute\QueueService;
 use OpenDominion\Services\Dominion\ResourceService as DominionResourceService;
@@ -20,7 +20,7 @@ class TradeService
 {
     protected $dominionResourceService;
     protected $holdResourceService;
-    protected $holdService;
+    #protected $holdService;
     protected $notificationService;
     protected $tradeCalculator;
     protected $queueService;
@@ -29,7 +29,7 @@ class TradeService
     {
         $this->dominionResourceService = app(DominionResourceService::class);
         $this->holdResourceService = app(HoldResourceService::class);
-        $this->holdService = app(HoldService::class);
+        #$this->holdService = app(HoldService::class);
         $this->notificationService = app(NotificationService::class);
         $this->tradeCalculator = app(TradeCalculator::class);
         $this->queueService = app(QueueService::class);
@@ -37,9 +37,6 @@ class TradeService
 
     public function handleTradeRoutesTick(Round $round)
     {
-        # Update prices
-        $this->holdService->setRoundHoldPrices($round);
-
         $activeTradeRoutes = $round->tradeRoutes->where('status', 1);
 
         foreach ($activeTradeRoutes as $tradeRoute)

@@ -288,20 +288,6 @@ watermill:
 
 ## Other: Advancements, Improvements, Research, Morale, Exchange Rate
 
-harbour:
-  name: Harbour
-  category: other
-  excluded_races:
-    - Dragons
-    - Glimjir
-    - Growth
-    - Reptilians
-    - Swarm
-  perks:
-    food_production_raw: 20
-    xp_generation_mod: 1,5,25 #Every 1% gives +5% XP production, max +25%
-    exchange_rate: 1,4,20 # Every 1% gives +4% exchange rate, max +20%
-
 factory:  
   name: Factory
   category: other
@@ -317,6 +303,21 @@ factory:
     construction_cost: 1,-2,30 # 1% gives -2% construction cost, max -30%
     construction_time: 1,-1.3,20 # 1% gives -1% construction time, max -30%
     machine_unit_costs: 1,-1.5,15 # Every 1% gives -1.5% unit cost, max -15%
+
+harbour:
+  name: Harbour
+  category: other
+  excluded_races:
+    - Dragons
+    - Glimjir
+    - Growth
+    - Reptilians
+    - Swarm
+  perks:
+    food_production_raw: 20
+    xp_generation_mod: 1,5,25 #Every 1% gives +5% XP production, max +25%
+    exchange_rate: 1,4,20 # Every 1% gives +4% exchange rate, max +20%
+
 
 school:
   name: School
@@ -387,7 +388,7 @@ constabulary:
   perks:
     spy_strength_on_defense: 1,10 # +10% defensive SPA per 1%, no max
     spy_housing: 40
-    sabotage_damage_suffered: 1,-2,50 # Every 1% reduces sabotage damage by 0.5%, max 50%
+    #sabotage_damage_suffered: 1,-2,50 # Every 1% reduces sabotage damage by 0.5%, max 50%
     housing: 0
 
 ## Anti-Theft
@@ -1403,8 +1404,7 @@ naval_institute:
     draftee_housing: 30
     housing: 0
 
-refiner:  
-  enabled: 0
+refinery:
   name: Refinery
   exclusive_races:
     - Imperial Gnome
@@ -1571,7 +1571,7 @@ cyst:
   exclusive_races:
     - Growth
   perks:
-    sorcery_damage_suffered: 1,-4,80 # 1% gives -4%, max -80%
+    #sorcery_damage_suffered: 1,-4,80 # 1% gives -4%, max -80%
     growth_units_production: 1,0.3 # 0.1 unit 1 per tick
     housing: 88
     jobs: 0

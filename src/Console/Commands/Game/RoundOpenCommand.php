@@ -5,6 +5,7 @@ namespace OpenDominion\Console\Commands\Game;
 use DB;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+
 use OpenDominion\Console\Commands\CommandInterface;
 use OpenDominion\Factories\HoldFactory;
 use OpenDominion\Factories\RealmFactory;
@@ -213,16 +214,9 @@ class RoundOpenCommand extends Command implements CommandInterface
             // Spawn Holds
             if($round->getSetting('trade_routes'))
             {
-                // Get starting barbarians (default 20) from user input
-                $startingHolds = $this->ask('How many starting holds? [10]: ') ?? 10;
-
-                // Create Holds.
-                for ($slot = 1; $slot <= $startingHolds; $slot++)
-                {
-                    $this->info("Creating a Hold...");
-                    $hold = $this->holdFactory->create($round);
-                    $this->info("* Hold created: {$hold->name} (ID {$hold->id})");
-                }
+                $this->info("Seeding holds.");
+                $this->holdFactory->seed($round);
+                $this->info("Holds created.");
             }
             else
             {

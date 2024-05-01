@@ -10,18 +10,31 @@ use OpenDominion\Models\Round;
 use OpenDominion\Models\Resource;
 
 use OpenDominion\Calculators\HoldCalculator;
+use OpenDominion\Calculators\Hold\ResourceCalculator;
+
 use OpenDominion\Helpers\HoldHelper;
+
+use OpenDominion\Services\Hold\QueueService;
+use OpenDominion\Services\Hold\ResourceService;
 
 class HoldService
 {
 
     protected $holdCalculator;
     protected $holdHelper;
+    protected $queueService;
+    protected $resourceCalculator;
+    protected $resourceService;
 
     public function __construct()
     {
         $this->holdCalculator = app(HoldCalculator::class);
+        $this->resourceCalculator = app(ResourceCalculator::class);
+
         $this->holdHelper = app(HoldHelper::class);
+
+        $this->queueService = app(QueueService::class);
+        $this->resourceService = app(ResourceService::class);
     }
 
     public function setRoundHoldPrices(Round $round): void
@@ -70,27 +83,6 @@ class HoldService
         return HoldPrice::updateOrCreate(['hold_id' => $hold->id, 'resource_id' => $resource->id, 'tick' => $tick, 'action' => 'sell'], ['price' => $price]);
     }
 
-    /*
-    public function updateAllHoldSentiments(Round $round): void
-    {
-        foreach ($round->holds as $hold)
-        {
-            foreach($round->dominions as $dominion)
-            {
-                $this->updateHoldSentiment($hold, $dominion);
-            }
-        }
-    }
-
-    public function updateHoldSentiment(Hold $hold, $target): void
-    {
-        $holdSentiment = HoldSentimentEvent::sum('sentiment', ['hold_id' => $hold->id, 'target_type' => get_class($target), 'target_id' => $target->id]);
-
-        HoldSentiment::updateOrCreate(['hold_id' => $hold->id, 'target_type' => get_class($target), 'target_id' => $target->id], ['sentiment' => $holdSentiment]);
-
-    }
-    */
-
     public function updateAllHoldSentiments(Round $round): void
     {
         // Assuming that holds and dominions are related to round and are Eloquent collections
@@ -119,5 +111,38 @@ class HoldService
             );
         }
     }
+
+    public function handleHoldResourceProduction(Hold $hold): void
+    {
+
+        foreach($hold->sold_resources as $resourceKey)
+        {
+            $amountProduced = $this->resourceCalculator->getProduction($hold, $resourceKey);
+            $this->resourceService->update($hold, [$resourceKey => $amountProduced]);
+        }
+
+    }
+
+    public function handleHoldTick(Round $round): void
+    {
+        # Update sentiments
+        $this->updateAllHoldSentiments($round);
+
+        # Update prices
+        $this->setRoundHoldPrices($round);
+
+        # Update resources
+        foreach ($round->holds as $hold)
+        {
+            # Handle queues
+            $this->queueService->handleHoldQueues($hold);
+
+            # Handle resource production
+            $this->handleHoldResourceProduction($hold);
+
+        }
+
+    }
+
 
 }

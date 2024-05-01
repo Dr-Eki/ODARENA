@@ -169,4 +169,86 @@ class HoldCalculator
         return $multiplier;
     }
 
+    public function getStartingBuildings(Hold $hold): array
+    {
+        $land = $hold->land;
+
+        $buildingData = [];
+
+        $buildingData = ['farm' => $land * 0.10];
+        $buildingData = ['harbour' => $land * 0.10];
+
+        $remainingLand = $land - array_sum($buildingData);
+
+        # How many resources are being sold?
+        $soldResources = count($hold->sold_resources);
+
+        # Land dedicated per resource
+        $landPerResource = $remainingLand / $soldResources;
+
+        foreach($hold->sold_resources as $resourceKey)
+        {
+            $bestMatchingBuilding = $this->getBestMatchingBuilding($hold, $resourceKey);
+            isset($buildingData[$bestMatchingBuilding]) ? $buildingData[$bestMatchingBuilding] += (int)round($landPerResource) : $buildingData[$bestMatchingBuilding] = (int)round($landPerResource);
+            $remainingLand -= (int)round($landPerResource);
+        }
+
+        # Remaining land is dedicated to harbour
+        $buildingData['harbour'] += max(0, $remainingLand);
+
+        return $buildingData;
+    }
+
+    public function getBestMatchingBuilding(Hold $hold, string $resourceKey): string
+    {
+        $resourceMap = collect([
+            'acid' => 'tissue',
+            'ash' => 'ore_mine',
+            'blood' => 'altar',
+            'body' => 'altar',
+            'books' => 'school',
+            'brimmer' => 'refinery',
+            'figurines' => 'workshop',
+            'food' => 'farm',
+            'gems' => 'gem_mine',
+            'gloom' => 'night_tower',
+            'gold' => 'gold_mine',
+            'gunpowder' => 'powder_mill',
+            'horse' => 'stable',
+            'instruments' => 'workshop',
+            'kelp' => 'wharf',
+            'lumber' => 'saw_mill',
+            'magma' => 'ore_mine',
+            'mana' => 'tower',
+            'miasma' => 'mass_grave',
+            'mud' => 'harbour',
+            'obsidian' => 'gem_mine',
+            'ore' => 'ore_mine',
+            'pearls' => 'wharf',
+            'prisoner' => 'constabulary',
+            'souls' => 'altar',
+            'spices' => 'farm',
+            'sugar' => 'farm',
+            'swamp_gas' => 'tower',
+            'thunderstone' => 'dwargen_mine',
+            'yak' => 'yakstead'
+        ]);
+        
+        return $resourceMap->get($resourceKey, 'harbour');
+    }
+
+    public function getStartingUnits(Hold $hold): array
+    {
+        return [];
+    }
+
+    public function getTickLandGrowth(Hold $hold): int
+    {
+        $growth = 0;
+
+        $growth += 2 * (1 + $hold->round->ticks/1000);
+
+        return round($growth);
+    }
+
 }

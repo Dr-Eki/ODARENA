@@ -3,9 +3,10 @@
 # app/config/holds.php
 
 return [
-    'starting_land' => 100,
+    'starting_land' => 250,
     'starting_morale' => 100,
     'starting_peasants' => 5000,
+    'starting_defense' => 25000,
 
     'defaults' => [
         'unit_return_ticks' => 12,

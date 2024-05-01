@@ -8,9 +8,10 @@ use Illuminate\Support\Str;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Traits\DominionGuardsTrait;
 
-use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Building;
+use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
+use OpenDominion\Models\HoldSentimentEvent;
 
 use OpenDominion\Factories\HoldFactory;
 
@@ -454,23 +455,25 @@ class ExpeditionActionService
     {
         $this->expedition['hold']['found'] = false;
 
-        if(in_array($dominion->round->mode, ['deathmatch', 'deathmatch-duration']))
-        {
-            return;
-        }
-
         $this->expedition['hold']['chance_to_find'] = $this->holdCalculator->getChanceToDiscoverHoldOnExpedition($dominion, $this->expedition);
      
         if(random_chance($this->expedition['hold']['chance_to_find']))
         {
-            if($hold = $this->holdFactory->create($dominion->round, $dominion))
+            $holdDiscovered = $dominion->round->holds->where('status',0)->random();
+
+            if($holdDiscovered)
             {
+                $holdDiscovered->status = 1;
+                $holdDiscovered->save();
+
+                HoldSentimentEvent::add($holdDiscovered, $dominion, 100, 'discovered_by_dominion');
+
                 $this->expedition['hold']['found'] = true;
 
                 $this->expedition['hold']['found'] = true;
-                $this->expedition['hold']['id'] = $hold->id;
-                $this->expedition['hold']['key'] = $hold->key;
-                $this->expedition['hold']['name'] = $hold->name;
+                $this->expedition['hold']['id'] = $holdDiscovered->id;
+                $this->expedition['hold']['key'] = $holdDiscovered->key;
+                $this->expedition['hold']['name'] = $holdDiscovered->name;
     
                 $this->statsService->updateStat($dominion, 'holds_discovered', 1);
             }

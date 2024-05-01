@@ -13,7 +13,7 @@ use OpenDominion\Models\HoldSentimentEvent;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\TradeRoute;
 
-#use OpenDominion\Calculators\Dominion\ResourceCalculator;
+use OpenDominion\Calculators\Hold\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\TradeCalculator;
 
 use OpenDominion\Http\Requests\Dominion\TradeCalculationRequest;
@@ -27,6 +27,7 @@ use OpenDominion\Services\Dominion\Actions\TradeActionService;
 
 use OpenDominion\Helpers\HoldHelper;
 use OpenDominion\Helpers\RaceHelper;
+use OpenDominion\Helpers\UnitHelper;
 
 use OpenDominion\Traits\DominionGuardsTrait;
 
@@ -74,10 +75,12 @@ class TradeController extends AbstractDominionController
         return view('pages.dominion.trade.hold', [
             'hold' => $hold,
             
+            'resourceCalculator' => app(ResourceCalculator::class),
             'tradeCalculator' => app(TradeCalculator::class),
 
             'holdHelper' => app(HoldHelper::class),
             'raceHelper' => app(RaceHelper::class),
+            'unitHelper' => app(UnitHelper::class),
         ]);
     }
 

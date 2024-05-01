@@ -25,4 +25,14 @@ class HoldBuilding extends AbstractModel
     {
         return $this->belongsTo(Building::class, 'building_id');
     }
+
+    public function getAmountAttribute($value)
+    {
+        return (int)$value;
+    }
+
+    public function setAmountAttribute($value)
+    {
+        $this->attributes['amount'] = (int)$value;
+    }
 }

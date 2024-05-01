@@ -30,7 +30,7 @@ class SpawnHoldCommand extends Command
 
         DB::transaction(function () use ($round, $count) {
             for ($i = 0; $i < $count; $i++) {
-                if($hold = $this->holdFactory->create($round))
+                if($hold = $this->holdFactory->create($round, 'random'))
                 {
                     $this->holdService->setHoldPrices($hold, $round->ticks);
                     $this->info("Spawned hold: {$hold->name} (ID {$hold->id})");

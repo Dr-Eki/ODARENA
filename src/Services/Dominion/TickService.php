@@ -258,7 +258,7 @@ class TickService
                 $this->updateArtefactsAegises($round);
 
                 if(static::EXTENDED_LOGGING) { Log::debug('* Update all trade routes'); }
-                $this->handleTradeRoutes($round);
+                $this->handleHoldsAndTradeRoutes($round);
 
                 Log::info(sprintf(
                     '[TICK] Ticked %s dominions in %s ms in %s',
@@ -1695,19 +1695,19 @@ class TickService
         RoundWinner::insert($winners);
     }
 
-    public function handleTradeRoutes(Round $round): void
+    public function handleHoldsAndTradeRoutes(Round $round): void
     {
         if(!$round->getSetting('trade_routes'))
         {
             return;
         }
 
-        app(HoldService::class)->updateAllHoldSentiments($round);
         app(TradeService::class)->handleTradeRoutesTick($round);
+        app(HoldService::class)->handleHoldTick($round);
 
         $spawnHold = rand(1, (int)config('barbarians.settings.ONE_IN_CHANCE_TO_SPAWN'));
 
-        Log::info('[BARBARIAN] spawn chance value: '. $spawnHold . ' (spawn if this value is 1).');
+        Log::info('[HOLD] unhide chance value: '. $spawnHold . ' (unhide if this value is 1).');
 
         if($spawnHold)
         {

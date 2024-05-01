@@ -1,18 +1,18 @@
 <?php
 
-namespace OpenDominion\Services\TradeRoute;
+namespace OpenDominion\Services\Hold;
 
 use BadMethodCallException;
 use DB;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use OpenDominion\Models\HoldSentimentEvent;
-use OpenDominion\Models\Resource;
-use OpenDominion\Models\TradeRoute;
-use OpenDominion\Models\TradeRoute\Queue;
+use OpenDominion\Models\Hold;
+use OpenDominion\Models\Building;
+use OpenDominion\Models\Hold\Queue;
 
-use OpenDominion\Services\Dominion\ResourceService as DominionResourceService;
-use OpenDominion\Services\Hold\ResourceService as HoldResourceService;
+use OpenDominion\Services\Hold\BuildingService;
+use OpenDominion\Services\Hold\ResourceService;
 
 
 class QueueService
@@ -20,24 +20,16 @@ class QueueService
 
     protected $forTick = false;
 
-    protected $dominionResourceService;
-    protected $holdResourceService;
+    protected $buildingService;
+    protected $resourceService;
 
     public function __construct()
     {
-        $this->dominionResourceService = app(DominionResourceService::class);
-        $this->holdResourceService = app(HoldResourceService::class);
+        $this->buildingService = app(BuildingService::class);
+        $this->resourceService = app(ResourceService::class);
     }
 
-    /**
-     * Toggle if this calculator should include the following tick's resources.
-     */
-    public function setForTick(bool $value)
-    {
-        $this->forTick = $value;
-    }
-
-    public function queueTrade(TradeRoute $tradeRoute, string $type, Resource $resource, int $amount, array $units = [], int $tick = 12): void
+    public function queueBuilding(Hold $hold, string $buildingKey, int $amount, int $tick = 12): void
     {
         if($amount == 0)
         {
@@ -45,84 +37,72 @@ class QueueService
         }
 
         $now = now();
+
+        $building = Building::fromKey($buildingKey);
     
         $queue = Queue::firstOrCreate(
             [
-                'trade_route_id' => $tradeRoute->id,
-                'resource_id' => $resource->id,
+                'hold_id' => $hold->id,
+                'type' => 'construction',
+                'item_type' => get_class($building),
+                'item_id' => $building->id,
                 'tick' => $tick,
-                'type' => $type,
                 'status' => 1
             ],
             [
                 'amount' => 0,
-                'units' => json_encode([]),
                 'created_at' => $now,
             ]
         );
     
         $queue->increment('amount', $amount);
-        $queue->units = json_encode($units);
         $queue->save();
 
-        #dump('> Queued ' . $amount . ' ' . $resource->name . ' for trade route ' . $tradeRoute->id . ' at tick ' . $tick . ', going from ' . $tradeRoute->dominion->name . ' to ' . $tradeRoute->hold->name);
+        #dump('> Queued ' . $amount . ' ' . $resource->name . ' for trade route ' . $hold->id . ' at tick ' . $tick . ', going from ' . $hold->dominion->name . ' to ' . $hold->hold->name);
     }
 
-    public function handleTradeRouteQueues(TradeRoute $tradeRoute): void
+    public function handleHoldQueues(Hold $hold): void
     {
-        $this->advanceTradeRouteQueues($tradeRoute);
-        $this->finishTradeRouteQueues($tradeRoute);
+        $this->advanceBuildingQueues($hold);
+        $this->finishBuildingQueues($hold);
     }
 
-    public function advanceTradeRouteQueues(TradeRoute $tradeRoute): void
+    public function advanceHoldQueues(Hold $hold): void
     {
-        $tradeRoute->queues()
+        $hold->queues()
             ->where('status', 1)
             ->where('tick','>',0)
             ->decrement('tick');
     }
 
-    public function finishTradeRouteQueues(TradeRoute $tradeRoute): void
+    public function finishHoldQueues(Hold $hold): void
     {
-        $finishedQueues = $tradeRoute->queues()
+        $finishedQueues = $hold->queues()
             ->where('status', 1)
             ->where('tick', 0)
             ->get();
 
         if($finishedQueues->count() > 0)
         {
-            $tradeRoute->increment('trades');
-            $tradeRoute->increment('total_bought', $finishedQueues->where('type', 'import')->sum('amount'));
-            $tradeRoute->increment('total_sold', $finishedQueues->where('type', 'export')->sum('amount'));
-
             foreach($finishedQueues as $key => $finishedQueue)
             {
                 $amount = $finishedQueue->amount;
     
-                #dump('Finished queue ' . $finishedQueue->id . ' of type ' . $finishedQueue->type . ' with ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' for trade route ' . $tradeRoute->id . ' at tick ' . $finishedQueue->tick . ' (' . $key . '/' . $finishedQueues->count()-1 . ')');
+                #dump('Finished queue ' . $finishedQueue->id . ' of type ' . $finishedQueue->type . ' with ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' for trade route ' . $hold->id . ' at tick ' . $finishedQueue->tick . ' (' . $key . '/' . $finishedQueues->count()-1 . ')');
 
                 # Update dominion resources
-                if($finishedQueue->type == 'import')
+                if($finishedQueue->type == 'construction')
                 {
-                    $this->dominionResourceService->updateResources($tradeRoute->dominion, [$finishedQueue->resource->key => $amount]);
-                    #dump('+ Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to dominion ' . $tradeRoute->dominion->name);
+                    $this->buildingService->update($hold->dominion, [$finishedQueue->resource->key => $amount]);
+                    #dump('+ Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to dominion ' . $hold->dominion->name);
                 }
-                elseif($finishedQueue->type == 'export')
-                {
-
-                    $this->holdResourceService->update($tradeRoute->hold, [$finishedQueue->resource->key => $amount]);
-                    #dump('+ Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to hold ' . $tradeRoute->hold->name);
-                }
-
-                $tradeRoute->save();
+                $hold->save();
             }
 
             $finishedQueues->each->delete();
         }
 
-        HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, +1, 'trade_completed');
-
-        $overDueQueues = $tradeRoute->queues()
+        $overDueQueues = $hold->queues()
             ->where('status', 1)
             ->where('tick', '<', 0)
             ->get();
@@ -136,10 +116,10 @@ class QueueService
      * Returns the queue of specific type of a trade route.
      *
      * @param string $type
-     * @param TradeRoute $tradeRoute
+     * @param Hold $hold
      * @return Collection
      */
-    public function getQueue(string $type, TradeRoute $tradeRoute): Collection
+    public function getQueue(string $type, Hold $hold): Collection
     {
         $tick = 0;
         if ($this->forTick)
@@ -147,7 +127,7 @@ class QueueService
             // don't include next tick when calculating tick
             $tick = 1;
         }
-        return $tradeRoute->queues
+        return $hold->queues
             ->where('type', $type)
             ->where('tick', '>', $tick);
     }
@@ -156,14 +136,14 @@ class QueueService
      * Returns the amount of incoming resource for a specific type and tick of a trade route.
      *
      * @param string $type
-     * @param TradeRoute $tradeRoute
+     * @param Hold $hold
      * @param string $resource
      * @param int $tick
      * @return int
      */
-    public function getQueueAmount(string $type, TradeRoute $tradeRoute, string $resource, int $tick): int
+    public function getQueueAmount(string $type, Hold $hold, string $resource, int $tick): int
     {
-        return $this->getQueue($type, $tradeRoute)
+        return $this->getQueue($type, $hold)
                 ->filter(static function ($row) use ($resource, $tick)
                 {
                     return (
@@ -178,12 +158,12 @@ class QueueService
      * trade route.
      *
      * @param string $type
-     * @param TradeRoute $tradeRoute
+     * @param Hold $hold
      * @return int
      */
-    public function getQueueTotal(string $type, TradeRoute $tradeRoute): int
+    public function getQueueTotal(string $type, Hold $hold): int
     {
-        return $this->getQueue($type, $tradeRoute)
+        return $this->getQueue($type, $hold)
             ->sum('amount');
     }
 
@@ -192,22 +172,22 @@ class QueueService
      * a trade route.
      *
      * @param string $type
-     * @param TradeRoute $tradeRoute
+     * @param Hold $hold
      * @param string $resource
      * @return int
      */
-    public function getQueueTotalByResource(string $type, TradeRoute $tradeRoute, string $resource): int
+    public function getQueueTotalByResource(string $type, Hold $hold, string $resource): int
     {
-        return $this->getQueue($type, $tradeRoute)
+        return $this->getQueue($type, $hold)
             ->filter(static function ($row) use ($resource) {
                 return ($row->resource === $resource);
             })->sum('amount');
     }
 
-    public function dequeueResource(string $type, TradeRoute $tradeRoute, string $resource, int $amount): void
+    public function dequeueResource(string $type, Hold $hold, string $resource, int $amount): void
     {
 
-        $queue = $this->getQueue($type, $tradeRoute)
+        $queue = $this->getQueue($type, $hold)
             ->filter(static function ($row) use ($resource) {
                 return ($row->resource === $resource);
             })->sortByDesc('tick');
@@ -229,8 +209,8 @@ class QueueService
 
             if($newAmount == 0)
             {
-                DB::table('trade_route_queue')->where([
-                    'trade_route_id' => $tradeRoute->id,
+                DB::table('hold_queue')->where([
+                    'hold_id' => $hold->id,
                     'type' => $type,
                     'resource' => $resource,
                     'tick' => $value->tick,
@@ -238,8 +218,8 @@ class QueueService
             }
             else
             {
-                DB::table('trade_route_queue')->where([
-                    'trade_route_id' => $tradeRoute->id,
+                DB::table('hold_queue')->where([
+                    'hold_id' => $hold->id,
                     'type' => $type,
                     'resource' => $resource,
                     'tick' => $value->tick,
@@ -250,10 +230,10 @@ class QueueService
         }
     }
 
-    public function dequeueResourceForTick(string $type, TradeRoute $tradeRoute, string $resource, int $amount, int $tick): void
+    public function dequeueResourceForTick(string $type, Hold $hold, string $resource, int $amount, int $tick): void
     {
 
-        $queue = $this->getQueue($type, $tradeRoute)
+        $queue = $this->getQueue($type, $hold)
             ->filter(static function ($row) use ($resource, $tick) {
                 return (
                     $row->resource === $resource and
@@ -277,8 +257,8 @@ class QueueService
 
             if($newAmount == 0)
             {
-                DB::table('trade_route_queue')->where([
-                    'trade_route_id' => $tradeRoute->id,
+                DB::table('hold_queue')->where([
+                    'hold_id' => $hold->id,
                     'type' => $type,
                     'resource' => $resource,
                     'tick' => $tick,
@@ -286,8 +266,8 @@ class QueueService
             }
             else
             {
-                DB::table('trade_route_queue')->where([
-                    'trade_route_id' => $tradeRoute->id,
+                DB::table('hold_queue')->where([
+                    'hold_id' => $hold->id,
                     'type' => $type,
                     'resource' => $resource,
                     'tick' => $tick,
@@ -298,7 +278,7 @@ class QueueService
         }
     }
 
-    public function queueResources(string $type, TradeRoute $tradeRoute, array $data, int $tick = 12): void
+    public function queueResources(string $type, Hold $hold, array $data, int $tick = 12): void
     {
         $data = array_map('\intval', $data);
         $now = now();
@@ -308,9 +288,9 @@ class QueueService
                 continue;
             }
     
-            $queue = DB::table('trade_route_queue')->firstOrCreate(
+            $queue = DB::table('hold_queue')->firstOrCreate(
                 [
-                    'trade_route_id' => $tradeRoute->id,
+                    'hold_id' => $hold->id,
                     'type' => $type,
                     'resource' => $resource,
                     'tick' => $tick,

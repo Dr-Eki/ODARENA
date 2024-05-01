@@ -1701,4 +1701,9 @@ class UnitHelper
         return $lookup[$needle] ?? $needle;
     }
 
+    public function getUnitStateDescription(int $state): string
+    {
+        return config('units.states')[$state];
+    }
+
 }

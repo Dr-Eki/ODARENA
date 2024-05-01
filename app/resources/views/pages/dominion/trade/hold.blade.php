@@ -51,7 +51,7 @@
                                 <td>{{ $hold->land }}</td>
                             </tr>
                             <tr>
-                                <td>{{ Str::plural($raceHelper->getPeasantsTerm($hold->race)) }}:</td>
+                                <td>{{-- Str::plural($raceHelper->getPeasantsTerm($hold->race)) --}}Population:</td>
                                 <td>{{ number_format($hold->peasants) }}</td>
                             </tr>
                             <tr>
@@ -215,11 +215,13 @@
                     <col>
                     <col width="200">
                     <col width="200">
+                    <col width="200">
                 </colgroup>
                 <thead>
                     <tr>
                         <th>Resource</th>
-                        <th>Storage</th>
+                        <th>Supply</th>
+                        <th>Production</th>
                         <th>Current Sell Price</th>
                         <th>Current Buy Price</th>
                     </tr>
@@ -232,6 +234,7 @@
                         <tr>
                             <td>{{ $resource->name }}</td>
                             <td>{{ number_format($hold->{'resource_' . $resourceKey}) }}</td>
+                            <td>{{ number_format($resourceCalculator->getProduction($hold, $resourceKey)) }}</td>
                             <td>{!! $hold->sellPrice($resourceKey) ? number_format($hold->sellPrice($resourceKey), config('trade.price_decimals')) : '&mdash;' !!}</td>
                             <td>{!! $hold->buyPrice($resourceKey) ? number_format($hold->buyPrice($resourceKey), config('trade.price_decimals')) : '&mdash;' !!}</td>
                         </tr>
@@ -240,8 +243,74 @@
             </table>
         @endcomponent
     </div>
+</div>
 
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        @component('partials.dominion.insight.box')
 
+            @slot('title', 'Buildings')
+            @slot('titleIconClass', 'fa fa-home fa-fw')
+            @slot('noPadding', true)
+
+            <table class="table">
+                <colgroup>
+                    <col>
+                    <col width="200">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Building</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($hold->buildings as $holdBuilding)
+                        <tr>
+                            <td>{{ $holdBuilding->building->name }}</td>
+                            <td>{{ number_format($holdBuilding->amount) }} <span class="text-muted"></span></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endcomponent
+    </div>
+    
+    <div class="col-sm-12 col-md-6">
+        @component('partials.dominion.insight.box')
+
+            @slot('title', 'Units')
+            @slot('titleIconClass', 'fa fa-solid fa-people-group')
+            @slot('noPadding', true)
+
+            <table class="table">
+                <colgroup>
+                    <col>
+                    <col width="200">
+                    <col width="200">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Unit</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($hold->units as $holdUnit)
+                        <tr>
+                            <td>
+                                <strong>{{ $holdUnit->unit->name }}</strong><br>
+                                <small class="text-muted">Faction:</small> <a href="{{ route('scribes.faction', Str::slug($holdUnit->unit->race->name)) }}#units" target="_blank">{{ $holdUnit->unit->race->name }}</a>
+                            </td>
+                            <td>{{ number_format($holdUnit->amount) }}</td>
+                            <td>{{ ucwords($unitHelper->getUnitStateDescription($holdUnit->state)) }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endcomponent
+    </div>
 </div>
 
 @endif

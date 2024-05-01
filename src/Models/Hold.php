@@ -26,6 +26,7 @@ class Hold extends AbstractModel
         'sold_resources' => 'array',
         'tick_discovered' => 'integer',
         'ticks' => 'integer',
+        'status' => 'integer',
     ];
 
     public function resolveRouteBinding($value, $field = null)
@@ -115,18 +116,6 @@ class Hold extends AbstractModel
         );
     }
 
-    public function buildings()
-    {
-        return $this->belongsToMany(
-            Building::class,
-            'dominion_buildings',
-            'dominion_id',
-            'building_id'
-        )
-            ->withTimestamps()
-            ->withPivot('owned');
-    }
-
     public function improvements()
     {
         return $this->belongsToMany(
@@ -206,7 +195,12 @@ class Hold extends AbstractModel
 
     public function units()
     {
-        return $this->hasMany(DominionUnit::class);
+        return $this->hasMany(HoldUnit::class);
+    }
+
+    public function buildings()
+    {
+        return $this->hasMany(HoldBuilding::class);
     }
 
     # Get units by state
@@ -315,6 +309,7 @@ class Hold extends AbstractModel
     {
         return $this->hasMany(Hold\Queue::class);
     }
+
 
     public function user()
     {
@@ -531,8 +526,7 @@ class Hold extends AbstractModel
      */
     public function isMonarch()
     {
-        $monarch = $this->realm->monarch;
-        return ($monarch !== null && $this->id == $monarch->id);
+        return true;
     }
 
     /**
@@ -666,7 +660,7 @@ class Hold extends AbstractModel
             });
 
             # Add the default value for each building without the perk
-            $perk += $unperkedBuildings->sum('pivot.owned') * $defaultValue;
+            $perk += $unperkedBuildings->sum('amount') * $defaultValue;
 
             # Add the perk value for each building with the perk
             foreach($perkedBuildings as $building)
@@ -678,23 +672,23 @@ class Hold extends AbstractModel
         }
 
         // Filter out buildings that require a deity unless the dominion has a deity, and buildings that are disabled
-        $buildings = $this->buildings->filter(function ($building) use ($perkKey) {
-            return (!isset($building->deity) || ($this->hasDeity() && $this->deity->id === $building->deity->id)) 
-                && $building->enabled 
-                && $building->perks->contains('key', $perkKey);
+        $holdBuildings = $this->buildings->filter(function ($holdBuilding) use ($perkKey) {
+            return (!isset($holdBuilding->building->deity) || ($this->hasDeity() && $this->deity->id === $holdBuilding->building->deity->id)) 
+                #&& $building->enabled 
+                && $holdBuilding->building->perks->contains('key', $perkKey);
         });
         
-        foreach ($buildings as $building)
+        foreach ($holdBuildings as $holdBuilding)
         {
-            $buildingOwned = $building->pivot->owned;
+            $buildingOwned = $holdBuilding->amount;
 
-            if($maxBuildingRatio = $building->getPerkValue('max_effective_building_ratio'))
+            if($maxBuildingRatio = $holdBuilding->building->getPerkValue('max_effective_building_ratio'))
             {
                 $buildingOwned = min($buildingOwned, $this->land * ($maxBuildingRatio / 100));
             }
 
             # Check if building has perk pairing_limit
-            if ($pairingLimit = $building->getPerkValue('pairing_limit')) {
+            if ($pairingLimit = $holdBuilding->building->getPerkValue('pairing_limit')) {
                 $pairingLimit = explode(',', $pairingLimit);
         
                 $chunkSize = (int)$pairingLimit[0];
@@ -711,7 +705,7 @@ class Hold extends AbstractModel
 
             # Check if building has perk pairing_limit
             # SAMPLE: multiple_pairing_limit: 50,wall;bastion # amount, buildings
-            if($multiplePairingLimit = $building->getPerkValue('multiple_pairing_limit'))
+            if($multiplePairingLimit = $holdBuilding->building->getPerkValue('multiple_pairing_limit'))
             {
                 $multiplePairingLimit = explode(',', $multiplePairingLimit);
                 $pairedBuildingKeys = explode(';', $multiplePairingLimit[1]);
@@ -732,7 +726,7 @@ class Hold extends AbstractModel
                 $buildingOwned = intval($buildingOwned);
             }
 
-            $perkValueString = $building->getPerkValue($perkKey);
+            $perkValueString = $holdBuilding->building->getPerkValue($perkKey);
 
             $perkValueString = is_numeric($perkValueString) ? (float)$perkValueString : $perkValueString;
             
@@ -967,7 +961,7 @@ class Hold extends AbstractModel
                     #$amountToDestroy = intval($amountToDestroy) + (rand()/getrandmax() < fmod($amountToDestroy, 1) ? 1 : 0);
                     $amountToDestroy = (int)floor($amountToDestroy);
 
-                    $result = ['building_key' => $building->key, 'amount' => $amountToDestroy, 'land_type' => $landTypeToDestroy];
+                    $result = ['building_key' => $holdBuilding->building->key, 'amount' => $amountToDestroy, 'land_type' => $landTypeToDestroy];
 
                     return $result;
                 }
@@ -983,7 +977,7 @@ class Hold extends AbstractModel
                     $amountToDestroy = $buildingOwned * $amountToDestroyPerBuilding;
                     $amountToDestroy = (int)floor($amountToDestroy);
 
-                    $result = ['building_key' => $building->key, 'amount' => $amountToDestroy];
+                    $result = ['building_key' => $holdBuilding->building->key, 'amount' => $amountToDestroy];
 
                     return $result;
                 }
@@ -1012,8 +1006,8 @@ class Hold extends AbstractModel
                 # Mana production based on WPA
                 elseif(in_array($perkKey, ['mana_production_raw_from_wizard_ratio']))
                 {
-                    $magicCalculator = app(MagicCalculator::class);
-                    $wizardRatio = $magicCalculator->getWizardRatio($this, 'defense');
+                    #$magicCalculator = app(MagicCalculator::class);
+                    $wizardRatio = 0;#$magicCalculator->getWizardRatio($this, 'defense');
                     $perk += $wizardRatio * $perkValueString * $buildingOwned;
                 }
 
@@ -1060,7 +1054,7 @@ class Hold extends AbstractModel
                     #    $perkValues[0] = [$perkValues[0]];
                     #}
 
-                    $data[$building->key] = [
+                    $data[$holdBuilding->building->key] = [
                         'buildings_amount' => $buildingOwned,
                         'generated_unit_slots' => (array)$perkValues[0],
                         'amount_per_building' => (float)$perkValues[1]
@@ -1109,15 +1103,15 @@ class Hold extends AbstractModel
                 if($perkKey == 'gold_production_raw')
                 {
                     #isset($iterations) ? $iterations += 1 : $iterations = 1;
-                    $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_production_mod');
-                    $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_production_mod');
+                    $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $holdBuilding->building->key . '_production_mod');
+                    $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $holdBuilding->building->key . '_production_mod');
                 }
 
                 if($perkKey == 'extra_units_trained' or $perkKey == 'improvements')
                 {
-                    $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $building->key . '_perk_mod');
-                    $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $building->key . '_perk_mod');
-                    $buildingSpecificMultiplier += $this->getTechPerkMultiplier('building_' . $building->key . '_perk_mod');
+                    $buildingSpecificMultiplier += $this->getDecreePerkMultiplier('building_' . $holdBuilding->building->key . '_perk_mod');
+                    $buildingSpecificMultiplier += $this->getSpellPerkMultiplier('building_' . $holdBuilding->building->key . '_perk_mod');
+                    $buildingSpecificMultiplier += $this->getTechPerkMultiplier('building_' . $holdBuilding->building->key . '_perk_mod');
                 }
 
             #}
@@ -1336,7 +1330,7 @@ class Hold extends AbstractModel
 
             if (is_numeric($perk))
             {
-                $perk *= 1 + $this->realm->getArtefactPerkMultiplier('spell_perks_mod');
+                #$perk *= 1 + $this->realm->getArtefactPerkMultiplier('spell_perks_mod');
             }
 
             return $perk;
@@ -1424,7 +1418,7 @@ class Hold extends AbstractModel
         $multiplier += $this->getTechPerkMultiplier('improvements');
         #$multiplier += $this->getDeityPerkMultiplier('improvements'); # Breaks
         $multiplier += $this->race->getPerkMultiplier('improvements');
-        $multiplier += $this->realm->getArtefactPerkMultiplier('improvements');
+        #$multiplier += $this->realm->getArtefactPerkMultiplier('improvements');
         $multiplier += $this->getDecreePerkMultiplier('improvements'); 
 
         if($this->race->getPerkValue('improvements_from_souls'))
@@ -1538,7 +1532,7 @@ class Hold extends AbstractModel
             $multiplier += $this->race->getPerkMultiplier('deity_power');
             $multiplier += $this->title->getPerkMultiplier('deity_power') * $this->getTitlePerkMultiplier();
             $multiplier += $this->getDecreePerkMultiplier('deity_power');
-            $multiplier += $this->realm->getArtefactPerkMultiplier('deity_power_mod');
+            #$multiplier += $this->realm->getArtefactPerkMultiplier('deity_power_mod');
             
             $devotionDurationMultiplier = 1 + min($this->devotion->duration * 0.1 / 100, 1);
 

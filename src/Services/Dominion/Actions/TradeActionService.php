@@ -250,11 +250,11 @@ class TradeActionService
 
         DB::transaction(function () use ($tradeRoute) {
 
-            $sentimentPenalty = $this->tradeCalculator->getTradeRouteCancellationSentimentPenalty($tradeRoute);
+            $sentimentPenalty = $this->tradeCalculator->getTradeRouteCancellationSentimentPenalty($tradeRoute, 'cancelled_by_dominion');
 
             if($sentimentPenalty)
             {
-                HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, -$sentimentPenalty, 'trade_route_cancelled_early');
+                HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, -$sentimentPenalty, 'trade_route_cancelled_by_dominion');
             }
 
             $tradeRoute->delete();

@@ -46,6 +46,11 @@ class Building extends AbstractModel
             ->withPivot('value');
     }
 
+    public static function fromKey($key)
+    {
+        return self::where('key', $key)->first();
+    }
+
     public function getPerkValue(string $key)
     {
         $perks = $this->perks->filter(static function (BuildingPerkType $buildingPerkType) use ($key) {

@@ -167,7 +167,7 @@ class TradeCalculator
         {
             if ($tradeRouteDuration < 24)
             {
-                $penalty += -48;
+                $penalty += 200;
             }
             elseif($tradeRouteDuration < 48)
             {
