@@ -266,16 +266,13 @@ class SpellActionService
         {
 
             $duration = $spell->duration;
-
-            $durationMultiplier = 1;
-            $durationMultiplier += $caster->getBuildingPerkMultiplier('spell_duration_mod');
-
             $duration += $caster->realm->getArtefactPerkValue($spell->key . '_duration_raw');
+
+            $durationMultiplier = $this->getSpellDurationMultiplier($caster, $spell);
 
             $duration = (int)floor($duration * $durationMultiplier);
 
             $duration = max(1, $duration);
-
 
             $this->statsService->updateStat($caster, 'magic_self_success', 1);
 
@@ -331,7 +328,9 @@ class SpellActionService
             $this->statsService->updateStat($caster, 'magic_friendly_success', 1);
             if ($this->spellCalculator->isSpellActive($target, $spell->key))
             {
-                if($this->spellCalculator->getSpellDuration($target, $spell->key) == $spell->duration)
+                $duration = $spell->duration * $this->getSpellDurationMultiplier($caster, $spell);
+
+                if($this->spellCalculator->getSpellDuration($target, $spell->key) >= $duration)
                 {
                     throw new GameException("{$spell->name} is already at maximum duration.");
                 }
@@ -339,7 +338,7 @@ class SpellActionService
                 DB::transaction(function () use ($caster, $target, $spell)
                 {
                     $dominionSpell = DominionSpell::where('dominion_id', $target->id)->where('spell_id', $spell->id)
-                    ->update(['duration' => $spell->duration]);
+                    ->update(['duration' => $duration]);
 
                     $target->save([
                         'event' => HistoryService::EVENT_ACTION_CAST_SPELL,
@@ -351,11 +350,13 @@ class SpellActionService
             {
                 DB::transaction(function () use ($caster, $target, $spell)
                 {
+                    $duration = $spell->duration * $this->getSpellDurationMultiplier($caster, $spell);
+
                     DominionSpell::create([
                         'dominion_id' => $target->id,
                         'caster_id' => $caster->id,
                         'spell_id' => $spell->id,
-                        'duration' => $spell->duration
+                        'duration' => $duration
                     ]);
 
                     $caster->save([
@@ -372,12 +373,16 @@ class SpellActionService
                 ])
                 ->sendNotifications($target, 'irregular_dominion');
 
+                $duration = $spell->duration * $this->getSpellDurationMultiplier($caster, $spell);
+
             return [
                 'success' => true,
                 'message' => sprintf(
-                    'Your wizards cast %s successfully, and it will continue to affect ' . $target->name . ' for the next %s ticks.',
+                    'Your wizards cast %s successfully, and it will continue to affect %s for the next %s ticks.',
+                    
                     $spell->name,
-                    $spell->duration
+                    $target->name,
+                    $duration
                 )
             ];
         }
@@ -961,6 +966,16 @@ class SpellActionService
                 'alert-type' => 'warning',
             ];
         }
+    }
+
+    public function getSpellDurationMultiplier(Dominion $dominion, Spell $spell): float
+    {
+        $multiplier = 1;
+
+        $multiplier += $dominion->getBuildingPerkMultiplier('spell_duration_mod');
+        $multiplier += min($this->magicCalculator->getWizardRatio($dominion, 'defense') / 8, 0.50);
+
+        return $multiplier;
     }
 
     protected function getReturnMessageString(Dominion $dominion): string

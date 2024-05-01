@@ -113,9 +113,9 @@ class RoundOpenCommand extends Command implements CommandInterface
 
         foreach(config('rounds.round_settings') as $key => $setting)
         {
-            $setting = $this->ask("[$counting / $counter] Enable $setting (y/n) [y]: ");
+            $setting = $this->ask("[$counting / $counter] Enable $setting (y/n) [n]: ");
 
-            $settings[$key] = ($setting == 'n' ? false : true);
+            $settings[$key] = ($setting == 'y' ? true : false);
 
             $counting++;
         }

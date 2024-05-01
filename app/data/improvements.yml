@@ -127,6 +127,7 @@ mining:
 
 sabotage:  
   name: Sabotage
+  enabled: 0
   excluded_races:
     - Barbarian
     - Growth
@@ -157,6 +158,7 @@ science:
 
 sorcery:
   name: Sorcery
+  enabled: 0
   excluded_races:
     - Barbarian
     - Growth

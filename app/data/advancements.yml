@@ -374,6 +374,13 @@ research:
   perks:
     research_slots: 12.50
 
+mercantilism:
+  name: Mercantilism
+  excluded_races:
+    - Growth
+  perks:
+    trade_route_slots: 25
+
 # FACTION SPECIFIC
 
 obsidian_liners:

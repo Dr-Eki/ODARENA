@@ -301,28 +301,4 @@ class RoundHelper
         return $races;
     }
 
-    public function getRoundSettings(): array
-    {
-        return config('rounds.round_settings');
-    }
-
-    public function getRoundDefaultSettings(): array
-    {
-        $settings = [];
-
-        foreach($this->getRoundSettings() as $key => $setting)
-        {
-            $settings[$key] = true;
-        }
-
-        return $settings;
-    }
-
-    public function getRoundDefaultSetting(string $setting): bool
-    {
-        $settings = $this->getRoundDefaultSettings();
-
-        return $settings[$setting];
-    }
-
 }

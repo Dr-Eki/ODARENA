@@ -206,10 +206,25 @@ class TradeCalculator
             $penalty -= 6; # The hold is sorry for not having enough resources
         }
 
-
-
         return $penalty;
     }
 
+    public function getTradeRoutesSlots(Dominion $dominion): int
+    {
+        $slots = 0;
+
+        $startingSlots = 3;
+        $startingSlots += $dominion->race->getPerkValue('trade_route_slots');
+
+        $slots += $startingSlots;
+
+
+        $slots += $dominion->getAdvancementPerkValue('trade_route_slots') / 100;
+
+        $slots += $dominion->land / 500;
+
+        return (int)floor($slots);
+
+    }
 
 }
