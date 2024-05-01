@@ -71,7 +71,7 @@
                 @if (isset($roundSettings['trade_routes']) and $roundSettings['trade_routes'] and !$selectedDominion->race->getPerkValue('cannot_trade'))
                     <li class="{{ Route::is('dominion.trade.routes') ? 'active' : null }}">
                         <a href="{{ route('dominion.trade.routes') }}">
-                            <i class="fa fa-solid fa-arrow-right-arrow-left fa-fw"></i>
+                            <i class="fas fa-arrow-right-arrow-left fa-fw"></i>
                             <span>Trade Routes</span>
                             {{-- 
                             @if(($unusedTradeRoutes = $tradeCalculator->getUnusedTradeRoutes($selectedDominion)))
