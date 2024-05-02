@@ -258,6 +258,19 @@ class NotificationHelper
                 },
                 'iconClass' => 'ra ra-crossed-swords text-orange',
             ],
+            # TRADE ROUTES
+            'trade_failed_and_cancelled' => [
+                'label' => 'A trade failed and the trade route has been cancelled',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.trade.routes'),
+                'iconClass' => 'fa fa-solid fa-arrow-right-arrow-left text-red',
+            ],
+            'trade_failed' => [
+                'label' => 'A trade failed because the hold has run out of resources',
+                'defaults' => ['email' => false, 'ingame' => true],
+                'route' => route('dominion.trade.routes'),
+                'iconClass' => 'fa fa-solid fa-arrow-right-arrow-left text-red',
+            ],
             # PROTECTORSHIP
             'protector_received_invasion' => [
                 'label' => 'Your protector got invaded',

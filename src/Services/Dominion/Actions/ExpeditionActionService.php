@@ -11,7 +11,6 @@ use OpenDominion\Traits\DominionGuardsTrait;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
-use OpenDominion\Models\HoldSentimentEvent;
 
 use OpenDominion\Factories\HoldFactory;
 
@@ -31,6 +30,7 @@ use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\TerrainCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
 
+use OpenDominion\Services\HoldService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
 use OpenDominion\Services\Dominion\HistoryService;
@@ -63,6 +63,7 @@ class ExpeditionActionService
     protected $unitHelper;
 
     protected $artefactService;
+    protected $holdService;
     protected $notificationService;
     protected $protectionService;
     protected $statsService;
@@ -90,6 +91,7 @@ class ExpeditionActionService
         $this->unitHelper = app(UnitHelper::class);
 
         $this->artefactService = app(ArtefactService::class);
+        $this->holdService = app(HoldService::class);
         $this->notificationService = app(NotificationService::class);
         $this->protectionService = app(ProtectionService::class);
         $this->statsService = app(StatsService::class);
@@ -328,7 +330,7 @@ class ExpeditionActionService
             $this->statsService->updateStat($dominion, 'expeditions', 1);
 
             # Debug before saving:
-            #$this->expedition); #dd('Safety!');
+            #ldd($this->expedition); dd('Safety!');
 
             $this->expedition = GameEvent::create([
                 'round_id' => $dominion->round_id,
@@ -459,15 +461,10 @@ class ExpeditionActionService
      
         if(random_chance($this->expedition['hold']['chance_to_find']))
         {
-            $holdDiscovered = $dominion->round->holds->where('status',0)->random();
+            $holdDiscovered = $this->holdService->discoverHold($dominion->round, $dominion);
 
             if($holdDiscovered)
             {
-                $holdDiscovered->status = 1;
-                $holdDiscovered->save();
-
-                HoldSentimentEvent::add($holdDiscovered, $dominion, 100, 'discovered_by_dominion');
-
                 $this->expedition['hold']['found'] = true;
 
                 $this->expedition['hold']['found'] = true;

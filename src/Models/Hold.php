@@ -29,6 +29,20 @@ class Hold extends AbstractModel
         'status' => 'integer',
     ];
 
+    protected $fillable = [
+        'key',
+        'peasants',
+        'land',
+        'morale',
+        'peasants_last_hour',
+        'status',
+        'desired_resources',
+        'sold_resources',
+        'tick_discovered',
+        'ticks',
+        'status',
+    ];
+
     public function resolveRouteBinding($value, $field = null)
     {
         return $this->where('key', $value)->firstOrFail();

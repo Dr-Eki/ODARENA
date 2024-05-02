@@ -75,7 +75,7 @@ class HoldFactory
                 'ruler_name' => $holdData->ruler_name ?? Str::random(8),
                 'description' => $holdData->description,
                 'round_id' => $round->id,
-                'title_id' => Title::all()->random()->id,
+                'title_id' => Title::all()->where('enabled',1)->random()->id,
                 'race_id' => isset($race->id) ? $race->id : null,
                 'status' => 1,
                 'land' => config('holds.starting_land'),

@@ -2,6 +2,8 @@
 
 namespace OpenDominion\Services;
 
+use OpenDominion\Models\Dominion;
+use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Hold;
 use OpenDominion\Models\HoldSentiment;
 use OpenDominion\Models\HoldSentimentEvent;
@@ -142,6 +144,42 @@ class HoldService
 
         }
 
+    }
+
+    public function discoverHold(Round $round, Dominion $discoverer = null): Hold
+    {
+        # Grab a random undiscovered hold
+        $hold = $round->holds->where('status',0)->random();
+
+        # Set status to discovered
+        $hold->status = 1;
+
+        # Set discovered tick
+        $hold->tick_discovered = $round->ticks;
+
+        # Save
+        $hold->save();
+
+        # Update hold prices right away
+        $this->setHoldPrices($hold, $round->ticks);
+
+        GameEvent::create([
+            'round_id' => $round->id,
+            'source_type' => Hold::class,
+            'source_id' => $hold->id,
+            'target_type' => isset($discoverer) ? Dominion::class : null,
+            'target_id' => isset($discoverer) ? $discoverer->id : null,
+            'type' => 'hold_discovered',
+            'data' => '',
+            'tick' => $round->ticks
+        ]);
+
+        if($discoverer)
+        {
+            HoldSentimentEvent::add($hold, $discoverer, 100, 'discovered_by_dominion');
+        }
+
+        return $hold;
     }
 
 

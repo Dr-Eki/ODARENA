@@ -181,6 +181,14 @@ class HoldCalculator
         $remainingLand = $land - array_sum($buildingData);
 
         # How many resources are being sold?
+        $soldResource = $hold->sold_resources;
+
+        # Don't count gold.
+        if (isset($soldResource['gold']))
+        {
+            unset($soldResource['gold']);
+        }
+
         $soldResources = count($hold->sold_resources);
 
         # Land dedicated per resource

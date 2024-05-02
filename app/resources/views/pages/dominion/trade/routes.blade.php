@@ -101,7 +101,7 @@
             </div>
 
             <div class="box-body">
-                @foreach($selectedDominion->round->holds->sortBy('id') as $hold)
+                @foreach($selectedDominion->round->holds->where('status',1)->sortByDesc('tick_discovered') as $hold)
                     @php
                         $sentiment = optional($hold->sentiments->where('target_id', $selectedDominion->id)->first())->sentiment ?? 0;
                         $sentimentDescription = $holdHelper->getSentimentDescription($sentiment);

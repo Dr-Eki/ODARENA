@@ -21,7 +21,7 @@
     <div class="col-sm-12 col-md-9">
         @component('partials.dominion.insight.box')
             @slot('title', ('The Hold of ' . $hold->name))
-            @slot('titleIconClass', 'fa-solid fa-dungeon')
+            @slot('titleIconClass', 'fa fa-solid fa-dungeon')
             @slot('tableResponsive', false)
             @slot('noPadding', true)
 

@@ -4,9 +4,9 @@ namespace OpenDominion\Services\Dominion\API;
 
 use OpenDominion\Calculators\Dominion\ArtefactCalculator;
 use OpenDominion\Calculators\Dominion\ExpeditionCalculator;
+use OpenDominion\Calculators\HoldCalculator;
 use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
-use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Models\Dominion;
 
 class ExpeditionCalculationService
@@ -18,14 +18,14 @@ class ExpeditionCalculationService
     /** @var ExpeditionCalculator */
     protected $expeditionCalculator;
 
+    /** @var HoldCalculator */
+    protected $holdCalculator;
+
     /** @var MagicCalculator */
     protected $magicCalculator;
 
     /** @var MilitaryCalculator */
     protected $militaryCalculator;
-
-    /** @var RangeCalculator */
-    protected $rangeCalculator;
    
 
     /** @var array Calculation result array. */
@@ -46,6 +46,7 @@ class ExpeditionCalculationService
         'spell_bonus' => null,
         'units_sent' => 0,
         'artefact_discovery_chance' => 0,
+        'hold_discovery_chance' => 0,
         'units' => [ // home, away, raw OP, raw DP
             '1' => ['dp' => 0, 'op' => 0],
             '2' => ['dp' => 0, 'op' => 0],
@@ -56,18 +57,13 @@ class ExpeditionCalculationService
         'wizard_points_required' => 0,
     ];
 
-    public function __construct(
-        ArtefactCalculator $artefactCalculator,
-        ExpeditionCalculator $expeditionCalculator,
-        MilitaryCalculator $militaryCalculator,
-        RangeCalculator $rangeCalculator
-    )
+    public function __construct()
     {
+        $this->artefactCalculator = app(ArtefactCalculator::class);
+        $this->expeditionCalculator = app(ExpeditionCalculator::class);
+        $this->holdCalculator = app(HoldCalculator::class);
         $this->magicCalculator = app(MagicCalculator::class);
-        $this->artefactCalculator = $artefactCalculator;
-        $this->expeditionCalculator = $expeditionCalculator;
-        $this->militaryCalculator = $militaryCalculator;
-        $this->rangeCalculator = $rangeCalculator;
+        $this->militaryCalculator = app(MilitaryCalculator::class);
     }
 
     /**
@@ -141,6 +137,7 @@ class ExpeditionCalculationService
         $this->calculationResult['land_discovered'] = $this->expeditionCalculator->getLandDiscoveredAmount($dominion, $this->calculationResult['away_offense']);
 
         $this->calculationResult['artefact_discovery_chance'] = $this->artefactCalculator->getChanceToDiscoverArtefactOnExpedition($dominion, $this->calculationResult) * 100;
+        $this->calculationResult['hold_discovery_chance'] = $this->holdCalculator->getChanceToDiscoverHoldOnExpedition($dominion, $this->calculationResult) * 100;
 
         $this->calculationResult['wizard_points'] = $this->magicCalculator->getWizardPoints($dominion, 'offense');
         $this->calculationResult['wizard_points_required'] = $this->magicCalculator->getWizardPointsRequiredToSendUnits($dominion, $units);

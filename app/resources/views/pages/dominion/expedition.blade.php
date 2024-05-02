@@ -193,10 +193,16 @@
                                                 <td id="invasion-land-discovered-amount" data-amount="0">0</td>
                                             </tr>
                                             @if(in_array($selectedDominion->round->mode,['artefacts', 'artefacts-packs']))
-                                            <tr>
-                                                <td><i class="ra ra-alien-fire"></i> Chance to discover artefact:</td>
-                                                <td id="artefact-discovery-chance" data-amount="0">0</td>
-                                            </tr>
+                                                <tr>
+                                                    <td><i class="ra ra-alien-fire"></i> Chance to discover artefact:</td>
+                                                    <td id="artefact-discovery-chance" data-amount="0">0</td>
+                                                </tr>
+                                            @endif
+                                            @if($selectedDominion->round->settings['trade_routes'])
+                                                <tr>
+                                                    <td><i class="fa fa-solid fa-dungeon"></i> Chance to discover hold:</td>
+                                                    <td id="hold-discovery-chance" data-amount="0">0</td>
+                                                </tr>
                                             @endif
                                         </tbody>
                                     </table>
@@ -356,6 +362,7 @@
             var homeForcesDPAElement = $('#home-forces-dpa');
             var invasionLandDiscoveredElement = $('#invasion-land-discovered-amount');
             var artefactDiscoveryChanceElement = $('#artefact-discovery-chance');
+            var holdDiscoveryChanceElement = $('#hold-discovery-chance');
             var wizardPointsElement = $('#wizard-points');
             var wizardPointsRequiredElement = $('#wizard-points-required');
 
@@ -404,6 +411,7 @@
                             homeForcesMinDPElement.data('amount', response.min_dp);
                             homeForcesDPAElement.data('amount', response.home_dpa);
                             artefactDiscoveryChanceElement.data('amount', response.artefact_discovery_chance);
+                            holdDiscoveryChanceElement.data('amount', response.hold_discovery_chance);
                             wizardPointsElement.data('amount', response.wizard_points);
                             wizardPointsRequiredElement.data('amount', response.wizard_points_required);
 
@@ -418,6 +426,7 @@
                             homeForcesMinDPElement.text(response.min_dp.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             homeForcesDPAElement.text(response.home_dpa.toLocaleString(undefined, {maximumFractionDigits: 3}));
                             artefactDiscoveryChanceElement.text(response.artefact_discovery_chance.toLocaleString(undefined, {maximumFractionDigits: 2}) + '%');
+                            holdDiscoveryChanceElement.text(response.hold_discovery_chance.toLocaleString(undefined, {maximumFractionDigits: 2}) + '%');
                             wizardPointsElement.text(response.wizard_points.toLocaleString(undefined, {maximumFractionDigits: 2}));
                             wizardPointsRequiredElement.text(response.wizard_points_required.toLocaleString(undefined, {maximumFractionDigits: 2}));
 

@@ -1280,6 +1280,11 @@ day23_top_op:
 day24_top_op:
   name: Day 24 Highest Offensive Power Seen
 
+# Holds and Trading
+
+holds_discovered:
+  name: Holds discovered
+
 # Artefacts
 
 artefacts_discovered:

@@ -178,14 +178,14 @@ class HistoryService
      */
     protected function getChangedAttributeKeys(Hold $hold): array
     {
+
+        return [];
+
         return collect($hold->getAttributes())
             ->diffAssoc(collect($hold->getOriginal()))
             ->except([
                 'id',
-                'user_id',
-                'pack_id',
                 'round_id',
-                'realm_id',
                 'race_id',
                 'title_id',
                 'name',
@@ -193,17 +193,8 @@ class HistoryService
                 'peasants_last_hour',
                 'created_at',
                 'updated_at',
-                'daily_gold',
-                'daily_land',
-                'council_last_read',
-                'news_last_read',
-                'last_tick_at',
-                'monarchy_vote_for_hold_id',
-                'tick_voted',
-                'most_recent_improvement_resource',
-                'most_theft_improvement_resource',
-                'most_recent_exchange_from',
-                'most_recent_exchange_to',
+                'sold_resources',
+                'desired_resources',
             ])->keys()->toArray();
     }
 }

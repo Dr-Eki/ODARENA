@@ -46,6 +46,11 @@ class TradeActionService
             throw new GameException('Invalid hold.');
         }
 
+        if($hold->status !== 1)
+        {
+            throw new GameException('This hold has not yet been discovered.');
+        }
+
         if(!$soldResource)
         {
             throw new GameException('Invalid sold resource.');
@@ -151,6 +156,11 @@ class TradeActionService
         if(!$hold)
         {
             throw new GameException('Invalid hold.');
+        }
+
+        if($hold->status !== 1)
+        {
+            throw new GameException('This hold has not yet been discovered.');
         }
 
         if(!$soldResource)

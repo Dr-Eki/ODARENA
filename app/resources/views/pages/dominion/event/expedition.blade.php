@@ -200,30 +200,75 @@
     </div>
 
     @if(isset($event->data['artefact']) and $event->data['artefact']['found'])
-    @php
-        $artefact = OpenDominion\Models\Artefact::findOrFail($event->data['artefact']['id']);
-    @endphp
-    <div class="row">
-        <div class="col-sm-12 col-md-8 col-md-offset-2">
-            <div class="box box-warning">
-                <div class="box-header with-border">
-                    <h3 class="box-title">
-                        <i class="ra ra-alien-fire"></i> Artefact discovered
-                    </h3>
-                </div>
-                <div class="box-body no-padding">
-                    <div class="col-xs-12 col-sm-12">
-                        <h4 class="text-orag">{{ $artefact->name }}</h4>
-                        <ul>
-                            @foreach($artefactHelper->getArtefactPerksString($artefact) as $effect)
-                                <li>{{ ucfirst($effect) }}</li>
-                            @endforeach
-                        </ul>
+        @php
+            $artefact = OpenDominion\Models\Artefact::findOrFail($event->data['artefact']['id']);
+        @endphp
+        <div class="row">
+            <div class="col-sm-12 col-md-8 col-md-offset-2">
+                <div class="box box-warning">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="ra ra-alien-fire"></i> Artefact discovered
+                        </h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <div class="col-xs-12 col-sm-12">
+                            <h4 class="text-orag">{{ $artefact->name }}</h4>
+                            <ul>
+                                @foreach($artefactHelper->getArtefactPerksString($artefact) as $effect)
+                                    <li>{{ ucfirst($effect) }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
+
+    @if(isset($event->data['hold']) and $event->data['hold']['found'])
+        @php
+            $hold = OpenDominion\Models\Hold::findOrFail($event->data['hold']['id']);
+        @endphp
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-md-offset-4">
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="fa fa-dungeon"></i> Hold discovered
+                        </h3>
+                    </div>
+                    <div class="box-body no-padding">
+                        <div class="col-xs-12 col-sm-12 text-center">
+                            <small class="text-muted">Your units venture far and discover a hold:</small><br>
+                            <h4>{{ $hold->name }}</h4>
+                            <p>{{ $hold->description }}</p>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 text-center">
+                            <h4>Sold Resources</h4>
+                            @foreach($hold->sold_resources as $resourceKey)
+                                @php
+                                    $resource = OpenDominion\Models\Resource::fromKey($resourceKey);
+                                @endphp
+                                {{ $resource->name }}<br>
+                            @endforeach
+                        </div>
+                        <div class="col-xs-6 col-sm-6 text-center">
+                            <h4>Desired Resources</h4>
+                            @foreach($hold->desired_resources as $resourceKey)
+                                @php
+                                    $resource = OpenDominion\Models\Resource::fromKey($resourceKey);
+                                @endphp
+                                {{ $resource->name }}<br>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="box-footer text-center">
+                        <a href="{{ route('dominion.trade.hold', $hold->key) }}" class="button btn btn-info">View hold</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     @endif
 
 @endsection
