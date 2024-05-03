@@ -67,8 +67,8 @@ class BarbarianCalculator
 
         $round = $round ?? Round::find($dominion->round_id);
 
-        # Special for round league ID 7
-        if($round->league->id == 7)
+        # Special for round league ID 7 or greater
+        if($round->league->id >= 7)
         {
             $dpa /= 4;
             $dpa = ceil($dpa);
