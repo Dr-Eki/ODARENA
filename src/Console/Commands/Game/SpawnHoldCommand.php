@@ -46,8 +46,6 @@ class SpawnHoldCommand extends Command
             }
         }
 
-
-
         $count = $this->ask('Amount of holds to discover [default 1]') ?? 1;
 
         DB::transaction(function () use ($round, $count) {
