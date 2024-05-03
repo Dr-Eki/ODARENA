@@ -38,6 +38,11 @@ class TradeActionService
             throw new GameException('You cannot trade while in protection.');
         }
 
+        if(!$dominion->round->hasStarted())
+        {
+            throw new GameException('You cannot trade until the round begins.');
+        }
+
         $this->guardLockedDominion($dominion);
         $this->guardActionsDuringTick($dominion);
 
