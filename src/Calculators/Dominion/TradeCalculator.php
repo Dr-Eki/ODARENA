@@ -170,11 +170,11 @@ class TradeCalculator
             }
             elseif($tradeRouteDuration < 48)
             {
-                $penalty += 24;
+                $penalty += 48;
             }
             elseif($tradeRouteDuration < 72)
             {
-                $penalty += 12;
+                $penalty += 24;
             }
             elseif($tradeRouteDuration > 192)
             {
@@ -190,7 +190,7 @@ class TradeCalculator
             }
             else
             {
-                $penalty += 6;
+                $penalty += 12;
             }
 
             # Does the hold have any resources left?
@@ -198,11 +198,6 @@ class TradeCalculator
             {
                 $penalty = 0;
             }
-
-        }
-        elseif($reason == 'hold_insufficient_resources')
-        {
-            $penalty -= 6; # The hold is sorry for not having enough resources
         }
 
         return $penalty;
