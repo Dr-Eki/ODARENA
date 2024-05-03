@@ -17,6 +17,7 @@ class Hold extends AbstractModel
 
     protected $casts = [
         'key' => 'string',
+        'name' => 'string',
         'peasants' => 'integer',
         'land' => 'integer',
         'morale' => 'integer',
@@ -30,6 +31,10 @@ class Hold extends AbstractModel
     ];
 
     protected $fillable = [
+        'round_id',
+        'title_id',
+        'race_id',
+        'name',
         'key',
         'peasants',
         'land',
