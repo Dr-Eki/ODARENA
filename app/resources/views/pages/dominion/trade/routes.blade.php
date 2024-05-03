@@ -107,6 +107,7 @@
                         $sentimentDescription = $holdHelper->getSentimentDescription($sentiment);
                         $sentimentClass = $holdHelper->getSentimentClass($sentimentDescription);
                         $canTradeWithHold = $tradeCalculator->canDominionTradeWithHold($selectedDominion, $hold);
+                        $hasAvailableTradeRouteSlots = $tradeCalculator->getAvailableTradeRouteSlots($selectedDominion);
                         $user = Auth::user();
                     @endphp
 
@@ -160,9 +161,21 @@
                                 </tbody>
                             </table>
                         </div>
-                        @if(!$canTradeWithHold)
+                        @if($selectedDominion->protection_tick)
+                            <div class="col-md-6">
+                                <p>You cannot trade while under protection.</p>
+                            </div>
+                        @elseif($selectedDominion->isLocked() or $selectedDominion->isAbandoned())
+                            <div class="col-md-6">
+                                <p>You cannot trade.</p>
+                            </div>
+                        @elseif(!$canTradeWithHold)
                             <div class="col-md-6">
                                 <p>You cannot trade with this hold. You do not have any resources the hold is interested in buying.</p>
+                            </div>
+                        @elseif(!$hasAvailableTradeRouteSlots)
+                            <div class="col-md-6">
+                                <p>You do not have any available trade route slots.</p>
                             </div>
                         @else
                             <div class="col-md-2">

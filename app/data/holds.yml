@@ -482,6 +482,7 @@ thulian_depths:
     - miasma
   sold_resources:
     - body
+    - gold
     - prisoner
 
 the_grotesque_citadel:

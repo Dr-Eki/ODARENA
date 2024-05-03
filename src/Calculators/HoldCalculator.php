@@ -60,8 +60,15 @@ class HoldCalculator
             return $multiplier;
         }
 
-        $multiplier += $this->getBaseDesirabilityMultiplier($hold, $resourceKey);
+        #dump('> Multiplier: ' . $multiplier);
+
         $multiplier += $this->getResourceSupplyMultiplier($hold, $resourceKey);
+        $multiplier *= $this->getBaseDesirabilityMultiplier($hold, $resourceKey);
+
+        #dump('> Desirability: ' . $this->getBaseDesirabilityMultiplier($hold, $resourceKey));
+        #dump('> Supply: ' . $this->getResourceSupplyMultiplier($hold, $resourceKey));
+        #dump('>> Multiplier: ' . $multiplier);
+        #dd($resourceKey, $hold->name);
 
         return $multiplier;
     }
@@ -69,18 +76,18 @@ class HoldCalculator
     public function getBaseDesirabilityMultiplier(Hold $hold, string $resourceKey): float
     {
 
-        $multiplier = 0;
+        $multiplier = 1;
 
         $isSoldResource = in_array($resourceKey, $hold->sold_resources);
         $isDesiredResource = in_array($resourceKey, $hold->desired_resources);
 
         if($isSoldResource)
         {
-            $multiplier += (8/9);
+            $multiplier *= (8/9);
         }
         if($isDesiredResource)
         {
-            $multiplier += (9/8);
+            $multiplier *= (9/8);
         }
 
         return $multiplier;
@@ -101,6 +108,9 @@ class HoldCalculator
         $multiplier = (1 - $ratio) / 10;
 
         $multiplier = max(-0.90, $multiplier);
+
+        #dump('* Supply multiplier');
+        #dump($current, $goal, $multiplier);
 
         return $multiplier;
     }

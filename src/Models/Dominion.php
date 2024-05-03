@@ -371,7 +371,7 @@ class Dominion extends AbstractModel
     {
         $dominionResourceKeys = $this->resources->pluck('key')->toArray();
         $dominionRaceResources = $this->race->resources;
-
+        
         return array_unique(array_merge($dominionResourceKeys, $dominionRaceResources));
     }
 

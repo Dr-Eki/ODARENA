@@ -31,7 +31,6 @@ class TradeCalculator
 
     public function canDominionBuyAnyResourcesFromHold(Dominion $dominion, Hold $hold): bool
     {
-
         return count(array_intersect($dominion->resourceKeys(), $hold->sold_resources)) > 0;
     }
 
