@@ -455,7 +455,13 @@ class ExpeditionActionService
 
     protected function handleHoldDiscovery($dominion): void
     {
+
         $this->expedition['hold']['found'] = false;
+
+        if(!$dominion->round->settings['trade_routes'])
+        {
+            return;
+        }
 
         $this->expedition['hold']['chance_to_find'] = $this->holdCalculator->getChanceToDiscoverHoldOnExpedition($dominion, $this->expedition);
      

@@ -1702,16 +1702,18 @@ class TickService
             return;
         }
 
+        $holdService = app(HoldService::class);
+
         app(TradeService::class)->handleTradeRoutesTick($round);
-        app(HoldService::class)->handleHoldTick($round);
+        $holdService->handleHoldTick($round);
 
-        $spawnHold = rand(1, (int)config('barbarians.settings.ONE_IN_CHANCE_TO_SPAWN'));
+        $discoverHoldChance = rand(1, (int)config('holds.tick_discover_hold_chance'));
 
-        Log::info('[HOLD] unhide chance value: '. $spawnHold . ' (unhide if this value is 1).');
+        Log::info('[HOLD] Discovery chance value: '. $discoverHoldChance . ' (discover if this value is 1).');
 
-        if($spawnHold)
+        if($discoverHoldChance)
         {
-            app(HoldFactory::class)->create($round);
+            $holdService->discoverHold($round);
         }
     }
 

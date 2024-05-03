@@ -695,6 +695,18 @@ class NotificationHelper
             case 'hourly_dominion.starvation_occurred':
                 return 'You do not have enough food! Morale is decreasing.';
 
+            case 'hourly_dominion.trade_failed':
+                return sprintf('%s does not have enough %s to trade with you. No resources have been sent by either party.',
+                    $data['hold_name'],
+                    $data['bought_resource_name']
+                );
+
+            case 'hourly_dominion.trade_failed_and_cancelled':
+                return sprintf('You do not have enough %s for your trade route with %s. The trade route has been cancelled!',
+                    $data['sold_resource_name'],
+                    $data['hold_name']
+                );
+
             # CULT
 
             case 'hourly_dominion.attrition_occurred':

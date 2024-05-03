@@ -300,13 +300,13 @@ class Hold extends AbstractModel
     public function getBuildingAmount(string $buildingKey)
     {
         $buildingKey = strtolower($buildingKey);
+
+        $building = Building::fromKey($buildingKey);
+
+        $holdBuilding = $this->buildings->where('building_id', $building->id)->first();
     
-        $building = $this->buildings()
-            ->where('buildings.key', $buildingKey)
-            ->first();
-    
-        if ($building) {
-            return $building->pivot->owned;
+        if ($holdBuilding) {
+            return $holdBuilding->amount;
         }
     
         return 0;

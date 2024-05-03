@@ -16,7 +16,7 @@ use OpenDominion\Models\AbstractModel;
  */
 class Queue extends AbstractModel
 {
-    protected $table = 'hold_queue';
+    protected $table = 'hold_queues';
 
     protected $guarded = ['created_at'];
 

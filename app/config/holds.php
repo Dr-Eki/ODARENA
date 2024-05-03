@@ -8,6 +8,9 @@ return [
     'starting_peasants' => 5000,
     'starting_defense' => 25000,
 
+
+    'tick_discover_hold_chance' => 60,
+
     'defaults' => [
         'unit_return_ticks' => 12,
         'unit_training_ticks' => 12,

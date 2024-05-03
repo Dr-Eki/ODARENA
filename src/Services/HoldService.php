@@ -2,6 +2,8 @@
 
 namespace OpenDominion\Services;
 
+use Log;
+
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Hold;
@@ -146,10 +148,23 @@ class HoldService
 
     }
 
-    public function discoverHold(Round $round, Dominion $discoverer = null): Hold
+    public function discoverHold(Round $round, Dominion $discoverer = null): ?Hold
     {
+        # Are there any undiscovered holds?
+        $undiscoveredHolds = $round->holds->where('status',0);
+
+        if($undiscoveredHolds->count() == 0)
+        {
+            return null;
+        }
+
         # Grab a random undiscovered hold
         $hold = $round->holds->where('status',0)->random();
+
+        if(!$hold)
+        {
+            return null;
+        }
 
         # Set status to discovered
         $hold->status = 1;
@@ -178,7 +193,7 @@ class HoldService
         {
             HoldSentimentEvent::add($hold, $discoverer, 100, 'discovered_by_dominion');
         }
-
+ 
         return $hold;
     }
 

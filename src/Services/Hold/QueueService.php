@@ -63,8 +63,8 @@ class QueueService
 
     public function handleHoldQueues(Hold $hold): void
     {
-        $this->advanceBuildingQueues($hold);
-        $this->finishBuildingQueues($hold);
+        $this->advanceHoldQueues($hold);
+        $this->finishHoldQueues($hold);
     }
 
     public function advanceHoldQueues(Hold $hold): void
@@ -209,7 +209,7 @@ class QueueService
 
             if($newAmount == 0)
             {
-                DB::table('hold_queue')->where([
+                DB::table('hold_queues')->where([
                     'hold_id' => $hold->id,
                     'type' => $type,
                     'resource' => $resource,
@@ -218,7 +218,7 @@ class QueueService
             }
             else
             {
-                DB::table('hold_queue')->where([
+                DB::table('hold_queues')->where([
                     'hold_id' => $hold->id,
                     'type' => $type,
                     'resource' => $resource,
@@ -257,7 +257,7 @@ class QueueService
 
             if($newAmount == 0)
             {
-                DB::table('hold_queue')->where([
+                DB::table('hold_queues')->where([
                     'hold_id' => $hold->id,
                     'type' => $type,
                     'resource' => $resource,
@@ -266,7 +266,7 @@ class QueueService
             }
             else
             {
-                DB::table('hold_queue')->where([
+                DB::table('hold_queues')->where([
                     'hold_id' => $hold->id,
                     'type' => $type,
                     'resource' => $resource,
@@ -288,7 +288,7 @@ class QueueService
                 continue;
             }
     
-            $queue = DB::table('hold_queue')->firstOrCreate(
+            $queue = DB::table('hold_queues')->firstOrCreate(
                 [
                     'hold_id' => $hold->id,
                     'type' => $type,
