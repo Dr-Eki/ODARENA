@@ -10,7 +10,7 @@ use OpenDominion\Services\HoldService;
 
 class SpawnHoldCommand extends Command
 {
-    protected $signature = 'game:hold:discover';
+    protected $signature = 'game:hold:discover {roundId?}';
     protected $description = 'Discover holds';
 
     private $holdFactory;
@@ -25,14 +25,28 @@ class SpawnHoldCommand extends Command
 
     public function handle()
     {
-        $round = Round::active()->orderBy('number', 'desc')->first();
 
-        if(!$round)
+        $roundId = $this->argument('roundId');
+
+        if($roundId and $round = Round::find($roundId))
         {
-            $this->error('No active round found');
-            dd($round);
-            return;
+            $this->info("Using round {$round->number} (ID {$round->id} / name {$round->name})");
         }
+        else
+        {
+            $this->info('No round specified, using active round');
+
+            $round = Round::active()->orderBy('number', 'desc')->first();
+
+            if(!$round)
+            {
+                $this->error('No active round found');
+                dd($round);
+                return;
+            }
+        }
+
+
 
         $count = $this->ask('Amount of holds to discover [default 1]') ?? 1;
 
