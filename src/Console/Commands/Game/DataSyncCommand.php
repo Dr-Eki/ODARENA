@@ -1139,11 +1139,6 @@ class DataSyncCommand extends Command implements CommandInterface
             $trade = object_get($resourceData, 'trade', ['buy' => 0, 'sell' => 0]);
             $trade->sell = $trade->buy > 0 ? 1/$trade->buy : 0;
 
-            if($resourceKey == 'prisoner')
-            {
-                dd($trade);
-            }
-
             // Resource
             $resource = Resource::firstOrNew(['key' => $resourceKey])
                 ->fill([
