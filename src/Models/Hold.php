@@ -18,6 +18,7 @@ class Hold extends AbstractModel
     protected $casts = [
         'key' => 'string',
         'name' => 'string',
+        'ruler_name' => 'string',
         'peasants' => 'integer',
         'land' => 'integer',
         'morale' => 'integer',
@@ -36,6 +37,7 @@ class Hold extends AbstractModel
         'race_id',
         'name',
         'key',
+        'ruler_name',
         'peasants',
         'land',
         'morale',
