@@ -209,7 +209,7 @@ class TradeCalculator
         return $penalty;
     }
 
-    public function getTradeRoutesSlots(Dominion $dominion): int
+    public function getTradeRouteSlots(Dominion $dominion): int
     {
         $slots = 0;
 
@@ -218,13 +218,21 @@ class TradeCalculator
 
         $slots += $startingSlots;
 
-
         $slots += $dominion->getAdvancementPerkValue('trade_route_slots') / 100;
 
-        $slots += $dominion->land / 500;
+        $slots += max($dominion->land - config('game.starting_land'), 0) / 500;
 
         return (int)floor($slots);
+    }
 
+    public function getUsedTradeRouteSlots(Dominion $dominion): int
+    {
+        return $dominion->tradeRoutes()->where('status', 1)->count();
+    }
+
+    public function getAvailableTradeRouteSlots(Dominion $dominion): int
+    {
+        return $this->getTradeRouteSlots($dominion) - $this->getUsedTradeRouteSlots($dominion);
     }
 
 }

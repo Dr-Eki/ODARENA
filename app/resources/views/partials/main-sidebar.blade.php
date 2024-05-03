@@ -73,11 +73,10 @@
                         <a href="{{ route('dominion.trade.routes') }}">
                             <i class="fas fa-arrow-right-arrow-left fa-fw"></i>
                             <span>Trade Routes</span>
-                            {{-- 
-                            @if(($unusedTradeRoutes = $tradeCalculator->getUnusedTradeRoutes($selectedDominion)))
+                            
+                            @if(!$selectedDominion->protection_ticks and $unusedTradeRoutes = $tradeCalculator->getAvailableTradeRouteSlots($selectedDominion))
                                 <span class="label label-warning pull-right">{{ number_format($unusedTradeRoutes) }}</span>
                             @endif
-                            --}}
                         </a>
                     </li>
                 @endif

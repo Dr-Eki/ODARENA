@@ -41,6 +41,11 @@ class TradeActionService
         $this->guardLockedDominion($dominion);
         $this->guardActionsDuringTick($dominion);
 
+        if($this->tradeCalculator->getAvailableTradeRouteSlots($dominion) <= 0)
+        {
+            throw new GameException('Insufficient trade routes available. You cannot create any more trade routes at this time.');
+        }
+
         if(!$hold)
         {
             throw new GameException('Invalid hold.');
@@ -120,7 +125,7 @@ class TradeActionService
                 'tick' => $dominion->round->ticks
             ]);
 
-            HoldSentimentEvent::add($hold, $dominion, +10, 'trade_route_established');
+            HoldSentimentEvent::add($hold, $dominion, +12, 'trade_route_established');
 
             $message = vsprintf('Trade route to trade %s for %s with %s has been created.', [
                 $soldResource->name,
