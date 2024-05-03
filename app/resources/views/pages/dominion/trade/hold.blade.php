@@ -301,7 +301,7 @@
                         <tr>
                             <td>
                                 <strong>{{ $holdUnit->unit->name }}</strong><br>
-                                <small class="text-muted">Faction:</small> <a href="{{ route('scribes.faction', Str::slug($holdUnit->unit->race->name)) }}#units" target="_blank">{{ $holdUnit->unit->race->name }}</a>
+                                <small class="text-muted">Faction:</small> <a href="{{ route('scribes.faction', Str::slug($holdUnit->unit->race->name),'_') }}#units" target="_blank">{{ $holdUnit->unit->race->name }}</a>
                             </td>
                             <td>{{ number_format($holdUnit->amount) }}</td>
                             <td>{{ ucwords($unitHelper->getUnitStateDescription($holdUnit->state)) }}</td>

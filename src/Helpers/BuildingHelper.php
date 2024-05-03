@@ -330,6 +330,7 @@ class BuildingHelper
             'vampires_unit_housing' => 'Houses %1$s %2$s.',
 
             'growth_units_production' => 'Produces %1$s %2$s per tick.',
+            'snow_elf_units_production' => 'Produces %1$s %2$s per tick.',
 
         ];
 

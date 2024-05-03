@@ -184,7 +184,7 @@ class DataSyncCommand extends Command implements CommandInterface
             // Race
             $race = Race::firstOrNew(['name' => $data->name])
                 ->fill([
-                    'key' => Str::slug(object_get($data, 'name')),
+                    'key' => Str::slug(object_get($data, 'name'), '_'),
                     'alignment' => object_get($data, 'alignment'),
                     'description' => object_get($data, 'description'),
                     'notes' => object_get($data, 'notes'),

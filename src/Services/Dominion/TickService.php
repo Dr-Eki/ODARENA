@@ -747,6 +747,7 @@ class TickService
         $tick->crypt_bodies_spent = 0;
         
         $unitsGenerated = $this->unitCalculator->getUnitsGenerated($dominion);
+
         $unitsAttrited = $this->unitCalculator->getUnitsAttrited($dominion);
 
         # Passive conversions

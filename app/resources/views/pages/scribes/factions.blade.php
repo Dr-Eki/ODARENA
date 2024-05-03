@@ -26,7 +26,7 @@
                     @if($race['playable'] == 1)
                         <tr>
                             <td>
-                                <a href="{{ route('scribes.faction', Str::slug($race['name'])) }}">{{ $race['name'] }}</a>
+                                <a href="{{ route('scribes.faction', Str::slug($race['name'],'_')) }}">{{ $race['name'] }}</a>
                             </td>
                         </tr>
                     @endif
@@ -47,7 +47,7 @@
                     @if($race['playable'] == 1)
                         <tr>
                             <td>
-                                <a href="{{ route('scribes.faction', Str::slug($race['name'])) }}">{{ $race['name'] }}</a>
+                                <a href="{{ route('scribes.faction', Str::slug($race['name'],'_')) }}">{{ $race['name'] }}</a>
                             </td>
                         </tr>
                     @endif
@@ -69,7 +69,7 @@
                         @if($race['playable'] == 1)
                             <tr>
                                 <td>
-                                    <a href="{{ route('scribes.faction', Str::slug($race['name'])) }}">{{ $race['name'] }}</a>
+                                    <a href="{{ route('scribes.faction', Str::slug($race['name'],'_')) }}">{{ $race['name'] }}</a>
                                 </td>
                             </tr>
                         @endif
@@ -88,7 +88,7 @@
                         @foreach ($npcRaces as $race)
                             <tr>
                                 <td>
-                                    <a href="{{ route('scribes.faction', Str::slug($race['name'])) }}">{{ $race['name'] }}</a>
+                                    <a href="{{ route('scribes.faction', Str::slug($race['name'],'_')) }}">{{ $race['name'] }}</a>
                                 </td>
                             </tr>
                         @endforeach

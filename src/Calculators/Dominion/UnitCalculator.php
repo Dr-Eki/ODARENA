@@ -50,6 +50,7 @@ class UnitCalculator
             return $unitsGenerated;
         }
 
+
         if($raceUnitsGenerationBuildingPerks = $dominion->getBuildingPerkValue($dominion->race->key . '_units_production'))
         {
             foreach($raceUnitsGenerationBuildingPerks as $raceUnitsGenerationBuildingPerk)
