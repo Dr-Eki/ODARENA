@@ -10,8 +10,8 @@ use OpenDominion\Services\HoldService;
 
 class SpawnHoldCommand extends Command
 {
-    protected $signature = 'game:spawn:hold';
-    protected $description = 'Spawns holds';
+    protected $signature = 'game:hold:discover';
+    protected $description = 'Discover holds';
 
     private $holdFactory;
     private $holdService;
@@ -34,18 +34,18 @@ class SpawnHoldCommand extends Command
             return;
         }
 
-        $count = $this->ask('Amount of holds to spawn [default 1]') ?? 1;
+        $count = $this->ask('Amount of holds to discover [default 1]') ?? 1;
 
         DB::transaction(function () use ($round, $count) {
             for ($i = 0; $i < $count; $i++) {
-                if($hold = $this->holdFactory->create($round, 'random'))
+                if($hold = $this->holdService->discoverHold($round, null))
                 {
                     $this->holdService->setHoldPrices($hold, $round->ticks);
-                    $this->info("Spawned hold: {$hold->name} (ID {$hold->id})");
+                    $this->info("Discovered hold: {$hold->name} (ID {$hold->id})");
                 }
                 else
                 {
-                    $this->warn('Could not spawn hold. Are all holds in play already?');
+                    $this->warn('Could not discover hold. Are all holds in play already?');
                 }
             }
         });
