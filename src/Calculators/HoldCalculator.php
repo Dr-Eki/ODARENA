@@ -21,15 +21,14 @@ class HoldCalculator
 
     public function getNewResourceBuyPrice(Hold $hold, string $resourceKey): float
     {
-        if(!$this->canResourceBeTraded($resourceKey) || /*!$this->canResourceBeTradedByHold($hold, $resourceKey) || */ !in_array($resourceKey, $hold->desired_resources))
+        if(!$this->canResourceBeTraded($resourceKey) or !in_array($resourceKey, $hold->desired_resources))
         {
             return 0;
         }
 
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
-
-        $resource = Resource::where('key', $resourceKey)->firstOrFail();
         $price = $resource->trade->buy;
+
         $price *= $this->getHoldResourcePriceMultiplier($hold, $resourceKey);
 
         return round($price, config('trade.price_decimals'));
@@ -38,13 +37,14 @@ class HoldCalculator
     public function getNewResourceSellPrice(Hold $hold, string $resourceKey): float
     {
 
-        if(!$this->canResourceBeTraded($resourceKey) /*|| !$this->canResourceBeTradedByHold($hold, $resourceKey)*/ || !in_array($resourceKey, $hold->sold_resources))
+        if(!$this->canResourceBeTraded($resourceKey) or !in_array($resourceKey, $hold->sold_resources))
         {
             return 0;
         }
 
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
         $price = $resource->trade->sell;
+
         $price *= $this->getHoldResourcePriceMultiplier($hold, $resourceKey);
 
         return round($price, config('trade.price_decimals'));
@@ -60,14 +60,17 @@ class HoldCalculator
             return $multiplier;
         }
 
-        #dump('> Multiplier: ' . $multiplier);
+        // Sentiment multiplier is not used here, it's in the TradeService when $dominion is known
+        #$multiplier += $this->getSentimentMultiplier($hold, $dominion, $resourceKey); 
 
-        $multiplier += $this->getResourceSupplyMultiplier($hold, $resourceKey);
+        dump('> Multiplier: ' . $multiplier);
+
         $multiplier *= $this->getBaseDesirabilityMultiplier($hold, $resourceKey);
+        $multiplier += $this->getResourceSupplyMultiplier($hold, $resourceKey);
 
-        #dump('> Desirability: ' . $this->getBaseDesirabilityMultiplier($hold, $resourceKey));
-        #dump('> Supply: ' . $this->getResourceSupplyMultiplier($hold, $resourceKey));
-        #dump('>> Multiplier: ' . $multiplier);
+        dump('> Desirability: ' . $this->getBaseDesirabilityMultiplier($hold, $resourceKey));
+        dump('> Supply: ' . $this->getResourceSupplyMultiplier($hold, $resourceKey));
+        dump('>> Multiplier: ' . $multiplier);
         #dd($resourceKey, $hold->name);
 
         return $multiplier;
@@ -83,11 +86,11 @@ class HoldCalculator
 
         if($isSoldResource)
         {
-            $multiplier *= (8/9);
+            $multiplier = (8/9);
         }
-        if($isDesiredResource)
+        elseif($isDesiredResource)
         {
-            $multiplier *= (9/8);
+            $multiplier = (9/8);
         }
 
         return $multiplier;

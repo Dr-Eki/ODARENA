@@ -246,13 +246,13 @@ class Hold extends AbstractModel
     public function buyPrice(string $resourceKey): float
     {
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
-        return $this->prices->where('resource_id', $resource->id)->where('action','buy')->first()->price ?? 0;
+        return $this->prices->where('resource_id', $resource->id)->where('action','buy')->sortByDesc('id')->first()->price ?? 0;
     }
 
     public function sellPrice(string $resourceKey): float
     {
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
-        return $this->prices->where('resource_id', $resource->id)->where('action','sell')->first()->price ?? 0;
+        return $this->prices->where('resource_id', $resource->id)->where('action','sell')->sortByDesc('id')->first()->price ?? 0;
     }
 
 
