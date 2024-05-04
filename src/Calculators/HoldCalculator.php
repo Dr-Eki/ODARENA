@@ -63,14 +63,14 @@ class HoldCalculator
         // Sentiment multiplier is not used here, it's in the TradeService when $dominion is known
         #$multiplier += $this->getSentimentMultiplier($hold, $dominion, $resourceKey); 
 
-        dump('> Multiplier: ' . $multiplier);
+        ldump('> Multiplier: ' . $multiplier);
 
         $multiplier *= $this->getBaseDesirabilityMultiplier($hold, $resourceKey);
         $multiplier += $this->getResourceSupplyMultiplier($hold, $resourceKey);
 
-        dump('> Desirability: ' . $this->getBaseDesirabilityMultiplier($hold, $resourceKey));
-        dump('> Supply: ' . $this->getResourceSupplyMultiplier($hold, $resourceKey));
-        dump('>> Multiplier: ' . $multiplier);
+        ldump('> Desirability: ' . $this->getBaseDesirabilityMultiplier($hold, $resourceKey));
+        ldump('> Supply: ' . $this->getResourceSupplyMultiplier($hold, $resourceKey));
+        ldump('>> Multiplier: ' . $multiplier);
         #dd($resourceKey, $hold->name);
 
         return $multiplier;

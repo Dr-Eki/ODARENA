@@ -7,7 +7,7 @@
     <div class="col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa-solid fa-book"></i> Trade Ledger</h3>
+                <h3 class="box-title"><i class="fa fa-solid fa-book"></i> Trade Ledger</h3>
             </div>
             <div class="box-body table-responsive box-border">
                 <table class="table table-hover">

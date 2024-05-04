@@ -41,14 +41,14 @@
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">
-                        <i class="fa-solid fa-arrow-right-arrow-left fa-fw"></i> Confirm Trade with {{ $hold->name }}
+                        <i class="fa fa-solid fa-arrow-right-arrow-left fa-fw"></i> Confirm Trade with {{ $hold->name }}
                     </h3>
                 </div>
                 <div class="box-body">
                     <div class="row">
                         <div class="col-xs-6 col-sm-6">
                             <h5>
-                                <i class="fa-solid fa-arrow-right fa-fw"></i> You Sell
+                                <i class="fa fa-solid fa-arrow-right fa-fw"></i> You Sell
                             </h5>
                             <p>
                                 <small class="text-muted">Resource:</small> {{ $soldResource->name }}<br>
@@ -57,7 +57,7 @@
                         </div>
                         <div class="col-xs-6 col-sm-6">
                             <h5>
-                                <i class="fa-solid fa-arrow-left fa-fw"></i> You Buy
+                                <i class="fa fa-solid fa-arrow-left fa-fw"></i> You Buy
                             </h5>
                             <p>
                                 <small class="text-muted">Resource:</small> {{ $boughtResource->name }}<br>

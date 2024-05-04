@@ -19,7 +19,7 @@
     <div class="col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa-solid fa-arrow-right-arrow-left fa-fw"></i> Trade Routes</h3>
+                <h3 class="box-title"><i class="fa fa-solid fa-arrow-right-arrow-left fa-fw"></i> Trade Routes</h3>
                 <a class="pull-right btn btn-primary" href="{{ route('dominion.trade.trades-in-progress') }}">View Trades In Progress</a>
             </div>
             <div class="box-body table-responsive box-border">
@@ -97,7 +97,7 @@
     <div class="col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa-solid fa-arrow-right-from-bracket"></i> Establish Trade Route</h3>
+                <h3 class="box-title"><i class="fa fa-solid fa-arrow-right-from-bracket"></i> Establish Trade Route</h3>
             </div>
 
             <div class="box-body">
@@ -250,7 +250,7 @@
     <div class="col-md-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa-solid fa-book"></i> Trade Ledger</h3>
+                <h3 class="box-title"><i class="fa fa-solid fa-book"></i> Trade Ledger</h3>
             </div>
             <div class="box-body table-responsive box-border">
                 <table class="table table-hover">
