@@ -3,6 +3,7 @@
 namespace OpenDominion\Http\Controllers;
 
 use Auth;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
@@ -100,6 +101,27 @@ class SettingsController extends AbstractController
     {
         /** @var User $user */
         $user = Auth::user();
+
+        // Purge Cloudflare cache
+        $client = new Client();
+        $zoneId = env('CLOUDFLARE_ZONE_ID');
+        $apiToken = env('CLOUDFLARE_API_TOKEN');
+        $url = "https://api.cloudflare.com/client/v4/zones/{$zoneId}/purge_cache";
+
+        $client = new Client([
+            'headers' => [
+                'Authorization' => 'Bearer ' . $apiToken,
+                'Content-Type' => 'application/json',
+            ],
+        ]);
+
+        $response = $client->post($url, [
+            'json' => [
+                'files' => [
+                    'https://odarena.com/uploads/avatars/' . $user->display_name . '.png',
+                ],
+            ],
+        ]);
 
         if ($user->avatar) {
             Storage::disk('public')->delete('uploads/avatars/' . $user->avatar);
