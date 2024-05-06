@@ -75,7 +75,7 @@ class TradeCalculator
 
         $netAmount = min($netAmount, $hold->{'resource_' . $boughtResource->key});
 
-        return $netAmount;
+        return max(0, $netAmount);
     }
 
     public function getResourceMaxOfferableAmount(Dominion $dominion, Resource $resource): int

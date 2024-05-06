@@ -29,7 +29,10 @@ class HoldCalculator
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
         $price = $resource->trade->buy;
 
-        $price *= $this->getHoldResourcePriceMultiplier($hold, $resourceKey);
+        $baseDesirabilityMultiplier = $this->getBaseDesirabilityMultiplier($hold, $resourceKey);
+        $supplyMultiplier = $this->getResourceSupplyMultiplier($hold, $resourceKey);
+
+        $price = $price * $baseDesirabilityMultiplier * $supplyMultiplier;
 
         return round($price, config('trade.price_decimals'));
     }
@@ -44,6 +47,29 @@ class HoldCalculator
 
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
         $price = $resource->trade->sell;
+
+        $baseDesirabilityMultiplier = $this->getBaseDesirabilityMultiplier($hold, $resourceKey);
+        $supplyMultiplier = $this->getResourceSupplyMultiplier($hold, $resourceKey);
+
+        $price = $price * $baseDesirabilityMultiplier * $supplyMultiplier;
+
+        /*
+        if($resourceKey == 'mud')
+        {
+
+            dump($hold->name . ' selling ' . $resourceKey);
+
+            dump('Price: ' .$price);
+            dump('baseDesirabilityMultiplier: ' . $baseDesirabilityMultiplier);
+            dump('Price * baseDesirabilityMultiplier: ' . $price * $baseDesirabilityMultiplier);
+            dump('supplyMultiplier: ' . $supplyMultiplier);
+            dump('Price * baseDesirabilityMultiplier * supplyMultiplier: ' . $price * $baseDesirabilityMultiplier * $supplyMultiplier);
+
+            $price = $price * $baseDesirabilityMultiplier * $supplyMultiplier;
+
+            dd($this->getHoldResourcePriceMultiplier($hold, $resourceKey));
+        }
+        */
 
         $price *= $this->getHoldResourcePriceMultiplier($hold, $resourceKey);
 
@@ -60,18 +86,13 @@ class HoldCalculator
             return $multiplier;
         }
 
-        // Sentiment multiplier is not used here, it's in the TradeService when $dominion is known
+        // Do not delete: Sentiment multiplier is not used here, it's in the TradeService when $dominion is known
         #$multiplier += $this->getSentimentMultiplier($hold, $dominion, $resourceKey); 
+        // Do not delete: this is a reminder.
 
-        ldump('> Multiplier: ' . $multiplier);
+        $baseDesirabilityMultiplier = $this->getBaseDesirabilityMultiplier($hold, $resourceKey);
+        $supplyMultiplier = $this->getResourceSupplyMultiplier($hold, $resourceKey);
 
-        $multiplier *= $this->getBaseDesirabilityMultiplier($hold, $resourceKey);
-        $multiplier += $this->getResourceSupplyMultiplier($hold, $resourceKey);
-
-        ldump('> Desirability: ' . $this->getBaseDesirabilityMultiplier($hold, $resourceKey));
-        ldump('> Supply: ' . $this->getResourceSupplyMultiplier($hold, $resourceKey));
-        ldump('>> Multiplier: ' . $multiplier);
-        #dd($resourceKey, $hold->name);
 
         return $multiplier;
     }
@@ -115,7 +136,7 @@ class HoldCalculator
         #dump('* Supply multiplier');
         #dump($current, $goal, $multiplier);
 
-        return $multiplier;
+        return 1 + $multiplier;
     }
 
     // This function gets the sentiment multiplier for a specific Dominion and Hold combination (at the moment of trade).
