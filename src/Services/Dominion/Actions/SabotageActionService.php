@@ -57,6 +57,9 @@ class SabotageActionService
 
     protected $unitHelper;
 
+    protected $sabotage;
+    protected $sabotageEvent;
+
     public function __construct()
     {
         $this->buildingCalculator = app(BuildingCalculator::class);
@@ -160,7 +163,7 @@ class SabotageActionService
 
                 if($slot !== 'spies')
                 {
-                    if(!$this->unitCalculator->isUnitOffensiveSpy($unit))
+                    if(!$this->unitHelper->isUnitOffensiveSpy($unit))
                     {
                         throw new GameException($unit->name . ' is not a spy unit and cannot be sent on sabotage missions.');
                     }

@@ -104,25 +104,6 @@ class ResourceCalculator
         return RoundResource::where('round_id',$round->id)->get();
     }
 
-    public function DEPRECATEDgetAmount(Dominion $dominion, string $resourceKey): int
-    {
-        $resource = Resource::where('key', $resourceKey)->first();
-
-        if(!$resource)
-        {
-            return 0;
-        }
-
-        $dominionResourceAmount = DominionResource::where('dominion_id', $dominion->id)->where('resource_id', $resource->id)->first();
-
-        if($dominionResourceAmount)
-        {
-            return $dominionResourceAmount->amount;
-        }
-
-        return 0;
-    }
-
     public function getRealmAmount(Realm $realm, string $resourceKey): int
     {
         $resource = Resource::where('key', $resourceKey)->first();
