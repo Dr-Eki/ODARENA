@@ -264,7 +264,7 @@
                         </div>
                     </div>
                     <div class="box-footer text-center">
-                        <a href="{{ route('dominion.trade.hold', $hold->key) }}" class="button btn btn-info">View hold</a>
+                        <a href="{{ route('dominion.trade.hold', $hold) }}" class="button btn btn-info">View hold</a>
                     </div>
                 </div>
             </div>

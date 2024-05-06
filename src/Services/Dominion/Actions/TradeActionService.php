@@ -277,7 +277,8 @@ class TradeActionService
                 HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, -$sentimentPenalty, 'trade_route_cancelled_by_dominion');
             }
 
-            $tradeRoute->delete();
+            $tradeRoute->status = 0;
+            $tradeRoute->save();
         });
 
         $message = vsprintf('Trade route to trade %s for %s with %s has been cancelled.', [

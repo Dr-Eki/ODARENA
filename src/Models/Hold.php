@@ -52,11 +52,6 @@ class Hold extends AbstractModel
         'status',
     ];
 
-    public function resolveRouteBinding($value, $field = null)
-    {
-        return $this->where('key', $value)->firstOrFail();
-    }
-
     // Relations
     public function tradeLedger()
     {

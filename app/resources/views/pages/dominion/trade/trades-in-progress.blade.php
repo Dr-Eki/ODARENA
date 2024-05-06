@@ -18,7 +18,7 @@
                         #ldump($resourceTradedBetweenDominionAndHold);
                     @endphp
 
-                    <a href="{{ route('dominion.trade.hold', $hold->key) }}"><strong>{{ $hold->name }}</strong></a></td>
+                    <a href="{{ route('dominion.trade.hold', $hold) }}"><strong>{{ $hold->name }}</strong></a></td>
                     <table class="table">
                         <colgroup>
                             <col>

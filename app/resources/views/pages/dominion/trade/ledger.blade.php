@@ -25,7 +25,7 @@
                     <tbody>
                         @foreach ($tradeLedgerEntries as $tradeLedgerEntry)
                             <tr>
-                                <td><a href="{{ route('dominion.trade.hold', $tradeLedgerEntry->hold->key) }}"><strong>{{ $tradeLedgerEntry->hold->name }}</strong></a></td>
+                                <td><a href="{{ route('dominion.trade.hold', $tradeLedgerEntry->hold) }}"><strong>{{ $tradeLedgerEntry->hold->name }}</strong></a></td>
                                 <td>{{ number_format($tradeLedgerEntry->tick) }}</td>
                                 <td>{{ $tradeLedgerEntry->soldResource->name }}</td>
                                 <td>{{ $tradeLedgerEntry->boughtResource->name }}</td>

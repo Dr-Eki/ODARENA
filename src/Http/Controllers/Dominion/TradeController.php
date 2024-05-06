@@ -17,7 +17,7 @@ use OpenDominion\Calculators\Hold\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\TradeCalculator;
 
 use OpenDominion\Http\Requests\Dominion\TradeCalculationRequest;
-use OpenDominion\Http\Requests\Dominion\TradeEditRequest;
+use OpenDominion\Http\Requests\Dominion\TradeDeleteRequest;
 use OpenDominion\Http\Requests\Dominion\Actions\TradeEditActionRequest;
 use OpenDominion\Http\Requests\Dominion\Actions\TradeActionRequest;
 
@@ -127,9 +127,11 @@ class TradeController extends AbstractDominionController
         ]);
     }
 
-    public function postDeleteTradeRoute(TradeEditRequest $request)
+    public function postDeleteTradeRoute(TradeDeleteRequest $request)
     {
-        $tradeRoute = TradeRoute::find($request->get('trade_route'));
+        $tradeRoute = TradeRoute::findOrFail($request->get('trade_route'));
+
+        #dd($tradeRoute);
 
         $tradeActionService = app(TradeActionService::class);
 

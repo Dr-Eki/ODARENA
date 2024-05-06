@@ -92,18 +92,6 @@ class TradeCalculator
         return $max;
     }
 
-    public function getAllResourcesMaxOfferableAmount(Dominion $dominion): array
-    {
-        $maxOfferableAmounts = [];
-
-        foreach ($dominion->resourceKeys() as $resourceKey) {
-            $resource = Resource::fromKey($resourceKey);
-            $maxOfferableAmounts[$resourceKey] = $this->getResourceMaxOfferableAmount($dominion, $resource);
-        }
-
-        return $maxOfferableAmounts;
-    }
-
     public function getTradeRoutesTickData(Dominion $dominion): Collection
     {
         $tradeRoutes = TradeRoute::where('dominion_id', $dominion->id)->where('status',1)->get()->sortBy('id');#$dominion->tradeRoutes()->where('status', 1)->get()->sortBy('id');

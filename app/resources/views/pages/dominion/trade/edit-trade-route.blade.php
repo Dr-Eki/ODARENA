@@ -21,7 +21,7 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    <form action="{{ route('dominion.trade.routes.edit', [$tradeRoute->hold->key, $tradeRoute->soldResource->key]) }}" method="post">
+                    <form action="{{ route('dominion.trade.routes.edit', [$tradeRoute->hold, $tradeRoute->soldResource->key]) }}" method="post">
                         @csrf
                         <input type="hidden" name="trade_route" value="{{ $tradeRoute->id }}">
                         <input type="hidden" name="hold" value="{{ $hold->id }}">

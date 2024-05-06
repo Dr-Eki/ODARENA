@@ -58,7 +58,7 @@
                         
                             <tr>
                                 <td>
-                                    <a href="{{ route('dominion.trade.hold', $tradeRoute->hold->key) }}"><strong>{{ $tradeRoute->hold->name }}</strong></a>
+                                    <a href="{{ route('dominion.trade.hold', $tradeRoute->hold) }}"><strong>{{ $tradeRoute->hold->name }}</strong></a>
                                 </td>
                                 <td>
                                     <span data-toggle="tooltip" data-placement="top" title='<span class="text-muted">Sentiment:</span>&nbsp;{{ number_format($sentiment) }}'>
@@ -81,7 +81,7 @@
                                 <td>{{ number_format($tradeRoute->total_bought) }}</td>
                                 <td>{{ number_format($tradeRoute->total_sold) }}</td>
                                 <td>
-                                    <a href="{{ route('dominion.trade.routes.edit', [$tradeRoute->hold->key, $tradeRoute->soldResource->key]) }}" class="btn btn-xs btn-primary">Edit</a>
+                                    <a href="{{ route('dominion.trade.routes.edit', [$tradeRoute->hold, $tradeRoute->soldResource->key]) }}" class="btn btn-xs btn-primary">Edit</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -122,7 +122,7 @@
 
                     <div class="row hold-row">
                         <div class="col-md-2">
-                            <h5><a href="{{ route('dominion.trade.hold', $hold->key) }}"><strong>{{ $hold->name }}</strong></a></h5>
+                            <h5><a href="{{ route('dominion.trade.hold', $hold) }}"><strong>{{ $hold->name }}</strong></a></h5>
                             <small class="text-muted">Ruler:</small> <em>{{ $hold->title->name }}</em> {{ $hold->ruler_name }}<br>
                             <small class="text-muted">Faction:</small> {{ $hold->race->name }}<br>
                             <small class="text-muted">Sentiment:</small> <span data-toggle="tooltip" data-placement="top" title='<span class="text-muted">Sentiment:</span>&nbsp;{{ number_format($sentiment) }}'>
@@ -268,7 +268,7 @@
                     <tbody>
                         @foreach ($selectedDominion->tradeLedger->sortByDesc('created_at')->take(10) as $tradeLedgerEntry)
                             <tr>
-                                <td><a href="{{ route('dominion.trade.hold', $tradeLedgerEntry->hold->key) }}"><strong>{{ $tradeLedgerEntry->hold->name }}</strong></a></td>
+                                <td><a href="{{ route('dominion.trade.hold', $tradeLedgerEntry->hold) }}"><strong>{{ $tradeLedgerEntry->hold->name }}</strong></a></td>
                                 <td>{{ number_format($tradeLedgerEntry->tick) }}</td>
                                 <td>{{ $tradeLedgerEntry->soldResource->name }}</td>
                                 <td>{{ $tradeLedgerEntry->boughtResource->name }}</td>

@@ -4,7 +4,7 @@ namespace OpenDominion\Http\Requests\Dominion;
 
 use OpenDominion\Http\Requests\Dominion\AbstractDominionRequest;
 
-class TradeEditRequest extends AbstractDominionRequest
+class TradeDeleteRequest extends AbstractDominionRequest
 {
     /**
      * {@inheritdoc}
@@ -12,8 +12,7 @@ class TradeEditRequest extends AbstractDominionRequest
     public function rules()
     {
         return [
-            'hold' => 'required|string|exists:holds,key',
-            'resource' => 'required|string|exists:resources,key',  
+            'trade_route' => 'required|int|exists:trade_routes,id',
         ];
     }
 }

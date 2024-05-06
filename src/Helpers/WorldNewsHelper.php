@@ -1173,7 +1173,7 @@ class WorldNewsHelper
     {
         return sprintf(
             '<a href="%s"><span class="%s">%s</span></a>',
-            route('dominion.trade.hold', $hold->key),
+            route('dominion.trade.hold', $hold),
             $this->getSpanClass('purple'),
             $hold->name
           );
