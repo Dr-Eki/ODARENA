@@ -142,7 +142,14 @@ class TradeService
         $this->queueService->queueTrade($tradeRoute, 'export', $soldResource, $soldResourceAmount);
 
         # Remove the resource from the dominion
-        $this->dominionResourceService->updateResources($dominion, [$soldResource->key => ($soldResourceAmount * -1)]);
+        if($this->resourceCalculator->isProducingResource($dominion, $soldResource))
+        {
+            // Do nothing
+        }
+        else
+        {
+            $this->dominionResourceService->updateResources($dominion, [$soldResource->key => ($soldResourceAmount * -1)]);
+        }
 
         # Queue up incoming
         $this->queueService->queueTrade($tradeRoute, 'import', $boughtResource, $boughtResourceAmount);
