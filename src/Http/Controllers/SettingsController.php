@@ -118,7 +118,7 @@ class SettingsController extends AbstractController
         $response = $client->post($url, [
             'json' => [
                 'files' => [
-                    'https://odarena.com/uploads/avatars/' . $user->display_name . '.png',
+                    'https://odarena.com/storage/uploads/avatars/' . $user->avatar,
                 ],
             ],
         ]);
