@@ -89,7 +89,7 @@ class QueueService
             ->where('tick', 0)
             ->get();
 
-            dd($finishedQueues);
+            #dd($finishedQueues);
 
         if($finishedQueues->count() > 0)
         {

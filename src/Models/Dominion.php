@@ -375,6 +375,15 @@ class Dominion extends AbstractModel
         return array_unique(array_merge($dominionResourceKeys, $dominionRaceResources));
     }
 
+    public function foreignResourceKeys(): array
+    {
+        $allResourceKeys = $this->resourceKeys();
+    
+        $raceResourceKeys = $this->race->resources;
+    
+        return array_diff($allResourceKeys, $raceResourceKeys);
+    }
+
     # This code enables the following syntax:
     # $dominion->{'terrain_' . $terrainKey} and similar
 

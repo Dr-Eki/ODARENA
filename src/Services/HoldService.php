@@ -127,6 +127,24 @@ class HoldService
 
     }
 
+    public function updateHoldLands($round): void
+    {
+        foreach ($round->holds as $hold)
+        {
+            $this->updateHoldLand($hold);
+        }
+    }
+
+    public function updateHoldLand(Hold $hold): void
+    {
+        $landGrowth = $this->holdCalculator->getTickLandGrowth($hold);
+
+        dump('Adding ' . $landGrowth . ' land to ' . $hold->name . ' (' . $hold->land . ' -> ' . ($hold->land + $landGrowth) . ')');
+
+        $hold->land += $landGrowth;
+        $hold->save();
+    }
+
     public function handleHoldTick(Round $round): void
     {
         # Update sentiments
@@ -145,6 +163,9 @@ class HoldService
             $this->handleHoldResourceProduction($hold);
 
         }
+
+        # Update hold land
+        $this->updateHoldLands($round);
 
     }
 
