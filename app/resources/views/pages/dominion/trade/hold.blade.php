@@ -159,8 +159,8 @@
                 <tbody>
                     @foreach ($hold->tradeRoutes->where('status',1) as $tradeRoute)
                         @php
-                            $canViewTradeRouteCounterparty = true;
-                            $canViewTradeRouteResources = true;
+                            $canViewTradeRouteCounterparty = false;
+                            $canViewTradeRouteResources = false;
 
                             // If selected dominion is in the same realm as the hold, selected dominion can see the resources
                             if($tradeRoute->dominion->realm->id == $selectedDominion->realm->id)
