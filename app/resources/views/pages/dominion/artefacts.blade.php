@@ -216,7 +216,7 @@
                               @else
                                 @if($selectedDominion->race->name == 'Dimensionalists')
 
-                                    @if($resourceCalculator->getAmount($selectedDominion, 'cosmic_alignment') >= $selectedDominion->race->getPerkValue('cosmic_alignment_to_invade'))
+                                    @if($selectedDominion->resource_cosmic_alignment >= $selectedDominion->race->getPerkValue('cosmic_alignment_to_invade'))
                                         <button type="submit"
                                                 class="btn btn-danger"
                                                 {{ $selectedDominion->isLocked() ? 'disabled' : null }}

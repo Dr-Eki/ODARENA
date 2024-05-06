@@ -109,7 +109,7 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $resource->name }}:</td>
-                                    <td>{{ number_format($resourceCalculator->getAmount($dominion, $resourceKey)) }}</td>
+                                    <td>{{ number_format($dominion->{'resource_'. $resourceKey})) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

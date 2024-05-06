@@ -104,13 +104,13 @@ class ResourceCalculator
         return RoundResource::where('round_id',$round->id)->get();
     }
 
-    public function getAmount(Dominion $dominion, string $resourceKey): int
+    public function DEPRECATEDgetAmount(Dominion $dominion, string $resourceKey): int
     {
         $resource = Resource::where('key', $resourceKey)->first();
 
         if(!$resource)
         {
-            dd($resourceKey, 'jcinnz smels funny');
+            return 0;
         }
 
         $dominionResourceAmount = DominionResource::where('dominion_id', $dominion->id)->where('resource_id', $resource->id)->first();
@@ -412,7 +412,7 @@ class ResourceCalculator
         if($this->hasMaxStorage($dominion, $resourceKey))
         {
             $maxStorage = $this->getMaxStorage($dominion, $resourceKey);
-            $availableStorage = max(0, $maxStorage - $this->getAmount($dominion, $resourceKey));
+            $availableStorage = max(0, $maxStorage - $dominion->{'resource_' . $resourceKey});#
             $production = min($production, $availableStorage);
         }
 
@@ -492,7 +492,7 @@ class ResourceCalculator
 
         if(($lightManaDrain = $dominion->race->getPerkValue('light_drains_' . $consumedResourceKey)) > 0)
         {
-            $consumption += $lightManaDrain * $this->getAmount($dominion, 'light');
+            $consumption += $lightManaDrain * $dominion->resource_light;
         }
 
         # Food consumption
@@ -579,7 +579,7 @@ class ResourceCalculator
 
         if($decayRate = $this->getDecay($dominion, $consumedResourceKey))
         {
-            $consumption += $this->getAmount($dominion, $consumedResourceKey) * $decayRate;
+            $consumption += $dominion->{'resource_' . $consumedResourceKey} * $decayRate;
         }
 
         $consumption += $this->getResourceTotalSoldPerTick($dominion, $consumedResource);
@@ -636,7 +636,7 @@ class ResourceCalculator
 
         if($interestRate > 0)
         {
-            $interest += $this->getAmount($dominion, $interestBearingResourceKey) * $interestRate;
+            $interest += $dominion->{'resource_'.$interestBearingResourceKey} * $interestRate;
         }
 
         $rawProductionCap = $this->getProductionRaw($dominion, $interestBearingResourceKey) / 5;
@@ -684,7 +684,7 @@ class ResourceCalculator
     {
         if(!$dominion->race->getPerkValue('no_food_consumption'))
         {
-            return ($this->getAmount($dominion, 'food') + ($this->getProduction($dominion, 'food') - $this->getConsumption($dominion, 'food')) < 0);
+            return ($dominion->resource_food + ($this->getProduction($dominion, 'food') - $this->getConsumption($dominion, 'food')) < 0);
         }
 
         return false;

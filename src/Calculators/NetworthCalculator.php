@@ -82,11 +82,11 @@ class NetworthCalculator
 
         if($dominion->race->name == 'Demon')
         {
-            $networth += $this->resourceCalculator->getAmount($dominion, 'soul') / 8;
+            $networth += $dominion->resource_soul / 8;
         }
 
-        $networth += $this->resourceCalculator->getAmount($dominion, 'marshling');
-        
+        $networth += $dominion->resource_marshling;
+         
         if($dominion->race->name == 'Yeti')
         {
             $networth += min($dominion->resource_ore / 30, $this->militaryCalculator->getTotalUnitsForSlot($dominion, 4)) * 6;

@@ -2706,8 +2706,8 @@ class MilitaryCalculator
         foreach($defender->race->resources as $resourceKey)
         {
             $resourceAmountReserved[$resourceKey] = 0;
-            $resourceAmountOwned[$resourceKey] = $this->resourceCalculator->getAmount($defender, $resourceKey);
-            $resourceAmountRemaining[$resourceKey] = $this->resourceCalculator->getAmount($defender, $resourceKey);
+            $resourceAmountOwned[$resourceKey] = $defender->{'resource_' . $resourceKey};
+            $resourceAmountRemaining[$resourceKey] = $resourceAmountOwned[$resourceKey];
         }
 
         foreach($defender->race->units->sortByDesc('power_defense') as $unit)

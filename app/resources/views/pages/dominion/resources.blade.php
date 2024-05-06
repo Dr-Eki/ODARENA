@@ -38,7 +38,7 @@
                                             $netProduction = $resourceCalculator->getProduction($selectedDominion, $resourceKey) - $resourceCalculator->getConsumption($selectedDominion, $resourceKey);
                                             $protected = $theftCalculator->getTheftProtection($selectedDominion, $resourceKey);
                                             $interest = $resourceCalculator->getInterest($selectedDominion, $resourceKey);
-                                            $currentAmount = $resourceCalculator->getAmount($selectedDominion, $resourceKey);
+                                            $currentAmount =$resource->{'resource_' . $resourceKey};
                                         @endphp
 
                                     <tr>
