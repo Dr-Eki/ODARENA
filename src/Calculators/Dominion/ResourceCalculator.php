@@ -577,6 +577,7 @@ class ResourceCalculator
 
     public function getResourceDueFromTradeNextTick(Dominion $dominion, string $resourceKey): float
     {
+        return 0;
         $resource = Resource::fromKey($resourceKey);
 
         if($resource->id !== 10)
