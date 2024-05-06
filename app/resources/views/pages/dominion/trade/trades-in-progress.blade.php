@@ -15,7 +15,7 @@
                         $hold = \OpenDominion\Models\Hold::where('key', $holdKey)->firstOrFail();
                         $resourceTradedBetweenDominionAndHold = $tradeCalculator->getResourcesTradedBetweenDominionAndHold($selectedDominion, $hold);
                         
-                        dump($resourceTradedBetweenDominionAndHold);
+                        ldump($resourceTradedBetweenDominionAndHold);
                     @endphp
 
                     <a href="{{ route('dominion.trade.hold', $hold->key) }}"><strong>{{ $hold->name }}</strong></a></td>
