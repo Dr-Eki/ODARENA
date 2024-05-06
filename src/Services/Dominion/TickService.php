@@ -1712,7 +1712,7 @@ class TickService
 
         Log::info('[HOLD] Discovery chance value: '. $discoverHoldChance . ' (discover if this value is 1).');
 
-        if($discoverHoldChance)
+        if($discoverHoldChance == 1)
         {
             $holdService->discoverHold($round);
         }
