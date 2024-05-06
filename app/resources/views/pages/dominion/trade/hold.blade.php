@@ -169,7 +169,7 @@
                             }
 
                             // If selected dominion is trading with the hold, selected dominion can see the name of counterparties
-                            if($hold->tradeRoutes->where('dominion_id',$selectedDominion->id)->count() > 0)
+                            if($hold->tradeRoutes->where('dominion_id',$selectedDominion->id)->count())
                             {
                                 $canViewTradeRouteCounterparty = true;
                             }

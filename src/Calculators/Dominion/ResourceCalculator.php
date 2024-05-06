@@ -572,7 +572,7 @@ class ResourceCalculator
 
     public function getResourceTotalSoldPerTick(Dominion $dominion, Resource $resource): float
     {
-        return TradeRoute::where('dominion_id', $dominion->id)->where('source_resource_id', $resource->id)->sum('source_amount');
+        return TradeRoute::where('dominion_id', $dominion->id)->where('source_resource_id', $resource->id)->where('status',1)->sum('source_amount');
     }
 
     public function getResourceDueFromTradeNextTick(Dominion $dominion, string $resourceKey): float
