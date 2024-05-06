@@ -226,9 +226,8 @@ class TickService
                     }
                 
                     $infoString = sprintf(
-                        '[%s] Waiting for tick queue to finish. Check %s of %s. Currently: %s. Trying again in %s ms.',
+                        '[%s] Waiting for tick queue to finish. Current queue: %s. Trying again in %s ms.',
                         now()->format('Y-m-d H:i:s'),
-                        $i,
                         $attempts,
                         Redis::llen('queues:tick'),
                         number_format($delay)
@@ -238,9 +237,6 @@ class TickService
                     dump($infoString);
                     throw new Exception('Tick queue not finish');
                 }, $delay);
-
-                if(static::EXTENDED_LOGGING) { Log::debug('* Update all dominions'); }
-                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
                 if(static::EXTENDED_LOGGING) { Log::debug('* Update all spells'); }
                 $this->updateAllSpells($round);
@@ -259,6 +255,9 @@ class TickService
 
                 if(static::EXTENDED_LOGGING) { Log::debug('* Update all trade routes'); }
                 $this->handleHoldsAndTradeRoutes($round);
+
+                if(static::EXTENDED_LOGGING) { Log::debug('* Update all dominions'); }
+                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
                 Log::info(sprintf(
                     '[TICK] Ticked %s dominions in %s ms in %s',
@@ -947,13 +946,13 @@ class TickService
                 'dominions.military_archmages' => DB::raw('dominions.military_archmages + dominion_tick.military_archmages'),
 
                 'dominions.land' => DB::raw('dominions.land + dominion_tick.land'),
-                'dominions.land_plain' => DB::raw('dominions.land_plain + dominion_tick.land_plain'),
-                'dominions.land_mountain' => DB::raw('dominions.land_mountain + dominion_tick.land_mountain'),
-                'dominions.land_swamp' => DB::raw('dominions.land_swamp + dominion_tick.land_swamp'),
-                'dominions.land_cavern' => DB::raw('dominions.land_cavern + dominion_tick.land_cavern'),
-                'dominions.land_forest' => DB::raw('dominions.land_forest + dominion_tick.land_forest'),
-                'dominions.land_hill' => DB::raw('dominions.land_hill + dominion_tick.land_hill'),
-                'dominions.land_water' => DB::raw('dominions.land_water + dominion_tick.land_water'),
+                #'dominions.land_plain' => DB::raw('dominions.land_plain + dominion_tick.land_plain'),
+                #'dominions.land_mountain' => DB::raw('dominions.land_mountain + dominion_tick.land_mountain'),
+                #'dominions.land_swamp' => DB::raw('dominions.land_swamp + dominion_tick.land_swamp'),
+                #'dominions.land_cavern' => DB::raw('dominions.land_cavern + dominion_tick.land_cavern'),
+                #'dominions.land_forest' => DB::raw('dominions.land_forest + dominion_tick.land_forest'),
+                #'dominions.land_hill' => DB::raw('dominions.land_hill + dominion_tick.land_hill'),
+                #'dominions.land_water' => DB::raw('dominions.land_water + dominion_tick.land_water'),
 
                 'dominions.protection_ticks' => DB::raw('dominions.protection_ticks + dominion_tick.protection_ticks'),
                 'dominions.ticks' => DB::raw('dominions.ticks + 1'),
@@ -995,13 +994,13 @@ class TickService
                 'dominions.military_archmages' => DB::raw('dominions.military_archmages + dominion_tick.military_archmages'),
 
                 'dominions.land' => DB::raw('dominions.land + dominion_tick.land'),
-                'dominions.land_plain' => DB::raw('dominions.land_plain + dominion_tick.land_plain'),
-                'dominions.land_mountain' => DB::raw('dominions.land_mountain + dominion_tick.land_mountain'),
-                'dominions.land_swamp' => DB::raw('dominions.land_swamp + dominion_tick.land_swamp'),
-                'dominions.land_cavern' => DB::raw('dominions.land_cavern + dominion_tick.land_cavern'),
-                'dominions.land_forest' => DB::raw('dominions.land_forest + dominion_tick.land_forest'),
-                'dominions.land_hill' => DB::raw('dominions.land_hill + dominion_tick.land_hill'),
-                'dominions.land_water' => DB::raw('dominions.land_water + dominion_tick.land_water'),
+                #'dominions.land_plain' => DB::raw('dominions.land_plain + dominion_tick.land_plain'),
+                #'dominions.land_mountain' => DB::raw('dominions.land_mountain + dominion_tick.land_mountain'),
+                #'dominions.land_swamp' => DB::raw('dominions.land_swamp + dominion_tick.land_swamp'),
+                #'dominions.land_cavern' => DB::raw('dominions.land_cavern + dominion_tick.land_cavern'),
+                #'dominions.land_forest' => DB::raw('dominions.land_forest + dominion_tick.land_forest'),
+                #'dominions.land_hill' => DB::raw('dominions.land_hill + dominion_tick.land_hill'),
+                #'dominions.land_water' => DB::raw('dominions.land_water + dominion_tick.land_water'),
 
                 'dominions.protection_ticks' => DB::raw('dominions.protection_ticks + dominion_tick.protection_ticks'),
                 'dominions.ticks' => DB::raw('dominions.ticks + 1'),

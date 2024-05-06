@@ -139,8 +139,6 @@ class HoldService
     {
         $landGrowth = $this->holdCalculator->getTickLandGrowth($hold);
 
-        dump('Adding ' . $landGrowth . ' land to ' . $hold->name . ' (' . $hold->land . ' -> ' . ($hold->land + $landGrowth) . ')');
-
         $hold->land += $landGrowth;
         $hold->save();
     }

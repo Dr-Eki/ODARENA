@@ -337,7 +337,6 @@ class MilitaryCalculator
         $dp = $this->getDefensivePowerRaw($defender, $attacker, $landRatio, $units, $multiplierReduction, $isAmbush, $ignoreRawDpFromBuildings, $invadingUnits, $ignoreRawDpFromAnnexedDominions);
         $dp *= $this->getDefensivePowerMultiplier($defender, $attacker, $multiplierReduction);
 
-
         $minDPPerAcre= (float)config('military.minimum_dpa');
 
         return max($dp * $defender->getMoraleMultiplier(), $minDPPerAcre * $defender->land);
