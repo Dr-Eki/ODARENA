@@ -65,7 +65,7 @@ class QueueService
         $queue->units = json_encode($units);
         $queue->save();
 
-        #dump('> Queued ' . $amount . ' ' . $resource->name . ' for trade route ' . $tradeRoute->id . ' at tick ' . $tick . ', going from ' . $tradeRoute->dominion->name . ' to ' . $tradeRoute->hold->name);
+        dump('> Queued ' . $type . ' of ' . $amount . ' ' . $resource->name . ' for trade route ' . $tradeRoute->id . ' at tick ' . $tick . ', going from ' . $tradeRoute->dominion->name . ' to ' . $tradeRoute->hold->name);
     }
 
     public function handleTradeRouteQueues(TradeRoute $tradeRoute): void
@@ -77,7 +77,7 @@ class QueueService
     public function advanceTradeRouteQueues(TradeRoute $tradeRoute): void
     {
         $tradeRoute->queues()
-            ->where('status', 1)
+            ->whereIn('status', [0, 1])
             ->where('tick','>',0)
             ->decrement('tick');
     }

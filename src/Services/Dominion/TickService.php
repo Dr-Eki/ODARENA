@@ -30,13 +30,11 @@ use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
 
-use OpenDominion\Factories\HoldFactory;
 
 use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RoundHelper;
 use OpenDominion\Helpers\UnitHelper;
-use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
@@ -136,7 +134,6 @@ class TickService
         $this->deityService = app(DeityService::class);
         $this->holdService = app(HoldService::class);
         $this->insightService = app(InsightService::class);
-        #$this->protectionService = app(ProtectionService::class);
         $this->queueService = app(QueueService::class);
         $this->researchService = app(ResearchService::class);
         $this->resourceService = app(ResourceService::class);
@@ -176,7 +173,7 @@ class TickService
 
             DB::transaction(function () use ($round, $tickTime)
             {
-                if(static::EXTENDED_LOGGING) { Log::debug('** Checking for win conditions'); }
+                if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
                 $this->handleWinConditions($round);
 
                 Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
@@ -202,7 +199,7 @@ class TickService
 
                 $this->temporaryData[$round->id]['stasis_dominions'] = [];
                 
-                if(static::EXTENDED_LOGGING) { Log::debug('* Going through all dominions'); }
+                if(config('game.extended_logging')) { Log::debug('* Going through all dominions'); }
                 foreach ($dominions as $dominion)
                 {
                     Log::info("Queueing up dominion {$dominion->id}: {$dominion->name}");
@@ -238,25 +235,25 @@ class TickService
                     throw new Exception('Tick queue not finish');
                 }, $delay);
 
-                if(static::EXTENDED_LOGGING) { Log::debug('* Update all spells'); }
+                if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
                 $this->updateAllSpells($round);
 
-                if(static::EXTENDED_LOGGING) { Log::debug('* Update all deities duration'); }
+                if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); }
                 $this->updateAllDeities($round);
 
-                if(static::EXTENDED_LOGGING) { Log::debug('* Update invasion queues'); }
+                if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); }
                 $this->updateAllInvasionQueues($round);
 
-                if(static::EXTENDED_LOGGING) { Log::debug('* Update all other queues'); }
+                if(config('game.extended_logging')) { Log::debug('* Update all other queues'); }
                 $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
-                if(static::EXTENDED_LOGGING) { Log::debug('* Update all artefact aegises'); }
+                if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); }
                 $this->updateArtefactsAegises($round);
 
-                if(static::EXTENDED_LOGGING) { Log::debug('* Update all trade routes'); }
+                if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
                 $this->handleHoldsAndTradeRoutes($round);
 
-                if(static::EXTENDED_LOGGING) { Log::debug('* Update all dominions'); }
+                if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
                 $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
                 Log::info(sprintf(
@@ -571,7 +568,7 @@ class TickService
 
         if($dominion->race->name == 'Barbarian')
         {
-            if(static::EXTENDED_LOGGING) { Log::debug('*** Handle Barbarian training for ' . $dominion->name); }
+            if(config('game.extended_logging')) { Log::debug('*** Handle Barbarian training for ' . $dominion->name); }
             $this->barbarianService->handleBarbarianTraining($dominion);
         }
 
@@ -895,7 +892,7 @@ class TickService
                 }
             }
 
-            if(static::EXTENDED_LOGGING) { Log::debug('** Audit and repair terrain'); }
+            if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }
             $this->terrainService->auditAndRepairTerrain($dominion);
         });
         
@@ -1435,7 +1432,7 @@ class TickService
 
         $this->temporaryData[$dominion->round->id]['stasis_dominions'][] = $dominion->id;
 
-        if(static::EXTENDED_LOGGING) { Log::debug('** Dominion is in stasis'); }
+        if(config('game.extended_logging')) { Log::debug('** Dominion is in stasis'); }
         $stasisDominion = Dominion::findorfail($dominion->id);
 
         ## Determine how many of each unit type is returning in $tick ticks
@@ -1572,7 +1569,7 @@ class TickService
                 ]);
                 $round->save(['event' => HistoryService::EVENT_ROUND_COUNTDOWN]);
 
-                if(static::EXTENDED_LOGGING) { Log::debug('*** Countdown triggered by ' . $realms->count() . ' realm(s)'); }
+                if(config('game.extended_logging')) { Log::debug('*** Countdown triggered by ' . $realms->count() . ' realm(s)'); }
             }
 
             if(!$realms->count() and $round->hasCountdown())
@@ -1613,7 +1610,7 @@ class TickService
                     ]);
                     $round->save(['event' => HistoryService::EVENT_ROUND_COUNTDOWN]);
 
-                    if(static::EXTENDED_LOGGING) { Log::debug('*** Countdown triggered by ticks'); }
+                    if(config('game.extended_logging')) { Log::debug('*** Countdown triggered by ticks'); }
                 }
             }
             # For indefinite rounds, create a countdown.
@@ -1638,7 +1635,7 @@ class TickService
                     $round->end_tick = $endTick;
                     $round->save();
 
-                    if(static::EXTENDED_LOGGING) { Log::debug('*** Countdown triggered by ' . $dominion->name . ' in realm #' . $dominion->realm->number); }
+                    if(config('game.extended_logging')) { Log::debug('*** Countdown triggered by ' . $dominion->name . ' in realm #' . $dominion->realm->number); }
                 }
             }
         }

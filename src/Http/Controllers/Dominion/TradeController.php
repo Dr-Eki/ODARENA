@@ -90,6 +90,14 @@ class TradeController extends AbstractDominionController
         return view('pages.dominion.trade.ledger', ['tradeLedgerEntries' => $tradeLedgerEntries]);
     }
 
+    public function getSentiments()
+    {
+        $dominion = $this->getSelectedDominion();
+        $sentiments = $dominion->holdSentimentEvents()->orderByDesc('created_at')->paginate(50);
+
+        return view('pages.dominion.trade.sentiments', ['sentiments' => $sentiments]);
+    }
+
     public function getEditTradeRoute($hold, $resourceKey)
     {
         $resource = Resource::where('key', $resourceKey)->first();
