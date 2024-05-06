@@ -81,13 +81,13 @@ class TradeCalculator
     public function getResourceMaxOfferableAmount(Dominion $dominion, Resource $resource): int
     {
         $max = 0;
-        $netProductionPerResource = $this->resourceCalculator->getResourceNetProduction($dominion, $resource->key);
+        $resourceNetProduction = $this->resourceCalculator->getResourceNetProduction($dominion, $resource->key);
 
         $resourceCurrentAmount = $dominion->{'resource_' . $resource->key};
 
-        $isProducingResource = $netProductionPerResource > 0;
+        $isProducingResource = $this->resourceCalculator->isProducingResource($dominion, $resource->key);
 
-        $max = $isProducingResource ? $netProductionPerResource : $resourceCurrentAmount;
+        $max = $isProducingResource ? $resourceNetProduction : $resourceCurrentAmount;
 
         return $max;
     }

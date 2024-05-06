@@ -7,9 +7,9 @@ use OpenDominion\Models\Round;
 use OpenDominion\Models\TradeLedger;
 use OpenDominion\Models\TradeRoute;
 
+use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\TradeCalculator;
 use OpenDominion\Models\HoldSentimentEvent;
-#use OpenDominion\Services\HoldService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\TradeRoute\QueueService;
 use OpenDominion\Services\Dominion\ResourceService as DominionResourceService;
@@ -20,8 +20,8 @@ class TradeService
 {
     protected $dominionResourceService;
     protected $holdResourceService;
-    #protected $holdService;
     protected $notificationService;
+    protected $resourceCalculator;
     protected $tradeCalculator;
     protected $queueService;
 
@@ -29,8 +29,8 @@ class TradeService
     {
         $this->dominionResourceService = app(DominionResourceService::class);
         $this->holdResourceService = app(HoldResourceService::class);
-        #$this->holdService = app(HoldService::class);
         $this->notificationService = app(NotificationService::class);
+        $this->resourceCalculator = app(ResourceCalculator::class);
         $this->tradeCalculator = app(TradeCalculator::class);
         $this->queueService = app(QueueService::class);
     }
@@ -94,10 +94,16 @@ class TradeService
             return;
         }
 
-
         # Cap by what's available
-        $soldResourceAmount = min($soldResourceAmount, $dominion->{'resource_' . $soldResource->key});
-
+        if($this->resourceCalculator->isProducingResource($dominion, $soldResource))
+        {
+            $soldResourceAmount = $soldResourceAmount;
+        }
+        else
+        {
+            $soldResourceAmount = min($soldResourceAmount, $dominion->{'resource_' . $soldResource->key});
+        }
+ 
         $tradeResult = $this->tradeCalculator->getTradeResult($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
         $boughtResourceAmount = $tradeResult['bought_resource_amount'];
 

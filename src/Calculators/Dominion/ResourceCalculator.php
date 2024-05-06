@@ -921,4 +921,9 @@ class ResourceCalculator
     {
         return $this->getProduction($dominion, $resourceKey) - $this->getConsumption($dominion, $resourceKey);
     }
+
+    public function isProducingResource(Dominion $dominion, string $resourceKey): bool
+    {
+        return $this->getProduction($dominion, $resourceKey) > 0;
+    }
 }

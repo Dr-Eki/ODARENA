@@ -159,14 +159,16 @@
                 <tbody>
                     @foreach ($hold->tradeRoutes->where('status',1) as $tradeRoute)
                         @php
-                            $canViewTradeRouteCounterparty = false;
-                            $canViewTradeRouteResources = false;
+                            $canViewTradeRouteCounterparty = true;
+                            $canViewTradeRouteResources = true;
 
+                            // If selected dominion is in the same realm as the hold, selected dominion can see the resources
                             if($tradeRoute->dominion->realm->id == $selectedDominion->realm->id)
                             {
                                 $canViewTradeRouteResources = true;
                             }
 
+                            // If selected dominion is trading with the hold, selected dominion can see the name of counterparties
                             if($hold->tradeRoutes->where('dominion_id',$selectedDominion->id)->count() > 0)
                             {
                                 $canViewTradeRouteCounterparty = true;
@@ -185,8 +187,8 @@
                             @endif
 
                             @if($canViewTradeRouteResources)
-                                <td>{{ number_format($tradeRoute->bought_resource) }}</td>
-                                <td>{{ number_format($tradeRoute->sold_resource) }}</td>
+                                <td>{{ $tradeRoute->bought_resource }}</td>
+                                <td>{{ $tradeRoute->sold_resource }}</td>
                                 <td class="text-center">{{ number_format($tradeRoute->trades) }}</td>
                             @else
                                 <td><em>Not disclosed</em></td>
