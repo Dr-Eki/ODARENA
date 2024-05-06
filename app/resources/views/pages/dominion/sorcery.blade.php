@@ -97,7 +97,7 @@
 
                         @foreach($selectedDominion->race->getSpells()->where('scope', 'hostile')->where('class','!=','invasion')->sortBy('class')->sortBy('level') as $spell)
                             @php
-                                $canCast = $spellCalculator->canCastSpell($selectedDominion, $spell, $resourceCalculator->getAmount($selectedDominion, 'mana'));
+                                $canCast = $spellCalculator->canCastSpell($selectedDominion, $spell, $dominion->resource_mana);
                             @endphp
                             <div class="col-md-{{ $bootstrapColWidth }}">
                                 <label class="btn btn-block">
@@ -145,7 +145,7 @@
                         <h3 class="box-title"><i class="fas fa-hat-wizard"></i> Wizard Strength</h3>
                     </div>
                     <div class="box-body">
-                        <input type="hidden" id="mana-available" data-amount="{{ $resourceCalculator->getAmount($selectedDominion, 'mana') }}">
+                        <input type="hidden" id="mana-available" data-amount="{{ $selectedDominion->resource_mana }}">
 
                         <input type="number"
                                id="amountSlider"

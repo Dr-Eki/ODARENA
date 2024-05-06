@@ -182,12 +182,12 @@ class SpellActionService
 
         $manaCost = $this->spellCalculator->getManaCost($dominion, $spell->key);
 
-        if ($this->resourceCalculator->getAmount($dominion, 'mana') < $manaCost)
+        if ($dominion->resource_mana < $manaCost)
         {
             throw new GameException("You do not have enough mana to cast {$spell->name}. You need " . number_format($manaCost). " mana to cast this spell.");
         }
 
-        if (!$this->spellCalculator->canCastSpell($dominion, $spell, $this->resourceCalculator->getAmount($dominion, 'mana')))
+        if (!$this->spellCalculator->canCastSpell($dominion, $spell, $dominion->resource_mana))
         {
             throw new GameException("You are not able to cast {$spell->name}.");
         }
@@ -470,7 +470,7 @@ class SpellActionService
                     $ratio = $spellPerkValues[2] / 100;
                     $exchangeRate = $spellPerkValues[3];
 
-                    $amountRemoved = ceil($this->resourceCalculator->getAmount($caster, $sourceResourceKey) * $ratio);
+                    $amountRemoved = ceil($caster->{'resource_' . $sourceResourceKey} * $ratio);
                     $amountAdded = floor($amountRemoved / $exchangeRate);
 
                     $this->resourceService->updateResources($caster, [$sourceResourceKey => $amountRemoved*-1]);
@@ -486,7 +486,7 @@ class SpellActionService
                     $exchangeRate = $spellPerkValues[3];
                     $sourceMax = $spellPerkValues[4];
 
-                    $amountRemoved = ceil(min($this->resourceCalculator->getAmount($caster, $sourceResourceKey) * $ratio, $sourceMax));
+                    $amountRemoved = ceil(min($caster->{'resource_' . $sourceResourceKey} * $ratio, $sourceMax));
                     $amountAdded = floor($amountRemoved / $exchangeRate);
 
                     $this->resourceService->updateResources($caster, [$sourceResourceKey => $amountRemoved*-1]);
@@ -603,7 +603,7 @@ class SpellActionService
                     $unitSlots = (array)$spellPerkValues[3];
 
                     $resourceRatioTaken = min($this->magicCalculator->getWizardRatio($caster) * $ratioPerWpa, $maxRatio);
-                    $resourceAmountOwned = $this->resourceCalculator->getAmount($caster, $resourceKey);
+                    $resourceAmountOwned = $caster->{'resource_' . $resourceKey};
                     $resourceAmountConverted = floor($resourceAmountOwned * $resourceRatioTaken);
 
                     $resourceAmountConverted = min($resourceAmountConverted, ($this->populationCalculator->getMaxPopulation($caster) - $this->populationCalculator->getPopulationMilitary($caster)/* - 1000*/));
@@ -917,7 +917,7 @@ class SpellActionService
 
             $manaCost = $this->spellCalculator->getManaCost($breaker, $spell->key) * 2;
 
-            if ($this->resourceCalculator->getAmount($breaker, 'mana') < $manaCost)
+            if ($breaker->resource_mana < $manaCost)
             {
                 throw new GameException("You do not have enough mana to break {$spell->name}. You need {$manaCost} mana to break this spell.");
             }

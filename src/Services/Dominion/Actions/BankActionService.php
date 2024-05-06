@@ -80,7 +80,7 @@ class BankActionService
             throw new GameException($dominion->race->name . ' cannot use ' . $targetResource->name . '.');
         }
 
-        if ($amount > $this->resourceCalculator->getAmount($dominion, $sourceResourceKey)) {
+        if ($amount > $dominion->{'resource_' . $sourceResourceKey}) {
             throw new GameException(sprintf(
                 'You do not have %s %s to exchange.',
                 number_format($amount),

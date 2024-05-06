@@ -22,7 +22,6 @@ use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
-use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 
 use OpenDominion\Services\Dominion\QueueService;
@@ -68,9 +67,6 @@ class QuickstartService
     /** @var PopulationCalculator */
     protected $populationCalculator;
 
-    /** @var ResourceCalculator */
-    protected $resourceCalculator;
-
     /** @var SpellCalculator */
     protected $spellCalculator;
 
@@ -100,7 +96,6 @@ class QuickstartService
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->networthCalculator = app(NetworthCalculator::class);
         $this->populationCalculator = app(PopulationCalculator::class);
-        $this->resourceCalculator = app(ResourceCalculator::class);
         $this->spellCalculator = app(SpellCalculator::class);
 
         $this->statsService = app(StatsService::class);
@@ -166,7 +161,7 @@ xp: %s\n",
         $resources = "\nresources:\n";
         foreach($dominion->race->resources as $resourceKey)
         {
-            $resources .= "    $resourceKey: {$this->resourceCalculator->getAmount($dominion, $resourceKey)}\n";
+            $resources .= "    $resourceKey: {$dominion->{'resource_' . $resourceKey}}\n";
         }
 
         $spells = "\nspells:\n";

@@ -871,7 +871,7 @@ class MilitaryCalculator
         $resourcePerUnitRequired = (float)$resourcePerkData[1];
         $resourceKey = (string)$resourcePerkData[2];
 
-        $resourceAmountOwned = $this->resourceCalculator->getAmount($dominion, $resourceKey);
+        $resourceAmountOwned = $dominion->{'resource_' . $resourceKey};
 
         # How many units have enough of resource?
         $unitsWithEnoughResources = (int)min(floor($resourceAmountOwned / $resourcePerUnitRequired), $units[$unit->slot]);
@@ -1295,7 +1295,7 @@ class MilitaryCalculator
         }
         elseif ($target !== null)
         {
-            $targetResources = $this->resourceCalculator->getAmount($target, $resource);
+            $targetResources = $target->{'resource_' . $resource};
         }
 
         $powerFromResource = $targetResources / $ratio;
@@ -1330,7 +1330,7 @@ class MilitaryCalculator
         $resource = (string)$fromResourcePerkData[0];
         $ratio = (int)$fromResourcePerkData[1];
 
-        $resourceAmount = $this->resourceCalculator->getAmount($dominion, $resource);
+        $resourceAmount = $dominion->{'resource_' . $resource};
 
         $powerFromResource = $resourceAmount / $ratio;
         $powerFromPerk = $powerFromResource;
@@ -1351,7 +1351,7 @@ class MilitaryCalculator
         $resource = (string)$fromResourcePerkData[0];
         $ratio = (float)$fromResourcePerkData[1];
 
-        $powerFromPerk = $this->resourceCalculator->getAmount($dominion, $resource) / $ratio;
+        $powerFromPerk = $dominion->{'resource_' . $resource} / $ratio;
 
         return $powerFromPerk;
     }

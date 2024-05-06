@@ -185,15 +185,15 @@ class ConstructionCalculator
                 $barrenLand,
 
                 # Resources 2.0
-                floor($this->resourceCalculator->getAmount($dominion, $primaryResource) / $primaryCost),
-                floor($this->resourceCalculator->getAmount($dominion, $secondaryResource) / $secondaryCost),
+                floor($dominion->{'resource_' . $primaryResource} / $primaryCost),
+                floor($dominion->{'resource_' . $secondaryResource} / $secondaryCost),
             );
         }
         else
         {
             $maxAfford = min(
                 $barrenLand,
-                floor($this->resourceCalculator->getAmount($dominion, $primaryResource) / $primaryCost),
+                floor($dominion->{'resource_' . $primaryResource} / $primaryCost),
             );
         }
 

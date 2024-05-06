@@ -220,7 +220,7 @@ class TrainingCalculator
                 {
                     if(in_array($type, $dominion->race->resources))
                     {
-                        $trainableByCost[$type] = (int)floor($this->resourceCalculator->getAmount($dominion, $type) / $value);
+                        $trainableByCost[$type] = (int)floor($dominion->{'resource_' . $type} / $value);
                     }
                     elseif($type == 'peasant' or $type == 'peasants')
                     {

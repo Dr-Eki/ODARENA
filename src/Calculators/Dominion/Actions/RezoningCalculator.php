@@ -97,7 +97,7 @@ class RezoningCalculator
         $cost = $this->getRezoningCost($dominion);
 
         return min(
-            floor($this->resourceCalculator->getAmount($dominion, $resource) / $cost),
+            floor($dominion->{'resource_' . $resource} / $cost),
             $dominion->land
           );
 

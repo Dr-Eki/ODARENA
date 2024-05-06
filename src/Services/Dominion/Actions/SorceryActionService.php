@@ -139,7 +139,7 @@ class SorceryActionService
                 throw new LogicException("Spell {$spell->name} is not enabled.");
             }
 
-            if (!$this->spellCalculator->canCastSpell($caster, $spell, $this->resourceCalculator->getAmount($caster, 'mana')))
+            if (!$this->spellCalculator->canCastSpell($caster, $spell, $caster->resource_mana))
             {
                 throw new GameException("You are not able to cast {$spell->name}.");
             }
@@ -165,7 +165,7 @@ class SorceryActionService
             }
 
             $manaCost = $this->sorceryCalculator->getSpellManaCost($caster, $spell, $wizardStrength);
-            $casterManaAmount = $this->resourceCalculator->getAmount($caster, 'mana');
+            $casterManaAmount = $caster->resource_mana;
 
             if ($manaCost > $casterManaAmount)
             {
@@ -404,7 +404,7 @@ class SorceryActionService
 
                         $damage = $baseDamage * $sorcerySpellDamageMultiplier * $spellDamageMultiplier;
 
-                        $targetResourceAmount = $this->resourceCalculator->getAmount($target, $resourceKey);
+                        $targetResourceAmount = $target->{'resource_' . $resourceKey};
 
                         $damageDealt = min($targetResourceAmount * $damage, $targetResourceAmount);
                         $damageDealt = floor($damageDealt);
@@ -446,7 +446,7 @@ class SorceryActionService
 
                         $damage = $baseDamage * $sorcerySpellDamageMultiplier * $spellDamageMultiplier;
 
-                        $damageDealt = min($target->{'military_unit'.$slot} * $damage * $this->resourceCalculator->getAmount($target, $resourceKey));
+                        $damageDealt = min($target->{'military_unit'.$slot} * $damage, $target->{'military_unit'.$slot});
                         $damageDealt = floor($damageDealt);
 
                         $targetUnitAmount = $target->{'military_unit'.$slot};
@@ -703,7 +703,7 @@ class SorceryActionService
         else
         {
             $resourceString = 'resource_'.$resourceKey;
-            $availableResource = $this->resourceCalculator->getAmount($target, $resourceKey);
+            $availableResource = $target->{'resource_' . $resourceKey};
         }
 
         // Unit theft protection

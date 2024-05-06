@@ -296,9 +296,9 @@ class TrainActionService
           if(in_array($resourceKey, $dominion->race->resources))
           {
               $resource = Resource::where('key', $resourceKey)->first();
-              if($totalCosts[$resourceKey] > $this->resourceCalculator->getAmount($dominion, $resourceKey))
+              if($totalCosts[$resourceKey] > $dominion->{'resource_' . $resourceKey})
               {
-                  throw new GameException('Training failed due to insufficient ' . $resource->name . '. You tried to spend ' . number_format($totalCosts[$resourceKey]) .  ' but only have ' . number_format($this->resourceCalculator->getAmount($dominion, $resourceKey)) . '.');
+                  throw new GameException('Training failed due to insufficient ' . $resource->name . '. You tried to spend ' . number_format($totalCosts[$resourceKey]) .  ' but only have ' . number_format($dominion->{'resource_' . $resourceKey}) . '.');
               }
           }
 

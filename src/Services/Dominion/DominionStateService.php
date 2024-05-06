@@ -240,7 +240,7 @@ class DominionStateService
             // Delete resources
             foreach($dominion->resources as $resource)
             {
-                $amountOwned = $this->resourceCalculator->getAmount($dominion, $resource->key);
+                $amountOwned = $dominion->{'resource_' . $resource->key}
                 $amountToRemove = $amountOwned * -1;
                 $this->resourceService->updateResources($dominion, [$resource->key => $amountToRemove]);
             }
@@ -440,7 +440,7 @@ ticks: %s
         $resources = "\nresources:\n";
         foreach($dominion->race->resources as $resourceKey)
         {
-            $resources .= "    $resourceKey: {$this->resourceCalculator->getAmount($dominion, $resourceKey)}\n";
+            $resources .= "    $resourceKey: {$dominion->{'resource_' . $resourceKey}}\n";
         }
 
         $spells = "\nspells:\n";

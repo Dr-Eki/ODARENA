@@ -68,6 +68,9 @@ class TheftActionService
     /** @var UnitHelper */
     protected $unitHelper;
 
+    protected $theft;
+    protected $theftEvent;
+
     public function __construct()
     {
         $this->militaryCalculator = app(MilitaryCalculator::class);
@@ -309,7 +312,7 @@ class TheftActionService
             $this->theft['returning_units'] = $units_surviving;
 
             # Determine how much was stolen
-            $this->theft['amount_owned'] = $this->resourceCalculator->getAmount($target, $resource->key);
+            $this->theft['amount_owned'] = $target->{'resource_' . $resource->key};
             $amountStolen = $this->theftCalculator->getTheftAmount($thief, $target, $resource, $units_surviving);
             $this->theft['amount_stolen'] = $amountStolen;
 

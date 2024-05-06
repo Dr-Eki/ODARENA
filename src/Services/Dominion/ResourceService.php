@@ -68,7 +68,7 @@ class ResourceService
             # Negative values: update or delete DominionResource
             else
             {
-                $owned = $this->resourceCalculator->getAmount($dominion, $resource->key);
+                $owned = $dominion->{'resource_' . $resource->key};
 
                 $amountToRemove = min(abs($amount), $owned);
 

@@ -223,10 +223,10 @@ class ArtefactActionService
             {
                 if($resourceCostToInvade = $attacker->race->getPerkValue($resourceKey . '_to_invade'))
                 {
-                    if($this->resourceCalculator->getAmount($attacker, $resourceKey) < $resourceCostToInvade)
+                    if($attacker->{'resource_' . $resourceKey} < $resourceCostToInvade)
                     {
                         $resource = Resource::where('key', $resourceKey)->first();
-                        throw new GameException('You do not have enough ' . Str::plural($resource->name, $resourceCostToInvade) . ' to invade. You have ' . number_format($this->resourceCalculator->getAmount($attacker, $resourceKey)) . ' and you need at least ' . number_format($resourceCostToInvade) . '.');
+                        throw new GameException('You do not have enough ' . Str::plural($resource->name, $resourceCostToInvade) . ' to invade. You have ' . number_format($attacker->{'resource_' . $resourceKey}) . ' and you need at least ' . number_format($resourceCostToInvade) . '.');
                     }
                     else
                     {
@@ -305,7 +305,7 @@ class ArtefactActionService
                     $resource = Resource::where('key', $resourceKey)->firstOrFail();
 
                     $resourceAmountRequired = ceil($resourceAmount * $amount);
-                    $resourceAmountOwned = $this->resourceCalculator->getAmount($attacker, $resourceKey);
+                    $resourceAmountOwned = $attacker->{'resource_' . $resourceKey};
 
                     if($resourceAmountRequired > $resourceAmountOwned)
                     {

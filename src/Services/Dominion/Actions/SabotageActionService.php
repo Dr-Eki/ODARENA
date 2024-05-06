@@ -344,7 +344,7 @@ class SabotageActionService
                     {
                         $resource = Resource::where('key', $resourceKey)->first();
 
-                        $targetResourceAmount = $this->resourceCalculator->getAmount($target, $resourceKey);
+                        $targetResourceAmount = $target->{'resource_' . $resourceKey};
 
                         $damage = min($targetResourceAmount * $damageRatio, $targetResourceAmount);
                         $damage = (int)floor($damage);

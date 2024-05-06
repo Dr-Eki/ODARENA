@@ -366,10 +366,10 @@ class InvadeActionService
             {
                 if($resourceCostToInvade = $attacker->race->getPerkValue($resourceKey . '_to_invade'))
                 {
-                    if($this->resourceCalculator->getAmount($attacker, $resourceKey) < $resourceCostToInvade)
+                    if($attacker->{'resource_' . $resourceKey} < $resourceCostToInvade)
                     {
                         $resource = Resource::where('key', $resourceKey)->first();
-                        throw new GameException('You do not have enough ' . Str::plural($resource->name, $resourceCostToInvade) . ' to invade. You have ' . number_format($this->resourceCalculator->getAmount($attacker, $resourceKey)) . ' and you need at least ' . number_format($resourceCostToInvade) . '.');
+                        throw new GameException('You do not have enough ' . Str::plural($resource->name, $resourceCostToInvade) . ' to invade. You have ' . number_format($attacker->{'resource_' . $resourceKey}) . ' and you need at least ' . number_format($resourceCostToInvade) . '.');
                     }
                     else
                     {
@@ -425,7 +425,7 @@ class InvadeActionService
                     $resource = Resource::where('key', $resourceKey)->firstOrFail();
 
                     $resourceAmountRequired = ceil($resourceAmount * $amount);
-                    $resourceAmountOwned = $this->resourceCalculator->getAmount($attacker, $resourceKey);
+                    $resourceAmountOwned = $attacker->{'resource_' . $resourceKey};
 
                     if($resourceAmountRequired > $resourceAmountOwned)
                     {
@@ -1669,7 +1669,7 @@ class InvadeActionService
                 {
                     $resourceKey = (string)$destroysResourcePerk[0];
                     $amountDestroyedPerUnit = (float)$destroysResourcePerk[1];
-                    $maxDestroyedBySlot = (int)round(min($this->invasion['attacker']['units_sent'][$slot] * $amountDestroyedPerUnit, $this->resourceCalculator->getAmount($defender, $resourceKey)));
+                    $maxDestroyedBySlot = (int)round(min($this->invasion['attacker']['units_sent'][$slot] * $amountDestroyedPerUnit, $defender->{'resource_' . $resourceKey}));
 
                     if($maxDestroyedBySlot > 0)
                     {
@@ -1693,7 +1693,7 @@ class InvadeActionService
                     {
                         $resourceKey = (string)$destroysResourcePerk[0];
                         $amountDestroyedPerUnit = (float)$destroysResourcePerk[1];
-                        $maxDestroyedBySlot = (int)round(min($this->invasion['attacker']['units_sent'][$slot] * $amountDestroyedPerUnit, $this->resourceCalculator->getAmount($defender, $resourceKey)));
+                        $maxDestroyedBySlot = (int)round(min($this->invasion['attacker']['units_sent'][$slot] * $amountDestroyedPerUnit, $defender->{'resource_' . $resourceKey}));
     
                         if($maxDestroyedBySlot > 0)
                         {
@@ -1719,7 +1719,7 @@ class InvadeActionService
            if($exhaustingPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'offense_from_resource_exhausting') and isset($units[$slot]))
            {
                $resourceKey = $exhaustingPerk[0];
-               $resourceAmount = $this->resourceCalculator->getAmount($attacker, $resourceKey);
+               $resourceAmount = $attacker->{'resource_' . $resourceKey};
 
                $this->invasion['attacker'][$resourceKey . '_exhausted'] = $resourceAmount;
 
@@ -1858,7 +1858,7 @@ class InvadeActionService
                 {
                     $resourceKey = (string)$destroysResourcePerk[0];
                     $amountDestroyedPerUnit = (float)$destroysResourcePerk[1];
-                    $maxDestroyedBySlot = (int)round(min($this->invasion['attacker']['units_sent'][$slot] * $amountDestroyedPerUnit, $this->resourceCalculator->getAmount($defender, $resourceKey)));
+                    $maxDestroyedBySlot = (int)round(min($this->invasion['attacker']['units_sent'][$slot] * $amountDestroyedPerUnit, $defender->{'resource_' . $resourceKey}));
 
                     if($maxDestroyedBySlot > 0)
                     {
@@ -1900,7 +1900,7 @@ class InvadeActionService
 
         foreach($defenderResourceAmountExhausted as $resourceKey => $amount)
         {
-            $amount = min($this->resourceCalculator->getAmount($defender, $resourceKey), $amount);
+            $amount = min($defender->{'resource_' . $resourceKey}, $amount);
             $this->resourceService->updateResources($defender, [$resourceKey => ($amount * -1)]);
             $this->invasion['defender']['resources_spent'][$resourceKey] = $amount;
         }
@@ -2725,7 +2725,7 @@ class InvadeActionService
 
                 $ratio = (float)$perkValueArray[0] / 100;
                 $resourceKey = (string)$perkValueArray[1];
-                $resourceAmountOwned = $this->resourceCalculator->getAmount($defender, $resourceKey);
+                $resourceAmountOwned = $defender->{'resource_' . $resourceKey};
                 $resourceAmountLost = $resourceAmountOwned * ($ratio * -1);
 
                 $this->invasion['defender']['resources_lost'][$resourceKey] = $resourceAmountLost;
@@ -2922,7 +2922,7 @@ class InvadeActionService
         {
             if($amount > 0)
             {
-                $result['attacker']['plunder'][$resourceKey] = min($amount, $this->resourceCalculator->getAmount($defender, $resourceKey));
+                $result['attacker']['plunder'][$resourceKey] = min($amount, $defender->{'resource_' . $resourceKey});
                 $this->resourceService->updateResources($defender, [$resourceKey => ($result['attacker']['plunder'][$resourceKey] * -1)]);
             }
         }

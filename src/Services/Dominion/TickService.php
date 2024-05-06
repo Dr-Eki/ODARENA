@@ -686,7 +686,7 @@ class TickService
             $foodProduction = $this->resourceCalculator->getProduction($dominion, 'food');
             $foodConsumed = $this->resourceCalculator->getConsumption($dominion, 'food');
             $foodNetChange = $foodProduction - $foodConsumed;
-            $foodOwned = $this->resourceCalculator->getAmount($dominion, 'food');
+            $foodOwned = $dominion->resource_food;
 
 
             if($foodConsumed > 0 and ($foodOwned + $foodNetChange) < 0)

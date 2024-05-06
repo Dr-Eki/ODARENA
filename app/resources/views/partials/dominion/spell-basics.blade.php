@@ -1,5 +1,5 @@
 @php
-    $manaAfforded = $spellCalculator->getManaCost($selectedDominion, $spell->key) <= $resourceCalculator->getAmount($selectedDominion, 'mana') ? 'text-green' : 'text-red';
+    $manaAfforded = $spellCalculator->getManaCost($selectedDominion, $spell->key) <= $selectedDominion->resource_mana ? 'text-green' : 'text-red';
 @endphp
 
 @if($spell->magic_level > 0)

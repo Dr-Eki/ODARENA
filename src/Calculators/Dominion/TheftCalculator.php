@@ -41,7 +41,7 @@ class TheftCalculator
             return 0;
         }
 
-        $resourceAvailableAmount = $this->resourceCalculator->getAmount($target, $resource->key);
+        $resourceAvailableAmount = $target->{'resource_' . $resource->key};
         $resourceAvailableAmount = $resourceAvailableAmount - $this->getTheftProtection($target, $resource->key);
         $resourceAvailableAmount = max(0, $resourceAvailableAmount);
 

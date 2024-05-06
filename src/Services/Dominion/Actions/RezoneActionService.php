@@ -127,7 +127,7 @@ class RezoneActionService
             $cost = $totalLand * $this->rezoningCalculator->getRezoningCost($dominion);
             $resource = $this->rezoningCalculator->getRezoningMaterial($dominion);
 
-            if($cost > $this->resourceCalculator->getAmount($dominion, $resource))
+            if($cost > $dominion->{'resource_' . $resource})
             {
                 throw new GameException("You do not have enough $resource to rezone {$totalLand} acres of land.");
             }

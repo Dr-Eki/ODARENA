@@ -31,7 +31,6 @@ use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\PopulationCalculator;
-use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 
 use OpenDominion\Services\Dominion\QueueService;
@@ -58,7 +57,6 @@ class InsightService
     protected $militaryCalculator;
     protected $networthCalculator;
     protected $populationCalculator;
-    protected $resourceCalculator;
     protected $spellCalculator;
     
     protected $statsService;
@@ -84,7 +82,6 @@ class InsightService
         $this->militaryCalculator = app(MilitaryCalculator::class);
         $this->networthCalculator = app(NetworthCalculator::class);
         $this->populationCalculator = app(PopulationCalculator::class);
-        $this->resourceCalculator = app(ResourceCalculator::class);
         $this->spellCalculator = app(SpellCalculator::class);
 
         $this->statsService = app(StatsService::class);
@@ -232,7 +229,7 @@ class InsightService
 
         foreach($target->race->resources as $resourceKey)
         {
-            $data['resource_'.$resourceKey] = $this->resourceCalculator->getAmount($target, $resourceKey);
+            $data['resource_'.$resourceKey] = $target->{'resource_' . $resourceKey};
         }
 
         // Units returning from invasion

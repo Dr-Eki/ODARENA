@@ -38,7 +38,7 @@ class ResourcesController extends AbstractDominionController
                   'label' => $resource->name,
                   'buy' => (float)$resource->buy,
                   'sell' => (float)$resource->sell * $resourceCalculator->getExchangeRatePerkMultiplier($dominion),
-                  'max' => (int)$resourceCalculator->getAmount($dominion, $resourceKey)
+                  'max' => (int)$dominion->{'resource_' . $resourceKey}
               ];
 
           }
