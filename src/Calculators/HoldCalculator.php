@@ -29,6 +29,11 @@ class HoldCalculator
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
         $price = $resource->trade->buy;
 
+        if($resourceKey == 'gold')
+        {
+            return $price;
+        }
+
         $baseDesirabilityMultiplier = $this->getBaseDesirabilityMultiplier($hold, $resourceKey);
         $supplyMultiplier = $this->getResourceSupplyMultiplier($hold, $resourceKey);
 
@@ -48,30 +53,17 @@ class HoldCalculator
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
         $price = $resource->trade->sell;
 
+        if($resourceKey == 'gold')
+        {
+            return $price;
+        }
+
         $baseDesirabilityMultiplier = $this->getBaseDesirabilityMultiplier($hold, $resourceKey);
         $supplyMultiplier = $this->getResourceSupplyMultiplier($hold, $resourceKey);
 
         $price = $price * $baseDesirabilityMultiplier * $supplyMultiplier;
 
-        /*
-        if($resourceKey == 'mud')
-        {
-
-            dump($hold->name . ' selling ' . $resourceKey);
-
-            dump('Price: ' .$price);
-            dump('baseDesirabilityMultiplier: ' . $baseDesirabilityMultiplier);
-            dump('Price * baseDesirabilityMultiplier: ' . $price * $baseDesirabilityMultiplier);
-            dump('supplyMultiplier: ' . $supplyMultiplier);
-            dump('Price * baseDesirabilityMultiplier * supplyMultiplier: ' . $price * $baseDesirabilityMultiplier * $supplyMultiplier);
-
-            $price = $price * $baseDesirabilityMultiplier * $supplyMultiplier;
-
-            dd($this->getHoldResourcePriceMultiplier($hold, $resourceKey));
-        }
-        */
-
-        $price *= $this->getHoldResourcePriceMultiplier($hold, $resourceKey);
+        #$price *= $this->getHoldResourcePriceMultiplier($hold, $resourceKey);
 
         return round($price, config('trade.price_decimals'));
     }
