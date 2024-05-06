@@ -89,6 +89,8 @@ class QueueService
             ->where('tick', 0)
             ->get();
 
+            dd($finishedQueues);
+
         if($finishedQueues->count() > 0)
         {
             $tradeRoute->increment('trades');

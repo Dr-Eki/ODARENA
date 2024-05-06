@@ -3,6 +3,7 @@
 namespace OpenDominion\Helpers;
 
 use LogicException;
+use Illuminate\Support\Str;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Resource;
@@ -473,7 +474,9 @@ class SettingHelper
             # CULT
 
             case 'hourly_dominion.attrition_occurred':
-                $units = array_sum($data);
+                $units = (int)array_reduce($data, function ($carry, $item) {
+                    return $carry + array_sum($item);
+                }, 0);
                 $term = isset($dominion) ?? $term = $this->raceHelper->getAttritionTermVerb($dominion->race);
 
                 return sprintf(

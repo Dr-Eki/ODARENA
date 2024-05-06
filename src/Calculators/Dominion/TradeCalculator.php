@@ -106,7 +106,7 @@ class TradeCalculator
 
     public function getTradeRoutesTickData(Dominion $dominion): Collection
     {
-        $tradeRoutes = $dominion->tradeRoutes()->where('status', 1)->get()->sortBy('id');
+        $tradeRoutes = TradeRoute::where('dominion_id', $dominion->id)->where('status',1)->get()->sortBy('id');#$dominion->tradeRoutes()->where('status', 1)->get()->sortBy('id');
     
         $data = collect();
     
@@ -129,6 +129,8 @@ class TradeCalculator
                 }
             }
         }
+
+        #dump($data);
     
         return $data;
     }
@@ -141,14 +143,19 @@ class TradeCalculator
             ->where('status', 1)
             ->get();
 
+        #dump($tradeRoutes);
+
         $resources = collect();
 
         foreach($tradeRoutes as $tradeRoute)
         {
+            dump($tradeRoute);
             $resources->push($tradeRoute->soldResource->key);
             $resources->push($tradeRoute->boughtResource->key);
 
         }
+
+        dump($resources);
 
         return $resources->unique();
     }

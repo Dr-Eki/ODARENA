@@ -41,6 +41,9 @@ class TradeService
 
         foreach ($activeTradeRoutes as $tradeRoute)
         {
+
+            dump('Handling trade route: ' . $tradeRoute->id . ' between ' . $tradeRoute->dominion->name . ' and ' . $tradeRoute->hold->name);
+
             # Handle queues
             $this->queueService->handleTradeRouteQueues($tradeRoute);
 
