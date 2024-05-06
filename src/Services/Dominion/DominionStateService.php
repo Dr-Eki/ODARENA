@@ -240,7 +240,7 @@ class DominionStateService
             // Delete resources
             foreach($dominion->resources as $resource)
             {
-                $amountOwned = $dominion->{'resource_' . $resource->key}
+                $amountOwned = $dominion->{'resource_' . $resource->key};
                 $amountToRemove = $amountOwned * -1;
                 $this->resourceService->updateResources($dominion, [$resource->key => $amountToRemove]);
             }
