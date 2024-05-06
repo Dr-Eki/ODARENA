@@ -149,13 +149,13 @@ class TradeCalculator
 
         foreach($tradeRoutes as $tradeRoute)
         {
-            dump($tradeRoute);
+            #ldump($tradeRoute);
             $resources->push($tradeRoute->soldResource->key);
             $resources->push($tradeRoute->boughtResource->key);
 
         }
 
-        dump($resources);
+        #ldump($resources);
 
         return $resources->unique();
     }
