@@ -106,7 +106,12 @@ class ResourceCalculator
 
     public function getAmount(Dominion $dominion, string $resourceKey): int
     {
-        $resource = Resource::where('key', $resourceKey)->firstOrFail();
+        $resource = Resource::where('key', $resourceKey)->first();
+
+        if(!$resource)
+        {
+            dd($resourceKey, 'jcinnz smels funny');
+        }
 
         $dominionResourceAmount = DominionResource::where('dominion_id', $dominion->id)->where('resource_id', $resource->id)->first();
 
