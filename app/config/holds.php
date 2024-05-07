@@ -9,7 +9,7 @@ return [
     'starting_defense' => 25000,
 
 
-    'tick_discover_hold_chance' => 60,
+    'tick_discover_hold_chance' => 30,
 
     'defaults' => [
         'unit_return_ticks' => 12,
