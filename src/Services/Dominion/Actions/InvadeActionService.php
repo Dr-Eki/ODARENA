@@ -421,7 +421,7 @@ class InvadeActionService
                 }
 
                 # Check for spends_resource_on_offense
-                if($spendsResourcesOnOffensePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'spends_resource_on_offense'))
+                if($spendsResourcesOnOffensePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'spends_resource_on_offense'))
                 {
                     $resourceKey = (string)$spendsResourcesOnOffensePerk[0];
                     $resourceAmount = (float)$spendsResourcesOnOffensePerk[1];
@@ -1129,43 +1129,43 @@ class InvadeActionService
         {
             if(in_array($slot, [1,2,3,4,5,6,7,8,9,10]))
             {
-                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into'))
+                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into'))
                 {
                     $slot = (int)$diesIntoPerk[0];
 
                     $diesIntoNewUnits[$slot] += intval($casualties);
                 }
 
-                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_spy'))
+                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_spy'))
                 {
                     $diesIntoNewUnits['spies'] += intval($casualties);
                 }
 
-                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_wizard'))
+                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_wizard'))
                 {
                     $diesIntoNewUnits['wizards'] += intval($casualties);
                 }
 
-                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_archmage'))
+                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_archmage'))
                 {
                     $diesIntoNewUnits['archmages'] += intval($casualties);
                 }
 
-                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_on_defense'))
+                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_on_defense'))
                 {
                     $slot = (int)$diesIntoPerk[0];
 
                     $diesIntoNewUnits[$slot] += intval($casualties);
                 }
 
-                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_on_defense_instantly'))
+                if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_on_defense_instantly'))
                 {
                     $slot = (int)$diesIntoPerk[0];
 
                     $diesIntoNewUnitsInstantly[$slot] += intval($casualties);
                 }
 
-                if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple'))
+                if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple'))
                 {
                     $slot = (int)$diesIntoMultiplePerk[0];
                     $amount = (float)$diesIntoMultiplePerk[1];
@@ -1173,7 +1173,7 @@ class InvadeActionService
                     $diesIntoNewUnits[$slot] += intval($casualties * $amount);
                 }
 
-                if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple_on_defense'))
+                if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple_on_defense'))
                 {
                     $slot = (int)$diesIntoMultiplePerk[0];
                     $amount = (float)$diesIntoMultiplePerk[1];
@@ -1181,7 +1181,7 @@ class InvadeActionService
                     $diesIntoNewUnits[$slot] += intval($casualties * $amount);
                 }
 
-                if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple_on_defense_instantly'))
+                if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple_on_defense_instantly'))
                 {
                     $slot = (int)$diesIntoMultiplePerk[0];
                     $amount = (float)$diesIntoMultiplePerk[1];
@@ -1189,7 +1189,7 @@ class InvadeActionService
                     $diesIntoNewUnitsInstantly[$slot] += intval($casualties * $amount);
                 }
 
-                if(!$this->invasion['result']['success'] and $diesIntoMultiplePerkOnVictory = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple_on_victory'))
+                if(!$this->invasion['result']['success'] and $diesIntoMultiplePerkOnVictory = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple_on_victory'))
                 {
                     $slot = (int)$diesIntoMultiplePerkOnVictory[0];
                     $amount = (float)$diesIntoMultiplePerkOnVictory[1];
@@ -1466,7 +1466,7 @@ class InvadeActionService
             foreach($attacker->race->units as $unit)
             {
                 if(
-                    $increasesMoraleGainsPerk = $attacker->race->getUnitPerkValueForUnitSlot($unit->slot, 'increases_morale_gains') and
+                    $increasesMoraleGainsPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$unit->slot, 'increases_morale_gains') and
                     isset($units[$unit->slot]) and
                     $this->invasion['result']['success']
                     )
@@ -1476,7 +1476,7 @@ class InvadeActionService
 
 
                 if(
-                    $increasesMoraleGainsPerk = $attacker->race->getUnitPerkValueForUnitSlot($unit->slot, 'increases_morale_gains_fixed') and
+                    $increasesMoraleGainsPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$unit->slot, 'increases_morale_gains_fixed') and
                     isset($units[$unit->slot]) and
                     $this->invasion['result']['success']
                     )
@@ -1495,7 +1495,7 @@ class InvadeActionService
             # Look for lowers_target_morale_on_successful_invasion
             for ($slot = 1; $slot <= $attacker->race->units->count(); $slot++) {
                 if (
-                    $lowersTargetMoralePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'lowers_target_morale_on_successful_invasion') and
+                    $lowersTargetMoralePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'lowers_target_morale_on_successful_invasion') and
                     isset($this->invasion['attacker']['units_sent'][$slot]) and
                     $this->invasion['result']['success']
                 ) {
@@ -1668,7 +1668,7 @@ class InvadeActionService
             # ATTACKER
             foreach($this->invasion['attacker']['units_sent'] as $slot => $amount)
             {
-                if ($destroysResourcePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'destroy_resource_on_victory'))
+                if ($destroysResourcePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'destroy_resource_on_victory'))
                 {
                     $resourceKey = (string)$destroysResourcePerk[0];
                     $amountDestroyedPerUnit = (float)$destroysResourcePerk[1];
@@ -1690,7 +1690,7 @@ class InvadeActionService
                 }
 
 
-                if ($destroysResourcesPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'destroy_resources_on_victory'))
+                if ($destroysResourcesPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'destroy_resources_on_victory'))
                 {
                     foreach($destroysResourcesPerk as $destroysResourcePerk)
                     {
@@ -1719,7 +1719,7 @@ class InvadeActionService
         for ($slot = 1; $slot <= $attacker->race->units->count(); $slot++)
         {
           # Snow Elf: Hailstorm Cannon exhausts all mana
-           if($exhaustingPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'offense_from_resource_exhausting') and isset($units[$slot]))
+           if($exhaustingPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'offense_from_resource_exhausting') and isset($units[$slot]))
            {
                $resourceKey = $exhaustingPerk[0];
                $resourceAmount = $attacker->{'resource_' . $resourceKey};
@@ -1730,7 +1730,7 @@ class InvadeActionService
            }
 
            # Yeti: Stonethrowers spend ore (but not necessarily all of it)
-           if($exhaustingPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'offense_from_resource_capped_exhausting') and isset($units[$slot]))
+           if($exhaustingPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'offense_from_resource_capped_exhausting') and isset($units[$slot]))
            {
                $amountPerUnit = (float)$exhaustingPerk[1];
                $resourceKey = (string)$exhaustingPerk[2];
@@ -1743,7 +1743,7 @@ class InvadeActionService
            }
 
            # Imperial Gnome: brimmer to fuel the Airships
-           if($spendsResourcesOnOffensePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'spends_resource_on_offense') and isset($units[$slot]))
+           if($spendsResourcesOnOffensePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'spends_resource_on_offense') and isset($units[$slot]))
            {
                $resourceKey = (string)$spendsResourcesOnOffensePerk[0];
                $resourceAmountPerUnit = (float)$spendsResourcesOnOffensePerk[1];
@@ -1763,7 +1763,7 @@ class InvadeActionService
             for ($unitSlot = 1; $unitSlot <= $attacker->race->units->count(); $unitSlot++)
             {
                 // burns_peasants
-                if (($burnsPeasantsOnAttackPerk = $attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'burns_peasants_on_attack')) and isset($units[$unitSlot]))
+                if (($burnsPeasantsOnAttackPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$unitSlot, 'burns_peasants_on_attack')) and isset($units[$unitSlot]))
                 {
                     $burningUnits = $units[$unitSlot];
                     $rawOpFromBurningUnits = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, null, [$unitSlot => $burningUnits]);
@@ -1777,7 +1777,7 @@ class InvadeActionService
                 }
 
                 // burns_draftees
-                if (($burnsDrafteesOnAttackPerk = $attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'burns_draftees_on_attack')) and isset($units[$unitSlot]))
+                if (($burnsDrafteesOnAttackPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$unitSlot, 'burns_draftees_on_attack')) and isset($units[$unitSlot]))
                 {
                     $burningUnits = $units[$unitSlot];
                     $rawOpFromBurningUnits = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, null, [$unitSlot => $burningUnits]);
@@ -1791,7 +1791,7 @@ class InvadeActionService
                 }
 
                 // damages_improvements_on_attack
-                if ($attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'damages_improvements_on_attack') and isset($units[$unitSlot]))
+                if ($attacker->race->getUnitPerkValueForUnitSlot((int)$unitSlot, 'damages_improvements_on_attack') and isset($units[$unitSlot]))
                 {
 
                     $totalImprovementPoints = $this->improvementCalculator->getDominionImprovementTotalAmountInvested($defender);
@@ -1799,7 +1799,7 @@ class InvadeActionService
                     $defenderImprovements = $this->improvementCalculator->getDominionImprovements($defender);
 
                     $damagingUnits = $units[$unitSlot];
-                    $damagePerUnit = $attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'damages_improvements_on_attack');
+                    $damagePerUnit = $attacker->race->getUnitPerkValueForUnitSlot((int)$unitSlot, 'damages_improvements_on_attack');
 
                     $damageMultiplier = 1;
                     $damageMultiplier += $defender->getBuildingPerkMultiplier('lightning_bolt_damage');
@@ -1821,10 +1821,10 @@ class InvadeActionService
                     $this->invasion['defender']['improvements_damage']['improvement_points'] = $damage;
                 }
 
-                if ($attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'eats_peasants_on_attack') and isset($units[$unitSlot]))
+                if ($attacker->race->getUnitPerkValueForUnitSlot((int)$unitSlot, 'eats_peasants_on_attack') and isset($units[$unitSlot]))
                 {
                     $eatingUnits = $units[$unitSlot];
-                    $peasantsEatenPerUnit = (float)$attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'eats_peasants_on_attack');
+                    $peasantsEatenPerUnit = (float)$attacker->race->getUnitPerkValueForUnitSlot((int)$unitSlot, 'eats_peasants_on_attack');
 
                     # If defender has less than 1000 peasants, we don't eat any.
                     if($defender->peasants < 1000)
@@ -1843,10 +1843,10 @@ class InvadeActionService
                 }
 
                 // Troll: eats_draftees_on_attack
-                if ($attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'eats_draftees_on_attack') and isset($units[$unitSlot]))
+                if ($attacker->race->getUnitPerkValueForUnitSlot((int)$unitSlot, 'eats_draftees_on_attack') and isset($units[$unitSlot]))
                 {
                     $eatingUnits = $units[$unitSlot];
-                    $drafteesEatenPerUnit = $attacker->race->getUnitPerkValueForUnitSlot($unitSlot, 'eats_draftees_on_attack');
+                    $drafteesEatenPerUnit = $attacker->race->getUnitPerkValueForUnitSlot((int)$unitSlot, 'eats_draftees_on_attack');
 
                     $eatenDraftees = round($eatingUnits * $drafteesEatenPerUnit * min($this->invasion['result']['op_dp_ratio'], 1));
                     $eatenDraftees = min($defender->military_draftees, $eatenDraftees);
@@ -1857,7 +1857,7 @@ class InvadeActionService
                 }
 
                 # destroy_resource
-                if ($destroysResourcePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'destroy_resource') and isset($units[$unitSlot]))
+                if ($destroysResourcePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'destroy_resource') and isset($units[$unitSlot]))
                 {
                     $resourceKey = (string)$destroysResourcePerk[0];
                     $amountDestroyedPerUnit = (float)$destroysResourcePerk[1];
@@ -1891,7 +1891,7 @@ class InvadeActionService
         {
            # Cires: gunpowder on defense (if attacker is not overwhelmed)
            # This sum up to more than the available gunpowder, which is fine, because the DP provided is calculated with the help of militaryCalculator->dpFromUnitWithoutSufficientResources()
-           if($spendsResourcesOnDefensePerk = $defender->race->getUnitPerkValueForUnitSlot($unit->slot, 'spends_resource_on_defense') and isset($this->invasion['defender']['units_defending'][$unit->slot]) and !$this->invasion['result']['overwhelmed'])
+           if($spendsResourcesOnDefensePerk = $defender->race->getUnitPerkValueForUnitSlot((int)$unit->slot, 'spends_resource_on_defense') and isset($this->invasion['defender']['units_defending'][$unit->slot]) and !$this->invasion['result']['overwhelmed'])
            {
                $resourceKey = (string)$spendsResourcesOnDefensePerk[0];
                $resourceAmountPerUnit = (float)$spendsResourcesOnDefensePerk[1];
@@ -1929,7 +1929,7 @@ class InvadeActionService
         # Calculate how much of raw OP came from stunning units
         foreach($units as $slot => $amount)
         {
-            if(!$attacker->race->getUnitPerkValueForUnitSlot($slot, 'stuns_units'))
+            if(!$attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'stuns_units'))
             {
                 continue;
             }
@@ -1938,7 +1938,7 @@ class InvadeActionService
                 return ($unit->slot == $slot);
             })->first();
 
-            $stunPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'stuns_units');
+            $stunPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'stuns_units');
 
             $rawOpFromThisUnit = $this->militaryCalculator->getUnitPowerWithPerks($attacker, $defender, $landRatio, $unit, 'offense') * $amount;
             $rawOpRatioFromThisUnit = $rawOpFromThisUnit / $this->invasion['attacker']['op_raw'];
@@ -2064,7 +2064,7 @@ class InvadeActionService
         $displacedPeasants = intval(($defender->peasants / $this->invasion['defender']['land_size']) * $landConquered);
     
         $peasantsCaptured = array_reduce(array_keys($units), function ($carry, $slot) use ($attacker, $defender, $landRatio, $rawOp, $units, $displacedPeasants) {
-            if ($attacker->race->getUnitPerkValueForUnitSlot($slot, 'captures_displaced_peasants')) {
+            if ($attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'captures_displaced_peasants')) {
                 $opFromSlot = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, $landRatio, [$slot => $units[$slot]]);
                 return $carry + floor($displacedPeasants * ($opFromSlot / $rawOp));
             }
@@ -2112,7 +2112,7 @@ class InvadeActionService
 
         foreach($units as $slot => $amount)
         {
-            if ($attacker->race->getUnitPerkValueForUnitSlot($slot, 'captures_displaced_peasants'))
+            if ($attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'captures_displaced_peasants'))
             {
                 $opFromSlot = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, $landRatio, [$slot => $amount]);
                 $opRatio = $opFromSlot / $rawOp;
@@ -2188,7 +2188,7 @@ class InvadeActionService
         {
             if(in_array($slot, [1,2,3,4,5,6,7,8,9,10]))
             {
-                if ($defender->race->getUnitPerkValueForUnitSlot($slot, 'kills_displaced_peasants'))
+                if ($defender->race->getUnitPerkValueForUnitSlot((int)$slot, 'kills_displaced_peasants'))
                 {
                     $dpFromSlot = $this->militaryCalculator->getDefensivePowerRaw($defender, $attacker, $landRatio, [$slot => $amount]);
                     $dpRatio = $dpFromSlot / $rawDp;
@@ -2323,7 +2323,7 @@ class InvadeActionService
             # Check for instant_return
             for ($slot = 1; $slot <= $attacker->race->units->count(); $slot++)
             {
-                if($attacker->race->getUnitPerkValueForUnitSlot($slot, 'instant_return'))
+                if($attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'instant_return'))
                 {
                     # This removes the unit from the $returningUnits array, thereby ensuring it is neither removed nor queued.
                     unset($returningUnits['military_unit' . $slot]);
@@ -2345,12 +2345,12 @@ class InvadeActionService
                     # See if slot $slot has wins_into perk.
                     if($this->invasion['result']['success'])
                     {
-                        if($attacker->race->getUnitPerkValueForUnitSlot($slot, 'wins_into'))
+                        if($attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'wins_into'))
                         {
-                            $returnsAsSlot = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'wins_into');
+                            $returnsAsSlot = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'wins_into');
                             $returningUnitKey = 'military_unit' . $returnsAsSlot;
                         }
-                        if($someWinIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'some_win_into'))
+                        if($someWinIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'some_win_into'))
                         {
                             $ratio = (float)$someWinIntoPerk[0] / 100;
                             $newSlot = (int)$someWinIntoPerk[1];
@@ -2397,7 +2397,7 @@ class InvadeActionService
                     {
                         $casualties = $this->invasion['attacker']['units_lost'][$slot];
 
-                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into'))
+                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into'))
                         {
                             # Which unit do they die into?
                             $newUnitSlot = $diesIntoPerk[0];
@@ -2407,7 +2407,7 @@ class InvadeActionService
                             $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += $casualties;
                         }
 
-                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_wizard'))
+                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_wizard'))
                         {
                             # Which unit do they die into?
                             $newUnitKey = "military_wizards";
@@ -2416,7 +2416,7 @@ class InvadeActionService
                             $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += $casualties;
                         }
 
-                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_spy'))
+                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_spy'))
                         {
                             # Which unit do they die into?
                             $newUnitKey = "military_spies";
@@ -2425,7 +2425,7 @@ class InvadeActionService
                             $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += $casualties;
                         }
 
-                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_archmage'))
+                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_archmage'))
                         {
                             # Which unit do they die into?
                             $newUnitKey = "military_archmages";
@@ -2434,7 +2434,7 @@ class InvadeActionService
                             $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += $casualties;
                         }
 
-                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_on_offense'))
+                        if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_on_offense'))
                         {
                             # Which unit do they die into?
                             $newUnitSlot = $diesIntoPerk[0];
@@ -2444,7 +2444,7 @@ class InvadeActionService
                             $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += $casualties;
                         }
 
-                        if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple'))
+                        if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple'))
                         {
                             # Which unit do they die into?
                             $newUnitSlot = $diesIntoMultiplePerk[0];
@@ -2455,7 +2455,7 @@ class InvadeActionService
                             $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += floor($casualties * $newUnitAmount);
                         }
 
-                        if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple_on_offense'))
+                        if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple_on_offense'))
                         {
                             # Which unit do they die into?
                             $newUnitSlot = $diesIntoMultiplePerk[0];
@@ -2466,7 +2466,7 @@ class InvadeActionService
                             $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += floor($casualties * $newUnitAmount);
                         }
 
-                        if($this->invasion['result']['success'] and $diesIntoMultiplePerkOnVictory = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple_on_victory'))
+                        if($this->invasion['result']['success'] and $diesIntoMultiplePerkOnVictory = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple_on_victory'))
                         {
                             # Which unit do they die into?
                             $newUnitSlot = $diesIntoMultiplePerkOnVictory[0];
@@ -2477,7 +2477,7 @@ class InvadeActionService
                             $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += floor($casualties * $newUnitAmount);
                         }
 
-                        if(!$this->invasion['result']['success'] and $diesIntoMultiplePerkOnVictory = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into_multiple_on_victory'))
+                        if(!$this->invasion['result']['success'] and $diesIntoMultiplePerkOnVictory = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple_on_victory'))
                         {
                             # Which unit do they die into?
                             $newUnitSlot = $diesIntoMultiplePerkOnVictory[0];
@@ -2489,7 +2489,7 @@ class InvadeActionService
                         }
 
                         # Check for faster_return_from_terrain
-                        if($fasterReturnFromTerrainPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_from_terrain'))
+                        if($fasterReturnFromTerrainPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'faster_return_from_terrain'))
                         {
 
                             $perChunk = $fasterReturnFromTerrainPerk[0];
@@ -2511,7 +2511,7 @@ class InvadeActionService
                         }
 
                         # Check for faster_return_from_time
-                        if($fasterReturnFromTimePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_from_time'))
+                        if($fasterReturnFromTimePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'faster_return_from_time'))
                         {
 
                             $hourFrom = $fasterReturnFromTimePerk[0];
@@ -2586,7 +2586,7 @@ class InvadeActionService
                     $amountReturning = array_sum($returningUnits[$unitKey]);
 
                     # Check for faster_return_if_paired
-                    if($fasterReturnIfPairedPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_if_paired'))
+                    if($fasterReturnIfPairedPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'faster_return_if_paired'))
                     {
                         $pairedUnitSlot = (int)$fasterReturnIfPairedPerk[0];
                         $pairedUnitKey = 'military_unit'.$pairedUnitSlot;
@@ -2605,7 +2605,7 @@ class InvadeActionService
                     }
 
                     # Check for faster_return_if_paired_multiple
-                    if($fasterReturnIfPairedMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_if_paired_multiple'))
+                    if($fasterReturnIfPairedMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'faster_return_if_paired_multiple'))
                     {
                         $pairedUnitSlot = (int)$fasterReturnIfPairedMultiplePerk[0];
                         $pairedUnitKey = 'military_unit'.$pairedUnitSlot;
@@ -2894,7 +2894,7 @@ class InvadeActionService
         # Attacker: Plundering
         foreach($this->invasion['attacker']['units_surviving'] as $slot => $amount)
         {
-            if($plunderPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot,'plunders'))
+            if($plunderPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot,'plunders'))
             {
                 foreach($plunderPerk as $plunder)
                 {
@@ -2908,7 +2908,7 @@ class InvadeActionService
                 #dump($amountToPlunder . ' ' . $resourceToPlunder . ' plundered by unit' . $slot . '(' . $amountPlunderedPerUnit . ' each: ' . number_format($amount) . ' survivors)');
             }
 
-            if($plunderPerk = $attacker->race->getUnitPerkValueForUnitSlot($slot,'plunder'))
+            if($plunderPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot,'plunder'))
             {
                 $resourceToPlunder = $plunderPerk[0];
                 $amountPlunderedPerUnit = (float)$plunderPerk[1];
@@ -2998,7 +2998,7 @@ class InvadeActionService
             {
                 if($slot !== 'draftees' and $slot !== 'peasants')
                 {
-                    if(!$this->conversionHelper->isSlotConvertible($slot, $defender) and !$defender->race->getUnitPerkValueForUnitSlot($slot, 'dies_into'))
+                    if(!$this->conversionHelper->isSlotConvertible($slot, $defender) and !$defender->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into'))
                     {
                         $defensiveBodies -= $lost;
                     }
@@ -3010,7 +3010,7 @@ class InvadeActionService
             {
                 if($slot !== 'draftees')
                 {
-                    if(!$this->conversionHelper->isSlotConvertible($slot, $attacker) or $attacker->race->getUnitPerkValueForUnitSlot($slot, 'dies_into'))
+                    if(!$this->conversionHelper->isSlotConvertible($slot, $attacker) or $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into'))
                     {
                         $offensiveBodies -= $lost;
                     }
@@ -3655,7 +3655,7 @@ class InvadeActionService
         }
 
         # Check for faster_return_if_paired
-        if($fasterReturnFromWizardRatio = $attacker->race->getUnitPerkValueForUnitSlot($unit->slot, 'faster_return_from_wizard_ratio'))
+        if($fasterReturnFromWizardRatio = $attacker->race->getUnitPerkValueForUnitSlot((int)$unit->slot, 'faster_return_from_wizard_ratio'))
         {
             $ticksFasterPerWizardRatio = (float)$fasterReturnFromWizardRatio[0];
             $maxFaster = (int)$fasterReturnFromWizardRatio[1];
@@ -3683,7 +3683,7 @@ class InvadeActionService
         $ticks -= (int)$attacker->getAdvancementPerkValue('faster_return');
         $ticks -= (int)$attacker->realm->getArtefactPerkValue('faster_return');
 
-        if($fasterReturnFromWizardRatio = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_from_wizard_ratio'))
+        if($fasterReturnFromWizardRatio = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'faster_return_from_wizard_ratio'))
         {
             $ticksFasterPerWizardRatio = (float)$fasterReturnFromWizardRatio[0];
             $maxFaster = (int)$fasterReturnFromWizardRatio[1];
@@ -3695,7 +3695,7 @@ class InvadeActionService
             $ticks -= $ticksFaster;
         }
 
-        if($fasterReturnFromSpyRatio = $attacker->race->getUnitPerkValueForUnitSlot($slot, 'faster_return_from_spy_ratio'))
+        if($fasterReturnFromSpyRatio = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'faster_return_from_spy_ratio'))
         {
             $ticksFasterPerWizardRatio = (float)$fasterReturnFromSpyRatio[0];
             $maxFaster = (int)$fasterReturnFromSpyRatio[1];

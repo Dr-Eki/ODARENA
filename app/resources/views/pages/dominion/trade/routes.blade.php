@@ -81,7 +81,9 @@
                                 <td>{{ number_format($tradeRoute->total_bought) }}</td>
                                 <td>{{ number_format($tradeRoute->total_sold) }}</td>
                                 <td>
-                                    <a href="{{ route('dominion.trade.routes.edit', [$tradeRoute->hold, $tradeRoute->soldResource->key]) }}" class="btn btn-xs btn-primary">Edit</a>
+                                    @if($tradeRoute->status == 1)
+                                        <a href="{{ route('dominion.trade.routes.edit', [$tradeRoute->hold, $tradeRoute->soldResource->key]) }}" class="btn btn-xs btn-primary">Edit</a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -184,7 +186,7 @@
                         @else
                             <div class="col-md-2">
                                 <h5 data-toggle="tooltip" data-placement="top" title="Do not exceed current net production or current stockpile (whichever is highest).">You Sell</h5>
-                                <div class="input-group">
+                                <div class="input-group" data-toggle="tooltip" data-placement="top" title="Select the resource to buy. The amount bought is calculated based on the amount you offer to sell.">
                                     <select name="sold_resource" class="input-group form-control" style="min-width:10em; width:100%;">
                                         @foreach($hold->desired_resources as $resourceKey)
                                             @php 
@@ -207,7 +209,7 @@
                             </div>
                             <div class="col-md-2">
                                 <h5>You Buy</h5>
-                                <div class="input-group">
+                                <div class="input-group" data-toggle="tooltip" data-placement="top" title="Select the resource you want to sell and how much you want to sell per tick.">
                                     <select name="bought_resource" class="form-control" style="min-width:10em; width:100%;">
                                         @foreach($hold->sold_resources as $resourceKey)
                                             @php 
