@@ -170,11 +170,13 @@ class TickService
         {
             DB::transaction(function () use ($round, $tickTime)
             {
+                Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
+
                 $this->temporaryData[$round->id] = [];
 
                 $round->is_ticking = 1;
                 $round->save();
-                
+
                 # Get all dominions for this round where protection_ticks == 0, in random order
                 $dominions = $round->activeDominions()
                     ->where('protection_ticks', 0)
@@ -202,14 +204,6 @@ class TickService
                 
                 retry($attempts, function () use ($round, $attempts, $delay) {
                     $i = isset($i) ? $i + 1 : 1;
-
-                    if (Redis::llen('queues:tick') === 0) {
-                        $round->fill([
-                            'ticks' => ($round->ticks + 1),
-                            'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
-                        ])->save();
-                        return;
-                    }
                 
                     $infoString = sprintf(
                         '[%s] Waiting for tick queue to finish. Current queue: %s. Trying again in %s ms.',
@@ -248,15 +242,12 @@ class TickService
                 if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
                 $this->handleWinConditions($round);
 
-                Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
-
                 # Calculate body decay
                 if(($decay = $this->resourceCalculator->getRoundResourceDecay($round, 'body')))
                 {
                     Log::info('* Body decay: ' . number_format($decay) . ' / ' . number_format($round->resource_body));
                     $this->resourceService->updateRoundResources($round, ['body' => (-$decay)]);
                 }
-               
                 
                 Log::info(sprintf(
                     '[TICK] Ticked %s dominions in %s ms in %s',
@@ -277,10 +268,13 @@ class TickService
 
             $this->now = now();
 
-             unset($this->temporaryData[$round->id]);
+            unset($this->temporaryData[$round->id]);
 
-            $round->is_ticking = 0;
-            $round->save();
+            $round->fill([
+                'ticks' => ($round->ticks + 1),
+                'is_ticking' => 0,
+                'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
+            ])->save();
 
 
              Log::info(sprintf(
