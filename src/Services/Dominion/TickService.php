@@ -174,40 +174,7 @@ class TickService
 
                 $round->is_ticking = 1;
                 $round->save();
-
-                if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
-                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
-                $this->updateAllSpells($round);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); }
-                $this->updateAllDeities($round);
-
-                if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); }
-                $this->updateAllInvasionQueues($round);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all other queues'); }
-                $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); }
-                $this->updateArtefactsAegises($round);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
-                $this->handleHoldsAndTradeRoutes($round);
-
-                if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
-                $this->handleWinConditions($round);
-
-                Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
-
-                # Calculate body decay
-                if(($decay = $this->resourceCalculator->getRoundResourceDecay($round, 'body')))
-                {
-                    Log::info('* Body decay: ' . number_format($decay) . ' / ' . number_format($round->resource_body));
-                    $this->resourceService->updateRoundResources($round, ['body' => (-$decay)]);
-                }
-
+                
                 # Get all dominions for this round where protection_ticks == 0, in random order
                 $dominions = $round->activeDominions()
                     ->where('protection_ticks', 0)
@@ -221,7 +188,7 @@ class TickService
                     ->get();
 
                 $this->temporaryData[$round->id]['stasis_dominions'] = [];
-                
+
                 if(config('game.extended_logging')) { Log::debug('* Going through all dominions'); }
                 foreach ($dominions as $dominion)
                 {
@@ -256,6 +223,41 @@ class TickService
                     throw new Exception('Tick queue not finish');
                 }, $delay);
 
+
+                if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
+                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
+
+                if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
+                $this->updateAllSpells($round);
+
+                if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); }
+                $this->updateAllDeities($round);
+
+                if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); }
+                $this->updateAllInvasionQueues($round);
+
+                if(config('game.extended_logging')) { Log::debug('* Update all other queues'); }
+                $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
+
+                if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); }
+                $this->updateArtefactsAegises($round);
+
+                if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
+                $this->handleHoldsAndTradeRoutes($round);
+
+                if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
+                $this->handleWinConditions($round);
+
+                Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
+
+                # Calculate body decay
+                if(($decay = $this->resourceCalculator->getRoundResourceDecay($round, 'body')))
+                {
+                    Log::info('* Body decay: ' . number_format($decay) . ' / ' . number_format($round->resource_body));
+                    $this->resourceService->updateRoundResources($round, ['body' => (-$decay)]);
+                }
+               
+                
                 Log::info(sprintf(
                     '[TICK] Ticked %s dominions in %s ms in %s',
                     number_format($round->activeDominions->count()),
