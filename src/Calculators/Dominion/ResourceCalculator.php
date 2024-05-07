@@ -576,7 +576,8 @@ class ResourceCalculator
     public function getResourceTotalSoldPerTick(Dominion $dominion, string $resourceKey): float
     {
         $resource = Resource::fromKey($resourceKey);
-        return TradeRoute::where('dominion_id', $dominion->id)->where('source_resource_id', $resource->id)->where('status',1)->sum('source_amount');
+        $amount = TradeRoute::where('dominion_id', $dominion->id)->where('source_resource_id', $resource->id)->where('status',1)->sum('source_amount');
+        return (float)$amount;
     }
 
     public function getResourceDueFromTradeNextTick(Dominion $dominion, string $resourceKey): float
@@ -805,7 +806,7 @@ class ResourceCalculator
 
         $maxStorage *= $multiplier;
 
-        return round($maxStorage);
+        return (int)round($maxStorage);
     }
 
     # To be fixed later

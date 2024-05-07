@@ -1,5 +1,8 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;

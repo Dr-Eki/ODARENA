@@ -1,5 +1,8 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Services\Dominion;
 
 use DB;
@@ -233,7 +236,10 @@ class TickService
                     dump($infoString);
                     throw new Exception('Tick queue not finish');
                 }, $delay);
+            });
 
+            DB::transaction(function () use ($round)
+            {
                 if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
                 $this->updateAllSpells($round);
 
@@ -950,7 +956,7 @@ class TickService
                 #'dominions.land_hill' => DB::raw('dominions.land_hill + dominion_tick.land_hill'),
                 #'dominions.land_water' => DB::raw('dominions.land_water + dominion_tick.land_water'),
 
-                'dominions.protection_ticks' => DB::raw('dominions.protection_ticks + dominion_tick.protection_ticks'),
+                'dominions.protection_ticks' => 0,#DB::raw('dominions.protection_ticks + dominion_tick.protection_ticks'),
                 'dominions.ticks' => DB::raw('dominions.ticks + 1'),
 
                 'dominions.last_tick_at' => DB::raw('now()')
@@ -1140,7 +1146,7 @@ class TickService
         # Impterest
         if(
             ($improvementInterestPerk = $dominion->race->getPerkValue('improvements_interest')) or
-            ($improvementInterestPerk = (mt_rand($dominion->race->getPerkValue('improvements_interest_random_min')*100, $dominion->race->getPerkValue('improvements_interest_random_max')*100))/100)
+            ($improvementInterestPerk = (mt_rand((int)$dominion->race->getPerkValue('improvements_interest_random_min')*100, (int)$dominion->race->getPerkValue('improvements_interest_random_max')*100))/100)
           )
         {
             $multiplier = 1;

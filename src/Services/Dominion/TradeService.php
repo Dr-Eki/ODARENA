@@ -1,5 +1,8 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Services\Dominion;
 
 use Log;
@@ -144,7 +147,7 @@ class TradeService
         $this->queueService->queueTrade($tradeRoute, 'export', $soldResource, $soldResourceAmount);
 
         # Remove the resource from the dominion
-        if($this->resourceCalculator->isProducingResource($dominion, $soldResource))
+        if($this->resourceCalculator->isProducingResource($dominion, $soldResource->key))
         {
             // Do nothing
         }

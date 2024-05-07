@@ -1,5 +1,8 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Services\Dominion\Actions;
 
 use DB;
@@ -442,11 +445,11 @@ class InvadeActionService
 
                 $data['land_conquered'] = $this->militaryCalculator->getLandConquered($attacker, $target, $landRatio);
                 $data['land_discovered'] = 0;
-                if($this->militaryCalculator->checkDiscoverLand($attacker, $target, $data['land_conquered'], $this->invasion['attacker']['capture_buildings']))
+                if($this->militaryCalculator->checkDiscoverLand($attacker, $target, (bool)$data['land_conquered'], $this->invasion['attacker']['capture_buildings']))
                 {
                     $this->invasion['data']['land_discovered'] = $data['land_conquered'] / ($target->race->name == 'Barbarian' ? 3 : 1);
                 }
-                $data['extra_land_discovered'] = $this->militaryCalculator->getExtraLandDiscovered($attacker, $target, $data['land_discovered'], $data['land_conquered']);
+                $data['extra_land_discovered'] = $this->militaryCalculator->getExtraLandDiscovered($attacker, $target, (bool)$data['land_discovered'], $data['land_conquered']);
     
 
                 $landGained += $data['land_conquered'];
@@ -607,7 +610,7 @@ class InvadeActionService
             $this->handleInvasionSpells($attacker, $defender);
 
             # Handle dies_into_resource, dies_into_resources, kills_into_resource, kills_into_resources
-            $this->handleResourceConversions($attacker, $defender, $landRatio);
+            #$this->handleResourceConversions($attacker, $defender, $landRatio);
 
             # Salvage and Plunder
             $this->handleSalvagingAndPlundering($attacker, $defender);
@@ -3455,10 +3458,10 @@ class InvadeActionService
         }
 
         // OP/DP killed/lost
-        $attackerRawOpLost = $this->militaryCalculator->getOffensivePowerRaw($attacker, $target, $landRatio, $this->invasion['attacker']['units_lost'], []);
-        $attackerModOpLost = $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $this->invasion['attacker']['units_lost'], []);
-        $defenderRawDpLost = $this->militaryCalculator->getDefensivePowerRaw($target, $attacker, $landRatio, $this->invasion['defender']['units_lost'], 0, $this->isAmbush, true, $this->invasion['attacker']['units_sent'], false, false);
-        $defenderModDpLost = $this->militaryCalculator->getDefensivePower($target, $attacker, $landRatio, $this->invasion['defender']['units_lost'], 0, $this->isAmbush, true, $this->invasion['attacker']['units_sent'], false, false);
+        $attackerRawOpLost = (int)$this->militaryCalculator->getOffensivePowerRaw($attacker, $target, $landRatio, $this->invasion['attacker']['units_lost'], []);
+        $attackerModOpLost = (int)$this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $this->invasion['attacker']['units_lost'], []);
+        $defenderRawDpLost = (int)$this->militaryCalculator->getDefensivePowerRaw($target, $attacker, $landRatio, $this->invasion['defender']['units_lost'], 0, $this->isAmbush, true, $this->invasion['attacker']['units_sent'], false, false);
+        $defenderModDpLost = (int)$this->militaryCalculator->getDefensivePower($target, $attacker, $landRatio, $this->invasion['defender']['units_lost'], 0, $this->isAmbush, true, $this->invasion['attacker']['units_sent'], false, false);
 
         $this->statsService->updateStat($attacker, 'raw_dp_killed_total',   $defenderRawDpLost);
         $this->statsService->updateStat($defender, 'raw_dp_lost_total',     $defenderRawDpLost);

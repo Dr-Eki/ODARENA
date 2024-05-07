@@ -1,5 +1,8 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Calculators;
 
 use OpenDominion\Models\Dominion;
@@ -282,7 +285,7 @@ class HoldCalculator
 
         $growth += 2 * (1 + $hold->round->ticks/1000);
 
-        return round($growth);
+        return (int)round($growth);
     }
 
 }

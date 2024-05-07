@@ -1,5 +1,8 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Calculators\Dominion;
 
 
@@ -62,8 +65,6 @@ class TradeCalculator
 
         $result['bought_resource_amount'] = $this->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
 
-        dump('*** getTradeResult()', $result, '***');
-
         return $result;
     }
 
@@ -72,26 +73,26 @@ class TradeCalculator
         $baseAmount = $soldResourceAmount * $hold->buyPrice($soldResource->key) * $hold->sellPrice($boughtResource->key);
         $multiplier = $this->holdCalculator->getSentimentMultiplier($hold, $dominion, $soldResource->key);
 
-        $netAmount = floor($baseAmount * $multiplier);
+        $netAmount = (int)floor($baseAmount * $multiplier);
 
         $netAmount = min($netAmount, $hold->{'resource_' . $boughtResource->key});
 
-        return max(0, $netAmount);
+        return (int)max(0, $netAmount);
     }
 
     public function getResourceMaxOfferableAmount(Dominion $dominion, Resource $resource): int
     {
         $max = 0;
+        $isProducingResource = $this->resourceCalculator->isProducingResource($dominion, $resource->key);
+
         $resourceNetProduction = $this->resourceCalculator->getNetProduction($dominion, $resource->key);
 
-        if($resourceNetProduction <= 0)
+        if($isProducingResource and $resourceNetProduction <= 0)
         {
             return 0;
         }
 
         $resourceCurrentAmount = $dominion->{'resource_' . $resource->key};
-
-        $isProducingResource = $this->resourceCalculator->isProducingResource($dominion, $resource->key);
 
         $max = $isProducingResource ? $resourceNetProduction : $resourceCurrentAmount;
 

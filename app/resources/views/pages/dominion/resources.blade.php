@@ -135,99 +135,104 @@
                                     </tr>
                                 @endforeach
                                 @foreach($selectedDominion->foreignResourceKeys() as $resourceKey)
-                                @php
-                                    $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
-                                    $production = $resourceCalculator->getProduction($selectedDominion, $resourceKey);
-                                    $soldAmount = $resourceCalculator->getResourceTotalSoldPerTick($selectedDominion, $resourceKey);
-                                    $tradeDueAmount = $resourceCalculator->getResourceDueFromTradeNextTick($selectedDominion, $resourceKey);
-                                    $consumption = $resourceCalculator->getConsumption($selectedDominion, $resourceKey);
-                                    $netProduction = $resourceCalculator->getNetProduction($selectedDominion, $resourceKey);
-                                    $protected = $theftCalculator->getTheftProtection($selectedDominion, $resourceKey);
-                                    #$interest = $resourceCalculator->getInterest($selectedDominion, $resourceKey);
-                                    $currentAmount = $selectedDominion->{'resource_' . $resourceKey};
-                                @endphp
+                                    @php
+                                        $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                        $production = $resourceCalculator->getProduction($selectedDominion, $resourceKey);
+                                        $soldAmount = $resourceCalculator->getResourceTotalSoldPerTick($selectedDominion, $resourceKey);
+                                        $dueAmount = $resourceCalculator->getResourceDueFromTradeNextTick($selectedDominion, $resourceKey);
+                                        $consumption = $resourceCalculator->getConsumption($selectedDominion, $resourceKey);
+                                        $netProduction = $dueAmount + $soldAmount + $consumption;
+                                        $protected = $theftCalculator->getTheftProtection($selectedDominion, $resourceKey);
+                                        #$interest = $resourceCalculator->getInterest($selectedDominion, $resourceKey);
+                                        $currentAmount = $selectedDominion->{'resource_' . $resourceKey};
+                                    @endphp
 
-                                <tr>
-                                    <td>
-                                        <span data-toggle="tooltip" data-placement="top" title="{{ $resource->description }}">{{ $resource->name }}</span>
-                                    </td>
-                                    <td>
-                                        @if ($netProduction > 0)
-                                            <span class="text-green">{{ number_format($netProduction) }}</span>
-                                        @elseif ($netProduction < 0)
-                                            <span class="text-red">{{ number_format($netProduction) }}</span>
-                                        @else
-                                            0
-                                        @endif
-
-                                        @if ($selectedDominion->getBuildingPerkValue($resourceKey . '_production_raw_random') > 0.00)
-                                            <span class="text-muted" data-toggle="tooltip" data-placement="top" title="Production of this resource is wholly or partly random. Actual production is determined during at each tick.">*</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($production)
-                                            <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Raw:</small> {{ number_format($resourceCalculator->getProductionRaw($selectedDominion, $resourceKey)) }}'>
-                                                <span class="text-green">{{ number_format($production) }}</span>
+                                    <tr>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="This is a foreign resource, not native to {{$selectedDominion->race->name}}.<br>Net production shown for such resources is amount sold plus amount due.">
+                                                <i class="fa-solid fa-flag"></i>
                                             </span>
-                                        @else
-                                            0
-                                        @endif
-
-                                        <small class="text-muted">({{ number_format(($resourceCalculator->getProductionMultiplier($selectedDominion, $resourceKey)-1) * 100,2) }}%)</small>
-                                    </td>
-                                    <td>{{ number_format($soldAmount) }}</td>
-                                    <td>{{ number_format($tradeDueAmount) }}</td>
-                                    <td>
-                                        @if ($consumption)
-                                            <span class="text-muted">
-                                                <span class="text-red" data-toggle="tooltip" data-placement="top" title="{{ $resourceHelper->getResourceConsumptionTerm($resourceKey) }}">{{ number_format($consumption) }}</span>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ $resource->description }}">
+                                                {{ $resource->name }}
                                             </span>
-                                        @else
-                                            0
-                                        @endif
-                                    </td>
-                                    <td>{{ number_format($currentAmount) }}</td>
-                                    <td>
-                                        @if ($protected)
-                                            @php
-                                                $spanClass = ($currentAmount >= $protected ? 'text-red' : 'text-green');
-                                                $ticksProtected = $production > 0 ? ($protected/$production) : 0;
-                                            @endphp
-                                            <span class="{{ $spanClass }}" data-toggle="tooltip" data-placement="top" title="Amount protected from theft.<br>{{ number_format($ticksProtected, 1) . ' ' . Str::plural('tick', $ticksProtected)}} worth ">{{ number_format($protected) }}</span>
-                                        @else
-                                            <span class="text-muted" data-toggle="tooltip" data-placement="top" title="Amount protected from theft">{{ number_format($protected) }}</span>
-                                        @endif
-                                    </td>
-                                    {{--
-                                    <td>
-                                        @if ($interest)
-                                            <span class="text-muted">
-                                                <br>
-                                                <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Interest rate:</small> {{ $resourceCalculator->getInterestRate($selectedDominion, $resourceKey)*100 }}%<br><small class="text-muted">Stockpile to reach max interest:</small> {{ number_format($resourceCalculator->getStockpileRequiredToMaxOutInterest($selectedDominion, $resourceKey)) }}'>
-                                                    Interest: <span class="text-green">{{ number_format($interest) }}</span>
+                                        </td>
+                                        <td>
+                                            @if ($netProduction > 0)
+                                                <span class="text-green">{{ number_format($netProduction) }}</span>
+                                            @elseif ($netProduction < 0)
+                                                <span class="text-red">{{ number_format($netProduction) }}</span>
+                                            @else
+                                                0
+                                            @endif
+
+                                            @if ($selectedDominion->getBuildingPerkValue($resourceKey . '_production_raw_random') > 0.00)
+                                                <span class="text-muted" data-toggle="tooltip" data-placement="top" title="Production of this resource is wholly or partly random. Actual production is determined during at each tick.">*</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($production)
+                                                <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Raw:</small> {{ number_format($resourceCalculator->getProductionRaw($selectedDominion, $resourceKey)) }}'>
+                                                    <span class="text-green">{{ number_format($production) }}</span>
                                                 </span>
-                                            </span>
-                                        @else
-                                            0
-                                        @endif
-                                    </td>
-                                    --}}
-                                    <td>
-                                        @if ($resourceCalculator->hasMaxStorage($selectedDominion, $resourceKey))
-                                            @php
-                                                $maxStorage = $resourceCalculator->getMaxStorage($selectedDominion, $resourceKey);
-                                                $spanClass = ($currentAmount >= $maxStorage ? 'text-red' : 'text-green');
+                                            @else
+                                                0
+                                            @endif
 
-                                            @endphp
-                                            <span class="text-muted">
-                                                <span class="{{ $spanClass }}">{{ number_format($maxStorage) }}
-                                            </span>
-                                        @else
-                                            &mdash;
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
+                                            <small class="text-muted">({{ number_format(($resourceCalculator->getProductionMultiplier($selectedDominion, $resourceKey)-1) * 100,2) }}%)</small>
+                                        </td>
+                                        <td><span class="{{ $soldAmount > 0 ? 'text-red' : null }}">{{ number_format($soldAmount) }}</span></td>
+                                        <td><span class="{{ $dueAmount > 0 ? 'text-green' : null }}">{{ number_format($dueAmount) }}</span></td>
+                                        <td>
+                                            @if ($consumption)
+                                                <span class="text-muted">
+                                                    <span class="text-red" data-toggle="tooltip" data-placement="top" title="{{ $resourceHelper->getResourceConsumptionTerm($resourceKey) }}">{{ number_format($consumption) }}</span>
+                                                </span>
+                                            @else
+                                                0
+                                            @endif
+                                        </td>
+                                        <td>{{ number_format($currentAmount) }}</td>
+                                        <td>
+                                            @if ($protected)
+                                                @php
+                                                    $spanClass = ($currentAmount >= $protected ? 'text-red' : 'text-green');
+                                                    $ticksProtected = $production > 0 ? ($protected/$production) : 0;
+                                                @endphp
+                                                <span class="{{ $spanClass }}" data-toggle="tooltip" data-placement="top" title="Amount protected from theft.<br>{{ number_format($ticksProtected, 1) . ' ' . Str::plural('tick', $ticksProtected)}} worth ">{{ number_format($protected) }}</span>
+                                            @else
+                                                <span class="text-muted" data-toggle="tooltip" data-placement="top" title="Amount protected from theft">{{ number_format($protected) }}</span>
+                                            @endif
+                                        </td>
+                                        {{--
+                                        <td>
+                                            @if ($interest)
+                                                <span class="text-muted">
+                                                    <br>
+                                                    <span data-toggle="tooltip" data-placement="top" title='<small class="text-muted">Interest rate:</small> {{ $resourceCalculator->getInterestRate($selectedDominion, $resourceKey)*100 }}%<br><small class="text-muted">Stockpile to reach max interest:</small> {{ number_format($resourceCalculator->getStockpileRequiredToMaxOutInterest($selectedDominion, $resourceKey)) }}'>
+                                                        Interest: <span class="text-green">{{ number_format($interest) }}</span>
+                                                    </span>
+                                                </span>
+                                            @else
+                                                0
+                                            @endif
+                                        </td>
+                                        --}}
+                                        <td>
+                                            @if ($resourceCalculator->hasMaxStorage($selectedDominion, $resourceKey))
+                                                @php
+                                                    $maxStorage = $resourceCalculator->getMaxStorage($selectedDominion, $resourceKey);
+                                                    $spanClass = ($currentAmount >= $maxStorage ? 'text-red' : 'text-green');
+
+                                                @endphp
+                                                <span class="text-muted">
+                                                    <span class="{{ $spanClass }}">{{ number_format($maxStorage) }}
+                                                </span>
+                                            @else
+                                                &mdash;
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
 
                                 <tr>
                                     <td>XP</td>
