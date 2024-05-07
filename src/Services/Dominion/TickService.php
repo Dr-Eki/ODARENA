@@ -212,6 +212,10 @@ class TickService
                         number_format($delay)
                     );
 
+                    if (Redis::llen('queues:tick') === 0) {
+                        return;
+                    }
+
                     Log::info($infoString);
                     dump($infoString);
                     throw new Exception('Tick queue not finish');
