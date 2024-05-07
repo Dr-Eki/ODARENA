@@ -84,6 +84,23 @@ class TradeController extends AbstractDominionController
         ]);
     }
 
+    public function getHolds()
+    {
+        $dominion = $this->getSelectedDominion();
+        $holds = $dominion->round->holds;
+
+        return view('pages.dominion.trade.holds', [
+            'holds' => $holds,
+            
+            'resourceCalculator' => app(ResourceCalculator::class),
+            'tradeCalculator' => app(TradeCalculator::class),
+
+            'holdHelper' => app(HoldHelper::class),
+            'raceHelper' => app(RaceHelper::class),
+            'unitHelper' => app(UnitHelper::class),
+        ]);
+    }
+
     public function getLedger()
     {
         $tradeLedgerEntries = $this->getSelectedDominion()->tradeLedger()->orderByDesc('created_at')->paginate(50);
