@@ -118,14 +118,12 @@ class TradeController extends AbstractDominionController
     public function getEditTradeRoute($tradeRoute)
     {
         $tradeRoute = TradeRoute::find((int)$tradeRoute);
-
-        $resource = $tradeRoute->sourceResource;
     
         // Define the dominion
         $dominion = $this->getSelectedDominion();
 
         // Optionally handle the case where hold or resource doesn't exist
-        if (!$resource or $tradeRoute->dominion_id !== $dominion->id) {
+        if ($tradeRoute->dominion_id !== $dominion->id) {
             return redirect()->route('dominion.trade.routes');
         }
         
