@@ -77,6 +77,7 @@ units:
       offense_from_pairing: 4,6,0.01 # slot, amount, num required
       defense_from_pairing: 4,2,0.01 # slot, amount, num required
       dies_into_resource: 0.66,yak
+      sendable_with_zero_op: 1
 
   - name: Warboss
     training_time: 12
