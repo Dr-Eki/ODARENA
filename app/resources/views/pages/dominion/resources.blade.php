@@ -45,7 +45,7 @@
                                         $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
                                         $production = $resourceCalculator->getProduction($selectedDominion, $resourceKey);
                                         $soldAmount = $resourceCalculator->getResourceTotalSoldPerTick($selectedDominion, $resourceKey);
-                                        $tradeDueAmount = $resourceCalculator->getResourceDueFromTradeNextTick($selectedDominion, $resourceKey);
+                                        $dueAmount = $resourceCalculator->getResourceDueFromTradeNextTick($selectedDominion, $resourceKey);
                                         $consumption = $resourceCalculator->getConsumption($selectedDominion, $resourceKey);
                                         $netProduction = $resourceCalculator->getNetProduction($selectedDominion, $resourceKey);
                                         $protected = $theftCalculator->getTheftProtection($selectedDominion, $resourceKey);
@@ -81,8 +81,8 @@
 
                                             <small class="text-muted">({{ number_format(($resourceCalculator->getProductionMultiplier($selectedDominion, $resourceKey)-1) * 100,2) }}%)</small>
                                         </td>
-                                        <td>{{ number_format($soldAmount) }}</td>
-                                        <td>{{ number_format($tradeDueAmount) }}</td>
+                                        <td><span class="{{ $soldAmount > 0 ? 'text-red' : null }}">{{ number_format($soldAmount) }}</span></td>
+                                        <td><span class="{{ $dueAmount > 0 ? 'text-green' : null }}">{{ number_format($dueAmount) }}</span></td>
                                         <td>
                                             @if ($consumption)
                                                 <span class="text-muted">

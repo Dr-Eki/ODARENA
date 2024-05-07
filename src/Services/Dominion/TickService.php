@@ -225,7 +225,6 @@ class TickService
                     $infoString = sprintf(
                         '[%s] Waiting for tick queue to finish. Current queue: %s. Trying again in %s ms.',
                         now()->format('Y-m-d H:i:s'),
-                        $attempts,
                         Redis::llen('queues:tick'),
                         number_format($delay)
                     );

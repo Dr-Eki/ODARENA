@@ -45,7 +45,6 @@ class TradeCalculator
         #return in_array($resource->key, $dominion->resourceKeys()) or $resource->category == 'luxury';
     }
 
-    #$tradeData = $this->tradeCalculator->getTradeResult($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
     public function getTradeResult(Dominion $dominion, Hold $hold, Resource $soldResource, int $soldResourceAmount, Resource $boughtResource): array
     {
 
@@ -62,6 +61,8 @@ class TradeCalculator
         ];
 
         $result['bought_resource_amount'] = $this->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
+
+        dump('*** getTradeResult()', $result, '***');
 
         return $result;
     }
@@ -82,6 +83,11 @@ class TradeCalculator
     {
         $max = 0;
         $resourceNetProduction = $this->resourceCalculator->getNetProduction($dominion, $resource->key);
+
+        if($resourceNetProduction <= 0)
+        {
+            return 0;
+        }
 
         $resourceCurrentAmount = $dominion->{'resource_' . $resource->key};
 

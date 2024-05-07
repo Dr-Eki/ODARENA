@@ -71,6 +71,11 @@ class TradeActionService
             throw new GameException('Invalid bought resource.');
         }
 
+        if($soldResource->id == $boughtResource->id)
+        {
+            throw new GameException('You cannot trade a resource for itself.');
+        }
+
         if($soldResourceAmount <= 0)
         {
             throw new GameException('Invalid amount. You must trade at least 1 of this resource.');
@@ -98,7 +103,7 @@ class TradeActionService
 
         if ($soldResourceAmount > $this->tradeCalculator->getResourceMaxOfferableAmount($dominion, $soldResource))
         {
-            throw new GameException('You cannot trade this amount of this resource.');
+            throw new GameException('You cannot trade this amount of this resource. You can at most offer ' . number_format($this->tradeCalculator->getResourceMaxOfferableAmount($dominion, $soldResource)) . '.');
         }
 
         if($this->tradeCalculator->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource) <= 0)
@@ -183,6 +188,11 @@ class TradeActionService
             throw new GameException('Invalid bought resource.');
         }
 
+        if($soldResource->id == $boughtResource->id)
+        {
+            throw new GameException('You cannot trade a resource for itself.');
+        }
+
         if($soldResourceAmount <= 0)
         {
             throw new GameException('Invalid amount. You must trade at least 1 of this resource.');
@@ -210,7 +220,7 @@ class TradeActionService
 
         if ($soldResourceAmount > $this->tradeCalculator->getResourceMaxOfferableAmount($dominion, $soldResource))
         {
-            throw new GameException('You cannot trade this amount of this resource.');
+            throw new GameException('You cannot trade this amount of this resource. You can at most offer ' . number_format($this->tradeCalculator->getResourceMaxOfferableAmount($dominion, $soldResource)) . '.');
         }
 
         if($this->tradeCalculator->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource) <= 0)

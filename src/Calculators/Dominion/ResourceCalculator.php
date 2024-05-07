@@ -1,5 +1,8 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Calculators\Dominion;
 
 
@@ -129,8 +132,8 @@ class ResourceCalculator
         // Add interest
         $production += $this->getInterest($dominion, $resourceKey);
 
-        // Add trade
-        $production += $this->getResourceDueFromTradeNextTick($dominion, $resourceKey);
+        // Add trade — No, this gets added through the TradeService. The function is here only to display for player.
+        # $production += $this->getResourceDueFromTradeNextTick($dominion, $resourceKey);
 
         // Return
         return (int)max($production, 0);
@@ -370,7 +373,7 @@ class ResourceCalculator
 
             foreach($dominion->race->units as $unit)
             {
-                $population += $this->unitCalculator->getUnitTypeTotalTrained($dominion, $unit->slot);
+                $population += $this->unitCalculator->getUnitTypeTotalTrained($dominion, (string)$unit->slot);
             }
 
             $production += $population * $productionFromPopulation;
@@ -578,7 +581,6 @@ class ResourceCalculator
 
     public function getResourceDueFromTradeNextTick(Dominion $dominion, string $resourceKey): float
     {
-
         $resource = Resource::fromKey($resourceKey);
 
         $tradeRouteIds = $dominion->tradeRoutes()->where('status',1)->where('target_resource_id', $resource->id)->pluck('id');
@@ -704,7 +706,7 @@ class ResourceCalculator
 
         $jobs *= $multiplier;
 
-        return $jobs;
+        return (int)round($jobs);
     }
 
     /**
@@ -902,17 +904,6 @@ class ResourceCalculator
 
         return $consumption;
     }
-
-    public function getNetProductionPerResource(Dominion $dominion): array
-    {
-        $netProduction = [];
-        foreach($dominion->resourceKeys() as $resourceKey)
-        {
-            $netProduction[$resourceKey] = $this->getProduction($dominion, $resourceKey) - $this->getConsumption($dominion, $resourceKey);
-        }
-
-        return $netProduction;
-    }
     
     public function getNetProduction(Dominion $dominion, string $resourceKey): int
     {
@@ -920,7 +911,10 @@ class ResourceCalculator
         $consumption = $this->getConsumption($dominion, $resourceKey);
         $sold = $this->getResourceTotalSoldPerTick($dominion, $resourceKey);
 
-        return $production - $consumption - $sold;
+        $netProduction = $production - $consumption - $sold;
+        $netProduction = (int)floor($netProduction);
+
+        return $netProduction;
     }
 
     public function isProducingResource(Dominion $dominion, string $resourceKey): bool

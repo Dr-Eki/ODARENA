@@ -62,9 +62,9 @@ class TradeService
         $boughtResource = $tradeRoute->boughtResource;
         $soldResourceAmount = $tradeRoute->source_amount;
 
+        /*
         if($soldResourceAmount <= 0)
         {
-
             $this->notificationService->queueNotification('trade_failed_and_cancelled', [
                 'hold_id' => $hold->id,
                 'hold_name' => $hold->name,
@@ -93,17 +93,19 @@ class TradeService
 
             return;
         }
+        */
 
-        # Cap by what's available
-        if($this->resourceCalculator->isProducingResource($dominion, $soldResource))
+        if($this->resourceCalculator->isProducingResource($dominion, $soldResource->key))
         {
+            # Producing resources are already accounted for in production, so we take it from there (it's removed in the ResourceCalculator)
             $soldResourceAmount = $soldResourceAmount;
         }
         else
         {
+            # Cap by what's available
             $soldResourceAmount = min($soldResourceAmount, $dominion->{'resource_' . $soldResource->key});
         }
- 
+
         $tradeResult = $this->tradeCalculator->getTradeResult($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
         $boughtResourceAmount = $tradeResult['bought_resource_amount'];
 
