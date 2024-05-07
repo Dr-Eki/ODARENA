@@ -389,6 +389,8 @@ class InvadeActionService
                     return ($unit->slot === $slot);
                 })->first();
 
+                $slot = (int)$slot;
+
                   if($this->militaryCalculator->getUnitPowerWithPerks($defender, null, null, $unit, 'defense') !== 0.0)
                   {
                       $this->invasion['defender']['units_defending'][$slot] = $defender->{'military_unit'.$slot};
@@ -2065,6 +2067,7 @@ class InvadeActionService
     
         $peasantsCaptured = array_reduce(array_keys($units), function ($carry, $slot) use ($attacker, $defender, $landRatio, $rawOp, $units, $displacedPeasants) {
             if ($attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'captures_displaced_peasants')) {
+                $slot = (int)$slot;
                 $opFromSlot = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, $landRatio, [$slot => $units[$slot]]);
                 return $carry + floor($displacedPeasants * ($opFromSlot / $rawOp));
             }
@@ -2335,19 +2338,20 @@ class InvadeActionService
             foreach($returningUnits as $unitKey => $values)
             {
                 $unitType = str_replace('military_', '', $unitKey);
-                $slot = str_replace('unit', '', $unitType);
+                $slot = (int)str_replace('unit', '', $unitType);
                 $amountReturning = 0;
 
                 $returningUnitKey = $unitKey;
 
                 if(in_array($slot, [1,2,3,4,5,6,7,8,9,10]))
                 {
+                    $slot = (int)$slot;
                     # See if slot $slot has wins_into perk.
                     if($this->invasion['result']['success'])
                     {
                         if($attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'wins_into'))
                         {
-                            $returnsAsSlot = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'wins_into');
+                            $returnsAsSlot = (int)$attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'wins_into');
                             $returningUnitKey = 'military_unit' . $returnsAsSlot;
                         }
                         if($someWinIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'some_win_into'))
@@ -2400,7 +2404,7 @@ class InvadeActionService
                         if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into'))
                         {
                             # Which unit do they die into?
-                            $newUnitSlot = $diesIntoPerk[0];
+                            $newUnitSlot = (int)$diesIntoPerk[0];
                             $newUnitKey = "military_unit{$newUnitSlot}";
                             $newUnitSlotReturnTime = $this->getUnitReturnTicksForSlot($attacker, $newUnitSlot);
 
@@ -2437,7 +2441,7 @@ class InvadeActionService
                         if($diesIntoPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_on_offense'))
                         {
                             # Which unit do they die into?
-                            $newUnitSlot = $diesIntoPerk[0];
+                            $newUnitSlot = (int)$diesIntoPerk[0];
                             $newUnitKey = "military_unit{$newUnitSlot}";
                             $newUnitSlotReturnTime = $this->getUnitReturnTicksForSlot($attacker, $newUnitSlot);
 
@@ -2447,7 +2451,7 @@ class InvadeActionService
                         if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple'))
                         {
                             # Which unit do they die into?
-                            $newUnitSlot = $diesIntoMultiplePerk[0];
+                            $newUnitSlot = (int)$diesIntoMultiplePerk[0];
                             $newUnitAmount = (float)$diesIntoMultiplePerk[1];
                             $newUnitKey = "military_unit{$newUnitSlot}";
                             $newUnitSlotReturnTime = $this->getUnitReturnTicksForSlot($attacker, $newUnitSlot);
@@ -2458,7 +2462,7 @@ class InvadeActionService
                         if($diesIntoMultiplePerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple_on_offense'))
                         {
                             # Which unit do they die into?
-                            $newUnitSlot = $diesIntoMultiplePerk[0];
+                            $newUnitSlot = (int)$diesIntoMultiplePerk[0];
                             $newUnitAmount = (float)$diesIntoMultiplePerk[1];
                             $newUnitKey = "military_unit{$newUnitSlot}";
                             $newUnitSlotReturnTime = $this->getUnitReturnTicksForSlot($attacker, $newUnitSlot);
@@ -2469,7 +2473,7 @@ class InvadeActionService
                         if($this->invasion['result']['success'] and $diesIntoMultiplePerkOnVictory = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple_on_victory'))
                         {
                             # Which unit do they die into?
-                            $newUnitSlot = $diesIntoMultiplePerkOnVictory[0];
+                            $newUnitSlot = (int)$diesIntoMultiplePerkOnVictory[0];
                             $newUnitAmount = (float)$diesIntoMultiplePerkOnVictory[1];
                             $newUnitKey = "military_unit{$newUnitSlot}";
                             $newUnitSlotReturnTime = $this->getUnitReturnTicksForSlot($attacker, $newUnitSlot);
@@ -2480,7 +2484,7 @@ class InvadeActionService
                         if(!$this->invasion['result']['success'] and $diesIntoMultiplePerkOnVictory = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'dies_into_multiple_on_victory'))
                         {
                             # Which unit do they die into?
-                            $newUnitSlot = $diesIntoMultiplePerkOnVictory[0];
+                            $newUnitSlot = (int)$diesIntoMultiplePerkOnVictory[0];
                             $newUnitAmount = $diesIntoMultiplePerkOnVictory[2];
                             $newUnitKey = "military_unit{$newUnitSlot}";
                             $newUnitSlotReturnTime = $this->getUnitReturnTicksForSlot($attacker, $newUnitSlot);
@@ -2576,7 +2580,7 @@ class InvadeActionService
             foreach($returningUnits as $unitKey => $unitKeyTicks)
             {
                 $unitType = str_replace('military_', '', $unitKey);
-                $slot = str_replace('unit', '', $unitType);
+                $slot = (int)str_replace('unit', '', $unitType);
                 $amountReturning = 0;
 
                 $returningUnitKey = $unitKey;
@@ -2644,7 +2648,7 @@ class InvadeActionService
                     }
                 }
 
-                $slot = str_replace('military_unit', '', $unitKey);
+                $slot = (int)str_replace('military_unit', '', $unitKey);
                 $this->invasion['attacker']['units_returning'][$slot] = array_sum($unitKeyTicks);
             }
         }
