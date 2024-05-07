@@ -123,7 +123,7 @@ class TradeController extends AbstractDominionController
         $dominion = $this->getSelectedDominion();
 
         // Optionally handle the case where hold or resource doesn't exist
-        if ($tradeRoute->dominion_id !== $dominion->id) {
+        if (!$tradeRoute or $tradeRoute->dominion_id !== $dominion->id) {
             return redirect()->route('dominion.trade.routes');
         }
         
