@@ -699,3 +699,38 @@ ak_nag_tafl:
     - gold
     - kelp
 
+whiterock_passage:
+  name: Whiterock Passage
+  ruler_name: Tugan Delger
+  description: A former Elven stronghold built across the Whiterock Passage, the great Tugan Delger drove out the Elves, and is now using the hold to build up an army.
+  race: Barbarian
+  desired_resources:
+    - books
+    - brimmer
+    - gold
+    - gunpowder
+    - obsidian
+    - ore
+    - mud
+  sold_resources:
+    - food
+    - gold
+    - lumber
+    - gems
+    - pearls
+
+baidar_jegu:
+  name: Baǐdar Jegu
+  ruler_name: Mehrim Tching
+  description: A grand Nomadic encampment, the only place as far as the eye can see, where weary travellers can find respite, and trade.
+  race: Nomad
+  desired_resources:
+    - food
+    - horse
+    - instruments
+    - gold
+  sold_resources:
+    - ash
+    - gold
+    - prisoner
+    - yak
