@@ -85,7 +85,7 @@ class QueueService
     public function finishTradeRouteQueues(TradeRoute $tradeRoute): void
     {
         $finishedQueues = $tradeRoute->queues()
-            ->where('status', 1)
+            ->whereIn('status', [0, 1])
             ->where('tick', 0)
             ->get();
 
