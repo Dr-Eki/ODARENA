@@ -118,7 +118,7 @@ class ResourceCalculator
         return 0;
     }
 
-    public function getProduction(Dominion $dominion, string $resourceKey): int
+    public function getProduction(Dominion $dominion, $resourceKey): int
     {
         // Get raw production
         $production = $this->getProductionRaw($dominion, $resourceKey);
@@ -563,32 +563,28 @@ class ResourceCalculator
             $consumption += $dominion->{'resource_' . $consumedResourceKey} * $decayRate;
         }
 
-        $consumption += $this->getResourceTotalSoldPerTick($dominion, $consumedResource);
+        #$consumption += $this->getResourceTotalSoldPerTick($dominion, $consumedResource);
 
         return (int)max(0, $consumption);
 
 
     }
 
-    public function getResourceTotalSoldPerTick(Dominion $dominion, Resource $resource): float
+    public function getResourceTotalSoldPerTick(Dominion $dominion, string $resourceKey): float
     {
+        $resource = Resource::fromKey($resourceKey);
         return TradeRoute::where('dominion_id', $dominion->id)->where('source_resource_id', $resource->id)->where('status',1)->sum('source_amount');
     }
 
     public function getResourceDueFromTradeNextTick(Dominion $dominion, string $resourceKey): float
     {
-        return 0;
+
         $resource = Resource::fromKey($resourceKey);
 
-        if($resource->id !== 10)
-        {
-            return 0;
-        }
-
         $tradeRouteIds = $dominion->tradeRoutes()->where('status',1)->where('target_resource_id', $resource->id)->pluck('id');
-        $queues = TradeRoute\Queue::whereIn('trade_route_id', $tradeRouteIds)->get();
+        $queues = TradeRoute\Queue::whereIn('trade_route_id', $tradeRouteIds)->where('type','import')->get();
 
-        return 0;#$queues->where('tick',1)->where('type', 'import')->sum('amount');
+        return $queues->where('tick',1)->where('type', 'import')->sum('amount');
 
     }
 
@@ -918,9 +914,13 @@ class ResourceCalculator
         return $netProduction;
     }
     
-    public function getResourceNetProduction(Dominion $dominion, string $resourceKey): int
+    public function getNetProduction(Dominion $dominion, string $resourceKey): int
     {
-        return $this->getProduction($dominion, $resourceKey) - $this->getConsumption($dominion, $resourceKey);
+        $production = $this->getProduction($dominion, $resourceKey);
+        $consumption = $this->getConsumption($dominion, $resourceKey);
+        $sold = $this->getResourceTotalSoldPerTick($dominion, $resourceKey);
+
+        return $production - $consumption - $sold;
     }
 
     public function isProducingResource(Dominion $dominion, string $resourceKey): bool

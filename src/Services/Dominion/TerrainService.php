@@ -79,7 +79,7 @@ class TerrainService
         if($this->terrainCalculator->hasTerrainAmountEqualToLand($dominion))
         {
             # Audit passed!
-            Log::info("[TERRAIN AUDIT] Audit passed for {$dominion->name} (# {$dominion->realm->number}).");
+            #Log::info("[TERRAIN AUDIT] Audit passed for {$dominion->name} (# {$dominion->realm->number}).");
             return;
         }
 

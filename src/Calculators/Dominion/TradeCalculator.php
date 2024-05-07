@@ -81,7 +81,7 @@ class TradeCalculator
     public function getResourceMaxOfferableAmount(Dominion $dominion, Resource $resource): int
     {
         $max = 0;
-        $resourceNetProduction = $this->resourceCalculator->getResourceNetProduction($dominion, $resource->key);
+        $resourceNetProduction = $this->resourceCalculator->getNetProduction($dominion, $resource->key);
 
         $resourceCurrentAmount = $dominion->{'resource_' . $resource->key};
 
@@ -94,7 +94,7 @@ class TradeCalculator
 
     public function getTradeRoutesTickData(Dominion $dominion): Collection
     {
-        $tradeRoutes = TradeRoute::where('dominion_id', $dominion->id)->where('status',1)->get()->sortBy('id');#$dominion->tradeRoutes()->where('status', 1)->get()->sortBy('id');
+        $tradeRoutes = TradeRoute::where('dominion_id', $dominion->id)->get()->sortBy('id');#$dominion->tradeRoutes()->where('status', 1)->get()->sortBy('id');
     
         $data = collect();
     
@@ -103,22 +103,20 @@ class TradeCalculator
                 for ($tick = 1; $tick <= 12; $tick++) {
                     $holdTradeRouteQueueData = $holdTradeRoute->queues->where('tick', $tick);#->where('amount', '>', 0);
                     foreach ($holdTradeRouteQueueData as $queue) {
-                        $holdKey = $holdTradeRoute->hold->key;
+                        $holdId = $holdTradeRoute->hold->id;
                         $resourceKey = $queue->resource->key;
                         $type = $queue->type;
                         $amount = $queue->amount;
     
                         // Initialize the nested structure if not already set
-                        $data->put($holdKey, collect($data->get($holdKey, collect()))); // Ensure there's a collection for this hold
-                        $data[$holdKey]->put($tick, collect($data[$holdKey]->get($tick, collect()))); // Ensure there's a collection for this tick
-                        $data[$holdKey][$tick]->put($resourceKey, collect($data[$holdKey][$tick]->get($resourceKey, collect()))); // Ensure there's a collection for this resource
-                        $data[$holdKey][$tick][$resourceKey]->put($type, $data[$holdKey][$tick][$resourceKey]->get($type, 0) + $amount); // Sum up the amount for this type
+                        $data->put($holdId, collect($data->get($holdId, collect()))); // Ensure there's a collection for this hold
+                        $data[$holdId]->put($tick, collect($data[$holdId]->get($tick, collect()))); // Ensure there's a collection for this tick
+                        $data[$holdId][$tick]->put($resourceKey, collect($data[$holdId][$tick]->get($resourceKey, collect()))); // Ensure there's a collection for this resource
+                        $data[$holdId][$tick][$resourceKey]->put($type, $data[$holdId][$tick][$resourceKey]->get($type, 0) + $amount); // Sum up the amount for this type
                     }
                 }
             }
         }
-
-        #dump($data);
     
         return $data;
     }

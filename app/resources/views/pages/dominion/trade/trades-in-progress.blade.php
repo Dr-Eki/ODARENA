@@ -10,12 +10,10 @@
                 <h3 class="box-title"><i class="fa-solid fa-arrow-right-arrow-left fa-fw"></i> Trades In Progress</h3>
             </div>
             <div class="box-body table-responsive">
-                @foreach($tradeRoutesTickData as $holdKey => $holdTradeData)
+                @foreach($tradeRoutesTickData as $holdId => $holdTradeData)
                     @php
-                        $hold = \OpenDominion\Models\Hold::where('key', $holdKey)->firstOrFail();
+                        $hold = \OpenDominion\Models\Hold::findOrFail($holdId);
                         $resourceTradedBetweenDominionAndHold = $tradeCalculator->getResourcesTradedBetweenDominionAndHold($selectedDominion, $hold);
-                        
-                        #ldump($resourceTradedBetweenDominionAndHold);
                     @endphp
 
                     <a href="{{ route('dominion.trade.hold', $hold) }}"><strong>{{ $hold->name }}</strong></a></td>

@@ -527,7 +527,7 @@ class ResourceCalculator
     }
 
 
-    public function getResourceNetProduction(Hold $hold, string $resourceKey): int
+    public function getNetProduction(Hold $hold, string $resourceKey): int
     {
         return $this->getProduction($hold, $resourceKey) - $this->getConsumption($hold, $resourceKey);
     }

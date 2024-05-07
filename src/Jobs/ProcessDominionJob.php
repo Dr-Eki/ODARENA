@@ -395,10 +395,12 @@ class ProcessDominionJob implements ShouldQueue
                 ->where('resource', 'resource_' . $resourceKey)
                 ->sum('amount');
 
-            $resourcesProduced += $this->resourceCalculator->getProduction($dominion, $resourceKey);
-            $resourcesConsumed = $this->resourceCalculator->getConsumption($dominion, $resourceKey);
+            #$resourcesProduced += $this->resourceCalculator->getProduction($dominion, $resourceKey);
+            #$resourcesConsumed = $this->resourceCalculator->getConsumption($dominion, $resourceKey);
 
-            $resourcesNetChange[$resourceKey] = $resourcesProduced - $resourcesConsumed;
+            $resourcesProduced += $this->resourceCalculator->getNetProduction($dominion, $resourceKey);
+
+            $resourcesNetChange[$resourceKey] = $resourcesProduced;#$resourcesProduced - $resourcesConsumed;
         }
 
         $this->resourceService->updateResources($dominion, $resourcesNetChange);
@@ -957,9 +959,10 @@ class ProcessDominionJob implements ShouldQueue
 
         if($this->resourceCalculator->canStarve($dominion->race))
         {
-            $foodProduction = $this->resourceCalculator->getProduction($dominion, 'food');
+            #$foodProduction = $this->resourceCalculator->getProduction($dominion, 'food');
             $foodConsumed = $this->resourceCalculator->getConsumption($dominion, 'food');
-            $foodNetChange = $foodProduction - $foodConsumed;
+            #$foodNetChange = $foodProduction - $foodConsumed;
+            $foodNetChange = $this->resourceCalculator->getNetProduction($dominion, 'food');
             $foodOwned = $dominion->resource_food;
 
 
