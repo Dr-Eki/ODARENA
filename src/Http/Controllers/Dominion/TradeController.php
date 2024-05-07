@@ -115,22 +115,19 @@ class TradeController extends AbstractDominionController
         return view('pages.dominion.trade.sentiments', ['sentiments' => $sentiments]);
     }
 
-    public function getEditTradeRoute($hold, $resourceKey)
+    public function getEditTradeRoute($tradeRoute)
     {
-        $resource = Resource::where('key', $resourceKey)->first();
+        $tradeRoute = TradeRoute::find((int)$tradeRoute);
+
+        $resource = $tradeRoute->sourceResource;
     
         // Define the dominion
         $dominion = $this->getSelectedDominion();
 
         // Optionally handle the case where hold or resource doesn't exist
-        if (!$hold || !$resource) {
+        if (!$resource or $tradeRoute->dominion_id !== $dominion->id) {
             return redirect()->route('dominion.trade.routes');
         }
-        
-        $tradeRoute = TradeRoute::where('dominion_id',$dominion->id)
-                                ->where('hold_id', $hold->id)
-                                ->where('source_resource_id', $resource->id)
-                                ->first();
         
         // Optionally handle the case where trade route doesn't exist or doesn't belong to this dominion
         if (!$tradeRoute || $tradeRoute->dominion_id !== $this->getSelectedDominion()->id) {

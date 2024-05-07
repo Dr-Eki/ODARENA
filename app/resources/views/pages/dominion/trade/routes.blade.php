@@ -82,7 +82,7 @@
                                 <td>{{ number_format($tradeRoute->total_sold) }}</td>
                                 <td>
                                     @if($tradeRoute->status == 1)
-                                        <a href="{{ route('dominion.trade.routes.edit', [$tradeRoute->hold, $tradeRoute->soldResource->key]) }}" class="btn btn-xs btn-primary">Edit</a>
+                                        <a href="{{ route('dominion.trade.routes.edit', $tradeRoute) }}" class="btn btn-xs btn-primary">Edit</a>
                                     @endif
                                 </td>
                             </tr>
