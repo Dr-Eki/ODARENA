@@ -3484,7 +3484,7 @@ class InvadeActionService
         $this->invasion['defender']['dp_lost_raw'] = $defenderRawDpLost;
 
         // OP/DP totals
-        $this->statsService->setStat($attacker, 'op_sent_max', max($this->invasion['attacker']['op'], $this->statsService->getStat($attacker, 'op_sent_max')));
+        $this->statsService->setStat($attacker, 'op_sent_max', (int)max($this->invasion['attacker']['op'], $this->statsService->getStat($attacker, 'op_sent_max')));
         $this->statsService->updateStat($attacker, 'op_sent_total', (int)$this->invasion['attacker']['op']);
 
         if(request()->getHost() === 'odarena.com')
