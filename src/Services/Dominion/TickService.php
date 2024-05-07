@@ -33,7 +33,6 @@ use OpenDominion\Calculators\Dominion\SorceryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
 
-
 use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RoundHelper;
@@ -169,13 +168,34 @@ class TickService
 
         foreach (Round::active()->get() as $round)
         {
-            $this->temporaryData[$round->id] = [];
-
-            $round->is_ticking = 1;
-            $round->save();
-
             DB::transaction(function () use ($round, $tickTime)
             {
+                $this->temporaryData[$round->id] = [];
+
+                $round->is_ticking = 1;
+                $round->save();
+
+                if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
+                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
+
+                if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
+                $this->updateAllSpells($round);
+
+                if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); }
+                $this->updateAllDeities($round);
+
+                if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); }
+                $this->updateAllInvasionQueues($round);
+
+                if(config('game.extended_logging')) { Log::debug('* Update all other queues'); }
+                $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
+
+                if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); }
+                $this->updateArtefactsAegises($round);
+
+                if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
+                $this->handleHoldsAndTradeRoutes($round);
+
                 if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
                 $this->handleWinConditions($round);
 
@@ -219,7 +239,6 @@ class TickService
                     if (Redis::llen('queues:tick') === 0) {
                         $round->fill([
                             'ticks' => ($round->ticks + 1),
-                            'is_ticking' => 0,
                             'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
                         ])->save();
                         return;
@@ -236,30 +255,6 @@ class TickService
                     dump($infoString);
                     throw new Exception('Tick queue not finish');
                 }, $delay);
-            });
-
-            DB::transaction(function () use ($round)
-            {
-                if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
-                $this->updateAllSpells($round);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); }
-                $this->updateAllDeities($round);
-
-                if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); }
-                $this->updateAllInvasionQueues($round);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all other queues'); }
-                $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); }
-                $this->updateArtefactsAegises($round);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
-                $this->handleHoldsAndTradeRoutes($round);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
-                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
                 Log::info(sprintf(
                     '[TICK] Ticked %s dominions in %s ms in %s',
@@ -281,6 +276,10 @@ class TickService
             $this->now = now();
 
              unset($this->temporaryData[$round->id]);
+
+            $round->is_ticking = 0;
+            $round->save();
+
 
              Log::info(sprintf(
                  '[QUEUES] Cleaned up queues, sent notifications, and precalculated %s dominions in %s ms in %s',
