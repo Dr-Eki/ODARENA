@@ -546,7 +546,7 @@ class Dominion extends AbstractModel
         // Verify tick hasn't happened during this request
         if ($this->exists && $this->last_tick_at != $this->fresh()->last_tick_at)
         {
-            throw new GameException('The World Spinner is spinning the world. Your request was discarded. Try again soon, little one.');
+            #throw new GameException('The World Spinner is spinning the world. Your request was discarded. Try again soon, little one.');
         }
 
         $saved = parent::save($options);
