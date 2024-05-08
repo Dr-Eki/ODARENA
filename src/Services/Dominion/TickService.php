@@ -154,33 +154,28 @@ class TickService
      */
     public function tickHourly()
     {
+        if(File::exists('storage/framework/down'))
+        {
+            $logString = 'Tick at ' . $this->now . ' skipped.';
+            Log::debug($logString);
+            return;
+        }
 
         Log::debug('Scheduled tick started at ' . $this->now . '.');
         dump('Scheduled tick started at ' . $this->now . '.');
 
         DB::transaction(function () 
         {
-            if(File::exists('storage/framework/down'))
-            {
-                $logString = 'Tick at ' . $this->now . ' skipped.';
-                Log::debug($logString);
-            }
-
-            $tickTime = now();
-
             foreach (Round::active()->get() as $round)
             {
                 $round->is_ticking = 1;
                 $round->save();
-
-                Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
 
                 if(config('game.extended_logging')) { Log::debug('** Queue, process, and wait for dominion jobs.'); }
                 $this->processDominionJobs($round);
             
                 $this->temporaryData[$round->id] = [];
 
-                // Process queues, update dominions, et cetera
                 #DB::transaction(function () use ($round)
                 #{
                 $this->temporaryData[$round->id]['stasis_dominions'] = [];
@@ -192,7 +187,7 @@ class TickService
                 #$this->updateAllSpells($round);
 
                 if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); }
-                $this->updateAllDeities($round);
+                #$this->updateAllDeities($round);
 
                 if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); }
                 $this->updateAllInvasionQueues($round);
@@ -211,13 +206,9 @@ class TickService
 
                 if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
                 $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
-                #});
 
-                #DB::transaction(function () use ($round)
-                #{
-                    if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
-                    $this->handleHoldsAndTradeRoutes($round);
-                #});
+                if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
+                $this->handleHoldsAndTradeRoutes($round);
 
                 $this->now = now();
 

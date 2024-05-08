@@ -279,6 +279,12 @@ class Dominion extends AbstractModel
             ->withPivot('invested');
     }
 
+
+    public function dominionSpells()
+    {
+        return $this->hasMany(DominionSpell::class, 'dominion_id');
+    }
+
     public function spells()
     {
         return $this->hasManyThrough(
@@ -314,7 +320,12 @@ class Dominion extends AbstractModel
         );
     }
 
-    public function devotion() # basically $this->dominionDeity() but not really
+    public function devotion()
+    {
+        return $this->hasOne(DominionDeity::class);
+    }
+
+    public function dominionDeity()
     {
         return $this->hasOne(DominionDeity::class);
     }

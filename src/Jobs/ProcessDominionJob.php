@@ -120,7 +120,7 @@ class ProcessDominionJob implements ShouldQueue
     {
         $round = $this->dominion->round;
 
-        Log::debug('** Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . ' ), ID ');
+        Log::debug('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . ' ), ID ');
         # Make a DB transaction
         #DB::transaction(function () use ($round)
         #{    
@@ -146,6 +146,9 @@ class ProcessDominionJob implements ShouldQueue
 
             if(config('game.extended_logging')){ Log::debug('** Updating deities'); }
             $this->handleDeities($this->dominion);
+
+            if(config('game.extended_logging')){ Log::debug('** Updating devotion'); }
+            $this->handleDevotion($this->dominion);
 
             if(config('game.extended_logging')){ Log::debug('** Updating artefacts'); }
             $this->handleArtefacts($this->dominion);
@@ -177,9 +180,6 @@ class ProcessDominionJob implements ShouldQueue
             if(config('game.extended_logging')) { Log::debug('** Updating spells'); }
             $this->updateSpells($this->dominion);
             
-            if(config('game.extended_logging')) { Log::debug('** Cleaning up active spells'); }
-            $this->cleanupActiveSpells($this->dominion);
-
             if(config('game.extended_logging')) { Log::debug('** Cleaning up queues'); }
             $this->cleanupQueues($this->dominion);
 
@@ -270,11 +270,17 @@ class ProcessDominionJob implements ShouldQueue
     # Take deities that are one tick away from finished and create or increment DominionImprovements.
     private function handleDeities(Dominion $dominion): void
     {
+        if($dominion->hasDeity())
+        {
+            return;
+        }
+
         $finishedDeitiesInQueue = DB::table('dominion_queue')
-                                        ->where('dominion_id',$dominion->id)
-                                        ->where('source', 'deity')
-                                        ->where('hours',1)
-                                        ->get();
+                    ->where('dominion_id',$dominion->id)
+                    ->where('source', 'deity')
+                    ->where('hours',1)
+                    ->get();
+
         foreach($finishedDeitiesInQueue as $finishedDeityInQueue)
         {
             $deityKey = $finishedDeityInQueue->resource;
@@ -293,6 +299,17 @@ class ProcessDominionJob implements ShouldQueue
             ]);
         }
 
+    }
+
+    private function handleDevotion(Dominion $dominion): void
+    {
+        if(!$dominion->hasDeity())
+        {
+            return;
+        }
+
+        $dominion->dominionDeity->increment('duration', 1);
+        $dominion->dominionDeity->save();
     }
 
     # Take research that is one tick away from finished and create DominionTech.
@@ -640,34 +657,38 @@ class ProcessDominionJob implements ShouldQueue
 
     public function queueNotifications(Dominion $dominion): void
     {
-        if(config('game.extended_logging')) { Log::debug('** Handle starvation for ' . $dominion->name); }
         if($this->resourceCalculator->isOnBrinkOfStarvation($dominion) and !$dominion->isAbandoned())
         {
+            if(config('game.extended_logging')) { Log::debug('** Queue starvation notifications'); }
             $this->notificationService->queueNotification('starvation_occurred');
-            #Log::info('[STARVATION] ' . $dominion->name . ' (# ' . $dominion->realm->number . ') is starving.');
         }
 
-        if(config('game.extended_logging')) { Log::debug('** Handle unit attrition for ' . $dominion->name); }
-        
         if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
         {
+            if(config('game.extended_logging')) { Log::debug('** Queue attrition notifications '); }
             $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']);
         }
     }
 
     protected function updateSpells(Dominion $dominion): void
     {
-        $dominion->spells->each(function ($spell) {
-            if ($spell->duration > 0) {
-                $spell->decrement('duration');
+
+        foreach($dominion->dominionSpells as $dominionSpell)
+        {
+            if($dominionSpell->duration > 0)
+            {
+                $dominionSpell->decrement('duration');
             }
-    
-            if ($spell->cooldown > 0) {
-                $spell->decrement('cooldown');
+
+            if($dominionSpell->cooldown > 0)
+            {
+                $dominionSpell->decrement('cooldown');
             }
-    
-            $spell->touch();
-        });
+
+            $dominionSpell->save();
+        }
+
+        $this->cleanupActiveSpells($dominion);
     }
 
     protected function cleanupActiveSpells(Dominion $dominion)
