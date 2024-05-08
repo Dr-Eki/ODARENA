@@ -49,6 +49,19 @@ class TradeActionService
         $this->guardLockedDominion($dominion);
         $this->guardActionsDuringTick($dominion);
 
+        $existingTradeRoute = TradeRoute::where([
+            'dominion_id' => $dominion->id,
+            'hold_id' => $hold->id,
+            'source_resource_id' => $soldResource->id,
+            'target_resource_id' => $boughtResource->id,
+            'status' => 1
+        ])->first();
+
+        if($existingTradeRoute)
+        {
+            throw new GameException('You already have a trade route to this hold trading these resources.');
+        }
+
         if($this->tradeCalculator->getAvailableTradeRouteSlots($dominion) <= 0)
         {
             throw new GameException('Insufficient trade routes available. You cannot create any more trade routes at this time.');

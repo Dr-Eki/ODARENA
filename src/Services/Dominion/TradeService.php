@@ -40,7 +40,7 @@ class TradeService
 
     public function handleTradeRoutesTick(Round $round)
     {
-        $activeTradeRoutes = $round->tradeRoutes->where('status', 1);
+        $activeTradeRoutes = $round->tradeRoutes->whereIn('status', [0,1]);
 
         foreach ($activeTradeRoutes as $tradeRoute)
         {
@@ -57,6 +57,11 @@ class TradeService
 
     public function handleTradeRoute(TradeRoute $tradeRoute): void
     {
+
+        if($tradeRoute->status === 0)
+        {
+            return;
+        }
 
         $dominion = $tradeRoute->dominion;
         

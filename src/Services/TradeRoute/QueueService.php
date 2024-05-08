@@ -77,7 +77,7 @@ class QueueService
     public function advanceTradeRouteQueues(TradeRoute $tradeRoute): void
     {
         $tradeRoute->queues()
-            ->whereIn('status', [0, 1])
+            #->whereIn('status', [0, 1])
             ->where('tick','>',0)
             ->decrement('tick');
     }

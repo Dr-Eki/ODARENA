@@ -63,13 +63,31 @@ class TradeCalculator
             'bought_resource_amount' => 0,
         ];
 
-        $result['bought_resource_amount'] = $this->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
+        $netBoughtResourceAmount = $this->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
+        $netSoldResourceAmount = $this->getSoldResourceAmount($dominion, $soldResource, $soldResourceAmount, $boughtResource, $netBoughtResourceAmount);
+        $result['bought_resource_amount'] = $netBoughtResourceAmount;
+        $result['sold_resource_amount'] = $netSoldResourceAmount;
+
+        if($netBoughtResourceAmount !== $soldResourceAmount)
+        {
+            $result['warning']['resource_bought_amount_change']['from'] = $soldResourceAmount;
+            $result['warning']['resource_bought_amount_change']['to'] = $netBoughtResourceAmount;
+        }
+
+        if($netSoldResourceAmount !== $soldResourceAmount)
+        {
+            $result['warning']['resource_sold_amount_change']['from'] = $soldResourceAmount;
+            $result['warning']['resource_sold_amount_change']['to'] = $netSoldResourceAmount;
+        }
 
         return $result;
     }
 
     public function getBoughtResourceAmount(Dominion $dominion, Hold $hold, Resource $soldResource, int $soldResourceAmount, Resource $boughtResource): int
     {
+
+        $soldResourceAmount = (int)min($soldResourceAmount, $hold->{'resource_' . $soldResource->key});
+
         $baseAmount = $soldResourceAmount * $hold->buyPrice($soldResource->key) * $hold->sellPrice($boughtResource->key);
         $multiplier = $this->holdCalculator->getSentimentMultiplier($hold, $dominion, $soldResource->key);
 
@@ -78,6 +96,15 @@ class TradeCalculator
         $netAmount = min($netAmount, $hold->{'resource_' . $boughtResource->key});
 
         return (int)max(0, $netAmount);
+    }
+
+    public function getSoldResourceAmount(Dominion $dominion, Resource $soldResource, int $soldResourceAmount, int $soldResourceAmount, int $netBoughtResourceAmount): int
+    {
+        $amountSold = $soldResourceAmount * ($boughtResourceAmount / $netBoughtResourceAmount);
+
+        $amountSold = min($amountSold, $dominion->{'resource_' . $soldResource->key});
+
+        return $amountSold;
     }
 
     public function getResourceMaxOfferableAmount(Dominion $dominion, Resource $resource): int
@@ -101,7 +128,7 @@ class TradeCalculator
 
     public function getTradeRoutesTickData(Dominion $dominion): Collection
     {
-        $tradeRoutes = TradeRoute::where('dominion_id', $dominion->id)->get()->sortBy('id');#$dominion->tradeRoutes()->where('status', 1)->get()->sortBy('id');
+        $tradeRoutes = TradeRoute::where('dominion_id', $dominion->id)->get()->sortBy('id');
     
         $data = collect();
     
@@ -133,7 +160,7 @@ class TradeCalculator
 
         $tradeRoutes = TradeRoute::where('dominion_id', $dominion->id)
             ->where('hold_id', $hold->id)
-            ->where('status', 1)
+            ->whereIn('status', [0,1])
             ->get();
 
         #dump($tradeRoutes);
