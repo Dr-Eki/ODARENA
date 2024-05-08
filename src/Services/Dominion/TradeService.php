@@ -44,7 +44,6 @@ class TradeService
 
         foreach ($activeTradeRoutes as $tradeRoute)
         {
-
             #dump('Handling trade route: ' . $tradeRoute->id . ' between ' . $tradeRoute->dominion->name . ' and ' . $tradeRoute->hold->name);
 
             # Handle queues
@@ -69,39 +68,6 @@ class TradeService
         $soldResource = $tradeRoute->soldResource;
         $boughtResource = $tradeRoute->boughtResource;
         $soldResourceAmount = $tradeRoute->source_amount;
-
-        /*
-        if($soldResourceAmount <= 0)
-        {
-            $this->notificationService->queueNotification('trade_failed_and_cancelled', [
-                'hold_id' => $hold->id,
-                'hold_name' => $hold->name,
-                'sold_resource_id' => $soldResource->id,
-                'sold_resource_name' => $soldResource->name,
-                'sold_resource_amount' => $soldResourceAmount,
-                'bought_resource_id' => $boughtResource->id,
-                'bought_resource_name' => $boughtResource->bought_resource_name,
-                'bought_resource_amount' => null,
-            ]);
-
-            Log::info('[TRADE] Hold is out of resources. Trade failed. Cancel traderoute.', [
-                'trade_route_id' => $tradeRoute->id,
-                'dominion_id' => $dominion->id,
-                'hold_id' => $hold->id,
-                'sold_resource_id' => $soldResource->id,
-                'bought_resource_id' => $boughtResource->id,
-                'sold_resource_amount' => $soldResourceAmount,
-                'bought_resource_amount' => null,
-            ]);
-
-            # Send notifications
-            $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
-
-            $this->cancelTradeRoute($tradeRoute, 'dominion_insufficient_resources');
-
-            return;
-        }
-        */
 
         if($this->resourceCalculator->isProducingResource($dominion, $soldResource->key))
         {

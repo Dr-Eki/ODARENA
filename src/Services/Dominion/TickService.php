@@ -154,37 +154,35 @@ class TickService
      */
     public function tickHourly()
     {
-        
-        if(File::exists('storage/framework/down'))
+
+        Log::debug('Scheduled tick started at ' . $this->now . '.');
+        dump('Scheduled tick started at ' . $this->now . '.');
+
+        DB::transaction(function () 
         {
-            $logString = 'Tick at ' . $this->now . ' skipped.';
-            Log::debug($logString);
-        }
+            if(File::exists('storage/framework/down'))
+            {
+                $logString = 'Tick at ' . $this->now . ' skipped.';
+                Log::debug($logString);
+            }
 
-        $tickTime = now();
+            $tickTime = now();
 
-        Log::debug('Scheduled tick started at ' . $tickTime . '.');
+            foreach (Round::active()->get() as $round)
+            {
+                $round->is_ticking = 1;
+                $round->save();
 
-        foreach (Round::active()->get() as $round)
-        {
-            $round->is_ticking = 1;
-            $round->save();
+                Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
 
-            Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
+                if(config('game.extended_logging')) { Log::debug('** Queue, process, and wait for dominion jobs.'); }
+                $this->processDominionJobs($round);
+            
+                $this->temporaryData[$round->id] = [];
 
-            if(config('game.extended_logging')) { Log::debug('** Queue, process, and wait for dominion jobs.'); }
-            $this->processDominionJobs($round);
-
-            #dump('Dominion jobs processed.');
-            #dump('Sleeping for two seconds...');
-            #sleep(2);
-            #dump('Waking up...');
-         
-            $this->temporaryData[$round->id] = [];
-
-            // Process queues, update dominions, et cetera
-            #DB::transaction(function () use ($round)
-            #{
+                // Process queues, update dominions, et cetera
+                #DB::transaction(function () use ($round)
+                #{
                 $this->temporaryData[$round->id]['stasis_dominions'] = [];
 
                 if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
@@ -213,39 +211,28 @@ class TickService
 
                 if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
                 $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
-                
-                Log::info(sprintf(
-                    '[TICK] Ticked %s dominions in %s ms in %s',
-                    number_format($round->activeDominions->count()),
-                    number_format($this->now->diffInMilliseconds(now())),
-                    $round->name
-                ));
-            #});
+                #});
 
-            #DB::transaction(function () use ($round)
-            #{
-                if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
-                $this->handleHoldsAndTradeRoutes($round);
-            #});
+                #DB::transaction(function () use ($round)
+                #{
+                    if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
+                    $this->handleHoldsAndTradeRoutes($round);
+                #});
 
-            $this->now = now();
+                $this->now = now();
 
-            unset($this->temporaryData[$round->id]);
+                unset($this->temporaryData[$round->id]);
 
-            $round->fill([
-                'ticks' => ($round->ticks + 1),
-                'is_ticking' => 0,
-                'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
-            ])->save();
+                $round->fill([
+                    'ticks' => ($round->ticks + 1),
+                    'is_ticking' => 0,
+                    'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
+                ])->save();
+            }
+        });
 
-
-             Log::info(sprintf(
-                 '[QUEUES] Cleaned up queues, sent notifications, and precalculated %s dominions in %s ms in %s',
-                 number_format($round->activeDominions->count()),
-                 number_format($this->now->diffInMilliseconds(now())),
-                 $round->name
-             ));
-        }
+        Log::debug('Scheduled tick finished at ' . now() . '.');
+        dump('Scheduled tick started at ' . now() . '.');
     }
 
     /**
