@@ -710,9 +710,17 @@ class NotificationHelper
             # CULT
 
             case 'hourly_dominion.attrition_occurred':
-                $units = (int)array_reduce($data, function ($carry, $item) {
-                    return $carry + array_sum($item);
-                }, 0);
+                if(is_array($data) && count($data) > 0)
+                {
+                    $units = (int)array_reduce($data, function ($carry, $item) {
+                        return $carry + array_sum($item);
+                    }, 0);
+                }
+                else
+                {
+                    $units = (float)$data;
+                }
+
                 $term = $this->raceHelper->getAttritionTermVerb($dominion->race);
 
                 return sprintf(
