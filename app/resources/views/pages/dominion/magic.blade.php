@@ -104,6 +104,36 @@
                 <a href="{{ route('scribes.spells') }}"><span><i class="fas fa-book"></i> Read more about Spells in the Scribes.</span></a>
             </div>
         </div>
+        @if($selectedDominion->race->key == 'afflicted')
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa-solid fa-virus"></i> Pestilence</h3>
+                </div>
+                <div class="box-body table-responsive box-border">
+                    @if($pestilences->count())
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Target</th>
+                                    <th>Spell</th>
+                                    <th>Duration</th>
+                            </thead>
+                            <tbody>
+                            @foreach($pestilences as $pestilence)
+                                <tr>
+                                    <td><a href="{{ route('dominion.insight.show', $pestilence->dominion) }}">{{ $pestilence->dominion->name }} (# {{ $pestilence->dominion->realm->number }})<a></td>
+                                    <td>{{ $pestilence->spell->name }}</td>
+                                    <td>{{ $pestilence->duration }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    @else
+                        <p>You have no pestilences active.</p>
+                    @endif
+                </div>
+            </div>
+        @endif
     </div>
 </div>
 

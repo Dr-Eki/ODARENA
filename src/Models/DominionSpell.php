@@ -30,4 +30,9 @@ class DominionSpell extends AbstractModel
     {
         return $this->belongsTo(Spell::class, 'spell_id');
     }
+
+    public function duration()
+    {
+        return $this->duration;
+    }
 }

@@ -163,7 +163,7 @@ class TickService
 
         $tickTime = now();
 
-        Log::debug('Scheduled tick started');
+        Log::debug('Scheduled tick started at ' . $tickTime . '.');
 
         foreach (Round::active()->get() as $round)
         {
@@ -175,16 +175,16 @@ class TickService
             if(config('game.extended_logging')) { Log::debug('** Queue, process, and wait for dominion jobs.'); }
             $this->processDominionJobs($round);
 
-            dump('Dominion jobs processed.');
-            dump('Sleeping for two seconds...');
-            sleep(2);
-            dump('Waking up...');
+            #dump('Dominion jobs processed.');
+            #dump('Sleeping for two seconds...');
+            #sleep(2);
+            #dump('Waking up...');
          
             $this->temporaryData[$round->id] = [];
 
             // Process queues, update dominions, et cetera
-            DB::transaction(function () use ($round)
-            {
+            #DB::transaction(function () use ($round)
+            #{
                 $this->temporaryData[$round->id]['stasis_dominions'] = [];
 
                 if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
@@ -220,13 +220,13 @@ class TickService
                     number_format($this->now->diffInMilliseconds(now())),
                     $round->name
                 ));
-            });
+            #});
 
-            DB::transaction(function () use ($round)
-            {
+            #DB::transaction(function () use ($round)
+            #{
                 if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
                 $this->handleHoldsAndTradeRoutes($round);
-            });
+            #});
 
             $this->now = now();
 

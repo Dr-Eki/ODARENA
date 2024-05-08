@@ -2,25 +2,21 @@
 
 namespace OpenDominion\Http\Controllers\Dominion;
 
-use OpenDominion\Calculators\Dominion\EspionageCalculator;
-use OpenDominion\Calculators\Dominion\LandCalculator;
-use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\EspionageHelper;
 use OpenDominion\Helpers\SpellHelper;
-#use OpenDominion\Http\Requests\Dominion\Actions\CastSpellRequest;
-#use OpenDominion\Http\Requests\Dominion\Actions\PerformEspionageRequest;
 use OpenDominion\Http\Requests\Dominion\Actions\MagicRequest;
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\DominionSpell;
+use OpenDominion\Models\Spell;
 use OpenDominion\Services\Analytics\AnalyticsEvent;
 use OpenDominion\Services\Analytics\AnalyticsService;
 use OpenDominion\Services\Dominion\Actions\SpellActionService;
 
 use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
-use OpenDominion\Models\Spell;
 #use OpenDominion\Models\Spyop;
 
 class MagicController extends AbstractDominionController
@@ -29,8 +25,10 @@ class MagicController extends AbstractDominionController
     {
         $dominion = $this->getSelectedDominion();
 
-        #$selfSpells = Spell::all()->where('scope','self')->where('enabled',1)->sortBy('name');
-        #$friendlySpells = Spell::all()->where('scope','friendly')->where('enabled',1)->sortBy('name');
+        $pestilence = Spell::where('key', 'pestilence')->first();
+        $lesserPestilence = Spell::where('key', 'lesser_pestilence')->first();
+
+        $pestilences = DominionSpell::whereIn('spell_id', [$pestilence->id, $lesserPestilence->id])->where('caster_id', $dominion->id)->get()->sortByDesc('created_at');
 
         return view('pages.dominion.magic', [
             'spellCalculator' => app(SpellCalculator::class),
@@ -38,6 +36,7 @@ class MagicController extends AbstractDominionController
             'magicCalculator' => app(MagicCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'resourceCalculator' => app(ResourceCalculator::class),
+            'pestilences' => $pestilences,
         ]);
     }
 
@@ -64,8 +63,6 @@ class MagicController extends AbstractDominionController
                     ->withInput($request->all())
                     ->withErrors([$e->getMessage()]);
             }
-
-            $request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
 
             return redirect()
                 ->to($result['redirect'] ?? route('dominion.magic'))
@@ -101,8 +98,6 @@ class MagicController extends AbstractDominionController
                 $result['data']['spell'],
                 $result['data']['manaCost']
             ));
-
-            $request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
 
             return redirect()
                 ->to($result['redirect'] ?? route('dominion.magic'))

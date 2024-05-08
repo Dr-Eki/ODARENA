@@ -122,8 +122,8 @@ class ProcessDominionJob implements ShouldQueue
 
         Log::debug('** Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . ' ), ID ');
         # Make a DB transaction
-        DB::transaction(function () use ($round)
-        {    
+        #DB::transaction(function () use ($round)
+        #{    
             $this->temporaryData[$round->id][$this->dominion->id] = [];
 
             #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
@@ -189,7 +189,7 @@ class ProcessDominionJob implements ShouldQueue
             if(config('game.extended_logging')) { Log::debug('** Precalculate tick'); }
             $this->precalculateTick($this->dominion, true);
 
-        });
+        #});
 
         if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }
         $this->terrainService->auditAndRepairTerrain($this->dominion);
