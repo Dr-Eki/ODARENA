@@ -171,11 +171,14 @@ class TickService
             $round->is_ticking = 1;
             $round->save();
 
+            $this->temporaryData[$round->id] = [];
+
             DB::transaction(function () use ($round, $tickTime)
             {
-                Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
+                if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
+                $this->handleWinConditions($round);
 
-                $this->temporaryData[$round->id] = [];
+                Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
 
                 # Get all dominions for this round where protection_ticks == 0, in random order
                 $dominions = $round->activeDominions()
@@ -199,29 +202,6 @@ class TickService
                     ProcessDominionJob::dispatch($dominion)->onQueue('tick');
                 }
 
-                $attempts = 60;
-                $delay = 1000; // milliseconds
-                
-                retry($attempts, function () use ($round, $attempts, $delay) {
-                    $i = isset($i) ? $i + 1 : 1;
-                
-                    $infoString = sprintf(
-                        '[%s] Waiting for tick queue to finish. Current queue: %s. Trying again in %s ms.',
-                        now()->format('Y-m-d H:i:s'),
-                        Redis::llen('queues:tick'),
-                        number_format($delay)
-                    );
-
-                    if (Redis::llen('queues:tick') === 0) {
-                        return;
-                    }
-
-                    Log::info($infoString);
-                    dump($infoString);
-                    throw new Exception('Tick queue not finish');
-                }, $delay);
-
-
                 if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
                 $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
@@ -242,9 +222,6 @@ class TickService
 
                 if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
                 $this->handleHoldsAndTradeRoutes($round);
-
-                if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
-                $this->handleWinConditions($round);
 
                 # Calculate body decay
                 if(($decay = $this->resourceCalculator->getRoundResourceDecay($round, 'body')))
@@ -269,6 +246,29 @@ class TickService
                     $this->barbarianService->createBarbarian($round);
                 }
             });
+
+            // Moved to outside of DB transaction because it caused deadlocks otherwise.
+            $attempts = 60;
+            $delay = 1000; // milliseconds
+            
+            retry($attempts, function () use ($round, $attempts, $delay) {
+                $i = isset($i) ? $i + 1 : 1;
+            
+                $infoString = sprintf(
+                    '[%s] Waiting for queued ProcessDominionJob to finish. Current queue: %s. Trying again in %s ms.',
+                    now()->format('Y-m-d H:i:s'),
+                    Redis::llen('queues:tick'),
+                    number_format($delay)
+                );
+
+                if (Redis::llen('queues:tick') === 0) {
+                    return;
+                }
+
+                Log::info($infoString);
+                dump($infoString);
+                throw new Exception('Tick queue not finish');
+            }, $delay);
 
             $this->now = now();
 
