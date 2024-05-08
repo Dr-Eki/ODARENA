@@ -19,7 +19,6 @@ use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Tech;
-use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Dominion\Tick;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
@@ -53,6 +52,7 @@ class ProcessDominionJob implements ShouldQueue
 
     protected $dominion;
     protected $temporaryData = [];
+    protected $now;
 
     protected $buildingCalculator;
     protected $conversionCalculator;
@@ -84,6 +84,7 @@ class ProcessDominionJob implements ShouldQueue
      */
     public function __construct($dominion)
     {
+        $this->now = now();
         $this->dominion = $dominion;
 
         $this->buildingCalculator = app(BuildingCalculator::class);
@@ -119,7 +120,7 @@ class ProcessDominionJob implements ShouldQueue
     {
 
         # Make a DB transaction
-        #DB::transaction(function () {
+        DB::transaction(function () {
 
             $round = $this->dominion->round;
             
@@ -230,6 +231,9 @@ class ProcessDominionJob implements ShouldQueue
                 $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$this->dominion->round->id][$this->dominion->id]['units_attrited']);
             }
 
+            if(config('game.extended_logging')) { Log::debug('** Updating spells'); }
+            $this->updateSpells($this->dominion);
+            
             if(config('game.extended_logging')) { Log::debug('** Cleaning up active spells'); }
             $this->cleanupActiveSpells($this->dominion);
 
@@ -242,7 +246,7 @@ class ProcessDominionJob implements ShouldQueue
             if(config('game.extended_logging')) { Log::debug('** Precalculate tick'); }
             $this->precalculateTick($this->dominion, true);
 
-        #});
+        });
 
         if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }
         $this->terrainService->auditAndRepairTerrain($this->dominion);
@@ -630,6 +634,19 @@ class ProcessDominionJob implements ShouldQueue
         }
 
         $this->queueService->setForTick(true);
+    }
+
+    protected function updateSpells(Dominion $dominion): void
+    {
+        dd('hnng;');
+        $dominion->spells->each(function ($spell) {
+            dd($spell);
+            $spell->update([
+                'duration' => DB::raw('GREATEST(0, `duration` - 1)'),
+                'cooldown' => DB::raw('GREATEST(0, `cooldown` - 1)'),
+                'updated_at' => $this->now,
+            ]);
+        });
     }
 
     protected function cleanupActiveSpells(Dominion $dominion)

@@ -95,7 +95,6 @@ class TickService
     protected $holdService;
     protected $insightService;
     protected $queueService;
-    #protected $protectionService;
     protected $researchService;
     protected $resourceService;
     protected $terrainService;
@@ -171,41 +170,22 @@ class TickService
             $round->is_ticking = 1;
             $round->save();
 
+            Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
+
+            if(config('game.extended_logging')) { Log::debug('** Queue, process, and wait for dominion jobs.'); }
+            $this->processDominionJobs($round);
+         
             $this->temporaryData[$round->id] = [];
 
-            DB::transaction(function () use ($round, $tickTime)
+            // Process queues, update dominions, et cetera
+            DB::transaction(function () use ($round)
             {
+                $this->temporaryData[$round->id]['stasis_dominions'] = [];
+
                 if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
                 $this->handleWinConditions($round);
 
-                Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
-
-                # Get all dominions for this round where protection_ticks == 0, in random order
-                $dominions = $round->activeDominions()
-                    ->where('protection_ticks', 0)
-                    ->inRandomOrder()
-                    ->with([
-                        'race',
-                        'race.perks',
-                        'race.units',
-                        'race.units.perks',
-                    ])
-                    ->get();
-
-                $this->temporaryData[$round->id]['stasis_dominions'] = [];
-
-                if(config('game.extended_logging')) { Log::debug('* Going through all dominions'); }
-                foreach ($dominions as $dominion)
-                {
-                    Log::info("Queueing up dominion {$dominion->id}: {$dominion->name}");
-                    dump("Queuing up dominion {$dominion->id}: {$dominion->name}");
-                    ProcessDominionJob::dispatch($dominion)->onQueue('tick');
-                }
-
-                if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
-                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
+                #if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
                 $this->updateAllSpells($round);
 
                 if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); }
@@ -223,12 +203,14 @@ class TickService
                 if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
                 $this->handleHoldsAndTradeRoutes($round);
 
-                # Calculate body decay
-                if(($decay = $this->resourceCalculator->getRoundResourceDecay($round, 'body')))
-                {
-                    Log::info('* Body decay: ' . number_format($decay) . ' / ' . number_format($round->resource_body));
-                    $this->resourceService->updateRoundResources($round, ['body' => (-$decay)]);
-                }
+                if(config('game.extended_logging')) { Log::debug('* Handle barbarian spawn'); }
+                $this->handleBarbarianSpawn($round);
+
+                if(config('game.extended_logging')) { Log::debug('* Handle body decay'); }
+                $this->handleBodyDecay($round);
+
+                if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
+                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
                 
                 Log::info(sprintf(
                     '[TICK] Ticked %s dominions in %s ms in %s',
@@ -236,39 +218,7 @@ class TickService
                     number_format($this->now->diffInMilliseconds(now())),
                     $round->name
                 ));
-
-                $spawnBarbarian = rand(1, (int)config('barbarians.settings.ONE_IN_CHANCE_TO_SPAWN'));
-
-                Log::Debug('[BARBARIAN] spawn chance value: '. $spawnBarbarian . ' (spawn if this value is 1).');
-
-                if($round->getSetting('barbarians') and $spawnBarbarian === 1)
-                {
-                    $this->barbarianService->createBarbarian($round);
-                }
             });
-
-            // Moved to outside of DB transaction because it caused deadlocks otherwise.
-            $attempts = 60;
-            $delay = 1000; // milliseconds
-            
-            retry($attempts, function () use ($round, $attempts, $delay) {
-                $i = isset($i) ? $i + 1 : 1;
-            
-                $infoString = sprintf(
-                    '[%s] Waiting for queued ProcessDominionJob to finish. Current queue: %s. Trying again in %s ms.',
-                    now()->format('Y-m-d H:i:s'),
-                    Redis::llen('queues:tick'),
-                    number_format($delay)
-                );
-
-                if (Redis::llen('queues:tick') === 0) {
-                    return;
-                }
-
-                Log::info($infoString);
-                dump($infoString);
-                throw new Exception('Tick queue not finish');
-            }, $delay);
 
             $this->now = now();
 
@@ -1698,6 +1648,72 @@ class TickService
         RoundWinner::insert($winners);
     }
 
+    public function handleBarbarianSpawn(Round $round): void
+    {
+        if(!$round->getSetting('barbarians'))
+        {
+            return;
+        }
+
+        $spawnBarbarian = rand(1, (int)config('barbarians.settings.ONE_IN_CHANCE_TO_SPAWN'));
+
+        Log::Debug('* Barbarian spawn chance value: '. $spawnBarbarian . ' (spawn if this value is 1).');
+
+        if($spawnBarbarian === 1)
+        {
+            $this->barbarianService->createBarbarian($round);
+        }
+    }
+
+    public function handleBodyDecay(Round $round)
+    {
+        # Calculate body decay
+        if(($decay = (int)$this->resourceCalculator->getRoundResourceDecay($round, 'body')))
+        {
+            Log::info('* Body decay: ' . number_format($decay) . ' / ' . number_format($round->resource_body));
+            $this->resourceService->updateRoundResources($round, ['body' => (-$decay)]);
+        }
+    }
+
+    public function processDominionJobs(Round $round): void
+    {
+        $dominions = $round->activeDominions()
+        ->where('protection_ticks', 0)
+        ->inRandomOrder()
+        ->get();
+
+        // Queue up all dominions for ticking (simultaneous processing)
+        foreach ($dominions as $dominion)
+        {
+            Log::info("Queueing up dominion {$dominion->id}: {$dominion->name}");
+            dump("Queuing up dominion {$dominion->id}: {$dominion->name}");
+            ProcessDominionJob::dispatch($dominion)->onQueue('tick');
+        }
+
+        // Wait for queue to clear
+        $attempts = 60;
+        $delay = 1000; // milliseconds
+        
+        retry($attempts, function () use ($round, $attempts, $delay) {
+            $i = isset($i) ? $i + 1 : 1;
+        
+            $infoString = sprintf(
+                '[%s] Waiting for queued ProcessDominionJob to finish. Current queue: %s. Trying again in %s ms.',
+                now()->format('Y-m-d H:i:s'),
+                Redis::llen('queues:tick'),
+                number_format($delay)
+            );
+
+            if (Redis::llen('queues:tick') === 0) {
+                return;
+            }
+
+            Log::info($infoString);
+            dump($infoString);
+            throw new Exception('Tick queue not finish');
+        }, $delay);
+    }
+
     public function handleHoldsAndTradeRoutes(Round $round): void
     {
         if(!$round->getSetting('trade_routes'))
@@ -1712,7 +1728,7 @@ class TickService
 
         $discoverHoldChance = rand(1, (int)config('holds.tick_discover_hold_chance'));
 
-        Log::info('[HOLD] Discovery chance value: '. $discoverHoldChance . ' (discover if this value is 1).');
+        Log::info('Hold discovery chance value: '. $discoverHoldChance . ' (discover if this value is 1).');
 
         if($discoverHoldChance == 1)
         {
