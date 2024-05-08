@@ -65,7 +65,7 @@ class QueueService
         $queue->units = json_encode($units);
         $queue->save();
 
-        dump('> Queued ' . $type . ' of ' . $amount . ' ' . $resource->name . ' for trade route ' . $tradeRoute->id . ' at tick ' . $tick . ', going from ' . $tradeRoute->dominion->name . ' to ' . $tradeRoute->hold->name);
+        #dump('> Queued ' . $type . ' of ' . $amount . ' ' . $resource->name . ' for trade route ' . $tradeRoute->id . ' at tick ' . $tick . ', going from ' . $tradeRoute->dominion->name . ' to ' . $tradeRoute->hold->name);
     }
 
     public function handleTradeRouteQueues(TradeRoute $tradeRoute): void
@@ -101,19 +101,19 @@ class QueueService
             {
                 $amount = $finishedQueue->amount;
     
-                dump('Finished queue ' . $finishedQueue->id . ' of type ' . $finishedQueue->type . ' with ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' for trade route ' . $tradeRoute->id . ' at tick ' . $finishedQueue->tick . ' (' . $key . '/' . $finishedQueues->count()-1 . ')');
+                #dump('Finished queue ' . $finishedQueue->id . ' of type ' . $finishedQueue->type . ' with ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' for trade route ' . $tradeRoute->id . ' at tick ' . $finishedQueue->tick . ' (' . $key . '/' . $finishedQueues->count()-1 . ')');
 
                 # Update dominion resources
                 if($finishedQueue->type == 'import')
                 {
                     $this->dominionResourceService->updateResources($tradeRoute->dominion, [$finishedQueue->resource->key => $amount]);
-                    dump('+ Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to dominion ' . $tradeRoute->dominion->name);
+                    #dump('+ Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to dominion ' . $tradeRoute->dominion->name);
                 }
                 elseif($finishedQueue->type == 'export')
                 {
 
                     $this->holdResourceService->update($tradeRoute->hold, [$finishedQueue->resource->key => $amount]);
-                    dump('+ Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to hold ' . $tradeRoute->hold->name);
+                    #dump('+ Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to hold ' . $tradeRoute->hold->name);
                 }
 
                 $tradeRoute->save();

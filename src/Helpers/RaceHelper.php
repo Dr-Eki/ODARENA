@@ -873,6 +873,7 @@ class RaceHelper
         }
 
         $lookup = [
+            'afflicted' => 'disintegrated',
             'snow_elf' => 'left us',
         ];
 

@@ -4,7 +4,7 @@
 
 return [
 
-    'extended_logging' => false,
+    'extended_logging' => true,
 
     'starting_land' => 1000,
 

@@ -345,6 +345,7 @@ class SettingHelper
         })->toArray();
     }
 
+    /*
     public function getNotificationMessage(string $category, string $type, array $data, Dominion $dominion = null): string
     {
         switch ("{$category}.{$type}") {
@@ -474,17 +475,7 @@ class SettingHelper
             # CULT
 
             case 'hourly_dominion.attrition_occurred':
-                if(is_array($data) && count($data) > 0)
-                {
-                    $units = (int)array_reduce($data, function ($carry, $item) {
-                        return $carry + array_sum($item);
-                    }, 0);
-                }
-                else
-                {
-                    $units = (float)$data;
-                }
-
+                $units = is_array($data) ? array_sum($data) : (float)$data;
                 $term = isset($dominion) ?? $term = $this->raceHelper->getAttritionTermVerb($dominion->race);
 
                 return sprintf(
@@ -1166,6 +1157,7 @@ class SettingHelper
                 throw new LogicException("Unknown WebNotification message for {$category}.{$type}");
         }
     }
+    */
 
     // todo: remove
     public function getIrregularTypes(): array

@@ -174,6 +174,11 @@ class TickService
 
             if(config('game.extended_logging')) { Log::debug('** Queue, process, and wait for dominion jobs.'); }
             $this->processDominionJobs($round);
+
+            dump('Dominion jobs processed.');
+            dump('Sleeping for two seconds...');
+            sleep(2);
+            dump('Waking up...');
          
             $this->temporaryData[$round->id] = [];
 
@@ -185,8 +190,8 @@ class TickService
                 if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
                 $this->handleWinConditions($round);
 
-                #if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
-                $this->updateAllSpells($round);
+                if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
+                #$this->updateAllSpells($round);
 
                 if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); }
                 $this->updateAllDeities($round);
@@ -199,9 +204,6 @@ class TickService
 
                 if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); }
                 $this->updateArtefactsAegises($round);
-
-                if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
-                $this->handleHoldsAndTradeRoutes($round);
 
                 if(config('game.extended_logging')) { Log::debug('* Handle barbarian spawn'); }
                 $this->handleBarbarianSpawn($round);
@@ -218,6 +220,12 @@ class TickService
                     number_format($this->now->diffInMilliseconds(now())),
                     $round->name
                 ));
+            });
+
+            DB::transaction(function () use ($round)
+            {
+                if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
+                $this->handleHoldsAndTradeRoutes($round);
             });
 
             $this->now = now();

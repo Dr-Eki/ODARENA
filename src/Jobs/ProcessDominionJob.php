@@ -118,118 +118,61 @@ class ProcessDominionJob implements ShouldQueue
      */
     public function handle()
     {
+        $round = $this->dominion->round;
 
+        Log::debug('** Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . ' ), ID ');
         # Make a DB transaction
-        DB::transaction(function () {
-
-            $round = $this->dominion->round;
-            
+        DB::transaction(function () use ($round)
+        {    
             $this->temporaryData[$round->id][$this->dominion->id] = [];
 
             #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
             $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
 
-            if(
-                ($this->dominion->round->ticks % 4 == 0) and
-                !$this->protectionService->isUnderProtection($this->dominion) and
-                $this->dominion->round->hasStarted() and
-                !$this->dominion->getSpellPerkValue('fog_of_war') and
-                !$this->dominion->isAbandoned()
-                )
-            {
-                $this->queueService->setForTick(false); # Necessary as otherwise this-tick units are missing
-                if(config('game.extended_logging')) { Log::debug('** Capturing insight for ' . $this->dominion->name); }
-                $this->insightService->captureDominionInsight($this->dominion);
-                $this->queueService->setForTick(true); # Reset
-            }
+            if(config('game.extended_logging')) { Log::debug('** Handle Barbarians stuff (if this dominion is a Barbarian)'); }
+            $this->handleBarbarians($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug('** Updating buildings for ' . $this->dominion->name); }
+            if(config('game.extended_logging')) { Log::debug('** Updating buildings'); }
+            $this->handleCaptureInsight($this->dominion);
+
+            if(config('game.extended_logging')) { Log::debug('** Updating buildings'); }
             $this->handleBuildings($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug('** Updating terrain for ' . $this->dominion->name); }
+            if(config('game.extended_logging')) { Log::debug('** Updating terrain'); }
             $this->handleTerrain($this->dominion);
 
-            if(config('game.extended_logging')){ Log::debug('** Updating improvments for ' . $this->dominion->name); }
+            if(config('game.extended_logging')){ Log::debug('** Updating improvments'); }
             $this->handleImprovements($this->dominion);
 
-            if(config('game.extended_logging')){ Log::debug('** Updating deities for ' . $this->dominion->name); }
+            if(config('game.extended_logging')){ Log::debug('** Updating deities'); }
             $this->handleDeities($this->dominion);
 
-            if(config('game.extended_logging')){ Log::debug('** Updating artefacts for ' . $this->dominion->name); }
+            if(config('game.extended_logging')){ Log::debug('** Updating artefacts'); }
             $this->handleArtefacts($this->dominion);
 
-            if(config('game.extended_logging')){ Log::debug('** Updating research for ' . $this->dominion->name); }
+            if(config('game.extended_logging')){ Log::debug('** Updating research'); }
             $this->handleResearch($this->dominion);
 
-            if(config('game.extended_logging')){ Log::debug('** Updating units for ' . $this->dominion->name); }
+            if(config('game.extended_logging')){ Log::debug('** Updating units'); }
             $this->handleUnits($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug('** Updating resources for ' . $this->dominion->name); }
+            if(config('game.extended_logging')) { Log::debug('** Updating resources'); }
             $this->handleResources($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug('** Handle Barbarians:'); }
-            # NPC Barbarian: invasion, training, construction
-            if($this->dominion->race->name === 'Barbarian')
-            {
-                if(config('game.extended_logging')) { Log::debug('*** Handle Barbarian invasions for ' . $this->dominion->name); }
-                $this->barbarianService->handleBarbarianInvasion($this->dominion);
-
-                if(config('game.extended_logging')) { Log::debug('*** Handle Barbarian construction for ' . $this->dominion->name); }
-                $this->barbarianService->handleBarbarianConstruction($this->dominion);
-
-                if(config('game.extended_logging')) { Log::debug('*** Handle Barbarian improvements for ' . $this->dominion->name); }
-                $this->barbarianService->handleBarbarianImprovements($this->dominion);
-            }
-
-            if(config('game.extended_logging')) { Log::debug('* Handle stasis'); }
+            if(config('game.extended_logging')) { Log::debug('** Handle stasis'); }
             $this->handleStasis($this->dominion);
 
             if(config('game.extended_logging')) { Log::debug('** Handle Pestilence'); }
-
-            // Afflicted: Abomination generation
-            if(!empty($this->dominion->tick->pestilence_units))
-            {
-                $caster = Dominion::findorfail($this->dominion->tick->pestilence_units['caster_dominion_id']);
-
-                if(config('game.extended_logging')) { Log::debug('*** ' . $this->dominion->name . ' has pestilence from ' . $caster->name); }
-
-                if ($caster)
-                {
-                    $this->queueService->queueResources('summoning', $caster, ['military_unit1' => $this->dominion->tick->pestilence_units['units']['military_unit1']], 12);
-                }
-            }
+            $this->handlePestilence($this->dominion);
 
             if(config('game.extended_logging')) { Log::debug('** Handle land generation'); }
-            // Myconid: Land generation
-            if(!empty($this->dominion->tick->generated_land))
-            {
-                $this->queueService->queueResources('exploration', $this->dominion, ['land' => $this->dominion->tick->generated_land], 12);
-            }
+            $this->handleLandGeneration($this->dominion);
 
             if(config('game.extended_logging')) { Log::debug('** Handle unit generation'); }
-            // Unit generation
-            foreach($this->dominion->race->units as $unit)
-            {
-                if(!empty($this->dominion->tick->{'generated_unit' . $unit->slot}))
-                {
-                    $this->queueService->queueResources('summoning', $this->dominion, [('military_unit' . $unit->slot) => $this->dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 0)); # trying +0, was +1 because it's ticking
-                }
-            }
+            $this->handleUnitGeneration($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug('** Handle starvation for ' . $this->dominion->name); }
-            
-            if($this->resourceCalculator->isOnBrinkOfStarvation($this->dominion) and !$this->dominion->isAbandoned())
-            {
-                $this->notificationService->queueNotification('starvation_occurred');
-                Log::info('[STARVATION] ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . ') is starving.');
-            }
-
-            if(config('game.extended_logging')) { Log::debug('** Handle unit attrition for ' . $this->dominion->name); }
-            
-            if(array_sum($this->temporaryData[$this->dominion->round->id][$this->dominion->id]['units_attrited']) > 0 and !$this->dominion->isAbandoned())
-            {
-                $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$this->dominion->round->id][$this->dominion->id]['units_attrited']);
-            }
+            if(config('game.extended_logging')) { Log::debug('** Queue notifications'); }
+            $this->queueNotifications($this->dominion);
 
             if(config('game.extended_logging')) { Log::debug('** Updating spells'); }
             $this->updateSpells($this->dominion);
@@ -251,8 +194,6 @@ class ProcessDominionJob implements ShouldQueue
         if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }
         $this->terrainService->auditAndRepairTerrain($this->dominion);
     }
-
-    ### FUNCTIONS COPIED IN FROM TICKSERVICE
 
     # Take buildings that are one tick away from finished and create or increment DominionBuildings.
     private function handleBuildings(Dominion $dominion): void
@@ -390,7 +331,7 @@ class ProcessDominionJob implements ShouldQueue
         $finishedResourcesInQueue = DB::table('dominion_queue')
             ->where('dominion_id', $dominion->id)
             ->where('resource', 'like', 'resource%')
-            ->whereIn('source', ['exploration', 'invasion', 'expedition', 'theft', 'desecration'])
+            ->whereIn('source', ['invasion', 'expedition', 'theft', 'desecration'])
             ->where('hours', 1)
             ->get();
 
@@ -399,12 +340,9 @@ class ProcessDominionJob implements ShouldQueue
                 ->where('resource', 'resource_' . $resourceKey)
                 ->sum('amount');
 
-            #$resourcesProduced += $this->resourceCalculator->getProduction($dominion, $resourceKey);
-            #$resourcesConsumed = $this->resourceCalculator->getConsumption($dominion, $resourceKey);
-
             $resourcesProduced += $this->resourceCalculator->getNetProduction($dominion, $resourceKey);
 
-            $resourcesNetChange[$resourceKey] = $resourcesProduced;#$resourcesProduced - $resourcesConsumed;
+            $resourcesNetChange[$resourceKey] = $resourcesProduced;
         }
 
         $this->resourceService->updateResources($dominion, $resourcesNetChange);
@@ -438,17 +376,6 @@ class ProcessDominionJob implements ShouldQueue
         }
     }
 
-    /*
-    private function updateArtefactsAegises(Round $round): void
-    {
-        # Update artefact aegis
-        foreach($round->realms as $realm)
-        {
-            $this->artefactService->updateArtefactAegis($realm);
-        }
-    }
-    */
-
     # Take buildings that are one tick away from finished and create or increment DominionBuildings.
     private function handleTerrain(Dominion $dominion): void
     {
@@ -474,6 +401,10 @@ class ProcessDominionJob implements ShouldQueue
     # This function handles queuing of evolved units (Vampires)
     private function handleUnits(Dominion $dominion): void
     {
+        return;
+        # Space reserved for units 2.0
+
+        /*
         $units = $this->unitCalculator->getDominionUnitBlankArray($dominion);
         $evolvedUnitsTo = [];
         $evolvedUnitsFrom = [];
@@ -530,6 +461,7 @@ class ProcessDominionJob implements ShouldQueue
         }
 
         $dominion->save();
+        */
 
     }
 
@@ -636,16 +568,105 @@ class ProcessDominionJob implements ShouldQueue
         $this->queueService->setForTick(true);
     }
 
+    protected function handleBarbarians(Dominion $dominion): void
+    {
+        if($dominion->race->name !== 'Barbarian')
+        {
+            return;
+        }
+
+        if(config('game.extended_logging')) { Log::debug('*** Handle Barbarian invasions for ' . $dominion->name); }
+        $this->barbarianService->handleBarbarianInvasion($dominion);
+
+        if(config('game.extended_logging')) { Log::debug('*** Handle Barbarian construction for ' . $dominion->name); }
+        $this->barbarianService->handleBarbarianConstruction($dominion);
+
+        if(config('game.extended_logging')) { Log::debug('*** Handle Barbarian improvements for ' . $dominion->name); }
+        $this->barbarianService->handleBarbarianImprovements($dominion);
+    }
+
+    protected function handleCaptureInsight(Dominion $dominion): void
+    {
+        if(
+            ($this->dominion->round->ticks % 4 == 0) and
+            $dominion->protection_ticks == 0 and
+            $this->dominion->round->hasStarted() and
+            !$this->dominion->getSpellPerkValue('fog_of_war') and
+            !$this->dominion->isAbandoned()
+            )
+        {
+            $this->queueService->setForTick(false); # Necessary as otherwise this-tick units are missing
+
+            if(config('game.extended_logging')) { Log::debug('** Capturing insight for ' . $this->dominion->name); }
+            $this->insightService->captureDominionInsight($this->dominion);
+
+            $this->queueService->setForTick(true); # Reset
+        }
+    }
+
+    public function handlePestilence(Dominion $dominion): void
+    {
+        if(!empty($dominion->tick->pestilence_units))
+        {
+            $caster = Dominion::find($dominion->tick->pestilence_units['caster_dominion_id']);
+
+            if(config('game.extended_logging')) { Log::debug('*** ' . $dominion->name . ' has pestilence from ' . $caster->name); }
+
+            if ($caster)
+            {
+                $this->queueService->queueResources('summoning', $caster, ['military_unit1' => $dominion->tick->pestilence_units['units']['military_unit1']], 12);
+            }
+        }
+    }
+
+    protected function handleLandGeneration(Dominion $dominion): void
+    {
+        if(!empty($dominion->tick->generated_land))
+        {
+            $this->queueService->queueResources('exploration', $dominion, ['land' => $dominion->tick->generated_land], 12);
+        }
+    }
+
+    public function handleUnitGeneration(Dominion $dominion): void
+    {
+        foreach($dominion->race->units as $unit)
+        {
+            if(!empty($dominion->tick->{'generated_unit' . $unit->slot}))
+            {
+                $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 0)); # trying +0, was +1 because it's ticking
+            }
+        }
+    }
+
+    public function queueNotifications(Dominion $dominion): void
+    {
+        if(config('game.extended_logging')) { Log::debug('** Handle starvation for ' . $dominion->name); }
+        if($this->resourceCalculator->isOnBrinkOfStarvation($dominion) and !$dominion->isAbandoned())
+        {
+            $this->notificationService->queueNotification('starvation_occurred');
+            #Log::info('[STARVATION] ' . $dominion->name . ' (# ' . $dominion->realm->number . ') is starving.');
+        }
+
+        if(config('game.extended_logging')) { Log::debug('** Handle unit attrition for ' . $dominion->name); }
+        
+        if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
+        {
+            $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']);
+        }
+    }
+
     protected function updateSpells(Dominion $dominion): void
     {
-        dd('hnng;');
         $dominion->spells->each(function ($spell) {
-            dd($spell);
-            $spell->update([
-                'duration' => DB::raw('GREATEST(0, `duration` - 1)'),
-                'cooldown' => DB::raw('GREATEST(0, `cooldown` - 1)'),
-                'updated_at' => $this->now,
-            ]);
+            if ($spell->duration > 0) {
+                $spell->decrement('duration');
+            }
+    
+            if ($spell->cooldown > 0) {
+                $spell->decrement('cooldown');
+            }
+    
+            $spell->touch();
         });
     }
 
