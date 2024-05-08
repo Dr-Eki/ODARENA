@@ -215,7 +215,7 @@ class QueueService
      * @param array $data In format: [$resource => $amount, $resource2 => $amount2] etc
      * @param int $hours
      */
-    /*
+    
     public function queueResources(string $source, Dominion $dominion, array $data, int $hours = 12): void
     {
         $data = array_map('\intval', $data);
@@ -256,7 +256,7 @@ class QueueService
             }
         }
     }
-    */
+    /*
     public function queueResources(string $source, Dominion $dominion, array $data, int $ticks = 12): void
     {
         $data = array_map('\intval', $data);
@@ -281,6 +281,7 @@ class QueueService
             );
         }
     }
+    */
 
     /**
      * Helper getter to call queue methods with types specified in the method
