@@ -58,26 +58,29 @@ class TradeCalculator
 
         $result = [
             'sold_resource_key' => $soldResource->key,
-            'sold_resource_amount' => $soldResourceAmount,
+            'sold_resource_amount' => (int)$soldResourceAmount,
             'bought_resource_key' => $boughtResource->key,
             'bought_resource_amount' => 0,
         ];
 
         $netBoughtResourceAmount = $this->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
-        $netSoldResourceAmount = $this->getSoldResourceAmount($dominion, $soldResource, $soldResourceAmount, $boughtResource, $netBoughtResourceAmount);
-        $result['bought_resource_amount'] = $netBoughtResourceAmount;
-        $result['sold_resource_amount'] = $netSoldResourceAmount;
+
+        $result['bought_resource_amount'] = (int)$netBoughtResourceAmount;
+
+        $netSoldResourceAmount = $result['sold_resource_amount']; 
 
         if($netBoughtResourceAmount !== $soldResourceAmount)
         {
-            $result['warning']['resource_bought_amount_change']['from'] = $soldResourceAmount;
-            $result['warning']['resource_bought_amount_change']['to'] = $netBoughtResourceAmount;
-        }
+            $result['warning']['resource_bought_amount_change']['from'] = (int)$soldResourceAmount;
+            $result['warning']['resource_bought_amount_change']['to'] = (int)$netBoughtResourceAmount;
 
-        if($netSoldResourceAmount !== $soldResourceAmount)
-        {
+            $netSoldResourceAmount = (int)round($result['sold_resource_amount'] * ($netBoughtResourceAmount / $soldResourceAmount)); 
+
             $result['warning']['resource_sold_amount_change']['from'] = $soldResourceAmount;
             $result['warning']['resource_sold_amount_change']['to'] = $netSoldResourceAmount;
+
+            $result['sold_resource_amount'] = $netSoldResourceAmount;
+            $result['bought_resource_amount'] = $netBoughtResourceAmount;
         }
 
         return $result;
@@ -96,15 +99,6 @@ class TradeCalculator
         $netAmount = min($netAmount, $hold->{'resource_' . $boughtResource->key});
 
         return (int)max(0, $netAmount);
-    }
-
-    public function getSoldResourceAmount(Dominion $dominion, Resource $soldResource, int $soldResourceAmount, int $soldResourceAmount, int $netBoughtResourceAmount): int
-    {
-        $amountSold = $soldResourceAmount * ($boughtResourceAmount / $netBoughtResourceAmount);
-
-        $amountSold = min($amountSold, $dominion->{'resource_' . $soldResource->key});
-
-        return $amountSold;
     }
 
     public function getResourceMaxOfferableAmount(Dominion $dominion, Resource $resource): int
