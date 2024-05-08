@@ -168,14 +168,14 @@ class TickService
 
         foreach (Round::active()->get() as $round)
         {
+            $round->is_ticking = 1;
+            $round->save();
+
             DB::transaction(function () use ($round, $tickTime)
             {
                 Log::debug('Tick number ' . number_format($round->ticks + 1) . ' for round ' . $round->number . ' started at ' . $tickTime . '.');
 
                 $this->temporaryData[$round->id] = [];
-
-                $round->is_ticking = 1;
-                $round->save();
 
                 # Get all dominions for this round where protection_ticks == 0, in random order
                 $dominions = $round->activeDominions()
