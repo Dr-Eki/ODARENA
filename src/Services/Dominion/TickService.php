@@ -847,8 +847,6 @@ class TickService
         $this->now = now();
     }
 
-    # TICK SERVICE 1.1 functions
-
     // Update dominions
     private function updateDominions(Round $round, array $stasisDominions)
     {

@@ -297,6 +297,11 @@ class Dominion extends AbstractModel
         );
     }
 
+    public function hasSpell(string $spellKey)
+    {
+        return $this->spells->contains('key', $spellKey);
+    }
+
     public function resources()
     {
         return $this->belongsToMany(
