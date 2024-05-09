@@ -166,9 +166,6 @@ class ProcessDominionJob implements ShouldQueue
 
             if(config('game.extended_logging')) { Log::debug('** Updating spells'); }
             $this->updateSpells($this->dominion);
-            
-            if(config('game.extended_logging')) { Log::debug('** Cleaning up queues'); }
-            $this->cleanupQueues($this->dominion);
 
             if(config('game.extended_logging')) { Log::debug('** Sending notifications (hourly_dominion)'); }
             $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
@@ -179,6 +176,9 @@ class ProcessDominionJob implements ShouldQueue
 
         if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }
         $this->terrainService->auditAndRepairTerrain($this->dominion);
+            
+        if(config('game.extended_logging')) { Log::debug('** Cleaning up queues'); }
+        $this->cleanupQueues($this->dominion);
     }
 
     # Take buildings that are one tick away from finished and create or increment DominionBuildings.
