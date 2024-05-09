@@ -14,6 +14,7 @@ use Illuminate\Queue\SerializesModels;
 use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\DominionSpell;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Spell;
@@ -174,9 +175,11 @@ class ProcessDominionJob implements ShouldQueue
             $this->tickCalculator->precalculateTick($this->dominion, true);
         });
 
+        # Cannot be a part of the DB transaction because it might cause deadlocks
         if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }
         $this->terrainService->auditAndRepairTerrain($this->dominion);
             
+        # Also cannot be a part of the DB transaction because it might cause deadlocks
         if(config('game.extended_logging')) { Log::debug('** Cleaning up queues'); }
         $this->cleanupQueues($this->dominion);
     }
@@ -610,8 +613,39 @@ class ProcessDominionJob implements ShouldQueue
         }
     }
 
-    public function handlePestilence(Dominion $dominion): void
+    public function handlePestilence(Dominion $afflicted): void
     {
+        if($afflicted->race->key !== 'afflicted')
+        {
+            return;
+        }
+
+        $unitsGenerated = 0;
+
+        $pestilence = Spell::fromKey('pestilence');
+        $lesserPestilence = Spell::fromKey('lesser_pestilence');
+        $pestilences = DominionSpell::whereIn('spell_id', [$pestilence->id, $lesserPestilence->id])->where('caster_id', $dominion->id)->where('duration','>',0)->get()->sortByDesc('created_at');
+
+        foreach($pestilences as $dominionSpellPestilence)
+        {
+            $target = Dominion::find($dominionSpellPestilence->dominion_id);
+
+            if($target->peasants <= 100)
+            {
+                continue;
+            }
+
+            $spellPerk = $dominionSpellPestilence->spell->perks->where('key', 'kill_peasants_and_converts_for_caster_unit')->first();
+            $spellPerk = explode(',', $spellPerk->pivot->value);
+
+
+            if($spellPerk)
+            {
+                $unitsGenerated += $target->peasants * $spellPerk->pivot->value;
+            }
+
+        }
+
         if(!empty($dominion->tick->pestilence_units))
         {
             $caster = Dominion::find($dominion->tick->pestilence_units['caster_dominion_id']);

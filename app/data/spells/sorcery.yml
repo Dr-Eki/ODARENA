@@ -364,7 +364,7 @@ pestilence:
   exclusive_races:
     - Afflicted
   perks:
-    kill_peasants_and_converts_for_caster_unit: 0.05,1 # 0.10% die and become unit1
+    kill_peasants_and_converts_for_caster_unit: 0.05,1 # 0.05% die and become unit1
     spreads_spell: lesser_pestilence
 
 lesser_pestilence:

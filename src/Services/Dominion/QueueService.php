@@ -288,24 +288,24 @@ class QueueService
         $data = array_map('\intval', $data);
         $now = now();
     
-        $upsertData = [];
-    
         foreach ($data as $resource => $amount) {
             if ($amount === 0) {
                 continue;
             }
     
-            $upsertData[] = [
-                'dominion_id' => $dominion->id,
-                'source' => $source,
-                'resource' => $resource,
-                'hours' => $ticks,
-                'amount' => DB::raw("amount + $amount"),
-                'created_at' => $now,
-            ];
+            DB::table('dominion_queue')->updateOrInsert(
+                [
+                    'dominion_id' => $dominion->id,
+                    'source' => $source,
+                    'resource' => $resource,
+                    'hours' => $ticks,
+                ],
+                [
+                    'amount' => DB::raw("amount + $amount"),
+                    'created_at' => $now,
+                ]
+            );
         }
-    
-        DB::table('dominion_queue')->upsert($upsertData, ['dominion_id', 'source', 'resource', 'hours'], ['amount']);
     }
 
     /**

@@ -36,6 +36,11 @@ class Spell extends AbstractModel
         'exclusive_races' => 'array'        
     ];
 
+    public static function fromKey($key)
+    {
+        return self::where('key', $key)->first();
+    }
+
     public function deity()
     {
         return $this->belongsTo(Deity::class);
