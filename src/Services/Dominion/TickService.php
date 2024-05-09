@@ -158,8 +158,8 @@ class TickService
         Log::debug('Scheduled tick started at ' . $this->now . '.');
         dump('Scheduled tick started at ' . $this->now . '.');
 
-        DB::transaction(function () 
-        {
+        #DB::transaction(function () 
+        #{
             foreach (Round::active()->get() as $round)
             {
                 $round->is_ticking = 1;
@@ -221,7 +221,7 @@ class TickService
                     'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
                 ])->save();
             }
-        });
+        #});
 
         Log::debug('Scheduled tick finished at ' . now() . '.');
         dump('Scheduled tick started at ' . now() . '.');
@@ -1709,16 +1709,24 @@ class TickService
         }
 
         $holdService = app(HoldService::class);
+        $tradeService = app(TradeService::class);
+        
 
-        app(TradeService::class)->handleTradeRoutesTick($round);
+        if(config('game.extended_logging')) { Log::debug('** Handle trade routes'); dump('** Handle trade routes'); }
+        $tradeService->handleTradeRoutesTick($round);
+
+        if(config('game.extended_logging')) { Log::debug('** Handle holds ticking'); dump('** Handle holds ticking'); }
         $holdService->handleHoldTick($round);
 
         $discoverHoldChance = rand(1, (int)config('holds.tick_discover_hold_chance'));
 
-        Log::info('Hold discovery chance value: '. $discoverHoldChance . ' (discover if this value is 1).');
+        $discoveryString = '** Hold discovery chance value: '. $discoverHoldChance . ' (discover if this value is 1).';
+        Log::info($discoveryString);
+        if(config('game.extended_logging')) { Log::debug($discoveryString); dump($discoveryString); }
 
         if($discoverHoldChance == 1)
         {
+            if(config('game.extended_logging')) { Log::debug('*** Hold discovered'); dump('*** Hold discovered'); }
             $holdService->discoverHold($round);
         }
     }
