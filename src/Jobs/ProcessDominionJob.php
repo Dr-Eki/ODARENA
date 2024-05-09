@@ -106,7 +106,8 @@ class ProcessDominionJob implements ShouldQueue
     {
         $round = $this->dominion->round;
 
-        Log::debug('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . ' ), ID ');
+        Log::debug('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . '), ID ' . $this->dominion->id);
+        dump('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . '), ID ' . $this->dominion->id);
         # Make a DB transaction
         DB::transaction(function () use ($round)
         {    
