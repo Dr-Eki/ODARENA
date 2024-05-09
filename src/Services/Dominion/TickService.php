@@ -172,43 +172,43 @@ class TickService
 
                     $this->temporaryData[$round->id]['stasis_dominions'] = [];
 
-                    if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
+                    if(config('game.extended_logging')) { Log::debug('* Checking for win conditions'); dump('* Checking for win conditions'); }
                     $this->handleWinConditions($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
+                    #if(config('game.extended_logging')) { Log::debug('* Update all spells'); dump('* Update all spells'); }
                     #$this->updateAllSpells($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); }
+                    #if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); dump('* Update all deities duration'); }
                     #$this->updateAllDeities($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); }
+                    if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); dump('* Update invasion queues');}
                     $this->updateAllInvasionQueues($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Update all other queues'); }
+                    if(config('game.extended_logging')) { Log::debug('* Update all other queues'); dump('* Update all other queues');}
                     $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
-                    if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); }
+                    if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); dump('* Update all artefact aegises');}
                     $this->updateArtefactsAegises($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Handle barbarian spawn'); }
+                    if(config('game.extended_logging')) { Log::debug('* Handle barbarian spawn'); dump('* Handle barbarian spawn');}
                     $this->handleBarbarianSpawn($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Handle body decay'); }
+                    if(config('game.extended_logging')) { Log::debug('* Handle body decay'); dump('* Handle body decay');}
                     $this->handleBodyDecay($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
+                    if(config('game.extended_logging')) { Log::debug('* Update all dominions'); dump('* Update all dominions'); }
                     $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
                 });
 
                 // Separate DB transaction for trade routes
                 DB::transaction(function () use ($round)
                 {
-                    if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
+                    if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); dump('* Update all trade routes'); }
                     $this->handleHoldsAndTradeRoutes($round);
                 });
 
                 // Each job is a DB transaction
-                if(config('game.extended_logging')) { Log::debug('** Queue, process, and wait for dominion jobs.'); }
+                if(config('game.extended_logging')) { Log::debug('* Queue, process, and wait for dominion jobs.'); dump('** Queue, process, and wait for dominion jobs.'); }
                 $this->processDominionJobs($round);
 
                 $this->now = now();
@@ -1672,8 +1672,8 @@ class TickService
         // Queue up all dominions for ticking (simultaneous processing)
         foreach ($dominions as $dominion)
         {
-            Log::info("Queueing up dominion {$dominion->id}: {$dominion->name}");
-            dump("Queuing up dominion {$dominion->id}: {$dominion->name}");
+            Log::info("** Queueing up dominion {$dominion->id}: {$dominion->name}");
+            dump("** Queuing up dominion {$dominion->id}: {$dominion->name}");
             ProcessDominionJob::dispatch($dominion)->onQueue('tick');
         }
 
