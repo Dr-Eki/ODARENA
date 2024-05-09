@@ -125,58 +125,72 @@ class MiscController extends AbstractDominionController
             DB::table('dominions')->where('monarchy_vote_for_dominion_id', '=', $dominion->id)->update(['monarchy_vote_for_dominion_id' => null]);
             DB::table('realms')->where('monarch_dominion_id', '=', $dominion->id)->update(['monarch_dominion_id' => null]);
 
-            DB::table('dominion_spells')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_spells')->where('caster_id', '=', $dominion->id)->delete();
-            DB::table('dominion_buildings')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_improvements')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_decree_states')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_deity')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_resources')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_insight')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_insight')->where('source_dominion_id', '=', $dominion->id)->delete();
-
+            // Council...
             DB::table('council_posts')->where('dominion_id', '=', $dominion->id)->delete();
             DB::table('council_threads')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_history')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_queue')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_techs')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_advancements')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_terrains')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('dominion_tick')->where('dominion_id', '=', $dominion->id)->delete();
 
-            DB::table('trade_routes')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('trade_ledger')->where('dominion_id', '=', $dominion->id)->delete();
-            
+            // Dominion...
+            DB::table('dominion_advancements')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_buildings')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_decree_states')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_deity')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_history')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_improvements')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_insight')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_insight')->where('source_dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_queue')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_resources')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_spells')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_spells')->where('caster_id', '=', $dominion->id)->delete();
             DB::table('dominion_stats')->where('dominion_id', '=', $dominion->id)->delete();
             DB::table('dominion_states')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('realm_history')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_techs')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_terrains')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_tick')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('dominion_units')->where('dominion_id', '=', $dominion->id)->delete();
 
-            // Get all game event IDs related to the dominion
-            $gameEventIds = DB::table('game_events')
-                                ->where('source_id', $dominion->id)
-                                ->orWhere('target_id', $dominion->id)
-                                ->pluck('id');
-
-            // Delete all related game_event_stories
-            DB::table('game_event_stories')
-                ->whereIn('game_event_id', $gameEventIds)
-                ->delete();
-
-            DB::table('game_events')->where('source_id', '=', $dominion->id)->delete();
-            DB::table('game_events')->where('target_id', '=', $dominion->id)->delete();
-
-            DB::table('watched_dominions')->where('dominion_id', '=', $dominion->id)->delete();
-            DB::table('watched_dominions')->where('watcher_id', '=', $dominion->id)->delete();
-
+            // Protectorship...
             DB::table('protectorships')->where('protector_id', '=', $dominion->id)->delete();
             DB::table('protectorships')->where('protected_id', '=', $dominion->id)->delete();
             DB::table('protectorship_offers')->where('protector_id', '=', $dominion->id)->delete();
             DB::table('protectorship_offers')->where('protected_id', '=', $dominion->id)->delete();
 
+            // Realm history...
+            DB::table('realm_history')->where('dominion_id', '=', $dominion->id)->delete();
+
+            // Holds...
+            DB::table('hold_sentiments')->where('target_id', '=', $dominion->id)->delete();
+            DB::table('hold_sentiment_events')->where('target_id', '=', $dominion->id)->delete();
+
+            // Trade...
+            DB::table('trade_ledger')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('trade_routes')->where('dominion_id', '=', $dominion->id)->delete();
+
+            // Watched dominions...
+            DB::table('watched_dominions')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('watched_dominions')->where('watcher_id', '=', $dominion->id)->delete();
+
+            // Game event stories...
+            DB::table('game_event_stories')
+                ->whereIn('game_event_id', function ($query) use ($dominion) {
+                    $query->select('id')
+                        ->from('game_events')
+                        ->where('source_id', $dominion->id)
+                        ->orWhere('target_id', $dominion->id);
+                })
+                ->delete();
+
+            DB::table('game_events')->where('source_id', '=', $dominion->id)->delete();
+            DB::table('game_events')->where('target_id', '=', $dominion->id)->delete();
+
             # Delete the dominion.
+
+            // Temporary (:eyeroll:) fix for foreign key constraint violation between trade_routes and dominion->id
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
             DB::table('dominions')->where('id', '=', $dominion->id)->delete();
-            
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         });
+
 
         $this->dominionSelectorService->unsetUserSelectedDominion();
 
@@ -188,6 +202,7 @@ class MiscController extends AbstractDominionController
             Auth::user()->display_name,
             Auth::user()->id
         ));
+        
 
         return redirect()
             ->to(route('dashboard'))
