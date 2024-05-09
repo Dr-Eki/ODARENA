@@ -115,7 +115,7 @@ class TickService
         $this->moraleCalculator = app(MoraleCalculator::class);
         #$this->realmCalculator = app(RealmCalculator::class);
         #$this->sorceryCalculator = app(SorceryCalculator::class);
-        $this->unitCalculator = app(TickCalculator::class);
+        $this->tickCalculator = app(TickCalculator::class);
         $this->unitCalculator = app(UnitCalculator::class);
 
         #$this->improvementHelper = app(ImprovementHelper::class);
@@ -780,17 +780,17 @@ class TickService
         DB::transaction(function () use ($dominion)
         {
 
-            $this->handleBuildings($dominion);
-            $this->handleTerrain($dominion);
-            $this->handleImprovements($dominion);
-            $this->handleDeities($dominion);
-            $this->handleResearch($dominion);
-            $this->handleUnits($dominion);
-            $this->handleResources($dominion);
+            #$this->handleBuildings($dominion);
+            #$this->handleTerrain($dominion);
+            #$this->handleImprovements($dominion);
+            #$this->handleDeities($dominion);
+            #$this->handleResearch($dominion);
+            #$this->handleUnits($dominion);
+            #$this->handleResources($dominion);
     
             $this->updateDominion($dominion);
-            $this->updateDominionSpells($dominion);
-            $this->updateDominionDeity($dominion);
+            #$this->updateDominionSpells($dominion);
+            #$this->updateDominionDeity($dominion);
             $this->updateDominionQueues($dominion);
 
             $this->temporaryData[$dominion->round->id][$dominion->id] = [];
@@ -798,56 +798,83 @@ class TickService
             #$this->temporaryData[$dominion->round->id][$dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($dominion);
             $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($dominion);
 
-            # Queue starvation notification.
-            if($dominion->tick->starvation_casualties and !$dominion->isAbandoned())
-            {
-                $this->notificationService->queueNotification('starvation_occurred');
-            }
+            ## Queue starvation notification.
+            #if($dominion->tick->starvation_casualties and !$dominion->isAbandoned())
+            #{
+            #    $this->notificationService->queueNotification('starvation_occurred');
+            #}
+#
+            #if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
+            #{
+            #    $this->notificationService->queueNotification('attrition_occurred',[$this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']]);
+            #}
 
-            if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
-            {
-                $this->notificationService->queueNotification('attrition_occurred',[$this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']]);
-            }
-
-            # Clean up
-            $this->cleanupActiveSpells($dominion);
-            $this->cleanupQueues($dominion);
-
-            $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
-
-            $this->tickCalculator->precalculateTick($dominion, true);
-
-            // Myconid: Land generation
-            if(!empty($dominion->tick->generated_land) and $dominion->protection_ticks > 0)
-            {
-                $this->queueService->queueResources('exploration', $dominion, ['land' => $dominion->tick->generated_land], 12);
-            }
-
-            // Unit generation
-            if($dominion->protection_ticks > 0)
-            {
-                foreach($dominion->race->units as $unit)
-                {
-                    if(!empty($dominion->tick->{'generated_unit' . $unit->slot}) and $dominion->protection_ticks > 0)
-                    {
-                        $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 1));
-                    }
-                }
-            }
-
-            if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }
-            $this->terrainService->auditAndRepairTerrain($dominion);
+            #// Myconid: Land generation
+            #if(!empty($dominion->tick->generated_land) and $dominion->protection_ticks > 0)
+            #{
+            #    $this->queueService->queueResources('exploration', $dominion, ['land' => $dominion->tick->generated_land], 12);
+            #}
+#
+            #// Unit generation
+            #if($dominion->protection_ticks > 0)
+            #{
+            #    foreach($dominion->race->units as $unit)
+            #    {
+            #        if(!empty($dominion->tick->{'generated_unit' . $unit->slot}) and $dominion->protection_ticks > 0)
+            #        {
+            #            $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 1));
+            #        }
+            #    }
+            #}
         });
+
+        # Clean up
+        $this->cleanupQueues($dominion);
+        $this->cleanupActiveSpells($dominion);
+
+        $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
+
+        $this->tickCalculator->precalculateTick($dominion, true);
+
+        if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }
+        $this->terrainService->auditAndRepairTerrain($dominion);
+
+        Log::info("** Manual tick: queueing up dominion {$dominion->id}: {$dominion->name}");
+        dump("** Manual tick: queuing up dominion {$dominion->id}: {$dominion->name}");
+        ProcessDominionJob::dispatch($dominion)->onQueue('tick');
         
         $this->dominionStateService->saveDominionState($dominion);
+
+        // Wait for queue to clear
+        $attempts = 60;
+        $delay = 1000; // milliseconds
+        
+        retry($attempts, function () use ($delay) {
+            $i = isset($i) ? $i + 1 : 1;
+        
+            $infoString = sprintf(
+                '[%s] Waiting for queued ProcessDominionJob to finish. Current queue: %s. Trying again in %s ms.',
+                now()->format('Y-m-d H:i:s'),
+                Redis::llen('queues:tick'),
+                number_format($delay)
+            );
+
+            if (Redis::llen('queues:tick') === 0) {
+                return;
+            }
+
+            Log::info($infoString);
+            dump($infoString);
+            throw new Exception('Tick queue not finish');
+        }, $delay);
+
+        $this->now = now();
 
         Log::info(sprintf(
             '[TICK] Ticked dominion %s in %s ms.',
             $dominion->name,
             number_format($this->now->diffInMilliseconds(now()))
         ));
-
-        $this->now = now();
     }
 
     // Update dominions
@@ -1681,7 +1708,7 @@ class TickService
         $attempts = 60;
         $delay = 1000; // milliseconds
         
-        retry($attempts, function () use ($round, $attempts, $delay) {
+        retry($attempts, function () use ($delay) {
             $i = isset($i) ? $i + 1 : 1;
         
             $infoString = sprintf(

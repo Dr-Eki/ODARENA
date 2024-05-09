@@ -5,7 +5,6 @@ namespace OpenDominion\Http\Controllers\Dominion;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Exceptions\GameException;
-use OpenDominion\Helpers\EspionageHelper;
 use OpenDominion\Helpers\SpellHelper;
 use OpenDominion\Http\Requests\Dominion\Actions\MagicRequest;
 use OpenDominion\Models\Dominion;
@@ -17,7 +16,6 @@ use OpenDominion\Services\Dominion\Actions\SpellActionService;
 
 use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
-#use OpenDominion\Models\Spyop;
 
 class MagicController extends AbstractDominionController
 {
@@ -28,7 +26,7 @@ class MagicController extends AbstractDominionController
         $pestilence = Spell::where('key', 'pestilence')->first();
         $lesserPestilence = Spell::where('key', 'lesser_pestilence')->first();
 
-        $pestilences = DominionSpell::whereIn('spell_id', [$pestilence->id, $lesserPestilence->id])->where('caster_id', $dominion->id)->get()->sortByDesc('created_at');
+        $pestilences = DominionSpell::whereIn('spell_id', [$pestilence->id, $lesserPestilence->id])->where('caster_id', $dominion->id)->where('duration','>',0)->get()->sortByDesc('created_at');
 
         return view('pages.dominion.magic', [
             'spellCalculator' => app(SpellCalculator::class),

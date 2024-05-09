@@ -191,39 +191,10 @@ class TickCalculator
         $drafteesGrowthRate = $this->populationCalculator->getPopulationDrafteeGrowth($dominion);
         $populationPeasantGrowth = $this->populationCalculator->getPopulationPeasantGrowth($dominion);
 
-        if ($dominion->hasSpell('pestilence'))
-        {
-            $spell = Spell::fromKey('pestilence');
-            $pestilence = $spell->getActiveSpellPerkValues('pestilence', 'kill_peasants_and_converts_for_caster_unit');
-            $ratio = $pestilence[0] / 100;
-            $slot = $pestilence[1];
-            #$caster = $this->spellCalculator->getCaster($dominion, 'pestilence');
-            $caster = $dominion->spells->where('key', 'lesser_pestilence')->caster;
-
-            $amountToDie = $dominion->peasants * $ratio * $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, Spell::where('key', 'pestilence')->first(), null);
-            $amountToDie *= $this->conversionCalculator->getConversionReductionMultiplier($dominion);
-            $amountToDie = (int)round($amountToDie);
-
-            $tick->pestilence_units = ['caster_dominion_id' => $caster->id, 'units' => ['military_unit' . $slot => $amountToDie]];
-
-            $populationPeasantGrowth -= $amountToDie;
-        }
-        elseif($dominion->hasSpell('lesser_pestilence'))
-        {
-            $spell = Spell::fromKey('lesser_pestilence');
-            $lesserPestilence = $spell->getActiveSpellPerkValues('lesser_pestilence', 'kill_peasants_and_converts_for_caster_unit');
-            $ratio = $lesserPestilence[0] / 100;
-            $slot = $lesserPestilence[1];
-            #$caster = $this->spellCalculator->getCaster($dominion, 'lesser_pestilence');
-            $caster = $dominion->spells->where('key', 'lesser_pestilence')->caster;
-
-            $amountToDie = $dominion->peasants * $ratio * $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, Spell::where('key', 'lesser_pestilence')->first(), null);
-            $amountToDie *= $this->conversionCalculator->getConversionReductionMultiplier($dominion);
-            $amountToDie = (int)round($amountToDie);
-
-            $tick->pestilence_units = ['caster_dominion_id' => $caster->id, 'units' => ['military_unit' . $slot => $amountToDie]];
-
-            $populationPeasantGrowth -= $amountToDie;
+        if ($dominion->hasSpell('pestilence')) {
+            $populationPeasantGrowth -= $this->handlePestilenceEffect($dominion, 'pestilence');
+        } elseif ($dominion->hasSpell('lesser_pestilence')) {
+            $populationPeasantGrowth -= $this->handlePestilenceEffect($dominion, 'lesser_pestilence');
         }
 
         # Check for peasants_conversion
@@ -419,6 +390,19 @@ class TickCalculator
         }
 
         $tick->save();
+    }
+
+    private function handlePestilenceEffect(Dominion $dominion, string $spellKey): int
+    {
+        $spell = Spell::fromKey($spellKey);
+        $pestilence = $spell->getActiveSpellPerkValues($spellKey, 'kill_peasants_and_converts_for_caster_unit');
+        $ratio = $pestilence[0] / 100;
+    
+        $amountToDie = $dominion->peasants * $ratio * $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, $spell, null);
+        $amountToDie *= $this->conversionCalculator->getConversionReductionMultiplier($dominion);
+        $amountToDie = (int)floor($amountToDie);
+    
+        return $amountToDie;
     }
 
 }

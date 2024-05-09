@@ -620,17 +620,49 @@ class ProcessDominionJob implements ShouldQueue
             return;
         }
 
+        dd('here');
 
+        $unitsGenerated = [];
 
-        if(!empty($afflicted->tick->pestilence_units))
+        $pestilenceIds = Spell::whereIn('key', ['pestilence', 'lesser_pestilence'])->pluck('id');
+        $pestilences = DominionSpell::with('spell')
+            ->whereIn('spell_id', $pestilenceIds)
+            ->where('caster_id', $afflicted->id)
+            ->where('duration','>',0)
+            ->get()
+            ->sortByDesc('created_at');
+
+        if(config('game.extended_logging')) { Log::debug('*** 🦠 Has ' . $pestilences->count() . ' active pestilence(s)'); dump('*** 🦠 Has ' . $pestilences->count() . ' active pestilence(s)'); }
+
+        foreach($pestilences as $dominionSpellPestilence)
         {
-            $caster = Dominion::find($afflicted->tick->pestilence_units['caster_dominion_id']);
+            $target = Dominion::find($dominionSpellPestilence->dominion_id);
 
-            if(config('game.extended_logging')) { Log::debug('*** ' . $afflicted->name . ' has pestilence from ' . $caster->name); }
-
-            if ($caster)
+            if($target->peasants <= 100)
             {
-                $this->queueService->queueResources('summoning', $caster, ['military_unit1' => $afflicted->tick->pestilence_units['units']['military_unit1']], 12);
+                continue;
+            }
+
+            $pestilence = $dominionSpellPestilence->spell->getActiveSpellPerkValues($dominionSpellPestilence->spell->key, 'kill_peasants_and_converts_for_caster_unit');
+            $ratio = $pestilence[0] / 100;
+            $slot = $pestilence[1];
+
+            if($ratio and $slot)
+            {
+                $peasantsKilled = (int)floor($target->peasants * $ratio);
+                $unitsGenerated[$slot] = isset($unitsGenerated[$slot]) ? $unitsGenerated[$slot] + $peasantsKilled : $peasantsKilled;
+
+                Log::info('*** Pestilence: ' . $target->name . ' lost ' . $peasantsKilled . ' peasants to pestilence.');
+            }
+        }
+
+        if(!empty($unitsGenerated))
+        {
+            if(config('game.extended_logging')) { Log::debug('*** Queuing units generated from pestilence.'); dump('*** Queuing units generated from pestilence.'); }
+
+            foreach($unitsGenerated as $slot => $amount)
+            {
+                $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
             }
         }
     }
