@@ -182,6 +182,8 @@ class ProcessDominionJob implements ShouldQueue
         # Also cannot be a part of the DB transaction because it might cause deadlocks
         if(config('game.extended_logging')) { Log::debug('** Cleaning up queues'); }
         $this->cleanupQueues($this->dominion);
+        if(config('game.extended_logging')) { Log::debug('** Cleaning up active spells'); }
+        $this->cleanupActiveSpells($this->dominion);
     }
 
     # Take buildings that are one tick away from finished and create or increment DominionBuildings.
@@ -718,8 +720,6 @@ class ProcessDominionJob implements ShouldQueue
 
             $dominionSpell->save();
         }
-
-        $this->cleanupActiveSpells($dominion);
     }
 
     protected function cleanupActiveSpells(Dominion $dominion)
