@@ -620,41 +620,17 @@ class ProcessDominionJob implements ShouldQueue
             return;
         }
 
-        $unitsGenerated = 0;
 
-        $pestilence = Spell::fromKey('pestilence');
-        $lesserPestilence = Spell::fromKey('lesser_pestilence');
-        $pestilences = DominionSpell::whereIn('spell_id', [$pestilence->id, $lesserPestilence->id])->where('caster_id', $dominion->id)->where('duration','>',0)->get()->sortByDesc('created_at');
 
-        foreach($pestilences as $dominionSpellPestilence)
+        if(!empty($afflicted->tick->pestilence_units))
         {
-            $target = Dominion::find($dominionSpellPestilence->dominion_id);
+            $caster = Dominion::find($afflicted->tick->pestilence_units['caster_dominion_id']);
 
-            if($target->peasants <= 100)
-            {
-                continue;
-            }
-
-            $spellPerk = $dominionSpellPestilence->spell->perks->where('key', 'kill_peasants_and_converts_for_caster_unit')->first();
-            $spellPerk = explode(',', $spellPerk->pivot->value);
-
-
-            if($spellPerk)
-            {
-                $unitsGenerated += $target->peasants * $spellPerk->pivot->value;
-            }
-
-        }
-
-        if(!empty($dominion->tick->pestilence_units))
-        {
-            $caster = Dominion::find($dominion->tick->pestilence_units['caster_dominion_id']);
-
-            if(config('game.extended_logging')) { Log::debug('*** ' . $dominion->name . ' has pestilence from ' . $caster->name); }
+            if(config('game.extended_logging')) { Log::debug('*** ' . $afflicted->name . ' has pestilence from ' . $caster->name); }
 
             if ($caster)
             {
-                $this->queueService->queueResources('summoning', $caster, ['military_unit1' => $dominion->tick->pestilence_units['units']['military_unit1']], 12);
+                $this->queueService->queueResources('summoning', $caster, ['military_unit1' => $afflicted->tick->pestilence_units['units']['military_unit1']], 12);
             }
         }
     }
