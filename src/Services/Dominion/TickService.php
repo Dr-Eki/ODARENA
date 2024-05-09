@@ -165,10 +165,6 @@ class TickService
                 $round->is_ticking = 1;
                 $round->save();
 
-                // Each job is a DB transaction
-                if(config('game.extended_logging')) { Log::debug('** Queue, process, and wait for dominion jobs.'); }
-                $this->processDominionJobs($round);
-
                 // One transaction for all of these
                 DB::transaction(function () use ($round)
                 {
@@ -210,6 +206,10 @@ class TickService
                     if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
                     $this->handleHoldsAndTradeRoutes($round);
                 });
+
+                // Each job is a DB transaction
+                if(config('game.extended_logging')) { Log::debug('** Queue, process, and wait for dominion jobs.'); }
+                $this->processDominionJobs($round);
 
                 $this->now = now();
 
