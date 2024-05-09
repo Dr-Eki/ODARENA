@@ -145,6 +145,7 @@ class MiscController extends AbstractDominionController
             DB::table('dominion_tick')->where('dominion_id', '=', $dominion->id)->delete();
 
             DB::table('trade_routes')->where('dominion_id', '=', $dominion->id)->delete();
+            DB::table('trade_ledger')->where('dominion_id', '=', $dominion->id)->delete();
             
             DB::table('dominion_stats')->where('dominion_id', '=', $dominion->id)->delete();
             DB::table('dominion_states')->where('dominion_id', '=', $dominion->id)->delete();
