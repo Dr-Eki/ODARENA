@@ -622,8 +622,6 @@ class ProcessDominionJob implements ShouldQueue
             return;
         }
 
-        dd('here');
-
         $unitsGenerated = [];
 
         $pestilenceIds = Spell::whereIn('key', ['pestilence', 'lesser_pestilence'])->pluck('id');
@@ -664,6 +662,7 @@ class ProcessDominionJob implements ShouldQueue
 
             foreach($unitsGenerated as $slot => $amount)
             {
+                if(config('game.extended_logging')) { Log::debug('**** ' . $amount . ' unit' . $slot . ' queued.'); dump('**** ' . $amount . ' unit' . $slot . ' queued.'); }
                 $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
             }
         }

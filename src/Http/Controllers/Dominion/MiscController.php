@@ -20,7 +20,7 @@ use OpenDominion\Models\DominionState;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Services\Dominion\QueueService;
-use OpenDominion\Services\Dominion\TickService;
+use OpenDominion\Calculators\Dominion\TickCalculator;
 
 use OpenDominion\Traits\DominionGuardsTrait;
 
@@ -41,8 +41,8 @@ class MiscController extends AbstractDominionController
     /** @var QueueService */
     protected $queueService;
 
-    /** @var TickService */
-    protected $tickService;
+    /** @var TickCalculator */
+    protected $tickCalculator;
 
     /**
      * MiscController constructor.
@@ -54,14 +54,14 @@ class MiscController extends AbstractDominionController
         SelectorService $dominionSelectorService,
         MilitaryCalculator $militaryCalculator,
         QueueService $queueService,
-        TickService $tickService
+        TickCalculator $tickCalculator
         )
     {
         $this->dominionSelectorService = $dominionSelectorService;
         $this->dominionStateService = $dominionStateService;
         $this->militaryCalculator = $militaryCalculator;
         $this->queueService = $queueService;
-        $this->tickService = $tickService;
+        $this->tickCalculator = $tickCalculator;
     }
 
     public function postClearNotifications()
@@ -310,14 +310,13 @@ class MiscController extends AbstractDominionController
 
         try {
             $result = $dominionStateService->restoreDominionState($dominion, $dominionState);
-            $this->tickService->precalculateTick($dominion);
+            $this->tickCalculator->precalculateTick($dominion);
         } catch (GameException $e) {
             return redirect()->back()
                 ->withInput($request->all())
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
         return redirect()->to($result['redirect'] ?? route('dominion.status'));
 
     }

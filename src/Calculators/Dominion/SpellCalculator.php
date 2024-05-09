@@ -135,7 +135,7 @@ class SpellCalculator
      */
     public function getActiveSpells(Dominion $dominion): Collection
     {
-        return DominionSpell::where('caster_id',$dominion->id)->get();
+        return DominionSpell::where('dominion_id',$dominion->id)->get();
     }
 
 
@@ -152,7 +152,7 @@ class SpellCalculator
             );
         }
 
-        return collect(DominionSpell::where('dominion_id',$dominion->id)->get());
+        return collect(DominionSpell::where('dominion_id',$caster->id)->get());
     }
 
     public function getPassiveSpellsCastOnDominion(Dominion $dominion, string $scope = null)#: Collection

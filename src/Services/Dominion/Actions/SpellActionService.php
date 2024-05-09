@@ -338,7 +338,7 @@ class SpellActionService
                 DB::transaction(function () use ($caster, $target, $spell)
                 {
                     $dominionSpell = DominionSpell::where('dominion_id', $target->id)->where('spell_id', $spell->id)
-                    ->update(['duration' => $duration]);
+                    ->update(['duration' => $spell->duration]);
 
                     $target->save([
                         'event' => HistoryService::EVENT_ACTION_CAST_SPELL,
@@ -890,7 +890,8 @@ class SpellActionService
     {
         $dominionSpell = DominionSpell::where('spell_id', $spell->id)->where('dominion_id', $breaker->id)->first();
 
-        $caster = Dominion::findOrFail($dominionSpell->caster_id);
+        #$caster = Dominion::findOrFail($dominionSpell->caster_id);
+        $caster = $dominionSpell->caster;
 
         if(!$this->spellCalculator->isSpellActive($breaker, $spell->key))
         {
