@@ -117,7 +117,7 @@ class ProcessDominionJob implements ShouldQueue
             #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
             $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug('** Handle Barbarians stuff (if this dominion is a Barbarian)'); }
+            if(config('game.extended_logging')) { Log::debug('** Handle Barbarian stuff (if this dominion is a Barbarian)'); }
             $this->handleBarbarians($this->dominion);
 
             if(config('game.extended_logging')) { Log::debug('** Updating buildings'); }
@@ -203,11 +203,11 @@ class ProcessDominionJob implements ShouldQueue
             $this->buildingCalculator->createOrIncrementBuildings($dominion, [$buildingKey => $amount]);
         }
 
-        # Handle self-destruct
-        if($buildingsDestroyed = $dominion->tick->buildings_destroyed)
-        {
-            $this->buildingCalculator->removeBuildings($dominion, $buildingsDestroyed);
-        }
+        # Handle self-destruct BUGGY
+        #if($buildingsDestroyed = $dominion->tick->buildings_destroyed)
+        #{
+        #    $this->buildingCalculator->removeBuildings($dominion, $buildingsDestroyed);
+        #}
     }
 
     # Take improvements that are one tick away from finished and create or increment DominionImprovements.
@@ -663,7 +663,17 @@ class ProcessDominionJob implements ShouldQueue
             foreach($unitsGenerated as $slot => $amount)
             {
                 if(config('game.extended_logging')) { Log::debug('**** ' . $amount . ' unit' . $slot . ' queued.'); dump('**** ' . $amount . ' unit' . $slot . ' queued.'); }
-                $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
+                try {
+                    DB::transaction(function () use ($unitsGenerated, $afflicted) {
+                        foreach ($unitsGenerated as $slot => $amount) {
+                            $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
+                            Log::info("Successfully queued {$amount} units of type {$slot} for {$afflicted->name}.");
+                        }
+                    });
+                } catch (\Exception $e) {
+                    Log::error("Failed to queue units: " . $e->getMessage());
+                }
+                #$this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
             }
         }
     }
