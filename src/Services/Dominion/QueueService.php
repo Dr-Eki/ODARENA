@@ -4,10 +4,10 @@ namespace OpenDominion\Services\Dominion;
 
 use BadMethodCallException;
 use DB;
+use Log;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use OpenDominion\Models\Dominion;
-use Throwable;
 
 /**
  * Class QueueService
@@ -288,23 +288,39 @@ class QueueService
         $data = array_map('\intval', $data);
         $now = now();
     
-        foreach ($data as $resource => $amount) {
-            if ($amount === 0) {
+        foreach ($data as $resource => $amount)
+        {
+
+            dump("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
+            Log::debug("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
+
+            if ($amount === 0)
+            {
                 continue;
             }
     
-            DB::table('dominion_queue')->updateOrInsert(
-                [
+            try {
+                $sql = "INSERT INTO `dominion_queue` (`dominion_id`, `source`, `resource`, `hours`, `amount`, `created_at`)
+                VALUES (:dominion_id, :source, :resource, :hours, :amount, :created_at)
+                ON DUPLICATE KEY UPDATE `amount` = `amount` + VALUES(`amount`), `created_at` = VALUES(`created_at`)";
+                
+                $bindings = [
                     'dominion_id' => $dominion->id,
                     'source' => $source,
                     'resource' => $resource,
                     'hours' => $ticks,
-                ],
-                [
-                    'amount' => DB::raw("amount + $amount"),
-                    'created_at' => $now,
-                ]
-            );
+                    'amount' => $amount,
+                    'created_at' => $now
+                ];
+
+                DB::transaction(function () use ($sql, $bindings) {
+                    DB::statement($sql, $bindings);
+                });
+                
+            } catch (\Illuminate\Database\QueryException $e) {
+                dump(">> Error: " . $e->getMessage());
+                Log::error(">> Error: " . $e->getMessage());
+            }
         }
     }
 

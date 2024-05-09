@@ -764,8 +764,9 @@ class TickService
     {
 
         Log::debug(sprintf(
-            '[TICK] Manual tick started for %s.',
-            $dominion->name
+            '[TICK] Manual tick started for %s (# %s).',
+            $dominion->name,
+            $dominion->realm->number ?? 'N/A'
         ));
 
         if($dominion->protection_ticks <= 0)
@@ -774,12 +775,10 @@ class TickService
             return;
         }
 
-        $this->tickCalculator->precalculateTick($dominion, true);
+        #$this->tickCalculator->precalculateTick($dominion, true);
 
-        
         DB::transaction(function () use ($dominion)
         {
-
             #$this->handleBuildings($dominion);
             #$this->handleTerrain($dominion);
             #$this->handleImprovements($dominion);

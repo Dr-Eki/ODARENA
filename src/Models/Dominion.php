@@ -1402,11 +1402,13 @@ class Dominion extends AbstractModel
             # Check each spell
             foreach ($spells as $spell)
             {
-                $dominionSpell = $dominionSpells->get($spell->id);
+                $dominionSpell = $this->dominionSpells->where('spell_id', $spell->id)->first();
                 $perkValueString = $spell->getPerkValue($perkKey);
 
+                #dd($spell, $dominionSpell, $perkValueString);
+
                 # Ignore spells that are not active or have perk value equal to 0
-                if($dominionSpell->duration <= 0 or $perkValueString === 0)
+                if(!$dominionSpell or $dominionSpell->duration <= 0 or $perkValueString === 0)
                 {
                     continue;
                 }

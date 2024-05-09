@@ -652,7 +652,7 @@ class ProcessDominionJob implements ShouldQueue
                 $peasantsKilled = (int)floor($target->peasants * $ratio);
                 $unitsGenerated[$slot] = isset($unitsGenerated[$slot]) ? $unitsGenerated[$slot] + $peasantsKilled : $peasantsKilled;
 
-                Log::info('*** Pestilence: ' . $target->name . ' lost ' . $peasantsKilled . ' peasants to pestilence.');
+                Log::info('*** ' . $dominionSpellPestilence->spell->name .': ' . $target->name . ' lost ' . $peasantsKilled . ' peasants to pestilence.');
             }
         }
 

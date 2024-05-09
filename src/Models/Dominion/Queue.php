@@ -18,9 +18,17 @@ class Queue extends AbstractModel
 {
     protected $table = 'dominion_queue';
 
-    protected $guarded = ['created_at'];
+    protected $fillable = [
+        'dominion_id',
+        'source',
+        'resource',
+        'hours',
+        'amount',
+    ];
 
-    protected $dates = ['created_at'];
+    protected $guarded = ['created_at', 'updated_at'];
 
-    const UPDATED_AT = null;
+    protected $dates = ['created_at', 'updated_at'];
+
+    #const UPDATED_AT = null;
 }
