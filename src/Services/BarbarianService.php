@@ -280,6 +280,8 @@ class BarbarianService
 
             }
 
+            $invadePlayer = false; # Fully disabled
+
             # Chicken out: 7/8 chance that the Barbarians won't hit.
             if($invadePlayer and rand(1, 8) !== 1)
             {
