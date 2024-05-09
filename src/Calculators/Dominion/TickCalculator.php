@@ -1,5 +1,8 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Calculators\Dominion;
 
 use DB;
@@ -7,8 +10,6 @@ use Illuminate\Support\Str;
 use OpenDominion\Models\Dominion\Tick;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Spell;
-
-use OpenDominion\Helpers\TitleHelper;
 
 use OpenDominion\Calculators\Dominion\ConversionCalculator;
 use OpenDominion\Calculators\Dominion\EspionageCalculator;

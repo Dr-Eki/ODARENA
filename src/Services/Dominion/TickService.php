@@ -6,55 +6,47 @@ declare(strict_types=1);
 namespace OpenDominion\Services\Dominion;
 
 use DB;
-use File;
 use Exception;
+use File;
 use Log;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Redis;
-
-use Laravel\Horizon\Horizon;
+#use Illuminate\Support\Str;
+#use Laravel\Horizon\Horizon;
 
 use OpenDominion\Jobs\ProcessDominionJob;
 
-use OpenDominion\Calculators\RealmCalculator;
-use OpenDominion\Calculators\Dominion\BuildingCalculator;
-use OpenDominion\Calculators\Dominion\ConversionCalculator;
-use OpenDominion\Calculators\Dominion\EspionageCalculator;
-use OpenDominion\Calculators\Dominion\ImprovementCalculator;
-use OpenDominion\Calculators\Dominion\LandCalculator;
-use OpenDominion\Calculators\Dominion\MagicCalculator;
-use OpenDominion\Calculators\Dominion\MilitaryCalculator;
-use OpenDominion\Calculators\Dominion\MoraleCalculator;
-use OpenDominion\Calculators\Dominion\PopulationCalculator;
-use OpenDominion\Calculators\Dominion\PrestigeCalculator;
-use OpenDominion\Calculators\Dominion\ProductionCalculator;
-use OpenDominion\Calculators\Dominion\ResourceCalculator;
-use OpenDominion\Calculators\Dominion\SorceryCalculator;
-use OpenDominion\Calculators\Dominion\SpellCalculator;
-use OpenDominion\Calculators\Dominion\UnitCalculator;
-
-use OpenDominion\Helpers\ImprovementHelper;
-use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RoundHelper;
-use OpenDominion\Helpers\UnitHelper;
+
 use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Improvement;
+use OpenDominion\Models\Spell;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\RoundWinner;
-use OpenDominion\Models\Spell;
 use OpenDominion\Models\Tech;
-use OpenDominion\Models\Dominion\Tick;
+#use OpenDominion\Models\Dominion\Tick;
+
+use OpenDominion\Calculators\Dominion\BuildingCalculator;
+use OpenDominion\Calculators\Dominion\EspionageCalculator;
+use OpenDominion\Calculators\Dominion\ImprovementCalculator;
+use OpenDominion\Calculators\Dominion\MoraleCalculator;
+use OpenDominion\Calculators\Dominion\ResourceCalculator;
+use OpenDominion\Calculators\Dominion\TickCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
+
 
 use OpenDominion\Services\BarbarianService;
 use OpenDominion\Services\HoldService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
-use OpenDominion\Services\Dominion\DominionStateService;
+use OpenDominion\Services\Dominion\DeityService;
 use OpenDominion\Services\Dominion\InsightService;
-use OpenDominion\Services\Dominion\TradeService;
+use OpenDominion\Services\Dominion\ResourceService;
+use OpenDominion\Services\Dominion\ResearchService;
+use OpenDominion\Services\Dominion\TerrainService;
+use OpenDominion\Services\Dominion\QueueService;
 use Throwable;
 
 class TickService
@@ -66,26 +58,27 @@ class TickService
     protected $temporaryData = [];
 
     protected $buildingCalculator;
-    protected $conversionCalculator;
+    #protected $conversionCalculator;
     protected $espionageCalculator;
     protected $improvementCalculator;
-    protected $landCalculator;
+    #protected $landCalculator;
     protected $magicCalculator;
     protected $militaryCalculator;
     protected $moraleCalculator;
     protected $notificationService;
-    protected $populationCalculator;
+    #protected $populationCalculator;
     protected $prestigeCalculator;
     protected $productionCalculator;
     protected $realmCalculator;
     protected $resourceCalculator;
     protected $sorceryCalculator;
     protected $spellCalculator;
+    protected $tickCalculator;
     protected $unitCalculator;
 
-    protected $improvementHelper;
-    protected $landHelper;
-    protected $unitHelper;
+    #protected $improvementHelper;
+    #protected $landHelper;
+    #protected $unitHelper;
     protected $roundHelper;
 
     protected $artefactService;
@@ -106,27 +99,28 @@ class TickService
     public function __construct()
     {
         $this->now = now();
-        $this->conversionCalculator = app(ConversionCalculator::class);
+        #$this->conversionCalculator = app(ConversionCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
-        $this->landCalculator = app(LandCalculator::class);
-        $this->magicCalculator = app(MagicCalculator::class);
+        #$this->landCalculator = app(LandCalculator::class);
+        #$this->magicCalculator = app(MagicCalculator::class);
         $this->notificationService = app(NotificationService::class);
-        $this->populationCalculator = app(PopulationCalculator::class);
-        $this->prestigeCalculator = app(PrestigeCalculator::class);
-        $this->productionCalculator = app(ProductionCalculator::class);
+        #$this->populationCalculator = app(PopulationCalculator::class);
+        #$this->prestigeCalculator = app(PrestigeCalculator::class);
+        #$this->productionCalculator = app(ProductionCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
-        $this->spellCalculator = app(SpellCalculator::class);
+        #$this->spellCalculator = app(SpellCalculator::class);
         $this->buildingCalculator = app(BuildingCalculator::class);
         $this->espionageCalculator = app(EspionageCalculator::class);
-        $this->militaryCalculator = app(MilitaryCalculator::class);
+        #$this->militaryCalculator = app(MilitaryCalculator::class);
         $this->moraleCalculator = app(MoraleCalculator::class);
-        $this->realmCalculator = app(RealmCalculator::class);
-        $this->sorceryCalculator = app(SorceryCalculator::class);
+        #$this->realmCalculator = app(RealmCalculator::class);
+        #$this->sorceryCalculator = app(SorceryCalculator::class);
+        $this->unitCalculator = app(TickCalculator::class);
         $this->unitCalculator = app(UnitCalculator::class);
 
-        $this->improvementHelper = app(ImprovementHelper::class);
-        $this->landHelper = app(LandHelper::class);
-        $this->unitHelper = app(UnitHelper::class);
+        #$this->improvementHelper = app(ImprovementHelper::class);
+        #$this->landHelper = app(LandHelper::class);
+        #$this->unitHelper = app(UnitHelper::class);
         $this->roundHelper = app(RoundHelper::class);
 
         $this->artefactService = app(ArtefactService::class);
@@ -142,7 +136,7 @@ class TickService
         $this->tradeService = app(TradeService::class);
 
         /* These calculators need to ignore queued resources for the following tick */
-        $this->populationCalculator->setForTick(true);
+        #$this->populationCalculator->setForTick(true);
         $this->queueService->setForTick(true);
         /* OK, get it? */
     }
@@ -171,44 +165,51 @@ class TickService
                 $round->is_ticking = 1;
                 $round->save();
 
+                // Each job is a DB transaction
                 if(config('game.extended_logging')) { Log::debug('** Queue, process, and wait for dominion jobs.'); }
                 $this->processDominionJobs($round);
-            
-                $this->temporaryData[$round->id] = [];
 
-                #DB::transaction(function () use ($round)
-                #{
-                $this->temporaryData[$round->id]['stasis_dominions'] = [];
+                // One transaction for all of these
+                DB::transaction(function () use ($round)
+                {
+                    $this->temporaryData[$round->id] = [];
 
-                if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
-                $this->handleWinConditions($round);
+                    $this->temporaryData[$round->id]['stasis_dominions'] = [];
 
-                if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
-                #$this->updateAllSpells($round);
+                    if(config('game.extended_logging')) { Log::debug('** Checking for win conditions'); }
+                    $this->handleWinConditions($round);
 
-                if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); }
-                #$this->updateAllDeities($round);
+                    if(config('game.extended_logging')) { Log::debug('* Update all spells'); }
+                    #$this->updateAllSpells($round);
 
-                if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); }
-                $this->updateAllInvasionQueues($round);
+                    if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); }
+                    #$this->updateAllDeities($round);
 
-                if(config('game.extended_logging')) { Log::debug('* Update all other queues'); }
-                $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
+                    if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); }
+                    $this->updateAllInvasionQueues($round);
 
-                if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); }
-                $this->updateArtefactsAegises($round);
+                    if(config('game.extended_logging')) { Log::debug('* Update all other queues'); }
+                    $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
-                if(config('game.extended_logging')) { Log::debug('* Handle barbarian spawn'); }
-                $this->handleBarbarianSpawn($round);
+                    if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); }
+                    $this->updateArtefactsAegises($round);
 
-                if(config('game.extended_logging')) { Log::debug('* Handle body decay'); }
-                $this->handleBodyDecay($round);
+                    if(config('game.extended_logging')) { Log::debug('* Handle barbarian spawn'); }
+                    $this->handleBarbarianSpawn($round);
 
-                if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
-                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
+                    if(config('game.extended_logging')) { Log::debug('* Handle body decay'); }
+                    $this->handleBodyDecay($round);
 
-                if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
-                $this->handleHoldsAndTradeRoutes($round);
+                    if(config('game.extended_logging')) { Log::debug('* Update all dominions'); }
+                    $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
+                });
+
+                // Separate DB transaction for trade routes
+                DB::transaction(function () use ($round)
+                {
+                    if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); }
+                    $this->handleHoldsAndTradeRoutes($round);
+                });
 
                 $this->now = now();
 
@@ -376,9 +377,9 @@ class TickService
 
     }
 
+    /*
     public function precalculateTick(Dominion $dominion, ?bool $saveHistory = false): void
     {
-        /** @var Tick $tick */
         $tick = Tick::firstOrCreate(['dominion_id' => $dominion->id]);
 
         if ($saveHistory)
@@ -478,33 +479,33 @@ class TickService
             }
         }
 
-        /*
-        // Queues
-        $incomingQueue = DB::table('dominion_queue')
-            ->where('dominion_id', $dominion->id)
-            ->where('source', '!=', 'construction')
-            ->where('source', '!=', 'repair')
-            ->where('source', '!=', 'restore')
-            ->where('hours', '=', 1)
-            ->get();
-
-        foreach ($incomingQueue as $row)
-        {
-            if(
-                    $row->source !== 'deity'
-                    and $row->source !== 'artefact'
-                    and $row->source !== 'research'
-                    and $row->source !== 'rezoning'
-                    and substr($row->resource, 0, strlen('resource_')) !== 'resource_'
-                    and substr($row->resource, 0, strlen('terrain_')) !== 'terrain_'
-            )
-            {
-                $tick->{$row->resource} += $row->amount;
-                // Temporarily add next hour's resources for accurate calculations
-                $dominion->{$row->resource} += $row->amount;
-            }
-        }
-        */
+        
+        #// Queues
+        #$incomingQueue = DB::table('dominion_queue')
+        #    ->where('dominion_id', $dominion->id)
+        #    ->where('source', '!=', 'construction')
+        #    ->where('source', '!=', 'repair')
+        #    ->where('source', '!=', 'restore')
+        #    ->where('hours', '=', 1)
+        #    ->get();
+#
+        #foreach ($incomingQueue as $row)
+        #{
+        #    if(
+        #            $row->source !== 'deity'
+        #            and $row->source !== 'artefact'
+        #            and $row->source !== 'research'
+        #            and $row->source !== 'rezoning'
+        #            and substr($row->resource, 0, strlen('resource_')) !== 'resource_'
+        #            and substr($row->resource, 0, strlen('terrain_')) !== 'terrain_'
+        #    )
+        #    {
+        #        $tick->{$row->resource} += $row->amount;
+        #        // Temporarily add next hour's resources for accurate calculations
+        #        $dominion->{$row->resource} += $row->amount;
+        #    }
+        #}
+        
 
         if($dominion->race->name == 'Barbarian')
         {
@@ -751,6 +752,7 @@ class TickService
 
         $tick->save();
     }
+    */
 
     # SINGLE DOMINION TICKS, MANUAL TICK
     /**
@@ -772,8 +774,9 @@ class TickService
             return;
         }
 
-        $this->precalculateTick($dominion, true);
+        $this->tickCalculator->precalculateTick($dominion, true);
 
+        
         DB::transaction(function () use ($dominion)
         {
 
@@ -812,7 +815,7 @@ class TickService
 
             $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
 
-            $this->precalculateTick($dominion, true);
+            $this->tickCalculator->precalculateTick($dominion, true);
 
             // Myconid: Land generation
             if(!empty($dominion->tick->generated_land) and $dominion->protection_ticks > 0)

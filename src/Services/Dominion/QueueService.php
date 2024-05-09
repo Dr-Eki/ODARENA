@@ -257,6 +257,7 @@ class QueueService
         }
     }
     */
+    /*
     public function queueResources(string $source, Dominion $dominion, array $data, int $ticks = 12): void
     {
         $data = array_map('\intval', $data);
@@ -280,6 +281,31 @@ class QueueService
                 ]
             );
         }
+    }
+    */
+    public function queueResources(string $source, Dominion $dominion, array $data, int $ticks = 12): void
+    {
+        $data = array_map('\intval', $data);
+        $now = now();
+
+        $insertData = [];
+
+        foreach ($data as $resource => $amount) {
+            if ($amount === 0) {
+                continue;
+            }
+
+            $insertData[] = [
+                'dominion_id' => $dominion->id,
+                'source' => $source,
+                'resource' => $resource,
+                'hours' => $ticks,
+                'amount' => DB::raw("amount + $amount"),
+                'created_at' => $now,
+            ];
+        }
+
+        DB::table('dominion_queue')->insert($insertData);
     }
 
     /**

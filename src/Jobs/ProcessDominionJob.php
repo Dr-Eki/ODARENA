@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Str;
+#use Illuminate\Support\Str;
 
 use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Deity;
@@ -19,18 +19,13 @@ use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Tech;
-use OpenDominion\Models\Dominion\Tick;
+#use OpenDominion\Models\Dominion\Tick;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
-use OpenDominion\Calculators\Dominion\ConversionCalculator;
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\MoraleCalculator;
-use OpenDominion\Calculators\Dominion\PopulationCalculator;
-use OpenDominion\Calculators\Dominion\ProductionCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
-use OpenDominion\Calculators\Dominion\SorceryCalculator;
-use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\TickCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
 
@@ -39,9 +34,8 @@ use OpenDominion\Services\BarbarianService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
 use OpenDominion\Services\Dominion\DeityService;
-use OpenDominion\Services\Dominion\HistoryService;
+#use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\InsightService;
-use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\ResearchService;
 use OpenDominion\Services\Dominion\TerrainService;
@@ -57,15 +51,10 @@ class ProcessDominionJob implements ShouldQueue
     protected $now;
 
     protected $buildingCalculator;
-    protected $conversionCalculator;
     protected $espionageCalculator;
     protected $improvementCalculator;
     protected $moraleCalculator;
-    protected $populationCalculator;
-    protected $productionCalculator;
     protected $resourceCalculator;
-    protected $sorceryCalculator;
-    protected $spellCalculator;
     protected $tickCalculator;
     protected $unitCalculator;
     
@@ -74,7 +63,6 @@ class ProcessDominionJob implements ShouldQueue
     protected $deityService;
     protected $insightService;
     protected $notificationService;
-    protected $protectionService;
     protected $queueService;
     protected $researchService;
     protected $resourceService;
@@ -91,15 +79,10 @@ class ProcessDominionJob implements ShouldQueue
         $this->dominion = $dominion;
 
         $this->buildingCalculator = app(BuildingCalculator::class);
-        $this->conversionCalculator = app(ConversionCalculator::class);
         $this->espionageCalculator = app(EspionageCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
         $this->moraleCalculator = app(MoraleCalculator::class);
-        $this->populationCalculator = app(PopulationCalculator::class);
-        $this->productionCalculator = app(ProductionCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
-        $this->sorceryCalculator = app(SorceryCalculator::class);
-        $this->spellCalculator = app(SpellCalculator::class);
         $this->tickCalculator = app(TickCalculator::class);
         $this->unitCalculator = app(UnitCalculator::class);
 
@@ -108,7 +91,6 @@ class ProcessDominionJob implements ShouldQueue
         $this->deityService = app(DeityService::class);
         $this->insightService = app(InsightService::class);
         $this->notificationService = app(NotificationService::class);
-        $this->protectionService = app(ProtectionService::class);
         $this->queueService = app(QueueService::class);
         $this->researchService = app(ResearchService::class);
         $this->resourceService = app(ResourceService::class);
@@ -126,8 +108,8 @@ class ProcessDominionJob implements ShouldQueue
 
         Log::debug('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . ' ), ID ');
         # Make a DB transaction
-        #DB::transaction(function () use ($round)
-        #{    
+        DB::transaction(function () use ($round)
+        {    
             $this->temporaryData[$round->id][$this->dominion->id] = [];
 
             #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
@@ -192,8 +174,7 @@ class ProcessDominionJob implements ShouldQueue
 
             if(config('game.extended_logging')) { Log::debug('** Precalculate tick'); }
             $this->tickCalculator->precalculateTick($this->dominion, true);
-
-        #});
+        });
 
         if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }
         $this->terrainService->auditAndRepairTerrain($this->dominion);
