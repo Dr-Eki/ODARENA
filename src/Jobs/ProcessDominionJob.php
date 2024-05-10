@@ -184,6 +184,8 @@ class ProcessDominionJob implements ShouldQueue
         $this->cleanupQueues($this->dominion);
         if(config('game.extended_logging')) { Log::debug('** Cleaning up active spells'); }
         $this->cleanupActiveSpells($this->dominion);
+
+        sleep(1);
     }
 
     # Take buildings that are one tick away from finished and create or increment DominionBuildings.

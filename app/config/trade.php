@@ -19,4 +19,6 @@ return [
 
     'sentiment_divisor' => 1100,
 
+    'trade_base_max' => 10000,
+
 ];

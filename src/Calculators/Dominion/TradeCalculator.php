@@ -27,6 +27,11 @@ class TradeCalculator
         $this->resourceCalculator = app(ResourceCalculator::class);
     }
 
+    public function maxTradeValue(Dominion $dominion): int
+    {
+        return config('trade.trade_base_max');
+    }
+
     public function canDominionTradeWithHold(Dominion $dominion, Hold $hold): bool
     {
         return $this->canDominionBuyAnyResourcesFromHold($dominion, $hold) && $this->canDominionSellAnyResourcesToHold($dominion, $hold);
