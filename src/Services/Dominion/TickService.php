@@ -775,7 +775,7 @@ class TickService
             return;
         }
 
-        #$this->tickCalculator->precalculateTick($dominion, true);
+        $this->tickCalculator->precalculateTick($dominion, true);
 
         DB::transaction(function () use ($dominion)
         {
@@ -840,34 +840,36 @@ class TickService
 
         Log::info("** Manual tick: queueing up dominion {$dominion->id}: {$dominion->name}");
         dump("** Manual tick: queuing up dominion {$dominion->id}: {$dominion->name}");
-        ProcessDominionJob::dispatch($dominion)->onQueue('tick');
-        
-        $this->dominionStateService->saveDominionState($dominion);
+        ProcessDominionJob::dispatch($dominion)->onQueue('manual_tick');
 
         // Wait for queue to clear
         $attempts = 60;
-        $delay = 1000; // milliseconds
+        $delay = (int)config('game.tick_queue_check_delay');
         
         retry($attempts, function () use ($delay) {
             $i = isset($i) ? $i + 1 : 1;
         
             $infoString = sprintf(
-                '[%s] Waiting for queued ProcessDominionJob to finish. Current queue: %s. Trying again in %s ms.',
+                '[%s] Waiting for queued ProcessDominionJob (queue:manual_tick) to finish. Current queue: %s. Next check in: %s ms.',
                 now()->format('Y-m-d H:i:s'),
-                Redis::llen('queues:tick'),
+                Redis::llen('queues:manual_tick'),
                 number_format($delay)
             );
-
-            if (Redis::llen('queues:tick') === 0) {
-                return;
+        
+            if (Redis::llen('queues:manual_tick') !== 0) {
+                Log::info($infoString);
+                dump($infoString);
+                throw new Exception('Tick queue not finish');
             }
-
-            Log::info($infoString);
-            dump($infoString);
-            throw new Exception('Tick queue not finish');
         }, $delay);
 
         $this->now = now();
+        
+        $this->dominionStateService->saveDominionState($dominion);
+
+        #$this->tickCalculator->precalculateTick($dominion, true);
+
+        $dominion->save();
 
         Log::info(sprintf(
             '[TICK] Ticked dominion %s in %s ms.',
@@ -1705,25 +1707,23 @@ class TickService
 
         // Wait for queue to clear
         $attempts = 60;
-        $delay = 1000; // milliseconds
+        $delay = (int)config('game.tick_queue_check_delay');
         
         retry($attempts, function () use ($delay) {
             $i = isset($i) ? $i + 1 : 1;
         
             $infoString = sprintf(
-                '[%s] Waiting for queued ProcessDominionJob to finish. Current queue: %s. Trying again in %s ms.',
+                '[%s] Waiting for queued ProcessDominionJob (queue:manual_tick) to finish. Current queue: %s. Next check in: %s ms.',
                 now()->format('Y-m-d H:i:s'),
-                Redis::llen('queues:tick'),
+                Redis::llen('queues:manual_tick'),
                 number_format($delay)
             );
-
-            if (Redis::llen('queues:tick') === 0) {
-                return;
+        
+            if (Redis::llen('queues:manual_tick') !== 0) {
+                Log::info($infoString);
+                dump($infoString);
+                throw new Exception('Tick queue not finish');
             }
-
-            Log::info($infoString);
-            dump($infoString);
-            throw new Exception('Tick queue not finish');
         }, $delay);
     }
 

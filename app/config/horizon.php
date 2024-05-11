@@ -200,7 +200,7 @@ return [
     'environments' => [
         'production' => [
             'supervisor-1' => [
-                'queue' => ['tick'],
+                'queue' => ['tick', 'manual_tick'],
                 'maxProcesses' => 24,
                 'balanceMaxShift' => 24,
                 'balanceCooldown' => 1,
@@ -209,7 +209,7 @@ return [
 
         'local' => [
             'supervisor-1' => [
-                'queue' => ['tick'],
+                'queue' => ['tick', 'manual_tick'],
                 'maxProcesses' => 24,
             ],
         ],

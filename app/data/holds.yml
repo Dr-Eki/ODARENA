@@ -548,7 +548,7 @@ stormwatch_peak:
 shadowmire:
   name: Shadowmire
   ruler_name: Irrenu Aric
-  description: A murky, fog-bound hold where Dark Elves harness the power of obsidian to forge powerful magic artifacts.
+  description: A murky, fog-bound hold where Dark Elves harness the power of obsidian to forge powerful magic artefacts.
   race: Dark Elf
   desired_resources:
     - gems

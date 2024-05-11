@@ -6,6 +6,8 @@ return [
 
     'extended_logging' => true,
 
+    'tick_queue_check_delay' => 500, # milliseconds
+
     'starting_land' => 1000,
 
     'defaults' => [

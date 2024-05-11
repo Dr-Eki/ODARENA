@@ -32,6 +32,16 @@ class TradeCalculator
         return config('trade.trade_base_max');
     }
 
+    public function getTradeMaxAmount(Dominion $dominion, Resource $resource): int
+    {
+        $resourceValue = $resource->trade->buy;
+        $maxTradeValue = $this->maxTradeValue($dominion);
+
+        $maxTradeAmount = (int)floor($maxTradeValue / $resourceValue);
+
+        return $maxTradeAmount;
+    }
+
     public function canDominionTradeWithHold(Dominion $dominion, Hold $hold): bool
     {
         return $this->canDominionBuyAnyResourcesFromHold($dominion, $hold) && $this->canDominionSellAnyResourcesToHold($dominion, $hold);
