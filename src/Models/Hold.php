@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Models;
 
+use DB;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
