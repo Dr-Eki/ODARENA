@@ -241,13 +241,59 @@ class Hold extends AbstractModel
     public function buyPrice(string $resourceKey): float
     {
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
-        return $this->prices->where('resource_id', $resource->id)->where('action','buy')->sortByDesc('id')->first()->price ?? 0;
+    
+        $sql = "SELECT
+            `price`
+        FROM
+            `hold_prices`
+        WHERE
+            `hold_id` = :hold_id AND
+            `resource_id` = :resource_id AND
+            `action` = :action AND
+            `tick` >= :tick
+        ORDER BY
+            tick DESC
+        LIMIT 1";
+    
+        $bindings = [
+            'hold_id' => $this->id,
+            'resource_id' => $resource->id,
+            'action' => 'buy',
+            'tick' => $this->round->ticks - 1
+        ];
+    
+        $result = DB::select($sql, $bindings);
+    
+        return (float)$result[0]->price ?? 0;
     }
 
     public function sellPrice(string $resourceKey): float
     {
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
-        return $this->prices->where('resource_id', $resource->id)->where('action','sell')->sortByDesc('id')->first()->price ?? 0;
+    
+        $sql = "SELECT
+            `price`
+        FROM
+            `hold_prices`
+        WHERE
+            `hold_id` = :hold_id AND
+            `resource_id` = :resource_id AND
+            `action` = :action AND
+            `tick` >= :tick
+        ORDER BY
+            tick DESC
+        LIMIT 1";
+    
+        $bindings = [
+            'hold_id' => $this->id,
+            'resource_id' => $resource->id,
+            'action' => 'sell',
+            'tick' => $this->round->ticks - 1
+        ];
+    
+        $result = DB::select($sql, $bindings);
+    
+        return (float)$result[0]->price ?? 0;
     }
 
 
