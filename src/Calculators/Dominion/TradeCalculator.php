@@ -80,27 +80,34 @@ class TradeCalculator
             'sold_resource_amount' => (int)$soldResourceAmount,
             'bought_resource_key' => $boughtResource->key,
             'bought_resource_amount' => 0,
+            'expected_resource_amount' => 0,
         ];
 
-        $netBoughtResourceAmount = $this->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
+        $expectedAmount = $this->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
+        $result['expected_resource_amount'] = $expectedAmount;
 
-        $result['bought_resource_amount'] = (int)$netBoughtResourceAmount;
+        $canHoldAffordTrade = $this->canHoldAffordTrade($hold, $boughtResource, $expectedAmount);
+        $canDominionAffordTrade = $this->canDominionAffordTrade($dominion, $soldResource, $soldResourceAmount);
 
-        $netSoldResourceAmount = $result['sold_resource_amount']; 
-
-        if($netBoughtResourceAmount !== $soldResourceAmount)
+        if(!$canHoldAffordTrade)
         {
-            $result['warning']['resource_bought_amount_change']['from'] = (int)$soldResourceAmount;
-            $result['warning']['resource_bought_amount_change']['to'] = (int)$netBoughtResourceAmount;
-
-            $netSoldResourceAmount = (int)round($result['sold_resource_amount'] * ($netBoughtResourceAmount / $soldResourceAmount)); 
-
-            $result['warning']['resource_sold_amount_change']['from'] = $soldResourceAmount;
-            $result['warning']['resource_sold_amount_change']['to'] = $netSoldResourceAmount;
-
-            $result['sold_resource_amount'] = $netSoldResourceAmount;
-            $result['bought_resource_amount'] = $netBoughtResourceAmount;
+            $result['error']['reason'] = 'hold_insufficient_resources';
+            $result['error']['details']['hold_production'] = $this->holdResourceCalculator->getProduction($hold, $boughtResource->key);
+            $result['error']['details']['hold_stockpile'] = $hold->{'resource_' . $boughtResource->key};
+            $result['error']['details']['hold_total_available'] = $result['error']['details']['hold_production'] + $result['error']['details']['hold_stockpile'];
+            return $result;
         }
+
+        if(!$canDominionAffordTrade)
+        {
+            $result['error']['reason'] = 'dominion_insufficient_resources';
+            $result['error']['details']['dominion_production'] = $this->dominionResourceCalculator->getProduction($dominion, $soldResource->key);
+            $result['error']['details']['dominion_stockpile'] = $dominion->{'resource_' . $soldResource->key};
+            $result['error']['details']['dominion_total_available'] = $result['error']['details']['dominion_production'] + $result['error']['details']['dominion_stockpile'];
+            return $result;
+        }
+
+        $result['bought_resource_amount'] = (int)$expectedAmount;
 
         return $result;
     }
@@ -112,10 +119,10 @@ class TradeCalculator
 
         $netAmount = $soldResourceAmount * $this->getResourceBuyPrice($dominion, $hold, $boughtResource, $soldResource);
 
-        if($netAmount > $hold->{'resource_' . $boughtResource->key})
-        {
-            return 0;
-        }
+        #if($netAmount > $hold->{'resource_' . $boughtResource->key})
+        #{
+        #    return 0;
+        #}
 
         return floorInt($netAmount);
 
@@ -281,39 +288,25 @@ class TradeCalculator
         return $this->getTradeRouteSlots($dominion) - $this->getUsedTradeRouteSlots($dominion);
     }
 
-    public function canHoldAffordTrade(Hold $hold, TradeRoute $tradeRoute): bool
+    public function canHoldAffordTrade(Hold $hold, Resource $boughtResource, int $amountToBeExported): bool
     {
 
-        # What the hold sells and the PLAYER BUYS
-        $boughtResource = $tradeRoute->boughtResource;
-
-        # What the hold buys and the PLAYER SELLS
-        $soldResource = $tradeRoute->soldResource;
+        # boughtResource = bought BY THE PLAYER
 
         $stockpile = $hold->{'resource_' . $boughtResource->key};
         $production = $this->holdResourceCalculator->getProduction($hold, $boughtResource->key);
 
-        # Bought amount = amount to be sold (bought by the dominion)
-        $amountToBeBought = $tradeRoute->bought_amount;
-
-        return ($production + $stockpile) >= $amountToBeSold;
+        return ($production + $stockpile) >= $amountToBeExported;
     }
 
-    public function canDominionAffordTrade(Dominion $dominion, TradeRoute $tradeRoute): bool
+    public function canDominionAffordTrade(Dominion $dominion, Resource $soldResource, int $soldAmount): bool
     {
 
-        # What the hold sells and the PLAYER BUYS
-        $boughtResource = $tradeRoute->boughtResource;
-
         # What the hold buys and the PLAYER SELLS
-        $soldResource = $tradeRoute->soldResource;
 
         $stockpile = $dominion->{'resource_' . $soldResource->key};
-        $production = $this->dominionResourceCalculator->getProduction($dominion, $tradeRoute->boughtResource->key);
+        $production = $this->dominionResourceCalculator->getProduction($dominion, $soldResource->key);
 
-        # Bought amount = amount to be sold (bought by the dominion)
-        $amountToBeSold = $tradeRoute->source_amount;
-
-        return ($production + $stockpile) >= $amountToBeSold;
+        return ($production + $stockpile) >= $soldAmount;
     }
 }

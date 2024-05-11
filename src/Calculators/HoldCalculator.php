@@ -199,9 +199,9 @@ class HoldCalculator
         return $multiplier;
     }
 
-    public function getStartingBuildings(Hold $hold): array
+    public function getNewBuildings(Hold $hold, int $newBuildings = 0): array
     {
-        $land = $hold->land;
+        $land = ($newBuildings > 0) ? $newBuildings : $hold->land;
 
         $buildingData = [];
 

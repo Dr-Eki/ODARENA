@@ -151,8 +151,9 @@
                 <thead>
                     <tr>
                         <th>Dominion</th>
-                        <th>Resource Bought</th>
                         <th>Resource Sold</th>
+                        <th>Amount Sold</th>
+                        <th>Resource Bought</th>
                         <th class="text-center">Trades</th>
                     </tr>
                 </thead>
@@ -161,15 +162,18 @@
                         @php
                             $canViewTradeRouteCounterparty = false;
                             $canViewTradeRouteResources = false;
+                            $canViewTradeRouteAmount = false;
 
                             // If selected dominion is in the same realm as the hold, selected dominion can see the resources
                             if($tradeRoute->dominion->realm->id == $selectedDominion->realm->id)
                             {
                                 $canViewTradeRouteResources = true;
+                                $canViewTradeRouteAmount = true;
                             }
 
                             // If selected dominion is trading with the hold, selected dominion can see the name of counterparties
-                            if($hold->tradeRoutes->where('dominion_id',$selectedDominion->id)->count())
+                            #if($hold->tradeRoutes->where('dominion_id',$selectedDominion->id)->count())
+                            if($tradeRoute->dominion->realm->id == $selectedDominion->realm->id)
                             {
                                 $canViewTradeRouteCounterparty = true;
                             }
@@ -179,16 +183,17 @@
                         <tr>
                             @if($canViewTradeRouteCounterparty)
                                 <td>
-                                        {{ $tradeRoute->dominion->name }}
-                                        (# {{ $tradeRoute->dominion->realm->number }})
+                                    {{ $tradeRoute->dominion->name }}
+                                    (# {{ $tradeRoute->dominion->realm->number }})
                                 </td>
                             @else
                                 <td><em>Not disclosed</em></td>
                             @endif
 
                             @if($canViewTradeRouteResources)
-                                <td>{{ $tradeRoute->bought_resource }}</td>
-                                <td>{{ $tradeRoute->sold_resource }}</td>
+                                <td>{{ $tradeRoute->soldResource->name }}</td>
+                                <td>{{ number_format($tradeRoute->source_amount) }}</td>
+                                <td>{{ $tradeRoute->boughtResource->name }}</td>
                                 <td class="text-center">{{ number_format($tradeRoute->trades) }}</td>
                             @else
                                 <td><em>Not disclosed</em></td>

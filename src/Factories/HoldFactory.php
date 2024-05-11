@@ -102,7 +102,7 @@ class HoldFactory
                 $this->resourceService->update($hold, [$resourceKey => $amountToAdd]);
             }
 
-            foreach($this->holdCalculator->getStartingBuildings($hold) as $buildingKey => $buildingAmount)
+            foreach($this->holdCalculator->getNewBuildings($hold) as $buildingKey => $buildingAmount)
             {
                 $this->buildingService->update($hold, [$buildingKey => $buildingAmount]);
             }
@@ -185,7 +185,7 @@ class HoldFactory
                     $this->resourceService->update($hold, [$resourceKey => $amountToAdd]);
                 }
 
-                foreach($this->holdCalculator->getStartingBuildings($hold) as $buildingKey => $buildingAmount)
+                foreach($this->holdCalculator->getNewBuildings($hold) as $buildingKey => $buildingAmount)
                 {
                     $this->buildingService->update($hold, [$buildingKey => $buildingAmount]);
                 }

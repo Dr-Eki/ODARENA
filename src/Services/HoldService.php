@@ -21,6 +21,7 @@ use OpenDominion\Calculators\Hold\ResourceCalculator;
 
 use OpenDominion\Helpers\HoldHelper;
 
+use OpenDominion\Services\Hold\BuildingService;
 use OpenDominion\Services\Hold\QueueService;
 use OpenDominion\Services\Hold\ResourceService;
 
@@ -28,9 +29,13 @@ class HoldService
 {
 
     protected $holdCalculator;
-    protected $holdHelper;
-    protected $queueService;
     protected $resourceCalculator;
+
+
+    protected $holdHelper;
+
+    protected $buildingService;
+    protected $queueService;
     protected $resourceService;
 
     public function __construct()
@@ -40,6 +45,7 @@ class HoldService
 
         $this->holdHelper = app(HoldHelper::class);
 
+        $this->buildingService = app(BuildingService::class);
         $this->queueService = app(QueueService::class);
         $this->resourceService = app(ResourceService::class);
     }
@@ -121,11 +127,21 @@ class HoldService
 
     public function handleHoldResourceProduction(Hold $hold): void
     {
-
         foreach($hold->sold_resources as $resourceKey)
         {
             $amountProduced = $this->resourceCalculator->getProduction($hold, $resourceKey);
             $this->resourceService->update($hold, [$resourceKey => $amountProduced]);
+        }
+
+    }
+
+    public function handleHoldConstruction(Hold $hold): void
+    {
+        $barrenLand = $hold->land - $hold->buildings->sum('amount');
+
+        foreach($this->holdCalculator->getNewBuildings($hold, $barrenLand) as $buildingKey => $buildingAmount)
+        {
+            $this->buildingService->update($hold, [$buildingKey => $buildingAmount]);
         }
 
     }
@@ -162,6 +178,9 @@ class HoldService
 
             # Handle resource production
             $this->handleHoldResourceProduction($hold);
+
+            # Handle building construction
+            $this->handleHoldConstruction($hold);
 
         }
 

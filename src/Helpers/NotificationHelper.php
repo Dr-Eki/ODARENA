@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Helpers;
 
+use Log;
 use LogicException;
 use Illuminate\Support\Str;
 use OpenDominion\Models\Artefact;

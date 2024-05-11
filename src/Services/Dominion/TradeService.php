@@ -40,7 +40,7 @@ class TradeService
 
     public function handleTradeRoutesTick(Round $round)
     {
-        $activeTradeRoutes = $round->tradeRoutes->whereIn('status', [0,1]);
+        $activeTradeRoutes = $round->tradeRoutes->whereIn('status', [0,1])->sortBy('id');
 
         foreach ($activeTradeRoutes as $tradeRoute)
         {
@@ -81,38 +81,57 @@ class TradeService
         }
 
         $tradeResult = $this->tradeCalculator->getTradeResult($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
-        $boughtResourceAmount = $tradeResult['bought_resource_amount'];
 
-        if($boughtResourceAmount <= 0)
+        if(isset($tradeResult['error']))
         {
-            $soldResourceAmount = 0;
+            if($tradeResult['error']['reason'] == 'hold_insufficient_resources')
+            {
+                $this->notificationService->queueNotification('trade_failed', [
+                    'hold_id' => $hold->id,
+                    'hold_name' => $hold->name,
+                    'sold_resource_id' => $soldResource->id,
+                    'sold_resource_name' => $soldResource->name,
+                    'sold_resource_amount' => $soldResourceAmount,
+                    'bought_resource_id' => $boughtResource->id,
+                    'bought_resource_name' => $boughtResource->name,
+                    'expected_bought_resource_amount' => $tradeResult['expected_resource_amount'],
+                    'hold_total_available' => $tradeResult['error']['details']['hold_total_available'],
+                    'hold_production' => $tradeResult['error']['details']['hold_production'],
+                    'hold_stockpile' => $tradeResult['error']['details']['hold_stockpile'],
+                ]);
+    
+                Log::info("*** Hold is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The hold does not have enough {$boughtResource->name}: {$tradeResult['expected_resource_amount']} expected, {$tradeResult['error']['details']['hold_total_available']} available, {$tradeResult['error']['details']['hold_production']} production, {$tradeResult['error']['details']['hold_stockpile']} stockpile.");
+            }
 
-            $this->notificationService->queueNotification('trade_failed', [
-                'hold_id' => $hold->id,
-                'hold_name' => $hold->name,
-                'sold_resource_id' => $soldResource->id,
-                'sold_resource_name' => $soldResource->name,
-                'sold_resource_amount' => $soldResourceAmount,
-                'bought_resource_id' => $boughtResource->id,
-                'bought_resource_name' => $boughtResource->bought_resource_name,
-                'bought_resource_amount' => $boughtResourceAmount,
-            ]);
+            if($tradeResult['error']['reason'] == 'dominion_insufficient_resources')
+            {
+                $this->notificationService->queueNotification('trade_failed', [
+                    'hold_id' => $hold->id,
+                    'hold_name' => $hold->name,
+                    'sold_resource_id' => $soldResource->id,
+                    'sold_resource_name' => $soldResource->name,
+                    'sold_resource_amount' => $soldResourceAmount,
+                    'bought_resource_id' => $boughtResource->id,
+                    'bought_resource_name' => $boughtResource->name,
+                    'expected_bought_resource_amount' => $tradeResult['expected_resource_amount'],
+                    'dominion_total_available' => $tradeResult['error']['details']['dominion_total_available'],
+                    'dominion_production' => $tradeResult['error']['details']['dominion_production'],
+                    'dominion_stockpile' => $tradeResult['error']['details']['dominion_stockpile'],
+                ]);
 
-            Log::info('[TRADE] Hold is out of resources. Trade failed', [
-                'trade_route_id' => $tradeRoute->id,
-                'dominion_id' => $dominion->id,
-                'hold_id' => $hold->id,
-                'sold_resource_id' => $soldResource->id,
-                'bought_resource_id' => $boughtResource->id,
-                'sold_resource_amount' => $soldResourceAmount,
-                'bought_resource_amount' => $boughtResourceAmount,
-            ]);
+                Log::info("*** Dominion is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The dominion does not have enough {$soldResource->name}: {$soldResourceAmount} expected, {$tradeResult['error']['details']['dominion_total_available']} available, {$tradeResult['error']['details']['dominion_production']} production, {$tradeResult['error']['details']['dominion_stockpile']} stockpile.");
+
+
+                $this->cancelTradeRoute($tradeRoute, 'dominion_insufficient_resources');
+            }
 
             # Send notifications
             $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
 
             return;
         }
+
+        $boughtResourceAmount = $tradeResult['bought_resource_amount'];
 
         # Queue up outgoing
         $this->queueService->queueTrade($tradeRoute, 'export', $soldResource, $soldResourceAmount);

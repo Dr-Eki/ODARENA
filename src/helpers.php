@@ -170,56 +170,6 @@ if (!function_exists('number_string')) {
     }
 }
 
-if(!function_exists('generateKeyFromNameString')) {
-    function generateKeyFromNameString(string $name): string
-    {
-        return preg_replace("/[^a-zA-Z0-9\_]+/", "",str_replace(' ', '_', strtolower($name)));
-    }
-}
-
-
-
-if (!function_exists('capSum')) {
-    /**
-     * Generates a string from a number with number_format, and an explicit + sign
-     * prefix.
-     *
-     * @param int|float $number
-     * @param int $numDecimals
-     * @return string
-     */
-    function capSum($current, $new) {
-        $remaining = 4294967295 - $current;
-        return min($new, $remaining);
-    }
-}
-
-if(!function_exists('indefiniteArticle'))
-{
-    /**
-     * Returns the indefinite article for a word.
-     *
-     * @param string $word
-     * @return string
-     */
-
-     function indefiniteArticle(string $word): string
-    {
-        $word = strtolower(trim($word));
-        $firstLetter = $word[0];
-
-        $vowels = ['a', 'e', 'i', 'o', 'u'];
-
-        if (in_array($firstLetter, $vowels)) {
-            return 'an';
-        } else {
-            return 'a';
-        }
-    }
-
-}
-
-
 if(!function_exists('ldump'))
 {
     /**
