@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Models;
 
+use DB;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
@@ -238,17 +239,96 @@ class Hold extends AbstractModel
         return array_unique($merged);
     }
 
+    #public function buyPrice(string $resourceKey): float
+    #{
+    #    $resource = Resource::where('key', $resourceKey)->firstOrFail();
+#
+    #    $price = $this->prices->where('resource_id', $resource->id)
+    #        ->where('action', 'buy')
+    #        ->orderBy('id', 'desc')
+    #        ->first();
+#
+    #    return $price ? $price->price : 0;
+    #}
+#
+    #public function sellPrice(string $resourceKey): float
+    #{
+    #    $resource = Resource::where('key', $resourceKey)->firstOrFail();
+#
+    #    $price = $this->prices->where('resource_id', $resource->id)
+    #        ->where('action', 'sell')
+    #        ->orderBy('id', 'desc')
+    #        ->first();
+#
+    #    return $price ? $price->price : 0;
+    #}
+
+    
+
     public function buyPrice(string $resourceKey): float
     {
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
-        return $this->prices->where('resource_id', $resource->id)->where('action','buy')->sortByDesc('id')->first()->price ?? 0;
+    
+        $sql = "SELECT
+            `price`
+        FROM
+            `hold_prices`
+        WHERE
+            `hold_id` = :hold_id AND
+            `resource_id` = :resource_id AND
+            `action` = :action AND
+            `tick` >= :tick
+        ORDER BY
+            tick DESC
+        LIMIT 1";
+    
+        $bindings = [
+            'hold_id' => $this->id,
+            'resource_id' => $resource->id,
+            'action' => 'buy',
+            'tick' => $this->round->ticks - 1
+        ];
+    
+        $result = DB::select($sql, $bindings);
+    
+        return (float)$result[0]->price ?? 0;
     }
 
     public function sellPrice(string $resourceKey): float
     {
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
-        return $this->prices->where('resource_id', $resource->id)->where('action','sell')->sortByDesc('id')->first()->price ?? 0;
+    
+        $sql = "SELECT
+            `price`
+        FROM
+            `hold_prices`
+        WHERE
+            `hold_id` = :hold_id AND
+            `resource_id` = :resource_id AND
+            `action` = :action AND
+            `tick` >= :tick
+        ORDER BY
+            tick DESC
+        LIMIT 1";
+    
+        $bindings = [
+            'hold_id' => $this->id,
+            'resource_id' => $resource->id,
+            'action' => 'sell',
+            'tick' => $this->round->ticks - 1
+        ];
+    
+        $result = DB::select($sql, $bindings);
+    
+        return (float)$result[0]->price ?? 0;
     }
+
+#
+#    public function sellPrice(string $resourceKey): float
+#    {
+#        $resource = Resource::where('key', $resourceKey)->firstOrFail();
+#        return $this->prices->where('resource_id', $resource->id)->where('action','sell')->where('tick','>=',$this->round->ticks)->sortByDesc('id')->first()->price ?? 0;
+#    }
 
 
     # This code enables the following syntax:

@@ -1,6 +1,6 @@
 <?php
 // We want strict types here.
-#declare(strict_types=1);
+declare(strict_types=1);
 
 namespace OpenDominion\Calculators\Dominion;
 
@@ -649,11 +649,11 @@ class MilitaryCalculator
             return 0;
         }
 
-        $buildingType = $buildingPerkData[0];
+        $buildingKey = $buildingPerkData[0];
         $ratio = (int)$buildingPerkData[1];
         $max = (int)$buildingPerkData[2];
         $totalLand = $dominion->land;
-        $landPercentage = ($this->buildingCalculator->getBuildingAmountOwned($dominion, null, $buildingType) / $totalLand) * 100;
+        $landPercentage = ($dominion->{'building_' . $buildingKey} / $totalLand) * 100;
 
         $powerFromBuilding = $landPercentage / $ratio;
         $powerFromPerk = min($powerFromBuilding, $max);
@@ -905,7 +905,7 @@ class MilitaryCalculator
             }
         } elseif ($target !== null) {
             $totalLand = $target->land;
-            $landPercentage = ($this->buildingCalculator->getBuildingAmountOwned($dominion, null, $buildingKey) / $totalLand) * 100;
+            $landPercentage = ($dominion->{'building_' . $buildingKey} / $totalLand) * 100;
         }
 
         $powerFromBuilding = $landPercentage / $ratio;
@@ -1059,7 +1059,7 @@ class MilitaryCalculator
         }
 
         $power = (float)$recentlyVictoriousPerkData[0];
-        $ticks = (float)$recentlyVictoriousPerkData[1];
+        $ticks = (int)$recentlyVictoriousPerkData[1];
 
         if($this->getRecentlyVictoriousCount($dominion, $ticks) > 0)
         {
@@ -2425,7 +2425,7 @@ class MilitaryCalculator
             $hasReturningUnits += $this->queueService->getArtefactattackQueueTotalByResource($dominion, "military_unit{$slot}");
         }
 
-        return $hasReturningUnits;
+        return $hasReturningUnits > 0;
     }
 
     /*
@@ -2455,7 +2455,7 @@ class MilitaryCalculator
 
         $landConquered *= 0.75;
 
-        return floor(max(10, $landConquered));
+        return (int)floor(max(10, $landConquered));
     }
 
     public function checkDiscoverLand(Dominion $attacker, Dominion $defender, bool $captureBuildings = false): bool
@@ -2661,7 +2661,7 @@ class MilitaryCalculator
 
         $strength *= $strengthGainMultiplier;
 
-        return $strength;
+        return (int)floor($strength);
 
     }
 
@@ -2756,7 +2756,7 @@ class MilitaryCalculator
         $multiplier += $dominion->getDecreePerkMultiplier('unit_send_capacity_mod');
         $multiplier += $dominion->getSpellPerkMultiplier('unit_send_capacity_mod');
 
-        return $maxUnits * $multiplier;
+        return (int)floor($maxUnits * $multiplier);
     }
 
     public function getUnitSabotagePoints(Dominion $saboteur, string $unitType): float

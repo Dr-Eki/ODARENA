@@ -281,3 +281,36 @@ if(!function_exists('negative'))
      
 }
 
+
+if (!function_exists('floorInt')) {
+    /**
+     * Dumps the given variables but only if running locally.
+     */
+    function floorInt($number): int
+    {
+        return (int)floor($number);
+    }
+}
+
+
+
+if (!function_exists('ceilInt')) {
+    /**
+     * Dumps the given variables but only if running locally.
+     */
+    function ceilInt($number): int
+    {
+        return (int)ceil($number);
+    }
+}
+
+
+if (!function_exists('roundInt')) {
+    /**
+     * Dumps the given variables but only if running locally.
+     */
+    function roundInt($number): int
+    {
+        return (int)round($number);
+    }
+}

@@ -48,7 +48,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($selectedDominion->tradeRoutes->where('status',1) as $tradeRoute)
+                        @foreach ($selectedDominion->tradeRoutes->where('status',1)->sortBy('hold_id') as $tradeRoute)
                             @php
                                 $sentiment = optional($tradeRoute->hold->sentiments->where('target_id', $selectedDominion->id)->first())->sentiment ?? 0;
                                 $sentimentDescription = $holdHelper->getSentimentDescription($sentiment);
@@ -103,13 +103,15 @@
             </div>
 
             <div class="box-body">
+                @php
+                    $hasAvailableTradeRouteSlots = $tradeCalculator->getAvailableTradeRouteSlots($selectedDominion);
+                @endphp
                 @foreach($selectedDominion->round->holds->where('status',1)->sortByDesc('tick_discovered') as $hold)
                     @php
                         $sentiment = optional($hold->sentiments->where('target_id', $selectedDominion->id)->first())->sentiment ?? 0;
                         $sentimentDescription = $holdHelper->getSentimentDescription($sentiment);
                         $sentimentClass = $holdHelper->getSentimentClass($sentimentDescription);
                         $canTradeWithHold = $tradeCalculator->canDominionTradeWithHold($selectedDominion, $hold);
-                        $hasAvailableTradeRouteSlots = $tradeCalculator->getAvailableTradeRouteSlots($selectedDominion);
                         $user = Auth::user();
                     @endphp
 

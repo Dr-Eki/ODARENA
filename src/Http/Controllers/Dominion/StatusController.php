@@ -98,7 +98,7 @@ class StatusController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        #dd($result, $request, $request->returnTo);
+        #sdd($result, $request, $request->returnTo);
 
         #$request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
         return redirect()->to(route($request->returnTo));

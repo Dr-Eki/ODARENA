@@ -14,17 +14,21 @@ use OpenDominion\Models\Resource;
 use OpenDominion\Models\TradeRoute;
 
 use OpenDominion\Calculators\HoldCalculator;
+use OpenDominion\Calculators\Hold\ResourceCalculator as HoldResourceCalculator;
+use OpenDominion\Calculators\Dominion\ResourceCalculator as DominionResourceCalculator;
 
 class TradeCalculator
 {
 
     protected $holdCalculator;
-    protected $resourceCalculator;
+    protected $dominionResourceCalculator;
+    protected $holdResourceCalculator;
 
     public function __construct()
     {
         $this->holdCalculator = app(HoldCalculator::class);
-        $this->resourceCalculator = app(ResourceCalculator::class);
+        $this->dominionResourceCalculator = app(DominionResourceCalculator::class);
+        $this->holdResourceCalculator = app(HoldResourceCalculator::class);
     }
 
     public function maxTradeValue(Dominion $dominion): int
@@ -106,22 +110,34 @@ class TradeCalculator
 
         $soldResourceAmount = (int)min($soldResourceAmount, $hold->{'resource_' . $soldResource->key});
 
-        $baseAmount = $soldResourceAmount * $hold->buyPrice($soldResource->key) * $hold->sellPrice($boughtResource->key);
+        $netAmount = $soldResourceAmount * $this->getResourceBuyPrice($dominion, $hold, $boughtResource, $soldResource);
+
+        if($netAmount > $hold->{'resource_' . $boughtResource->key})
+        {
+            return 0;
+        }
+
+        return floorInt($netAmount);
+
+        #$netAmount = min($netAmount, $hold->{'resource_' . $boughtResource->key});
+
+        #return (int)max(0, $netAmount);
+    }
+
+    public function getResourceBuyPrice(Dominion $dominion, Hold $hold, Resource $boughtResource, Resource $soldResource): float
+    {
+        $price = $hold->buyPrice($soldResource->key) * $hold->sellPrice($boughtResource->key);
         $multiplier = $this->holdCalculator->getSentimentMultiplier($hold, $dominion, $soldResource->key);
 
-        $netAmount = (int)floor($baseAmount * $multiplier);
-
-        $netAmount = min($netAmount, $hold->{'resource_' . $boughtResource->key});
-
-        return (int)max(0, $netAmount);
+        return round($price * $multiplier, config('trade.price_decimals'));
     }
 
     public function getResourceMaxOfferableAmount(Dominion $dominion, Resource $resource): int
     {
         $max = 0;
-        $isProducingResource = $this->resourceCalculator->isProducingResource($dominion, $resource->key);
+        $isProducingResource = $this->dominionResourceCalculator->isProducingResource($dominion, $resource->key);
 
-        $resourceNetProduction = $this->resourceCalculator->getNetProduction($dominion, $resource->key);
+        $resourceNetProduction = $this->dominionResourceCalculator->getNetProduction($dominion, $resource->key);
 
         if($isProducingResource and $resourceNetProduction <= 0)
         {
@@ -265,4 +281,39 @@ class TradeCalculator
         return $this->getTradeRouteSlots($dominion) - $this->getUsedTradeRouteSlots($dominion);
     }
 
+    public function canHoldAffordTrade(Hold $hold, TradeRoute $tradeRoute): bool
+    {
+
+        # What the hold sells and the PLAYER BUYS
+        $boughtResource = $tradeRoute->boughtResource;
+
+        # What the hold buys and the PLAYER SELLS
+        $soldResource = $tradeRoute->soldResource;
+
+        $stockpile = $hold->{'resource_' . $boughtResource->key};
+        $production = $this->holdResourceCalculator->getProduction($hold, $boughtResource->key);
+
+        # Bought amount = amount to be sold (bought by the dominion)
+        $amountToBeBought = $tradeRoute->bought_amount;
+
+        return ($production + $stockpile) >= $amountToBeSold;
+    }
+
+    public function canDominionAffordTrade(Dominion $dominion, TradeRoute $tradeRoute): bool
+    {
+
+        # What the hold sells and the PLAYER BUYS
+        $boughtResource = $tradeRoute->boughtResource;
+
+        # What the hold buys and the PLAYER SELLS
+        $soldResource = $tradeRoute->soldResource;
+
+        $stockpile = $dominion->{'resource_' . $soldResource->key};
+        $production = $this->dominionResourceCalculator->getProduction($dominion, $tradeRoute->boughtResource->key);
+
+        # Bought amount = amount to be sold (bought by the dominion)
+        $amountToBeSold = $tradeRoute->source_amount;
+
+        return ($production + $stockpile) >= $amountToBeSold;
+    }
 }

@@ -289,14 +289,6 @@ class HoldCalculator
         return (int)round($growth);
     }
 
-    public function canHoldAffordTrade(Hold $hold, TradeRoute $tradeRoute): bool
-    {
-        $stockpile = $hold->{'resource_' . $tradeRoute->boughtResource->key};
 
-        # Bought amount = amount to be sold (bought by the dominion)
-        $amountToBeSold = $tradeRoute->bought_amount;
-
-        return $stockpile >= $amountToBeSold;
-    }
 
 }
