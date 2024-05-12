@@ -18,6 +18,7 @@ class TradeLedger extends AbstractModel
         'source_amount',
         'target_amount',
         'trade_dominion_sentiment',
+        'trade_result_data',
     ];
 
     public function round()

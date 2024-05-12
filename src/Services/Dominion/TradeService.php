@@ -69,18 +69,25 @@ class TradeService
         $boughtResource = $tradeRoute->boughtResource;
         $soldResourceAmount = $tradeRoute->source_amount;
 
+        $dominionSoldResourceStockpile = $dominion->{'resource_' . $soldResource->key};
+        $amountToTakeFromStockpile = 0;
+        $dominionSoldResourceNetProduction = $this->resourceCalculator->getNetProduction($dominion, $soldResource->key);
+
         if($this->resourceCalculator->isProducingResource($dominion, $soldResource->key))
         {
             # Producing resources are already accounted for in production, so we take it from there (it's removed in the ResourceCalculator)
             $soldResourceAmount = $soldResourceAmount;
-        }
-        else
-        {
-            # Cap by what's available
-            $soldResourceAmount = min($soldResourceAmount, $dominion->{'resource_' . $soldResource->key});
+
+            if($dominionSoldResourceNetProduction < 0)
+            {
+                $amountToTakeFromStockpile = min(abs($dominionSoldResourceNetProduction), $dominionSoldResourceStockpile);
+            }
         }
 
         $tradeResult = $this->tradeCalculator->getTradeResult($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
+        $tradeResult['amount_to_take_from_stockpile'] = $amountToTakeFromStockpile;
+        $tradeResult['dominion_has_enough_from_income'] = $dominionSoldResourceNetProduction > 0;
+        $tradeResult['dominion_amount_from_stockpile'] = $amountToTakeFromStockpile;
 
         if(isset($tradeResult['error']))
         {
@@ -100,6 +107,23 @@ class TradeService
                     'hold_stockpile' => $tradeResult['error']['details']['hold_stockpile'],
                 ]);
     
+                # Record trade ledger
+                TradeLedger::create([
+                    'round_id' => $tradeRoute->round_id,
+                    'dominion_id' => $dominion->id,
+                    'hold_id' => $hold->id,
+                    'tick' => $tradeRoute->round->ticks,
+                    'return_tick' => $tradeRoute->round->ticks + 12, # Hardcoded for now
+                    'return_ticks' => 12, # Hardcoded for now
+                    'source_resource_id' => $soldResource->id,
+                    'target_resource_id' => $boughtResource->id,
+                    'source_amount' => $soldResourceAmount,
+                    'target_amount' => 0,
+                    'trade_dominion_sentiment' => optional($hold->sentiments->where('target_id', $dominion->id)->first())->sentiment ?? 0,
+                    'trade_result_data' => json_encode($tradeResult)
+                ]);
+
+
                 Log::info("*** Hold is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The hold does not have enough {$boughtResource->name}: {$tradeResult['expected_resource_amount']} expected, {$tradeResult['error']['details']['hold_total_available']} available, {$tradeResult['error']['details']['hold_production']} production, {$tradeResult['error']['details']['hold_stockpile']} stockpile.");
             }
 
@@ -117,6 +141,22 @@ class TradeService
                     'dominion_total_available' => $tradeResult['error']['details']['dominion_total_available'],
                     'dominion_production' => $tradeResult['error']['details']['dominion_production'],
                     'dominion_stockpile' => $tradeResult['error']['details']['dominion_stockpile'],
+                ]);
+    
+                # Record trade ledger
+                TradeLedger::create([
+                    'round_id' => $tradeRoute->round_id,
+                    'dominion_id' => $dominion->id,
+                    'hold_id' => $hold->id,
+                    'tick' => $tradeRoute->round->ticks,
+                    'return_tick' => $tradeRoute->round->ticks + 12, # Hardcoded for now
+                    'return_ticks' => 12, # Hardcoded for now
+                    'source_resource_id' => $soldResource->id,
+                    'target_resource_id' => $boughtResource->id,
+                    'source_amount' => $soldResourceAmount,
+                    'target_amount' => 0,
+                    'trade_dominion_sentiment' => optional($hold->sentiments->where('target_id', $dominion->id)->first())->sentiment ?? 0,
+                    'trade_result_data' => json_encode($tradeResult)
                 ]);
 
                 Log::info("*** Dominion is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The dominion does not have enough {$soldResource->name}: {$soldResourceAmount} expected, {$tradeResult['error']['details']['dominion_total_available']} available, {$tradeResult['error']['details']['dominion_production']} production, {$tradeResult['error']['details']['dominion_stockpile']} stockpile.");
@@ -137,13 +177,14 @@ class TradeService
         $this->queueService->queueTrade($tradeRoute, 'export', $soldResource, $soldResourceAmount);
 
         # Remove the resource from the dominion
-        if($this->resourceCalculator->isProducingResource($dominion, $soldResource->key))
+        
+        if($tradeResult['dominion_has_enough_from_income'])
         {
             // Do nothing
         }
         else
         {
-            $this->dominionResourceService->updateResources($dominion, [$soldResource->key => ($soldResourceAmount * -1)]);
+            $this->dominionResourceService->updateResources($dominion, [$soldResource->key => ($amountToTakeFromStockpile * -1)]);
         }
 
         # Queue up incoming
@@ -165,6 +206,7 @@ class TradeService
             'source_amount' => $soldResourceAmount,
             'target_amount' => $boughtResourceAmount,
             'trade_dominion_sentiment' => optional($hold->sentiments->where('target_id', $dominion->id)->first())->sentiment ?? 0,
+            'trade_result_data' => json_encode($tradeResult)
         ]);
 
     }

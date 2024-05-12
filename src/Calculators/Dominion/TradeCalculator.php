@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace OpenDominion\Calculators\Dominion;
 
+use Log;
 
 use Illuminate\Support\Collection;
 
@@ -92,19 +93,29 @@ class TradeCalculator
         if(!$canHoldAffordTrade)
         {
             $result['error']['reason'] = 'hold_insufficient_resources';
+            $result['hold_can_afford_trade'] = false;
             $result['error']['details']['hold_production'] = $this->holdResourceCalculator->getProduction($hold, $boughtResource->key);
             $result['error']['details']['hold_stockpile'] = $hold->{'resource_' . $boughtResource->key};
             $result['error']['details']['hold_total_available'] = $result['error']['details']['hold_production'] + $result['error']['details']['hold_stockpile'];
             return $result;
         }
+        else
+        {
+            $result['hold_can_afford_trade'] = true;
+        }
 
         if(!$canDominionAffordTrade)
         {
             $result['error']['reason'] = 'dominion_insufficient_resources';
+            $result['dominion_can_afford_trade'] = false;
             $result['error']['details']['dominion_production'] = $this->dominionResourceCalculator->getProduction($dominion, $soldResource->key);
             $result['error']['details']['dominion_stockpile'] = $dominion->{'resource_' . $soldResource->key};
             $result['error']['details']['dominion_total_available'] = $result['error']['details']['dominion_production'] + $result['error']['details']['dominion_stockpile'];
             return $result;
+        }
+        else
+        {
+            $result['dominion_can_afford_trade'] = true;
         }
 
         $result['bought_resource_amount'] = (int)$expectedAmount;
@@ -306,6 +317,8 @@ class TradeCalculator
 
         $stockpile = $dominion->{'resource_' . $soldResource->key};
         $production = $this->dominionResourceCalculator->getProduction($dominion, $soldResource->key);
+
+        Log::info("[CAN DOMINION AFFORD TRADE] Dominion: {$dominion->name} / Stockpile: $stockpile / Production: $production / Sold: $soldAmount");
 
         return ($production + $stockpile) >= $soldAmount;
     }

@@ -2041,7 +2041,7 @@ class MilitaryCalculator
     {
         if(is_int($slot))
         {
-            return (
+            return (int)(
                 $dominion->{'military_unit' . $slot} +
                 $this->queueService->getInvasionQueueTotalByResource($dominion, "military_unit{$slot}") +
                 $this->queueService->getExpeditionQueueTotalByResource($dominion, "military_unit{$slot}") +
@@ -2054,7 +2054,7 @@ class MilitaryCalculator
         }
         elseif(in_array($slot, ['draftees', 'spies', 'wizards', 'archmages']))
         {
-            return (
+            return (int)(
                 $dominion->{'military_' . $slot} +
                 $this->queueService->getInvasionQueueTotalByResource($dominion, "military_{$slot}") +
                 $this->queueService->getExpeditionQueueTotalByResource($dominion, "military_{$slot}") +
@@ -2108,7 +2108,7 @@ class MilitaryCalculator
             }
         }
 
-        return (int)floor($spies);
+        return floorInt($spies);
     }
 
     public function getTotalSpyUnitsAtHome(Dominion $dominion, string $type = 'offense'): int
@@ -2149,7 +2149,7 @@ class MilitaryCalculator
             }
         }
 
-        return (int)floor($spies);
+        return floorInt($spies);
     }
 
     public function getMaxSpyUnitsSendable(Dominion $dominion): int
@@ -2159,7 +2159,7 @@ class MilitaryCalculator
 
         $spyStrengthRatio = $dominion->spy_strength / 100;
 
-        return (int)floor(min($spyUnitsAvailable, $spyUnitsTotal * $spyStrengthRatio));
+        return floorInt(min($spyUnitsAvailable, $spyUnitsTotal * $spyStrengthRatio));
     }
 
     /**
@@ -2192,7 +2192,7 @@ class MilitaryCalculator
                 return !$event->data['result']['overwhelmed'];
             });
 
-        return $invasionEvents->count();
+        return (int)$invasionEvents->count();
     }
 
     /**
@@ -2224,7 +2224,7 @@ class MilitaryCalculator
             return ($event->data['result']['success'] and $event->data['land_ratio'] >= 75);
         });
 
-        return $invasionEvents->count();
+        return (int)$invasionEvents->count();
     }
 
     /**
@@ -2257,12 +2257,12 @@ class MilitaryCalculator
             return !$event->data['result']['overwhelmed'];
         });
 
-        return $invasionEvents->count();
+        return (int)$invasionEvents->count();
     }
 
     public function getRecentInvasionsSent(Dominion $dominion, int $ticks = 12): int
     {
-        return GameEvent::query()
+        return (int)GameEvent::query()
             ->where('tick', '>=', ($dominion->round->ticks - $ticks))
             ->where([
                 'source_type' => Dominion::class,
@@ -2455,7 +2455,7 @@ class MilitaryCalculator
 
         $landConquered *= 0.75;
 
-        return (int)floor(max(10, $landConquered));
+        return floorInt(max(10, $landConquered));
     }
 
     public function checkDiscoverLand(Dominion $attacker, Dominion $defender, bool $captureBuildings = false): bool
@@ -2508,7 +2508,7 @@ class MilitaryCalculator
             $multiplier += min($attacker->xp, 2250000) / 2250000;
         }
 
-        return floor($landConquered * $multiplier);
+        return floorInt($landConquered * $multiplier);
 
     }
 
@@ -2549,7 +2549,7 @@ class MilitaryCalculator
 
     public function getNetVictories(Dominion $dominion): int
     {
-        return $this->statsService->getStat($dominion, 'invasion_victories') - $this->statsService->getStat($dominion, 'defense_failures');
+        return (int)($this->statsService->getStat($dominion, 'invasion_victories') - $this->statsService->getStat($dominion, 'defense_failures'));
     }
 
     public function getRawMilitaryPowerFromAnnexedDominion(Dominion $dominion): int
@@ -2565,7 +2565,7 @@ class MilitaryCalculator
             $militaryPower += $dominion->{'military_unit'.$slot} * $unit->power_offense;
         }
 
-        return $militaryPower;
+        return floorInt($militaryPower);
     }
 
     public function getRawMilitaryPowerFromAnnexedDominions(Dominion $legion, Dominion $target = null): int
@@ -2582,7 +2582,7 @@ class MilitaryCalculator
             $militaryPower += $this->getRawMilitaryPowerFromAnnexedDominion($dominion);
         }
 
-        return $militaryPower;
+        return floorInt($militaryPower);
     }
 
     public function getDefensiveMultiplierReduction(Dominion $attacker): float
@@ -2661,7 +2661,7 @@ class MilitaryCalculator
 
         $strength *= $strengthGainMultiplier;
 
-        return (int)floor($strength);
+        return floorInt($strength);
 
     }
 
@@ -2696,7 +2696,7 @@ class MilitaryCalculator
             $units += $dominion->peasants;
         }
 
-        return $units;
+        return floorInt($units);
 
     }
 
@@ -2756,7 +2756,7 @@ class MilitaryCalculator
         $multiplier += $dominion->getDecreePerkMultiplier('unit_send_capacity_mod');
         $multiplier += $dominion->getSpellPerkMultiplier('unit_send_capacity_mod');
 
-        return (int)floor($maxUnits * $multiplier);
+        return floorInt($maxUnits * $multiplier);
     }
 
     public function getUnitSabotagePoints(Dominion $saboteur, string $unitType): float
@@ -2824,7 +2824,7 @@ class MilitaryCalculator
             ->where('tick', '>=', ($source->round->ticks - $ticks))
             ->count();
 
-        return $recentAttacks;
+        return (int)$recentAttacks;
     }
 
     public function getTotalPowerOfUnit(Dominion $dominion, Dominion $enemy, float $landRatio = null, Unit $unit, $units = null, $invadingUnits = null): float
