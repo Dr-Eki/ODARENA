@@ -581,10 +581,10 @@ class UnitCalculator
         # Unit:unit limit (including_away)
         if($pairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slotLimited, 'pairing_limit_including_away'))
         {
-            $slotLimitedTo = (int)$pairingLimit[0];
+            $slotLimitedTo = (string)$pairingLimit[0];
             $perUnitLimitedTo = (float)$pairingLimit[1];
 
-            $limitingUnits = $this->getUnitTypeTotalPaid($dominion, $slotLimited);
+            $limitingUnits = $this->getUnitTypeTotalPaid($dominion, $slotLimitedTo);
 
             return floorInt($limitingUnits * $perUnitLimitedTo * $limitMultiplier);
         }
@@ -642,6 +642,8 @@ class UnitCalculator
         {
             return floorInt($pairingLimit);
         }
+
+        return 0;
 
     }
 
