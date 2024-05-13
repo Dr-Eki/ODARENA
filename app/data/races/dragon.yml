@@ -79,7 +79,7 @@ units:
       defense: 6
     perks:
       # stat_pairing_limit: unit4_lost,100 # stat, max units per value of the stat
-      minimum_victories: 8
+      minimum_victories: 10
       casualties: -20
       burns_peasants_on_attack: 10
       immortal_on_overwhelming_victory: 1.10 # OP:DP ratio required to be immortal
