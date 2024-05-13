@@ -157,7 +157,7 @@ class HoldFactory
                     'ruler_name' => $holdData->ruler_name ?? Str::random(8),
                     'description' => $holdData->description,
                     'round_id' => $round->id,
-                    'title_id' => Title::all()->random()->id,
+                    'title_id' => Title::where('enabled', 1)->get()->random()->id,
                     'race_id' => isset($race->id) ? $race->id : null,
                     'status' => 0,
                     'land' => config('holds.starting_land'),
@@ -189,17 +189,6 @@ class HoldFactory
                 {
                     $this->buildingService->update($hold, [$buildingKey => $buildingAmount]);
                 }
-
-                GameEvent::create([
-                    'round_id' => $hold->round_id,
-                    'source_type' => Hold::class,
-                    'source_id' => $hold->id,
-                    'target_type' => null,
-                    'target_id' => null,
-                    'type' => 'hold_discovered',
-                    'data' => '',
-                    'tick' => $hold->round->ticks
-                ]);
             }
         });
     }
