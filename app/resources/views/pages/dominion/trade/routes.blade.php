@@ -159,7 +159,7 @@
                                         <tr>
                                             <td>{{ $resource->name }}</td>
                                             <td>{!! $buyPrice ? number_format($buyPrice, config('trade.price_decimals')) : '&mdash;' !!}</td>
-                                            <td>{!! $sellPrice ? number_format($sellPrice, config('trade.price_decimals')) : '&mdash;' !!}</td>
+                                            <td>{!! $sellPrice ? number_format(1/$sellPrice, config('trade.price_decimals')) : '&mdash;' !!}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

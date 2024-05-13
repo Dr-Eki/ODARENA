@@ -128,6 +128,7 @@
                     @endforeach
                 </tbody>
             </table>
+            <a href="{{ route('dominion.trade.hold.sentiments', $hold) }}" class="btn btn-primary btn-xl btn-block">View hold sentiment details</a>
         @endcomponent
     </div>
 
@@ -183,8 +184,10 @@
                         <tr>
                             @if($canViewTradeRouteCounterparty)
                                 <td>
-                                    {{ $tradeRoute->dominion->name }}
-                                    (# {{ $tradeRoute->dominion->realm->number }})
+                                    <a href="{{ route('dominion.insight.show', $tradeRoute->dominion) }}">
+                                        {{ $tradeRoute->dominion->name }}
+                                        (# {{ $tradeRoute->dominion->realm->number }})
+                                    </a>
                                 </td>
                             @else
                                 <td><em>Not disclosed</em></td>
@@ -205,6 +208,7 @@
                     @endforeach
                 </tbody>
             </table>
+            <a href="{{ route('dominion.trade.hold.ledger', $hold) }}" class="btn btn-primary btn-xl btn-block">View hold trade ledger</a>
         @endcomponent
     </div>
     
@@ -229,8 +233,8 @@
                         <th>Resource</th>
                         <th>Supply</th>
                         <th>Production</th>
-                        <th>Current Sell Price</th>
                         <th>Current Buy Price</th>
+                        <th>Current Sell Price</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -242,8 +246,8 @@
                             <td>{{ $resource->name }}</td>
                             <td>{{ number_format($hold->{'resource_' . $resourceKey}) }}</td>
                             <td>{{ number_format($resourceCalculator->getProduction($hold, $resourceKey)) }}</td>
-                            <td>{!! $hold->sellPrice($resourceKey) ? number_format($hold->sellPrice($resourceKey), config('trade.price_decimals')) : '&mdash;' !!}</td>
                             <td>{!! $hold->buyPrice($resourceKey) ? number_format($hold->buyPrice($resourceKey), config('trade.price_decimals')) : '&mdash;' !!}</td>
+                            <td>{!! $hold->sellPrice($resourceKey) ? number_format($hold->sellPrice($resourceKey), config('trade.price_decimals')) : '&mdash;' !!}</td>
                         </tr>
                     @endforeach
                 </tbody>

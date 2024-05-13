@@ -336,7 +336,7 @@ class ProcessDominionJob implements ShouldQueue
                                         ->where('source', 'research')
                                         ->where('hours',1)
                                         ->get();
-                                        
+
         foreach($finishedResearchesInQueue as $finishedDeityInQueue)
         {
             $techKey = $finishedDeityInQueue->resource;
@@ -740,7 +740,6 @@ class ProcessDominionJob implements ShouldQueue
 
     protected function updateSpells(Dominion $dominion): void
     {
-
         foreach($dominion->dominionSpells as $dominionSpell)
         {
             if($dominionSpell->duration > 0)

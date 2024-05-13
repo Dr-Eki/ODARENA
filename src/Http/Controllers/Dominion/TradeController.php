@@ -84,20 +84,7 @@ class TradeController extends AbstractDominionController
         ]);
     }
 
-    public function getHoldTrade(Hold $hold, TradeLedger $tradeLedgerEntry)
-    {
 
-        return view('pages.dominion.trade.hold.trade', [
-            'hold' => $hold,
-            
-            'resourceCalculator' => app(ResourceCalculator::class),
-            'tradeCalculator' => app(TradeCalculator::class),
-
-            'holdHelper' => app(HoldHelper::class),
-            'raceHelper' => app(RaceHelper::class),
-            'unitHelper' => app(UnitHelper::class),
-        ]);
-    }
 
     public function getHolds()
     {
@@ -120,6 +107,22 @@ class TradeController extends AbstractDominionController
     {
         $tradeLedgerEntries = $this->getSelectedDominion()->tradeLedger()->orderByDesc('created_at')->paginate(50);
         return view('pages.dominion.trade.ledger', ['tradeLedgerEntries' => $tradeLedgerEntries]);
+    }
+
+    public function getHoldLedger(Hold $hold)
+    {
+        $viewer = $this->getSelectedDominion();
+        $holdTradeLedgerEntries = $hold->tradeLedger()
+            ->join('dominions', 'trade_ledger.dominion_id', '=', 'dominions.id')
+            ->join('realms', 'dominions.realm_id', '=', 'realms.id')
+            ->where('dominions.realm_id', $viewer->realm->id)
+            ->orderByDesc('trade_ledger.created_at')
+            ->paginate(50);
+            
+        return view('pages.dominion.trade.hold.ledger', [
+            'holdTradeLedgerEntries' => $holdTradeLedgerEntries,
+            'hold' => $hold,
+        ]);
     }
 
     public function getSentiments()
