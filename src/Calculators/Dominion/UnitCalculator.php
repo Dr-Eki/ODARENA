@@ -1,5 +1,8 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Calculators\Dominion;
 
 use OpenDominion\Models\Dominion;
@@ -248,7 +251,7 @@ class UnitCalculator
             }
         }
 
-        return $generatedLand;
+        return (int)$generatedLand;
     }
 
     public function getAttritionMultiplier(Dominion $dominion): float
@@ -303,27 +306,27 @@ class UnitCalculator
 
     public function getUnitTypeTotalReturning(Dominion $dominion, string $unitType): int
     {
-        return $this->getUnitTypeTotal($dominion, $unitType, true, false, true);
+        return (int)$this->getUnitTypeTotal($dominion, $unitType, true, false, true);
     }
 
     public function getUnitTypeTotalIncoming(Dominion $dominion, string $unitType): int
     {
-        return $this->getUnitTypeTotal($dominion, $unitType, true, true, false);
+        return (int)$this->getUnitTypeTotal($dominion, $unitType, true, true, false);
     }
 
     public function getUnitTypeTotalTrained(Dominion $dominion, string $unitType): int
     {
-        return $this->getUnitTypeTotal($dominion, $unitType, false, false, true);
+        return (int)$this->getUnitTypeTotal($dominion, $unitType, false, false, true);
     }
 
     public function getUnitTypeTotalPaid(Dominion $dominion, string $unitType): int
     {
-        return $this->getUnitTypeTotal($dominion, $unitType, false, false, false);
+        return (int)$this->getUnitTypeTotal($dominion, $unitType, false, false, false);
     }
 
     public function getUnitTypeTotalAtHome(Dominion $dominion, string $unitType): int
     {
-        return $this->getUnitTypeTotal($dominion, $unitType, false, true, true);
+        return (int)$this->getUnitTypeTotal($dominion, $unitType, false, true, true);
     }
 
     public function getUnitTypeTotal(Dominion $dominion, string $unitType, bool $excludeAtHome = false, bool $excludeReturning = false, bool $excludeIncoming = false): int
@@ -335,7 +338,6 @@ class UnitCalculator
 
         if($unitKey === null)
         {
-            dd($unitKey, $unitType);
             return 0;
         }
 
@@ -361,17 +363,17 @@ class UnitCalculator
             $units += $this->queueService->getSummoningQueueTotalByResource($dominion, $unitKey);
         }
 
-        return $units;
+        return (int)$units;
     }
 
     public function getQueuedReturningUnitTypeAtTick(Dominion $dominion, string $unitType, int $tick): int
     {
-        return $this->getQueuedUnitTypeAtTick($dominion, $unitType, $tick, false, true);
+        return (int)$this->getQueuedUnitTypeAtTick($dominion, $unitType, $tick, false, true);
     }
 
     public function getQueuedIncomingUnitTypeAtTick(Dominion $dominion, string $unitType, int $tick): int
     {
-        return $this->getQueuedUnitTypeAtTick($dominion, $unitType, $tick, true, false);
+        return (int)$this->getQueuedUnitTypeAtTick($dominion, $unitType, $tick, true, false);
     }
 
     public function getQueuedUnitTypeAtTick(Dominion $dominion, string $unitType, int $tick, bool $excludeReturning = false, bool $excludeIncoming = false): int
@@ -408,7 +410,7 @@ class UnitCalculator
             $units += $this->queueService->getEvolutionQueueAmount($dominion, $unitKey, $tick);
         }
 
-        return $units;
+        return (int)$units;
     }
 
     public function getUnitSlot($unitType): ?string
@@ -471,7 +473,7 @@ class UnitCalculator
             $total += $dominion->{$unitKey};
         }
 
-        return $total;
+        return (int)$total;
     }
 
     # This does not take cost into consideration
@@ -573,7 +575,7 @@ class UnitCalculator
 
             $limitingUnits = $dominion->{'military_unit' . $slotLimitedTo};
 
-            return floor($limitingUnits * $perUnitLimitedTo * $limitMultiplier);
+            return floorInt($limitingUnits * $perUnitLimitedTo * $limitMultiplier);
         }
 
         # Unit:unit limit (including_away)
@@ -584,7 +586,7 @@ class UnitCalculator
 
             $limitingUnits = $this->getUnitTypeTotalPaid($dominion, $slotLimited);
 
-            return floor($limitingUnits * $perUnitLimitedTo * $limitMultiplier);
+            return floorInt($limitingUnits * $perUnitLimitedTo * $limitMultiplier);
         }
 
         # Unit:building limit
@@ -602,7 +604,7 @@ class UnitCalculator
                 $limitingBuildings = min($limitingBuildings, $dominion->land * 0.20);
             }
 
-            return floor($limitingBuildings * $perBuildingLimitedTo * $limitMultiplier);
+            return floorInt($limitingBuildings * $perBuildingLimitedTo * $limitMultiplier);
 
         }
 
@@ -610,7 +612,7 @@ class UnitCalculator
         if($pairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slotLimited, 'archmage_limit'))
         {
             $perArchmage = (float)$pairingLimit;
-            return floor($perArchmage * $dominion->military_archmages * $limitMultiplier);
+            return floorInt($perArchmage * $dominion->military_archmages * $limitMultiplier);
         }
 
         # Unit:net_victories limit
@@ -620,7 +622,7 @@ class UnitCalculator
 
             $netVictories = $this->statsService->getStat($dominion, 'invasion_victories') - $this->statsService->getStat($dominion, 'defense_failures');
 
-            return floor($perNetVictory * $netVictories);
+            return floorInt($perNetVictory * $netVictories);
         }
 
 
@@ -632,13 +634,13 @@ class UnitCalculator
 
             $statValue = $this->statsService->getStat($dominion, $statKey);
 
-            return floor($statValue * $perStat);
+            return floorInt($statValue * $perStat);
         }
 
         # Unit limit
         if($pairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slotLimited, 'amount_limit'))
         {
-            return $pairingLimit;
+            return floorInt($pairingLimit);
         }
 
     }
