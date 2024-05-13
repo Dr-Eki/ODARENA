@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', ' Hold ' . $hold->name . ' | Trade Ledger')
+@section('title', "Hold | {$hold->name} | Ledger")
 
 @section('content')
 

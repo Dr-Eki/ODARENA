@@ -28,6 +28,8 @@ class HoldSentimentEvent extends Model
      */
     protected $casts = [
         'sentiment' => 'int',
+        'description' => 'string',
+        'created_at' => 'datetime',
     ];
 
     /**

@@ -124,14 +124,37 @@ class TradeController extends AbstractDominionController
             'hold' => $hold,
         ]);
     }
-
-    public function getSentiments()
+    public function getHoldSentiments(Hold $hold, Request $request)
     {
-        $dominion = $this->getSelectedDominion();
-        $sentiments = $dominion->holdSentimentEvents()->orderByDesc('created_at')->paginate(50);
-
-        return view('pages.dominion.trade.sentiments', ['sentiments' => $sentiments]);
+        $viewer = $this->getSelectedDominion();
+        $query = $hold->sentimentEvents()
+            ->select('hold_sentiment_events.*', 'dominions.name as dominion_name', 'realms.number as realm_number')
+            ->join('dominions', 'hold_sentiment_events.target_id', '=', 'dominions.id')
+            ->join('realms', 'dominions.realm_id', '=', 'realms.id')
+            ->where('dominions.realm_id', $viewer->realm->id)
+            ->where('hold_sentiment_events.target_type', get_class($viewer));
+    
+        // Search filter for dominion name or description
+        if ($request->has('search') && $request->search !== null) {
+            $query->where(function ($query) use ($request) {
+                $query->where('dominions.name', 'like', '%' . $request->search . '%')
+                      ->orWhere('hold_sentiment_events.description', 'like', '%' . $request->search . '%');
+            });
+        }
+    
+        $holdSentimentEvents = $query->orderByDesc('hold_sentiment_events.created_at')
+                                     ->paginate(50);
+    
+        return view('pages.dominion.trade.hold.sentiments', [
+            'holdSentimentEvents' => $holdSentimentEvents,
+            'hold' => $hold,
+            'holdHelper' => app(HoldHelper::class),
+            'search' => $request->search // Passing back the search term to the view
+        ]);
     }
+    
+    
+    
 
     public function getEditTradeRoute($tradeRoute)
     {

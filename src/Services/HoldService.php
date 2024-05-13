@@ -232,7 +232,7 @@ class HoldService
 
         if($discoverer)
         {
-            HoldSentimentEvent::add($hold, $discoverer, 100, 'discovered_by_dominion');
+            HoldSentimentEvent::add($hold, $discoverer, config('holds.sentiment_penalties.discovered_by_dominion'), 'discovered_by_dominion');
         }
  
         return $hold;

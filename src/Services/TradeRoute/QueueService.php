@@ -122,7 +122,7 @@ class QueueService
             $finishedQueues->each->delete();
         }
 
-        HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, +1, 'trade_completed');
+        HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, config('holds.sentiment_penalties.trade_completed'), 'trade_completed');
 
         $overDueQueues = $tradeRoute->queues()
             ->where('status', 1)

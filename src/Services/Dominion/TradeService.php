@@ -215,7 +215,7 @@ class TradeService
     {
         if($tradeCancellationSentimentPenalty = $this->tradeCalculator->getTradeRouteCancellationSentimentPenalty($tradeRoute, $reason))
         {
-            HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, $tradeCancellationSentimentPenalty, $reason);
+            HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, -$tradeCancellationSentimentPenalty, $reason);
         }
 
         $tradeRoute->status = 0;

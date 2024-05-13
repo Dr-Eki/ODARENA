@@ -43,10 +43,10 @@ class TradeActionService
             throw new GameException('You cannot trade while in protection.');
         }
 
-        if(!$dominion->round->hasStarted())
-        {
-            throw new GameException('You cannot trade until the round begins.');
-        }
+        #if(!$dominion->round->hasStarted())
+        #{
+        #    throw new GameException('You cannot trade until the round begins.');
+        #}
 
         if($dominion->round->hasEnded())
         {
@@ -163,7 +163,7 @@ class TradeActionService
                 'tick' => $dominion->round->ticks
             ]);
 
-            HoldSentimentEvent::add($hold, $dominion, +0, 'trade_route_established');
+            HoldSentimentEvent::add($hold, $dominion, config('holds.sentiment_penalties.discovered_by_dominion'), 'trade_route_established');
 
             $message = vsprintf('Trade route to trade %s for %s with %s has been created.', [
                 $soldResource->name,
@@ -265,7 +265,11 @@ class TradeActionService
 
             if($soldResourceAmount < $tradeRoute->source_amount)
             {
-                HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, -20, 'sold_amount_reduced');
+                $reductionRatio = $soldResourceAmount / $tradeRoute->source_amount;
+                $baseSentimentPenalty = config('holds.sentiment_penalties.sold_amount_reduced');
+                $penalty = $baseSentimentPenalty * $reductionRatio;
+
+                HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, -$penalty, 'sold_amount_reduced');
             }
 
             $tradeRoute->update([

@@ -110,4 +110,17 @@ class HoldHelper
         return $resourceMap->get($resourceKey, 'harbour');
     }
 
+    public function getSentimentEventDescriptionString(string $description): string
+    {
+        $resourceMap = collect([
+            'trade_completed' => 'Trade completed',
+            'trade_route_established' => 'Trade route established',
+            'dominion_insufficient_resources' => 'Dominion has insufficient resources',
+            'discovered_by_dominion' => 'Discovered by dominion',
+            'trade_route_cancelled_by_dominion' => 'Trade route cancelled by dominion',
+        ]);
+        
+        return $resourceMap->get($description, $description);
+    }
+
 }

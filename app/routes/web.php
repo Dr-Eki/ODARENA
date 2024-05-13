@@ -112,7 +112,7 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('trade/holds')->uses('Dominion\TradeController@getHolds')->name('trade.holds');
             $router->get('trade/hold/{hold}')->uses('Dominion\TradeController@getHold')->name('trade.hold');
             $router->get('trade/hold/{hold}/ledger')->uses('Dominion\TradeController@getHoldLedger')->name('trade.hold.ledger');
-            $router->get('trade/hold/{hold}/sentiments')->uses('Dominion\TradeController@getHoldSentiment')->name('trade.hold.sentiments');
+            $router->get('trade/hold/{hold}/sentiments')->uses('Dominion\TradeController@getHoldSentiments')->name('trade.hold.sentiments');
             $router->get('trade/routes/confirm-trade-route')->uses('Dominion\TradeController@getConfirmTradeRoute')->name('trade.routes.confirm-trade-route');
             $router->get('trade/routes/clear-trade-route')->uses('Dominion\TradeController@clearTradeDetails')->name('trade.routes.clear-trade-route');
             $router->get('trade/routes/edit/{tradeRoute}')->uses('Dominion\TradeController@getEditTradeRoute')->name('trade.routes.edit');

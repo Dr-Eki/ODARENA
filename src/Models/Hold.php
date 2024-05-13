@@ -69,6 +69,11 @@ class Hold extends AbstractModel
         return $this->hasMany(HoldSentiment::class, 'hold_id');
     }
 
+    public function sentimentEvents()
+    {
+        return $this->hasMany(HoldSentimentEvent::class, 'hold_id');
+    }
+
     public function prices()
     {
         return $this->hasMany(HoldPrice::class);

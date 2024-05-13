@@ -8,7 +8,6 @@ return [
     'starting_peasants' => 5000,
     'starting_defense' => 25000,
 
-
     'tick_discover_hold_chance' => 40,
 
     'defaults' => [
@@ -27,5 +26,15 @@ return [
         'instruments' => 0.016,
         'spices' => 0.016,
         'sugar' => 0.015,
-    ]
+    ],
+
+    # Sentiment penalties
+    'sentiment_penalties' =>
+    [
+        'sold_amount_reduced' => 20,
+        'discovered_by_dominion' => 100,
+        'trade_route_established' => 1,
+        'trade_completed' => 1,
+    ],
+
 ];
