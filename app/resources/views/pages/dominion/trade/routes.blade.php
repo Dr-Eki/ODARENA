@@ -165,13 +165,9 @@
                                 </tbody>
                             </table>
                         </div>
-                        @if($selectedDominion->protection_tick)
+                        @if($selectedDominion->protection_ticks)
                             <div class="col-md-6">
                                 <p>You cannot trade while under protection.</p>
-                            </div>
-                        @elseif(!$selectedDominion->round->hasStarted())
-                            <div class="col-md-6">
-                                <p>You cannot trade before the round has started.</p>
                             </div>
                         @elseif($selectedDominion->isLocked() or $selectedDominion->isAbandoned())
                             <div class="col-md-6">
