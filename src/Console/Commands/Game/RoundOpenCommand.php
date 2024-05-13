@@ -16,6 +16,7 @@ use OpenDominion\Helpers\RoundHelper;
 use RuntimeException;
 
 use OpenDominion\Services\BarbarianService;
+use OpenDominion\Services\HoldService;
 
 class RoundOpenCommand extends Command implements CommandInterface
 {
@@ -25,20 +26,14 @@ class RoundOpenCommand extends Command implements CommandInterface
     /** @var string The console command description. */
     protected $description = 'Creates a new round and prompts for conditions and settings';
 
-    /** @var HoldFactory */
     protected $holdFactory;
-
-    /** @var RealmFactory */
     protected $realmFactory;
-
-    /** @var RoundFactory */
     protected $roundFactory;
 
-    /** @var RoundHelper */
     protected $roundHelper;
 
-    /** @var BarbarianService */
     protected $barbarianService;
+    protected $holdService;
 
     /**
      * RoundOpenCommand constructor.
@@ -47,11 +42,14 @@ class RoundOpenCommand extends Command implements CommandInterface
      * @param RealmFactory $realmFactory
      */
     public function __construct(
-        BarbarianService $barbarianService,
         HoldFactory $holdFactory,
         RealmFactory $realmFactory,
         RoundFactory $roundFactory,
-        RoundHelper $roundHelper
+
+        RoundHelper $roundHelper,
+
+        BarbarianService $barbarianService,
+        HoldService $holdService,
     ) {
         parent::__construct();
 
@@ -60,6 +58,7 @@ class RoundOpenCommand extends Command implements CommandInterface
         $this->roundHelper = $roundHelper;
         $this->realmFactory = $realmFactory;
         $this->barbarianService = $barbarianService;
+        $this->holdService = $holdService;
     }
 
     /**
@@ -217,6 +216,17 @@ class RoundOpenCommand extends Command implements CommandInterface
                 $this->info("Seeding holds.");
                 $this->holdFactory->seed($round);
                 $this->info("Holds created.");
+
+                // Get starting holds (default 1) from user input
+                $startingHolds = $this->ask('How many starting discovered holds? [10]: ') ?? 10;
+
+                // Create Barbarians.
+                for ($slot = 1; $slot <= $startingHolds; $slot++)
+                {
+                    $this->info("Discovering a hold...");
+                    $hold = $this->holdService->discoverHold($round);
+                    $this->info("* Hold discovered: {$hold->name} (ID {$hold->id})");
+                }
             }
             else
             {

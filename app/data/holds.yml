@@ -1,7 +1,7 @@
 verdant_veil:
   name: Verdant Veil
   ruler_name: Elara
-  description: A lush forest hold, known for its hidden groves and secretive denizens.
+  description: A lush forest hold, known for its hidden groves and secretive denizens. 
   race: Wood Elf
   desired_resources:
     - books
@@ -291,6 +291,7 @@ drakmount:
     - body
     - gold
     - obsidian
+    - dragonscale
 
 vas_nilghad:
   name: Vas Nilghad
@@ -734,3 +735,20 @@ baidar_jegu:
     - gold
     - prisoner
     - yak
+
+windward_fortress:
+  name: Windward Fortress
+  ruler_name: Kaela the Younger
+  description: Windward Fortress is straddled between two mountains, stretching from one promontory to the other. It is said to be the last common dwelling of Elves and Snow Elves. Abandoned by both, it was taken over by roaming farmers, who eventually succumbed to the dubious privilege of Dragonic rule.
+  race: Dragons
+  desired_resources:
+    - books
+    - food
+    - lumber
+    - gems
+    - gold
+  sold_resources:
+    - gold
+    - obsidian
+    - thunderstone
+    - dragonscale

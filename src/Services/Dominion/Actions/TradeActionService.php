@@ -163,7 +163,7 @@ class TradeActionService
                 'tick' => $dominion->round->ticks
             ]);
 
-            HoldSentimentEvent::add($hold, $dominion, config('holds.sentiment_penalties.discovered_by_dominion'), 'trade_route_established');
+            HoldSentimentEvent::add($hold, $dominion, config('holds.sentiment_values.discovered_by_dominion'), 'trade_route_established');
 
             $message = vsprintf('Trade route to trade %s for %s with %s has been created.', [
                 $soldResource->name,
@@ -266,7 +266,7 @@ class TradeActionService
             if($soldResourceAmount < $tradeRoute->source_amount)
             {
                 $reductionRatio = $soldResourceAmount / $tradeRoute->source_amount;
-                $baseSentimentPenalty = config('holds.sentiment_penalties.sold_amount_reduced');
+                $baseSentimentPenalty = config('holds.sentiment_values.sold_amount_reduced');
                 $penalty = $baseSentimentPenalty * $reductionRatio;
 
                 HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, -$penalty, 'sold_amount_reduced');

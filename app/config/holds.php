@@ -29,7 +29,7 @@ return [
     ],
 
     # Sentiment penalties
-    'sentiment_penalties' =>
+    'sentiment_values' =>
     [
         'sold_amount_reduced' => 20,
         'discovered_by_dominion' => 100,

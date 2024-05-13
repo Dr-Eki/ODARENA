@@ -81,6 +81,7 @@ class HoldHelper
             'body' => 'altar',
             'books' => 'school',
             'brimmer' => 'refinery',
+            'dragonscale' => 'gem_mine',
             'figurines' => 'workshop',
             'food' => 'farm',
             'gems' => 'gem_mine',
