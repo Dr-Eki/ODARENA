@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Models\Hold;
-use OpenDominion\Models\HoldSentimentEvent;
 use OpenDominion\Models\Resource;
+use OpenDominion\Models\TradeLedger;
 use OpenDominion\Models\TradeRoute;
 
 use OpenDominion\Calculators\Hold\ResourceCalculator;
@@ -73,6 +73,21 @@ class TradeController extends AbstractDominionController
     {
 
         return view('pages.dominion.trade.hold', [
+            'hold' => $hold,
+            
+            'resourceCalculator' => app(ResourceCalculator::class),
+            'tradeCalculator' => app(TradeCalculator::class),
+
+            'holdHelper' => app(HoldHelper::class),
+            'raceHelper' => app(RaceHelper::class),
+            'unitHelper' => app(UnitHelper::class),
+        ]);
+    }
+
+    public function getHoldTrade(Hold $hold, TradeLedger $tradeLedgerEntry)
+    {
+
+        return view('pages.dominion.trade.hold.trade', [
             'hold' => $hold,
             
             'resourceCalculator' => app(ResourceCalculator::class),

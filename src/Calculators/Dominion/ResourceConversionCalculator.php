@@ -60,6 +60,9 @@ class ResourceConversionCalculator
 
             'dies_into_resource',
             'dies_into_resource_on_success',
+
+            'dies_into_resources',
+            'dies_into_resources_on_success',
         ];
 
         $resourcesThatUseEntireBodies = ['body'];

@@ -8,17 +8,19 @@ namespace OpenDominion\Calculators;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Hold;
 use OpenDominion\Models\Resource;
-use OpenDominion\Models\TradeRoute;
 
 use OpenDominion\Services\Dominion\StatsService;
+use OpenDominion\Helpers\HoldHelper;
 
 class HoldCalculator
 {
 
+    protected $holdHelper;
     protected $statsService;
 
     public function __construct()
     {
+        $this->holdHelper = app(HoldHelper::class);
         $this->statsService = app(StatsService::class);
     }
 
@@ -226,7 +228,7 @@ class HoldCalculator
 
         foreach($hold->sold_resources as $resourceKey)
         {
-            $bestMatchingBuilding = $this->getBestMatchingBuilding($hold, $resourceKey);
+            $bestMatchingBuilding = $this->holdHelper->getBestMatchingBuilding($resourceKey);
             isset($buildingData[$bestMatchingBuilding]) ? $buildingData[$bestMatchingBuilding] += (int)round($landPerResource) : $buildingData[$bestMatchingBuilding] = (int)round($landPerResource);
             $remainingLand -= (int)round($landPerResource);
         }
@@ -237,43 +239,7 @@ class HoldCalculator
         return $buildingData;
     }
 
-    public function getBestMatchingBuilding(Hold $hold, string $resourceKey): string
-    {
-        $resourceMap = collect([
-            'acid' => 'tissue',
-            'ash' => 'ore_mine',
-            'blood' => 'altar',
-            'body' => 'altar',
-            'books' => 'school',
-            'brimmer' => 'refinery',
-            'figurines' => 'workshop',
-            'food' => 'farm',
-            'gems' => 'gem_mine',
-            'gloom' => 'night_tower',
-            'gold' => 'gold_mine',
-            'gunpowder' => 'powder_mill',
-            'horse' => 'stable',
-            'instruments' => 'workshop',
-            'kelp' => 'wharf',
-            'lumber' => 'saw_mill',
-            'magma' => 'ore_mine',
-            'mana' => 'tower',
-            'miasma' => 'mass_grave',
-            'mud' => 'harbour',
-            'obsidian' => 'gem_mine',
-            'ore' => 'ore_mine',
-            'pearls' => 'wharf',
-            'prisoner' => 'constabulary',
-            'souls' => 'altar',
-            'spices' => 'farm',
-            'sugar' => 'farm',
-            'swamp_gas' => 'tower',
-            'thunderstone' => 'dwargen_mine',
-            'yak' => 'yakstead'
-        ]);
-        
-        return $resourceMap->get($resourceKey, 'harbour');
-    }
+
 
     public function getStartingUnits(Hold $hold): array
     {

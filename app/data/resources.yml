@@ -72,6 +72,15 @@ cosmic_alignment:
     buy: 0
     sell: 0
 
+dragonscale:
+  name: Dragonscale
+  description: The scales of a dragon, extremely hard and holding magical properties.
+  buy: null
+  sell: null
+  trade:
+    buy: 100
+    sell: 100
+
 elk:
   name: Elk
   description: Majestic wanderers of the forest, Druva's personal guards and messengers.

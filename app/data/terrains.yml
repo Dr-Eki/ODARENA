@@ -46,7 +46,7 @@ badlands:
 glacier:
   name: Glacier
   order: 10
-  description: The frozen desert, these massive and slow-moving bodies of ice carve and shape the landscape. Treacherous and full of hidden crevasses, with abundance of unique wildlife, while also concealing ancient secrets and frozen artifacts.
+  description: The frozen desert, these massive and slow-moving bodies of ice carve and shape the landscape. Treacherous and full of hidden crevasses, with abundance of unique wildlife, while also concealing ancient secrets and frozen artefacts.
 
 volcanic:
   name: Volcanic

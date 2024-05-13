@@ -610,10 +610,6 @@ class InvadeActionService
 
             # Afflicted
             $this->handleInvasionSpells($attacker, $defender);
-
-            # Handle dies_into_resource, dies_into_resources, kills_into_resource, kills_into_resources
-            #$this->handleResourceConversions($attacker, $defender, $landRatio);
-
             # Salvage and Plunder
             $this->handleSalvagingAndPlundering($attacker, $defender);
 
@@ -2080,75 +2076,6 @@ class InvadeActionService
         }
     }
     
-
-    /*
-    public function handlePeasantCapture(Dominion $attacker, Dominion $defender, array $units, float $landRatio): void
-    {
-        if(!$this->raceHelper->checkIfRaceUnitsHavePerks($attacker->race, ['captures_displaced_peasants']))
-        {
-            return;
-        }
-
-        if(!$this->invasion['result']['success'])
-        {
-            return;
-        }
-
-        $rawOp = 0;
-        foreach($this->invasion['attacker']['units_sent'] as $slot => $amount)
-        {
-            if($amount > 0)
-            {
-                $unit = $attacker->race->units->filter(function ($unit) use ($slot) {
-                    return ($unit->slot === $slot);
-                })->first();
-
-                $rawOpFromSlot = $this->militaryCalculator->getUnitPowerWithPerks($attacker, $defender, $landRatio, $unit, 'offense');
-                $totalRawOpFromSlot = $rawOpFromSlot * $amount;
-
-                $rawOp += $totalRawOpFromSlot;
-            }
-        }
-
-        $landConquered = $this->invasion['attacker']['land_conquered'];
-        $displacedPeasants = intval(($defender->peasants / $this->invasion['defender']['land_size']) * $landConquered);
-
-        foreach($units as $slot => $amount)
-        {
-            if ($attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'captures_displaced_peasants'))
-            {
-                $opFromSlot = $this->militaryCalculator->getOffensivePowerRaw($attacker, $defender, $landRatio, [$slot => $amount]);
-                $opRatio = $opFromSlot / $rawOp;
-
-                $peasantsCaptured = (int)floor($displacedPeasants * $opRatio);
-
-                #dump('Slot ' . $slot . ' OP: ' . number_format($opFromSlot) . ' which is ' . $opRatio . ' ratio relative to ' . number_format($rawOp) . ' raw OP total.');
-
-                if(isset($this->invasion['attacker']['peasants_captured']))
-                {
-                    $this->invasion['attacker']['peasants_captured'] += $peasantsCaptured;
-                }
-                else
-                {
-                    $this->invasion['attacker']['peasants_captured'] = $peasantsCaptured;
-                }
-            }
-        }
-
-        if(isset($this->invasion['attacker']['peasants_captured']))
-        {
-            $this->invasion['attacker']['peasants_captured'] = intval(max(0, $this->invasion['attacker']['peasants_captured']));
-
-            $this->queueService->queueResources(
-                'invasion',
-                $attacker,
-                ['peasants' => $this->invasion['attacker']['peasants_captured']],
-                12
-            );
-        }
-    }
-    */
-
     public function handlePeasantKilling(Dominion $attacker, Dominion $defender, array $units, float $landRatio): void
     {
         if($defender->race->name !== 'Demon' or !$this->invasion['result']['success'])
@@ -2214,92 +2141,6 @@ class InvadeActionService
         $this->resourceService->updateResources($defender, $resourceArray);
 
     }
-
-    /*
-    public function handlePsionicConversions(Dominion $cult, Dominion $enemy, string $mode = 'offense'): void
-    {
-
-        $psionicConversions = $this->conversionCalculator->getPsionicConversions($cult, $enemy, $this->invasion, $mode);
-
-        #dump($psionicConversions);
-
-        if(empty($psionicConversions))
-        {
-            return;
-        }
-
-        $this->invasion['attacker']['psionic_conversions'] = $psionicConversions;
-        $this->statsService->updateStat($cult, 'units_converted_psionically', array_sum($psionicConversions));
-        $this->statsService->updateStat($enemy, 'units_lost_psionically', array_sum($psionicConversions));
-
-        if($mode == 'offense')
-        {
-            if(!isset($this->invasion['attacker']['conversions']))
-            {
-                $this->invasion['attacker']['conversions'] = array_fill(1, $cult->race->units->count(), 0);
-            }
-
-            foreach($psionicConversions['psionic_losses'] as $slot => $amount)
-            {
-                isset($this->invasion['defender']['units_lost'][$slot]) ? $this->invasion['defender']['units_lost'][$slot] += $amount : $this->invasion['defender']['units_lost'][$slot] = $amount;
-
-                if(in_array($slot, [1,2,3,4,5,6,7,8,9,10]))
-                {
-                    $enemy->{'military_unit'.$slot} -= $amount;
-                }
-                elseif($slot == 'draftees')
-                {
-                    $enemy->{'military_'.$slot} -= $amount;
-                }
-                elseif($slot == 'peasants')
-                {
-                    $enemy->{$slot} -= $amount;
-                }
-            }
-
-            foreach($psionicConversions['psionic_conversions'] as $slot => $amount)
-            {
-                $this->invasion['attacker']['conversions'][$slot] += $amount;
-            }
-        }
-
-        if($mode == 'defense')
-        {
-            if(!isset($this->invasion['defender']['conversions']))
-            {
-                $this->invasion['defender']['conversions'] = array_fill(1, $cult->race->units->count(), 0);
-            }
-
-            foreach($psionicConversions['psionic_losses'] as $slot => $amount)
-            {
-                isset($this->invasion['attacker']['units_lost'][$slot]) ? $this->invasion['attacker']['units_lost'][$slot] += $amount : $this->invasion['attacker']['units_lost'][$slot] = $amount;
-
-                if(isset($this->invasion['attacker']['units_sent'][$slot]))
-                {
-                    if(in_array($slot, [1,2,3,4,5,6,7,8,9,10]))
-                    {
-                        $this->invasion['attacker']['units_lost'][$slot] += $amount;
-                    }
-                    elseif($slot == 'draftees')
-                    {
-                        $this->invasion['attacker']['units_lost'][$slot] += $amount;
-                    }
-                    elseif($slot == 'peasants')
-                    {
-                        #$this->invasion['attacker']['units_lost'][$slot] += $amount;
-                        #$enemy->{$slot} -= $amount;
-                    }
-                }
-            }
-
-            foreach($psionicConversions['psionic_conversions'] as $slot => $amount)
-            {
-                $this->invasion['defender']['conversions'][$slot] += $amount;
-            }
-        }
-        
-    }
-    */
 
     # Unit Return 2.0
     protected function handleReturningUnits(Dominion $attacker, array $units, array $convertedUnits): void
@@ -2780,7 +2621,7 @@ class InvadeActionService
 
     protected function handleResourceConversions(Dominion $converter, string $mode = 'offense'): void
     {
-        # Queue up for attacker
+        # Queue up for attacker in handlResourceGainsForAttacker
         /*
         if($mode == 'offense')
         {
@@ -3671,7 +3512,7 @@ class InvadeActionService
             $ticks -= $ticksFaster;
         }
 
-        return $ticks;
+        return (int)$ticks;
     }
 
     protected function getUnitReturnTicksForSlot(Dominion $attacker, int $slot): int
@@ -3711,7 +3552,7 @@ class InvadeActionService
             $ticks -= $ticksFaster;
         }
 
-        return min(max(1, $ticks), 12);
+        return (int)min(max(1, $ticks), 12);
     }
 
     /**
@@ -3741,7 +3582,7 @@ class InvadeActionService
             }
         }
 
-        return $hours;
+        return (int)$hours;
     }
 
     protected function getDefensivePowerWithTemples(

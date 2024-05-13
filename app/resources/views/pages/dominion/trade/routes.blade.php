@@ -284,7 +284,7 @@
                     </tbody>
                 </table>
                 <div class="col-md-2 text-left">
-                    <small class="text-muted">Showing last 10 entries. </small>
+                    <small class="text-muted">Showing the ten most recent entries. </small>
                 </div>
                 <div class="col-md-10 text-right">
                     <a href="{{ route('dominion.trade.ledger') }}" class="btn btn-primary">View Full Ledger</a>

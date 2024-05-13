@@ -379,7 +379,7 @@ mercantilism:
   excluded_races:
     - Growth
   perks:
-    trade_route_slots: 25
+    land_per_trade_slot: -3.125
 
 # FACTION SPECIFIC
 

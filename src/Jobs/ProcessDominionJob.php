@@ -197,19 +197,23 @@ class ProcessDominionJob implements ShouldQueue
                                         ->where('hours',1)
                                         ->get();
 
+        if(config('game.extended_logging')) { Log::debug('** Finished buildings in queue: ' . $finishedBuildingsInQueue->count()); }
+
+        if(!$finishedBuildingsInQueue->count())
+        {
+            return;
+        }
+
+        $buildings = [];
+
         foreach($finishedBuildingsInQueue as $finishedBuildingInQueue)
         {
             $buildingKey = str_replace('building_', '', $finishedBuildingInQueue->resource);
             $amount = intval($finishedBuildingInQueue->amount);
-            #$building = Building::where('key', $buildingKey)->first();
-            $this->buildingCalculator->createOrIncrementBuildings($dominion, [$buildingKey => $amount]);
+            $buildings = [$buildingKey => $amount];
         }
 
-        # Handle self-destruct BUGGY
-        #if($buildingsDestroyed = $dominion->tick->buildings_destroyed)
-        #{
-        #    $this->buildingCalculator->removeBuildings($dominion, $buildingsDestroyed);
-        #}
+        $this->buildingCalculator->createOrIncrementBuildings($dominion, $buildings);
     }
 
     # Take improvements that are one tick away from finished and create or increment DominionImprovements.
@@ -220,13 +224,25 @@ class ProcessDominionJob implements ShouldQueue
                                         ->where('resource', 'like', 'improvement%')
                                         ->where('hours',1)
                                         ->get();
+
+        if(config('game.extended_logging')) { Log::debug('** Finished improvements in queue: ' . $finishedImprovementsInQueue->count()); }
+
+        if(!$finishedImprovementsInQueue->count())
+        {
+            return;
+        }
+
+        $improvements = [];
+
         foreach($finishedImprovementsInQueue as $finishedImprovementInQueue)
         {
             $improvementKey = str_replace('improvement_', '', $finishedImprovementInQueue->resource);
             $amount = intval($finishedImprovementInQueue->amount);
             $improvement = Improvement::where('key', $improvementKey)->first();
-            $this->improvementCalculator->createOrIncrementImprovements($dominion, [$improvementKey => $amount]);
+            $improvements = [$improvement->key => $amount];
         }
+
+        $this->improvementCalculator->createOrIncrementImprovements($dominion, $improvements);
 
         # Impterest
         if(
@@ -274,6 +290,13 @@ class ProcessDominionJob implements ShouldQueue
                     ->where('hours',1)
                     ->get();
 
+        if(config('game.extended_logging')) { Log::debug('** Finished deities in queue: ' . $finishedDeitiesInQueue->count()); }
+
+        if(!$finishedDeitiesInQueue->count())
+        {
+            return;
+        }
+
         foreach($finishedDeitiesInQueue as $finishedDeityInQueue)
         {
             $deityKey = $finishedDeityInQueue->resource;
@@ -313,6 +336,7 @@ class ProcessDominionJob implements ShouldQueue
                                         ->where('source', 'research')
                                         ->where('hours',1)
                                         ->get();
+                                        
         foreach($finishedResearchesInQueue as $finishedDeityInQueue)
         {
             $techKey = $finishedDeityInQueue->resource;

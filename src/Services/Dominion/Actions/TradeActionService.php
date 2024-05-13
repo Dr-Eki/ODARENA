@@ -35,6 +35,8 @@ class TradeActionService
 
     public function create(Dominion $dominion, Hold $hold, Resource $soldResource, int $soldResourceAmount, Resource $boughtResource)
     {
+        $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
 
         if($dominion->protection_ticks > 0)
         {
@@ -46,21 +48,31 @@ class TradeActionService
             throw new GameException('You cannot trade until the round begins.');
         }
 
-        $this->guardLockedDominion($dominion);
-        $this->guardActionsDuringTick($dominion);
-
-        $existingTradeRoute = TradeRoute::where([
-            'dominion_id' => $dominion->id,
-            'hold_id' => $hold->id,
-            'source_resource_id' => $soldResource->id,
-            'target_resource_id' => $boughtResource->id,
-            'status' => 1
-        ])->first();
-
-        if($existingTradeRoute)
+        if($dominion->round->hasEnded())
         {
-            throw new GameException('You already have a trade route to this hold trading these resources.');
+            throw new GameException('You cannot trade after the round has ended.');
         }
+
+        $tradeOfferValue = $this->tradeCalculator->getTradeOfferValue($soldResource, $soldResourceAmount);
+        $maxTradeValue = $this->tradeCalculator->getMaxTradeValue($dominion, $soldResource);
+
+        if($tradeOfferValue > $maxTradeValue)
+        {
+            throw new GameException('You cannot trade this amount of this resource. You can at most offer trades at a base value of ' . number_format($maxTradeValue) . ' gold\'s worth of ' . $soldResource->name . ' and you offered ' . number_format($tradeOfferValue) .'.');
+        }
+
+        #$existingTradeRoute = TradeRoute::where([
+        #    'dominion_id' => $dominion->id,
+        #    'hold_id' => $hold->id,
+        #    'source_resource_id' => $soldResource->id,
+        #    'target_resource_id' => $boughtResource->id,
+        #    'status' => 1
+        #])->first();
+#
+        #if($existingTradeRoute)
+        #{
+        #    throw new GameException('You already have a trade route to this hold trading these resources.');
+        #}
 
         if($this->tradeCalculator->getAvailableTradeRouteSlots($dominion) <= 0)
         {
@@ -171,18 +183,23 @@ class TradeActionService
     {
         $dominion = $tradeRoute->dominion;
 
+        $this->guardLockedDominion($dominion);
+        $this->guardActionsDuringTick($dominion);
+
         if($dominion->protection_ticks > 0)
         {
             throw new GameException('You cannot trade while in protection.');
+        }
+
+        if($dominion->round->hasEnded())
+        {
+            throw new GameException('You cannot edit a trade after the round has ended.');
         }
         
 
         $hold = $tradeRoute->hold;
         $soldResource = $tradeRoute->soldResource;
         $boughtResource = $tradeRoute->boughtResource;
-
-        $this->guardLockedDominion($dominion);
-        $this->guardActionsDuringTick($dominion);
 
         if(!$hold)
         {

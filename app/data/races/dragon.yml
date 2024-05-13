@@ -16,6 +16,7 @@ resources:
   - ore
   - mana
   - gems
+  - dragonscale
 
 construction_materials:
   - gold
@@ -63,28 +64,28 @@ units:
       gems_production_raw_from_building_pairing: 0.05,gem_mine,1.2
 
   - name: Dragon Knight
-    description: A once poor farmer, now a skilled warrior, clad in dragonscale armour, wielding weapons forged from dragon bones.
+    description: Hard-working farmers, who have proven themselves in battle, can become Dragon Knights, wearing armour and wielding weapons made from dragonscales of fallen dragons.
     training_time: 12
     type:
       - living
       - sentient
       - legendary
     cost:
-      gold: 1800
-      gems: 100
+      gold: 1400
+      dragonscale: 10
       draftees: 1
     power:
       offense: 8
       defense: 6
     perks:
-      stat_pairing_limit: unit4_lost,100 # stat, max units per value of the stat
-      minimum_victories: 10
+      # stat_pairing_limit: unit4_lost,100 # stat, max units per value of the stat
+      minimum_victories: 8
       casualties: -20
       burns_peasants_on_attack: 10
       immortal_on_overwhelming_victory: 1.10 # OP:DP ratio required to be immortal
 
   - name: Dragon
-    description: A majestic beast, drawn by the allure of gems hidden within the mountains.
+    description: The strongest creature in the world, drawn to the shimmering allure of gems hidden within the mountains.
     training_time: 12
     type:
       - living
@@ -103,3 +104,4 @@ units:
       casualties: -40
       protects_resource_from_theft: gems,10000
       immortal_on_overwhelming_victory: 1.10 # OP:DP ratio required to be immortal
+      dies_into_resource: 1000,dragonscale

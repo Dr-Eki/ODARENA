@@ -1,11 +1,13 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Calculators\Hold;
 
-use OpenDominion\Helpers\UnitHelper;
+use OpenDominion\Helpers\HoldHelper;
 
 use OpenDominion\Models\Hold;
-use OpenDominion\Models\Building;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\TradeRoute;
 
@@ -15,8 +17,7 @@ use OpenDominion\Services\Hold\QueueService;
 
 class ResourceCalculator
 {
-
-    protected $unitHelper;
+    protected $holdHelper;
 
     protected $spellCalculator;
     protected $unitCalculator;
@@ -25,7 +26,7 @@ class ResourceCalculator
 
     public function __construct()
     {
-        $this->unitHelper = app(UnitHelper::class);
+        $this->holdHelper = app(HoldHelper::class);
         $this->unitCalculator = app(UnitCalculator::class);
         $this->queueService = app(QueueService::class);
     }
@@ -43,6 +44,9 @@ class ResourceCalculator
 
         // Add trade
         $production += $this->getResourceDueFromTradeNextTick($hold, $resourceKey);
+
+        // Special case for luxury resources
+        $production += $this->getLuxuryResourceProduction($hold, $resourceKey);
 
         // Return
         return (int)max($production, 0);
@@ -511,8 +515,9 @@ class ResourceCalculator
 
     public function getInterest(Hold $hold, string $interestBearingResourceKey): int
     {
-        $interest = 0;
+        return 0;
         /*
+        $interest = 0;
         $interestRate = $this->getInterestRate($hold, $interestBearingResourceKey);
 
         if($interestRate > 0)
@@ -523,13 +528,36 @@ class ResourceCalculator
         $rawProductionCap = $this->getProductionRaw($hold, $interestBearingResourceKey) / 5;
 
         $interest = min($interest, $rawProductionCap);
-        */
         return $interest;
+        */
+    }
+
+    public function getLuxuryResourceProduction(Hold $hold, string $resourceKey): int
+    {
+   
+        $resource = Resource::fromKey($resourceKey);
+
+        if($resource->category !== 'luxury')
+        {
+            return 0;
+        }
+
+        $production = 0;
+
+        $bestMatchingBuilding = $this->holdHelper->getBestMatchingBuilding($resourceKey);
+
+        $buildingAmount = $hold->{'building_' . $bestMatchingBuilding};
+        $resourceProductionPerBuilding = config('holds.luxury_resource_production')[$resourceKey];
+
+        $production += $buildingAmount * $resourceProductionPerBuilding;
+
+        return floorInt($production);
+        
     }
 
 
     public function getNetProduction(Hold $hold, string $resourceKey): int
     {
-        return $this->getProduction($hold, $resourceKey) - $this->getConsumption($hold, $resourceKey);
+        return (int)($this->getProduction($hold, $resourceKey) - $this->getConsumption($hold, $resourceKey));
     }
 }

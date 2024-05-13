@@ -32,7 +32,14 @@ class TradeCalculator
         $this->holdResourceCalculator = app(HoldResourceCalculator::class);
     }
 
-    public function maxTradeValue(Dominion $dominion): int
+    public function getTradeOfferValue(Resource $resource, int $amount): float
+    {
+        $resourceValue = $resource->trade->buy;
+
+        return round($resourceValue * $amount, config('trade.price_decimals'));
+    }
+
+    public function getMaxTradeValue(Dominion $dominion, Resource $resource): int
     {
         return config('trade.trade_base_max');
     }
@@ -40,11 +47,23 @@ class TradeCalculator
     public function getTradeMaxAmount(Dominion $dominion, Resource $resource): int
     {
         $resourceValue = $resource->trade->buy;
-        $maxTradeValue = $this->maxTradeValue($dominion);
+        $maxTradeValue = $this->getMaxTradeValue($dominion, $resource);
 
         $maxTradeAmount = (int)floor($maxTradeValue / $resourceValue);
 
         return $maxTradeAmount;
+    }
+
+    public function getMaxTradeValueForAllResources(Dominion $dominion): array
+    {
+        $result = [];
+
+        foreach(Resource::where('enabled', 1)->get() as $resource)
+        {
+            $result[$resource->key] = $this->getTradeMaxAmount($dominion, $resource);
+        }
+
+        return $result;
     }
 
     public function canDominionTradeWithHold(Dominion $dominion, Hold $hold): bool
@@ -275,18 +294,12 @@ class TradeCalculator
 
     public function getTradeRouteSlots(Dominion $dominion): int
     {
-        $slots = 0;
+        $landPerTradeSlot = config('trade.land_per_trade_slot');
+        $landPerTradeSlot *= (1 + $dominion->getAdvancementPerkMultiplier('land_per_trade_slot'));
 
-        $startingSlots = 3;
-        $startingSlots += $dominion->race->getPerkValue('trade_route_slots');
+        $slots = $dominion->land / $landPerTradeSlot;
 
-        $slots += $startingSlots;
-
-        $slots += $dominion->getAdvancementPerkValue('trade_route_slots') / 100;
-
-        $slots += max($dominion->land - config('game.starting_land'), 0) / 500;
-
-        return (int)floor($slots);
+        return floorInt($slots);
     }
 
     public function getUsedTradeRouteSlots(Dominion $dominion): int
@@ -318,7 +331,7 @@ class TradeCalculator
         $stockpile = $dominion->{'resource_' . $soldResource->key};
         $production = $this->dominionResourceCalculator->getProduction($dominion, $soldResource->key);
 
-        Log::info("[CAN DOMINION AFFORD TRADE] Dominion: {$dominion->name} / Stockpile: $stockpile / Production: $production / Sold: $soldAmount");
+        #Log::info("[CAN DOMINION AFFORD TRADE] Dominion: {$dominion->name} / Stockpile: $stockpile / Production: $production / Sold: $soldAmount");
 
         return ($production + $stockpile) >= $soldAmount;
     }

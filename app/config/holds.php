@@ -18,4 +18,14 @@ return [
         'rezoning_ticks' => 12,
         'queue_ticks' => 12,
     ],
+
+    'luxury_resource_production' =>
+    [
+        # Per getBestMatchingBuilding() in HoldHelper.php
+        'books' => 0.02,
+        'figurines' => 0.04,
+        'instruments' => 0.016,
+        'spices' => 0.016,
+        'sugar' => 0.015,
+    ]
 ];

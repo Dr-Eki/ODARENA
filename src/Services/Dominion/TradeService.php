@@ -129,7 +129,7 @@ class TradeService
 
             if($tradeResult['error']['reason'] == 'dominion_insufficient_resources')
             {
-                $this->notificationService->queueNotification('trade_failed', [
+                $this->notificationService->queueNotification('trade_failed_and_cancelled', [
                     'hold_id' => $hold->id,
                     'hold_name' => $hold->name,
                     'sold_resource_id' => $soldResource->id,
@@ -184,7 +184,7 @@ class TradeService
         }
         else
         {
-            $this->dominionResourceService->updateResources($dominion, [$soldResource->key => ($amountToTakeFromStockpile * -1)]);
+            $this->dominionResourceService->updateResources($dominion, [$soldResource->key => ($tradeResult['dominion_amount_from_stockpile'] * -1)]);
         }
 
         # Queue up incoming

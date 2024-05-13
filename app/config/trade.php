@@ -21,4 +21,6 @@ return [
 
     'trade_base_max' => 10000,
 
+    'land_per_trade_slot' => 200,
+
 ];

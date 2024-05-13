@@ -64,9 +64,50 @@ class HoldHelper
         $statusDescriptions = [
             0 => 'undiscovered',
             1 => 'discovered',
+            2 => 'annexed',
+            3 => 'abandoned',
+            4 => 'razed',
         ];
 
         return $statusDescriptions[$status] ?? 'Unknown';
+    }
+
+    public function getBestMatchingBuilding(string $resourceKey): string
+    {
+        $resourceMap = collect([
+            'acid' => 'tissue',
+            'ash' => 'ore_mine',
+            'blood' => 'altar',
+            'body' => 'altar',
+            'books' => 'school',
+            'brimmer' => 'refinery',
+            'figurines' => 'workshop',
+            'food' => 'farm',
+            'gems' => 'gem_mine',
+            'gloom' => 'night_tower',
+            'gold' => 'gold_mine',
+            'gunpowder' => 'powder_mill',
+            'horse' => 'stable',
+            'instruments' => 'workshop',
+            'kelp' => 'wharf',
+            'lumber' => 'saw_mill',
+            'magma' => 'ore_mine',
+            'mana' => 'tower',
+            'miasma' => 'mass_grave',
+            'mud' => 'harbour',
+            'obsidian' => 'gem_mine',
+            'ore' => 'ore_mine',
+            'pearls' => 'wharf',
+            'prisoner' => 'constabulary',
+            'souls' => 'altar',
+            'spices' => 'farm',
+            'sugar' => 'farm',
+            'swamp_gas' => 'tower',
+            'thunderstone' => 'dwargen_mine',
+            'yak' => 'yakstead'
+        ]);
+        
+        return $resourceMap->get($resourceKey, 'harbour');
     }
 
 }
