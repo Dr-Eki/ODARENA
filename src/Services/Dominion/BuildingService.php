@@ -68,7 +68,7 @@ class BuildingService
                 if($dominionHasBuilding)
                 {
 
-                    $logString = '*** BuildingService::update() - DominionBuilding to be updated from ' . $dominion->dominionBuilding->amount ?? 0 . ' by ' . $amount;
+                    $logString = '*** BuildingService::update() - DominionBuilding to be updated from ' . $dominionHasBuilding->amount ?? 0 . ' by ' . $amount;
 
                     $dominionBuilding = DominionBuilding::where('dominion_id', $dominion->id)
                         ->where('building_id', $building->id)
