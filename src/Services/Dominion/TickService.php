@@ -861,7 +861,7 @@ class TickService
         
             if (Redis::llen('queues:manual_tick') !== 0) {
                 Log::info($infoString);
-                dump($infoString);
+                #dump($infoString);
                 throw new Exception('Tick queue not finish');
             }
         }, $delay);
@@ -1724,7 +1724,7 @@ class TickService
         
             if (Redis::llen('queues:manual_tick') !== 0) {
                 Log::info($infoString);
-                dump($infoString);
+                #dump($infoString);
                 throw new Exception('Tick queue not finish');
             }
         }, $delay);

@@ -291,7 +291,7 @@ class QueueService
         foreach ($data as $resource => $amount)
         {
 
-            dump("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
+            #dump("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
             Log::debug("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
 
             if ($amount === 0)

@@ -44,23 +44,30 @@ class OpenAIService
             'max_tokens' => $maxTokens,
             'n' => 1,
         ];
-
+    
         try {
-            $response = $this->client->post('chat/completions', ['json' => $payload]);
+            $response = $this->client->post('chat/completions', [
+                'json' => $payload
+            ]);
+    
             $data = json_decode($response->getBody(), true);
-
-            $assistantMessage = $data['choices'][0]['message']['content'];
-
-            return [
-                'userMessage' => $message,
-                'assistantMessage' => $assistantMessage,
-            ];
+    
+            if (isset($data['choices'][0]['message']['content'])) {
+                $assistantMessage = $data['choices'][0]['message']['content'];
+                return [
+                    'userMessage' => $message,
+                    'assistantMessage' => $assistantMessage,
+                ];
+            } else {
+                throw new Exception('Invalid response from API');
+            }
         } catch (Exception $e) {
             return [
                 'error' => $e->getMessage(),
             ];
         }
     }
+    
 
     public function generateImagesFromText(string $text, int $n = 1, string $size = '512x512'): array
     {
