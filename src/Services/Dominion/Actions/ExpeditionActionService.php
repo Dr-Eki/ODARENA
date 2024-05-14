@@ -243,7 +243,7 @@ class ExpeditionActionService
 
                     $building = Building::where('key', $buildingKeyLimitedTo)->first();
                     $dominionBuildings = $this->buildingCalculator->getDominionBuildings($dominion);
-                    $amountOfLimitingBuilding = $dominionBuildings->where('building_id', $building->id)->first()->owned;
+                    $amountOfLimitingBuilding = $dominionBuildings->where('building_id', $building->id)->first()->amount;
 
                     $maxSendableOfThisUnit = $amountOfLimitingBuilding * $unitsPerBuilding;
 

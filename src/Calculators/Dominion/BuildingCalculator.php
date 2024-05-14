@@ -86,9 +86,9 @@ class BuildingCalculator
         {
             foreach ($dominion->buildings as $dominionBuilding)
             {
-                if ($dominionBuilding->pivot->owned > 0)
+                if ($dominionBuilding->pivot->amount > 0)
                 {
-                    $buildingsLost['available'][$dominionBuilding->key] = (int)round($buildingsLeftToLose * ($dominionBuilding->pivot->owned / $builtLand));
+                    $buildingsLost['available'][$dominionBuilding->key] = (int)round($buildingsLeftToLose * ($dominionBuilding->pivot->amount / $builtLand));
                 }
             }
         }
@@ -115,7 +115,7 @@ class BuildingCalculator
         }
     
         $totalBuildings = $dominion->buildings->map(function ($building) {
-            return $building->pivot->owned;
+            return $building->pivot->amount;
         })->sum();
 
         $barrenLand = $dominion->land - $this->getTotalBuildings($dominion);
@@ -145,8 +145,8 @@ class BuildingCalculator
         // Then, take into account the available buildings
         if ($buildingsLeftToLose > 0 && $totalBuildings > 0) {
             foreach ($dominion->buildings as $index => $dominionBuilding) {
-                if ($dominionBuilding->pivot->owned > 0) {
-                    $buildingsLost['available'][$dominionBuilding->key] = intval(round($buildingsLeftToLose * ($dominionBuilding->pivot->owned / $totalBuildings)));
+                if ($dominionBuilding->pivot->amount > 0) {
+                    $buildingsLost['available'][$dominionBuilding->key] = intval(round($buildingsLeftToLose * ($dominionBuilding->pivot->amount / $totalBuildings)));
                 }
             }
         }
@@ -163,7 +163,7 @@ class BuildingCalculator
     public function getTotalBuildings(Dominion $dominion): int
     {
         return $dominion->buildings->map(function ($building) {
-            return $building->pivot->owned;
+            return $building->pivot->amount;
         })->sum();
     }
 
@@ -309,7 +309,7 @@ class BuildingCalculator
 
         if($dominionBuildings->contains('building_id', $building->id))
         {
-            return $dominionBuildings->where('building_id', $building->id)->first()->owned;
+            return $dominionBuildings->where('building_id', $building->id)->first()->amount;
         }
         else
         {
@@ -363,7 +363,7 @@ class BuildingCalculator
     public function getBuildingCategoryAmount(Dominion $dominion, string $category): int
     {
         return $dominion->buildings->sum(function ($dominionBuilding) use ($category) {
-            return $dominionBuilding->category == $category ? $dominionBuilding->pivot->owned : 0;
+            return $dominionBuilding->category == $category ? $dominionBuilding->pivot->amount : 0;
         });
     }
 

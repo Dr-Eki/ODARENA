@@ -9,7 +9,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-#use Illuminate\Support\Str;
 
 use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Deity;
@@ -20,9 +19,7 @@ use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Tech;
-#use OpenDominion\Models\Dominion\Tick;
 
-use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\MoraleCalculator;
@@ -34,8 +31,8 @@ use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Services\BarbarianService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
+use OpenDominion\Services\Dominion\BuildingService;
 use OpenDominion\Services\Dominion\DeityService;
-#use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\InsightService;
 use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\ResearchService;
@@ -51,7 +48,6 @@ class ProcessDominionJob implements ShouldQueue
     protected $temporaryData = [];
     protected $now;
 
-    protected $buildingCalculator;
     protected $espionageCalculator;
     protected $improvementCalculator;
     protected $moraleCalculator;
@@ -61,6 +57,7 @@ class ProcessDominionJob implements ShouldQueue
     
     protected $artefactService;
     protected $barbarianService;
+    protected $buildingService;
     protected $deityService;
     protected $insightService;
     protected $notificationService;
@@ -79,7 +76,6 @@ class ProcessDominionJob implements ShouldQueue
         $this->now = now();
         $this->dominion = $dominion;
 
-        $this->buildingCalculator = app(BuildingCalculator::class);
         $this->espionageCalculator = app(EspionageCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
         $this->moraleCalculator = app(MoraleCalculator::class);
@@ -89,6 +85,7 @@ class ProcessDominionJob implements ShouldQueue
 
         $this->artefactService = app(ArtefactService::class);
         $this->barbarianService = app(BarbarianService::class);
+        $this->buildingService = app(buildingService::class);
         $this->deityService = app(DeityService::class);
         $this->insightService = app(InsightService::class);
         $this->notificationService = app(NotificationService::class);
@@ -204,16 +201,18 @@ class ProcessDominionJob implements ShouldQueue
             return;
         }
 
-        $buildings = [];
+        $buildingsToAdd = [];
 
         foreach($finishedBuildingsInQueue as $finishedBuildingInQueue)
         {
             $buildingKey = str_replace('building_', '', $finishedBuildingInQueue->resource);
             $amount = intval($finishedBuildingInQueue->amount);
-            $buildings = [$buildingKey => $amount];
+            $buildingsToAdd[$buildingKey] = $amount;
+
+            if(config('game.extended_logging')) { Log::debug("*** {$amount} building {$buildingKey} finished."); }
         }
 
-        $this->buildingCalculator->createOrIncrementBuildings($dominion, $buildings);
+        $this->buildingService->update($dominion, $buildingsToAdd);
     }
 
     # Take improvements that are one tick away from finished and create or increment DominionImprovements.

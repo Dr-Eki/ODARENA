@@ -28,7 +28,7 @@ use OpenDominion\Models\RoundWinner;
 use OpenDominion\Models\Tech;
 #use OpenDominion\Models\Dominion\Tick;
 
-use OpenDominion\Calculators\Dominion\BuildingCalculator;
+#use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\MoraleCalculator;
@@ -41,6 +41,7 @@ use OpenDominion\Services\BarbarianService;
 use OpenDominion\Services\HoldService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
+use OpenDominion\Services\Dominion\buildingService;
 use OpenDominion\Services\Dominion\DeityService;
 use OpenDominion\Services\Dominion\InsightService;
 use OpenDominion\Services\Dominion\ResourceService;
@@ -57,7 +58,7 @@ class TickService
     protected $now;
     protected $temporaryData = [];
 
-    protected $buildingCalculator;
+    #protected $buildingCalculator;
     #protected $conversionCalculator;
     protected $espionageCalculator;
     protected $improvementCalculator;
@@ -83,6 +84,7 @@ class TickService
 
     protected $artefactService;
     protected $barbarianService;
+    protected $buildingService;
     protected $dominionStateService;
     protected $deityService;
     protected $holdService;
@@ -109,7 +111,7 @@ class TickService
         #$this->productionCalculator = app(ProductionCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
         #$this->spellCalculator = app(SpellCalculator::class);
-        $this->buildingCalculator = app(BuildingCalculator::class);
+        #$this->buildingCalculator = app(BuildingCalculator::class);
         $this->espionageCalculator = app(EspionageCalculator::class);
         #$this->militaryCalculator = app(MilitaryCalculator::class);
         $this->moraleCalculator = app(MoraleCalculator::class);
@@ -124,6 +126,7 @@ class TickService
         $this->roundHelper = app(RoundHelper::class);
 
         $this->artefactService = app(ArtefactService::class);
+        $this->buildingService = app(BuildingService::class);
         $this->barbarianService = app(BarbarianService::class);
         $this->dominionStateService = app(DominionStateService::class);
         $this->deityService = app(DeityService::class);
@@ -839,7 +842,7 @@ class TickService
         $this->terrainService->auditAndRepairTerrain($dominion);
 
         Log::info("** Manual tick: queueing up dominion {$dominion->id}: {$dominion->name}");
-        dump("** Manual tick: queuing up dominion {$dominion->id}: {$dominion->name}");
+        #dump("** Manual tick: queuing up dominion {$dominion->id}: {$dominion->name}");
         ProcessDominionJob::dispatch($dominion)->onQueue('manual_tick');
 
         // Wait for queue to clear
@@ -1081,14 +1084,14 @@ class TickService
             $buildingKey = str_replace('building_', '', $finishedBuildingInQueue->resource);
             $amount = intval($finishedBuildingInQueue->amount);
             #$building = Building::where('key', $buildingKey)->first();
-            $this->buildingCalculator->createOrIncrementBuildings($dominion, [$buildingKey => $amount]);
+            $this->buildingService->update($dominion, [$buildingKey => $amount]);
         }
 
         # Handle self-destruct
-        if($buildingsDestroyed = $dominion->tick->buildings_destroyed)
-        {
-            $this->buildingCalculator->removeBuildings($dominion, $buildingsDestroyed);
-        }
+        #if($buildingsDestroyed = $dominion->tick->buildings_destroyed)
+        #{
+        #    $this->buildingService->update($dominion, $buildingsDestroyed);
+        #}
     }
 
     # Take improvements that are one tick away from finished and create or increment DominionImprovements.

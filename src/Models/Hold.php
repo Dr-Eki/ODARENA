@@ -743,7 +743,7 @@ class Hold extends AbstractModel
             # Add the perk value for each building with the perk
             foreach($perkedBuildings as $building)
             {
-                $perk += $building->pivot->owned * $building->getPerkValue($perkKey);
+                $perk += $building->pivot->amount * $building->getPerkValue($perkKey);
             }
             
             return $perk;
@@ -773,7 +773,7 @@ class Hold extends AbstractModel
                 $buildingKey = (string)$pairingLimit[1];
 
                 // Get amount owned of $pairedBuilding
-                $pairedBuildingOwned = $this->{'building_' . $buildingKey};# buildings->firstWhere('id', $pairedBuilding->id)->pivot->owned;
+                $pairedBuildingOwned = $this->{'building_' . $buildingKey};# buildings->firstWhere('id', $pairedBuilding->id)->pivot->amount;
         
                 // $buildingOwned is the minimum of the two
                 $buildingOwned = min($buildingOwned, floor($pairedBuildingOwned / $chunkSize));
@@ -792,7 +792,7 @@ class Hold extends AbstractModel
                 $chunkSize = (int)$multiplePairingLimit[0];
             
                 // Convert buildings to a key-value pair array
-                $buildingsOwned = $this->buildings->pluck('pivot.owned', 'key');
+                $buildingsOwned = $this->buildings->pluck('pivot.amount', 'key');
             
                 foreach($pairedBuildingKeys as $buildingKey)
                 {

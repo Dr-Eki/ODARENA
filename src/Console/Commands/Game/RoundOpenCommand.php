@@ -233,7 +233,6 @@ class RoundOpenCommand extends Command implements CommandInterface
                 $this->info('Trade Routes are disabled for this round.');
             }
 
-
             // Done!
             $this->info('Done! Round has been created.');
         });

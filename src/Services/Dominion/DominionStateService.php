@@ -216,7 +216,7 @@ class DominionStateService
             // Delete buildings
             foreach($dominion->buildings as $dominionBuilding)
             {
-                $this->buildingCalculator->removeBuildings($dominion, [$dominionBuilding->key => $dominionBuilding->pivot->owned]);
+                $this->buildingCalculator->removeBuildings($dominion, [$dominionBuilding->key => $dominionBuilding->pivot->amount]);
             }
 
             // Add buildings

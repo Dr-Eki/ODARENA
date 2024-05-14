@@ -398,7 +398,7 @@ class PopulationCalculator
                     $unitSlot = (int)$perkValue[0];
                     $amountHoused = (float)$perkValue[1];
                         
-                    $amountHousable = $amountHoused * $building->pivot->owned * (1 + $dominion->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect'));
+                    $amountHousable = $amountHoused * $building->pivot->amount * (1 + $dominion->realm->getArtefactPerkMultiplier($building->land_type . '_buildings_effect'));
                     $amountHousable = intval($amountHousable);
 
                     $availableHousingFromUnitSpecificBuildings[$unitSlot] = (isset($availableHousingFromUnitSpecificBuildings[$unitSlot]) ? $availableHousingFromUnitSpecificBuildings[$unitSlot] + $amountHousable : $amountHousable);
@@ -427,7 +427,7 @@ class PopulationCalculator
                 $unitSpecificBuildingHousing += $amountHoused;
             }
         }
-        */
+        
 
 
         $multiplier = 1;
@@ -437,6 +437,7 @@ class PopulationCalculator
         $unitSpecificBuildingHousing *= $multiplier;
 
         return (int)$unitSpecificBuildingHousing;
+        */
     }
 
     /*

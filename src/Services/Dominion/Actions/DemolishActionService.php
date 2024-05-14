@@ -80,7 +80,7 @@ class DemolishActionService
                 throw new GameException('Demolition was not completed due to bad input.');
             }
 
-            if ($amount > $dominionBuildings->where('building_id', $building->id)->first()->owned)
+            if ($amount > $dominionBuildings->where('building_id', $building->id)->first()->amount)
             {
                 throw new GameException('Amount demolished exceeds owned.');
             }

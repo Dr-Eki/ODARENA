@@ -145,9 +145,9 @@ class LandCalculator
             $barren = $dominion->{'land_' . $landType};
             foreach($availableBuildings->where('land_type',$landType) as $building)
             {
-                if(isset($dominionBuildings->where('building_id', $building->id)->first()->owned) and $dominionBuildings->where('building_id', $building->id)->first()->owned > 0)
+                if(isset($dominionBuildings->where('building_id', $building->id)->first()->amount) and $dominionBuildings->where('building_id', $building->id)->first()->amount > 0)
                 {
-                    $barren -= $dominionBuildings->where('building_id', $building->id)->first()->owned;
+                    $barren -= $dominionBuildings->where('building_id', $building->id)->first()->amount;
                 }
                 $barren -= $this->queueService->getConstructionQueueTotalByResource($dominion, "building_{$building->key}");
                 $barren -= $this->queueService->getSabotageQueueTotalByResource($dominion, "building_{$building->key}");

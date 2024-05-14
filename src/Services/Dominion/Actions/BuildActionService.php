@@ -156,13 +156,13 @@ class BuildActionService
 
                 # Get amount owned of $pairingBuilding
                 $pairingBuildingRecord = $dominion->buildings()->where('key', $pairingBuilding->key)->first();
-                $pairingBuildingOwned = $pairingBuildingRecord ? ($pairingBuildingRecord->pivot->owned ?? 0) : 0;
+                $pairingBuildingOwned = $pairingBuildingRecord ? ($pairingBuildingRecord->pivot->amount ?? 0) : 0;
 
                 $maxCapacity = intval(floor($pairingBuildingOwned / $chunkSize));
 
                 # Get amount owned of $pairedBuilding
                 $pairedBuildingRecord = $dominion->buildings()->where('key', $building->key)->first();
-                $pairedOwnedAndUnderConstruction = $pairedBuildingRecord ? ($pairedBuildingRecord->pivot->owned ?? 0) : 0;
+                $pairedOwnedAndUnderConstruction = $pairedBuildingRecord ? ($pairedBuildingRecord->pivot->amount ?? 0) : 0;
                 $pairedOwnedAndUnderConstruction += $this->queueService->getConstructionQueueTotalByResource($dominion, "building_{$building->key}");
                 $pairedOwnedAndUnderConstruction += $this->queueService->getRepairQueueTotalByResource($dominion, "building_{$building->key}");
                 $pairedOwnedAndUnderConstruction += $this->queueService->getInvasionQueueTotalByResource($dominion, "building_{$building->key}");
@@ -192,11 +192,11 @@ class BuildActionService
                 {
                     $pairingBuilding = Building::where('key', $buildingKey)->firstOrFail();
                     $pairingBuildingRecord = $dominion->buildings()->where('key', $pairingBuilding->key)->first();
-                    $pairingBuildingsOwned += $pairingBuildingRecord->pivot->owned ?? 0;
+                    $pairingBuildingsOwned += $pairingBuildingRecord->pivot->amount ?? 0;
                     $pairingBuildings[] = $pairingBuilding->name;
                 }
 
-                $buildingOwnedAndUnderConstruction = $dominion->buildings()->where('key', $building->key)->first()->pivot->owned ?? 0;
+                $buildingOwnedAndUnderConstruction = $dominion->buildings()->where('key', $building->key)->first()->pivot->amount ?? 0;
                 $buildingOwnedAndUnderConstruction += $this->queueService->getConstructionQueueTotalByResource($dominion, "building_{$building->key}");
                 $buildingOwnedAndUnderConstruction += $this->queueService->getRepairQueueTotalByResource($dominion, "building_{$building->key}");
                 $buildingOwnedAndUnderConstruction += $this->queueService->getInvasionQueueTotalByResource($dominion, "building_{$building->key}");

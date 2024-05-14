@@ -264,7 +264,7 @@ class Dominion extends AbstractModel
             'building_id'
         )
             ->withTimestamps()
-            ->withPivot('owned');
+            ->withPivot('amount');
     }
 
     public function improvements()
@@ -459,7 +459,7 @@ class Dominion extends AbstractModel
             ->first();
     
         if ($building) {
-            return $building->pivot->owned;
+            return $building->pivot->amount;
         }
     
         return 0;
@@ -827,12 +827,12 @@ class Dominion extends AbstractModel
             });
 
             # Add the default value for each building without the perk
-            $perk += $unperkedBuildings->sum('pivot.owned') * $defaultValue;
+            $perk += $unperkedBuildings->sum('pivot.amount') * $defaultValue;
 
             # Add the perk value for each building with the perk
             foreach($perkedBuildings as $building)
             {
-                $perk += $building->pivot->owned * $building->getPerkValue($perkKey);
+                $perk += $building->pivot->amount * $building->getPerkValue($perkKey);
             }
             
             return $perk;
@@ -847,7 +847,7 @@ class Dominion extends AbstractModel
         
         foreach ($buildings as $building)
         {
-            $buildingOwned = $building->pivot->owned;
+            $buildingOwned = $building->pivot->amount;
 
             if($maxBuildingRatio = $building->getPerkValue('max_effective_building_ratio'))
             {
@@ -862,7 +862,7 @@ class Dominion extends AbstractModel
                 $buildingKey = (string)$pairingLimit[1];
 
                 // Get amount owned of $pairedBuilding
-                $pairedBuildingOwned = $this->{'building_' . $buildingKey};# buildings->firstWhere('id', $pairedBuilding->id)->pivot->owned;
+                $pairedBuildingOwned = $this->{'building_' . $buildingKey};# buildings->firstWhere('id', $pairedBuilding->id)->pivot->amount;
         
                 // $buildingOwned is the minimum of the two
                 $buildingOwned = min($buildingOwned, floor($pairedBuildingOwned / $chunkSize));
@@ -881,7 +881,7 @@ class Dominion extends AbstractModel
                 $chunkSize = (int)$multiplePairingLimit[0];
             
                 // Convert buildings to a key-value pair array
-                $buildingsOwned = $this->buildings->pluck('pivot.owned', 'key');
+                $buildingsOwned = $this->buildings->pluck('pivot.amount', 'key');
             
                 foreach($pairedBuildingKeys as $buildingKey)
                 {
