@@ -1057,6 +1057,7 @@ night_tower:
 
 orcish_longhouse:
   name: Longhouse
+  category: housing
   exclusive_races:
     - Orc
     #- Black Orc
@@ -1067,6 +1068,7 @@ orcish_longhouse:
 
 yakstead:
   name: Yakstead
+  category: production
   exclusive_races:
     - Orc
   perks:
