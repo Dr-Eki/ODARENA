@@ -41,7 +41,7 @@ use OpenDominion\Services\BarbarianService;
 use OpenDominion\Services\HoldService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
-use OpenDominion\Services\Dominion\buildingService;
+use OpenDominion\Services\Dominion\BuildingService;
 use OpenDominion\Services\Dominion\DeityService;
 use OpenDominion\Services\Dominion\InsightService;
 use OpenDominion\Services\Dominion\ResourceService;
