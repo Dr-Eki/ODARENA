@@ -193,7 +193,7 @@ class BuildingCalculator
                     DB::transaction(function () use ($dominion, $building, $amount)
                     {
                         DominionBuilding::where('dominion_id', $dominion->id)->where('building_id', $building->id)
-                        ->increment('owned', $amount);
+                        ->increment('amount', $amount);
                     });
                 }
                 else
@@ -203,7 +203,7 @@ class BuildingCalculator
                         DominionBuilding::create([
                             'dominion_id' => $dominion->id,
                             'building_id' => $building->id,
-                            'owned' => $amount
+                            'amount' => $amount
                         ]);
                     });
                 }
@@ -225,7 +225,7 @@ class BuildingCalculator
                     DB::transaction(function () use ($dominion, $building, $amountToDestroy)
                     {
                         DominionBuilding::where('dominion_id', $dominion->id)->where('building_id', $building->id)
-                        ->decrement('owned', $amountToDestroy);
+                        ->decrement('amount', $amountToDestroy);
                     });
                 }
             }
