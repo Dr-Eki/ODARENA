@@ -92,7 +92,7 @@
 
             @slot('title', 'Sentiments')
             @slot('titleIconClass', 'fa-solid fa-handshake')
-
+            @slot('tableResponsive', false)
             @slot('noPadding', true)
 
             <table class="table">
@@ -142,6 +142,7 @@
 
             @slot('title', 'Establish Trade Route')
             @slot('titleIconClass', 'fa fa-solid fa-arrow-right-from-bracket')
+            @slot('tableResponsive', false)
             @slot('noPadding', true)
 
             <div class="box-body">
