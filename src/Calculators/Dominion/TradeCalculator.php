@@ -241,7 +241,6 @@ class TradeCalculator
             #ldump($tradeRoute);
             $resources->push($tradeRoute->soldResource->key);
             $resources->push($tradeRoute->boughtResource->key);
-
         }
 
         #ldump($resources);

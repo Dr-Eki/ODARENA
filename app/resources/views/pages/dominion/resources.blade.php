@@ -141,7 +141,7 @@
                                         $soldAmount = $resourceCalculator->getResourceTotalSoldPerTick($selectedDominion, $resourceKey);
                                         $dueAmount = $resourceCalculator->getResourceDueFromTradeNextTick($selectedDominion, $resourceKey);
                                         $consumption = $resourceCalculator->getConsumption($selectedDominion, $resourceKey);
-                                        $netProduction = $dueAmount + $soldAmount + $consumption;
+                                        $netProduction = $dueAmount - $soldAmount - $consumption;
                                         $protected = $theftCalculator->getTheftProtection($selectedDominion, $resourceKey);
                                         #$interest = $resourceCalculator->getInterest($selectedDominion, $resourceKey);
                                         $currentAmount = $selectedDominion->{'resource_' . $resourceKey};

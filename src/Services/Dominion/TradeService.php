@@ -57,7 +57,7 @@ class TradeService
     public function handleTradeRoute(TradeRoute $tradeRoute): void
     {
 
-        if($tradeRoute->status === 0)
+        if($tradeRoute->status !== 1)
         {
             return;
         }
@@ -85,7 +85,6 @@ class TradeService
         }
 
         $tradeResult = $this->tradeCalculator->getTradeResult($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource);
-        $tradeResult['amount_to_take_from_stockpile'] = $amountToTakeFromStockpile;
         $tradeResult['dominion_has_enough_from_income'] = $dominionSoldResourceNetProduction > 0;
         $tradeResult['dominion_amount_from_stockpile'] = $amountToTakeFromStockpile;
 
