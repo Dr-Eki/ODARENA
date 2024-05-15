@@ -169,12 +169,18 @@ class TradeCalculator
         return round($price * $multiplier, config('trade.price_decimals'));
     }
 
-    public function getResourceMaxOfferableAmount(Dominion $dominion, Resource $resource): int
+    public function getResourceMaxOfferableAmount(Dominion $dominion, Resource $resource, int $currentAmountSold = 0): int
     {
         $max = 0;
         $isProducingResource = $this->dominionResourceCalculator->isProducingResource($dominion, $resource->key);
 
         $resourceNetProduction = $this->dominionResourceCalculator->getNetProduction($dominion, $resource->key);
+
+        # If $isEdit, then add the current amount sold to the netProduction
+        if($currentAmountSold > 0)
+        {
+            $resourceNetProduction += $currentAmountSold;
+        }
 
         if($isProducingResource and $resourceNetProduction <= 0)
         {

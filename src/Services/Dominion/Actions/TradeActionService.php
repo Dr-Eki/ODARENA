@@ -201,6 +201,14 @@ class TradeActionService
         $soldResource = $tradeRoute->soldResource;
         $boughtResource = $tradeRoute->boughtResource;
 
+        $tradeOfferValue = $this->tradeCalculator->getTradeOfferValue($soldResource, $soldResourceAmount);
+        $maxTradeValue = $this->tradeCalculator->getMaxTradeValue($dominion, $soldResource);
+
+        if($tradeOfferValue > $maxTradeValue)
+        {
+            throw new GameException('You cannot trade this amount of this resource. You can at most offer trades at a base value of ' . number_format($maxTradeValue) . ' gold\'s worth of ' . $soldResource->name . ' and you offered ' . number_format($tradeOfferValue) .'.');
+        }
+
         if(!$hold)
         {
             throw new GameException('Invalid hold.');
@@ -251,7 +259,7 @@ class TradeActionService
             throw new GameException('You cannot buy this resource.');
         }
 
-        if ($soldResourceAmount > $this->tradeCalculator->getResourceMaxOfferableAmount($dominion, $soldResource))
+        if ($soldResourceAmount > $this->tradeCalculator->getResourceMaxOfferableAmount($dominion, $soldResource, $soldResourceAmount))
         {
             throw new GameException('You cannot trade this amount of this resource. You can at most offer ' . number_format($this->tradeCalculator->getResourceMaxOfferableAmount($dominion, $soldResource)) . '.');
         }

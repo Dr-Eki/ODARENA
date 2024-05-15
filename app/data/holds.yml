@@ -230,7 +230,7 @@ forgeheart:
 emerald_realm:
   name: Ysilien
   ruler_name: Ailre Iarmoira
-  description: A vibrant hold overflowing with lush vegetation and diverse wildlife, famous for its natural remedies and vibrant markets.
+  description: A vibrant hold overflowing with lush vegetation and diverse wildlife, famous for its natural remedies and bustling markets.
   race: Elf
   desired_resources:
     - gems
