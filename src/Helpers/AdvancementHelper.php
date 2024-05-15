@@ -132,7 +132,7 @@ class AdvancementHelper
 
             // Other, Special, One-Off
             'research_slots' => 'progress towards one extra research slot',
-            'trade_route_slots' => '+1 x trade route slots',
+            'land_per_trade_slot' => 'land required per trade route slot',
 
         ];
 
