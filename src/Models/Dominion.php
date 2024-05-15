@@ -990,7 +990,6 @@ class Dominion extends AbstractModel
                     $sourceResourceKey = (string)$perkValues[1];
                     $targetAmount = (float)$perkValues[2];
                     $targetResourceKey = (string)$perkValues[3];
-                    $buildingOwned = $buildingOwned;
 
                     $maxAmountConverted = min($this->{'resource_' . $sourceResourceKey}, $buildingOwned * $sourceAmount);
                     $amountCreated = $maxAmountConverted / ($sourceAmount / $targetAmount);
