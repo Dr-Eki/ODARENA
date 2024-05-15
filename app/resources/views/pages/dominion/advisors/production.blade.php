@@ -38,7 +38,7 @@
                                           <td>{{ number_format(($resourceCalculator->getProductionMultiplier($selectedDominion, $resourceKey)-1)*100, 2) }}%</td>
                                           <td>{{ number_format($resourceCalculator->getConsumption($selectedDominion, $resourceKey)) }}</td>
                                           <td>{{ number_format($resourceCalculator->getProduction($selectedDominion, $resourceKey) - $resourceCalculator->getConsumption($selectedDominion, $resourceKey)) }}</td>
-                                          <td>{{ number_format($selectedDominion->{'resource_' . $resourceKey})) }}</td>
+                                          <td>{{ number_format($selectedDominion->{'resource_' . $resourceKey}) }}</td>
                                   @endforeach
                                   <tr>
                                       <td>XP</td>
