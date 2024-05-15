@@ -134,6 +134,148 @@
 
 </div>
 
+
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        @component('partials.dominion.insight.box')
+
+            @slot('title', 'Establish Trade Route')
+            @slot('titleIconClass', 'fa fa-solid fa-arrow-right-from-bracket')
+            @slot('noPadding', true)
+
+            <div class="box-body">
+                @php
+                    $hasAvailableTradeRouteSlots = $tradeCalculator->getAvailableTradeRouteSlots($selectedDominion);
+                    $sentiment = optional($hold->sentiments->where('target_id', $selectedDominion->id)->first())->sentiment ?? 0;
+                    $sentimentDescription = $holdHelper->getSentimentDescription($sentiment);
+                    $sentimentClass = $holdHelper->getSentimentClass($sentimentDescription);
+                    $canTradeWithHold = $tradeCalculator->canDominionTradeWithHold($selectedDominion, $hold);
+                    $user = Auth::user();
+                @endphp
+
+                @if($canTradeWithHold)
+                    @if(isset($user->settings['skip_trade_confirmation']) and $user->settings['skip_trade_confirmation'])
+                        <form method="post" action="{{ route('dominion.trade.routes.create-trade-route') }}">
+                    @else
+                        <form method="post" action="{{ route('dominion.trade.routes.store-trade-details') }}">
+                    @endif
+                    <input type="hidden" name="hold" value="{{ $hold->id }}">
+                    @csrf
+                @endif
+
+                <div class="row hold-row">
+                    <div class="col-md-6">
+                        <table class="table table-responsive table-hover">
+                            <colgroup>
+                                <col width="100">
+                                <col width="100">
+                                <col width="100">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th><em class="text-muted">Hold prices</em></th>
+                                    <th>Buy Price</th>
+                                    <th>Sell Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(collect($hold->resourceKeys())->sort() as $resourceKey)
+                                    @php 
+                                        $resource = OpenDominion\Models\Resource::fromKey($resourceKey);
+                                        $buyPrice = $hold->buyPrice($resourceKey);
+                                        $sellPrice = $hold->sellPrice($resourceKey);
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $resource->name }}</td>
+                                        <td>{!! $buyPrice ? number_format($buyPrice, config('trade.price_decimals')) : '&mdash;' !!}</td>
+                                        <td>{!! $sellPrice ? number_format(1/$sellPrice, config('trade.price_decimals')) : '&mdash;' !!}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    @if($selectedDominion->protection_ticks)
+                        <div class="col-md-6">
+                            <p>You cannot trade while under protection.</p>
+                        </div>
+                    @elseif($selectedDominion->isLocked() or $selectedDominion->isAbandoned())
+                        <div class="col-md-6">
+                            <p>You cannot trade.</p>
+                        </div>
+                    @elseif(!$canTradeWithHold)
+                        <div class="col-md-6">
+                            <p>You cannot trade with this hold. You do not have any resources the hold is interested in buying.</p>
+                        </div>
+                    @elseif(!$hasAvailableTradeRouteSlots)
+                        <div class="col-md-6">
+                            <p>You do not have any available trade route slots.</p>
+                        </div>
+                    @else
+                        <div class="col-md-2">
+                            <h5 data-toggle="tooltip" data-placement="top" title="Do not exceed current net production or current stockpile (whichever is highest).">You Sell</h5>
+                            <div class="input-group" data-toggle="tooltip" data-placement="top" title="Select the resource to buy. The amount bought is calculated based on the amount you offer to sell.">
+                                <select name="sold_resource" class="input-group form-control" style="min-width:10em; width:100%;">
+                                    @foreach($hold->desired_resources as $resourceKey)
+                                        @php 
+                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                            $canTradeResource = $tradeCalculator->canDominionTradeResource($selectedDominion, $resource);
+                                        @endphp
+
+                                        @if($tradeCalculator->canDominionTradeResource($selectedDominion, $resource))
+                                            <option value="{{ $resource->key }}">{{ $resource->name }}</option>
+                                        @else
+                                            <option value="{{ $resource->key }}" disabled>{{ $resource->name }} (cannot trade)</option>
+                                        @endif
+
+                                    @endforeach
+                                </select>
+                                <span class="input-group-btn">
+                                    <input type="number" name="sold_resource_amount" class="form-control text-center" placeholder="0" min="1" size="5" style="min-width:5em; width:100%;" {{ $selectedDominion->isLocked() ? 'disabled' : null }}>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <h5>You Buy</h5>
+                            <div class="input-group" data-toggle="tooltip" data-placement="top" title="Select the resource you want to sell and how much you want to sell per tick.">
+                                <select name="bought_resource" class="form-control" style="min-width:10em; width:100%;">
+                                    @foreach($hold->sold_resources as $resourceKey)
+                                        @php 
+                                            $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                        @endphp
+
+                                        @if($tradeCalculator->canDominionTradeResource($selectedDominion, $resource))
+                                            <option value="{{ $resource->key }}">{{ $resource->name }}</option>
+                                        @else
+                                            <option value="{{ $resource->key }}" disabled>{{ $resource->name }} (cannot trade)</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                <span class="input-group-btn">
+                                    <input type="number" name="bought_resource_amount" class="form-control text-center" placeholder="0" min="0" size="5" style="min-width:5em; width:100%;" disabled>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <h5>&nbsp;</h5>
+                            <span data-toggle="tooltip" data-placement="top" title="Submit trade offer to {{ $hold->name }}">
+                            <button type="submit" class="btn btn-block btn-primary">
+                                Offer Trade
+                            </button>
+                            </span>
+                        </div>
+                    @endif
+                </div>
+
+                @if($canTradeWithHold)
+                    </form>
+                @endif
+            </div>      
+
+        @endcomponent
+    </div>
+</div>
+
 <div class="row">
     <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
@@ -327,3 +469,51 @@
 @endif
 
 @endsection
+
+@push('page-scripts')
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.box-primary form');
+
+        forms.forEach(form => {
+            const soldResourceSelect = form.querySelector('select[name="sold_resource"]');
+            const boughtResourceSelect = form.querySelector('select[name="bought_resource"]');
+            const soldResourceAmountInput = form.querySelector('input[name="sold_resource_amount"]');
+            const boughtResourceAmountInput = form.querySelector('input[name="bought_resource_amount"]');
+
+            // Check if elements exist before adding event listeners
+            if (soldResourceSelect && boughtResourceSelect && soldResourceAmountInput && boughtResourceAmountInput) {
+                [soldResourceSelect, boughtResourceSelect, soldResourceAmountInput].forEach(input => {
+                    input.addEventListener('change', function() {
+                        const data = {
+                            hold: form.querySelector('input[name="hold"]').value,
+                            sold_resource: soldResourceSelect.value,
+                            sold_resource_amount: soldResourceAmountInput.value,
+                            bought_resource: boughtResourceSelect.value,
+                        };
+
+                        fetch('/dominion/trade/routes/calculate-trade-route', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.original && data.original.bought_resource_amount) {
+                                boughtResourceAmountInput.value = data.original.bought_resource_amount;
+                            } else {
+                                console.error('Invalid response structure:', data);
+                                boughtResourceAmountInput.value = 'Error';
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    });
+                });
+            }
+        });
+    });
+    </script>
+@endpush
