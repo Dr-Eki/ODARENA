@@ -48,7 +48,7 @@
                             </tr>
                             <tr>
                                 <td>Land:</td>
-                                <td>{{ $hold->land }} (barren: {{ $hold->getBarrenLand() }})</td> 
+                                <td>{{ $hold->land }}</td> 
                             </tr>
                             <tr>
                                 <td>{{-- Str::plural($raceHelper->getPeasantsTerm($hold->race)) --}}Population:</td>
