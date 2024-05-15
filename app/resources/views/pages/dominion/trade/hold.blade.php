@@ -208,7 +208,7 @@
                         <div class="col-md-6">
                             <p>You cannot trade with this hold. You do not have any resources the hold is interested in buying.</p>
                         </div>
-                    @elseif(!$hasAvailableTradeRouteSlots)
+                    @elseif($hasAvailableTradeRouteSlots <= 0)
                         <div class="col-md-6">
                             <p>You do not have any available trade route slots.</p>
                         </div>
