@@ -275,7 +275,7 @@ class TradeActionService
             {
                 $reductionRatio = $soldResourceAmount / $tradeRoute->source_amount;
                 $baseSentimentPenalty = config('holds.sentiment_values.sold_amount_reduced');
-                $penalty = $baseSentimentPenalty * $reductionRatio;
+                $penalty = ceilInt($baseSentimentPenalty * $reductionRatio);
 
                 HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, -$penalty, 'sold_amount_reduced');
             }
