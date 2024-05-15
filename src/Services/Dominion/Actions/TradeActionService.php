@@ -163,7 +163,7 @@ class TradeActionService
                 'tick' => $dominion->round->ticks
             ]);
 
-            HoldSentimentEvent::add($hold, $dominion, config('holds.sentiment_values.discovered_by_dominion'), 'trade_route_established');
+            HoldSentimentEvent::add($hold, $dominion, config('holds.sentiment_values.trade_route_established'), 'trade_route_established');
 
             $message = vsprintf('Trade route to trade %s for %s with %s has been created.', [
                 $soldResource->name,

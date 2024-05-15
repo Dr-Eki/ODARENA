@@ -90,7 +90,7 @@ class MilitaryController extends AbstractDominionController
             $result['data']['draftRate']
         ));
 
-        $request->session()->flash('alert-success', $result['message']);
+        #$request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.military');
     }
 
@@ -128,7 +128,7 @@ class MilitaryController extends AbstractDominionController
             $result['data']['totalTroopsReleased']
         ));
 
-        $request->session()->flash('alert-success', $result['message']);
+        #$request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.military');
 
     }
@@ -147,7 +147,7 @@ class MilitaryController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', $result['message']);
+        #$request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.military');
     }
 
@@ -183,7 +183,7 @@ class MilitaryController extends AbstractDominionController
             $result['data']['totalTroopsReleased']
         ));
 
-        $request->session()->flash('alert-success', $result['message']);
+        #$request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.military.release');
 
     }

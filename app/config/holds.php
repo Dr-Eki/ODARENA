@@ -33,7 +33,7 @@ return [
     [
         'sold_amount_reduced' => 20,
         'discovered_by_dominion' => 100,
-        'trade_route_established' => 1,
+        'trade_route_established' => 4,
         'trade_completed' => 1,
     ],
 
