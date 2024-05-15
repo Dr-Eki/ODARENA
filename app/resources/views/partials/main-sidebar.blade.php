@@ -200,6 +200,10 @@
                     {!! $councilUnreadCount > 0 ? ('<span class="pull-right-container"><small class="label pull-right bg-green">' . $councilUnreadCount . '</small></span>') : null !!}</a>
                 </li>
 
+                @if(!$selectedDominion->watchedDominions->isEmpty())
+                    <li class="{{ Route::is('dominion.insight.watched-dominions') ? 'active' : null }}"><a href="{{ route('dominion.insight.watched-dominions') }}"><i class="fas fa-eye fa-fw"></i> <span>Watched Dominions</span></a></li>
+                @endif
+
                 {{--
                 <li class="{{ Route::is('dominion.notes') ? 'active' : null }}">
                     <a href="{{ route('dominion.notes') }}">

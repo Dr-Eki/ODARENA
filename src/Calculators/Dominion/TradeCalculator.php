@@ -176,7 +176,8 @@ class TradeCalculator
 
         $resourceNetProduction = $this->dominionResourceCalculator->getNetProduction($dominion, $resource->key);
 
-        # If $isEdit, then add the current amount sold to the netProduction
+        # If $currentAmountSold > 0, the user is editing the trade route.
+        # In that case, add the current amount sold to the netProduction.
         if($currentAmountSold > 0)
         {
             $resourceNetProduction += $currentAmountSold;
@@ -256,6 +257,21 @@ class TradeCalculator
         $tradeRouteDuration = $tradeRouteTicks - $currentTick;
 
         $penalty = 0;
+
+        $hold = $tradeRoute->hold;
+        $dominion = $tradeRoute->dominion;
+        $soldResource = $tradeRoute->soldResource;
+        $soldResourceAmount = $tradeRoute->source_amount;
+        $boughtResource = $tradeRoute->boughtResource;
+        $expectedAmount = $tradeRoute->source_amount;
+
+        $canHoldAffordTrade = $this->canHoldAffordTrade($hold, $boughtResource, $expectedAmount);
+        $canDominionAffordTrade = $this->canDominionAffordTrade($dominion, $soldResource, $soldResourceAmount);
+
+        if(!$canHoldAffordTrade)
+        {
+            return 0;
+        }
 
         if($reason == 'cancelled_by_dominion' or $reason == 'dominion_insufficient_resources')
         {
