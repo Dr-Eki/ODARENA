@@ -290,14 +290,13 @@ class QueueService
     
         foreach ($data as $resource => $amount)
         {
-
-            #dump("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
-            Log::debug("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
-
             if ($amount === 0)
             {
                 continue;
             }
+
+            #dump("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
+            Log::debug("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
     
             try {
                 $sql = "INSERT INTO `dominion_queue` (`dominion_id`, `source`, `resource`, `hours`, `amount`, `created_at`)
