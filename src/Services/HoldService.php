@@ -137,9 +137,7 @@ class HoldService
 
     public function handleHoldConstruction(Hold $hold): void
     {
-        $barrenLand = $hold->land - $hold->buildings->sum('amount');
-
-        foreach($this->holdCalculator->getNewBuildings($hold, $barrenLand) as $buildingKey => $buildingAmount)
+        foreach($this->holdCalculator->getNewBuildings($hold, $hold->getBarrenLand()) as $buildingKey => $buildingAmount)
         {
             $this->buildingService->update($hold, [$buildingKey => $buildingAmount]);
         }

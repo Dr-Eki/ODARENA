@@ -48,7 +48,7 @@
                             </tr>
                             <tr>
                                 <td>Land:</td>
-                                <td>{{ $hold->land }}</td>
+                                <td>{{ $hold->land }} (barren: {{ $hold->getBarrenLand() }})</td> 
                             </tr>
                             <tr>
                                 <td>{{-- Str::plural($raceHelper->getPeasantsTerm($hold->race)) --}}Population:</td>
@@ -247,7 +247,7 @@
                             <td>{{ number_format($hold->{'resource_' . $resourceKey}) }}</td>
                             <td>{{ number_format($resourceCalculator->getProduction($hold, $resourceKey)) }}</td>
                             <td>{!! $hold->buyPrice($resourceKey) ? number_format($hold->buyPrice($resourceKey), config('trade.price_decimals')) : '&mdash;' !!}</td>
-                            <td>{!! $hold->sellPrice($resourceKey) ? number_format($hold->sellPrice($resourceKey), config('trade.price_decimals')) : '&mdash;' !!}</td>
+                            <td>{!! $hold->sellPrice($resourceKey) ? number_format(1/$hold->sellPrice($resourceKey), config('trade.price_decimals')) : '&mdash;' !!}</td>
                         </tr>
                     @endforeach
                 </tbody>

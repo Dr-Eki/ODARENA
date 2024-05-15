@@ -227,6 +227,11 @@ class Hold extends AbstractModel
         return $this->hasMany(HoldBuilding::class);
     }
 
+    public function getBarrenLand()
+    {
+        return $this->land - $this->buildings->sum('amount');
+    }
+
     # Get units by state
     public function getUnitsByState(int $state)
     {
