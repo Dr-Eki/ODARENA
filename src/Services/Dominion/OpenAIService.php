@@ -30,7 +30,7 @@ class OpenAIService
     public function sendMessageAndGetCompletion(string $storyteller, string $message, int $maxTokens = 1000)
     {
         $payload = [
-            'model' => 'gpt-4',
+            'model' => 'gpt-4o',
             'messages' => [
                 [
                     'role' => 'system',
