@@ -39,7 +39,7 @@ class MilitaryController extends AbstractDominionController
 {
     public function getMilitary()
     {
-        $self = $this->getSelectedDominion()->refresh();
+        $self = $this->getSelectedDominion();
         $queueService = app(QueueService::class);
         $resourceCalculator = app(ResourceCalculator::class);
 
