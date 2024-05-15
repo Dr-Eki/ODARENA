@@ -39,11 +39,9 @@ class MilitaryController extends AbstractDominionController
 {
     public function getMilitary()
     {
-        $self = $this->getSelectedDominion()->fresh();
+        $self = $this->getSelectedDominion()->refresh();
         $queueService = app(QueueService::class);
         $resourceCalculator = app(ResourceCalculator::class);
-
-        $returningResources = $resourceCalculator->getReturningResources($self);
 
         return view('pages.dominion.military', [
             'artefactHelper' => app(ArtefactHelper::class),
@@ -62,7 +60,7 @@ class MilitaryController extends AbstractDominionController
             'raceHelper' => app(RaceHelper::class),
             'landCalculator' => app(LandCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),
-            'returningResources' => $returningResources,
+            'returningResources' => $resourceCalculator->getReturningResources($self),
             'spellCalculator' => app(SpellCalculator::class),
             'unitCalculator' => app(UnitCalculator::class),
         ]);
