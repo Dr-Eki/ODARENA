@@ -794,7 +794,6 @@ class PopulationCalculator
      */
     public function getPopulationPeasantGrowth(Dominion $dominion): int
     {
-
         $maximumPeasantDeath = ((-0.05 * $dominion->peasants) - $this->getPopulationDrafteeGrowth($dominion));
 
         $roomForPeasants = ($this->getMaxPopulation($dominion) - $this->getPopulation($dominion));# - $this->getUnhousedDraftees($dominion));

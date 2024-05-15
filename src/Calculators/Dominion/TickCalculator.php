@@ -245,7 +245,18 @@ class TickCalculator
             $tick->peasants = ($dominion->peasants)*-1;
         }
 
+
         $tick->peasants = $populationPeasantGrowth;
+
+        if($tick->peasants < 0)
+        {
+            # Cannot be greater than the current peasants (negative amount)
+            $tickPeasants = abs($tick->peasants);
+            $currentPeasants = $dominion->peasants;
+            $maxToRemove = max(0, $currentPeasants - 1000); # Spare 1,000
+
+            $tick->peasants = -min($tickPeasants, $maxToRemove);
+        }
 
         $tick->peasants_sacrificed = 0;
 
