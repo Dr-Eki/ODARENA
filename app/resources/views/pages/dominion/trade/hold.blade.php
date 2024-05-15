@@ -166,7 +166,7 @@
 
                 <div class="row hold-row">
                     <div class="col-md-6">
-                        <table class="table table-responsive table-hover">
+                        <table class="table table-hover">
                             <colgroup>
                                 <col width="100">
                                 <col width="100">
