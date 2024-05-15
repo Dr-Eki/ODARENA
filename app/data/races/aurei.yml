@@ -1,7 +1,7 @@
 name: Aurei
 alignment: good
 description:
-home_terrain: mountains
+home_terrain: desert
 playable: 1 # Round 88
 skill_level: 2
 magic_level: 5

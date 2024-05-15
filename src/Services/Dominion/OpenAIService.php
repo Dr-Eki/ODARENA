@@ -68,10 +68,10 @@ class OpenAIService
         }
     }
     
-
     public function generateImagesFromText(string $text, int $n = 1, string $size = '512x512'): array
     {
         $payload = [
+            'model' => 'dall-e-3',
             'prompt' => $text,
             'n' => $n,
             'size' => $size,
