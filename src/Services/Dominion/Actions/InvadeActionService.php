@@ -721,7 +721,7 @@ class InvadeActionService
             ]);
 
             // Send push notification
-            if($target->race->key !== 'barbarian')
+            if($target->race->key !== 'barbarian' and !$target->isAbandoned())
             {
                 if($this->invasion['result']['success'])
                 {
