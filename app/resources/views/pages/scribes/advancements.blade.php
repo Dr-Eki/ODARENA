@@ -43,12 +43,7 @@
                             $advancementPerkBase = $advancementHelper->extractAdvancementPerkValuesForScribes($perk->pivot->value) / 100;
                         @endphp
                         <li>
-                            @if($advancementPerkBase > 0)
-                                +{{ number_format($advancementPerkBase * 100, 2) }}%
-                            @else
-                                {{ number_format($advancementPerkBase * 100, 2) }}%
-                            @endif
-
+                            {{ sprintf('%+g', $advancementPerkBase*100) }}%
                             {{ $advancementHelper->getAdvancementPerkDescription($perk->key) }}
                         </li>
 

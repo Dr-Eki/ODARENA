@@ -267,7 +267,7 @@ class TradeCalculator
         $canHoldAffordTrade = $this->canHoldAffordTrade($hold, $boughtResource, $expectedAmount);
         $canDominionAffordTrade = $this->canDominionAffordTrade($dominion, $soldResource, $soldResourceAmount);
 
-        if(!$canHoldAffordTrade)
+        if($reason == 'hold_insufficient_resources' or !$canHoldAffordTrade)
         {
             return 0;
         }

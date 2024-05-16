@@ -697,7 +697,7 @@ class NotificationHelper
                 return 'You do not have enough food! Morale is decreasing.';
 
             case 'hourly_dominion.trade_failed':
-                return sprintf('%s does not have enough %s to trade with you. No resources have been sent by either party.',
+                return sprintf('%s does not have enough %s to trade with you. The trade route has been cancelled. No sentiment penalty incurred.',
                     $data['hold_name'],
                     $data['bought_resource_name']
                 );

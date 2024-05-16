@@ -17,8 +17,6 @@ return [
         'luxury' => (5/4)*10000,
     ],
 
-    'sentiment_divisor' => 1100,
-
     'trade_base_max' => 10000,
 
     'land_per_trade_slot' => 200,
