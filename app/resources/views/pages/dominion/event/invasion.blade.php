@@ -1124,7 +1124,7 @@
                     <div class="row">
                         <div class="col-sm-4 text-center">
                             <a href="{{ route('dominion.insight.show', [$event->source->id]) }}"><i class="fa fa-eye"></i> {{ $event->source->name }} (# {{ $event->source->realm->number }})</a>
-                            @if($event->source->user->hasAvatar())
+                            @if($event->source->user->hasAvatar() and !$event->source->isAbandoned()))
                                 <img src="{{ $event->source->user->getAvatarUrl() }}" class="img-responsive center-block" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}">
                             @elseif($event->source->race->key === 'barbarian')
                                 <img src="{{ asset('assets/app/images/barbarian.svg') }}" class="img-responsive center-block" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}">
@@ -1137,7 +1137,7 @@
                         </div>
                         <div class="col-sm-4 text-center">
                             <a href="{{ route('dominion.insight.show', [$event->target->id]) }}"><i class="fa fa-eye"></i> {{ $event->target->name }} (# {{ $event->target->realm->number }})</a>
-                            @if($event->target->user->hasAvatar())
+                            @if($event->target->user->hasAvatar() and !$event->target->isAbandoned())
                                 <img src="{{ $event->target->user->getAvatarUrl() }}" class="img-responsive center-block" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}">
                             @elseif($event->target->race->key === 'barbarian')
                                 <img src="{{ asset('assets/app/images/barbarian.svg') }}" class="img-responsive center-block" height="{{ config('user.avatar.display_x') }}" width="{{ config('user.avatar.display_y') }}">

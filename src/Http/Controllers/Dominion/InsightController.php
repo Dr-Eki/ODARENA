@@ -127,7 +127,7 @@ class InsightController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
+        #$request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
         return redirect()->to($result['redirect'] ?? route('dominion.insight.show', $dominion));
     }
 
@@ -146,7 +146,7 @@ class InsightController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
+        #$request->session()->flash(('alert-' . ($result['alert-type'] ?? 'success')), $result['message']);
         return redirect()->to($result['redirect'] ?? route('dominion.insight.show', $dominion));
     }
 
