@@ -50,7 +50,7 @@
                             <tr>
                                 <td>Ruler:</td>
                                 <td>
-                                    @if($dominion->user->hasAvatar())
+                                    @if(isset($dominion->user) and $dominion->user->hasAvatar())
                                         <img style="display: inline; vertical-align: middle; height: 1em;" src="{{ $dominion->user->getAvatarUrl() }}">
                                     @elseif($dominion->race->key === 'barbarian')
                                         <img style="display: inline; vertical-align: middle; height: 1em;" src="{{ asset('assets/app/images/barbarian.svg') }}">

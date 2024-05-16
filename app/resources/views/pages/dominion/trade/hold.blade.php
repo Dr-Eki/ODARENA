@@ -147,7 +147,7 @@
 
             <div class="box-body">
                 @php
-                    $hasAvailableTradeRouteSlots = $tradeCalculator->getAvailableTradeRouteSlots($selectedDominion);
+                    $hasAvailableTradeRouteSlots = $tradeCalculator->getAvailableTradeRouteSlots($selectedDominion) > 0;
                     $sentiment = optional($hold->sentiments->where('target_id', $selectedDominion->id)->first())->sentiment ?? 0;
                     $sentimentDescription = $holdHelper->getSentimentDescription($sentiment);
                     $sentimentClass = $holdHelper->getSentimentClass($sentimentDescription);
@@ -208,7 +208,7 @@
                         <div class="col-md-6">
                             <p>You cannot trade with this hold. You do not have any resources the hold is interested in buying.</p>
                         </div>
-                    @elseif($hasAvailableTradeRouteSlots <= 0)
+                    @elseif(!$hasAvailableTradeRouteSlots)
                         <div class="col-md-6">
                             <p>You do not have any available trade route slots.</p>
                         </div>

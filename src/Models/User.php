@@ -93,9 +93,6 @@ class User extends AbstractModel implements AuthenticatableContract, Authorizabl
         }
 
         return '#';
-
-        #return Gravatar::src($this->email, 200);
-
     }
 
     public function hasAvatar()
