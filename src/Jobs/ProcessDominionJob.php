@@ -778,6 +778,9 @@ class ProcessDominionJob implements ShouldQueue
             {
                 $harmfulSpells[] = $spell->key;
             }
+
+            $row->delete();
+            Log::info("Spell {$spell->name} has dissipated.", ['dominion_id' => $dominion->id, 'spell_id' => $spell->id]);
         }
 
         if (!empty($beneficialSpells) and !$dominion->isAbandoned())

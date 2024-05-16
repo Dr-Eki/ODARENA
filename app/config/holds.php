@@ -28,7 +28,7 @@ return [
         'sugar' => 0.015,
     ],
 
-    # Sentiment penalties
+    # Sentiment values
     'sentiment_values' =>
     [
         'sold_amount_reduced' => 20,
@@ -36,5 +36,7 @@ return [
         'trade_route_established' => 4,
         'trade_completed' => 1,
     ],
+
+    'sentiment_divisor' => 4000,
 
 ];

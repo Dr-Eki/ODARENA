@@ -149,6 +149,10 @@ class HoldCalculator
 
         $sentiment = optional($hold->sentiments->where('target_id', $dominion->id)->first())->sentiment ?? 0;
 
+        # Cap $sentiment between -1000 and +1000
+        $sentiment = max(-1000, $sentiment);
+        $sentiment = min(1000, $sentiment);
+
         return $multiplier += $sentiment / config('trade.sentiment_divisor');
     }
 
