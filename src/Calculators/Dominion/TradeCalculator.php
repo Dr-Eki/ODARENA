@@ -339,7 +339,7 @@ class TradeCalculator
         # boughtResource = bought BY THE PLAYER
 
         $stockpile = $hold->{'resource_' . $boughtResource->key};
-        $production = $this->holdResourceCalculator->getProduction($hold, $boughtResource->key);
+        $production = 0;#$this->holdResourceCalculator->getProduction($hold, $boughtResource->key);
 
         return ($production + $stockpile) >= $amountToBeExported;
     }

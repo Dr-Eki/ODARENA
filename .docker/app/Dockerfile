@@ -26,11 +26,11 @@ RUN docker-php-ext-install sockets pdo_mysql intl mbstring exif pcntl bcmath gd 
 # Install Redis extension
 RUN pecl install redis && docker-php-ext-enable redis
 
-# Install Supervisord
-RUN apt-get update && apt-get install -y supervisor
+# Install Supervisord // Nah, use screen instead to run `php artisan horizon` in the background
+# RUN apt-get update && apt-get install -y supervisor
 
 #Install Node Js and Npm
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_21.x | bash -
 RUN apt-get install -y nodejs
 
 # Install procps

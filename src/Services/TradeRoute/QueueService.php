@@ -115,7 +115,6 @@ class QueueService
 
                     $this->holdResourceService->update($tradeRoute->hold, [$finishedQueue->resource->key => $amount]);
                     #dump('+ Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to hold ' . $tradeRoute->hold->name);
-                    HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, config('holds.sentiment_values.trade_completed'), 'trade_completed');
                 }
 
                 $tradeRoute->save();
@@ -124,6 +123,7 @@ class QueueService
             $finishedQueues->each->delete();
         }
 
+        HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, config('holds.sentiment_values.trade_completed'), 'trade_completed');
 
         $overDueQueues = $tradeRoute->queues()
             ->where('status', 1)
