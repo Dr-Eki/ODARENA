@@ -26,7 +26,7 @@ use OpenDominion\Services\Dominion\StatsService;
 class MilitaryCalculator
 {
     /** @var bool */
-    protected $forTick = false;
+    #protected $forTick = false;
 
     /** @var AdvancementCalculator */
     protected $advancementCalculator;
@@ -87,11 +87,11 @@ class MilitaryCalculator
     /**
      * Toggle if this calculator should include the following hour's resources.
      */
-    public function setForTick(bool $value)
-    {
-        $this->forTick = $value;
-        $this->queueService->setForTick($value);
-    }
+    #public function setForTick(bool $value)
+    #{
+    #    $this->forTick = $value;
+    #    $this->queueService->setForTick($value);
+    #}
 
     /**
      * Returns the Dominion's offensive power.

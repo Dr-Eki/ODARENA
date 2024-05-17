@@ -13,7 +13,7 @@ class PopulationCalculator
 {
 
     /** @var bool */
-    protected $forTick = false;
+    #protected $forTick = false;
 
     /** @var LandCalculator */
     protected $landCalculator;
@@ -56,11 +56,11 @@ class PopulationCalculator
     /**
      * Toggle if this calculator should include the following hour's resources.
      */
-    public function setForTick(bool $value)
-    {
-        $this->forTick = $value;
-        $this->queueService->setForTick($value);
-    }
+    #public function setForTick(bool $value)
+    #{
+    #    $this->forTick = $value;
+    #    $this->queueService->setForTick($value);
+    #}
 
     /**
      * Returns the Dominion's total population, both peasants and military.

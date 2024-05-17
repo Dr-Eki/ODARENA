@@ -282,7 +282,7 @@ class SabotageActionService
 
                     $damageRatio = $sabotageDamage['mod']['construction'];
 
-                    $this->queueService->setForTick(false); # OFF
+                    #$this->queueService->setForTick(false); # OFF
 
                     foreach($this->queueService->getConstructionQueue($target)->sortBy('hours')->shuffle() as $index => $constructionBuilding)
                     {
@@ -314,7 +314,7 @@ class SabotageActionService
                         $this->statsService->updateStat($target, 'sabotage_construction_damage_suffered', array_sum($this->sabotage['damage_dealt'][$type]));
                     }
 
-                    $this->queueService->setForTick(true); # ON
+                    #$this->queueService->setForTick(true); # ON
 
                 }
 

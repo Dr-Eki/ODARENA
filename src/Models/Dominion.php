@@ -579,9 +579,9 @@ class Dominion extends AbstractModel
         }
 
         // Recalculate next tick
-        $tickCalculator = app(\OpenDominion\Calculators\Dominion\TickCalculator::class);
-        $tickCalculator->precalculateTick($this);
-
+        #$tickCalculator = app(\OpenDominion\Calculators\Dominion\TickCalculator::class);
+        #$tickCalculator->precalculateTick($this);
+#
         return $saved;
     }
 

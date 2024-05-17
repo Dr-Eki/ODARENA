@@ -106,84 +106,112 @@ class ProcessDominionJob implements ShouldQueue
 
         Log::debug('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . '), ID ' . $this->dominion->id);
         # Make a DB transaction
+
+        # Do this first to populate dominion_tick
+        if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Precalculate tick"); }
+        $this->tickCalculator->precalculateTick($this->dominion, true);
+
         DB::transaction(function () use ($round)
-        {    
+        {  
+
             $this->temporaryData[$round->id][$this->dominion->id] = [];
 
             #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
             $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)"); }
+            xtLog("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)");
             $this->handleBarbarians($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Updating buildings"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Updating buildings"); }
+            xtLog("[{$this->dominion->id}] ** Updating buildings");
             $this->handleCaptureInsight($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Updating buildings"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Updating buildings"); }
+            xtLog("[{$this->dominion->id}] ** Updating buildings");
             $this->handleBuildings($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Updating terrain"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Updating terrain"); }
+            xtLog("[{$this->dominion->id}] ** Updating terrain");
             $this->handleTerrain($this->dominion);
 
-            if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating improvments"); }
+            #if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating improvments"); }
+            xtLog("[{$this->dominion->id}] ** Updating improvments");
             $this->handleImprovements($this->dominion);
 
-            if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating deities"); }
+            #if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating deities"); }
+            xtLog("[{$this->dominion->id}] ** Updating deities");
             $this->handleDeities($this->dominion);
 
-            if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating devotion"); }
+            #if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating devotion"); }
+            xtLog("[{$this->dominion->id}] ** Updating devotion");
             $this->handleDevotion($this->dominion);
 
-            if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating artefacts"); }
+            #if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating artefacts"); }
+            xtLog("[{$this->dominion->id}] ** Updating artefacts");
             $this->handleArtefacts($this->dominion);
 
-            if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating research"); }
+            #if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating research"); }
+            xtLog("[{$this->dominion->id}] ** Updating research");
             $this->handleResearch($this->dominion);
 
-            if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating units"); }
+            #if(config('game.extended_logging')){ Log::debug("[{$this->dominion->id}] ** Updating units"); }
+            xtLog("[{$this->dominion->id}] ** Updating units");
             $this->handleUnits($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Updating resources"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Updating resources"); }
+            xtLog("[{$this->dominion->id}] ** Updating resources");
             $this->handleResources($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Handle stasis"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Handle stasis"); }
+            xtLog("[{$this->dominion->id}] ** Handle stasis");
             $this->handleStasis($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Handle Pestilence"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Handle Pestilence"); }
+            xtLog("[{$this->dominion->id}] ** Handle Pestilence");
             $this->handlePestilence($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Handle land generation"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Handle land generation"); }
+            xtLog("[{$this->dominion->id}] ** Handle land generation");
             $this->handleLandGeneration($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Handle unit generation"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Handle unit generation"); }
+            xtLog("[{$this->dominion->id}] ** Handle unit generation");
             $this->handleUnitGeneration($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Queue notifications"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Queue notifications"); }
+            xtLog("[{$this->dominion->id}] ** Queue notifications");
             $this->queueNotifications($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Updating spells"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Updating spells"); }
+            xtLog("[{$this->dominion->id}] ** Updating spells");
             $this->updateSpells($this->dominion);
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Sending notifications (hourly_dominion)"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Sending notifications (hourly_dominion)"); }
             $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
-
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Precalculate tick"); }
-            $this->tickCalculator->precalculateTick($this->dominion, true);
         });
 
         # Cannot be a part of the DB transaction because it might cause deadlocks
-        if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Audit and repair terrain"); }
+        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Audit and repair terrain"); }
+        xtLog("[{$this->dominion->id}] ** Audit and repair terrain");
         $this->terrainService->auditAndRepairTerrain($this->dominion);
             
         # Also cannot be a part of the DB transaction because it might cause deadlocks
-        if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Cleaning up queues"); }
+        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Cleaning up queues"); }
+        xtLog("[{$this->dominion->id}] ** Cleaning up queues");
         $this->cleanupQueues($this->dominion);
 
-        if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Cleaning up active spells"); }
+        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Cleaning up active spells"); }
+        xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
         $this->cleanupActiveSpells($this->dominion);
 
+        # And do it again to prepare for the next tick (this can probably be removed)
+        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Re-precalculate tick"); }
+        #xtLog("[{$this->dominion->id}] ** Re-precalculate tick");
+        #$this->tickCalculator->precalculateTick($this->dominion);
 
-        if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number}), ID {$this->dominion->id}"); }
+        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number}), ID {$this->dominion->id}"); }
+        xtLog("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number}), ID {$this->dominion->id}");
         $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
     }
 
@@ -196,7 +224,8 @@ class ProcessDominionJob implements ShouldQueue
                                         ->where('hours',1)
                                         ->get();
 
-        if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Finished buildings in queue: " . $finishedBuildingsInQueue->count()); }
+        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Finished buildings in queue: " . $finishedBuildingsInQueue->count()); }
+        xtLog("[{$this->dominion->id}] ** Finished buildings in queue: " . $finishedBuildingsInQueue->count());
 
         if(!$finishedBuildingsInQueue->count())
         {
@@ -211,7 +240,8 @@ class ProcessDominionJob implements ShouldQueue
             $amount = intval($finishedBuildingInQueue->amount);
             $buildingsToAdd[$buildingKey] = $amount;
 
-            if(config('game.extended_logging')) { Log::debug("*** {$amount} building {$buildingKey} finished."); }
+            #if(config('game.extended_logging')) { Log::debug("*** {$amount} building {$buildingKey} finished."); }
+            xtLog("*** {$amount} building {$buildingKey} finished.");
         }
 
         $this->buildingService->update($dominion, $buildingsToAdd);
@@ -226,7 +256,8 @@ class ProcessDominionJob implements ShouldQueue
                                         ->where('hours',1)
                                         ->get();
 
-        if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Finished improvements in queue: " . $finishedImprovementsInQueue->count()); }
+        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Finished improvements in queue: " . $finishedImprovementsInQueue->count()); }
+        xtLog("[{$this->dominion->id}] ** Finished improvements in queue: " . $finishedImprovementsInQueue->count());
 
         if(!$finishedImprovementsInQueue->count())
         {
@@ -291,7 +322,8 @@ class ProcessDominionJob implements ShouldQueue
                     ->where('hours',1)
                     ->get();
 
-        if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Finished deities in queue: " . $finishedDeitiesInQueue->count()); }
+        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Finished deities in queue: " . $finishedDeitiesInQueue->count()); }
+        xtLog("[{$this->dominion->id}] ** Finished deities in queue: " . $finishedDeitiesInQueue->count());
 
         if(!$finishedDeitiesInQueue->count())
         {
@@ -510,7 +542,9 @@ class ProcessDominionJob implements ShouldQueue
 
         $this->temporaryData[$dominion->round->id]['stasis_dominions'][] = $dominion->id;
 
-        if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Dominion is in stasis"); }
+        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Dominion is in stasis"); }
+        xtLog("[{$this->dominion->id}] ** Dominion is in stasis");
+
         $stasisDominion = Dominion::findorfail($dominion->id);
 
         ## Determine how many of each unit type is returning in $tick ticks
@@ -525,7 +559,7 @@ class ProcessDominionJob implements ShouldQueue
             }
         }
 
-        $this->queueService->setForTick(false);
+        #$this->queueService->setForTick(false);
         foreach($stasisDominion->race->units as $unit)
         {
             $units['unit' . $unit->slot] = $this->queueService->getInvasionQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
@@ -600,7 +634,7 @@ class ProcessDominionJob implements ShouldQueue
             #echo "\nUnits requeued";
         }
 
-        $this->queueService->setForTick(true);
+        #$this->queueService->setForTick(true);
     }
 
     protected function handleBarbarians(Dominion $barbarian): void
@@ -610,16 +644,20 @@ class ProcessDominionJob implements ShouldQueue
             return;
         }
 
-        if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian invasions"); }
+        #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian invasions"); }
+        xtLog("*** Handle Barbarian invasions");
         $this->barbarianService->handleBarbarianInvasion($barbarian);
 
-        if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian construction"); }
+        #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian construction"); }
+        xtLog("*** Handle Barbarian construction");
         $this->barbarianService->handleBarbarianConstruction($barbarian);
 
-        if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian improvements"); }
+        #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian improvements"); }
+        xtLog("*** Handle Barbarian improvements");
         $this->barbarianService->handleBarbarianImprovements($barbarian);
 
-        if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian training"); }
+        #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian training"); }
+        xtLog("*** Handle Barbarian training");
         $this->barbarianService->handleBarbarianTraining($barbarian);
     }
 
@@ -633,12 +671,13 @@ class ProcessDominionJob implements ShouldQueue
             !$this->dominion->isAbandoned()
             )
         {
-            $this->queueService->setForTick(false); # Necessary as otherwise this-tick units are missing
+            #$this->queueService->setForTick(false); # Necessary as otherwise this-tick units are missing
 
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Capturing insight for {$this->dominion->name}"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Capturing insight for {$this->dominion->name}"); }
+            xtLog("[{$this->dominion->id}] ** Capturing insight for {$this->dominion->name}");
             $this->insightService->captureDominionInsight($this->dominion);
 
-            $this->queueService->setForTick(true); # Reset
+            #$this->queueService->setForTick(true); # Reset
         }
     }
 
@@ -659,7 +698,8 @@ class ProcessDominionJob implements ShouldQueue
             ->get()
             ->sortByDesc('created_at');
 
-        if(config('game.extended_logging')) { Log::debug('*** 🦠 Has ' . $pestilences->count() . ' active pestilence(s)'); }
+        #if(config('game.extended_logging')) { Log::debug('*** 🦠 Has ' . $pestilences->count() . ' active pestilence(s)'); }
+        xtLog('*** 🦠 Has ' . $pestilences->count() . ' active pestilence(s)');
 
         foreach($pestilences as $dominionSpellPestilence)
         {
@@ -685,7 +725,8 @@ class ProcessDominionJob implements ShouldQueue
 
         if(!empty($unitsGenerated))
         {
-            if(config('game.extended_logging')) { Log::debug("[{$afflicted->id}] *** Queuing units generated from pestilence."); }
+            #if(config('game.extended_logging')) { Log::debug("[{$afflicted->id}] *** Queuing units generated from pestilence."); }
+            xtLog("[{$afflicted->id}] *** Queuing units generated from pestilence.");
 
             foreach($unitsGenerated as $slot => $amount)
             {
@@ -727,13 +768,15 @@ class ProcessDominionJob implements ShouldQueue
     {
         if($this->resourceCalculator->isOnBrinkOfStarvation($dominion) and !$dominion->isAbandoned())
         {
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Queue starvation notifications"); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Queue starvation notifications"); }
+            xtLog("[{$this->dominion->id}] ** Queue starvation notifications");
             $this->notificationService->queueNotification('starvation_occurred');
         }
 
         if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
         {
-            if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Queue attrition notifications "); }
+            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Queue attrition notifications "); }
+            xtLog("[{$this->dominion->id}] ** Queue attrition notifications ");
             $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']);
         }
     }
@@ -779,7 +822,7 @@ class ProcessDominionJob implements ShouldQueue
             {
                 $harmfulSpells[] = $spell->key;
             }
-            Log::info("Spell {$spell->name} has dissipated.", ['dominion_id' => $dominion->id, 'spell_id' => $spell->id]);
+            xtLog("[{$dominion->id}] ** Spell {$spell->name} has dissipated.");
         }
 
         if (!empty($beneficialSpells) and !$dominion->isAbandoned())
@@ -808,7 +851,8 @@ class ProcessDominionJob implements ShouldQueue
 
         $finished = DB::table('dominion_queue')
             ->where('dominion_id', $dominion->id)
-            ->where('hours', '<=', 0)
+            #->where('hours', '<=', 0)
+            ->where('hours', '=', 0)
             ->get();
 
         foreach ($finished->groupBy('source') as $source => $group)
@@ -831,13 +875,10 @@ class ProcessDominionJob implements ShouldQueue
             $this->notificationService->queueNotification($notificationType, $resources);
         }
 
-        DB::transaction(function () use ($dominion)
-        {
-            DB::table('dominion_queue')
-                ->where('dominion_id', $dominion->id)
-                ->where('hours', '<=', 0)
-                ->delete();
-        }, 10);
+        DB::table('dominion_queue')
+            ->where('dominion_id', $dominion->id)
+            ->where('hours', '<=', 0)
+            ->delete();
 
     }
     

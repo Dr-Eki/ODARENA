@@ -5,6 +5,7 @@
 return [
 
     'extended_logging' => true,
+    'extended_logging_with_dump' => true,
 
     'tick_queue_check_delay' => 500, # milliseconds
 

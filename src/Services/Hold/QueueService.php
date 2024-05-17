@@ -18,7 +18,7 @@ use OpenDominion\Services\Hold\ResourceService;
 class QueueService
 {
 
-    protected $forTick = false;
+    #protected $forTick = false;
 
     protected $buildingService;
     protected $resourceService;
@@ -122,11 +122,11 @@ class QueueService
     public function getQueue(string $type, Hold $hold): Collection
     {
         $tick = 0;
-        if ($this->forTick)
-        {
-            // don't include next tick when calculating tick
-            $tick = 1;
-        }
+        #if ($this->forTick)
+        #{
+        #    // don't include next tick when calculating tick
+        #    $tick = 1;
+        #}
         return $hold->queues
             ->where('type', $type)
             ->where('tick', '>', $tick);

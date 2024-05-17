@@ -31,15 +31,15 @@ use OpenDominion\Models\Dominion;
 class QueueService
 {
     /** @var bool */
-    protected $forTick = false;
+    #protected $forTick = false;
 
     /**
      * Toggle if this calculator should include the following hour's resources.
      */
-    public function setForTick(bool $value)
-    {
-        $this->forTick = $value;
-    }
+    #public function setForTick(bool $value)
+    #{
+    #    $this->forTick = $value;
+    #}
 
     /**
      * Returns the queue of specific type of a dominion.
@@ -51,11 +51,11 @@ class QueueService
     public function getQueue(string $source, Dominion $dominion): Collection
     {
         $hours = 0;
-        if ($this->forTick)
-        {
-            // don't include next hour when calculating tick
-            $hours = 1;
-        }
+        #if ($this->forTick)
+        #{
+        #    // don't include next hour when calculating tick
+        #    $hours = 1;
+        #}
         return $dominion->queues
             ->where('source', $source)
             ->where('hours', '>', $hours);

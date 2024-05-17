@@ -140,7 +140,7 @@ class TickService
 
         /* These calculators need to ignore queued resources for the following tick */
         #$this->populationCalculator->setForTick(true);
-        $this->queueService->setForTick(true);
+        #$this->queueService->setForTick(true);
         /* OK, get it? */
     }
 
@@ -158,8 +158,7 @@ class TickService
             return;
         }
 
-        Log::debug('Scheduled tick started at ' . $this->now . '.');
-        dump('Scheduled tick started at ' . $this->now . '.');
+        xtLog('Scheduled tick started at ' . $this->now . '.');
 
         #DB::transaction(function () 
         #{
@@ -226,8 +225,8 @@ class TickService
             }
         #});
 
-        Log::debug('Scheduled tick finished at ' . now() . '.');
-        dump('Scheduled tick started at ' . now() . '.');
+        $finishedAt = now();
+        xtLog('Scheduled tick finished at ' . $finishedAt . '.');   
     }
 
     /**
@@ -836,7 +835,7 @@ class TickService
 
         $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
 
-        $this->tickCalculator->precalculateTick($dominion, true);
+        #$this->tickCalculator->precalculateTick($dominion, true);
 
         if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }
         $this->terrainService->auditAndRepairTerrain($dominion);
@@ -1421,7 +1420,7 @@ class TickService
             }
         }
 
-        $this->queueService->setForTick(false);
+        #$this->queueService->setForTick(false);
         foreach($stasisDominion->race->units as $unit)
         {
             $units['unit' . $unit->slot] = $this->queueService->getInvasionQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
@@ -1496,7 +1495,7 @@ class TickService
             #echo "\nUnits requeued";
         }
 
-        $this->queueService->setForTick(true);
+        #$this->queueService->setForTick(true);
     }
 
     public function handleWinConditions(Round $round): void
@@ -1716,15 +1715,16 @@ class TickService
             $i = isset($i) ? $i + 1 : 1;
         
             $infoString = sprintf(
-                '[%s] Waiting for queued ProcessDominionJob (queue:manual_tick) to finish. Current queue: %s. Next check in: %s ms.',
+                '[%s] Waiting for queued ProcessDominionJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
                 now()->format('Y-m-d H:i:s'),
-                Redis::llen('queues:manual_tick'),
+                Redis::llen('queues:tick'),
                 number_format($delay)
             );
         
-            if (Redis::llen('queues:manual_tick') !== 0) {
-                Log::info($infoString);
+            if (Redis::llen('queues:tick') !== 0) {
+                #Log::info($infoString);
                 #dump($infoString);
+                xtLog($infoString);
                 throw new Exception('Tick queue not finish');
             }
         }, $delay);

@@ -18,7 +18,7 @@ use OpenDominion\Services\Hold\ResourceService as HoldResourceService;
 class QueueService
 {
 
-    protected $forTick = false;
+    #protected $forTick = false;
 
     protected $dominionResourceService;
     protected $holdResourceService;
@@ -32,10 +32,10 @@ class QueueService
     /**
      * Toggle if this calculator should include the following tick's resources.
      */
-    public function setForTick(bool $value)
-    {
-        $this->forTick = $value;
-    }
+    #public function setForTick(bool $value)
+    #{
+    #    $this->forTick = $value;
+    #}
 
     public function queueTrade(TradeRoute $tradeRoute, string $type, Resource $resource, int $amount, array $units = [], int $tick = 12): void
     {
@@ -145,11 +145,11 @@ class QueueService
     public function getQueue(string $type, TradeRoute $tradeRoute): Collection
     {
         $tick = 0;
-        if ($this->forTick)
-        {
-            // don't include next tick when calculating tick
-            $tick = 1;
-        }
+        #if ($this->forTick)
+        #{
+        #    // don't include next tick when calculating tick
+        #    $tick = 1;
+        #}
         return $tradeRoute->queues
             ->where('type', $type)
             ->where('tick', '>', $tick);
