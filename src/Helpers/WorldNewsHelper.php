@@ -1313,6 +1313,7 @@ class WorldNewsHelper
             'sabotage' => 'Sabotage',
             'sorcery' => 'Sorcery',
             'theft' =>' Theft',
+            'tradeRouteCreated' => 'Trade route established',
         ];
     }
 
