@@ -108,7 +108,7 @@
                 @endphp
                 @foreach($selectedDominion->round->holds->where('status',1)->sortByDesc('tick_discovered') as $hold)
                     @php
-                        $sentiment = optional($hold->sentiments->where('target_id', $selectedDominion->id)->first())->sentiment ?? 0;
+                        $sentiment = $hold->getSentiment($selectedDominion);# optional($hold->sentiments->where('target_id', $selectedDominion->id)->first())->sentiment ?? 0;
                         $sentimentDescription = $holdHelper->getSentimentDescription($sentiment);
                         $sentimentClass = $holdHelper->getSentimentClass($sentimentDescription);
                         $canTradeWithHold = $tradeCalculator->canDominionTradeWithHold($selectedDominion, $hold);

@@ -76,10 +76,11 @@ class Hold extends AbstractModel
 
     public function getSentiment($target): int
     {
-        return $this->sentiments->where([
-            'target_id' => $target->id,
-            'target_type' => get_class($target),
-        ])->first()->sentiment ?? 0;
+        return $this->sentiments
+            ->where('target_id', $target->id)
+            ->where('target_type', get_class($target))
+            ->first()
+            ->sentiment ?? 0;
     }
 
     public function prices()
