@@ -875,21 +875,6 @@ class ProcessDominionJob implements ShouldQueue
 
             xtLog("[{$dominion->id}] *** {$row->amount} {$row->resource} completed and set for tick.");
         }
-
-        $rowsToDelete = DB::table('dominion_queue')
-            ->where('dominion_id', $dominion->id)
-            ->where('hours', '<=', 0)
-            ->get();
-
-        $rowToDeleteCount = count($rowsToDelete);
-
-        DB::table('dominion_queue')
-            ->whereIn('id', $rowsToDelete)
-            ->delete();
-
-        xtLog("[{$dominion->id}] *** Deleted {$rowToDeleteCount} completed queue items.");
-
-
     }
-    
+
 }
