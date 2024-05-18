@@ -84,8 +84,6 @@ class TradeController extends AbstractDominionController
         ]);
     }
 
-
-
     public function getHolds()
     {
         $dominion = $this->getSelectedDominion();

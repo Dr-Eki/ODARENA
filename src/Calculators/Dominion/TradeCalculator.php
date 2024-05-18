@@ -356,4 +356,16 @@ class TradeCalculator
 
         return ($production + $stockpile) >= $soldAmount;
     }
+
+    public function getSentimentRequiredToEstablishTradeRoute(Hold $hold, Dominion $dominion): int
+    {
+        $currentTradeRoutes = TradeRoute::where([
+            'dominion_id' => $dominion->id,
+            'hold_id' => $hold->id,
+            'status' => 1,
+        ])->count();
+
+        return ceilInt($currentTradeRoutes * config('trade.sentiment_per_trade_route'));
+
+    }
 }

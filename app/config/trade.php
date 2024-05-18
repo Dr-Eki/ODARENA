@@ -21,4 +21,6 @@ return [
 
     'land_per_trade_slot' => 200,
 
+    'sentiment_per_trade_route' => 50,
+
 ];

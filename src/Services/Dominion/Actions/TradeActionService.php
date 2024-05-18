@@ -53,6 +53,13 @@ class TradeActionService
             throw new GameException('You cannot trade after the round has ended.');
         }
 
+        $holdSentiment = $hold->sentiments->where('target_type', get_class($dominion))->where('target_id', $dominion->id)->first()->value ?? 0;
+
+        if(($sentimentRequired = $this->tradeCalculator->getSentimentRequiredToEstablishTradeRoute($hold, $dominion)) > $holdSentiment)
+        {
+            throw new GameException('You do not have enough sentiment to establish a new trade route with ' . $hold->name . '. Sentiment required: ' . number_format($sentimentRequired) . '. Current: ' . number_format($holdSentiment) . '.');
+        }
+
         $tradeOfferValue = $this->tradeCalculator->getTradeOfferValue($soldResource, $soldResourceAmount);
         $maxTradeValue = $this->tradeCalculator->getMaxTradeValue($dominion, $soldResource);
 
