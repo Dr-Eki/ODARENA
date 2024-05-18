@@ -246,7 +246,7 @@ if (!function_exists('xtLog')) {
     /**
      * Dumps the given variables but only if running locally.
      */
-    function xtLog($string, $type): void
+    function xtLog($string, $type = 'info'): void
     {
         if(config('game.extended_logging'))
         {
