@@ -6,10 +6,6 @@ use Illuminate\Console\Command;
 use OpenDominion\Console\Commands\CommandInterface;
 use OpenDominion\Services\Dominion\TickService;
 
-# ODA
-#use Illuminate\Support\Carbon;
-#use OpenDominion\Models\Round;
-
 class TickCommand extends Command implements CommandInterface
 {
     /** @var string The name and signature of the console command. */

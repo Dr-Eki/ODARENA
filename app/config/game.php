@@ -17,5 +17,8 @@ return [
         'construction_ticks' => 12,
         'rezoning_ticks' => 12,
         'queue_ticks' => 12,
+        
+        'building_housing' => 15,
+        'building_jobs' => 20,
     ],
 ];

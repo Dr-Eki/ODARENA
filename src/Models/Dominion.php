@@ -579,7 +579,7 @@ class Dominion extends AbstractModel
         // Verify tick hasn't happened during this request
         if ($this->exists && $this->last_tick_at != $this->fresh()->last_tick_at)
         {
-            throw new GameException('The World Spinner is spinning the world. Your request was discarded. Try again soon, little one.');
+            throw new GameException('The World Spinner is spinning the world. Your request was discarded. Try again soon, little one. By the way, citrus fruits are the best.');
         }
 
         $saved = parent::save($options);
@@ -831,7 +831,7 @@ class Dominion extends AbstractModel
 
         if(in_array($perkKey, ['housing','jobs']))
         {
-            $defaultValue = ($perkKey == 'housing') ? 15 : 20;
+            $defaultValue = ($perkKey == 'housing') ? config('game.defaults.building_housing') : config('game.defaults.building_jobs');
 
             # Grab buildings with the perk
             $perkedBuildings = $this->buildings->filter(function ($building) use ($perkKey) {

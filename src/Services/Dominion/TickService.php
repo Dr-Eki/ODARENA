@@ -52,8 +52,6 @@ use Throwable;
 
 class TickService
 {
-    protected const EXTENDED_LOGGING = false;
-
     /** @var Carbon */
     protected $now;
     protected $temporaryData = [];
@@ -159,79 +157,68 @@ class TickService
 
         xtLog('Scheduled tick started at ' . $this->now . '.');
 
-        #DB::transaction(function () 
-        #{
-            foreach (Round::active()->get() as $round)
+        foreach (Round::active()->get() as $round)
+        {
+            xtLog('Round ' . $round->number . ' tick started at ' . $this->now . '.');
+
+            $round->is_ticking = 1;
+            $round->save();
+
+            // One transaction for all of these
+            DB::transaction(function () use ($round)
             {
-                $round->is_ticking = 1;
-                $round->save();
+                $this->temporaryData[$round->id] = [];
 
-                // One transaction for all of these
-                DB::transaction(function () use ($round)
-                {
-                    $this->temporaryData[$round->id] = [];
+                $this->temporaryData[$round->id]['stasis_dominions'] = [];
 
-                    $this->temporaryData[$round->id]['stasis_dominions'] = [];
+                xtLog('* Checking for win conditions');
+                $this->handleWinConditions($round);
 
-                    #if(config('game.extended_logging')) { Log::debug('* Checking for win conditions'); dump('* Checking for win conditions'); }
-                    xtLog('* Checking for win conditions');
-                    $this->handleWinConditions($round);
+                xtLog('* Update invasion queues');
+                $this->updateAllInvasionQueues($round);
 
-                    #if(config('game.extended_logging')) { Log::debug('* Update all spells'); dump('* Update all spells'); }
-                    #$this->updateAllSpells($round);
+                xtLog('* Update all other queues');
+                $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
-                    #if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); dump('* Update all deities duration'); }
-                    #$this->updateAllDeities($round);
+                xtLog('* Update all artefact aegises');
+                $this->updateArtefactsAegises($round);
 
-                    #if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); dump('* Update invasion queues');}
-                    xtLog('* Update invasion queues');
-                    $this->updateAllInvasionQueues($round);
+                xtLog('* Handle barbarian spawn');
+                $this->handleBarbarianSpawn($round);
 
-                    #if(config('game.extended_logging')) { Log::debug('* Update all other queues'); dump('* Update all other queues');}
-                    xtLog('* Update all other queues');
-                    $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
+                xtLog('* Handle body decay');
+                $this->handleBodyDecay($round);
 
-                    #if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); dump('* Update all artefact aegises');}
-                    xtLog('* Update all artefact aegises');
-                    $this->updateArtefactsAegises($round);
+                xtLog('* Update all dominions');
+                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
+            });
 
-                    #if(config('game.extended_logging')) { Log::debug('* Handle barbarian spawn'); dump('* Handle barbarian spawn');}
-                    xtLog('* Handle barbarian spawn');
-                    $this->handleBarbarianSpawn($round);
+            // Separate DB transaction for trade routes
+            DB::transaction(function () use ($round)
+            {
+                xtLog('* Update all trade routes');
+                $this->handleHoldsAndTradeRoutes($round);
+            });
 
-                    #if(config('game.extended_logging')) { Log::debug('* Handle body decay'); dump('* Handle body decay');}
-                    xtLog('* Handle body decay');
-                    $this->handleBodyDecay($round);
+            // Each job is a DB transaction
+            xtLog('* Queue, process, and wait for dominion jobs.');
+            $this->processDominionJobs($round);
 
-                    #if(config('game.extended_logging')) { Log::debug('* Update all dominions'); dump('* Update all dominions'); }
-                    xtLog('* Update all dominions');
-                    $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
-                });
+            xtLog('* Clear out all finished queues');
+            $this->clearFinishedQueues($round);
 
-                // Separate DB transaction for trade routes
-                DB::transaction(function () use ($round)
-                {
-                    #if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); dump('* Update all trade routes'); }
-                    xtLog('* Update all trade routes');
-                    $this->handleHoldsAndTradeRoutes($round);
-                });
+            $this->now = now();
 
-                // Each job is a DB transaction
-                #if(config('game.extended_logging')) { Log::debug('* Queue, process, and wait for dominion jobs.'); dump('** Queue, process, and wait for dominion jobs.'); }
-                xtLog('* Queue, process, and wait for dominion jobs.');
-                $this->processDominionJobs($round);
+            unset($this->temporaryData[$round->id]);
 
-                $this->now = now();
+            $round->fill([
+                'ticks' => ($round->ticks + 1),
+                'is_ticking' => 0,
+                'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
+            ])->save();
 
-                unset($this->temporaryData[$round->id]);
 
-                $round->fill([
-                    'ticks' => ($round->ticks + 1),
-                    'is_ticking' => 0,
-                    'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
-                ])->save();
-            }
-        #});
+        }
 
         $finishedAt = now();
         xtLog('Scheduled tick finished at ' . $finishedAt . '.');   
@@ -244,7 +231,6 @@ class TickService
      */
     public function tickDaily()
     {
-        #Log::debug('[DAILY] Daily tick started');
         xtLog('Scheduled daily tick started at ' . $this->now . '.');
 
         DB::transaction(function () {
@@ -258,14 +244,18 @@ class TickService
             }
         });
 
-        #Log::info('[DAILY] Daily tick finished');
         xtLog('Scheduled daily tick finished at ' . now() . '.');
     }
 
     protected function cleanupActiveSpells(Dominion $dominion)
     {
-        $finished = DB::table('dominion_spells')
-            ->where('dominion_id', $dominion->id)
+        #$finished = DB::table('dominion_spells')
+        #    ->where('dominion_id', $dominion->id)
+        #    ->where('duration', '<=', 0)
+        #    ->where('cooldown', '<=', 0)
+        #    ->get();
+
+        $finished = $dominion->dominionSpells()
             ->where('duration', '<=', 0)
             ->where('cooldown', '<=', 0)
             ->get();
@@ -287,14 +277,17 @@ class TickService
             }
         }
 
-        if (!empty($beneficialSpells) and !$dominion->isAbandoned())
+        if(!$dominion->isAbandoned())
         {
-            $this->notificationService->queueNotification('beneficial_magic_dissipated', $beneficialSpells);
-        }
+            if (!empty($beneficialSpells))
+            {
+                $this->notificationService->queueNotification('beneficial_magic_dissipated', $beneficialSpells);
+            }
 
-        if (!empty($harmfulSpells) and !$dominion->isAbandoned())
-        {
-            $this->notificationService->queueNotification('harmful_magic_dissipated', $harmfulSpells);
+            if (!empty($harmfulSpells))
+            {
+                $this->notificationService->queueNotification('harmful_magic_dissipated', $harmfulSpells);
+            }
         }
 
         DB::table('dominion_spells')
@@ -303,50 +296,6 @@ class TickService
             ->where('cooldown', '<=', 0)
             ->delete();
     }
-
-    /*
-    protected function cleanupActiveSpells(Dominion $dominion)
-    {
-        $finished = DB::table('dominion_spells')
-            ->where('dominion_id', $dominion->id)
-            ->where('duration', '<=', 0)
-            ->where('cooldown', '<=', 0)
-            ->get();
-
-        $beneficialSpells = [];
-        $harmfulSpells = [];
-
-        foreach ($finished as $row)
-        {
-            $spell = Spell::where('id', $row->spell_id)->first();
-
-            if ($row->caster_id == $dominion->id)
-            {
-                $beneficialSpells[] = $spell->key;
-            }
-            else
-            {
-                $harmfulSpells[] = $spell->key;
-            }
-        }
-
-        if (!empty($beneficialSpells) and !$dominion->isAbandoned())
-        {
-            $this->notificationService->queueNotification('beneficial_magic_dissipated', $beneficialSpells);
-        }
-
-        if (!empty($harmfulSpells) and !$dominion->isAbandoned())
-        {
-            $this->notificationService->queueNotification('harmful_magic_dissipated', $harmfulSpells);
-        }
-
-        DB::table('dominion_spells')
-            ->where('dominion_id', $dominion->id)
-            ->where('duration', '<=', 0)
-            ->where('cooldown', '<=', 0)
-            ->delete();
-    }
-    */
 
     protected function cleanupQueues(Dominion $dominion)
     {
@@ -384,388 +333,18 @@ class TickService
                 ->where('dominion_id', $dominion->id)
                 ->where('hours', '<=', 0)
                 ->delete();
-        }, 10);
-
+        });
     }
 
-    /*
-    public function precalculateTick(Dominion $dominion, ?bool $saveHistory = false): void
+    public function clearFinishedQueues(Round $round)
     {
-        $tick = Tick::firstOrCreate(['dominion_id' => $dominion->id]);
-
-        if ($saveHistory)
-        {
-            // Save a dominion history record
-            $dominionHistoryService = app(HistoryService::class);
-
-            $changes = array_filter($tick->getAttributes(), static function ($value, $key)
-            {
-                return (
-                    !in_array($key, [
-                        'id',
-                        'dominion_id',
-                        'created_at',
-                        'updated_at'
-                    ], true) &&
-                    ($value != 0) // todo: strict type checking?
-                );
-            }, ARRAY_FILTER_USE_BOTH);
-
-            $dominionHistoryService->record($dominion, $changes, HistoryService::EVENT_TICK);
-        }
-
-        // Reset tick values — I don't understand this. WaveHack magic. Leave (mostly) intact, only adapt, don't refactor.
-        foreach ($tick->getAttributes() as $attr => $value)
-        {
-            # Values that become 0
-            $zeroArray = [
-                'id',
-                'dominion_id',
-                'updated_at',
-                'pestilence_units',
-                'generated_land',
-                'generated_unit1',
-                'generated_unit2',
-                'generated_unit3',
-                'generated_unit4',
-                'generated_unit5',
-                'generated_unit6',
-                'generated_unit7',
-                'generated_unit8',
-                'generated_unit9',
-                'generated_unit10',
-            ];
-
-            # Values that become []
-            $emptyArray = [
-                'starvation_casualties',
-                'pestilence_units',
-                'generated_land',
-                'generated_unit1',
-                'generated_unit2',
-                'generated_unit3',
-                'generated_unit4',
-                'generated_unit5',
-                'generated_unit6',
-                'generated_unit4',
-                'generated_unit7',
-                'generated_unit8',
-                'generated_unit9',
-                'generated_unit10',
-                'buildings_destroyed',
-            ];
-
-            #if (!in_array($attr, ['id', 'dominion_id', 'updated_at', 'pestilence_units', 'generated_land', 'generated_unit1', 'generated_unit2', 'generated_unit3', 'generated_unit4'], true))
-            if (!in_array($attr, $zeroArray, true))
-            {
-                  $tick->{$attr} = 0;
-            }
-            #elseif (in_array($attr, ['starvation_casualties', 'pestilence_units', 'generated_land', 'generated_unit1', 'generated_unit2', 'generated_unit3', 'generated_unit4'], true))
-            elseif (in_array($attr, $emptyArray, true))
-            {
-                  $tick->{$attr} = [];
-            }
-        }
-
-        // Hacky refresh for dominion
-        $dominion->refresh();
-
-        // Define the excluded sources
-        $excludedSources = ['construction', 'repair', 'restore', 'deity', 'artefact', 'research', 'rezoning'];
-
-        // Get the incoming queue
-        $incomingQueue = DB::table('dominion_queue')
-            ->where('dominion_id', $dominion->id)
-            ->whereNotIn('source', $excludedSources)
-            ->where('hours', '=', 1)
-            ->get();
-
-        foreach ($incomingQueue as $row)
-        {
-            // Check if the resource is not a 'resource_' or 'terrain_'
-            if (!Str::startsWith($row->resource, ['resource_', 'terrain_'])) {
-                $tick->{$row->resource} += $row->amount;
-                // Temporarily add next hour's resources for accurate calculations
-                $dominion->{$row->resource} += $row->amount;
-            }
-        }
-
-        
-        #// Queues
-        #$incomingQueue = DB::table('dominion_queue')
-        #    ->where('dominion_id', $dominion->id)
-        #    ->where('source', '!=', 'construction')
-        #    ->where('source', '!=', 'repair')
-        #    ->where('source', '!=', 'restore')
-        #    ->where('hours', '=', 1)
-        #    ->get();
-#
-        #foreach ($incomingQueue as $row)
-        #{
-        #    if(
-        #            $row->source !== 'deity'
-        #            and $row->source !== 'artefact'
-        #            and $row->source !== 'research'
-        #            and $row->source !== 'rezoning'
-        #            and substr($row->resource, 0, strlen('resource_')) !== 'resource_'
-        #            and substr($row->resource, 0, strlen('terrain_')) !== 'terrain_'
-        #    )
-        #    {
-        #        $tick->{$row->resource} += $row->amount;
-        #        // Temporarily add next hour's resources for accurate calculations
-        #        $dominion->{$row->resource} += $row->amount;
-        #    }
-        #}
-        
-
-        if($dominion->race->name == 'Barbarian')
-        {
-            if(config('game.extended_logging')) { Log::debug('*** Handle Barbarian training for ' . $dominion->name); }
-            $this->barbarianService->handleBarbarianTraining($dominion);
-        }
-
-        $tick->protection_ticks = 0;
-        // Tick
-        if($dominion->protection_ticks > 0)
-        {
-            $tick->protection_ticks += -1;
-        }
-
-        // Population
-        $drafteesGrowthRate = $this->populationCalculator->getPopulationDrafteeGrowth($dominion);
-        $populationPeasantGrowth = $this->populationCalculator->getPopulationPeasantGrowth($dominion);
-
-        if ($this->spellCalculator->isSpellActive($dominion, 'pestilence'))
-        {
-            $spell = Spell::where('key', 'pestilence')->first();
-            $pestilence = $spell->getActiveSpellPerkValues('pestilence', 'kill_peasants_and_converts_for_caster_unit');
-            $ratio = $pestilence[0] / 100;
-            $slot = $pestilence[1];
-            $caster = $this->spellCalculator->getCaster($dominion, 'pestilence');
-
-            $amountToDie = $dominion->peasants * $ratio * $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, Spell::where('key', 'pestilence')->first(), null);
-            $amountToDie *= $this->conversionCalculator->getConversionReductionMultiplier($dominion);
-            $amountToDie = (int)round($amountToDie);
-
-            $tick->pestilence_units = ['caster_dominion_id' => $caster->id, 'units' => ['military_unit1' => $amountToDie]];
-
-            $populationPeasantGrowth -= $amountToDie;
-        }
-        elseif ($this->spellCalculator->isSpellActive($dominion, 'lesser_pestilence'))
-        {
-            $spell = Spell::where('key', 'lesser_pestilence')->first();
-            $lesserPestilence = $spell->getActiveSpellPerkValues('lesser_pestilence', 'kill_peasants_and_converts_for_caster_unit');
-            $ratio = $lesserPestilence[0] / 100;
-            $slot = $lesserPestilence[1];
-            $caster = $this->spellCalculator->getCaster($dominion, 'lesser_pestilence');
-
-            $amountToDie = $dominion->peasants * $ratio * $this->sorceryCalculator->getDominionHarmfulSpellDamageModifier($dominion, null, Spell::where('key', 'lesser_pestilence')->first(), null);
-            $amountToDie *= $this->conversionCalculator->getConversionReductionMultiplier($dominion);
-            $amountToDie = (int)round($amountToDie);
-
-            $tick->pestilence_units = ['caster_dominion_id' => $caster->id, 'units' => ['military_unit1' => $amountToDie]];
-
-            $populationPeasantGrowth -= $amountToDie;
-        }
-
-        # Check for peasants_conversion
-        if($peasantConversionData = $dominion->getBuildingPerkValue('peasants_conversion'))
-        {
-            $multiplier = 1;
-            $multiplier += $dominion->getSpellPerkMultiplier('peasants_converted');
-            $multiplier += $dominion->getBuildingPerkMultiplier('peasants_converted');
-            $multiplier += $dominion->getImprovementPerkMultiplier('peasants_converted');
-
-            $populationPeasantGrowth -= $peasantConversionData['from']['peasants'];
-        }
-        # Check for peasants_conversions
-        if($peasantConversionsData = $dominion->getBuildingPerkValue('peasants_conversions'))
-        {
-            $multiplier = 1;
-            $multiplier += $dominion->getSpellPerkMultiplier('peasants_converted');
-            $multiplier += $dominion->getBuildingPerkMultiplier('peasants_converted');
-            $multiplier += $dominion->getImprovementPerkMultiplier('peasants_converted');
-
-            $populationPeasantGrowth -= $peasantConversionsData['from']['peasants'];
-        }
-        # Check for units with peasants_conversions
-        $peasantsConvertedByUnits = 0;
-        foreach($dominion->race->units as $unit)
-        {
-            if($unitPeasantsConversionPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'peasants_conversions'))
-            {
-                $multiplier = 1;
-                $multiplier += $dominion->getSpellPerkMultiplier('peasants_converted');
-                $multiplier += $dominion->getBuildingPerkMultiplier('peasants_converted');
-                $multiplier += $dominion->getImprovementPerkMultiplier('peasants_converted');
-
-                $peasantsConvertedByUnits += $unitPeasantsConversionPerk[0] * $dominion->{'military_unit' . $unit->slot} * $multiplier;
-            }
-
-            if($unitPeasantsConversionPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'peasants_to_unit_conversions'))
-            {
-                $peasantsConvertedByUnits += $unitPeasantsConversionPerk[0] * $dominion->{'military_unit' . $unit->slot};
-            }
-
-
-        }
-        $populationPeasantGrowth -= (int)round($peasantsConvertedByUnits);
-
-        if(($dominion->peasants + $tick->peasants) <= 0)
-        {
-            $tick->peasants = ($dominion->peasants)*-1;
-        }
-
-        $tick->peasants = $populationPeasantGrowth;
-
-        $tick->peasants_sacrificed = 0;
-
-        $tick->military_draftees = $drafteesGrowthRate;
-
-        // Production/generation
-        $tick->xp += $this->productionCalculator->getXpGeneration($dominion);
-        $tick->prestige += $this->productionCalculator->getPrestigeInterest($dominion);
-
-        // Starvation
-        $tick->starvation_casualties = false;
-
-        if($this->resourceCalculator->canStarve($dominion->race))
-        {
-            #$foodProduction = $this->resourceCalculator->getProduction($dominion, 'food');
-            $foodConsumed = $this->resourceCalculator->getConsumption($dominion, 'food');
-            $foodNetChange = $this->resourceCalculator->getNetProduction($dominion, 'food');
-            $foodOwned = $dominion->resource_food;
-
-
-            if($foodConsumed > 0 and ($foodOwned + $foodNetChange) < 0)
-            {
-                $dominion->tick->starvation_casualties = true;
-            }
-        }
-
-        // Morale
-        $baseMorale = $this->moraleCalculator->getBaseMorale($dominion);
-        $moraleChangeModifier = $this->moraleCalculator->moraleChangeModifier($dominion);
-
-        if(($tick->starvation_casualties or $dominion->tick->starvation_casualties) and $this->resourceCalculator->canStarve($dominion->race))
-        {
-            $starvationMoraleChange = min(10, $dominion->morale)*-1;
-            $tick->morale += $starvationMoraleChange;
-        }
-        else
-        {
-            if ($dominion->morale < 35)
-            {
-                $tick->morale = 7;
-            }
-            elseif ($dominion->morale < 70)
-            {
-                $tick->morale = 6;
-            }
-            elseif ($dominion->morale < $baseMorale)
-            {
-                $tick->morale = min(3, $baseMorale - $dominion->morale);
-            }
-            elseif($dominion->morale > $baseMorale)
-            {
-                $tick->morale -= min(2 * $moraleChangeModifier, $dominion->morale - $baseMorale);
-            }
-        }
-
-
-        $spyStrengthBase = $this->espionageCalculator->getSpyStrengthBase($dominion);
-        $wizardStrengthBase = $this->spellCalculator->getWizardStrengthBase($dominion);
-
-        // Spy Strength
-        if ($dominion->spy_strength < $spyStrengthBase)
-        {
-            $tick->spy_strength =  min($this->espionageCalculator->getSpyStrengthRecoveryAmount($dominion), $spyStrengthBase - $dominion->spy_strength);
-        }
-
-        // Wizard Strength
-        if ($dominion->wizard_strength < $wizardStrengthBase)
-        {
-            $tick->wizard_strength =  min($this->spellCalculator->getWizardStrengthRecoveryAmount($dominion), $wizardStrengthBase - $dominion->wizard_strength);
-        }
-
-        # Tickly unit perks
-        $generatedLand = $this->unitCalculator->getUnitLandGeneration($dominion);
-
-        # Imperial Crypt: Rites of Zidur, Rites of Kinthys
-        $tick->crypt_bodies_spent = 0;
-        
-        $unitsGenerated = $this->unitCalculator->getUnitsGenerated($dominion);
-
-        $unitsAttrited = $this->unitCalculator->getUnitsAttrited($dominion);
-
-        # Passive conversions
-        $passiveConversions = $this->conversionCalculator->getPassiveConversions($dominion);
-        if((array_sum($passiveConversions['units_converted']) + array_sum($passiveConversions['units_removed'])) > 0)
-        {
-            $unitsConverted = $passiveConversions['units_converted'];
-            $unitsRemoved = $passiveConversions['units_removed'];
-
-            foreach($dominion->race->units as $unit)
-            {
-                $unitsGenerated[$unit->slot] += $unitsConverted[$unit->slot];
-                $unitsAttrited[$unit->slot] += $unitsRemoved[$unit->slot];
-            }
-        }
-        
-        # Use decimals as probability to round up
-        $tick->generated_land += intval($generatedLand) + (rand()/getrandmax() < fmod($generatedLand, 1) ? 1 : 0);
-
-        foreach($dominion->race->units as $unit)
-        {
-            $tick->{'generated_unit' . $unit->slot} += intval($unitsGenerated[$unit->slot]) + (rand()/getrandmax() < fmod($unitsGenerated[$unit->slot], 1) ? 1 : 0);
-            $tick->{'attrition_unit' . $unit->slot} += intval($unitsAttrited[$unit->slot]);
-        }
-
-        # Handle building self-destruct
-        if($selfDestruction = $dominion->getBuildingPerkValue('destroys_itself_and_land'))
-        {
-            $buildingKey = (string)$selfDestruction['building_key'];
-            $amountToDestroy = (int)$selfDestruction['amount'];
-            $landType = (string)$selfDestruction['land_type'];
-
-            if($amountToDestroy > 0)
-            {
-                $tick->{'land_'.$landType} -= min($amountToDestroy, $dominion->{'land_'.$landType});
-                $tick->buildings_destroyed = [$buildingKey => ['builtBuildingsToDestroy' => $amountToDestroy]];
-            }
-        }
-        if($selfDestruction = $dominion->getBuildingPerkValue('destroys_itself'))
-        {
-            $buildingKey = (string)$selfDestruction['building_key'];
-            $amountToDestroy = (int)$selfDestruction['amount'];
-
-            if($amountToDestroy > 0)
-            {
-                $tick->buildings_destroyed = [$buildingKey => ['builtBuildingsToDestroy' => $amountToDestroy]];
-            }
-        }
-
-        foreach ($incomingQueue as $row)
-        {
-            if(
-                $row->source !== 'deity'
-                and $row->source !== 'research'
-                and $row->source !== 'artefact'
-                and substr($row->resource, 0, strlen('resource_')) !== 'resource_'
-                and substr($row->resource, 0, strlen('terrain_')) !== 'terrain_'
-            )
-                
-            {
-                // Reset current resources in case object is saved later
-                $dominion->{$row->resource} -= $row->amount;
-            }
-        }
-
-        $tick->save();
+        DB::table('dominion_queue')
+            ->join('dominions', 'dominion_queue.dominion_id', '=', 'dominions.id')
+            ->where('dominions.round_id', $round->id)
+            ->where('dominion_queue.hours', '<=', 0)
+            ->delete();
     }
-    */
 
-    # SINGLE DOMINION TICKS, MANUAL TICK
     /**
      * Does an hourly tick on all active dominions.
      *
@@ -786,7 +365,7 @@ class TickService
             return;
         }
 
-        $this->tickCalculator->precalculateTick($dominion, true);
+        $this->tickCalculator->precalculateTick($dominion);
 
         DB::transaction(function () use ($dominion)
         {
@@ -839,37 +418,37 @@ class TickService
         });
 
         # Clean up
-        $this->cleanupQueues($dominion);
-        $this->cleanupActiveSpells($dominion);
+        // Delete because these happen in ProcessDominionJob
+        #$this->cleanupQueues($dominion);
+        #$this->cleanupActiveSpells($dominion);
 
         $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
 
         #$this->tickCalculator->precalculateTick($dominion, true);
 
-        if(config('game.extended_logging')) { Log::debug('** Audit and repair terrain'); }
+        xtLog("[{$dominion->id}] ** Audit and repair terrain");
         $this->terrainService->auditAndRepairTerrain($dominion);
 
-        Log::info("** Manual tick: queueing up dominion {$dominion->id}: {$dominion->name}");
-        #dump("** Manual tick: queuing up dominion {$dominion->id}: {$dominion->name}");
+        xtLog("[{$dominion->id}] ** Queuing up manual tick in ProcessDominionJob");
         ProcessDominionJob::dispatch($dominion)->onQueue('manual_tick');
 
         // Wait for queue to clear
         $attempts = 60;
         $delay = (int)config('game.tick_queue_check_delay');
         
-        retry($attempts, function () use ($delay) {
+        retry($attempts, function () use ($delay, $dominion) {
             $i = isset($i) ? $i + 1 : 1;
         
             $infoString = sprintf(
-                '[%s] Waiting for queued ProcessDominionJob (queue:manual_tick) to finish. Current queue: %s. Next check in: %s ms.',
+                '[%s] [%s] Waiting for queued ProcessDominionJob (queue:manual_tick) to finish. Current queue: %s. Next check in: %s ms.',
+                $dominion->id,
                 now()->format('Y-m-d H:i:s'),
                 Redis::llen('queues:manual_tick'),
                 number_format($delay)
             );
         
             if (Redis::llen('queues:manual_tick') !== 0) {
-                Log::info($infoString);
-                #dump($infoString);
+                xtLog($infoString);
                 throw new Exception('Tick queue not finish');
             }
         }, $delay);
@@ -878,7 +457,7 @@ class TickService
         
         $this->dominionStateService->saveDominionState($dominion);
 
-        #$this->tickCalculator->precalculateTick($dominion, true);
+        $this->tickCalculator->precalculateTick($dominion, true);
 
         $dominion->save();
 
@@ -1011,8 +590,15 @@ class TickService
     }
 
     // Update queues for a specific dominion
+    // We don't have to worry about stasis here because the dominion is in protection
     private function updateDominionQueues(Dominion $dominion): void
     {
+        // Just to be safe.
+        if($dominion->protection_ticks > 0)
+        {
+            return; 
+        }
+
         DB::table('dominion_queue')
             ->join('dominions', 'dominion_queue.dominion_id', '=', 'dominions.id')
             ->where('dominions.id', $dominion->id)
@@ -1724,7 +1310,7 @@ class TickService
             $i = isset($i) ? $i + 1 : 1;
         
             $infoString = sprintf(
-                '[%s] Waiting for queued ProcessDominionJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
+                '** [%s] Waiting for queued ProcessDominionJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
                 now()->format('Y-m-d H:i:s'),
                 Redis::llen('queues:tick'),
                 number_format($delay)
