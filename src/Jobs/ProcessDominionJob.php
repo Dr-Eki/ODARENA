@@ -107,6 +107,10 @@ class ProcessDominionJob implements ShouldQueue
         Log::debug('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . '), ID ' . $this->dominion->id);
         # Make a DB transaction
 
+        # Do this first to populate dominion_tick
+        xtLog("[{$this->dominion->id}] ** Precalculate tick");
+        $this->tickCalculator->precalculateTick($this->dominion, true);
+
         DB::transaction(function () use ($round)
         {  
 
@@ -201,10 +205,9 @@ class ProcessDominionJob implements ShouldQueue
         xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
         $this->cleanupActiveSpells($this->dominion);
 
-        # And do it again to prepare for the next tick (this can probably be removed)
-        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Re-precalculate tick"); }
-        #xtLog("[{$this->dominion->id}] ** Re-precalculate tick");
-        #$this->tickCalculator->precalculateTick($this->dominion);
+        # And do it again to prepare for the next tick 
+        xtLog("[{$this->dominion->id}] ** Re-precalculate tick");
+        $this->tickCalculator->precalculateTick($this->dominion);
 
         #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number}), ID {$this->dominion->id}"); }
         xtLog("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number}), ID {$this->dominion->id}");
