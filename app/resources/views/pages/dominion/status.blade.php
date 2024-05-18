@@ -43,7 +43,19 @@
                                 </tr>
                                 <tr>
                                     <td>Land:</td>
-                                    <td>{{ number_format($selectedDominion->land) }}</td>
+                                    <td>
+                                        <span data-toggle="tooltip" data-placement="top" title='{!!
+                                                sprintf('<small class="text-muted">Total:</small> %s<br><small class="text-muted">Barren:</small> %s<br><small class="text-muted">Unbuilt:</small> %s<br><small class="text-muted">Construction:</small> %s',
+                                                number_format($selectedDominion->land),
+                                                number_format($selectedDominion->getBarrenLand()),
+                                                number_format($selectedDominion->getUnbuiltLand()),
+                                                number_format($selectedDominion->getLandUnderConstruction())
+                                                )
+                                                !!}
+                                            '>
+                                            {{ number_format($selectedDominion->land) }}
+                                        </span>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>{{ $raceHelper->getPeasantsTerm($selectedDominion->race) }}:</td>

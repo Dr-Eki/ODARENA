@@ -61,7 +61,7 @@
                         <a href="{{ route('dominion.buildings') }}">
                             <i class="fa fa-home fa-fw"></i>
                             <span>Buildings</span>
-                            @if(($barrenLand = $selectedDominion->getBarrenland()))
+                            @if(($barrenLand = $landCalculator->getTotalBarrenLand($selectedDominion)))
                                 <span class="label label-danger pull-right">{{ number_format($barrenLand) }}</span>
                             @endif
                         </a>
