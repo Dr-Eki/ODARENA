@@ -55,7 +55,16 @@ class TradeActionService
 
         $holdSentiment = $hold->getSentiment($dominion) ?? 0;
 
-        if(($sentimentRequired = $this->tradeCalculator->getSentimentRequiredToEstablishTradeRoute($hold, $dominion)) > $holdSentiment)
+        # Does this dominion already trade with this hold?
+        $isDominionTradingWithHold = TradeRoute::where([
+            'dominion_id' => $dominion->id,
+            'hold_id' => $hold->id,
+            'source_resource_id' => $soldResource->id,
+            'target_resource_id' => $boughtResource->id,
+            'status' => 1
+        ])->exists();
+
+        if($isDominionTradingWithHold and ($sentimentRequired = $this->tradeCalculator->getSentimentRequiredToEstablishTradeRoute($hold, $dominion)) > $holdSentiment)
         {
             throw new GameException('You do not have enough sentiment to establish a new trade route with ' . $hold->name . '. Sentiment required: ' . number_format($sentimentRequired) . '. Current: ' . number_format($holdSentiment) . '.');
         }
