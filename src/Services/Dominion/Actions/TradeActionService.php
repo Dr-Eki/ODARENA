@@ -53,7 +53,7 @@ class TradeActionService
             throw new GameException('You cannot trade after the round has ended.');
         }
 
-        $holdSentiment = $hold->sentiments->where('target_type', get_class($dominion))->where('target_id', $dominion->id)->first()->value ?? 0;
+        $holdSentiment = $hold->getSentiment($dominion) ?? 0;
 
         if(($sentimentRequired = $this->tradeCalculator->getSentimentRequiredToEstablishTradeRoute($hold, $dominion)) > $holdSentiment)
         {
