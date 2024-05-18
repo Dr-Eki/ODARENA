@@ -39,7 +39,7 @@ class GenerateStoriesCommand extends Command implements CommandInterface
         }
         else
         {
-            Log::alert('OpenAI API key not set, skipping story generation');
+            xtLog('OpenAI API key not set, skipping story generation.');
         }
     }
 

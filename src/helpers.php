@@ -246,11 +246,27 @@ if (!function_exists('xtLog')) {
     /**
      * Dumps the given variables but only if running locally.
      */
-    function xtLog($string): void
+    function xtLog($string, $type): void
     {
         if(config('game.extended_logging'))
         {
-            Log::info($string);
+
+            if($type == 'error')
+            {
+                Log::error($string);
+            }
+            elseif($type == 'warning')
+            {
+                Log::warning($string);
+            }
+            elseif($type == 'debug')
+            {
+                Log::debug($string);
+            }
+            else
+            {
+                Log::info($string);
+            }
         }
 
         if(config('game.extended_logging_with_dump'))

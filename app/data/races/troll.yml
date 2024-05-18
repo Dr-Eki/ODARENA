@@ -116,7 +116,6 @@ units:
     offense: 0
     defense: 0
   perks:
-    sendable_with_zero_op: 1
     does_not_count_as_population: 1
 
 - name: Troll

@@ -42,11 +42,13 @@ class Handler extends ExceptionHandler
     public function report(Throwable $exception)
     {
         if ($exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) {
-            Log::error('MethodNotAllowedHttpException for URL: ' . request()->fullUrl());
+            xtLog('MethodNotAllowedHttpException for URL: ' . request()->fullUrl(), 'error');
+            #Log::error('MethodNotAllowedHttpException for URL: ' . request()->fullUrl());
         }
 
 
         if ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+            xtLog('ModelNotFoundException for URL: ' . request()->fullUrl(), 'error');
             Log::error('ModelNotFoundException for URL: ' . request()->fullUrl());
         }
        

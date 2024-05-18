@@ -645,19 +645,19 @@ class ProcessDominionJob implements ShouldQueue
         }
 
         #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian invasions"); }
-        xtLog("*** Handle Barbarian invasions");
+        xtLog("[{$barbarian->id}] *** Handle Barbarian invasions");
         $this->barbarianService->handleBarbarianInvasion($barbarian);
 
         #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian construction"); }
-        xtLog("*** Handle Barbarian construction");
+        xtLog("[{$barbarian->id}] *** Handle Barbarian construction");
         $this->barbarianService->handleBarbarianConstruction($barbarian);
 
         #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian improvements"); }
-        xtLog("*** Handle Barbarian improvements");
+        xtLog("[{$barbarian->id}] *** Handle Barbarian improvements");
         $this->barbarianService->handleBarbarianImprovements($barbarian);
 
         #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian training"); }
-        xtLog("*** Handle Barbarian training");
+        xtLog("[{$barbarian->id}] *** Handle Barbarian training");
         $this->barbarianService->handleBarbarianTraining($barbarian);
     }
 
@@ -719,7 +719,7 @@ class ProcessDominionJob implements ShouldQueue
                 $peasantsKilled = (int)floor($target->peasants * $ratio);
                 $unitsGenerated[$slot] = isset($unitsGenerated[$slot]) ? $unitsGenerated[$slot] + $peasantsKilled : $peasantsKilled;
 
-                Log::info('*** ' . $dominionSpellPestilence->spell->name .': ' . $target->name . ' lost ' . $peasantsKilled . ' peasants to pestilence.');
+                xtLog("[{$afflicted->id}] *** {$dominionSpellPestilence->spell->name} :{$target->name} ({$target->id}) lost $peasantsKilled peasants to pestilence.");
             }
         }
 
