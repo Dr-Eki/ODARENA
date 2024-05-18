@@ -485,6 +485,11 @@ class Dominion extends AbstractModel
         return $this->hasOne(Dominion\Tick::class);
     }
 
+    public function getBarrenLand()
+    {
+        return $this->land - $this->buildings->sum('pivot.amount');
+    }
+
     // PROTECTORSHIP STUFF
     public function protector()
     {

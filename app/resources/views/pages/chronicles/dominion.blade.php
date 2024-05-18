@@ -54,7 +54,7 @@
                             <tr>
                                 <td>Land:</td>
                                 <td>
-                                    {{ number_format($dominion->land) }}
+                                    {{ number_format($dominion->land) }} 
                                 </td>
                             </tr>
                             <tr>
