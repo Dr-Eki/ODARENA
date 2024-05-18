@@ -134,7 +134,6 @@ class DominionStateService
             
             'land' => object_get($stateData, 'land', 1000),
             'daily_land' => object_get($stateData, 'daily_land', 0),
-            'daily_gold' => object_get($stateData, 'daily_gold', 0),
             'monarchy_vote_for_dominion_id' => object_get($stateData, 'monarchy_vote_for_dominion_id', null),
             'tick_voted' => object_get($stateData, 'tick_voted', null),
             'most_recent_improvement_resource' => object_get($stateData, 'most_recent_improvement_resource', 'gems'),
@@ -195,7 +194,6 @@ class DominionStateService
             // Basics
             $dominion->land = $dominionState->land;
             $dominion->daily_land = $dominionState->daily_land;
-            $dominion->daily_gold = $dominionState->daily_gold;
             $dominion->monarchy_vote_for_dominion_id = $dominionState->monarchy_vote_for_dominion_id;
             $dominion->tick_voted = $dominionState->tick_voted;
             $dominion->most_recent_improvement_resource = $dominionState->most_recent_improvement_resource;
@@ -382,7 +380,6 @@ class DominionStateService
 "
 land: %s
 daily_land: %s
-daily_gold: %s
 monarchy_vote_for_dominion_id: %s
 tick_voted: %s
 most_recent_improvement_resource: %s
@@ -404,7 +401,6 @@ ticks: %s
 \n",
             (int)$dominion->land,
             (int)$dominion->daily_land,
-            (int)$dominion->daily_gold,
             $dominion->monarchy_vote_for_dominion_id,
             $dominion->tick_voted,
             $dominion->most_recent_improvement_resource,

@@ -29,7 +29,6 @@ use OpenDominion\Services\Dominion\QueueService;
  * @property int $morale
  * @property float $spy_strength
  * @property float $wizard_strength
- * @property bool $daily_gold
  * @property bool $daily_land
  * @property int $resource_gold
  * @property int $resource_food
@@ -147,7 +146,6 @@ class Dominion extends AbstractModel
         'land_hill' => 'integer',
         'land_water' => 'integer',
 
-        'daily_gold' => 'boolean',
         'daily_land' => 'boolean',
 
         'is_locked' => 'integer',

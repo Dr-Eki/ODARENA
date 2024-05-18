@@ -107,10 +107,6 @@ class ProcessDominionJob implements ShouldQueue
         Log::debug('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . '), ID ' . $this->dominion->id);
         # Make a DB transaction
 
-        # Do this first to populate dominion_tick
-        if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Precalculate tick"); }
-        $this->tickCalculator->precalculateTick($this->dominion, true);
-
         DB::transaction(function () use ($round)
         {  
 

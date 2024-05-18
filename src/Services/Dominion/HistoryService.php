@@ -185,7 +185,6 @@ class HistoryService
                 'peasants_last_hour',
                 'created_at',
                 'updated_at',
-                'daily_gold',
                 'daily_land',
                 'council_last_read',
                 'news_last_read',

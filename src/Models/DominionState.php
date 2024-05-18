@@ -24,7 +24,6 @@ class DominionState extends AbstractModel
     protected $casts = [
         'land' => 'integer',
         'daily_land' => 'integer',
-        'daily_gold' => 'integer',
         'monarchy_vote_for_dominion_id' => 'integer',
         'tick_voted' => 'integer',
         'most_recent_improvement_resource' => 'string',

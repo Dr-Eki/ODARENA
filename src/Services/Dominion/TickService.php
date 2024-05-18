@@ -153,8 +153,7 @@ class TickService
     {
         if(File::exists('storage/framework/down'))
         {
-            $logString = 'Tick at ' . $this->now . ' skipped.';
-            Log::debug($logString);
+            xtLog('Tick at ' . $this->now . ' skipped.');
             return;
         }
 
@@ -174,7 +173,8 @@ class TickService
 
                     $this->temporaryData[$round->id]['stasis_dominions'] = [];
 
-                    if(config('game.extended_logging')) { Log::debug('* Checking for win conditions'); dump('* Checking for win conditions'); }
+                    #if(config('game.extended_logging')) { Log::debug('* Checking for win conditions'); dump('* Checking for win conditions'); }
+                    xtLog('* Checking for win conditions');
                     $this->handleWinConditions($round);
 
                     #if(config('game.extended_logging')) { Log::debug('* Update all spells'); dump('* Update all spells'); }
@@ -183,34 +183,42 @@ class TickService
                     #if(config('game.extended_logging')) { Log::debug('* Update all deities duration'); dump('* Update all deities duration'); }
                     #$this->updateAllDeities($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); dump('* Update invasion queues');}
+                    #if(config('game.extended_logging')) { Log::debug('* Update invasion queues'); dump('* Update invasion queues');}
+                    xtLog('* Update invasion queues');
                     $this->updateAllInvasionQueues($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Update all other queues'); dump('* Update all other queues');}
+                    #if(config('game.extended_logging')) { Log::debug('* Update all other queues'); dump('* Update all other queues');}
+                    xtLog('* Update all other queues');
                     $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
 
-                    if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); dump('* Update all artefact aegises');}
+                    #if(config('game.extended_logging')) { Log::debug('* Update all artefact aegises'); dump('* Update all artefact aegises');}
+                    xtLog('* Update all artefact aegises');
                     $this->updateArtefactsAegises($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Handle barbarian spawn'); dump('* Handle barbarian spawn');}
+                    #if(config('game.extended_logging')) { Log::debug('* Handle barbarian spawn'); dump('* Handle barbarian spawn');}
+                    xtLog('* Handle barbarian spawn');
                     $this->handleBarbarianSpawn($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Handle body decay'); dump('* Handle body decay');}
+                    #if(config('game.extended_logging')) { Log::debug('* Handle body decay'); dump('* Handle body decay');}
+                    xtLog('* Handle body decay');
                     $this->handleBodyDecay($round);
 
-                    if(config('game.extended_logging')) { Log::debug('* Update all dominions'); dump('* Update all dominions'); }
+                    #if(config('game.extended_logging')) { Log::debug('* Update all dominions'); dump('* Update all dominions'); }
+                    xtLog('* Update all dominions');
                     $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
                 });
 
                 // Separate DB transaction for trade routes
                 DB::transaction(function () use ($round)
                 {
-                    if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); dump('* Update all trade routes'); }
+                    #if(config('game.extended_logging')) { Log::debug('* Update all trade routes'); dump('* Update all trade routes'); }
+                    xtLog('* Update all trade routes');
                     $this->handleHoldsAndTradeRoutes($round);
                 });
 
                 // Each job is a DB transaction
-                if(config('game.extended_logging')) { Log::debug('* Queue, process, and wait for dominion jobs.'); dump('** Queue, process, and wait for dominion jobs.'); }
+                #if(config('game.extended_logging')) { Log::debug('* Queue, process, and wait for dominion jobs.'); dump('** Queue, process, and wait for dominion jobs.'); }
+                xtLog('* Queue, process, and wait for dominion jobs.');
                 $this->processDominionJobs($round);
 
                 $this->now = now();
@@ -236,13 +244,13 @@ class TickService
      */
     public function tickDaily()
     {
-        Log::debug('[DAILY] Daily tick started');
+        #Log::debug('[DAILY] Daily tick started');
+        xtLog('Scheduled daily tick started at ' . $this->now . '.');
 
         DB::transaction(function () {
             foreach (Round::with('dominions')->active()->get() as $round) {
                 // toBase required to prevent ambiguous updated_at column in query
                 $round->dominions()->toBase()->update([
-                    'daily_gold' => false,
                     'daily_land' => false,
                 ], [
                     'event' => 'tick',
@@ -250,7 +258,8 @@ class TickService
             }
         });
 
-        Log::info('[DAILY] Daily tick finished');
+        #Log::info('[DAILY] Daily tick finished');
+        xtLog('Scheduled daily tick finished at ' . now() . '.');
     }
 
     protected function cleanupActiveSpells(Dominion $dominion)

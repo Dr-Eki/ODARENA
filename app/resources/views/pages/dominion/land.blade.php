@@ -190,7 +190,7 @@
 
     <div class="col-sm-12 col-md-3">
         @php
-            $canClaim = (!$selectedDominion->isLocked() || !$selectedDominion->daily_land || $selectedDominion->protection_ticks > 0 || $selectedDominion->round->hasStarted());
+            $canClaim = (!$selectedDominion->isLocked() and !$selectedDominion->daily_land and $selectedDominion->protection_ticks === 0 and $selectedDominion->round->hasStarted());
         @endphp
         <div class="box {{ $canClaim ? 'box-warning' : null }}">
             <div class="box-header with-border">

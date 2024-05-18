@@ -1942,3 +1942,14 @@ cabin:
     jobs: 0
 
 # END BARBARIAN
+
+
+### HOLD BUILDINGS ###
+
+prison:
+  name: Prison
+  category: hold
+  perks:
+    prisoner_production_raw: 0.1
+    body_production_raw: 0.01
+
