@@ -1947,6 +1947,7 @@ cabin:
 ### HOLD BUILDINGS ###
 
 prison:
+  enabled: 0
   name: Prison
   category: hold
   perks:
