@@ -15,11 +15,8 @@ return new class extends Migration
             // Drop the foreign key constraint on dominion_id
             $table->dropForeign(['dominion_id']);
     
-            // Get the name of the primary key constraint
-            $primaryKeyName = DB::connection()->getDoctrineSchemaManager()->listTableDetails('dominion_queue')->getPrimaryKey()->getName();
-    
             // Drop the existing primary key
-            $table->dropPrimary($primaryKeyName);
+            #$table->dropPrimary('PRIMARY');
     
             // Add the new id column
             $table->bigIncrements('id')->first();
