@@ -322,8 +322,9 @@ class TrainingCalculator
             }
 
             # Unit:minimum_victories limit
-            if($minimumVictoriesPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'minimum_victories'))
+            if($minimumVictoriesPerk = (int)$dominion->race->getUnitPerkValueForUnitSlot($slot, 'minimum_victories'))
             {
+                #dd($minimumVictoriesPerk, $this->statsService->getStat($dominion, 'invasion_victories'), $minimumVictoriesPerk > $this->statsService->getStat($dominion, 'invasion_victories'));
                 if($minimumVictoriesPerk > $this->statsService->getStat($dominion, 'invasion_victories'))
                 {
                     $trainable[$unitType] = 0;

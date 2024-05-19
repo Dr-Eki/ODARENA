@@ -250,14 +250,15 @@ class TrainActionService
             {
               throw new GameException('This unit cannot be trained.');
             }
+
+
+            $unit = $dominion->race->units->filter(function ($unit) use ($unitSlot) {
+                return ($unit->slot === $unitSlot);
+            })->first();
             
             # OK, unit can be trained. Let's check for pairing limits.
             if(!$this->unitCalculator->checkUnitLimitForTraining($dominion, $unitSlot, $amountToTrain))
             {
-                $unit = $dominion->race->units->filter(function ($unit) use ($unitSlot) {
-                    return ($unit->slot === $unitSlot);
-                })->first();
-
                 throw new GameException('You can at most control ' . number_format($this->unitCalculator->getUnitMaxCapacity($dominion, $unitSlot)) . ' ' . Str::unitPlural($unit->name) . '. To control more, you need to first have more of their superior unit.');
             }
 

@@ -625,7 +625,6 @@ class UnitCalculator
             return floorInt($perNetVictory * $netVictories);
         }
 
-
         # Unit:stat_pairing_limit limit
         if($statPairingLimit = $dominion->race->getUnitPerkValueForUnitSlot($slotLimited, 'stat_pairing_limit'))
         {

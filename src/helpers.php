@@ -232,16 +232,6 @@ if(!function_exists('negative'))
 }
 
 
-if (!function_exists('floorInt')) {
-    /**
-     * Dumps the given variables but only if running locally.
-     */
-    function floorInt($number): int
-    {
-        return (int)floor($number);
-    }
-}
-
 if (!function_exists('xtLog')) {
     /**
      * Dumps the given variables but only if running locally.
@@ -273,6 +263,17 @@ if (!function_exists('xtLog')) {
         {
             dump($string);
         }
+    }
+}
+
+
+if (!function_exists('floorInt')) {
+    /**
+     * Dumps the given variables but only if running locally.
+     */
+    function floorInt($number): int
+    {
+        return (int)floor($number);
     }
 }
 

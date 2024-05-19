@@ -150,83 +150,79 @@ class TickService
      */
     public function tickHourly()
     {
-        if(File::exists('storage/framework/down'))
-        {
+        if (File::exists('storage/framework/down')) {
             xtLog('Tick at ' . $this->now . ' skipped.');
             return;
         }
-
+    
         xtLog('Scheduled tick started at ' . $this->now . '.');
-
-        foreach (Round::active()->get() as $round)
-        {
+    
+        foreach (Round::active()->get() as $round) {
             xtLog('Round ' . $round->number . ' tick started at ' . $this->now . '.');
-
+    
             $round->is_ticking = 1;
             $round->save();
-
+    
             xtLog('* Queue, process, and wait for dominion precalculations.');
             $this->processPrecalculationJobs($round);
-
+    
             // One transaction for all of these
-            DB::transaction(function () use ($round)
-            {
+            DB::transaction(function () use ($round) {
                 $this->temporaryData[$round->id] = [];
-
+    
                 $this->temporaryData[$round->id]['stasis_dominions'] = [];
-
+    
                 xtLog('* Checking for win conditions');
                 $this->handleWinConditions($round);
-
+    
                 xtLog('* Update invasion queues');
                 $this->updateAllInvasionQueues($round);
-
+    
                 xtLog('* Update all other queues');
                 $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
-
+    
                 xtLog('* Update all artefact aegises');
                 $this->updateArtefactsAegises($round);
-
+    
                 xtLog('* Handle barbarian spawn');
                 $this->handleBarbarianSpawn($round);
-
+    
                 xtLog('* Handle body decay');
                 $this->handleBodyDecay($round);
-
+    
                 xtLog('* Update all dominions');
                 $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
             });
-
+    
             // Separate DB transaction for trade routes
-            DB::transaction(function () use ($round)
-            {
+            DB::transaction(function () use ($round) {
                 xtLog('* Update all trade routes');
                 $this->handleHoldsAndTradeRoutes($round);
             });
-
+    
             // Each job is a DB transaction
             xtLog('* Queue, process, and wait for dominion jobs.');
             $this->processDominionJobs($round);
-
+    
             xtLog('* Clear out all finished queues');
             $this->clearFinishedQueues($round);
-
+    
             $this->now = now();
-
+    
             xtLog('* Repeat queue, process, and wait for dominion precalculations.');
             $this->processPrecalculationJobs($round);
-
+    
             unset($this->temporaryData[$round->id]);
-
+    
             $round->fill([
                 'ticks' => ($round->ticks + 1),
                 'is_ticking' => 0,
                 'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
             ])->save();
         }
-
+    
         $finishedAt = now();
-        xtLog('Scheduled tick finished at ' . $finishedAt . '.');   
+        xtLog('Scheduled tick finished at ' . $finishedAt . '.');
     }
 
     /**
@@ -343,15 +339,16 @@ class TickService
 
     public function clearFinishedQueues(Round $round)
     {
-        DB::transaction(function () use ($round)
-        {
+        DB::transaction(function () use ($round) {
             DB::table('dominion_queue')
-            ->join('dominions', 'dominion_queue.dominion_id', '=', 'dominions.id')
-            ->where('dominions.round_id', $round->id)
-            ->where('dominion_queue.hours', '<=', 0)
-            ->delete();
+                ->join('dominions', 'dominion_queue.dominion_id', '=', 'dominions.id')
+                ->where('dominions.round_id', $round->id)
+                ->where('dominion_queue.hours', '<=', 0)
+                ->lockForUpdate() // Lock rows for update to prevent concurrent modification
+                ->delete();
         });
     }
+    
 
     /**
      * Does an hourly tick on all active dominions.
@@ -1335,41 +1332,45 @@ class TickService
     public function processDominionJobs(Round $round): void
     {
         $dominions = $round->activeDominions()
-        ->where('protection_ticks', 0)
-        ->inRandomOrder()
-        ->get();
-
+            ->where('protection_ticks', 0)
+            ->inRandomOrder()
+            ->get();
+    
         // Queue up all dominions for ticking (simultaneous processing)
-        foreach ($dominions as $dominion)
-        {
+        foreach ($dominions as $dominion) {
             Log::info("** Queueing up dominion {$dominion->id}: {$dominion->name}");
             dump("** Queuing up dominion {$dominion->id}: {$dominion->name}");
             ProcessDominionJob::dispatch($dominion)->onQueue('tick');
         }
-
+    
         // Wait for queue to clear
         $attempts = 60;
-        $delay = (int)config('game.tick_queue_check_delay');
+        $delay = (int) config('game.tick_queue_check_delay');
+        $initialDelay = roundInt(($delay * 2) / 1000);
+        $closingDelay = roundInt(($delay * 2) / 1000);
         
+        sleep($initialDelay); // Add initial delay before retrying
+    
         retry($attempts, function () use ($delay) {
             $i = isset($i) ? $i + 1 : 1;
-        
+    
             $infoString = sprintf(
                 '** [%s] Waiting for queued ProcessDominionJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
                 now()->format('Y-m-d H:i:s'),
                 Redis::llen('queues:tick'),
                 number_format($delay)
             );
-        
+    
             if (Redis::llen('queues:tick') !== 0) {
-                #Log::info($infoString);
-                #dump($infoString);
                 xtLog($infoString);
                 throw new Exception('Tick queue not finish');
             }
         }, $delay);
+
+        sleep($closingDelay); // Add initial delay before retrying
     }
 
+    
     public function handleHoldsAndTradeRoutes(Round $round): void
     {
         if(!$round->getSetting('trade_routes'))
