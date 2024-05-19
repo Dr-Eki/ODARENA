@@ -27,7 +27,6 @@ use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\TickCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
 
-
 use OpenDominion\Services\BarbarianService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
@@ -106,10 +105,9 @@ class ProcessDominionJob implements ShouldQueue
         xtLog('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . '), ID ' . $this->dominion->id);
 
         # Do this first to populate dominion_tick
-        xtLog("[{$this->dominion->id}] ** Precalculate tick");
-        $this->tickCalculator->precalculateTick($this->dominion, true);
+        # xtLog("[{$this->dominion->id}] ** Precalculate tick");
+        # $this->tickCalculator->precalculateTick($this->dominion, true);
         
-
         # Make a DB transaction
 
         DB::transaction(function () use ($round)
@@ -187,8 +185,8 @@ class ProcessDominionJob implements ShouldQueue
         $this->handleFinishedSpells($this->dominion);
 
         # And do it again to prepare for the next tick 
-        xtLog("[{$this->dominion->id}] ** Re-precalculate tick");
-        $this->tickCalculator->precalculateTick($this->dominion);
+        #xtLog("[{$this->dominion->id}] ** Re-precalculate tick");
+        #$this->tickCalculator->precalculateTick($this->dominion);
 
         xtLog("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number}), ID {$this->dominion->id}");
         $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');

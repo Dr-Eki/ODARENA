@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Redis;
 #use Laravel\Horizon\Horizon;
 
 use OpenDominion\Jobs\ProcessDominionJob;
+use OpenDominion\Jobs\ProcessPrecalculationJob;
 
 use OpenDominion\Helpers\RoundHelper;
 
@@ -164,6 +165,16 @@ class TickService
             $round->is_ticking = 1;
             $round->save();
 
+            xtLog('* Queue, process, and wait for dominion precalculations.');
+            $this->processPrecalculationJobs($round);
+
+            $dominions = $round->activeDominions()->get();
+            foreach($dominions as $dominion)
+            {
+                xtLog('* Precalculating dominion ' . $dominion->id . ' (' . $dominion->realm->number . ')...');
+                $this->tickCalculator->precalculateTick($dominion);
+            }
+
             // One transaction for all of these
             DB::transaction(function () use ($round)
             {
@@ -208,6 +219,9 @@ class TickService
             $this->clearFinishedQueues($round);
 
             $this->now = now();
+
+            xtLog('* Repeat queue, process, and wait for dominion precalculations.');
+            $this->processPrecalculationJobs($round);
 
             unset($this->temporaryData[$round->id]);
 
@@ -1285,6 +1299,43 @@ class TickService
             Log::info('* Body decay: ' . number_format($decay) . ' / ' . number_format($round->resource_body));
             $this->resourceService->updateRoundResources($round, ['body' => (-$decay)]);
         }
+    }
+
+    public function processPrecalculationJobs(Round $round): void
+    {
+        $dominions = $round->activeDominions()
+        ->where('protection_ticks', 0)
+        ->inRandomOrder()
+        ->get();
+
+        // Queue up all dominions for precalculation (simultaneous processing)
+        foreach ($dominions as $dominion)
+        {
+            xtLog("[{$dominion->id}] ** Queuing up precalculation of dominion {$dominion->id}: {$dominion->name}");
+            ProcessPrecalculationJob::dispatch($dominion)->onQueue('tick');
+        }
+
+        // Wait for queue to clear
+        $attempts = 60;
+        $delay = (int)config('game.tick_queue_check_delay');
+        
+        retry($attempts, function () use ($delay) {
+            $i = isset($i) ? $i + 1 : 1;
+        
+            $infoString = sprintf(
+                '** [%s] Waiting for queued ProcessPrecalculationJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
+                now()->format('Y-m-d H:i:s'),
+                Redis::llen('queues:tick'),
+                number_format($delay)
+            );
+        
+            if (Redis::llen('queues:tick') !== 0) {
+                #Log::info($infoString);
+                #dump($infoString);
+                xtLog($infoString);
+                throw new Exception('Tick queue not finish');
+            }
+        }, $delay);
     }
 
     public function processDominionJobs(Round $round): void
