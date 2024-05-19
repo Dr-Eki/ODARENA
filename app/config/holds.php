@@ -37,8 +37,8 @@ return [
         'trade_completed' => 1,
     ],
 
-    'sentiment_max' => 4000,
-    'sentiment_min' => -6000,
+    'sentiment_max' => 1000,
+    'sentiment_min' => -1000,
 
     'sentiment_divisor' => 4000,
 
