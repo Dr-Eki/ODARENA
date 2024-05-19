@@ -352,11 +352,14 @@ class TickService
 
     public function clearFinishedQueues(Round $round)
     {
-        DB::table('dominion_queue')
+        DB::transaction(function () use ($round)
+        {
+            DB::table('dominion_queue')
             ->join('dominions', 'dominion_queue.dominion_id', '=', 'dominions.id')
             ->where('dominions.round_id', $round->id)
             ->where('dominion_queue.hours', '<=', 0)
             ->delete();
+        });
     }
 
     /**
