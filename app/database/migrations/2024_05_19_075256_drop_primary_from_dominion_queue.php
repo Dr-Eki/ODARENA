@@ -12,29 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('dominion_queue', function (Blueprint $table) {
-            // Add the new id column if it doesn't exist
-            if (!Schema::hasColumn('dominion_queue', 'id')) {
-                $table->bigIncrements('id')->first();
-            }
+            // Drop the foreign key constraint on dominion_id
+            $table->dropForeign(['dominion_id']);
+            
+            // Drop the existing primary key
+            $table->dropPrimary();
+
+            // Add the new id column
+            $table->bigIncrements('id')->first();
 
             // Optionally, you can add a composite unique index on the previous primary key columns if needed
-            if (!Schema::hasColumn('dominion_queue', 'dominion_id') && !Schema::hasColumn('dominion_queue', 'source') && !Schema::hasColumn('dominion_queue', 'resource') && !Schema::hasColumn('dominion_queue', 'hours')) {
-                $table->unique(['dominion_id', 'source', 'resource', 'hours']);
-            }
+            $table->unique(['dominion_id', 'source', 'resource', 'hours']);
 
-            // Recreate the foreign key constraint on dominion_id if it doesn't exist
-            $foreignKeys = Schema::getConnection()->getDoctrineSchemaManager()->listTableForeignKeys('dominion_queue');
-            $hasForeignKey = false;
-            foreach ($foreignKeys as $foreignKey) {
-                if ($foreignKey->getLocalColumns() == ['dominion_id']) {
-                    $hasForeignKey = true;
-                    break;
-                }
-            }
-
-            if (!$hasForeignKey) {
-                $table->foreign('dominion_id')->references('id')->on('dominion_table'); // Adjust 'dominion_table' to the correct table name
-            }
+            // Recreate the foreign key constraint on dominion_id
+            $table->foreign('dominion_id')->references('id')->on('dominion_table'); // Adjust 'dominion_table' to the correct table name
         });
     }
 
