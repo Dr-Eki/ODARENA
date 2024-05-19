@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', "Insight | $dominion->name")
+@section('title', "Insight | $dominion->name (# {$dominion->realm->number})")
 
 @section('content')
 
@@ -314,58 +314,6 @@
 
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="ra ra-axe"></i> Military</h3>
-            </div>
-            <div class="box-body table-responsive no-padding">
-                <table class="table">
-                    <colgroup>
-                        <col width="33%">
-                        <col width="33%">
-                        <col width="33%">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>Modifier</th>
-                            <th>Offensive</th>
-                            <th>Defensive</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Military:</strong></td>
-                            <td><strong>{{ number_format(($militaryCalculator->getOffensivePowerMultiplier($dominion) - 1) * 100, 2) }}%</strong></td>
-                            <td><strong>{{ number_format(($militaryCalculator->getDefensivePowerMultiplier($dominion) - 1) * 100, 2) }}%</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Enemy modifers:</td>
-                            <td>{{ number_format(($militaryCalculator->getOffensiveMultiplierReduction($dominion)-1)*100, 2) }}%</td>
-                            <td>{{ number_format($militaryCalculator->getDefensiveMultiplierReduction($dominion)*100, 2) }}%</td>
-                        </tr>
-                        <tr>
-                            <td>Own casualties:</td>
-                            <td>{{ number_format(($casualtiesCalculator->getBasicCasualtiesPerkMultipliers($dominion, 'offense'))*100, 2) }}%</td>
-                            <td>{{ number_format(($casualtiesCalculator->getBasicCasualtiesPerkMultipliers($dominion, 'defense'))*100, 2) }}%</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"><p class="text-muted"><small><em>The perks above are the basic, static values and do not take into account circumstantial perks such as perks vs. specific types of targets or perks based on specific unit compositions.</em></small></p></td>
-                        </tr>
-                        <tr>
-                            <td>Spy Ratio:</td>
-                            <td>{{ number_format($militaryCalculator->getSpyRatio($dominion, 'offense'), 2) }}</td>
-                            <td>{{ number_format($militaryCalculator->getSpyRatio($dominion, 'defense'), 2) }}</td>
-                        </tr>
-                        <tr>
-                            <td>Wizard Ratio:</td>
-                            <td>{{ number_format(($magicCalculator->getWizardRatio($dominion, 'offense')), 2) }}</td>
-                            <td>{{ number_format(($magicCalculator->getWizardRatio($dominion, 'defense')), 2) }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="box">
-            <div class="box-header with-border">
                 <h3 class="box-title"><i class="fas fa-pray"></i> Deity</h3>
             </div>
             <div class="box-body">
@@ -438,6 +386,410 @@
                 </div>
             </div>
         @endif
+    </div>
+
+
+    <div class="col-sm-12 col-md-9">
+        @component('partials.dominion.insight.box')
+            @slot('title', 'Battle Calculator')
+            @slot('titleIconClass', 'ra ra-crossed-swords')
+            @slot('tableResponsive', false)
+            @slot('noPadding', true)
+
+
+            <form action="#" method="post" role="form" id="invade_form">
+                <input type="hidden" name="source_dominion" id="source_dominion" value="{{ $dominion->id }}">
+                @csrf
+                <div class="box-body">
+                    <p>Target:</p>
+                    <label>
+                        <input type="radio" name="target_dominion" id="target_dominion_1" value="{{ $selectedDominion->id }}" checked> 
+                        You ({{ $selectedDominion->name }})
+                    </label>
+                    <br>
+                    <label>
+                        <input type="radio" name="target_dominion" id="target_dominion_2" value="{{ null }}"> 
+                        None
+                    </label>
+                </div>
+
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-users"></i> Units to send by {{ $dominion->name }}</h3>
+                    </div>
+                    <div class="box-body table-responsive no-padding">
+                        <table class="table">
+                            <colgroup>
+                                <col>
+                                <col width="100">
+                                <col width="100">
+                                <col width="100">
+                                <col width="150">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Unit</th>
+                                    <th class="text-center">OP / DP</th>
+                                    <th class="text-center">Available</th>
+                                    <th class="text-center">Send</th>
+                                    <th class="text-center">Total OP / DP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $offenseVsBarren = [];
+                                    $offenseVsOpposingUnits = [];
+                                    $offenseFromMob = [];
+                                    $offenseFromBeingOutnumbered = [];
+                                @endphp
+                                @foreach ($dominion->race->units as $unit)
+
+
+
+                                    @if ($unit->power_offense == 0 and !$unit->getPerkValue('sendable_with_zero_op'))
+                                        @continue
+                                    @endif
+
+                                    @php
+                                        $offensivePower = $militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'offense');
+                                        $defensivePower = $militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'defense');
+
+                                        $hasDynamicOffensivePower = $unit->perks->filter(static function ($perk) {
+                                            return Str::startsWith($perk->key, ['offense_from_', 'offense_vs_', 'offense_m']);
+                                        })->count() > 0;
+                                        if ($hasDynamicOffensivePower)
+                                        {
+                                            $offenseVsBarrenPerk = $unit->getPerkValue('offense_vs_barren_land');
+                                            if ($offenseVsBarrenPerk) {
+                                                $offenseVsBarren[] = explode(',', $offenseVsBarrenPerk)[0];
+                                            }
+
+                                            $offenseFromMobPerk = $unit->getPerkValue('offense_mob');
+                                            if ($offenseFromMobPerk) {
+                                                $offenseFromMob = explode(',', $offenseFromMobPerk)[0];
+                                            }
+
+                                            $offenseFromBeingOutnumberedPerk = $unit->getPerkValue('offense_from_being_outnumbered');
+                                            if ($offenseFromBeingOutnumberedPerk) {
+                                                $offenseFromBeingOutnumbered = explode(',', $offenseFromBeingOutnumberedPerk)[0];
+                                            }
+
+                                        }
+                                        $hasDynamicDefensivePower = $unit->perks->filter(static function ($perk) {
+                                            return Str::startsWith($perk->key, ['defense_from_', 'defense_vs_']);
+                                        })->count() > 0;
+
+                                        $unitType = 'unit' . $unit->slot;
+                                    @endphp
+
+                                    <tr>
+                                        <td>
+                                            <span data-toggle="tooltip" data-placement="top" title="{{ $unitHelper->getUnitHelpString($unitType, $dominion->race, [$militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unitHelper->getUnitFromRaceUnitType($dominion->race, $unitType), 'offense'), $militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unitHelper->getUnitFromRaceUnitType($dominion->race, $unitType), 'defense'), ]) }}">
+                                                {{ $unit->name }}
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span id="unit{{ $unit->slot }}_op">{{ floatval($offensivePower) }}</span>{{ $hasDynamicOffensivePower ? '*' : null }}
+                                            /
+                                            <span id="unit{{ $unit->slot }}_dp" class="text-muted">{{ floatval($defensivePower) }}</span><span class="text-muted">{{ $hasDynamicDefensivePower ? '*' : null }}</span>
+                                        </td>
+                                        <td class="text-center">
+                                            {{ number_format($dominion->{"military_unit{$unit->slot}"}) }}
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="number"
+                                                   name="unit[{{ $unit->slot }}]"
+                                                   id="unit[{{ $unit->slot }}]"
+                                                   class="form-control text-center"
+                                                   placeholder="0"
+                                                   min="0"
+                                                   max="{{ $dominion->{"military_unit{$unit->slot}"} }}"
+                                                   style="min-width:5em;"
+                                                   data-slot="{{ $unit->slot }}"
+                                                   data-amount="{{ $dominion->{"military_unit{$unit->slot}"} }}"
+                                                   data-op="{{ $unit->power_offense }}"
+                                                   data-dp="{{ $unit->power_defense }}"
+                                                   {{ $dominion->isLocked() ? 'disabled' : null }}>
+                                        </td>
+                                        <td class="text-center" id="unit{{ $unit->slot }}_stats">
+                                            <span class="op">0</span> / <span class="dp text-muted">0</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                @if($offenseVsBarren)
+                                    <tr>
+                                        <td colspan="3" class="text-right">
+                                            <b>Enter target barren percentage:</b>
+                                        </td>
+                                        <td>
+                                            <input type="number"
+                                                   name="calc[barren_land_percent]"
+                                                   class="form-control text-center"
+                                                   min="0"
+                                                   max="100"
+                                                   placeholder="0"
+                                                   {{ $dominion->isLocked() ? 'disabled' : null }}>
+                                        </td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                @endif
+                                @if($offenseFromMob)
+                                    <tr>
+                                        <td colspan="3" class="text-right">
+                                            <b>Enter total number of units target has at home:</b>
+                                        </td>
+                                        <td>
+                                            <input type="number"
+                                                   name="calc[opposing_units]"
+                                                   class="form-control text-center"
+                                                   min="0"
+                                                   placeholder="0"
+                                                   {{ $dominion->isLocked() ? 'disabled' : null }}>
+                                              <textarea type="hidden" style="display: none;"
+                                                     id="invasion-total-units"
+                                                     name="calc[units_sent]"
+                                                     class="form-control text-center"
+                                                     min="0"
+                                                     placeholder="0"
+                                                     data-amount="0"
+                                                     value=""
+                                                     {{ $dominion->isLocked() ? 'disabled' : null }}>
+                                                   </textarea>
+
+
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if($offenseFromBeingOutnumbered)
+                                    <tr>
+                                        <td colspan="3" class="text-right">
+                                            <b>Enter total number of units target has at home:</b>
+                                        </td>
+                                        <td>
+                                            <input type="number"
+                                                   name="calc[opposing_units]"
+                                                   class="form-control text-center"
+                                                   min="0"
+                                                   placeholder="0"
+                                                   {{ $dominion->isLocked() ? 'disabled' : null }}>
+                                              <textarea type="hidden" style="display: none;"
+                                                     id="invasion-total-units"
+                                                     name="calc[units_sent]"
+                                                     class="form-control text-center"
+                                                     min="0"
+                                                     placeholder="0"
+                                                     data-amount="0"
+                                                     value=""
+                                                     {{ $dominion->isLocked() ? 'disabled' : null }}>
+                                                   </textarea>
+                                        </td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+
+                        <div class="box box-danger">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><i class="ra ra-sword"></i> Invasion force</h3>
+                            </div>
+                            <div class="box-body table-responsive no-padding">
+                                <table class="table">
+                                    <colgroup>
+                                        <col width="30%">
+                                        <col width="70%">
+                                    </colgroup>
+                                    <tbody>
+                                        <tr>
+                                            <td>OP:</td>
+                                            <td>
+                                                <strong id="invasion-force-op" data-amount="0">0</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Morale:</td>
+                                            <td>{{ number_format($dominion->morale) }}</td>
+                                        </tr>
+                                        {{-- 
+                                        <tr>
+                                            <td>DP:</td>
+                                            <td id="invasion-force-dp" data-amount="0">0</td>
+                                        </tr>
+                                        --}}
+                                        <tr>
+                                            <td>
+                                                Max OP:
+                                                <i class="fa fa-question-circle"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="You may send out a maximum of 133% of your new home DP in OP. (4:3 rule)"></i>
+                                            </td>
+                                            <td id="invasion-force-max-op" data-amount="0">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Target DP:
+                                            </td>
+                                            <td id="target-dp" data-amount="0">0</td>
+                                        </tr>
+                                        @if($magicCalculator->getWizardPointsRequiredByAllUnits($dominion))
+                                            <tr>
+                                                <td>
+                                                    Wizard points required:
+                                                </td>
+                                                <td id="wizard-points-required" data-amount="0">0</td>
+                                            </tr>
+                                        @endif
+                                        <tr>
+                                            <td>Land conquered:</td>
+                                            <td id="invasion-land-conquered" data-amount="0">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><i class="fa fa-home"></i> Military At Home</h3>
+                            </div>
+                            <div class="box-body table-responsive no-padding">
+                                <table class="table">
+                                    <colgroup>
+                                        <col width="30%">
+                                        <col width="70%">
+                                    </colgroup>
+                                    <tbody>
+                                        {{--
+                                        <tr>
+                                            <td>OP:</td>
+                                            <td id="home-forces-op" data-original="{{ $militaryCalculator->getOffensivePower($dominion) }}" data-amount="0">
+                                                {{ number_format($militaryCalculator->getOffensivePower($dominion), 2) }}
+                                            </td>
+                                        </tr>
+                                        --}}
+                                        <tr>
+                                            <td>Mod DP for</td>
+                                            <td>
+                                                <span id="home-forces-dp" data-original="{{ $militaryCalculator->getDefensivePower($dominion) }}" data-amount="0">
+                                                    {{ number_format($militaryCalculator->getDefensivePower($dominion)) }}
+                                                </span>
+
+                                                <small class="text-muted">
+                                                    (<span id="home-forces-dp-raw" data-original="{{ $militaryCalculator->getDefensivePowerRaw($dominion) }}" data-amount="0">{{ number_format($militaryCalculator->getDefensivePowerRaw($dominion)) }}</span> raw)
+                                                </small>
+                                            </td>
+                                        </tr>
+                                        {{--
+                                        <tr>
+                                            <td>
+                                                Min DP:
+                                                <i class="fa fa-question-circle"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="You must leave at least 33% of your invasion force OP in DP at home. (33% rule)"></i>
+                                            </td>
+                                            <td id="home-forces-min-dp" data-amount="0">0</td>
+                                        </tr>
+                                        --}}
+                                        <tr>
+                                            <td>DPA:</td>
+                                            <td id="home-forces-dpa" data-amount="0">
+                                                {{ number_format($militaryCalculator->getDefensivePower($dominion) / $dominion->land, 2) }}
+                                            </td>
+                                        </tr>
+                                        @if($magicCalculator->getWizardPointsRequiredByAllUnits($dominion))
+                                            <tr>
+                                                <td>
+                                                    Wizard points:
+                                                </td>
+                                                <td id="wizard-points" data-amount="0">0</td>
+                                            </tr>
+                                        @endif
+                                        @if($dominion->getSpellPerkValue('fog_of_war'))
+                                            @php
+                                                $spell = OpenDominion\Models\Spell::where('key', 'fog')->firstOrFail();
+                                            @endphp
+                                            <tr>
+                                                <td>Sazal's Fog:</td>
+                                                <td>
+                                                    {{ number_format($spellCalculator->getSpellDuration($dominion, $spell->key)) }} {{ Str::plural('tick', $spellCalculator->getSpellDuration($dominion, $spell->key)) }}
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+
+        @endcomponent
+    </div>
+
+    <div class="col-sm-12 col-md-3">
+
+
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="ra ra-axe"></i> Military</h3>
+            </div>
+            <div class="box-body table-responsive no-padding">
+                <table class="table">
+                    <colgroup>
+                        <col width="33%">
+                        <col width="33%">
+                        <col width="33%">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Modifier</th>
+                            <th>Offensive</th>
+                            <th>Defensive</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Military:</strong></td>
+                            <td><strong>{{ number_format(($militaryCalculator->getOffensivePowerMultiplier($dominion) - 1) * 100, 2) }}%</strong></td>
+                            <td><strong>{{ number_format(($militaryCalculator->getDefensivePowerMultiplier($dominion) - 1) * 100, 2) }}%</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Enemy modifers:</td>
+                            <td>{{ number_format(($militaryCalculator->getOffensiveMultiplierReduction($dominion)-1)*100, 2) }}%</td>
+                            <td>{{ number_format($militaryCalculator->getDefensiveMultiplierReduction($dominion)*100, 2) }}%</td>
+                        </tr>
+                        <tr>
+                            <td>Own casualties:</td>
+                            <td>{{ number_format(($casualtiesCalculator->getBasicCasualtiesPerkMultipliers($dominion, 'offense'))*100, 2) }}%</td>
+                            <td>{{ number_format(($casualtiesCalculator->getBasicCasualtiesPerkMultipliers($dominion, 'defense'))*100, 2) }}%</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><p class="text-muted"><small><em>The perks above are the basic, static values and do not take into account circumstantial perks such as perks vs. specific types of targets or perks based on specific unit compositions.</em></small></p></td>
+                        </tr>
+                        <tr>
+                            <td>Spy Ratio:</td>
+                            <td>{{ number_format($militaryCalculator->getSpyRatio($dominion, 'offense'), 2) }}</td>
+                            <td>{{ number_format($militaryCalculator->getSpyRatio($dominion, 'defense'), 2) }}</td>
+                        </tr>
+                        <tr>
+                            <td>Wizard Ratio:</td>
+                            <td>{{ number_format(($magicCalculator->getWizardRatio($dominion, 'offense')), 2) }}</td>
+                            <td>{{ number_format(($magicCalculator->getWizardRatio($dominion, 'defense')), 2) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -1210,17 +1562,179 @@
 
 @endsection
 
+
 @push('inline-scripts')
     <script type="text/javascript">
-        document.querySelector("#words").onclick = function () {
-        document.querySelector("#text_copy").select();
-        document.execCommand("copy");
-        };
 
-        document.querySelector("#input-btn").onclick = function () {
-        document.querySelector("#input").select();
-        document.execCommand("copy");
-        };
+        $(document).keypress(
+            function(event)
+            {
+                if (event.which == '13')
+                {
+                    event.preventDefault();
+                }
+            }
+        );
+
+        (function ($) {
+            var invasionForceOPElement = $('#invasion-force-op');
+            var invasionForceDPElement = $('#invasion-force-dp');
+            var invasionForceMaxOPElement = $('#invasion-force-max-op');
+            var homeForcesOPElement = $('#home-forces-op');
+            var homeForcesDPElement = $('#home-forces-dp');
+            var homeForcesDPRawElement = $('#home-forces-dp-raw');
+            var homeForcesMinDPElement = $('#home-forces-min-dp');
+            var homeForcesDPAElement = $('#home-forces-dpa');
+            var invasionLandConqueredElement = $('#invasion-land-conquered');
+            var targetDpElement = $('#target-dp');
+            var wizardPointsElement = $('#wizard-points');
+            var wizardPointsRequiredElement = $('#wizard-points-required');
+
+            var invasionForceCountElement = $('#invasion-total-units');
+
+            var invadeButtonElement = $('#invade-button');
+            var allUnitInputs = $('input[name^=\'unit\']');
+
+            @if (!$protectionService->isUnderProtection($dominion))
+                updateUnitStats();
+            @endif
+
+            $('input[name="target_dominion"]').change(function (e) {
+                updateUnitStats();
+            });
+
+            $('input[name^=\'calc\']').change(function (e) {
+                updateUnitStats();
+            });
+
+            $('input[name^=\'unit\']').change(function (e) {
+                updateUnitStats();
+            });
+
+            function updateUnitStats() {
+                // Update unit stats
+                $.get(
+                    "{{ route('api.dominion.insight-battle-calculator') }}?" + $('#invade_form').serialize(), {},
+                    function(response) {
+                        if(response.result == 'success')
+                        {
+                            $.each(response.units, function(slot, stats)
+                            {
+                                // Update unit stats data attributes
+                                $('#unit\\['+slot+'\\]').data('dp', stats.dp);
+                                $('#unit\\['+slot+'\\]').data('op', stats.op);
+                                // Update unit stats display
+                                $('#unit'+slot+'_dp').text(stats.dp.toLocaleString(undefined, {maximumFractionDigits: 3}));
+                                $('#unit'+slot+'_op').text(stats.op.toLocaleString(undefined, {maximumFractionDigits: 3}));
+                            });
+
+                            // Update OP / DP data attributes
+                            invasionForceOPElement.data('amount', response.away_offense);
+                            invasionForceDPElement.data('amount', response.away_defense);
+                            invasionForceMaxOPElement.data('amount', response.max_op);
+                            invasionLandConqueredElement.data('amount', response.land_conquered);
+                            homeForcesOPElement.data('amount', response.home_offense);
+                            homeForcesDPElement.data('amount', response.home_defense);
+                            homeForcesDPRawElement.data('amount', response.home_defense_raw);
+                            homeForcesMinDPElement.data('amount', response.min_dp);
+                            homeForcesDPAElement.data('amount', response.home_dpa);
+                            targetDpElement.data('amount', response.target_dp);
+                            wizardPointsElement.data('amount', response.wizard_points);
+                            wizardPointsRequiredElement.data('amount', response.wizard_points_required);
+
+                            // Update OP / DP display
+                            invasionForceOPElement.text(response.away_offense.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            invasionForceDPElement.text(response.away_defense.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            invasionForceMaxOPElement.text(response.max_op.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            invasionLandConqueredElement.text(response.land_conquered.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            homeForcesOPElement.text(response.home_offense.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            homeForcesDPElement.text(response.home_defense.toLocaleString(undefined, {maximumFractionDigits: 0}));
+                            homeForcesDPRawElement.text(response.home_defense_raw.toLocaleString(undefined, {maximumFractionDigits: 0}));
+                            homeForcesMinDPElement.text(response.min_dp.toLocaleString(undefined, {maximumFractionDigits: 0}));
+                            homeForcesDPAElement.text(response.home_dpa.toLocaleString(undefined, {maximumFractionDigits: 0}));
+                            targetDpElement.text(response.target_dp.toLocaleString(undefined, {maximumFractionDigits: 0}));
+                            wizardPointsElement.text(response.wizard_points.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                            wizardPointsRequiredElement.text(response.wizard_points_required.toLocaleString(undefined, {maximumFractionDigits: 2}));
+
+                            invasionForceCountElement.text(response.units_sent);
+
+                            calculate();
+                        }
+                    }
+                );
+            }
+
+            function calculate() {
+                // Calculate subtotals for each unit
+                allUnitInputs.each(function () {
+                    var unitOP = parseFloat($(this).data('op'));
+                    var unitDP = parseFloat($(this).data('dp'));
+                    var amountToSend = parseInt($(this).val() || 0);
+                    var totalUnitOP = amountToSend * unitOP;
+                    var totalUnitDP = amountToSend * unitDP;
+                    var unitSlot = parseInt($(this).data('slot'));
+                    var unitStatsElement = $('#unit' + unitSlot + '_stats');
+                    unitStatsElement.find('.op').text(totalUnitOP.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                    unitStatsElement.find('.dp').text(totalUnitDP.toLocaleString(undefined, {maximumFractionDigits: 2}));
+                });
+
+                // Check 33% rule
+                var minDefenseRule = parseFloat(homeForcesDPElement.data('amount')) < parseFloat(homeForcesMinDPElement.data('amount'));
+                if (minDefenseRule) {
+                    homeForcesDPElement.addClass('text-danger');
+                } else {
+                    homeForcesDPElement.removeClass('text-danger');
+                }
+
+                // Check 4:3 rule
+                var maxOffenseRule = parseFloat(invasionForceOPElement.data('amount')) > parseFloat(invasionForceMaxOPElement.data('amount'));
+                if (maxOffenseRule) {
+                    invasionForceOPElement.addClass('text-danger');
+                } else {
+                    invasionForceOPElement.removeClass('text-danger');
+                }
+
+                // Check wizard points rule
+                var wizardPointsRule = parseFloat(wizardPointsElement.data('amount')) < parseFloat(wizardPointsRequiredElement.data('amount'));
+                if (wizardPointsRule) {
+                    wizardPointsRequiredElement.addClass('text-danger');
+                } else {
+                    wizardPointsRequiredElement.removeClass('text-danger');
+                }
+
+                // Check if invasion force OP is greater than target OP
+                var invasionSuccess = parseFloat(invasionForceOPElement.data('amount')) > parseFloat(targetDpElement.data('amount'));
+
+                // Get the selected option element
+                var selectedOption = $('#target_dominion option:selected');
+
+                // Check if the selected target is fogged
+                var isFogged = selectedOption.data('fogged') === 1;
+
+                invasionForceOPElement.toggleClass('text-warning', isFogged);
+                invasionForceOPElement.toggleClass('text-success', !isFogged && invasionSuccess);
+                invasionForceOPElement.toggleClass('text-danger', !isFogged && !invasionSuccess);
+
+                // Check if invade button should be disabled
+                if (minDefenseRule || maxOffenseRule || wizardPointsRule) {
+                    invadeButtonElement.attr('disabled', 'disabled');
+                } else {
+                    invadeButtonElement.removeAttr('disabled');
+                }
+
+
+            }
+        })(jQuery);
 
     </script>
 @endpush
+
+@push('page-scripts')
+    <script type="text/javascript">
+    $("form").submit(function () {
+        // prevent duplicate form submissions
+        $(this).find(":submit").attr('disabled', 'disabled');
+    });
+    </script>
+@endpush
+

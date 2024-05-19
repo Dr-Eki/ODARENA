@@ -69,20 +69,20 @@ class InvadeCalculationService
     }
 
     /**
-     * Calculates an invasion against dominion $target from $dominion.
+     * Calculates an invasion against dominion $target from $attacker.
      *
-     * @param Dominion $dominion
+     * @param Dominion $attacker
      * @param Dominion|null $target
      * @param array $units
      * @return array
      */
-    public function calculate(Dominion $dominion, Dominion $target = null, ?array $units, ?array $calc): array
+    public function calculate(Dominion $attacker, Dominion $target = null, ?array $units, ?array $calc): array
     {
-        #$this->guardActionsDuringTick($dominion);
+        #$this->guardActionsDuringTick($attacker);
 
         #isset($target) ?? $this->guardActionsDuringTick($target);
 
-        if ($dominion->isLocked() || $dominion->round->hasEnded())
+        if ($attacker->isLocked() || $attacker->round->hasEnded())
         {
             return ['result' => 'error', 'message' => 'invalid dominion(s) selected'];
         }
@@ -98,23 +98,23 @@ class InvadeCalculationService
         }
 
         if ($target !== null) {
-            $landRatio = $this->rangeCalculator->getDominionRange($dominion, $target) / 100;
+            $landRatio = $this->rangeCalculator->getDominionRange($attacker, $target) / 100;
             $this->calculationResult['land_ratio'] = $landRatio;
         } else {
             $landRatio = 0.5;
         }
 
         // Calculate unit stats
-        foreach ($dominion->race->units as $unit) {
+        foreach ($attacker->race->units as $unit) {
             $this->calculationResult['units'][$unit->slot]['dp'] = $this->militaryCalculator->getUnitPowerWithPerks(
-                $dominion,
+                $attacker,
                 $target,
                 $landRatio,
                 $unit,
                 'defense'
             );
             $this->calculationResult['units'][$unit->slot]['op'] = $this->militaryCalculator->getUnitPowerWithPerks(
-                $dominion,
+                $attacker,
                 $target,
                 $landRatio,
                 $unit,
@@ -125,52 +125,52 @@ class InvadeCalculationService
         $this->calculationResult['units_sent'] = array_sum($units);
 
         // Calculate total offense and defense
-        $this->calculationResult['dp_multiplier'] = $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
-        $this->calculationResult['op_multiplier'] = $this->militaryCalculator->getOffensivePowerMultiplier($dominion);
+        $this->calculationResult['dp_multiplier'] = $this->militaryCalculator->getDefensivePowerMultiplier($attacker);
+        $this->calculationResult['op_multiplier'] = $this->militaryCalculator->getOffensivePowerMultiplier($attacker);
 
-        $this->calculationResult['away_defense'] = $this->militaryCalculator->getDefensivePower($dominion, null, null, $units);
+        $this->calculationResult['away_defense'] = $this->militaryCalculator->getDefensivePower($attacker, null, null, $units);
 
         if($target)
         {
-            $this->calculationResult['away_offense'] = $this->militaryCalculator->getOffensivePower($dominion, $target, $landRatio, $units, [], true); #
+            $this->calculationResult['away_offense'] = $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $units, [], true); #
         }
         else
         {
-            $this->calculationResult['away_offense'] = $this->militaryCalculator->getOffensivePower($dominion, $target, $landRatio, $units, $calc);
+            $this->calculationResult['away_offense'] = $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $units, $calc);
         }
 
         $unitsHome = [
-            0 => $dominion->military_draftees,
+            0 => $attacker->military_draftees,
         ];
 
-        foreach($dominion->race->units as $unit)
+        foreach($attacker->race->units as $unit)
         {
-            $unitsHome[] = $dominion->{'military_unit'.$unit->slot} - (isset($units[$unit->slot]) ? $units[$unit->slot] : 0);
+            $unitsHome[] = $attacker->{'military_unit'.$unit->slot} - (isset($units[$unit->slot]) ? $units[$unit->slot] : 0);
         }
 
-        $this->calculationResult['home_defense'] = $this->militaryCalculator->getDefensivePower($dominion, null, null, $unitsHome);
-        $this->calculationResult['home_defense_raw'] = $this->militaryCalculator->getDefensivePowerRaw($dominion, null, null, $unitsHome);
+        $this->calculationResult['home_defense'] = $this->militaryCalculator->getDefensivePower($attacker, null, null, $unitsHome);
+        $this->calculationResult['home_defense_raw'] = $this->militaryCalculator->getDefensivePowerRaw($attacker, null, null, $unitsHome);
 
-        $this->calculationResult['home_offense'] = $this->militaryCalculator->getOffensivePower($dominion, $target, $landRatio, $unitsHome, $calc);
-        $this->calculationResult['home_dpa'] = $this->calculationResult['home_defense'] / $dominion->land;
+        $this->calculationResult['home_offense'] = $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $unitsHome, $calc);
+        $this->calculationResult['home_dpa'] = $this->calculationResult['home_defense'] / $attacker->land;
 
         $this->calculationResult['max_op'] = $this->calculationResult['home_defense'] * (4/3);
         $this->calculationResult['min_dp'] = $this->calculationResult['away_offense'] / 3;
 
 
-        if($dominion->hasProtector())
+        if($attacker->hasProtector())
         {
-            $this->calculationResult['home_defense'] = $this->militaryCalculator->getDefensivePower($dominion->protector);
-            $this->calculationResult['home_defense_raw'] = $this->militaryCalculator->getDefensivePowerRaw($dominion->protector);
+            $this->calculationResult['home_defense'] = $this->militaryCalculator->getDefensivePower($attacker->protector);
+            $this->calculationResult['home_defense_raw'] = $this->militaryCalculator->getDefensivePowerRaw($attacker->protector);
             $this->calculationResult['max_op'] = $this->calculationResult['away_offense'];    
             $this->calculationResult['min_dp'] = $this->calculationResult['home_defense'];         
         }
 
-        if(isset($target) and $dominion->round->hasStarted() and $target->protection_ticks == 0)
+        if(isset($target) and $attacker->round->hasStarted() and $target->protection_ticks == 0)
         {
-            $this->calculationResult['land_conquered'] = $this->militaryCalculator->getLandConquered($dominion, $target, $landRatio*100);
+            $this->calculationResult['land_conquered'] = $this->militaryCalculator->getLandConquered($attacker, $target, $landRatio*100);
 
-            $dpMultiplierReduction = $this->militaryCalculator->getDefensiveMultiplierReduction($dominion);
+            $dpMultiplierReduction = $this->militaryCalculator->getDefensiveMultiplierReduction($attacker);
 
             // Void: immunity to DP mod reductions
             if ($target->getSpellPerkValue('immune_to_temples'))
@@ -178,27 +178,27 @@ class InvadeCalculationService
                 $dpMultiplierReduction = 0;
             }
             
-            $this->calculationResult['is_ambush'] = ($this->militaryCalculator->getRawDefenseAmbushReductionRatio($dominion) > 0);
+            $this->calculationResult['is_ambush'] = ($this->militaryCalculator->getRawDefenseAmbushReductionRatio($attacker) > 0);
     
             if($target->getSpellPerkValue('fog_of_war') and !$target->hasProtector())
             {
                 $this->calculationResult['target_dp'] = 'Unknown due to Sazal\'s Fog';
                 $this->calculationResult['target_fog'] = 1;
-                $this->calculationResult['away_offense'] = number_format($this->militaryCalculator->getOffensivePower($dominion, $target, $landRatio, $units, $calc));
+                $this->calculationResult['away_offense'] = number_format($this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $units, $calc));
                 $this->calculationResult['away_offense'] .= ' (may be inaccurate due to Sazal\'s Fog)';
             }
             elseif($target->hasProtector() and $target->protector->getSpellPerkValue('fog_of_war'))
             {
                 $this->calculationResult['target_dp'] = 'Unknown due to Sazal\'s Fog';
                 $this->calculationResult['target_fog'] = 1;
-                $this->calculationResult['away_offense'] = number_format($this->militaryCalculator->getOffensivePower($dominion, $target, $landRatio, $units, $calc));
+                $this->calculationResult['away_offense'] = number_format($this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $units, $calc));
                 $this->calculationResult['away_offense'] .= ' (may be inaccurate due to Sazal\'s Fog)';
             }
             else
             {
                 $this->calculationResult['target_dp'] = $this->militaryCalculator->getDefensivePower(
                     $target,
-                    $dominion,
+                    $attacker,
                     $landRatio,
                     null,
                     $dpMultiplierReduction,
@@ -213,8 +213,8 @@ class InvadeCalculationService
             }
         }
 
-        $this->calculationResult['wizard_points'] = $this->magicCalculator->getWizardPoints($dominion, 'offense');
-        $this->calculationResult['wizard_points_required'] = $this->magicCalculator->getWizardPointsRequiredToSendUnits($dominion, $units);
+        $this->calculationResult['wizard_points'] = $this->magicCalculator->getWizardPoints($attacker, 'offense');
+        $this->calculationResult['wizard_points_required'] = $this->magicCalculator->getWizardPointsRequiredToSendUnits($attacker, $units);
 
         return $this->calculationResult;
     }

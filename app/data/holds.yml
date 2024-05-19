@@ -752,3 +752,55 @@ windward_fortress:
     - obsidian
     - thunderstone
     - dragonscale
+
+hammerhead_bay:
+  name: Hammerhead Bay
+  ruler_name: Garnen Kegstone
+  description: Originally a small mining outpost, Hammerhead Bay has turned into a bustling port town thanks to its deep waters, strategic location, and predictable weather. The name comes from the shape of the bay, which is said to resemble the head of a hammer.
+  race: Dwarg
+  units_from: Dwarg, Gnome, Norse
+  desired_resources:
+    - food
+    - kelp
+    - gold
+    - gunpowder
+    - lumber
+    - pearls
+  sold_resources:
+    - brimmer
+    - gold
+    - gems
+    - ore
+
+ishuazk:
+  name: Ishuazk
+  ruler_name: Strong One
+  description: Half sunken into the swamp and the other half overgrown with vines and moss, Ishuazk is a hold of the Reptilians, known for its fierce warriors and their unique weapons.
+  race: Reptilians
+  units_from: Reptilians
+  desired_resources:
+    - gems
+    - gold
+    - kelp
+    - pearls
+  sold_resources:
+    - books
+    - gold
+    - mana
+
+blackmoss_cavern:
+  name: Blackmoss Cavern
+  ruler_name: Guh the Wise
+  description: Blackmoss Cavern stretches far into the Blackmoss Hill, a hold of Trolls, known for their unique concoctions and their love for shiny things.
+  race: Troll
+  units_from: Troll, Goblin
+  desired_resources:
+    - gold
+    - gems
+    - ore
+    - prisoner
+  sold_resources:
+    - gold
+    - kelp
+    - lumber
+    - mud

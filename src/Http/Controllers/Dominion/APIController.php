@@ -71,6 +71,43 @@ class APIController extends AbstractDominionController
         return $result;
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/api/v1/dominion/invasion",
+     *     tags={"Calculators"},
+     *     @OA\Response(
+     *         response="200",
+     *         description="Returns an array with data for invasion",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(type="number"))
+     *         )
+     *     )
+     * )
+     */
+    public function calculateInsightBattle(InvadeCalculationRequest $request): array
+    {
+        $attacker = Dominion::find($request->get('source_dominion'));
+        $target = Dominion::find($request->get('target_dominion'));
+        $invadeCalculationService = app(InvadeCalculationService::class);
+
+        try {
+            $result = $invadeCalculationService->calculate(
+                $attacker,
+                $target,
+                $request->get('unit'),
+                $request->get('calc')
+            );
+        } catch (GameException $e) {
+            return [
+                'result' => 'error',
+                'errors' => [$e->getMessage()]
+            ];
+        }
+
+        return $result;
+    }
+
     /**
      * @OA\Get(
      *     path="/api/v1/dominion/artefact-attack",

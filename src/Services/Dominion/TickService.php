@@ -337,27 +337,25 @@ class TickService
         });
     }
 
-public function clearFinishedQueues(Round $round)
-{
-    $attempts = 5; // Number of attempts to retry
-    for ($attempt = 1; $attempt <= $attempts; $attempt++) {
-        try {
-            DB::transaction(function () use ($round) {
-                #$round->dominionQueues->where('hours', '<=', 0)->delete();
-                $round->dominionQueues()->where('hours', '<=', 0)->delete();
-            });
-            break; // If successful, exit the loop
-        } catch (\Illuminate\Database\QueryException $e) {
-            if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
-                sleep(1); // Wait a bit before retrying
-                continue;
+    public function clearFinishedQueues(Round $round)
+    {
+        $attempts = 5; // Number of attempts to retry
+        for ($attempt = 1; $attempt <= $attempts; $attempt++) {
+            try {
+                DB::transaction(function () use ($round) {
+                    #$round->dominionQueues->where('hours', '<=', 0)->delete();
+                    $round->dominionQueues()->where('hours', '<=', 0)->delete();
+                });
+                break; // If successful, exit the loop
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
+                    sleep(1); // Wait a bit before retrying
+                    continue;
+                }
+                throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
             }
-            throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
         }
     }
-}
-
-    
 
     /**
      * Does an hourly tick on all active dominions.
@@ -448,7 +446,7 @@ public function clearFinishedQueues(Round $round)
 
         // Wait for queue to clear
         $attempts = 60;
-        $delay = (int)config('game.tick_queue_check_delay');
+        $delay = (int)config('ticking.queue_check_delay');
         
         retry($attempts, function () use ($delay, $dominion) {
             $i = isset($i) ? $i + 1 : 1;
@@ -1316,8 +1314,8 @@ public function clearFinishedQueues(Round $round)
         }
 
         // Wait for queue to clear
-        $attempts = 60;
-        $delay = (int)config('game.tick_queue_check_delay');
+        $attempts = (int)config('ticking.queue_retry_attempts');
+        $delay = (int)config('ticking.queue_check_delay');
         
         retry($attempts, function () use ($delay) {
             $i = isset($i) ? $i + 1 : 1;
@@ -1330,8 +1328,6 @@ public function clearFinishedQueues(Round $round)
             );
         
             if (Redis::llen('queues:tick') !== 0) {
-                #Log::info($infoString);
-                #dump($infoString);
                 xtLog($infoString);
                 throw new Exception('Tick queue not finish');
             }
@@ -1353,10 +1349,11 @@ public function clearFinishedQueues(Round $round)
         }
     
         // Wait for queue to clear
-        $attempts = 60;
-        $delay = (int) config('game.tick_queue_check_delay');
-        $initialDelay = roundInt(($delay * 2) / 1000);
-        $closingDelay = roundInt(($delay * 2) / 1000);
+        $attempts = (int)config('ticking.queue_retry_attempts');
+        $delay = (int)config('ticking.queue_check_delay');
+
+        $initialDelay = roundInt(($delay * 1) / 1000);
+        $closingDelay = roundInt(($delay * 1) / 1000);
         
         sleep($initialDelay); // Add initial delay before retrying
     
