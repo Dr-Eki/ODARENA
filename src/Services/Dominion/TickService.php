@@ -343,7 +343,8 @@ public function clearFinishedQueues(Round $round)
     for ($attempt = 1; $attempt <= $attempts; $attempt++) {
         try {
             DB::transaction(function () use ($round) {
-                $round->dominionQueues->where('hours', '<=', 0)->delete();
+                #$round->dominionQueues->where('hours', '<=', 0)->delete();
+                $round->dominionQueues()->where('hours', '<=', 0)->delete();
             });
             break; // If successful, exit the loop
         } catch (\Illuminate\Database\QueryException $e) {
