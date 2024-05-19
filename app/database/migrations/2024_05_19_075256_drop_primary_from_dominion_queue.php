@@ -16,7 +16,7 @@ return new class extends Migration
             $table->dropForeign(['dominion_id']);
     
             // Drop the existing primary key
-            $table->dropPrimary();
+            $table->dropPrimary('PRIMARY');
     
             // Add the new id column
             $table->bigIncrements('id')->first();
