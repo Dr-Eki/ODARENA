@@ -755,6 +755,30 @@ gloom_salvaged:
 gloom_plundered:
   name: Gloom plundered
 
+
+dragonscale_production:
+  name: Dragonscale production
+dragonscale_sold:
+  name: Dragonscale sold
+dragonscale_bought:
+  name: Dragonscale bought
+dragonscale_building:
+  name: Dragonscale building
+dragonscale_rezoning:
+  name: Dragonscale rezoning
+dragonscale_training:
+  name: Dragonscale training
+dragonscale_improvements:
+  name: Dragonscale improvements
+dragonscale_exploring:
+  name: Dragonscale exploring
+dragonscale_lost:
+  name: Dragonscale lost
+dragonscale_salvaged:
+  name: Dragonscale salvaged
+dragonscale_plundered:
+  name: Dragonscale plundered
+  
 # Land
 
 land_conquered:

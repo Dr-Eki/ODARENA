@@ -538,7 +538,7 @@ class UnitCalculator
             'net_victories_limit',
             'stat_pairing_limit',
             'amount_limit',
-            'minimum_victories'
+            #'minimum_victories'
         ];
     
         foreach ($perkKeys as $perkKey) {
