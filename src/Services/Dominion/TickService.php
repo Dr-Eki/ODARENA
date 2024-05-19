@@ -168,13 +168,6 @@ class TickService
             xtLog('* Queue, process, and wait for dominion precalculations.');
             $this->processPrecalculationJobs($round);
 
-            $dominions = $round->activeDominions()->get();
-            foreach($dominions as $dominion)
-            {
-                xtLog('* Precalculating dominion ' . $dominion->id . ' (' . $dominion->realm->number . ')...');
-                $this->tickCalculator->precalculateTick($dominion);
-            }
-
             // One transaction for all of these
             DB::transaction(function () use ($round)
             {
