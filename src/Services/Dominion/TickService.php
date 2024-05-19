@@ -223,8 +223,6 @@ class TickService
                 'is_ticking' => 0,
                 'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
             ])->save();
-
-
         }
 
         $finishedAt = now();
