@@ -108,6 +108,37 @@ class Round extends AbstractModel
         return $this->hasMany(RoundWinner::class);
     }
 
+    public function dominionQueues()
+    {
+        return $this->hasManyThrough(Dominion\Queue::class, Dominion::class);
+
+            /*
+        $query = DB::table('dominion_queue')
+            ->join('dominions', 'dominions.id', '=', 'dominion_queue.dominion_id')
+            ->where('dominions.round_id', $this->id)
+            ->select('dominion_queue.*');
+    
+        if ($hours !== null) {
+            $query->where('dominion_queue.hours', $hours);
+        }
+        */
+
+    }
+
+    public function getDominionQueues(?int $hours = null)
+    {
+        $query = DB::table('dominion_queue')
+            ->join('dominions', 'dominions.id', '=', 'dominion_queue.dominion_id')
+            ->where('dominions.round_id', $this->id)
+            ->select('dominion_queue.*');
+
+        if ($hours !== null) {
+            $query->where('dominion_queue.hours', $hours);
+        }
+
+        return $query->get();
+    }
+
     public function resources()
     {
         return $this->belongsToMany(

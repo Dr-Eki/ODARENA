@@ -337,17 +337,25 @@ class TickService
         });
     }
 
-    public function clearFinishedQueues(Round $round)
-    {
-        DB::transaction(function () use ($round) {
-            DB::table('dominion_queue')
-                ->join('dominions', 'dominion_queue.dominion_id', '=', 'dominions.id')
-                ->where('dominions.round_id', $round->id)
-                ->where('dominion_queue.hours', '<=', 0)
-                ->lockForUpdate() // Lock rows for update to prevent concurrent modification
-                ->delete();
-        });
+public function clearFinishedQueues(Round $round)
+{
+    $attempts = 5; // Number of attempts to retry
+    for ($attempt = 1; $attempt <= $attempts; $attempt++) {
+        try {
+            DB::transaction(function () use ($round) {
+                $round->dominionQueues->where('hours', '<=', 0)->delete();
+            });
+            break; // If successful, exit the loop
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
+                sleep(1); // Wait a bit before retrying
+                continue;
+            }
+            throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
+        }
     }
+}
+
     
 
     /**
