@@ -72,20 +72,20 @@ class HoldService
         }
     }
 
-    public function setHoldBuyPrice(Hold $hold, int $tick, string $resourceKey): HoldPrice
+    public function setHoldBuyPrice(Hold $hold, int $tick, string $resourceKey): void
     {
         $price = $this->holdCalculator->getNewResourceBuyPrice($hold, $resourceKey);
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
 
-        return HoldPrice::updateOrInsert(['hold_id' => $hold->id, 'resource_id' => $resource->id, 'tick' => $tick, 'action' => 'buy'], ['price' => $price]);
+        HoldPrice::updateOrInsert(['hold_id' => $hold->id, 'resource_id' => $resource->id, 'tick' => $tick, 'action' => 'buy'], ['price' => $price]);
     }
 
-    public function setHoldSellPrice(Hold $hold, int $tick, string $resourceKey): HoldPrice
+    public function setHoldSellPrice(Hold $hold, int $tick, string $resourceKey): void
     {
         $price = $this->holdCalculator->getNewResourceSellPrice($hold, $resourceKey);
         $resource = Resource::where('key', $resourceKey)->firstOrFail();
 
-        return HoldPrice::updateOrInsert(['hold_id' => $hold->id, 'resource_id' => $resource->id, 'tick' => $tick, 'action' => 'sell'], ['price' => $price]);
+        HoldPrice::updateOrInsert(['hold_id' => $hold->id, 'resource_id' => $resource->id, 'tick' => $tick, 'action' => 'sell'], ['price' => $price]);
     }
 
     public function updateAllHoldSentiments(Round $round): void
