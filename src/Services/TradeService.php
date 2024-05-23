@@ -3,7 +3,7 @@
 // We want strict types here.
 declare(strict_types=1);
 
-namespace OpenDominion\Services\Dominion;
+namespace OpenDominion\Services;
 
 use Log;
 use OpenDominion\Models\Round;
@@ -44,8 +44,6 @@ class TradeService
 
         foreach ($activeTradeRoutes as $tradeRoute)
         {
-            #dump('Handling trade route: ' . $tradeRoute->id . ' between ' . $tradeRoute->dominion->name . ' and ' . $tradeRoute->hold->name);
-
             # Handle queues
             $this->queueService->handleTradeRouteQueues($tradeRoute);
 
@@ -174,25 +172,17 @@ class TradeService
 
         $boughtResourceAmount = $tradeResult['bought_resource_amount'];
 
-        # Queue up outgoing
-        $this->queueService->queueTrade($tradeRoute, 'export', $soldResource, $soldResourceAmount);
-
         # Remove the resource from the dominion
-        
-        if($tradeResult['dominion_has_enough_from_income'])
-        {
-            // Do nothing
-        }
-        else
-        {
-            $this->dominionResourceService->updateResources($dominion, [$soldResource->key => ($tradeResult['dominion_amount_from_stockpile'] * -1)]);
-        }
-
-        # Queue up incoming
-        $this->queueService->queueTrade($tradeRoute, 'import', $boughtResource, $boughtResourceAmount);
+        $this->dominionResourceService->updateResources($dominion, [$soldResource->key => ($soldResourceAmount * -1)]);
 
         # Remove the resource from the hold
         $this->holdResourceService->update($hold, [$boughtResource->key => ($boughtResourceAmount * -1)]);
+
+        # Queue up outgoing
+        $this->queueService->queueTrade($tradeRoute, 'export', $soldResource, $soldResourceAmount);
+
+        # Queue up incoming
+        $this->queueService->queueTrade($tradeRoute, 'import', $boughtResource, $boughtResourceAmount);
 
         # Record trade ledger
         TradeLedger::create([

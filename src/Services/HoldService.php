@@ -50,18 +50,10 @@ class HoldService
         $this->resourceService = app(ResourceService::class);
     }
 
-    public function setRoundHoldPrices(Round $round): void
+    public function setHoldPrices(Hold $hold): void
     {
-        foreach ($round->holds as $hold)
-        {
-            $this->setHoldPrices($hold, $round->ticks);
-        }
-    }
-
-    public function setHoldPrices(Hold $hold, int $tick): void
-    {
-        $this->setHoldBuyPrices($hold, $tick);
-        $this->setHoldSellPrices($hold, $tick);
+        $this->setHoldBuyPrices($hold, $hold->round->ticks);
+        $this->setHoldSellPrices($hold, $hold->round->ticks);
     }
 
     public function setHoldBuyPrices(Hold $hold, int $tick): void
@@ -158,33 +150,6 @@ class HoldService
 
         $hold->land += $landGrowth;
         $hold->save();
-    }
-
-    public function handleHoldTick(Round $round): void
-    {
-        # Update sentiments
-        $this->updateAllHoldSentiments($round);
-
-        # Update prices
-        $this->setRoundHoldPrices($round);
-
-        # Update resources
-        foreach ($round->holds as $hold)
-        {
-            # Handle queues
-            $this->queueService->handleHoldQueues($hold);
-
-            # Handle resource production
-            $this->handleHoldResourceProduction($hold);
-
-            # Handle building construction
-            $this->handleHoldConstruction($hold);
-
-        }
-
-        # Update hold land
-        $this->updateHoldLands($round);
-
     }
 
     public function discoverHold(Round $round, Dominion $discoverer = null): ?Hold

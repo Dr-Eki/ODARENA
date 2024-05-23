@@ -285,7 +285,7 @@ class Hold extends AbstractModel
     
         $result = DB::select($sql, $bindings);
     
-        return (float)$result[0]->price ?? 0;
+        return (isset($result[0]->price) ? (float)$result[0]->price : 0);
     }
 
     public function sellPrice(string $resourceKey): float
@@ -314,7 +314,7 @@ class Hold extends AbstractModel
     
         $result = DB::select($sql, $bindings);
     
-        return (float)$result[0]->price ?? 0;
+        return (isset($result[0]->price) ? (float)$result[0]->price : 0);
     }
 
 #

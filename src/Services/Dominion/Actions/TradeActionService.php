@@ -145,9 +145,9 @@ class TradeActionService
             throw new GameException('You cannot buy this resource.');
         }
 
-        if ($soldResourceAmount > $this->tradeCalculator->getResourceMaxOfferableAmount($dominion, $soldResource))
+        if ($soldResourceAmount > ($resourceMaxOfferableAmount = $this->tradeCalculator->getResourceMaxOfferableAmount($dominion, $soldResource)))
         {
-            throw new GameException('You cannot trade this amount of this resource. You can at most offer ' . number_format($this->tradeCalculator->getResourceMaxOfferableAmount($dominion, $soldResource)) . '.');
+            throw new GameException("You cannot trade that much {$soldResource->name}. You can at most offer " . number_format($resourceMaxOfferableAmount) . ".");
         }
 
         if($this->tradeCalculator->getBoughtResourceAmount($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource) <= 0)

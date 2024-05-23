@@ -34,7 +34,7 @@
                                         <th><i class="fa-solid fa-arrow-right fa-fw"></i> Sold</th>
                                         <th><i class="fa-solid fa-arrow-left fa-fw"></i> Due</th>
                                         <th>Consumed</th>
-                                        <th>Available</th>
+                                        <th>Stockpile</th>
                                         <th>Protected</th>
                                         {{-- <th>Interest</th> --}}
                                         <th>Max Storage</th>

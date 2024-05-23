@@ -569,8 +569,6 @@ class ResourceCalculator
         #$consumption += $this->getResourceTotalSoldPerTick($dominion, $consumedResource);
 
         return (int)max(0, $consumption);
-
-
     }
 
     public function getResourceTotalSoldPerTick(Dominion $dominion, string $resourceKey): float
@@ -910,9 +908,9 @@ class ResourceCalculator
     {
         $production = $this->getProduction($dominion, $resourceKey);
         $consumption = $this->getConsumption($dominion, $resourceKey);
-        $sold = $this->getResourceTotalSoldPerTick($dominion, $resourceKey);
+        #$sold = $this->getResourceTotalSoldPerTick($dominion, $resourceKey);
 
-        $netProduction = $production - $consumption - $sold;
+        $netProduction = $production - $consumption;# - $sold;
         $netProduction = (int)floor($netProduction);
 
         return $netProduction;

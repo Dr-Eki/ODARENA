@@ -72,6 +72,13 @@ class TradeController extends AbstractDominionController
     public function getHold(Hold $hold)
     {
 
+        $dominion = $this->getSelectedDominion();
+        if($hold->round->id !== $dominion->round->id)
+        {
+            xtLog("[{$dominion->id}] Dominion tried to access an out-of-round hold [{$hold->id}].");
+            return redirect()->route('dominion.trade.routes');
+        }
+
         return view('pages.dominion.trade.hold', [
             'hold' => $hold,
             

@@ -14,7 +14,10 @@ use Illuminate\Support\Facades\Redis;
 #use Laravel\Horizon\Horizon;
 
 use OpenDominion\Jobs\ProcessDominionJob;
+use OpenDominion\Jobs\ProcessHoldJob;
 use OpenDominion\Jobs\ProcessPrecalculationJob;
+use OpenDominion\Jobs\ProcessTradeRouteJob;
+
 
 use OpenDominion\Helpers\RoundHelper;
 
@@ -27,9 +30,7 @@ use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\RoundWinner;
 use OpenDominion\Models\Tech;
-#use OpenDominion\Models\Dominion\Tick;
 
-#use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\MoraleCalculator;
@@ -37,9 +38,9 @@ use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\TickCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
 
-
 use OpenDominion\Services\BarbarianService;
 use OpenDominion\Services\HoldService;
+use OpenDominion\Services\TradeService;
 use OpenDominion\Services\NotificationService;
 use OpenDominion\Services\Dominion\ArtefactService;
 use OpenDominion\Services\Dominion\BuildingService;
@@ -57,16 +58,12 @@ class TickService
     protected $now;
     protected $temporaryData = [];
 
-    #protected $buildingCalculator;
-    #protected $conversionCalculator;
     protected $espionageCalculator;
     protected $improvementCalculator;
-    #protected $landCalculator;
     protected $magicCalculator;
     protected $militaryCalculator;
     protected $moraleCalculator;
     protected $notificationService;
-    #protected $populationCalculator;
     protected $prestigeCalculator;
     protected $productionCalculator;
     protected $realmCalculator;
@@ -75,10 +72,6 @@ class TickService
     protected $spellCalculator;
     protected $tickCalculator;
     protected $unitCalculator;
-
-    #protected $improvementHelper;
-    #protected $landHelper;
-    #protected $unitHelper;
     protected $roundHelper;
 
     protected $artefactService;
@@ -100,28 +93,14 @@ class TickService
     public function __construct()
     {
         $this->now = now();
-        #$this->conversionCalculator = app(ConversionCalculator::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
-        #$this->landCalculator = app(LandCalculator::class);
-        #$this->magicCalculator = app(MagicCalculator::class);
         $this->notificationService = app(NotificationService::class);
-        #$this->populationCalculator = app(PopulationCalculator::class);
-        #$this->prestigeCalculator = app(PrestigeCalculator::class);
-        #$this->productionCalculator = app(ProductionCalculator::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
-        #$this->spellCalculator = app(SpellCalculator::class);
-        #$this->buildingCalculator = app(BuildingCalculator::class);
         $this->espionageCalculator = app(EspionageCalculator::class);
-        #$this->militaryCalculator = app(MilitaryCalculator::class);
         $this->moraleCalculator = app(MoraleCalculator::class);
-        #$this->realmCalculator = app(RealmCalculator::class);
-        #$this->sorceryCalculator = app(SorceryCalculator::class);
         $this->tickCalculator = app(TickCalculator::class);
         $this->unitCalculator = app(UnitCalculator::class);
-
-        #$this->improvementHelper = app(ImprovementHelper::class);
-        #$this->landHelper = app(LandHelper::class);
-        #$this->unitHelper = app(UnitHelper::class);
+        
         $this->roundHelper = app(RoundHelper::class);
 
         $this->artefactService = app(ArtefactService::class);
@@ -194,18 +173,18 @@ class TickService
                 $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
             });
     
-            // Separate DB transaction for trade routes
-            DB::transaction(function () use ($round) {
-                xtLog('* Update all trade routes');
-                $this->handleHoldsAndTradeRoutes($round);
-            });
-    
             // Each job is a DB transaction
             xtLog('* Queue, process, and wait for dominion jobs.');
             $this->processDominionJobs($round);
     
             xtLog('* Clear out all finished queues');
             $this->clearFinishedQueues($round);
+
+            // Separate DB transaction for trade routes
+            DB::transaction(function () use ($round) {
+                xtLog('* Update all trade routes');
+                $this->handleHoldsAndTradeRoutes($round);
+            });
     
             $this->now = now();
     
@@ -365,15 +344,11 @@ class TickService
     public function tickManually(Dominion $dominion): void
     {
 
-        Log::debug(sprintf(
-            '[TICK] Manual tick started for %s (# %s).',
-            $dominion->name,
-            $dominion->realm->number ?? 'N/A'
-        ));
+        xtLog("[{$dominion->id}] * Manual tick started");
 
         if($dominion->protection_ticks <= 0)
         {
-            Log::debug('[TICK] Manual tick skipped for %s, protection ticks are <=0.');
+            xtLog("[{$dominion->id}] ** Manual tick skipped, protection ticks are <=0.");
             return;
         }
 
@@ -441,7 +416,7 @@ class TickService
         xtLog("[{$dominion->id}] ** Audit and repair terrain");
         $this->terrainService->auditAndRepairTerrain($dominion);
 
-        xtLog("[{$dominion->id}] ** Queuing up manual tick in ProcessDominionJob");
+        xtLog("** [{$dominion->id}] Queuing up manual tick in ProcessDominionJob");
         ProcessDominionJob::dispatch($dominion)->onQueue('manual_tick');
 
         // Wait for queue to clear
@@ -1309,7 +1284,7 @@ class TickService
         // Queue up all dominions for precalculation (simultaneous processing)
         foreach ($dominions as $dominion)
         {
-            xtLog("[{$dominion->id}] ** Queuing up precalculation of dominion {$dominion->id}: {$dominion->name}");
+            xtLog("** [{$dominion->id}] Queuing up precalculation of dominion: {$dominion->name}");
             ProcessPrecalculationJob::dispatch($dominion)->onQueue('tick');
         }
 
@@ -1343,8 +1318,7 @@ class TickService
     
         // Queue up all dominions for ticking (simultaneous processing)
         foreach ($dominions as $dominion) {
-            Log::info("** Queueing up dominion {$dominion->id}: {$dominion->name}");
-            dump("** Queuing up dominion {$dominion->id}: {$dominion->name}");
+            xtLog("** [{$dominion->id}] Queueing up dominion for processing job: {$dominion->name}");
             ProcessDominionJob::dispatch($dominion)->onQueue('tick');
         }
     
@@ -1376,7 +1350,69 @@ class TickService
         sleep($closingDelay); // Add initial delay before retrying
     }
 
+    public function processTradeRouteJobs(Round $round): void
+    {
+        $activeTradeRoutes = $round->tradeRoutes->whereIn('status', [0,1])->sortBy('id');
+
+        // Queue up all dominions for precalculation (simultaneous processing)
+        foreach ($activeTradeRoutes as $tradeRoute)
+        {
+            xtLog("** [TR{$tradeRoute->id}] Queueing up trade route for processing job: {$tradeRoute->dominion->name}:{$tradeRoute->hold->name}");
+            ProcessTradeRouteJob::dispatch($tradeRoute)->onQueue('tick');
+        }
+
+        // Wait for queue to clear
+        $attempts = (int)config('ticking.queue_retry_attempts');
+        $delay = (int)config('ticking.queue_check_delay');
+        
+        retry($attempts, function () use ($delay) {
+            $i = isset($i) ? $i + 1 : 1;
+        
+            $infoString = sprintf(
+                '** [%s] Waiting for queued ProcessTradeRouteJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
+                now()->format('Y-m-d H:i:s'),
+                Redis::llen('queues:tick'),
+                number_format($delay)
+            );
+        
+            if (Redis::llen('queues:tick') !== 0) {
+                xtLog($infoString);
+                throw new Exception('Tick queue not finish');
+            }
+        }, $delay);
+    }
     
+    public function processHoldJobs(Round $round): void
+    {
+
+        // Queue up all dominions for precalculation (simultaneous processing)
+        foreach ($round->holds as $hold)
+        {
+            xtLog("** [HL{$hold->id}] Queueing up hold for processing job: {$hold->name}");
+            ProcessHoldJob::dispatch($hold)->onQueue('tick');
+        }
+
+        // Wait for queue to clear
+        $attempts = (int)config('ticking.queue_retry_attempts');
+        $delay = (int)config('ticking.queue_check_delay');
+        
+        retry($attempts, function () use ($delay) {
+            $i = isset($i) ? $i + 1 : 1;
+        
+            $infoString = sprintf(
+                '** [%s] Waiting for queued ProcessHoldJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
+                now()->format('Y-m-d H:i:s'),
+                Redis::llen('queues:tick'),
+                number_format($delay)
+            );
+        
+            if (Redis::llen('queues:tick') !== 0) {
+                xtLog($infoString);
+                throw new Exception('Tick queue not finish');
+            }
+        }, $delay);
+    }
+
     public function handleHoldsAndTradeRoutes(Round $round): void
     {
         if(!$round->getSetting('trade_routes'))
@@ -1384,25 +1420,23 @@ class TickService
             return;
         }
 
+        // Holds first to update hold resources from production
+        $this->processHoldJobs($round);
+        $this->processTradeRouteJobs($round);
+
+        xtLog('** Handle holds ticking (sentiment and price updates)');
         $holdService = app(HoldService::class);
-        $tradeService = app(TradeService::class);
-        
 
-        if(config('game.extended_logging')) { Log::debug('** Handle trade routes'); dump('** Handle trade routes'); }
-        $tradeService->handleTradeRoutesTick($round);
-
-        if(config('game.extended_logging')) { Log::debug('** Handle holds ticking'); dump('** Handle holds ticking'); }
-        $holdService->handleHoldTick($round);
+        xtLog('** Update all hold sentiments');
+        $holdService->updateAllHoldSentiments($round);
 
         $discoverHoldChance = rand(1, (int)config('holds.tick_discover_hold_chance'));
 
-        $discoveryString = '** Hold discovery chance value: '. $discoverHoldChance . ' (discover if this value is 1).';
-        Log::info($discoveryString);
-        if(config('game.extended_logging')) { Log::debug($discoveryString); dump($discoveryString); }
+        xtLog("** Hold discovery chance value: $discoverHoldChance (discover if this value is 1).");
 
         if($discoverHoldChance == 1)
         {
-            if(config('game.extended_logging')) { Log::debug('*** Hold discovered'); dump('*** Hold discovered'); }
+            xtLog('*** Hold discovered');
             $holdService->discoverHold($round);
         }
     }

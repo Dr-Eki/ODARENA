@@ -182,6 +182,11 @@ class TradeCalculator
         {
             $resourceNetProduction += $currentAmountSold;
         }
+        else
+        {
+            // Remove amount sold each tick from net production
+            $resourceNetProduction -= $this->dominionResourceCalculator->getResourceTotalSoldPerTick($dominion, $resource->key);
+        }
 
         if($isProducingResource and $resourceNetProduction <= 0)
         {
@@ -190,7 +195,7 @@ class TradeCalculator
 
         $resourceCurrentAmount = $dominion->{'resource_' . $resource->key};
 
-        $max = $isProducingResource ? $resourceNetProduction : $resourceCurrentAmount;
+        $max = floorInt($isProducingResource ? $resourceNetProduction : $resourceCurrentAmount);
 
         return $max;
     }
@@ -339,22 +344,20 @@ class TradeCalculator
         # boughtResource = bought BY THE PLAYER
 
         $stockpile = $hold->{'resource_' . $boughtResource->key};
-        $production = 0;#$this->holdResourceCalculator->getProduction($hold, $boughtResource->key);
+        // Production is accounted for, this happens AFTER production.
+        #$production = $this->holdResourceCalculator->getProduction($hold, $boughtResource->key);
 
-        return ($production + $stockpile) >= $amountToBeExported;
+        return $stockpile >= $amountToBeExported;
     }
 
     public function canDominionAffordTrade(Dominion $dominion, Resource $soldResource, int $soldAmount): bool
     {
-
         # What the hold buys and the PLAYER SELLS
-
         $stockpile = $dominion->{'resource_' . $soldResource->key};
-        $production = $this->dominionResourceCalculator->getProduction($dominion, $soldResource->key);
+        // Production is accounted for, this happens AFTER production.
+        #$production = $this->dominionResourceCalculator->getProduction($dominion, $soldResource->key);
 
-        #Log::info("[CAN DOMINION AFFORD TRADE] Dominion: {$dominion->name} / Stockpile: $stockpile / Production: $production / Sold: $soldAmount");
-
-        return ($production + $stockpile) >= $soldAmount;
+        return $stockpile >= $soldAmount;
     }
 
     public function getSentimentRequiredToEstablishTradeRoute(Hold $hold, Dominion $dominion): int

@@ -702,7 +702,7 @@ class ProcessDominionJob implements ShouldQueue
 
         if(!empty($unitsGenerated))
         {
-            xtLog("[{$afflicted->id}] *** Queuing units generated from pestilences.");
+            xtLog("*** [{$afflicted->id}] Queuing units generated from pestilences.");
 
             foreach($unitsGenerated as $slot => $amount)
             {

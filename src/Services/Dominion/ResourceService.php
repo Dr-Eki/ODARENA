@@ -3,7 +3,6 @@
 namespace OpenDominion\Services\Dominion;
 
 use DB;
-use Carbon\Carbon;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionResource;
 use OpenDominion\Models\Realm;
@@ -12,28 +11,50 @@ use OpenDominion\Models\Resource;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\RoundResource;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
-use OpenDominion\Helpers\ResourceHelper;
-use OpenDominion\Services\Dominion\QueueService;
 
 class ResourceService
 {
 
-    /** @var ResourceHelper */
-    protected $resourceHelper;
-
-    /** @var ResourceCalculator */
     protected $resourceCalculator;
-
-    /** @var QueueService */
-    protected $queueService;
 
     public function __construct()
     {
-        $this->resourceHelper = app(ResourceHelper::class);
         $this->resourceCalculator = app(ResourceCalculator::class);
-        $this->queueService = app(QueueService::class);
     }
 
+    public function updateResources(Dominion $hold, array $resourceKeys): void
+    {
+        DB::transaction(function () use ($hold, $resourceKeys) {
+            foreach($resourceKeys as $resourceKey => $amount) {
+                $resource = Resource::where('key', $resourceKey)->first();
+    
+                $holdHasResource = DominionResource::where('dominion_id', $hold->id)
+                    ->where('resource_id', $resource->id)
+                    ->exists();
+    
+                if($holdHasResource) {
+                    $holdResource = DominionResource::where('dominion_id', $hold->id)
+                        ->where('resource_id', $resource->id)
+                        ->first();
+    
+                    $holdResource->amount += $amount;
+    
+                    if ($holdResource->amount <= 0) {
+                        $holdResource->delete();
+                    } else {
+                        $holdResource->save();
+                    }
+                } elseif($amount > 0) {
+                    DominionResource::create([
+                        'dominion_id' => $hold->id,
+                        'resource_id' => $resource->id,
+                        'amount' => $amount,
+                    ]);
+                }
+            }
+        });
+    }
+    /*
     public function updateResources(Dominion $dominion, array $resourceKeys): void
     {
         foreach($resourceKeys as $resourceKey => $amount)
@@ -45,7 +66,7 @@ class ResourceService
             {
                 $amount = intval(max(0, $amount));
 
-                if($this->resourceCalculator->dominionHasResource($dominion, $resourceKey))
+                if($dominion->{'resource_' . $resourceKey})
                 {
                     DB::transaction(function () use ($dominion, $resource, $amount)
                     {
@@ -72,7 +93,7 @@ class ResourceService
 
                 $amountToRemove = min(abs($amount), $owned);
 
-                if($this->resourceCalculator->dominionHasResource($dominion, $resource->key))
+                if($owned)
                 {
                     if($amountToRemove <= $owned)
                     {
@@ -84,25 +105,15 @@ class ResourceService
                             ->decrement('amount', $amountToRemove);
                         });
                     }
-                    # All
-                    /*
-                    elseif($amountToRemove == $owned)
-                    {
-                        DB::transaction(function () use ($dominion, $resource)
-                        {
-                            DominionResource::where('dominion_id', $dominion->id)->where('resource_id', $resource->id)
-                            ->delete();
-                        });
-                    }
-                    */
                     else
                     {
-                        dd('[MEGA ERROR] Trying to remove more of a resource than you have. This might have been a temporary glitch due to multiple simultaneous events. Try again, but please report your findings on Discord.', $resource, $amountToRemove, $owned);
+                        xtLog("[{$dominion->id}] *** Tried to remove more of a resource than dominion has. Resource: {$resource->key}, Amount: {$amountToRemove}, Owned: {$owned}");
                     }
                 }
             }
         }
     }
+    */
 
     public function updateRealmResources(Realm $realm, array $resourceKeys): void
     {
