@@ -274,6 +274,7 @@ class TickService
             ->delete();
     }
 
+    /*
     protected function cleanupQueues(Dominion $dominion)
     {
         $finished = DB::table('dominion_queue')
@@ -312,6 +313,7 @@ class TickService
                 ->delete();
         });
     }
+    */
 
     public function clearFinishedQueues(Round $round)
     {
