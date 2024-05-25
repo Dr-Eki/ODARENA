@@ -55,7 +55,7 @@ class ProcessHoldJob implements ShouldQueue
 
         # Update hold land
         xtLog("*** [HL{$this->hold->id}] Updating land construction");
-        $this->holdService->$this->updateHoldLand($this->hold);
+        $this->holdService->updateHoldLand($this->hold);
 
     }
 }
