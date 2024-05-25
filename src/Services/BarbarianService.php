@@ -306,11 +306,11 @@ class BarbarianService
                     $landGainRatio = rand($this->barbarianCalculator->getSetting('LAND_GAIN_MIN'), $this->barbarianCalculator->getSetting('LAND_GAIN_MAX'))/1000;
 
                     $logString .= "\t\t* Invasion:\n";
-                    $logString .= "\t\t**Land gain ratio: " . number_format($landGainRatio*100,2) . "% \n";
+                    $logString .= "\t\t** Land gain ratio: " . number_format($landGainRatio*100,2) . "% \n";
 
                     # Calculate the amount of acres to grow.
                     $landGained = intval($dominion->land * $landGainRatio);
-                    $logString .= "\t\t**Land to gain: " . number_format($landGained). "\n";
+                    $logString .= "\t\t** Land to gain: " . number_format($landGained). "\n";
 
                     # After 384 ticks into the round, Barbarian will abort invasion if the land gained would put the Barbarian within 60% of the largest dominion of the round
                     if($dominion->round->ticks > 384 and !(env('APP_ENV') == 'local'))

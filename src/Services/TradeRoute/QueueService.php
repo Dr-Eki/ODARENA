@@ -120,6 +120,17 @@ class QueueService
                 }
 
                 #$tradeRoute->save();
+
+                $isDeleted = $finishedQueues->each->delete();
+                if($isDeleted)
+                {
+                    xtLog("[TR{$tradeRoute->id}] ***** Deleted queue {$finishedQueue->id}");
+                }
+                else
+                {
+                    xtLog("[TR{$tradeRoute->id}] ***** Failed to delete queue {$finishedQueue->id}");
+                }
+
             }
 
             $finishedQueues->each->delete();
