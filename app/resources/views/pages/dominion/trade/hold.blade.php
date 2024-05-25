@@ -48,7 +48,12 @@
                             </tr>
                             <tr>
                                 <td>Land:</td>
-                                <td>{{ number_format($hold->land) }}</td> 
+                                <td>
+                                    <span data-toggle="tooltip" data-placement="top" title='<span class="text-muted">Barren:</span>&nbsp;{{ number_format($hold->getBarrenLand()) }}'>
+                                    {{ number_format($hold->land) }}
+                                    </span>
+                                    
+                                </td> 
                             </tr>
                             <tr>
                                 <td>{{-- Str::plural($raceHelper->getPeasantsTerm($hold->race)) --}}Population:</td>

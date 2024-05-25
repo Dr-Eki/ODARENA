@@ -238,7 +238,7 @@ class Hold extends AbstractModel
 
     public function getBarrenLand()
     {
-        return $this->land - $this->buildings->sum('amount');
+        return max(0, $this->land - $this->buildings->sum('amount'));
     }
 
     # Get units by state
