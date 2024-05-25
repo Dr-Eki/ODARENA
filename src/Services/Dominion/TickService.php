@@ -1300,7 +1300,7 @@ class TickService
         // Queue up all dominions for precalculation (simultaneous processing)
         foreach ($activeTradeRoutes as $tradeRoute)
         {
-            xtLog("** [TR{$tradeRoute->id}] Queueing up trade route for processing job: {$tradeRoute->dominion->name}:{$tradeRoute->hold->name}");
+            xtLog("** [TR{$tradeRoute->id}] Queueing up trade route for processing job: {$tradeRoute->dominion->name} (ID {$tradeRoute->dominion->id}) and {$tradeRoute->hold->name}");
             ProcessTradeRouteJob::dispatch($tradeRoute)->onQueue('tick');
         }
 

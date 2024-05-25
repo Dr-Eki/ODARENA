@@ -110,7 +110,7 @@ class QueueService
                 if($finishedQueue->type == 'import')
                 {
                     $this->dominionResourceService->updateResources($tradeRoute->dominion, [$finishedQueue->resource->key => $amount]);
-                    xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to dominion {$tradeRoute->dominion->name}");
+                    xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to dominion {$tradeRoute->dominion->name} (ID {$tradeRoute->dominion->id})");
                 }
                 elseif($finishedQueue->type == 'export')
                 {
