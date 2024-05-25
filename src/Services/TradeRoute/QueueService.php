@@ -64,8 +64,12 @@ class QueueService
         $queue->increment('amount', $amount);
         $queue->units = json_encode($units);
         $queue->save();
+        
+        $preposition1 = ($type == 'import') ? 'to' : 'from';
+        $preposition2 = ($type == 'import') ? 'from' : 'to';
 
-        #dump('> Queued ' . $type . ' of ' . $amount . ' ' . $resource->name . ' for trade route ' . $tradeRoute->id . ' at tick ' . $tick . ', going from ' . $tradeRoute->dominion->name . ' to ' . $tradeRoute->hold->name);
+        xtLog("[{$tradeRoute->id}] **** Queued $type of $amount {$resource->name} for trade route at tick $tick $preposition1 {$tradeRoute->dominion->name} $preposition2 {$tradeRoute->hold->name}");
+        
     }
 
     public function handleTradeRouteQueues(TradeRoute $tradeRoute): void
@@ -85,8 +89,7 @@ class QueueService
 
     public function finishTradeRouteQueues(TradeRoute $tradeRoute): void
     {
-        #$finishedQueues = TradeRoute\Queue::where('tick',0)->where('trade_route_id', $tradeRoute->id)->get();
-        
+
         $finishedQueues = $tradeRoute->queues()
             #->whereIn('status', [0, 1])
             #->where('status', 1)
@@ -105,7 +108,7 @@ class QueueService
             {
                 $amount = $finishedQueue->amount;
     
-                xtLog("[TR{$tradeRoute->id}] **** Finished queue {$finishedQueue->id} of type {$finishedQueue->type} with {$finishedQueue->amount} {$finishedQueue->resource->name} for trade route {$tradeRoute->id} at tick {$finishedQueue->tick} ($key/" . ($finishedQueues->count()-1) . ")");
+                xtLog("[TR{$tradeRoute->id}] **** Finished queue {$finishedQueue->id} of type {$finishedQueue->type} with {$finishedQueue->amount} {$finishedQueue->resource->name} for trade route {$tradeRoute->id} at tick {$finishedQueue->tick} ($key/" . ($finishedQueues->count()-1) . "), dominion ID {$tradeRoute->dominion->id} and hold ID {$tradeRoute->hold->id}");
 
                 if($finishedQueue->type == 'import')
                 {
