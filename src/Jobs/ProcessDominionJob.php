@@ -194,7 +194,7 @@ class ProcessDominionJob implements ShouldQueue
         #xtLog("[{$this->dominion->id}] ** Re-precalculate tick");
         #$this->tickCalculator->precalculateTick($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number}), ID {$this->dominion->id}");
+        xtLog("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number})");
         $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
     }
 
