@@ -107,6 +107,8 @@ class DataSyncCommand extends Command implements CommandInterface
     public function handle(): void
     {
         $start = now();
+        xtLog("[$start] Syncing game data...");
+
         DB::transaction(function () {
             $this->syncRaceTerrains();
 
@@ -132,8 +134,9 @@ class DataSyncCommand extends Command implements CommandInterface
         });
 
         $finish = now();
+        xtLog("[$finish] Game data synced in " . number_format($start->diffInMilliseconds($finish)) . ' ms');
 
-        $this->info('Game data synced in ' . number_format($finish->diffInMilliseconds($start)) . ' ms');
+        $this->info("[$finish] Game data synced in " . number_format($start->diffInMilliseconds($finish)) . ' ms');
     }
 
     /**
