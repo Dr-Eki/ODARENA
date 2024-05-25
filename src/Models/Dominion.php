@@ -405,6 +405,13 @@ class Dominion extends AbstractModel
         return in_array($resourceKey, $this->foreignResourceKeys());
     }
 
+    public function getResourceKeysInDisplayOrder(): array
+    {
+        $resourceKeys = $this->race->resources;
+        $foreignResourceKeys = $this->foreignResourceKeys();
+        return array_merge($resourceKeys, $foreignResourceKeys);
+    }
+
     # This code enables the following syntax:
     # $dominion->{'terrain_' . $terrainKey} and similar
 

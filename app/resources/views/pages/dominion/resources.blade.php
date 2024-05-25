@@ -40,9 +40,9 @@
                                         <th>Max Storage</th>
                                     </tr>
                                 </thead>
-                                @foreach($selectedDominion->resources as $resource)
+                                @foreach($selectedDominion->getResourceKeysInDisplayOrder() as $resourceKey)
                                     @php
-                                        #$resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
+                                        $resource = OpenDominion\Models\Resource::where('key', $resourceKey)->first();
                                         $isForeign = $selectedDominion->isForeignResourceKey($resource->key);
                                         $production = $resourceCalculator->getProduction($selectedDominion, $resource->key);
                                         $soldAmount = $resourceCalculator->getResourceTotalSoldPerTick($selectedDominion, $resource->key);
