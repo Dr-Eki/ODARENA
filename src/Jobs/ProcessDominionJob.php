@@ -222,7 +222,7 @@ class ProcessDominionJob implements ShouldQueue
             $amount = intval($finishedBuildingInQueue->amount);
             $buildingsToAdd[$buildingKey] = $amount;
 
-            xtLog("*** {$amount} building {$buildingKey} finished.");
+            xtLog("[{$dominion->id}] *** {$amount} building {$buildingKey} finished.");
         }
 
         $this->buildingService->update($dominion, $buildingsToAdd);
@@ -730,7 +730,7 @@ class ProcessDominionJob implements ShouldQueue
 
         if(!empty($unitsGenerated))
         {
-            xtLog("*** [{$afflicted->id}] Queuing units generated from pestilences.");
+            xtLog("[{$afflicted->id}] *** Queuing units generated from pestilences.");
 
             foreach($unitsGenerated as $slot => $amount)
             {

@@ -150,7 +150,6 @@ class QueueService
             ->get();
 
         $overDueQueues->each->delete();
-
     }
 
 

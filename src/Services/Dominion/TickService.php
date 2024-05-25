@@ -1229,7 +1229,7 @@ class TickService
         // Queue up all dominions for precalculation (simultaneous processing)
         foreach ($dominions as $dominion)
         {
-            xtLog("** [{$dominion->id}] Queuing up precalculation of dominion: {$dominion->name}");
+            xtLog("[{$dominion->id}] ** Queuing up precalculation of dominion: {$dominion->name}");
             ProcessPrecalculationJob::dispatch($dominion)->onQueue('tick');
         }
 
@@ -1262,7 +1262,7 @@ class TickService
     
         // Queue up all dominions for ticking (simultaneous processing)
         foreach ($dominions as $dominion) {
-            xtLog("** [{$dominion->id}] Queueing up dominion for processing job: {$dominion->name}");
+            xtLog("[{$dominion->id}] ** Queueing up dominion for processing job: {$dominion->name}");
             ProcessDominionJob::dispatch($dominion)->onQueue('tick');
         }
     
@@ -1300,7 +1300,7 @@ class TickService
         // Queue up all dominions for precalculation (simultaneous processing)
         foreach ($activeTradeRoutes as $tradeRoute)
         {
-            xtLog("** [TR{$tradeRoute->id}] Queueing up trade route for processing job: {$tradeRoute->dominion->name} (ID {$tradeRoute->dominion->id}) and {$tradeRoute->hold->name}");
+            xtLog("[TR{$tradeRoute->id}] ** Queueing up trade route for processing job: {$tradeRoute->dominion->name} (ID {$tradeRoute->dominion->id}) and {$tradeRoute->hold->name}");
             ProcessTradeRouteJob::dispatch($tradeRoute)->onQueue('tick');
         }
 
@@ -1330,7 +1330,7 @@ class TickService
         // Queue up all dominions for precalculation (simultaneous processing)
         foreach ($round->holds as $hold)
         {
-            xtLog("** [HL{$hold->id}] Queueing up hold for processing job: {$hold->name}");
+            xtLog("[HL{$hold->id}] ** Queueing up hold for processing job: {$hold->name}");
             ProcessHoldJob::dispatch($hold)->onQueue('tick');
         }
 

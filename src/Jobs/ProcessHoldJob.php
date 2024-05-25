@@ -38,23 +38,23 @@ class ProcessHoldJob implements ShouldQueue
     public function handle()
     {
         # Handle queues
-        xtLog("*** [HL{$this->hold->id}] Handling queues");
+        xtLog("[HL{$this->hold->id}] *** Handling queues");
         $this->queueService->handleHoldQueues($this->hold);
 
         # Handle resource production
-        xtLog("*** [HL{$this->hold->id}] Handling resource production");
+        xtLog("[HL{$this->hold->id}] *** Handling resource production");
         $this->holdService->handleHoldResourceProduction($this->hold);
 
         # Handle building construction
-        xtLog("*** [HL{$this->hold->id}] Handling construction");
+        xtLog("[HL{$this->hold->id}] *** Handling construction");
         $this->holdService->handleHoldConstruction($this->hold);
 
         # Update prices
-        xtLog("*** [HL{$this->hold->id}] Setting prices");
+        xtLog("[HL{$this->hold->id}] *** Setting prices");
         $this->holdService->setHoldPrices($this->hold);
 
         # Update hold land
-        xtLog("*** [HL{$this->hold->id}] Updating land construction");
+        xtLog("[HL{$this->hold->id}] *** Updating land construction");
         $this->holdService->updateHoldLand($this->hold);
 
     }
