@@ -176,6 +176,9 @@ class TradeCalculator
 
         $resourceNetProduction = $this->dominionResourceCalculator->getNetProduction($dominion, $resource->key);
 
+        $dueNextTick = $this->dominionResourceCalculator->getResourceDueFromTradeNextTick($dominion, $resource->key);
+        $resourceNetProduction += $dueNextTick;
+
         # If $currentAmountSold > 0, the user is editing the trade route.
         # In that case, add the current amount sold to the netProduction.
         if($currentAmountSold > 0)
