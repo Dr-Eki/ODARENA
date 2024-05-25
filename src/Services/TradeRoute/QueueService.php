@@ -124,7 +124,7 @@ class QueueService
 
                 #$tradeRoute->save();
 
-                $isDeleted = $finishedQueues->each->delete();
+                $isDeleted = $finishedQueue->delete();
                 if($isDeleted)
                 {
                     xtLog("[TR{$tradeRoute->id}] ***** Deleted queue {$finishedQueue->id}");
@@ -146,7 +146,7 @@ class QueueService
 
         $overDueQueues = $tradeRoute->queues()
             ->where('status', 1)
-            ->where('tick', '<', 0)
+            ->where('tick', '<=', 0)
             ->get();
 
         $overDueQueues->each->delete();
