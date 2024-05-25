@@ -151,11 +151,11 @@ class TickService
                 xtLog('* Checking for win conditions');
                 $this->handleWinConditions($round);
     
-                xtLog('* Update invasion queues');
-                $this->updateAllInvasionQueues($round);
+                #xtLog('* Update invasion queues');
+                #$this->updateAllInvasionQueues($round);
     
-                xtLog('* Update all other queues');
-                $this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
+                #xtLog('* Update all other queues');
+                #$this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
     
                 xtLog('* Update all artefact aegises');
                 $this->updateArtefactsAegises($round);
@@ -174,8 +174,8 @@ class TickService
             xtLog('* Queue, process, and wait for dominion jobs.');
             $this->processDominionJobs($round);
     
-            xtLog('* Clear out all finished queues');
-            $this->clearFinishedQueues($round);
+            #xtLog('* Clear out all finished queues');
+            #$this->clearFinishedQueues($round);
 
             // Separate DB transaction for trade routes
             DB::transaction(function () use ($round) {
@@ -315,11 +315,10 @@ class TickService
 
     public function clearFinishedQueues(Round $round)
     {
-        $attempts = 5; // Number of attempts to retry
+        $attempts = 10; // Number of attempts to retry
         for ($attempt = 1; $attempt <= $attempts; $attempt++) {
             try {
                 DB::transaction(function () use ($round) {
-                    #$round->dominionQueues->where('hours', '<=', 0)->delete();
                     $round->dominionQueues()->where('hours', '<=', 0)->delete();
                 });
                 break; // If successful, exit the loop
@@ -341,7 +340,7 @@ class TickService
     public function tickManually(Dominion $dominion): void
     {
 
-        xtLog("[{$dominion->id}] * Manual tick started");
+        xtLog("[{$dominion->id}] * Manual tick started for {$dominion->name} at {$this->now}.");
 
         if($dominion->protection_ticks <= 0)
         {
@@ -349,18 +348,20 @@ class TickService
             return;
         }
 
+        xtLog("[{$dominion->id}] ** Precalculating tick for dominion");
         $this->tickCalculator->precalculateTick($dominion);
-        $this->updateDominionQueues($dominion);
-        $this->temporaryData[$dominion->round->id][$dominion->id] = [];
-        $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($dominion);
 
-        $this->updateDominion($dominion);
+        DB::transaction(function () use ($dominion) {
+            $this->temporaryData[$dominion->round->id][$dominion->id] = [];
+            $this->temporaryData[$dominion->round->id][$dominion->id]['stasis_dominions'] = [];
+            $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($dominion);
 
-        # Clean up
-        // Delete because these happen in ProcessDominionJob
-        #$this->cleanupQueues($dominion);
-        #$this->cleanupActiveSpells($dominion);
+            #xtLog("[{$dominion->id}] ** Updating queues");
+            #$this->updateDominionQueues($dominion);
 
+            xtLog("[{$dominion->id}] ** Update dominion (from dominion_tick)");
+            $this->updateDominion($dominion);
+        });
 
         xtLog("[{$dominion->id}] ** Audit and repair terrain");
         $this->terrainService->auditAndRepairTerrain($dominion);
@@ -376,7 +377,7 @@ class TickService
             $i = isset($i) ? $i + 1 : 1;
         
             $infoString = sprintf(
-                '[%s] ** Waiting for queued ProcessDominionJob (queue:manual_tick) to finish. Current queue: %s. Next check in: %s ms.',
+                '[%s] *** Waiting for queued ProcessDominionJob (queue:manual_tick) to finish. Current queue: %s. Next check in: %s ms.',
                 $dominion->id,
                 Redis::llen('queues:manual_tick'),
                 number_format($delay)
@@ -390,19 +391,20 @@ class TickService
 
         $this->now = now();
         
+        xtLog("[{$dominion->id}] ** Saving dominion state");
         $this->dominionStateService->saveDominionState($dominion);
         
+        xtLog("[{$dominion->id}] ** Sending notificaitons");
         $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
 
+        xtLog("[{$dominion->id}] ** Precalculating tick for dominion again");
         $this->tickCalculator->precalculateTick($dominion, true);
 
         $dominion->save();
 
-        Log::info(sprintf(
-            '[TICK] Ticked dominion %s in %s ms.',
-            $dominion->name,
-            number_format($this->now->diffInMilliseconds(now()))
-        ));
+        $this->now = now();
+
+        xtLog("[{$dominion->id}] * Manual tick finished for {$dominion->name} at {$this->now}.");
         
     }
 
@@ -504,28 +506,28 @@ class TickService
     }
 
     // Update spells for a specific dominion
-    private function updateDominionSpells(Dominion $dominion): void
-    {
-        DB::table('dominion_spells')
-            ->where('dominion_id', $dominion->id)
-            ->update([
-                'duration' => DB::raw('GREATEST(0, `duration` - 1)'),
-                'cooldown' => DB::raw('GREATEST(0, `cooldown` - 1)'),
-                'dominion_spells.updated_at' => $this->now,
-            ]);
-    }
+    #private function updateDominionSpells(Dominion $dominion): void
+    #{
+    #    DB::table('dominion_spells')
+    #        ->where('dominion_id', $dominion->id)
+    #        ->update([
+    #            'duration' => DB::raw('GREATEST(0, `duration` - 1)'),
+    #            'cooldown' => DB::raw('GREATEST(0, `cooldown` - 1)'),
+    #            'dominion_spells.updated_at' => $this->now,
+    #        ]);
+    #}
 
     // Update deity duration for a specific dominion
-    private function updateDominionDeity(Dominion $dominion): void
-    {
-        DB::table('dominion_deity')
-            ->join('dominions', 'dominion_deity.dominion_id', '=', 'dominions.id')
-            ->where('dominions.id', $dominion->id)
-            ->update([
-                'duration' => DB::raw('`duration` + 1'),
-                'dominion_deity.updated_at' => $this->now,
-            ]);
-    }
+    #private function updateDominionDeity(Dominion $dominion): void
+    #{
+    #    DB::table('dominion_deity')
+    #        ->join('dominions', 'dominion_deity.dominion_id', '=', 'dominions.id')
+    #        ->where('dominions.id', $dominion->id)
+    #        ->update([
+    #            'duration' => DB::raw('`duration` + 1'),
+    #            'dominion_deity.updated_at' => $this->now,
+    #        ]);
+    #}
 
     // Update queues for a specific dominion
     // We don't have to worry about stasis here because the dominion is in protection

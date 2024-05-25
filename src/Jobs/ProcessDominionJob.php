@@ -112,11 +112,13 @@ class ProcessDominionJob implements ShouldQueue
 
         DB::transaction(function () use ($round)
         {  
-
             $this->temporaryData[$round->id][$this->dominion->id] = [];
 
             #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
             $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
+
+            xtLog("[{$this->dominion->id}] ** Advancing queues");
+            $this->advanceQueues($this->dominion);
 
             xtLog("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)");
             $this->handleBarbarians($this->dominion);
@@ -178,8 +180,12 @@ class ProcessDominionJob implements ShouldQueue
         $this->terrainService->auditAndRepairTerrain($this->dominion);
             
         # Also cannot be a part of the DB transaction because it might cause deadlocks
-        xtLog("[{$this->dominion->id}] ** Processing queues");
+        xtLog("[{$this->dominion->id}] ** Handle finished queues");
         $this->handleFinishedQueues($this->dominion);
+
+        # Cannot be a part of the DB transaction because it might cause deadlocks
+        xtLog("[{$this->dominion->id}] ** Clear finished queues");
+        $this->clearFinishedQueues($this->dominion);
 
         xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
         $this->handleFinishedSpells($this->dominion);
@@ -198,10 +204,9 @@ class ProcessDominionJob implements ShouldQueue
         $finishedBuildingsInQueue = DB::table('dominion_queue')
                                         ->where('dominion_id',$dominion->id)
                                         ->where('resource', 'like', 'building%')
-                                        ->where('hours',1)
+                                        ->where('hours', 0)
                                         ->get();
 
-        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Finished buildings in queue: " . $finishedBuildingsInQueue->count()); }
         xtLog("[{$this->dominion->id}] ** Finished buildings in queue: " . $finishedBuildingsInQueue->count());
 
         if(!$finishedBuildingsInQueue->count())
@@ -217,7 +222,6 @@ class ProcessDominionJob implements ShouldQueue
             $amount = intval($finishedBuildingInQueue->amount);
             $buildingsToAdd[$buildingKey] = $amount;
 
-            #if(config('game.extended_logging')) { Log::debug("*** {$amount} building {$buildingKey} finished."); }
             xtLog("*** {$amount} building {$buildingKey} finished.");
         }
 
@@ -230,7 +234,7 @@ class ProcessDominionJob implements ShouldQueue
         $finishedImprovementsInQueue = DB::table('dominion_queue')
                                         ->where('dominion_id',$dominion->id)
                                         ->where('resource', 'like', 'improvement%')
-                                        ->where('hours',1)
+                                        ->where('hours', 0)
                                         ->get();
 
         #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Finished improvements in queue: " . $finishedImprovementsInQueue->count()); }
@@ -296,7 +300,7 @@ class ProcessDominionJob implements ShouldQueue
         $finishedDeitiesInQueue = DB::table('dominion_queue')
                     ->where('dominion_id',$dominion->id)
                     ->where('source', 'deity')
-                    ->where('hours',1)
+                    ->where('hours', 0)
                     ->get();
 
         #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Finished deities in queue: " . $finishedDeitiesInQueue->count()); }
@@ -344,7 +348,7 @@ class ProcessDominionJob implements ShouldQueue
         $finishedResearchesInQueue = DB::table('dominion_queue')
                                         ->where('dominion_id',$dominion->id)
                                         ->where('source', 'research')
-                                        ->where('hours',1)
+                                        ->where('hours', 0)
                                         ->get();
 
         foreach($finishedResearchesInQueue as $finishedDeityInQueue)
@@ -376,7 +380,7 @@ class ProcessDominionJob implements ShouldQueue
             ->where('dominion_id', $dominion->id)
             ->where('resource', 'like', 'resource%')
             ->whereIn('source', ['invasion', 'expedition', 'theft', 'desecration'])
-            ->where('hours', 1)
+            ->where('hours', 0)
             ->get();
 
         foreach ($dominion->race->resources as $resourceKey) {
@@ -398,7 +402,7 @@ class ProcessDominionJob implements ShouldQueue
         $finishedArtefactsInQueue = DB::table('dominion_queue')
                                         ->where('dominion_id',$dominion->id)
                                         ->where('source', 'artefact')
-                                        ->where('hours',1)
+                                        ->where('hours', 0)
                                         ->get();
         foreach($finishedArtefactsInQueue as $finishedArtefactInQueue)
         {
@@ -426,7 +430,7 @@ class ProcessDominionJob implements ShouldQueue
         $finishedTerrainsInQueue = DB::table('dominion_queue')
             ->where('dominion_id', $dominion->id)
             ->where('resource', 'like', 'terrain%')
-            ->where('hours', 1)
+            ->where('hours', 0)
             ->get();
     
         $terrainChanges = [];
@@ -612,6 +616,30 @@ class ProcessDominionJob implements ShouldQueue
         }
 
         #$this->queueService->setForTick(true);
+    }
+
+
+    protected function advanceQueues(Dominion $dominion): void
+    {
+        # If $domion->getSpellPerkValue('stasis'), then exclude queue source 'invasion'
+        if($dominion->getSpellPerkValue('stasis'))
+        {
+
+            xtLog("[{$dominion->id}] *** Dominion is under stasis: advancing all queues except invasion");
+
+            $dominion->queues()
+                ->where('hours', '>', 0)
+                ->where('source', '!=', 'invasion')
+                ->decrement('hours');
+        }
+        else
+        {
+            xtLog("[{$dominion->id}] *** Advancing all dominion queues");
+
+            $dominion->queues()
+                ->where('hours', '>', 0)
+                ->decrement('hours');
+        }
     }
 
     protected function handleBarbarians(Dominion $barbarian): void
@@ -840,8 +868,8 @@ class ProcessDominionJob implements ShouldQueue
 
         $finished = DB::table('dominion_queue')
             ->where('dominion_id', $dominion->id)
-            #->where('hours', '<=', 0)
-            ->where('hours', '=', 0)
+            ->where('hours', '<=', 0)
+            #->where('hours', '=', 0)
             ->get();
 
         foreach ($finished->groupBy('source') as $source => $group)
@@ -873,6 +901,14 @@ class ProcessDominionJob implements ShouldQueue
 
             xtLog("[{$dominion->id}] *** {$row->amount} {$row->resource} completed and set for tick.");
         }
+    }
+
+    public function clearFinishedQueues(Dominion $dominion)
+    {
+        DB::table('dominion_queue')
+            ->where('dominion_id', $dominion->id)
+            ->where('hours', '<=', 0)
+            ->delete();
     }
 
 }

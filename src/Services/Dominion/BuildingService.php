@@ -23,41 +23,19 @@ class BuildingService
         DB::transaction(function () use ($dominion, $buildingKeys)
         {
 
-            Log::info('** BuildingService::update() - Updating DominionBuildings', [
-                'dominion_id' => $dominion->id,
-                'building_keys' => $buildingKeys,
-            ]);
-            dump('** BuildingService::update() - Updating DominionBuildings', [
-                'dominion_id' => $dominion->id,
-                'building_keys' => $buildingKeys,
-            ]);
+
+            xtlog("[{$dominion->id}] **** Updating buildings for dominion: " . json_encode($buildingKeys));
 
             foreach($buildingKeys as $buildingKey => $amount)
             {
 
-                Log::info('*** BuildingService::update() - foreach() - Updating DominionBuilding', [
-                    'dominion_id' => $dominion->id,
-                    'building_key' => $buildingKey,
-                    'amount' => $amount,
-                ]);
-                dump('*** BuildingService::update() - foreach() - Updating DominionBuilding', [
-                    'dominion_id' => $dominion->id,
-                    'building_key' => $buildingKey,
-                    'amount' => $amount,
-                ]);
+                xtLog("[{$dominion->id}] ***** Updating building {$buildingKey}) by {$amount}");
 
                 $building = Building::fromKey($buildingKey);
 
                 if(!$building)
                 {
-                    Log::error('*** BuildingService::update() - Building not found', [
-                        'dominion_id' => $dominion->id,
-                        'building_key' => $buildingKey,
-                    ]);
-                    dump('*** BuildingService::update() - Building not found', [
-                        'dominion_id' => $dominion->id,
-                        'building_key' => $buildingKey,
-                    ]);
+                    xtLog("[{$dominion->id}] ***** Building with key {$buildingKey} not found", 'error');
                     continue;
                 }
     
@@ -72,24 +50,21 @@ class BuildingService
                         ->where('building_id', $building->id)
                         ->first();
 
-                    $logString = '*** BuildingService::update() - DominionBuilding to be updated from ' . $dominionBuilding->amount ?? 0 . ' by ' . $amount;
-
+                    xtLog("[{$dominion->id}] ***** DominionBuilding to be updated from " . $dominionBuilding->amount ?? 0 . " by {$amount}");
 
                     $dominionBuilding->amount += $amount;
     
                     if ($dominionBuilding->amount <= 0)
                     {
+                        $id = $dominionBuilding->id;
                         $dominionBuilding->delete();
+                        xtLog("[{$dominion->id}] ****** DominionBuilding {$id} deleted");
                     }
                     else
                     {
                         $dominionBuilding->save();
+                        xtLog("[{$dominion->id}] ****** DominionBuilding {$dominionBuilding->id} amount updated to {$dominionBuilding->amount}");
                     }
-
-                    $logString .= ' to ' . $dominionBuilding->amount;
-
-                    Log::info($logString);
-                    dump($logString);
                 }
                 elseif($amount > 0)
                 {
@@ -101,29 +76,11 @@ class BuildingService
 
                     $dominionBuilding->save();
 
-                    Log::info('*** BuildingService::update() - DominionBuilding created', [
-                        'dominion_id' => $dominion->id,
-                        'building_id' => $building->id,
-                        'amount' => $amount,
-                    ]);
-                    dump('*** BuildingService::update() - DominionBuilding created', [
-                        'dominion_id' => $dominion->id,
-                        'building_id' => $building->id,
-                        'amount' => $amount,
-                    ]);
+                    xtLog("[{$dominion->id}] ****** DominionBuilding (building {$building->name}) created with amount {$amount} and ID {$dominionBuilding->id}");
                 }
                 else
                 {
-                    Log::error('*** BuildingService::update() - DominionBuilding not found or amount <= 0', [
-                        'dominion_id' => $dominion->id,
-                        'building_id' => $building->id,
-                        'amount' => $amount,
-                    ]);
-                    dump('*** BuildingService::update() - DominionBuilding not found or amount <= 0', [
-                        'dominion_id' => $dominion->id,
-                        'building_id' => $building->id,
-                        'amount' => $amount,
-                    ]);
+                    xtLog("[{$dominion->id}] ****** DominionBuilding not found or amount <= 0", 'error');
                 }
             }
         });

@@ -90,7 +90,6 @@ class HoldService
 
     public function updateAllHoldSentiments(Round $round): void
     {
-        // Assuming that holds and dominions are related to round and are Eloquent collections
         $holdIds = $round->holds->pluck('id');
         $dominionIds = $round->dominions->pluck('id');
     

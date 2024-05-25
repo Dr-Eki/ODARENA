@@ -739,7 +739,7 @@ baidar_jegu:
 windward_fortress:
   name: Windward Fortress
   ruler_name: Kaela the Younger
-  description: Windward Fortress is straddled between two mountains, stretching from one promontory to the other. It is said to be the last common dwelling of Elves and Snow Elves. Abandoned by both, it was taken over by roaming farmers, who eventually succumbed to the dubious privilege of Dragonic rule.
+  description: Windward Fortress is straddled between two mountains, stretching from one promontory to the other. It is said to be the last common dwelling of Elves and Snow Elves. Abandoned by both, it was taken over by farmers driven away from their homelands, who eventually succumbed to the dubious privilege of Dragonic rule.
   race: Dragons
   desired_resources:
     - books
