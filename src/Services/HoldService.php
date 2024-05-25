@@ -94,6 +94,29 @@ class HoldService
         $holdIds = $round->holds->pluck('id');
         $dominionIds = $round->dominions->pluck('id');
     
+        // Group events by hold_id and target_id, and sum sentiments in the database
+        $sentimentSums = HoldSentimentEvent::whereIn('hold_id', $holdIds)
+                                           ->whereIn('target_id', $dominionIds)
+                                           ->selectRaw('hold_id, target_id, target_type, SUM(sentiment) as total_sentiment')
+                                           ->groupBy('hold_id', 'target_id', 'target_type')
+                                           ->get();
+    
+        // Loop through the sums and update/create records
+        foreach ($sentimentSums as $sum) {
+            HoldSentiment::updateOrCreate(
+                ['hold_id' => $sum->hold_id, 'target_id' => $sum->target_id, 'target_type' => $sum->target_type],
+                ['sentiment' => $sum->total_sentiment]
+            );
+        }
+    }
+
+    /*
+    public function updateAllHoldSentiments(Round $round): void
+    {
+        // Assuming that holds and dominions are related to round and are Eloquent collections
+        $holdIds = $round->holds->pluck('id');
+        $dominionIds = $round->dominions->pluck('id');
+    
         // Pre-fetch all HoldSentimentEvents for these holds and dominions
         $sentimentEvents = HoldSentimentEvent::whereIn('hold_id', $holdIds)
                                              ->whereIn('target_id', $dominionIds)
@@ -116,6 +139,7 @@ class HoldService
             );
         }
     }
+    */
 
     public function handleHoldResourceProduction(Hold $hold): void
     {
