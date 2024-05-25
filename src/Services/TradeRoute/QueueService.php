@@ -146,7 +146,7 @@ class QueueService
 
         $overDueQueues = $tradeRoute->queues()
             ->where('status', 1)
-            ->where('tick', '<=', 0)
+            ->where('tick', '<', 0)
             ->get();
 
         $overDueQueues->each->delete();
