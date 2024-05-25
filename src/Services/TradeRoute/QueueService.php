@@ -70,8 +70,8 @@ class QueueService
 
     public function handleTradeRouteQueues(TradeRoute $tradeRoute): void
     {
-        $this->advanceTradeRouteQueues($tradeRoute);
         $this->finishTradeRouteQueues($tradeRoute);
+        $this->advanceTradeRouteQueues($tradeRoute);
     }
 
     public function advanceTradeRouteQueues(TradeRoute $tradeRoute): void
@@ -81,6 +81,7 @@ class QueueService
             ->where('tick','>',0)
             ->decrement('tick');
     }
+   
 
     public function finishTradeRouteQueues(TradeRoute $tradeRoute): void
     {

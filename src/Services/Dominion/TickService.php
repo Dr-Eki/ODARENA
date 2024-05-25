@@ -10,9 +10,6 @@ use Exception;
 use File;
 use Log;
 use Illuminate\Support\Facades\Redis;
-#use Illuminate\Support\Str;
-#use Laravel\Horizon\Horizon;
-
 use OpenDominion\Jobs\ProcessDominionJob;
 use OpenDominion\Jobs\ProcessHoldJob;
 use OpenDominion\Jobs\ProcessPrecalculationJob;
@@ -427,9 +424,8 @@ class TickService
             $i = isset($i) ? $i + 1 : 1;
         
             $infoString = sprintf(
-                '[%s] [%s] Waiting for queued ProcessDominionJob (queue:manual_tick) to finish. Current queue: %s. Next check in: %s ms.',
+                '[%s] ** Waiting for queued ProcessDominionJob (queue:manual_tick) to finish. Current queue: %s. Next check in: %s ms.',
                 $dominion->id,
-                now()->format('Y-m-d H:i:s'),
                 Redis::llen('queues:manual_tick'),
                 number_format($delay)
             );
@@ -1296,8 +1292,7 @@ class TickService
             $i = isset($i) ? $i + 1 : 1;
         
             $infoString = sprintf(
-                '** [%s] Waiting for queued ProcessPrecalculationJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
-                now()->format('Y-m-d H:i:s'),
+                '** Waiting for queued ProcessPrecalculationJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
                 Redis::llen('queues:tick'),
                 number_format($delay)
             );
@@ -1335,8 +1330,7 @@ class TickService
             $i = isset($i) ? $i + 1 : 1;
     
             $infoString = sprintf(
-                '** [%s] Waiting for queued ProcessDominionJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
-                now()->format('Y-m-d H:i:s'),
+                '** Waiting for queued ProcessDominionJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
                 Redis::llen('queues:tick'),
                 number_format($delay)
             );
@@ -1369,8 +1363,7 @@ class TickService
             $i = isset($i) ? $i + 1 : 1;
         
             $infoString = sprintf(
-                '** [%s] Waiting for queued ProcessTradeRouteJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
-                now()->format('Y-m-d H:i:s'),
+                '** Waiting for queued ProcessTradeRouteJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
                 Redis::llen('queues:tick'),
                 number_format($delay)
             );
@@ -1400,8 +1393,7 @@ class TickService
             $i = isset($i) ? $i + 1 : 1;
         
             $infoString = sprintf(
-                '** [%s] Waiting for queued ProcessHoldJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
-                now()->format('Y-m-d H:i:s'),
+                '** Waiting for queued ProcessHoldJob (queue:tick) to finish. Current queue: %s. Next check in: %s ms.',
                 Redis::llen('queues:tick'),
                 number_format($delay)
             );
