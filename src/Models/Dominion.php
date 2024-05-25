@@ -311,6 +311,8 @@ class Dominion extends AbstractModel
             ->withPivot('amount');
     }
 
+
+
     public function deity()
     {
         return $this->hasOneThrough(
@@ -396,6 +398,11 @@ class Dominion extends AbstractModel
         $raceResourceKeys = $this->race->resources;
     
         return array_diff($allResourceKeys, $raceResourceKeys);
+    }
+
+    public function isForeignResourceKey(string $resourceKey)
+    {
+        return in_array($resourceKey, $this->foreignResourceKeys());
     }
 
     # This code enables the following syntax:

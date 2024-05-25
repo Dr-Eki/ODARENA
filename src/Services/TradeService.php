@@ -121,7 +121,7 @@ class TradeService
                 ]);
 
                 #Log::info("*** Hold is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The hold does not have enough {$boughtResource->name}: {$tradeResult['expected_resource_amount']} expected, {$tradeResult['error']['details']['hold_total_available']} available, {$tradeResult['error']['details']['hold_production']} production, {$tradeResult['error']['details']['hold_stockpile']} stockpile.");
-                xtLog("Hold is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The hold does not have enough {$boughtResource->name}: {$tradeResult['expected_resource_amount']} expected, {$tradeResult['error']['details']['hold_total_available']} available, {$tradeResult['error']['details']['hold_production']} production, {$tradeResult['error']['details']['hold_stockpile']} stockpile.", 'warning');
+                xtLog("[{$dominion->id}] *** Hold is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The hold does not have enough {$boughtResource->name}: {$tradeResult['expected_resource_amount']} expected, {$tradeResult['error']['details']['hold_total_available']} available, {$tradeResult['error']['details']['hold_production']} production, {$tradeResult['error']['details']['hold_stockpile']} stockpile.");
 
                 $this->cancelTradeRoute($tradeRoute, 'hold_insufficient_resources');
             }
@@ -159,7 +159,7 @@ class TradeService
                 ]);
 
                 #Log::info("*** Dominion is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The dominion does not have enough {$soldResource->name}: {$soldResourceAmount} expected, {$tradeResult['error']['details']['dominion_total_available']} available, {$tradeResult['error']['details']['dominion_production']} production, {$tradeResult['error']['details']['dominion_stockpile']} stockpile.");
-                xtLog("Dominion is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The dominion does not have enough {$soldResource->name}: {$soldResourceAmount} expected, {$tradeResult['error']['details']['dominion_total_available']} available, {$tradeResult['error']['details']['dominion_production']} production, {$tradeResult['error']['details']['dominion_stockpile']} stockpile.", 'warning');
+                xtLog("[{$dominion->id}] *** Dominion is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The dominion does not have enough {$soldResource->name}: {$soldResourceAmount} expected, {$tradeResult['error']['details']['dominion_total_available']} available, {$tradeResult['error']['details']['dominion_production']} production, {$tradeResult['error']['details']['dominion_stockpile']} stockpile.");
 
                 $this->cancelTradeRoute($tradeRoute, 'dominion_insufficient_resources');
             }
@@ -200,6 +200,8 @@ class TradeService
             'trade_result_data' => json_encode($tradeResult)
         ]);
 
+        xtLog("[{$dominion->id}] *** Trade between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name} was successful. Sold {$soldResourceAmount} {$soldResource->name} for {$boughtResourceAmount} {$boughtResource->name}.", 'info');
+
     }
 
     public function cancelTradeRoute(TradeRoute $tradeRoute, string $reason): void
@@ -211,6 +213,8 @@ class TradeService
 
         $tradeRoute->status = 0;
         $tradeRoute->save();
+
+        xtLog("[TR{$tradeRoute->dominion->id}] *** Trade between {$tradeRoute->dominion->name} (# {$tradeRoute->dominion->realm->number}) and {$tradeRoute->hold->name} was cancelled. Reason: {$reason}.");
     }
 
 }

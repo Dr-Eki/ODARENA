@@ -271,12 +271,9 @@ class TickCalculator
 
         if($this->resourceCalculator->canStarve($dominion->race))
         {
-            #$foodProduction = $this->resourceCalculator->getProduction($dominion, 'food');
             $foodConsumed = $this->resourceCalculator->getConsumption($dominion, 'food');
-            #$foodNetChange = $foodProduction - $foodConsumed;
             $foodNetChange = $this->resourceCalculator->getNetProduction($dominion, 'food');
             $foodOwned = $dominion->resource_food;
-
 
             if($foodConsumed > 0 and ($foodOwned + $foodNetChange) < 0)
             {
