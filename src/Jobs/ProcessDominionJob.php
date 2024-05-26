@@ -13,11 +13,13 @@ use Illuminate\Queue\SerializesModels;
 use OpenDominion\Models\Artefact;
 use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\DominionResource;
 use OpenDominion\Models\DominionSpell;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Improvement;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Realm;
+use OpenDominion\Models\Resource;
 use OpenDominion\Models\Tech;
 
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
@@ -104,14 +106,8 @@ class ProcessDominionJob implements ShouldQueue
         $round = $this->dominion->round;
         xtLog('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . '), ID ' . $this->dominion->id);
 
-        # Do this first to populate dominion_tick
-        # xtLog("[{$this->dominion->id}] ** Precalculate tick");
-        # $this->tickCalculator->precalculateTick($this->dominion, true);
-        
-        # Make a DB transaction
-
-        DB::transaction(function () use ($round)
-        {  
+        #DB::transaction(function () use ($round)
+        #{  
             $this->temporaryData[$round->id][$this->dominion->id] = [];
 
             #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
@@ -119,6 +115,9 @@ class ProcessDominionJob implements ShouldQueue
 
             xtLog("[{$this->dominion->id}] ** Advancing queues");
             $this->advanceQueues($this->dominion);
+
+            xtLog("[{$this->dominion->id}] ** Seeding resources");
+            $this->seedResources($this->dominion);
 
             xtLog("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)");
             $this->handleBarbarians($this->dominion);
@@ -185,7 +184,7 @@ class ProcessDominionJob implements ShouldQueue
 
             xtLog("[{$this->dominion->id}] ** Sending notifications (hourly_dominion)");
             $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
-        });
+        #});
 
         xtLog("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number})");
         $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
@@ -199,10 +198,18 @@ class ProcessDominionJob implements ShouldQueue
             return;
         }
 
+        
+
         xtLog("[{$dominion->id}] *** Advancing all dominion queues");
         $attempts = (int)config('ticking.deadlock_retry_attempts');
         $delay = (int)config('ticking.deadlock_retry_delay');
 
+
+        $dominion->queues()
+        ->where('hours', '>', 0)
+        ->decrement('hours');
+
+        /*
         for ($attempt = 1; $attempt <= $attempts; $attempt++)
         {
             try
@@ -224,6 +231,24 @@ class ProcessDominionJob implements ShouldQueue
                     continue;
                 }
                 throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
+            }
+        }
+        */
+    }
+
+    protected function seedResources(Dominion $dominion): void
+    {
+        foreach(Resource::all() as $resource)
+        {
+            # Check if dominon has dominionResource with this reosurce, otherwise create it
+            if(!$dominion->resources->contains('resource_id', $resource->id))
+            {
+                xtLog("[{$dominion->id}] *** Creating missing resource {$resource->key} for {$dominion->name}");
+                DominionResource::create([
+                    'dominion_id' => $dominion->id,
+                    'resource_id' => $resource->id,
+                    'amount' => 0
+                ]);
             }
         }
     }
@@ -494,19 +519,22 @@ class ProcessDominionJob implements ShouldQueue
             {
                 xtLog("[{$afflicted->id}] **** {$amount} unit$slot queued.");
 
-                try {
-                    DB::transaction(function () use ($unitsGenerated, $afflicted) {
-                        foreach ($unitsGenerated as $slot => $amount) {
-                            $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
+                xtLog("[{$afflicted->id}] *** Successfully queued {$amount} units of type {$slot} for {$afflicted->name}.");
+                $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
 
-                            xtLog("[{$afflicted->id}] *** Successfully queued {$amount} units of type {$slot} for {$afflicted->name}.");
-                        }
-                    });
-                } catch (\Exception $e) {
-                    Log::error("Failed to queue units: " . $e->getMessage());
-                    xtLog("[{$afflicted->id}] *** Failed to queue units: " . $e->getMessage() . " ({$e->getLine()})");
-                }
-            }
+                #try {
+                #    DB::transaction(function () use ($unitsGenerated, $afflicted) {
+                #        foreach ($unitsGenerated as $slot => $amount) {
+                #
+                #            xtLog("[{$afflicted->id}] *** Successfully queued {$amount} units of type {$slot} for {$afflicted->name}.");
+                #            $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
+                #        }
+                #    });
+                #} catch (\Exception $e) {
+                #    Log::error("Failed to queue units: " . $e->getMessage());
+                #    xtLog("[{$afflicted->id}] *** Failed to queue units: " . $e->getMessage() . " ({$e->getLine()})");
+                #}
+            }#
         }
     }
 

@@ -155,7 +155,7 @@ class TradeActionService
             throw new GameException('Trade route could not be established as the expected return is 0.');
         }
 
-        DB::transaction(function () use ($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource) {
+        #DB::transaction(function () use ($dominion, $hold, $soldResource, $soldResourceAmount, $boughtResource) {
             $this->tradeRoute = TradeRoute::create([
                 'round_id' => $dominion->round->id,
                 'dominion_id' => $dominion->id,
@@ -164,7 +164,7 @@ class TradeActionService
                 'target_resource_id' => $boughtResource->id,
                 'source_amount' => $soldResourceAmount,
             ]);
-        });
+        #});
 
         if($this->tradeRoute)
         {
@@ -285,7 +285,7 @@ class TradeActionService
             throw new GameException('Trade route could not be established as the expected return is 0.');
         }
 
-        DB::transaction(function () use ($tradeRoute, $soldResourceAmount) {
+        #DB::transaction(function () use ($tradeRoute, $soldResourceAmount) {
 
             if($soldResourceAmount < $tradeRoute->source_amount)
             {
@@ -299,7 +299,7 @@ class TradeActionService
             $tradeRoute->update([
                 'source_amount' => $soldResourceAmount,
             ]);
-        });
+        #});
 
         if($this->tradeRoute)
         {
@@ -339,7 +339,7 @@ class TradeActionService
             throw new GameException('Invalid hold.');
         }
 
-        DB::transaction(function () use ($tradeRoute) {
+        #DB::transaction(function () use ($tradeRoute) {
 
             $sentimentPenalty = $this->tradeCalculator->getTradeRouteCancellationSentimentPenalty($tradeRoute, 'cancelled_by_dominion');
 
@@ -350,7 +350,7 @@ class TradeActionService
 
             $tradeRoute->status = 0;
             $tradeRoute->save();
-        });
+        #});
 
         $message = vsprintf('Trade route to trade %s for %s with %s has been cancelled.', [
             $soldResource->name,

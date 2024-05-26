@@ -45,8 +45,8 @@ class TradeService
             return;
         }
 
-        DB::transaction(function() use ($tradeRoute)
-        {
+        #DB::transaction(function() use ($tradeRoute)
+        #{
             $dominion = $tradeRoute->dominion;
             
             $hold = $tradeRoute->hold;
@@ -186,7 +186,7 @@ class TradeService
             ]);
 
             xtLog("[{$dominion->id}] *** Trade between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name} was successful. Sold {$soldResourceAmount} {$soldResource->name} for {$boughtResourceAmount} {$boughtResource->name}.", 'info');
-        });
+        #});
 
     }
 

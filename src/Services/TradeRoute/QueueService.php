@@ -75,8 +75,8 @@ class QueueService
 
     public function advanceTradeRouteQueues(TradeRoute $tradeRoute): void
     {
-        DB::transaction(function () use ($tradeRoute)
-        {
+        #DB::transaction(function () use ($tradeRoute)
+        #{
             // Delete leftover zero tick trades
             $tradeRouteQueuesDeleted = $tradeRoute->queues()
                 ->where('tick', '=', 0)
@@ -89,14 +89,14 @@ class QueueService
                 ->decrement('tick');
 
             xtLog("[TR{$tradeRoute->id}] **** Decremented $tradeRouteQueuesTicked trade route queues");
-        });
+        #});
     }
    
 
     public function finishTradeRouteQueues(TradeRoute $tradeRoute): void
     {
-        DB::transaction(function () use ($tradeRoute)
-        {
+        #DB::transaction(function () use ($tradeRoute)
+        #{
             $finishedQueues = $tradeRoute->queues()
                 ->where('tick', 0)
                 ->get();
@@ -150,7 +150,7 @@ class QueueService
             {
                 xtLog("[TR{$tradeRoute->id}] **** Deleted $overDueQueuesDeleted overdue trade route queues");
             }
-        });
+        #});
     }
 
     /**

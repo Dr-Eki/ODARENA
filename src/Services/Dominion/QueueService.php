@@ -314,9 +314,9 @@ class QueueService
                         'created_at' => $now
                     ];
     
-                    DB::transaction(function () use ($sql, $bindings) {
+                    #DB::transaction(function () use ($sql, $bindings) {
                         DB::statement($sql, $bindings);
-                    });
+                    #});
                     break; // If successful, exit the loop
                 } catch (\Illuminate\Database\QueryException $e) {
                     if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
