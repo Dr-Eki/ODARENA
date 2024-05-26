@@ -117,80 +117,79 @@ class ProcessDominionJob implements ShouldQueue
         {  
             $this->temporaryData[$round->id][$this->dominion->id] = [];
 
-        #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
-        $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
+            #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
+            $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Advancing queues (if in protection)");
-        $this->advanceQueues($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Advancing queues (if in protection)");
+            $this->advanceQueues($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)");
-        $this->handleBarbarians($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)");
+            $this->handleBarbarians($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Updating buildings");
-        $this->handleCaptureInsight($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Updating buildings");
+            $this->handleCaptureInsight($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Updating buildings");
-        $this->handleBuildings($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Updating buildings");
+            $this->handleBuildings($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Updating terrain");
-        $this->handleTerrain($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Updating terrain");
+            $this->handleTerrain($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Updating improvements");
-        $this->handleImprovements($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Updating improvements");
+            $this->handleImprovements($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Updating deities");
-        $this->handleDeities($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Updating deities");
+            $this->handleDeities($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Updating devotion");
-        $this->handleDevotion($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Updating devotion");
+            $this->handleDevotion($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Updating artefacts");
-        $this->handleArtefacts($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Updating artefacts");
+            $this->handleArtefacts($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Updating research");
-        $this->handleResearch($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Updating research");
+            $this->handleResearch($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Updating units");
-        $this->handleUnits($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Updating units");
+            $this->handleUnits($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Updating resources");
-        $this->handleResources($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Updating resources");
+            $this->handleResources($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Handle Pestilence");
-        $this->handlePestilence($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Handle Pestilence");
+            $this->handlePestilence($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Handle land generation");
-        $this->handleLandGeneration($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Handle land generation");
+            $this->handleLandGeneration($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Handle unit generation");
-        $this->handleUnitGeneration($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Handle unit generation");
+            $this->handleUnitGeneration($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Queue notifications");
-        $this->queueNotifications($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Queue notifications");
+            $this->queueNotifications($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Updating spells");
-        $this->updateSpells($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Updating spells");
+            $this->updateSpells($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Audit and repair terrain");
-        $this->terrainService->auditAndRepairTerrain($this->dominion);
-            
-        xtLog("[{$this->dominion->id}] ** Handle finished queues");
-        $this->handleFinishedQueues($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Audit and repair terrain");
+            $this->terrainService->auditAndRepairTerrain($this->dominion);
+                
+            xtLog("[{$this->dominion->id}] ** Handle finished queues");
+            $this->handleFinishedQueues($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Clear finished queues");
-        $this->deleteFinishedQueues($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Clear finished queues");
+            $this->deleteFinishedQueues($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
-        $this->handleFinishedSpells($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
+            $this->handleFinishedSpells($this->dominion);
 
-        xtLog("[{$this->dominion->id}] ** Clearing finished spells");
-        $this->deleteFinishedSpells($this->dominion);
+            xtLog("[{$this->dominion->id}] ** Clearing finished spells");
+            $this->deleteFinishedSpells($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Sending notifications (hourly_dominion)");
-            $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
         });
 
         xtLog("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number})");
+        xtLog("[{$this->dominion->id}] ** Sending notifications (hourly_dominion)");
         $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
     }
 

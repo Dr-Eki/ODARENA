@@ -43,7 +43,6 @@ class TickChangeService
      */
     public function commit()
     {
-
         $tickChanges = TickChange::where('status', 0)->get();
 
         $tickChangesDominionResources = $tickChanges->where('target_type', Dominion::class)->where('source_type', Resource::class);
@@ -53,7 +52,17 @@ class TickChangeService
         $this->commitDominionResources($tickChangesDominionResources);
         $this->commitHoldResources($tickChangesHoldResources);
         $this->commitDominionBuildings($tickChangesDominionBuildings);
+    }
 
+    public function commitForDominion(Dominion $dominion)
+    {
+        $tickChanges = TickChange::where('status', 0)->get();
+
+        $tickChangesDominionResources = $tickChanges->where('target_type', Dominion::class)->where('target_id', $dominion->id)->where('source_type', Resource::class);
+        $tickChangesDominionBuildings = $tickChanges->where('target_type', Dominion::class)->where('target_id', $dominion->id)->where('source_type', Building::class);
+
+        $this->commitDominionResources($tickChangesDominionResources);
+        $this->commitDominionBuildings($tickChangesDominionBuildings);
     }
 
     protected function commitDominionResources(Collection $tickChangesDominionResources): void

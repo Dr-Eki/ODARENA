@@ -243,41 +243,38 @@ class TickService
 
             xtLog("[{$dominion->id}] ** Update dominion (from dominion_tick)");
             $this->updateDominion($dominion);
+
+            xtLog("[{$dominion->id}] ** Audit and repair terrain");
+            $this->terrainService->auditAndRepairTerrain($dominion);
+
+            xtLog("[{$dominion->id}] ** Queuing up manual tick in ProcessDominionJob");
+            ProcessDominionJob::dispatch($dominion)->onQueue('manual_tick');
+
+            // Wait for queue to clear
+            $attempts = (int)config('ticking.queue_retry_attempts');
+            $delay = (int)config('ticking.queue_check_delay');
+            $closingDelay = roundInt(config('ticking.queue_closing_delay') / 2);
+            
+            retry($attempts, function () use ($delay, $dominion) {
+                $i = isset($i) ? $i + 1 : 1;
+            
+                $infoString = sprintf(
+                    '[%s] *** Waiting for queued ProcessDominionJob (queue:manual_tick) to finish. Current queue: %s. Next check in: %s ms.',
+                    $dominion->id,
+                    Redis::llen('queues:manual_tick'),
+                    number_format($delay)
+                );
+            
+                if (Redis::llen('queues:manual_tick') !== 0) {
+                    xtLog($infoString);
+                    throw new Exception('Tick queue not finish');
+                }
+            }, $delay);
+
+            usleep($closingDelay);
+
+            $this->now = now();
         });
-
-        xtLog("[{$dominion->id}] ** Audit and repair terrain");
-        $this->terrainService->auditAndRepairTerrain($dominion);
-
-        xtLog("[{$dominion->id}] ** Queuing up manual tick in ProcessDominionJob");
-        ProcessDominionJob::dispatch($dominion)->onQueue('manual_tick');
-
-        // Wait for queue to clear
-        $attempts = (int)config('ticking.queue_retry_attempts');
-        $delay = (int)config('ticking.queue_check_delay');
-        $closingDelay = roundInt(config('ticking.queue_closing_delay') / 2);
-        
-        retry($attempts, function () use ($delay, $dominion) {
-            $i = isset($i) ? $i + 1 : 1;
-        
-            $infoString = sprintf(
-                '[%s] *** Waiting for queued ProcessDominionJob (queue:manual_tick) to finish. Current queue: %s. Next check in: %s ms.',
-                $dominion->id,
-                Redis::llen('queues:manual_tick'),
-                number_format($delay)
-            );
-        
-            if (Redis::llen('queues:manual_tick') !== 0) {
-                xtLog($infoString);
-                throw new Exception('Tick queue not finish');
-            }
-        }, $delay);
-
-        usleep($closingDelay);
-
-        $this->now = now();
-        
-        xtLog('* Commit tick changes');
-        $this->handleTickCommit();
         
         xtLog("[{$dominion->id}] ** Saving dominion state");
         $this->dominionStateService->saveDominionState($dominion);
@@ -287,6 +284,9 @@ class TickService
 
         xtLog("[{$dominion->id}] ** Precalculating tick for dominion again");
         $this->tickCalculator->precalculateTick($dominion, true);
+        
+        xtLog('* Commit tick changes');
+        $this->handleTickCommitForDominion($dominion);
 
         $dominion->save();
 
@@ -823,9 +823,40 @@ class TickService
             }
         }, $delay);
 
-        usleep(roundInt($openingDelay / 2));
+        usleep(roundInt($closingDelay / 2));
 
         $this->tickChangeService->commit();
+    }
+
+    public function handleTickCommitForDominion(Dominion $dominion): void
+    {
+
+        # Make sure that all queued jobs are finished
+        $attempts = (int)config('ticking.queue_retry_attempts');
+        $delay = (int)config('ticking.queue_check_delay');
+        $openingDelay = (int)config('ticking.queue_opening_delay');
+        $closingDelay = (int)config('ticking.queue_closing_delay');
+
+        usleep(roundInt($openingDelay / 2));
+
+        retry($attempts, function () use ($delay) {
+            $i = isset($i) ? $i + 1 : 1;
+        
+            $infoString = sprintf(
+                '** Waiting for queued jobs to finish before committing tick. Current queue: %s. Next check in: %s ms.',
+                Redis::llen('queues:tick'),
+                number_format($delay)
+            );
+        
+            if (Redis::llen('queues:tick') !== 0) {
+                xtLog($infoString);
+                throw new Exception('Tick queue not finish');
+            }
+        }, $delay);
+
+        usleep(roundInt($closingDelay / 2));
+
+        $this->tickChangeService->commitForDominion($dominion);
     }
 
 }
