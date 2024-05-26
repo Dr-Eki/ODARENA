@@ -568,6 +568,26 @@ class ProcessDominionJob implements ShouldQueue
             ->where('hours', 0)
             ->get();
 
+        foreach($finishedResourcesInQueue as $finishedResourceInQueue)
+        {
+
+            $finishedResourceKey = str_replace($finishedResourceInQueue->resource, 'resource_', '');
+            $finishedResource = Resource::fromKey($finishedResourceKey);
+            $type = $finishedResourceInQueue->source;
+            $amount = (int)$finishedResourceInQueue->amount;
+
+            TickChange::create([
+                'tick' => $dominion->round->ticks,
+                'source_type' => Resource::class,
+                'source_id' => $finishedResource->id,
+                'target_type' => Dominion::class,
+                'target_id' => $dominion->id,
+                'amount' => $amount,
+                'status' => 0,
+                'type' => $type,
+            ]);
+        }
+
         foreach ($dominion->race->resources as $resourceKey)
         {
             $resource = Resource::fromKey($resourceKey);
@@ -578,22 +598,22 @@ class ProcessDominionJob implements ShouldQueue
                 continue;
             }
 
-            $resourcesProduced = $finishedResourcesInQueue
-                ->where('resource', 'resource_' . $resourceKey)
-                ->sum('amount');
+            #$resourcesProduced = $finishedResourcesInQueue
+            #    ->where('resource', 'resource_' . $resourceKey)
+            #    ->sum('amount');
 
-            $resourcesProduced += $this->resourceCalculator->getNetProduction($dominion, $resourceKey);
 
-            $resourcesNetChange[$resourceKey] = $resourcesProduced;
+            #$resourcesNetChange[$resourceKey] = $resourcesProduced;
 
-            $resourcesProducedRaw = $this->resourceCalculator->getProduction($dominion, $resourceKey);
+            $netProduction = $this->resourceCalculator->getNetProduction($dominion, $resourceKey);
+            $rawProduction = $this->resourceCalculator->getProduction($dominion, $resourceKey);
             $resourcesConsumed = $this->resourceCalculator->getConsumption($dominion, $resourceKey);
 
-            xtLog("[{$dominion->id}] *** Resource: {$resourcesProducedRaw} {$resourceKey} raw produced.");
+            xtLog("[{$dominion->id}] *** Resource: {$rawProduction} {$resourceKey} raw produced.");
             xtLog("[{$dominion->id}] *** Resource: {$resourcesConsumed} {$resourceKey} consumed.");
-            xtLog("[{$dominion->id}] *** Resource: {$resourcesProduced} {$resourceKey} net produced.");
+            xtLog("[{$dominion->id}] *** Resource: {$netProduction} {$resourceKey} net produced.");
 
-            if($resourcesProduced != 0)
+            if($netProduction != 0)
             {
                 TickChange::create([
                     'tick' => $dominion->round->ticks,
@@ -601,7 +621,7 @@ class ProcessDominionJob implements ShouldQueue
                     'source_id' => $resource->id,
                     'target_type' => Dominion::class,
                     'target_id' => $dominion->id,
-                    'amount' => $resourcesProduced,
+                    'amount' => $netProduction,
                     'status' => 0,
                     'type' => 'production',
                 ]);

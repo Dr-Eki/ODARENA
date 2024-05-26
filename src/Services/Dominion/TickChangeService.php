@@ -54,8 +54,9 @@ class TickChangeService
         $this->commitDominionBuildings($tickChangesDominionBuildings);
     }
 
-    public function commitForDominion(Dominion $dominion)
+    public function commitForDominion(Dominion $dominion): void
     {
+
         $tickChanges = TickChange::where('status', 0)->get();
 
         $tickChangesDominionResources = $tickChanges->where('target_type', Dominion::class)->where('target_id', $dominion->id)->where('source_type', Resource::class);
@@ -79,6 +80,11 @@ class TickChangeService
         foreach($dominionResourceChanges as $dominionId => $resourceData)
         {
             $dominion = Dominion::find($dominionId);
+            
+            if($dominion->protection_ticks)
+            {
+                return;
+            }
 
             if($dominion)
             {
@@ -162,6 +168,12 @@ class TickChangeService
             {
                 xtLog("[{$dominionId}] ** Dominion ID not found for tick change change");
                 continue;
+            }
+            
+            if($dominion->protection_ticks)
+            {
+                xtLog("[{$dominion->id}]  ");
+                return;
             }
 
             foreach($buildingData as $buildingKey => $amount)
