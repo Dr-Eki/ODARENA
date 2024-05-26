@@ -106,85 +106,79 @@ class ProcessDominionJob implements ShouldQueue
         $round = $this->dominion->round;
         xtLog('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . '), ID ' . $this->dominion->id);
 
-        #DB::transaction(function () use ($round)
-        #{  
-            $this->temporaryData[$round->id][$this->dominion->id] = [];
+        $this->temporaryData[$round->id][$this->dominion->id] = [];
 
-            #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
-            $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
+        #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
+        $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Advancing queues");
-            $this->advanceQueues($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Advancing queues");
+        $this->advanceQueues($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Seeding resources");
-            $this->seedResources($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)");
+        $this->handleBarbarians($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)");
-            $this->handleBarbarians($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Updating buildings");
+        $this->handleCaptureInsight($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating buildings");
-            $this->handleCaptureInsight($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Updating buildings");
+        $this->handleBuildings($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating buildings");
-            $this->handleBuildings($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Updating terrain");
+        $this->handleTerrain($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating terrain");
-            $this->handleTerrain($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Updating improvements");
+        $this->handleImprovements($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating improvements");
-            $this->handleImprovements($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Updating deities");
+        $this->handleDeities($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating deities");
-            $this->handleDeities($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Updating devotion");
+        $this->handleDevotion($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating devotion");
-            $this->handleDevotion($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Updating artefacts");
+        $this->handleArtefacts($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating artefacts");
-            $this->handleArtefacts($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Updating research");
+        $this->handleResearch($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating research");
-            $this->handleResearch($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Updating units");
+        $this->handleUnits($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating units");
-            $this->handleUnits($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Updating resources");
+        $this->handleResources($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating resources");
-            $this->handleResources($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Handle Pestilence");
+        $this->handlePestilence($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Handle Pestilence");
-            $this->handlePestilence($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Handle land generation");
+        $this->handleLandGeneration($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Handle land generation");
-            $this->handleLandGeneration($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Handle unit generation");
+        $this->handleUnitGeneration($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Handle unit generation");
-            $this->handleUnitGeneration($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Queue notifications");
+        $this->queueNotifications($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Queue notifications");
-            $this->queueNotifications($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Updating spells");
+        $this->updateSpells($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating spells");
-            $this->updateSpells($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Audit and repair terrain");
+        $this->terrainService->auditAndRepairTerrain($this->dominion);
+            
+        xtLog("[{$this->dominion->id}] ** Handle finished queues");
+        $this->handleFinishedQueues($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Audit and repair terrain");
-            $this->terrainService->auditAndRepairTerrain($this->dominion);
-                
-            xtLog("[{$this->dominion->id}] ** Handle finished queues");
-            $this->handleFinishedQueues($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Clear finished queues");
+        $this->deleteFinishedQueues($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Clear finished queues");
-            $this->deleteFinishedQueues($this->dominion);
-    
-            xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
-            $this->handleFinishedSpells($this->dominion);
-    
-            xtLog("[{$this->dominion->id}] ** Clearing finished spells");
-            $this->deleteFinishedSpells($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
+        $this->handleFinishedSpells($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Sending notifications (hourly_dominion)");
-            $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
-        #});
+        xtLog("[{$this->dominion->id}] ** Clearing finished spells");
+        $this->deleteFinishedSpells($this->dominion);
+
+        xtLog("[{$this->dominion->id}] ** Sending notifications (hourly_dominion)");
+        $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
 
         xtLog("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number})");
         $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
@@ -198,18 +192,10 @@ class ProcessDominionJob implements ShouldQueue
             return;
         }
 
-        
-
         xtLog("[{$dominion->id}] *** Advancing all dominion queues");
         $attempts = (int)config('ticking.deadlock_retry_attempts');
         $delay = (int)config('ticking.deadlock_retry_delay');
 
-
-        $dominion->queues()
-        ->where('hours', '>', 0)
-        ->decrement('hours');
-
-        /*
         for ($attempt = 1; $attempt <= $attempts; $attempt++)
         {
             try
@@ -226,29 +212,11 @@ class ProcessDominionJob implements ShouldQueue
             {
                 if ($e->getCode() == 1213 && $attempt < $attempts)
                 { 
-                    sleep($delay); 
-                    xtLog("[{$dominion->id}] Deadlock detected in ProcessDominionJob::advanceQueues(), retrying... (attempt $attempt/$attempts)");
+                    usleep($delay);
+                    xtLog("[{$dominion->id}] **** Deadlock detected in ProcessDominionJob::advanceQueues(), retrying... (attempt $attempt/$attempts)");
                     continue;
                 }
                 throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
-            }
-        }
-        */
-    }
-
-    protected function seedResources(Dominion $dominion): void
-    {
-        foreach(Resource::all() as $resource)
-        {
-            # Check if dominon has dominionResource with this reosurce, otherwise create it
-            if(!$dominion->resources->contains('resource_id', $resource->id))
-            {
-                xtLog("[{$dominion->id}] *** Creating missing resource {$resource->key} for {$dominion->name}");
-                DominionResource::create([
-                    'dominion_id' => $dominion->id,
-                    'resource_id' => $resource->id,
-                    'amount' => 0
-                ]);
             }
         }
     }
@@ -519,22 +487,20 @@ class ProcessDominionJob implements ShouldQueue
             {
                 xtLog("[{$afflicted->id}] **** {$amount} unit$slot queued.");
 
-                xtLog("[{$afflicted->id}] *** Successfully queued {$amount} units of type {$slot} for {$afflicted->name}.");
-                $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
+                try {
+                    DB::transaction(function () use ($unitsGenerated, $afflicted) {
+                        foreach ($unitsGenerated as $slot => $amount) {
+                            $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
 
-                #try {
-                #    DB::transaction(function () use ($unitsGenerated, $afflicted) {
-                #        foreach ($unitsGenerated as $slot => $amount) {
-                #
-                #            xtLog("[{$afflicted->id}] *** Successfully queued {$amount} units of type {$slot} for {$afflicted->name}.");
-                #            $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
-                #        }
-                #    });
-                #} catch (\Exception $e) {
-                #    Log::error("Failed to queue units: " . $e->getMessage());
-                #    xtLog("[{$afflicted->id}] *** Failed to queue units: " . $e->getMessage() . " ({$e->getLine()})");
-                #}
-            }#
+                            xtLog("[{$afflicted->id}] ***** Successfully queued {$amount} units of type {$slot} for {$afflicted->name}.");
+                        }
+                    });
+                } catch (\Exception $e)
+                {
+                    Log::error("Failed to queue units: " . $e->getMessage());
+                    xtLog("[{$afflicted->id}] ***** Failed to queue units: " . $e->getMessage() . " ({$e->getLine()})");
+                }
+            }
         }
     }
 

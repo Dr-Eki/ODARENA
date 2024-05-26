@@ -24,23 +24,32 @@ class ResourceService
 
     public function update(Dominion $dominion, array $resourceKeys): void
     {
-        #DB::transaction(function () use ($dominion, $resourceKeys)
-        #{
+        DB::transaction(function () use ($dominion, $resourceKeys) {
             foreach($resourceKeys as $resourceKey => $amount)
             {
                 $resource = Resource::where('key', $resourceKey)->first();
     
-                DominionResource::updateOrCreate(
-                    [
+                // Get the dominion resource with a lock for update
+                $dominionResource = DominionResource::where('dominion_id', $dominion->id)
+                    ->where('resource_id', $resource->id)
+                    ->lockForUpdate()
+                    ->first();
+    
+                if ($dominionResource) {
+                    // Update the existing dominion resource
+                    $dominionResource->update([
+                        'amount' => DB::raw("GREATEST(0, amount + {$amount})")
+                    ]);
+                } else {
+                    // Create a new dominion resource
+                    DominionResource::create([
                         'dominion_id' => $dominion->id,
                         'resource_id' => $resource->id,
-                    ],
-                    [
-                        'amount' => DB::raw("GREATEST(0, amount + {$amount})")
-                    ]
-                );
+                        'amount' => max(0, $amount)
+                    ]);
+                }
             }
-        #});
+        });
     }
 
     public function updateRealmResources(Realm $realm, array $resourceKeys): void

@@ -356,13 +356,7 @@ class RoundController extends AbstractController
                     $dominionSelectorService->selectUserDominion($dominion);
                 }
         
-                $request->session()->flash(
-                    'alert-success',
-                    ("You have successfully registered to round {$round->number} ({$round->name})! You have joined realm {$realm->number} ({$realm->name}) with " . ($realm->dominions()->count() - 1) . ' other ' . Str::plural('dominion', ($realm->dominions()->count() - 1)) . '.')
-                );
-
-                $dominionStateService = app(DominionStateService::class);
-                $dominionStateService->saveDominionState($dominion);
+                app(DominionStateService::class)->saveDominionState($dominion);
         
                 return redirect()->route('dominion.status');
 
@@ -517,7 +511,6 @@ class RoundController extends AbstractController
         try {
             DB::transaction(function () use ($request, $round, &$realm, &$dominion, &$dominionName, $roundsPlayed, $countRaces, $eventData, $pack) {
                 $realmFinderService = app(RealmFinderService::class);
-                $realmFactory = app(RealmFactory::class);
 
                 /** @var User $user */
                 $user = Auth::user();
@@ -551,11 +544,6 @@ class RoundController extends AbstractController
                 }
 
                 $realm = $realmFinderService->findRealm($round, $race, $pack);
-
-                #if (!$realm)
-                #{
-                #    $realm = $realmFactory->create($round, $race->alignment);
-                #}
 
                 $dominionName = $request->get('dominion_name');
 
@@ -616,11 +604,6 @@ class RoundController extends AbstractController
             $dominionSelectorService = app(SelectorService::class);
             $dominionSelectorService->selectUserDominion($dominion);
         }
-
-        $request->session()->flash(
-            'alert-success',
-            ("You have successfully registered to round {$round->number} ({$round->name})! You have joined realm {$realm->number} ({$realm->name}) with " . ($realm->dominions()->count() - 1) . ' other ' . Str::plural('dominion', ($realm->dominions()->count() - 1)) . '.')
-        );
 
         $dominionStateService = app(DominionStateService::class);
         $dominionStateService->saveDominionState($dominion);
@@ -694,12 +677,7 @@ class RoundController extends AbstractController
         $realm->update([
             'name' => $realmName,
         ]);
-
-        $request->session()->flash(
-            'alert-success',
-            ('Your pack has been created.')
-        );
-
+        
         return redirect()->route('round.register', $round);
     }
 

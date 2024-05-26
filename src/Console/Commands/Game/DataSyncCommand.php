@@ -1846,35 +1846,32 @@ class DataSyncCommand extends Command implements CommandInterface
 
         $this->info('Populating race terrains...');
 
-        DB::transaction( function ()
+        $sortingArray = Terrain::all()->sortBy('order')->pluck('key','order')->toArray();
+        foreach(Race::all()->wherein('playable', [1, 2]) as $race)
         {
-            $sortingArray = Terrain::all()->sortBy('order')->pluck('key','order')->toArray();
-            foreach(Race::all()->wherein('playable', [1, 2]) as $race)
+            $terrainKeys = [];
+            $this->info("\t $race->name");
+
+            foreach($this->buildingHelper->getBuildingsByRace($race) as $building)
             {
-                $terrainKeys = [];
-                $this->info("\t $race->name");
-
-                foreach($this->buildingHelper->getBuildingsByRace($race) as $building)
+                if($building->terrain)
                 {
-                    if($building->terrain)
-                    {
-                        $terrainKeys[] = $building->terrain->key;
-                    }
+                    $terrainKeys[] = $building->terrain->key;
                 }
-    
-                $terrainKeys = array_values(array_unique($terrainKeys));
-    
-                $sortingArrayFlipped = array_flip($sortingArray);
-
-                usort($terrainKeys, function ($a, $b) use ($sortingArrayFlipped) {
-                    return $sortingArrayFlipped[$a] <=> $sortingArrayFlipped[$b];
-                });
-                
-                $race->terrains = $terrainKeys;
-        
-                $race->save();
             }
-        });
+
+            $terrainKeys = array_values(array_unique($terrainKeys));
+
+            $sortingArrayFlipped = array_flip($sortingArray);
+
+            usort($terrainKeys, function ($a, $b) use ($sortingArrayFlipped) {
+                return $sortingArrayFlipped[$a] <=> $sortingArrayFlipped[$b];
+            });
+            
+            $race->terrains = $terrainKeys;
+    
+            $race->save();
+        }
 
         $this->info('Race terrains populated.');
 
@@ -1887,16 +1884,14 @@ class DataSyncCommand extends Command implements CommandInterface
         $allRaceTerrains = RaceTerrain::all()->pluck('id')->toArray();
         $updatedOrCreatedRaceTerrainIds = [];
     
-        DB::transaction(function () use (&$updatedOrCreatedRaceTerrainIds) {
-            foreach (Race::all() as $race)
+        foreach (Race::all() as $race)
+        {
+            foreach (Terrain::all() as $terrain)
             {
-                foreach (Terrain::all() as $terrain)
-                {
-                    $raceTerrain = RaceTerrain::updateOrCreate(['race_id' => $race->id, 'terrain_id' => $terrain->id]);
-                    $updatedOrCreatedRaceTerrainIds[] = $raceTerrain->id; // add the id to our list
-                }
+                $raceTerrain = RaceTerrain::updateOrCreate(['race_id' => $race->id, 'terrain_id' => $terrain->id]);
+                $updatedOrCreatedRaceTerrainIds[] = $raceTerrain->id; // add the id to our list
             }
-        });
+        }
     
         // Determine which RaceTerrains to delete
         $raceTerrainsToDelete = array_diff($allRaceTerrains, $updatedOrCreatedRaceTerrainIds);
