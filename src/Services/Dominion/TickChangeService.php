@@ -54,10 +54,6 @@ class TickChangeService
         $this->commitHoldResources($tickChangesHoldResources);
         $this->commitDominionBuildings($tickChangesDominionBuildings);
 
-        $tickChangesDominionResources->each(function ($tickChange) {
-            $tickChange->update(['status' => 1]);
-        });
-
     }
 
     protected function commitDominionResources(Collection $tickChangesDominionResources): void
@@ -91,6 +87,10 @@ class TickChangeService
                 $this->dominionResourceService->update($dominion, [$resourceKey => $amount]);
             }
         }
+
+        $tickChangesDominionResources->each(function ($tickChange) {
+            $tickChange->update(['status' => 1]);
+        });
     }
 
     protected function commitHoldResources(Collection $tickChangesHoldResources): void
@@ -124,6 +124,10 @@ class TickChangeService
                 $this->holdResourceService->update($hold, [$resourceKey => $amount]);
             }
         }
+
+        $tickChangesHoldResources->each(function ($tickChange) {
+            $tickChange->update(['status' => 1]);
+        });
     }
 
     protected function commitDominionBuildings(Collection $tickChangesDominionBuildings): void
@@ -157,6 +161,10 @@ class TickChangeService
                 $this->buildingService->update($dominion, [$buildingKey => $amount]);
             }
         }
+
+        $tickChangesDominionBuildings->each(function ($tickChange) {
+            $tickChange->update(['status' => 1]);
+        });
     }
 
 }
