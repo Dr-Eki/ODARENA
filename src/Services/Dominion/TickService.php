@@ -139,7 +139,7 @@ class TickService
             $this->processPrecalculationJobs($round);
     
             // One transaction for all of these
-            #DB::transaction(function () use ($round) {
+            DB::transaction(function () use ($round) {
                 $this->temporaryData[$round->id] = [];
         
                 xtLog('* Checking for win conditions');
@@ -156,7 +156,7 @@ class TickService
     
                 xtLog('* Update all dominions');
                 $this->updateDominions($round);
-            #});
+            });
     
             xtLog('* Queue, process, and wait for dominion jobs.');
             $this->processDominionJobs($round);
@@ -191,7 +191,7 @@ class TickService
     {
         xtLog('Scheduled daily tick started at ' . $this->now . '.');
 
-        #DB::transaction(function () {
+        DB::transaction(function () {
             foreach (Round::with('dominions')->active()->get() as $round) {
                 // toBase required to prevent ambiguous updated_at column in query
                 $round->dominions()->toBase()->update([
@@ -200,7 +200,7 @@ class TickService
                     'event' => 'tick',
                 ]);
             }
-        #});
+        });
 
         xtLog('Scheduled daily tick finished at ' . now() . '.');
     }
@@ -224,13 +224,13 @@ class TickService
         xtLog("[{$dominion->id}] ** Precalculating tick for dominion");
         $this->tickCalculator->precalculateTick($dominion);
 
-        #DB::transaction(function () use ($dominion) {
+        DB::transaction(function () use ($dominion) {
             $this->temporaryData[$dominion->round->id][$dominion->id] = [];
             $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($dominion);
 
             xtLog("[{$dominion->id}] ** Update dominion (from dominion_tick)");
             $this->updateDominion($dominion);
-        #});
+        });
 
         xtLog("[{$dominion->id}] ** Audit and repair terrain");
         $this->terrainService->auditAndRepairTerrain($dominion);

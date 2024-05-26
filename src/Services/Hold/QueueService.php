@@ -6,6 +6,7 @@ use BadMethodCallException;
 use DB;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use OpenDominion\Models\HoldSentimentEvent;
 use OpenDominion\Models\Hold;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Hold\Queue;
