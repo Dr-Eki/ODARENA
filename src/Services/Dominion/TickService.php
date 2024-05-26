@@ -276,6 +276,9 @@ class TickService
 
         $this->now = now();
         
+        xtLog('* Commit tick changes');
+        $this->handleTickCommit();
+        
         xtLog("[{$dominion->id}] ** Saving dominion state");
         $this->dominionStateService->saveDominionState($dominion);
         
