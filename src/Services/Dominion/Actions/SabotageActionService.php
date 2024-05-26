@@ -352,7 +352,7 @@ class SabotageActionService
                         $damage = min($targetResourceAmount * $damageRatio, $targetResourceAmount);
                         $damage = (int)floor($damage);
         
-                        $this->resourceService->updateResources($target, [$resourceKey => $damage*-1]);
+                        $this->resourceService->update($target, [$resourceKey => $damage*-1]);
                         #$this->queueService->queueResources('restore', $target, [$resourceKey => $damage], 6);
         
                         $this->statsService->updateStat($saboteur, 'sabotage_resources_damage_dealt', $damage);

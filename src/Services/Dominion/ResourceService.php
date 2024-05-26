@@ -22,7 +22,7 @@ class ResourceService
         $this->resourceCalculator = app(ResourceCalculator::class);
     }
 
-    public function updateResources(Dominion $hold, array $resourceKeys): void
+    public function update(Dominion $hold, array $resourceKeys): void
     {
         DB::transaction(function () use ($hold, $resourceKeys) {
             foreach($resourceKeys as $resourceKey => $amount) {

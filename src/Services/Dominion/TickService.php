@@ -119,7 +119,7 @@ class TickService
      *
      * @throws Exception|Throwable
      */
-    public function tickHourly()
+    public function tick()
     {
         if (File::exists('storage/framework/down')) {
             xtLog('Tick at ' . $this->now . ' skipped.');
@@ -128,7 +128,8 @@ class TickService
     
         xtLog('Scheduled tick started at ' . $this->now . '.');
     
-        foreach (Round::active()->get() as $round) {
+        foreach (Round::active()->get() as $round)
+        {
             xtLog('Round ' . $round->number . ' tick started at ' . $this->now . '.');
     
             $round->is_ticking = 1;
@@ -140,18 +141,10 @@ class TickService
             // One transaction for all of these
             DB::transaction(function () use ($round) {
                 $this->temporaryData[$round->id] = [];
-    
-                $this->temporaryData[$round->id]['stasis_dominions'] = [];
-    
+        
                 xtLog('* Checking for win conditions');
                 $this->handleWinConditions($round);
-    
-                #xtLog('* Update invasion queues');
-                #$this->updateAllInvasionQueues($round);
-    
-                #xtLog('* Update all other queues');
-                #$this->updateAllOtherQueues($round, $this->temporaryData[$round->id]['stasis_dominions']);
-    
+        
                 xtLog('* Update all artefact aegises');
                 $this->updateArtefactsAegises($round);
     
@@ -162,21 +155,14 @@ class TickService
                 $this->handleBodyDecay($round);
     
                 xtLog('* Update all dominions');
-                $this->updateDominions($round, $this->temporaryData[$round->id]['stasis_dominions']);
+                $this->updateDominions($round);
             });
     
-            // Each job is a DB transaction
             xtLog('* Queue, process, and wait for dominion jobs.');
             $this->processDominionJobs($round);
     
-            #xtLog('* Clear out all finished queues');
-            #$this->clearFinishedQueues($round);
-
-            // Separate DB transaction for trade routes
-            DB::transaction(function () use ($round) {
-                xtLog('* Update all trade routes');
-                $this->handleHoldsAndTradeRoutes($round);
-            });
+            xtLog('* Update all trade routes');
+            $this->handleHoldsAndTradeRoutes($round);
     
             $this->now = now();
     
@@ -219,26 +205,6 @@ class TickService
         xtLog('Scheduled daily tick finished at ' . now() . '.');
     }
 
-    public function clearFinishedQueues(Round $round)
-    {
-        $attempts = 10; // Number of attempts to retry
-        for ($attempt = 1; $attempt <= $attempts; $attempt++) {
-            try {
-                DB::transaction(function () use ($round) {
-                    $round->dominionQueues()->where('hours', '<=', 0)->delete();
-                });
-                break; // If successful, exit the loop
-            } catch (\Illuminate\Database\QueryException $e) {
-                if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
-                    sleep(1); // Wait a bit before retrying
-                    xtLog("[RD{$round->id}] Deadlock detected in TickService::clearFinishedQueues(), retrying... (attempt $attempt/$attempts)");
-                    continue;
-                }
-                throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
-            }
-        }
-    }
-
     /**
      * Does an hourly tick on all active dominions.
      *
@@ -260,11 +226,7 @@ class TickService
 
         DB::transaction(function () use ($dominion) {
             $this->temporaryData[$dominion->round->id][$dominion->id] = [];
-            $this->temporaryData[$dominion->round->id][$dominion->id]['stasis_dominions'] = [];
             $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($dominion);
-
-            #xtLog("[{$dominion->id}] ** Updating queues");
-            #$this->updateDominionQueues($dominion);
 
             xtLog("[{$dominion->id}] ** Update dominion (from dominion_tick)");
             $this->updateDominion($dominion);
@@ -279,6 +241,7 @@ class TickService
         // Wait for queue to clear
         $attempts = (int)config('ticking.queue_retry_attempts');
         $delay = (int)config('ticking.queue_check_delay');
+        $closingDelay = roundInt(config('ticking.queue_closing_delay') / 2);
         
         retry($attempts, function () use ($delay, $dominion) {
             $i = isset($i) ? $i + 1 : 1;
@@ -295,6 +258,8 @@ class TickService
                 throw new Exception('Tick queue not finish');
             }
         }, $delay);
+
+        usleep($closingDelay);
 
         $this->now = now();
         
@@ -316,13 +281,13 @@ class TickService
     }
 
     // Update dominions
-    private function updateDominions(Round $round, array $stasisDominions)
+    private function updateDominions(Round $round)
     {
         DB::table('dominions')
             ->join('dominion_tick', 'dominions.id', '=', 'dominion_tick.dominion_id')
             ->where('dominions.round_id', $round->id)
             ->where('dominions.is_locked', false)
-            ->whereNotIn('dominion_tick.dominion_id', $stasisDominions)
+            #->whereNotIn('dominion_tick.dominion_id', $stasisDominions)
             ->where('dominions.protection_ticks', '=', 0)
             ->update([
                 'dominions.prestige' => DB::raw('dominions.prestige + dominion_tick.prestige'),
@@ -699,10 +664,10 @@ class TickService
         $attempts = (int)config('ticking.queue_retry_attempts');
         $delay = (int)config('ticking.queue_check_delay');
 
-        $initialDelay = roundInt(($delay * 1) / 1000);
-        $closingDelay = roundInt(($delay * 1) / 1000);
+        $initialDelay = roundInt($delay * 1);
+        $closingDelay = roundInt($delay * 1);
         
-        sleep($initialDelay); // Add initial delay before retrying
+        usleep($initialDelay); // Add initial delay before retrying
     
         retry($attempts, function () use ($delay) {
             $i = isset($i) ? $i + 1 : 1;
@@ -719,15 +684,15 @@ class TickService
             }
         }, $delay);
 
-        sleep($closingDelay); // Add initial delay before retrying
+        usleep($closingDelay); // Add initial delay before retrying
     }
 
     public function processTradeRouteJobs(Round $round): void
     {
-        $activeTradeRoutes = $round->tradeRoutes->whereIn('status', [0,1])->sortBy('id');
+        $tradeRoutes = $round->tradeRoutes->whereIn('status', [0,1])->sortBy('id');
 
         // Queue up all dominions for precalculation (simultaneous processing)
-        foreach ($activeTradeRoutes as $tradeRoute)
+        foreach ($tradeRoutes as $tradeRoute)
         {
             if($tradeRoute->hasQueues() or $tradeRoute->isActive())
             {
@@ -743,6 +708,7 @@ class TickService
         // Wait for queue to clear
         $attempts = (int)config('ticking.queue_retry_attempts');
         $delay = (int)config('ticking.queue_check_delay');
+        $closingDelay = (int)config('ticking.queue_closing_delay');
         
         retry($attempts, function () use ($delay) {
             $i = isset($i) ? $i + 1 : 1;
@@ -758,6 +724,8 @@ class TickService
                 throw new Exception('Tick queue not finish');
             }
         }, $delay);
+
+        usleep($closingDelay);
     }
     
     public function processHoldJobs(Round $round): void
@@ -773,6 +741,7 @@ class TickService
         // Wait for queue to clear
         $attempts = (int)config('ticking.queue_retry_attempts');
         $delay = (int)config('ticking.queue_check_delay');
+        $closingDelay = (int)config('ticking.queue_closing_delay');
         
         retry($attempts, function () use ($delay) {
             $i = isset($i) ? $i + 1 : 1;
@@ -788,6 +757,8 @@ class TickService
                 throw new Exception('Tick queue not finish');
             }
         }, $delay);
+
+        usleep($closingDelay);
     }
 
 }

@@ -170,7 +170,7 @@ class RezoneActionService
                     $this->statsService->updateStat($dominion, ($resource . '_rezoning'), $cost);
     
                     # All fine, perform changes.
-                    $this->resourceService->updateResources($dominion, [$resource => $cost*-1]);
+                    $this->resourceService->update($dominion, [$resource => $cost*-1]);
                     
                     # Queue the rezoning.
                     foreach($terrainAdd as $terrain => $amount)

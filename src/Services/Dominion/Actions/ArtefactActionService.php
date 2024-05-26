@@ -230,7 +230,7 @@ class ArtefactActionService
                     }
                     else
                     {
-                        $this->resourceService->updateResources($attacker, [$resourceKey => $resourceCostToInvade*-1]);
+                        $this->resourceService->update($attacker, [$resourceKey => $resourceCostToInvade*-1]);
                     }
                 }
             }

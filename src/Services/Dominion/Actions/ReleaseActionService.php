@@ -205,7 +205,7 @@ class ReleaseActionService
             {
                 $amount = ceil($releasesIntoResourcePerk[0] * $amount);
                 $resourceKey = $releasesIntoResourcePerk[1];
-                $this->resourceService->updateResources($dominion, [$resourceKey => $amount]);
+                $this->resourceService->update($dominion, [$resourceKey => $amount]);
             }
 
             if ($releasesIntoResourcesPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'releases_into_resources'))
@@ -214,7 +214,7 @@ class ReleaseActionService
                 {
                     $amount = ceil($releasesIntoResourcePerk[0] * $amount);
                     $resourceKey = $releasesIntoResourcePerk[1];
-                    $this->resourceService->updateResources($dominion, [$resourceKey => $amount]);
+                    $this->resourceService->update($dominion, [$resourceKey => $amount]);
                 }
             }
 

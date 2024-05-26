@@ -409,7 +409,7 @@ class SorceryActionService
                         $damageDealt = min($targetResourceAmount * $damage, $targetResourceAmount);
                         $damageDealt = floor($damageDealt);
 
-                        $this->resourceService->updateResources($target, [$resourceKey => $damageDealt*-1]);
+                        $this->resourceService->update($target, [$resourceKey => $damageDealt*-1]);
 
                         $this->statsService->updateStat($caster, ('sorcery_' . $resourceKey . '_destroyed'), $damage);
 
@@ -556,8 +556,8 @@ class SorceryActionService
 
                         $damageDealt = $this->getTheftAmount($caster, $target, $spell, $resourceKey, $theftRatio);
 
-                        $this->resourceService->updateResources($target, [$resourceKey => $damageDealt*-1]);
-                        $this->resourceService->updateResources($caster, [$resourceKey => $damageDealt]);
+                        $this->resourceService->update($target, [$resourceKey => $damageDealt*-1]);
+                        $this->resourceService->update($caster, [$resourceKey => $damageDealt]);
 
                         $this->statsService->updateStat($caster, ($resourceKey .  '_stolen'), $damageDealt);
                         $this->statsService->updateStat($target, ($resourceKey . '_lost'), $damageDealt);
@@ -610,7 +610,7 @@ class SorceryActionService
             $this->statsService->updateStat($caster, 'sorcery_wizard_strength', $wizardStrength);
 
             // Remove mana
-            $this->resourceService->updateResources($caster, ['mana' => $manaCost*-1]);
+            $this->resourceService->update($caster, ['mana' => $manaCost*-1]);
             $this->statsService->updateStat($caster, 'mana_cast', $manaCost);
 
             // Remove wizard strength

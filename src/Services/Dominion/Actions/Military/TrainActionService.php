@@ -431,7 +431,7 @@ class TrainActionService
                     $resourceCosts[$resourceKey] = $cost*-1;
                 }
             }
-            $this->resourceService->updateResources($dominion, $resourceCosts);
+            $this->resourceService->update($dominion, $resourceCosts);
 
             foreach($data as $unitType => $amountToTrain)
             {

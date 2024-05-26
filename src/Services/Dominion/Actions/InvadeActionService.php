@@ -376,7 +376,7 @@ class InvadeActionService
                     }
                     else
                     {
-                        $this->resourceService->updateResources($attacker, [$resourceKey => $resourceCostToInvade*-1]);
+                        $this->resourceService->update($attacker, [$resourceKey => $resourceCostToInvade*-1]);
                     }
                 }
             }
@@ -1683,7 +1683,7 @@ class InvadeActionService
                             $this->invasion['attacker']['resources_destroyed'][$resourceKey] = $maxDestroyedBySlot;
                         }
 
-                        $this->resourceService->updateResources($defender, [$resourceKey => ($maxDestroyedBySlot * -1)]);
+                        $this->resourceService->update($defender, [$resourceKey => ($maxDestroyedBySlot * -1)]);
                     }
                 }
 
@@ -1707,7 +1707,7 @@ class InvadeActionService
                                 $this->invasion['attacker']['resources_destroyed'][$resourceKey] = $maxDestroyedBySlot;
                             }
     
-                            $this->resourceService->updateResources($defender, [$resourceKey => ($maxDestroyedBySlot * -1)]);
+                            $this->resourceService->update($defender, [$resourceKey => ($maxDestroyedBySlot * -1)]);
                         }
                     }
                 }
@@ -1724,7 +1724,7 @@ class InvadeActionService
 
                $this->invasion['attacker'][$resourceKey . '_exhausted'] = $resourceAmount;
 
-               $this->resourceService->updateResources($attacker, [$resourceKey => ($resourceAmount * -1)]);
+               $this->resourceService->update($attacker, [$resourceKey => ($resourceAmount * -1)]);
            }
 
            # Yeti: Stonethrowers spend ore (but not necessarily all of it)
@@ -1737,7 +1737,7 @@ class InvadeActionService
 
                $this->invasion['attacker'][$resourceKey . '_exhausted'] = $resourceAmountExhausted;
 
-               $this->resourceService->updateResources($attacker, [$resourceKey => ($resourceAmountExhausted * -1)]);
+               $this->resourceService->update($attacker, [$resourceKey => ($resourceAmountExhausted * -1)]);
            }
 
            # Imperial Gnome: brimmer to fuel the Airships
@@ -1751,7 +1751,7 @@ class InvadeActionService
 
                $this->invasion['attacker'][$resourceKey . '_exhausted'] = $resourceAmountSpent;
 
-               $this->resourceService->updateResources($attacker, [$resourceKey => ($resourceAmountSpent * -1)]);
+               $this->resourceService->update($attacker, [$resourceKey => ($resourceAmountSpent * -1)]);
            }
         }
 
@@ -1872,7 +1872,7 @@ class InvadeActionService
                             $this->invasion['attacker']['resources_destroyed'][$resourceKey] = $maxDestroyedBySlot;
                         }
 
-                        $this->resourceService->updateResources($defender, [$resourceKey => ($maxDestroyedBySlot * -1)]);
+                        $this->resourceService->update($defender, [$resourceKey => ($maxDestroyedBySlot * -1)]);
                     }
                 }
             }
@@ -1902,7 +1902,7 @@ class InvadeActionService
         foreach($defenderResourceAmountExhausted as $resourceKey => $amount)
         {
             $amount = min($defender->{'resource_' . $resourceKey}, $amount);
-            $this->resourceService->updateResources($defender, [$resourceKey => ($amount * -1)]);
+            $this->resourceService->update($defender, [$resourceKey => ($amount * -1)]);
             $this->invasion['defender']['resources_spent'][$resourceKey] = $amount;
         }
 
@@ -2138,7 +2138,7 @@ class InvadeActionService
 
         $resourceArray = ['blood' => $this->invasion['defender']['displaced_peasants_killing']['blood'], 'soul' => $this->invasion['defender']['displaced_peasants_killing']['soul']];
 
-        $this->resourceService->updateResources($defender, $resourceArray);
+        $this->resourceService->update($defender, $resourceArray);
 
     }
 
@@ -2578,7 +2578,7 @@ class InvadeActionService
 
                 $this->invasion['defender']['resources_lost'][$resourceKey] = $resourceAmountLost;
 
-                $this->resourceService->updateResources($defender, [$resourceKey => ($resourceAmountOwned * -1)]);
+                $this->resourceService->update($defender, [$resourceKey => ($resourceAmountOwned * -1)]);
             }
         }
 
@@ -2644,7 +2644,7 @@ class InvadeActionService
             {
                 if($resourceKey !== 'bodies_spent')
                 {
-                    $this->resourceService->updateResources($converter, [$resourceKey => max(0, $resourceAmount)]);
+                    $this->resourceService->update($converter, [$resourceKey => max(0, $resourceAmount)]);
                 }
             }
         }
@@ -2771,7 +2771,7 @@ class InvadeActionService
             if($amount > 0)
             {
                 $result['attacker']['plunder'][$resourceKey] = min($amount, $defender->{'resource_' . $resourceKey});
-                $this->resourceService->updateResources($defender, [$resourceKey => ($result['attacker']['plunder'][$resourceKey] * -1)]);
+                $this->resourceService->update($defender, [$resourceKey => ($result['attacker']['plunder'][$resourceKey] * -1)]);
             }
         }
 
@@ -2780,7 +2780,7 @@ class InvadeActionService
         {
             if($amount > 0)
             {
-                $this->resourceService->updateResources($defender, [$resourceKey => $amount]);
+                $this->resourceService->update($defender, [$resourceKey => $amount]);
             }
         }
 

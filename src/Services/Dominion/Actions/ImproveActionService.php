@@ -151,7 +151,7 @@ class ImproveActionService
 
         $this->improvementCalculator->createOrIncrementImprovements($dominion, $data);
 
-        $this->resourceService->updateResources($dominion, [$resource => $totalResourcesToInvest*-1]);
+        $this->resourceService->update($dominion, [$resource => $totalResourcesToInvest*-1]);
 
         $dominion->most_recent_improvement_resource = $resource;
 

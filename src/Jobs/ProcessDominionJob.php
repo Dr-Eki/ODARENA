@@ -153,9 +153,6 @@ class ProcessDominionJob implements ShouldQueue
             xtLog("[{$this->dominion->id}] ** Updating resources");
             $this->handleResources($this->dominion);
 
-            #xtLog("[{$this->dominion->id}] ** Handle stasis");
-            #$this->handleStasis($this->dominion);
-
             xtLog("[{$this->dominion->id}] ** Handle Pestilence");
             $this->handlePestilence($this->dominion);
 
@@ -171,31 +168,132 @@ class ProcessDominionJob implements ShouldQueue
             xtLog("[{$this->dominion->id}] ** Updating spells");
             $this->updateSpells($this->dominion);
 
+            xtLog("[{$this->dominion->id}] ** Audit and repair terrain");
+            $this->terrainService->auditAndRepairTerrain($this->dominion);
+                
+            xtLog("[{$this->dominion->id}] ** Handle finished queues");
+            $this->handleFinishedQueues($this->dominion);
+
+            xtLog("[{$this->dominion->id}] ** Clear finished queues");
+            $this->deleteFinishedQueues($this->dominion);
+    
+            xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
+            $this->handleFinishedSpells($this->dominion);
+    
+            xtLog("[{$this->dominion->id}] ** Clearing finished spells");
+            $this->deleteFinishedSpells($this->dominion);
+
             xtLog("[{$this->dominion->id}] ** Sending notifications (hourly_dominion)");
             $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
         });
 
-        # Cannot be a part of the DB transaction because it might cause deadlocks
-        xtLog("[{$this->dominion->id}] ** Audit and repair terrain");
-        $this->terrainService->auditAndRepairTerrain($this->dominion);
-            
-        # Also cannot be a part of the DB transaction because it might cause deadlocks
-        xtLog("[{$this->dominion->id}] ** Handle finished queues");
-        $this->handleFinishedQueues($this->dominion);
-
-        # Cannot be a part of the DB transaction because it might cause deadlocks
-        xtLog("[{$this->dominion->id}] ** Clear finished queues");
-        $this->clearFinishedQueues($this->dominion);
-
-        xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
-        $this->handleFinishedSpells($this->dominion);
-
-        # And do it again to prepare for the next tick 
-        #xtLog("[{$this->dominion->id}] ** Re-precalculate tick");
-        #$this->tickCalculator->precalculateTick($this->dominion);
-
         xtLog("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number})");
         $this->notificationService->sendNotifications($this->dominion, 'hourly_dominion');
+    }
+
+    protected function advanceQueues(Dominion $dominion): void
+    {
+        if($dominion->isAbandoned() or $dominion->isLocked())
+        {
+            xtLog("[{$dominion->id}] *** Dominion is abandoned or locked, skipping queue advancement");
+            return;
+        }
+
+        xtLog("[{$dominion->id}] *** Advancing all dominion queues");
+        $attempts = (int)config('ticking.deadlock_retry_attempts');
+        $delay = (int)config('ticking.deadlock_retry_delay');
+
+        for ($attempt = 1; $attempt <= $attempts; $attempt++)
+        {
+            try
+            {
+                DB::transaction(function () use ($dominion)
+                {
+                    $dominion->queues()
+                    ->where('hours', '>', 0)
+                    ->decrement('hours');
+                });
+                break; // If successful, exit the loop
+            }
+            catch (\Illuminate\Database\QueryException $e)
+            {
+                if ($e->getCode() == 1213 && $attempt < $attempts)
+                { 
+                    sleep($delay); 
+                    xtLog("[{$dominion->id}] Deadlock detected in ProcessDominionJob::advanceQueues(), retrying... (attempt $attempt/$attempts)");
+                    continue;
+                }
+                throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
+            }
+        }
+    }
+
+    protected function handleBarbarians(Dominion $barbarian): void
+    {
+        if($barbarian->race->name !== 'Barbarian')
+        {
+            return;
+        }
+        
+        xtLog("[{$barbarian->id}] *** Handle Barbarian invasions");
+        $this->barbarianService->handleBarbarianInvasion($barbarian);
+
+        xtLog("[{$barbarian->id}] *** Handle Barbarian construction");
+        $this->barbarianService->handleBarbarianConstruction($barbarian);
+
+        xtLog("[{$barbarian->id}] *** Handle Barbarian improvements");
+        $this->barbarianService->handleBarbarianImprovements($barbarian);
+
+        xtLog("[{$barbarian->id}] *** Handle Barbarian training");
+        $this->barbarianService->handleBarbarianTraining($barbarian);
+    }
+
+
+    protected function handleCaptureInsight(Dominion $dominion): void
+    {
+        if(
+            ($this->dominion->round->ticks % 4 == 0) and
+            $dominion->protection_ticks == 0 and
+            $this->dominion->round->hasStarted() and
+            !$this->dominion->getSpellPerkValue('fog_of_war') and
+            !$this->dominion->isAbandoned()
+            )
+        {
+            #$this->queueService->setForTick(false); # Necessary as otherwise this-tick units are missing
+
+            xtLog("[{$this->dominion->id}] ** Capturing insight for {$this->dominion->name}");
+            $this->insightService->captureDominionInsight($this->dominion);
+
+            #$this->queueService->setForTick(true); # Reset
+        }
+    }
+
+    # Take artefacts that are one tick away from finished and create or increment RealmArtefact.
+    private function handleArtefacts(Dominion $dominion): void
+    {
+        $finishedArtefactsInQueue = DB::table('dominion_queue')
+                                        ->where('dominion_id',$dominion->id)
+                                        ->where('source', 'artefact')
+                                        ->where('hours', 0)
+                                        ->get();
+        foreach($finishedArtefactsInQueue as $finishedArtefactInQueue)
+        {
+            $artefactKey = $finishedArtefactInQueue->resource;
+            $artefact = Artefact::where('key', $artefactKey)->first();
+
+            $this->artefactService->addArtefactToRealm($dominion->realm, $artefact);
+
+            GameEvent::create([
+                'round_id' => $dominion->round_id,
+                'source_type' => Artefact::class,
+                'source_id' => $artefact->id,
+                'target_type' => Realm::class,
+                'target_id' => $dominion->realm->id,
+                'type' => 'artefact_completed',
+                'data' => ['dominion_id' => $dominion->id],
+                'tick' => $dominion->round->ticks
+            ]);
+        }
     }
 
     # Take buildings that are one tick away from finished and create or increment DominionBuildings.
@@ -228,6 +326,57 @@ class ProcessDominionJob implements ShouldQueue
         $this->buildingService->update($dominion, $buildingsToAdd);
     }
 
+    # Take deities that are one tick away from finished and create or increment DominionImprovements.
+    private function handleDeities(Dominion $dominion): void
+    {
+        if($dominion->hasDeity())
+        {
+            return;
+        }
+
+        $finishedDeitiesInQueue = DB::table('dominion_queue')
+                    ->where('dominion_id',$dominion->id)
+                    ->where('source', 'deity')
+                    ->where('hours', 0)
+                    ->get();
+
+        xtLog("[{$this->dominion->id}] ** Finished deities in queue: " . $finishedDeitiesInQueue->count());
+
+        if(!$finishedDeitiesInQueue->count())
+        {
+            return;
+        }
+
+        foreach($finishedDeitiesInQueue as $finishedDeityInQueue)
+        {
+            $deityKey = $finishedDeityInQueue->resource;
+            $deity = Deity::where('key', $deityKey)->first();
+            $this->deityService->completeSubmissionToDeity($dominion, $deity);
+
+            GameEvent::create([
+                'round_id' => $dominion->round_id,
+                'source_type' => Deity::class,
+                'source_id' => $deity->id,
+                'target_type' => Dominion::class,
+                'target_id' => $dominion->id,
+                'type' => 'deity_completed',
+                'data' => NULL,
+                'tick' => $dominion->round->ticks
+            ]);
+        }
+    }
+
+    private function handleDevotion(Dominion $dominion): void
+    {
+        if(!$dominion->hasDeity())
+        {
+            return;
+        }
+
+        $dominion->dominionDeity->increment('duration', 1);
+        $dominion->dominionDeity->save();
+    }
+
     # Take improvements that are one tick away from finished and create or increment DominionImprovements.
     private function handleImprovements(Dominion $dominion): void
     {
@@ -237,7 +386,6 @@ class ProcessDominionJob implements ShouldQueue
                                         ->where('hours', 0)
                                         ->get();
 
-        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Finished improvements in queue: " . $finishedImprovementsInQueue->count()); }
         xtLog("[{$this->dominion->id}] ** Finished improvements in queue: " . $finishedImprovementsInQueue->count());
 
         if(!$finishedImprovementsInQueue->count())
@@ -289,57 +437,77 @@ class ProcessDominionJob implements ShouldQueue
         }
     }
 
-    # Take deities that are one tick away from finished and create or increment DominionImprovements.
-    private function handleDeities(Dominion $dominion): void
+    protected function handleLandGeneration(Dominion $dominion): void
     {
-        if($dominion->hasDeity())
+        if(!empty($dominion->tick->generated_land))
         {
-            return;
+            $this->queueService->queueResources('exploration', $dominion, ['land' => $dominion->tick->generated_land], 12);
         }
-
-        $finishedDeitiesInQueue = DB::table('dominion_queue')
-                    ->where('dominion_id',$dominion->id)
-                    ->where('source', 'deity')
-                    ->where('hours', 0)
-                    ->get();
-
-        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Finished deities in queue: " . $finishedDeitiesInQueue->count()); }
-        xtLog("[{$this->dominion->id}] ** Finished deities in queue: " . $finishedDeitiesInQueue->count());
-
-        if(!$finishedDeitiesInQueue->count())
-        {
-            return;
-        }
-
-        foreach($finishedDeitiesInQueue as $finishedDeityInQueue)
-        {
-            $deityKey = $finishedDeityInQueue->resource;
-            $deity = Deity::where('key', $deityKey)->first();
-            $this->deityService->completeSubmissionToDeity($dominion, $deity);
-
-            GameEvent::create([
-                'round_id' => $dominion->round_id,
-                'source_type' => Deity::class,
-                'source_id' => $deity->id,
-                'target_type' => Dominion::class,
-                'target_id' => $dominion->id,
-                'type' => 'deity_completed',
-                'data' => NULL,
-                'tick' => $dominion->round->ticks
-            ]);
-        }
-
     }
 
-    private function handleDevotion(Dominion $dominion): void
+    public function handlePestilence(Dominion $afflicted): void
     {
-        if(!$dominion->hasDeity())
+        if($afflicted->race->key !== 'afflicted')
         {
             return;
         }
 
-        $dominion->dominionDeity->increment('duration', 1);
-        $dominion->dominionDeity->save();
+        $unitsGenerated = [];
+
+        $pestilenceIds = Spell::whereIn('key', ['pestilence', 'lesser_pestilence'])->pluck('id');
+        $pestilences = DominionSpell::with('spell')
+            ->whereIn('spell_id', $pestilenceIds)
+            ->where('caster_id', $afflicted->id)
+            ->where('duration','>',0)
+            ->get()
+            ->sortByDesc('created_at');
+
+        xtLog('*** 🦠 Has ' . $pestilences->count() . ' active pestilence(s)');
+
+        foreach($pestilences as $dominionSpellPestilence)
+        {
+            $target = Dominion::find($dominionSpellPestilence->dominion_id);
+
+            if($target->peasants <= 100)
+            {
+                continue;
+            }
+
+            $pestilence = $dominionSpellPestilence->spell->getActiveSpellPerkValues($dominionSpellPestilence->spell->key, 'kill_peasants_and_converts_for_caster_unit');
+            $ratio = $pestilence[0] / 100;
+            $slot = $pestilence[1];
+
+            if($ratio and $slot)
+            {
+                $peasantsKilled = (int)floor($target->peasants * $ratio);
+                $unitsGenerated[$slot] = isset($unitsGenerated[$slot]) ? $unitsGenerated[$slot] + $peasantsKilled : $peasantsKilled;
+
+                xtLog("[{$afflicted->id}] *** {$dominionSpellPestilence->spell->name} :{$target->name} ({$target->id}) lost $peasantsKilled peasants to pestilence.");
+            }
+        }
+
+        if(!empty($unitsGenerated))
+        {
+            xtLog("[{$afflicted->id}] *** Queuing units generated from pestilences.");
+
+            foreach($unitsGenerated as $slot => $amount)
+            {
+                xtLog("[{$afflicted->id}] **** {$amount} unit$slot queued.");
+
+                try {
+                    DB::transaction(function () use ($unitsGenerated, $afflicted) {
+                        foreach ($unitsGenerated as $slot => $amount) {
+                            $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
+
+                            xtLog("[{$afflicted->id}] *** Successfully queued {$amount} units of type {$slot} for {$afflicted->name}.");
+                        }
+                    });
+                } catch (\Exception $e) {
+                    Log::error("Failed to queue units: " . $e->getMessage());
+                    xtLog("[{$afflicted->id}] *** Failed to queue units: " . $e->getMessage() . " ({$e->getLine()})");
+                }
+            }
+        }
     }
 
     # Take research that is one tick away from finished and create DominionTech.
@@ -391,37 +559,16 @@ class ProcessDominionJob implements ShouldQueue
             $resourcesProduced += $this->resourceCalculator->getNetProduction($dominion, $resourceKey);
 
             $resourcesNetChange[$resourceKey] = $resourcesProduced;
+
+            $resourcesProducedRaw = $this->resourceCalculator->getProduction($dominion, $resourceKey);
+            $resourcesConsumed = $this->resourceCalculator->getConsumption($dominion, $resourceKey);
+
+            xtLog("[{$dominion->id}] *** Resource: {$resourcesProducedRaw} {$resourceKey} raw produced.");
+            xtLog("[{$dominion->id}] *** Resource: {$resourcesConsumed} {$resourceKey} consumed.");
+            xtLog("[{$dominion->id}] *** Resource: {$resourcesProduced} {$resourceKey} net produced.");
         }
 
-        $this->resourceService->updateResources($dominion, $resourcesNetChange);
-    }
-
-    # Take artefacts that are one tick away from finished and create or increment RealmArtefact.
-    private function handleArtefacts(Dominion $dominion): void
-    {
-        $finishedArtefactsInQueue = DB::table('dominion_queue')
-                                        ->where('dominion_id',$dominion->id)
-                                        ->where('source', 'artefact')
-                                        ->where('hours', 0)
-                                        ->get();
-        foreach($finishedArtefactsInQueue as $finishedArtefactInQueue)
-        {
-            $artefactKey = $finishedArtefactInQueue->resource;
-            $artefact = Artefact::where('key', $artefactKey)->first();
-
-            $this->artefactService->addArtefactToRealm($dominion->realm, $artefact);
-
-            GameEvent::create([
-                'round_id' => $dominion->round_id,
-                'source_type' => Artefact::class,
-                'source_id' => $artefact->id,
-                'target_type' => Realm::class,
-                'target_id' => $dominion->realm->id,
-                'type' => 'artefact_completed',
-                'data' => ['dominion_id' => $dominion->id],
-                'tick' => $dominion->round->ticks
-            ]);
-        }
+        $this->resourceService->update($dominion, $resourcesNetChange);
     }
 
     # Take buildings that are one tick away from finished and create or increment DominionBuildings.
@@ -446,321 +593,9 @@ class ProcessDominionJob implements ShouldQueue
         $this->terrainService->handleTerrainTransformation($dominion);
     }
 
-    # This function handles queuing of evolved units (Vampires)
     private function handleUnits(Dominion $dominion): void
     {
         return;
-        # Space reserved for units 2.0
-
-        /*
-        $units = $this->unitCalculator->getDominionUnitBlankArray($dominion);
-        $evolvedUnitsTo = [];
-        $evolvedUnitsFrom = [];
-        $evolutionMultiplier = $this->unitCalculator->getEvolutionMultiplier($dominion);
-    
-        foreach($units as $slot => $zero)
-        {
-
-            $unitCapacityAvailable = $this->unitCalculator->getUnitCapacityAvailable($dominion, $slot);
-
-            if($unitEvolutionPerk = $dominion->race->getUnitPerkValueForUnitSlot($slot, 'evolves_into_unit'))
-            {
-                $targetSlot = (int)$unitEvolutionPerk[0];
-                $evolutionRatio = (float)$unitEvolutionPerk[1];
-    
-                $unitCount = $dominion->{'military_unit' . $slot};
-    
-                $unitsEvolved = $unitCount * ($evolutionRatio / 100);
-                $unitsEvolved = floor($unitsEvolved * $evolutionMultiplier);
-                $unitsEvolved = (int)min($unitCount, $unitsEvolved);
-
-                if($this->unitCalculator->unitHasCapacityLimit($dominion, $slot))
-                {
-                    $unitsEvolved = min($unitsEvolved, $unitCapacityAvailable);
-                }
-    
-                if($unitsEvolved > 0)
-                {
-                    if(isset($evolvedUnitsTo[$targetSlot]))
-                    {
-                        $evolvedUnitsTo[$targetSlot] += $unitsEvolved;
-                        $evolvedUnitsFrom[$targetSlot] += $unitsEvolved;
-                    }
-                    else
-                    {
-                        $evolvedUnitsTo[$targetSlot] = $unitsEvolved;
-                        $evolvedUnitsFrom[$slot] = $unitsEvolved;
-                    }
-                }
-            }
-        }
-
-    
-        foreach($evolvedUnitsTo as $targetSlot => $evolvedUnitAmount)
-        {
-            $evolvedUnit = $dominion->race->units->where('slot', $targetSlot)->first();
-    
-            $this->queueService->queueResources('evolution', $dominion, ['military_unit' . $targetSlot => $evolvedUnitAmount], ($evolvedUnit->training_time + 0)); # trying +0, was +1 because 12 becomes 11 otherwise
-        }
-
-        foreach($evolvedUnitsFrom as $sourceSlot => $amountEvolved)
-        {
-            $dominion->{'military_unit' . $sourceSlot} -= $amountEvolved;
-        }
-
-        $dominion->save();
-        */
-
-    }
-
-    // Scoot hour 1 Qur Stasis units back to hour 2
-    /*
-    public function handleStasis(Dominion $dominion): void
-    {
-        if(!$dominion->getSpellPerkValue('stasis'))
-        {
-            return;
-        }
-
-        $this->temporaryData[$dominion->round->id]['stasis_dominions'][] = $dominion->id;
-
-        #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Dominion is in stasis"); }
-        xtLog("[{$this->dominion->id}] ** Dominion is in stasis");
-
-        $stasisDominion = Dominion::findorfail($dominion->id);
-
-        ## Determine how many of each unit type is returning in $tick ticks
-        $tick = 1;
-
-        foreach (range(1, $stasisDominion->race->units->count()) as $slot)
-        {
-            $unitType = 'unit' . $slot;
-            for ($i = 1; $i <= 12; $i++)
-            {
-                $invasionQueueUnits[$slot][$i] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_{$unitType}", $i);
-            }
-        }
-
-        #$this->queueService->setForTick(false);
-        foreach($stasisDominion->race->units as $unit)
-        {
-            $units['unit' . $unit->slot] = $this->queueService->getInvasionQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
-        }
-        
-        $units['spies'] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_spies", $tick);
-        $units['wizards'] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_wizards", $tick);
-        $units['archmages'] = $this->queueService->getInvasionQueueAmount($stasisDominion, "military_archmages", $tick);
-
-        foreach($units as $slot => $amount)
-        {
-            $unitType = 'military_'.$slot;
-            # Dequeue the units from hour 1
-            $this->queueService->dequeueResourceForHour('invasion', $stasisDominion, $unitType, $amount, $tick);
-            #echo "\nUnits dequeued";
-
-            # (Re-)Queue the units to hour 2
-            $this->queueService->queueResources('invasion', $stasisDominion, [$unitType => $amount], ($tick+1));
-            #echo "\nUnits requeued";
-        }
-
-        foreach($stasisDominion->race->units as $unit)
-        {
-            $units['unit' . $unit->slot] = $this->queueService->getExpeditionQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
-        }
-
-        foreach($units as $slot => $amount)
-        {
-            $unitType = 'military_'.$slot;
-            # Dequeue the units from hour 1
-            $this->queueService->dequeueResourceForHour('invasion', $stasisDominion, $unitType, $amount, $tick);
-            #echo "\nUnits dequeued";
-
-            # (Re-)Queue the units to hour 2
-            $this->queueService->queueResources('invasion', $stasisDominion, [$unitType => $amount], ($tick+1));
-            #echo "\nUnits requeued";
-        }
-
-        foreach($stasisDominion->race->units as $unit)
-        {
-            $units['unit' . $unit->slot] = $this->queueService->getTheftQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
-        }
-        
-        $units['spies'] = $this->queueService->getTheftQueueAmount($stasisDominion, "military_spies", $tick);
-
-        foreach($units as $slot => $amount)
-        {
-            $unitType = 'military_'.$slot;
-            # Dequeue the units from hour 1
-            $this->queueService->dequeueResourceForHour('theft', $stasisDominion, $unitType, $amount, $tick);
-
-            # (Re-)Queue the units to hour 2
-            $this->queueService->queueResources('theft', $stasisDominion, [$unitType => $amount], ($tick+1));
-        }
-
-        foreach($stasisDominion->race->units as $unit)
-        {
-            $units['unit' . $unit->slot] = $this->queueService->getSabotageQueueAmount($stasisDominion, ('military_unit'. $unit->slot), $tick);
-        }
-
-        $units['spies'] = $this->queueService->getSabotageQueueAmount($stasisDominion, "military_spies", $tick);
-
-        foreach($units as $slot => $amount)
-        {
-            $unitType = 'military_'.$slot;
-            # Dequeue the units from hour 1
-            $this->queueService->dequeueResourceForHour('sabotage', $stasisDominion, $unitType, $amount, $tick);
-            #echo "\nUnits dequeued";
-
-            # (Re-)Queue the units to hour 2
-            $this->queueService->queueResources('sabotage', $stasisDominion, [$unitType => $amount], ($tick+1));
-            #echo "\nUnits requeued";
-        }
-
-        #$this->queueService->setForTick(true);
-    }
-    */
-
-    protected function advanceQueues(Dominion $dominion): void
-    {
-        xtLog("[{$dominion->id}] *** Advancing all dominion queues");
-        $attempts = 10; // Number of attempts to retry
-        $delay = 1; // Delay in seconds between attempts
-
-        for ($attempt = 1; $attempt <= $attempts; $attempt++) {
-            try {
-                DB::transaction(function () use ($dominion) {
-                    $dominion->queues()
-                    ->where('hours', '>', 0)
-                    ->decrement('hours');
-                });
-                break; // If successful, exit the loop
-            } catch (\Illuminate\Database\QueryException $e) {
-                if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
-                    sleep($delay); // Wait a bit before retrying
-                    xtLog("[{$dominion->id}] Deadlock detected in ProcessDominionJob::advanceQueues(), retrying... (attempt $attempt/$attempts)");
-                    continue;
-                }
-                throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
-            }
-        }
-    }
-
-    protected function handleBarbarians(Dominion $barbarian): void
-    {
-        if($barbarian->race->name !== 'Barbarian')
-        {
-            return;
-        }
-
-        #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian invasions"); }
-        xtLog("[{$barbarian->id}] *** Handle Barbarian invasions");
-        $this->barbarianService->handleBarbarianInvasion($barbarian);
-
-        #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian construction"); }
-        xtLog("[{$barbarian->id}] *** Handle Barbarian construction");
-        $this->barbarianService->handleBarbarianConstruction($barbarian);
-
-        #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian improvements"); }
-        xtLog("[{$barbarian->id}] *** Handle Barbarian improvements");
-        $this->barbarianService->handleBarbarianImprovements($barbarian);
-
-        #if(config('game.extended_logging')) { Log::debug("*** Handle Barbarian training"); }
-        xtLog("[{$barbarian->id}] *** Handle Barbarian training");
-        $this->barbarianService->handleBarbarianTraining($barbarian);
-    }
-
-    protected function handleCaptureInsight(Dominion $dominion): void
-    {
-        if(
-            ($this->dominion->round->ticks % 4 == 0) and
-            $dominion->protection_ticks == 0 and
-            $this->dominion->round->hasStarted() and
-            !$this->dominion->getSpellPerkValue('fog_of_war') and
-            !$this->dominion->isAbandoned()
-            )
-        {
-            #$this->queueService->setForTick(false); # Necessary as otherwise this-tick units are missing
-
-            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Capturing insight for {$this->dominion->name}"); }
-            xtLog("[{$this->dominion->id}] ** Capturing insight for {$this->dominion->name}");
-            $this->insightService->captureDominionInsight($this->dominion);
-
-            #$this->queueService->setForTick(true); # Reset
-        }
-    }
-
-    public function handlePestilence(Dominion $afflicted): void
-    {
-        if($afflicted->race->key !== 'afflicted')
-        {
-            return;
-        }
-
-        $unitsGenerated = [];
-
-        $pestilenceIds = Spell::whereIn('key', ['pestilence', 'lesser_pestilence'])->pluck('id');
-        $pestilences = DominionSpell::with('spell')
-            ->whereIn('spell_id', $pestilenceIds)
-            ->where('caster_id', $afflicted->id)
-            ->where('duration','>',0)
-            ->get()
-            ->sortByDesc('created_at');
-
-        #if(config('game.extended_logging')) { Log::debug('*** 🦠 Has ' . $pestilences->count() . ' active pestilence(s)'); }
-        xtLog('*** 🦠 Has ' . $pestilences->count() . ' active pestilence(s)');
-
-        foreach($pestilences as $dominionSpellPestilence)
-        {
-            $target = Dominion::find($dominionSpellPestilence->dominion_id);
-
-            if($target->peasants <= 100)
-            {
-                continue;
-            }
-
-            $pestilence = $dominionSpellPestilence->spell->getActiveSpellPerkValues($dominionSpellPestilence->spell->key, 'kill_peasants_and_converts_for_caster_unit');
-            $ratio = $pestilence[0] / 100;
-            $slot = $pestilence[1];
-
-            if($ratio and $slot)
-            {
-                $peasantsKilled = (int)floor($target->peasants * $ratio);
-                $unitsGenerated[$slot] = isset($unitsGenerated[$slot]) ? $unitsGenerated[$slot] + $peasantsKilled : $peasantsKilled;
-
-                xtLog("[{$afflicted->id}] *** {$dominionSpellPestilence->spell->name} :{$target->name} ({$target->id}) lost $peasantsKilled peasants to pestilence.");
-            }
-        }
-
-        if(!empty($unitsGenerated))
-        {
-            xtLog("[{$afflicted->id}] *** Queuing units generated from pestilences.");
-
-            foreach($unitsGenerated as $slot => $amount)
-            {
-                xtLog("[{$afflicted->id}] **** {$amount} unit$slot queued.");
-
-                try {
-                    DB::transaction(function () use ($unitsGenerated, $afflicted) {
-                        foreach ($unitsGenerated as $slot => $amount) {
-                            $this->queueService->queueResources('summoning', $afflicted, [('military_unit' . $slot) => $amount], 12);
-
-                            xtLog("[{$afflicted->id}] *** Successfully queued {$amount} units of type {$slot} for {$afflicted->name}.");
-                        }
-                    });
-                } catch (\Exception $e) {
-                    Log::error("Failed to queue units: " . $e->getMessage());
-                    xtLog("[{$afflicted->id}] *** Failed to queue units: " . $e->getMessage() . " ({$e->getLine()})");
-                }
-            }
-        }
-    }
-
-    protected function handleLandGeneration(Dominion $dominion): void
-    {
-        if(!empty($dominion->tick->generated_land))
-        {
-            $this->queueService->queueResources('exploration', $dominion, ['land' => $dominion->tick->generated_land], 12);
-        }
     }
 
     public function handleUnitGeneration(Dominion $dominion): void
@@ -769,7 +604,7 @@ class ProcessDominionJob implements ShouldQueue
         {
             if(!empty($dominion->tick->{'generated_unit' . $unit->slot}))
             {
-                $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 0)); # trying +0, was +1 because it's ticking
+                $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 0));
             }
         }
     }
@@ -778,14 +613,12 @@ class ProcessDominionJob implements ShouldQueue
     {
         if($this->resourceCalculator->isOnBrinkOfStarvation($dominion) and !$dominion->isAbandoned())
         {
-            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Queue starvation notifications"); }
             xtLog("[{$this->dominion->id}] ** Queue starvation notifications");
             $this->notificationService->queueNotification('starvation_occurred');
         }
 
         if(array_sum($this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']) > 0 and !$dominion->isAbandoned())
         {
-            #if(config('game.extended_logging')) { Log::debug("[{$this->dominion->id}] ** Queue attrition notifications "); }
             xtLog("[{$this->dominion->id}] ** Queue attrition notifications ");
             $this->notificationService->queueNotification('attrition_occurred', $this->temporaryData[$dominion->round->id][$dominion->id]['units_attrited']);
         }
@@ -795,27 +628,24 @@ class ProcessDominionJob implements ShouldQueue
     {
         foreach($dominion->dominionSpells as $dominionSpell)
         {
-            if($dominionSpell->duration > 0)
-            {
-                $dominionSpell->decrement('duration');
+            $updates = [];
+    
+            if($dominionSpell->duration > 0) {
+                $updates['duration'] = DB::raw('GREATEST(0, duration - 1)');
             }
-
-            if($dominionSpell->cooldown > 0)
-            {
-                $dominionSpell->decrement('cooldown');
+    
+            if($dominionSpell->cooldown > 0) {
+                $updates['cooldown'] = DB::raw('GREATEST(0, cooldown - 1)');
             }
-
-            $dominionSpell->save();
+    
+            if (!empty($updates)) {
+                $dominionSpell->update($updates);
+            }
         }
     }
 
     protected function handleFinishedSpells(Dominion $dominion)
     {
-        #$finished = DB::table('dominion_spells')
-        #    ->where('dominion_id', $dominion->id)
-        #    ->where('duration', '<=', 0)
-        #    ->where('cooldown', '<=', 0)
-        #    ->get();
 
         $finished = $dominion->dominionSpells()
             ->where('duration', '<=', 0)
@@ -853,26 +683,19 @@ class ProcessDominionJob implements ShouldQueue
                 $this->notificationService->queueNotification('harmful_magic_dissipated', $harmfulSpells);
             }
         }
-
-        # Delete finished spells
-        DB::table('dominion_spells')
-            ->where('dominion_id', $dominion->id)
-            ->where('duration', '<=', 0)
-            ->where('cooldown', '<=', 0)
-            ->delete();
     }
 
     protected function handleFinishedQueues(Dominion $dominion)
     {
-        if($dominion->isAbandoned())
+        if($dominion->isAbandoned() or $dominion->isLocked())
         {
+            xtLog("[{$dominion->id}] *** Dominion is abandoned or locked, skipping queue handling");
             return;
         }
 
         $finished = DB::table('dominion_queue')
             ->where('dominion_id', $dominion->id)
-            ->where('hours', '<=', 0)
-            #->where('hours', '=', 0)
+            ->where('hours', '=', 0)
             ->get();
 
         foreach ($finished->groupBy('source') as $source => $group)
@@ -906,12 +729,26 @@ class ProcessDominionJob implements ShouldQueue
         }
     }
 
-    public function clearFinishedQueues(Dominion $dominion)
+    # Delete finished spells
+    protected function deleteFinishedSpells(Dominion $dominion): void
     {
-        DB::table('dominion_queue')
+        $deletedSpells = DB::table('dominion_spells')
+            ->where('dominion_id', $dominion->id)
+            ->where('duration', '<=', 0)
+            ->where('cooldown', '<=', 0)
+            ->delete();
+        
+        xtLog("[{$dominion->id}] *** Deleted {$deletedSpells} finished spells.");
+    }
+
+    public function deleteFinishedQueues(Dominion $dominion)
+    {
+        $deletedQueueItems = DB::table('dominion_queue')
             ->where('dominion_id', $dominion->id)
             ->where('hours', '<=', 0)
             ->delete();
+
+        xtLog("[{$dominion->id}] *** Deleted {$deletedQueueItems} finished queue items.");
     }
 
 }
