@@ -120,8 +120,8 @@ class ProcessDominionJob implements ShouldQueue
         #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
         $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
 
-        #xtLog("[{$this->dominion->id}] ** Advancing queues");
-        #$this->advanceQueues($this->dominion);
+        xtLog("[{$this->dominion->id}] ** Advancing queues (if in protection)");
+        $this->advanceQueues($this->dominion);
 
         xtLog("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)");
         $this->handleBarbarians($this->dominion);
@@ -196,9 +196,9 @@ class ProcessDominionJob implements ShouldQueue
 
     protected function advanceQueues(Dominion $dominion): void
     {
-        if($dominion->isAbandoned() or $dominion->isLocked())
+        if($dominion->isAbandoned() or $dominion->isLocked() or $dominion->protection_ticks <= 0)
         {
-            xtLog("[{$dominion->id}] *** Dominion is abandoned or locked, skipping queue advancement");
+            xtLog("[{$dominion->id}] *** Dominion is abandoned, locked, or in protection: skipping queue advancement");
             return;
         }
 
