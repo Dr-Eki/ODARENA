@@ -41,6 +41,7 @@ use OpenDominion\Services\Dominion\InsightService;
 use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\ResearchService;
 use OpenDominion\Services\Dominion\TerrainService;
+use OpenDominion\Services\Dominion\TickChangeService;
 use OpenDominion\Services\Dominion\QueueService;
 use Throwable;
 
@@ -77,6 +78,7 @@ class TickService
     protected $researchService;
     protected $resourceService;
     protected $terrainService;
+    protected $tickChangeService;
     protected $tradeService;
 
     /**
@@ -106,6 +108,7 @@ class TickService
         $this->researchService = app(ResearchService::class);
         $this->resourceService = app(ResourceService::class);
         $this->terrainService = app(TerrainService::class);
+        $this->tickChangeService = app(TickChangeService::class);
         $this->tradeService = app(TradeService::class);
 
         /* These calculators need to ignore queued resources for the following tick */
@@ -156,6 +159,13 @@ class TickService
     
                 xtLog('* Update all dominions');
                 $this->updateDominions($round);
+
+                xtLog('* Advance all dominion queues');
+                $this->advanceAllDominionQueues($round);
+
+                xtLog('* Advance all trade route queues');
+                $this->advanceAllTradeRouteQueues($round);
+
             });
     
             xtLog('* Queue, process, and wait for dominion jobs.');
@@ -177,6 +187,9 @@ class TickService
                 'has_ended' => isset($round->end_tick) ? (($round->ticks + 1) >= $round->end_tick) : false,
             ])->save();
         }
+
+        xtLog('* Commit tick changes');
+        $this->handleTickCommit();
     
         $finishedAt = now();
         xtLog('Scheduled tick finished at ' . $finishedAt . '.');
@@ -375,6 +388,26 @@ class TickService
 
                 'dominions.last_tick_at' => DB::raw('now()')
             ]);
+    }
+
+    private function advanceAllDominionQueues(Round $round): void
+    {
+        DB::table('dominion_queue')
+            ->join('dominions', 'dominion_queue.dominion_id', '=', 'dominions.id')
+            ->where('dominions.round_id', $round->id)
+            ->where('dominions.is_locked', false)
+            ->where('dominions.protection_ticks', 0)
+            ->where('dominion_queue.hours', '>', 0)
+            ->decrement('dominion_queue.hours', 1);
+    }
+
+    private function advanceAllTradeRouteQueues(Round $round): void
+    {
+        DB::table('trade_route_queue')
+            ->join('trade_routes', 'trade_route_queue.trade_route_id', '=', 'trade_routes.id')
+            ->where('trade_routes.round_id', $round->id)
+            ->where('trade_route_queue.tick', '>', 0)
+            ->decrement('trade_route_queue.tick', 1);
     }
 
     private function updateArtefactsAegises(Round $round): void
@@ -759,6 +792,37 @@ class TickService
         }, $delay);
 
         usleep($closingDelay);
+    }
+
+    public function handleTickCommit(): void
+    {
+
+        # Make sure that all queued jobs are finished
+        $attempts = (int)config('ticking.queue_retry_attempts');
+        $delay = (int)config('ticking.queue_check_delay');
+        $openingDelay = (int)config('ticking.queue_opening_delay');
+        $closingDelay = (int)config('ticking.queue_closing_delay');
+
+        usleep(roundInt($openingDelay / 2));
+
+        retry($attempts, function () use ($delay) {
+            $i = isset($i) ? $i + 1 : 1;
+        
+            $infoString = sprintf(
+                '** Waiting for queued jobs to finish before committing tick. Current queue: %s. Next check in: %s ms.',
+                Redis::llen('queues:tick'),
+                number_format($delay)
+            );
+        
+            if (Redis::llen('queues:tick') !== 0) {
+                xtLog($infoString);
+                throw new Exception('Tick queue not finish');
+            }
+        }, $delay);
+
+        usleep(roundInt($openingDelay / 2));
+
+        $this->tickChangeService->commit();
     }
 
 }

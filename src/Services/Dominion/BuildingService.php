@@ -22,8 +22,6 @@ class BuildingService
     {
         DB::transaction(function () use ($dominion, $buildingKeys)
         {
-
-
             xtlog("[{$dominion->id}] **** Updating buildings for dominion: " . json_encode($buildingKeys));
 
             foreach($buildingKeys as $buildingKey => $amount)

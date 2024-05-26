@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use OpenDominion\Models\HoldSentimentEvent;
 use OpenDominion\Models\Resource;
+use OpenDominion\Models\TickChange;
 use OpenDominion\Models\TradeRoute;
 use OpenDominion\Models\TradeRoute\Queue;
 
@@ -117,12 +118,42 @@ class QueueService
     
                 if ($finishedQueue->type == 'import')
                 {
-                    $this->dominionResourceService->update($tradeRoute->dominion, [$finishedQueue->resource->key => $amount]);
+                    #$this->dominionResourceService->update($tradeRoute->dominion, [$finishedQueue->resource->key => $amount]);
+                    if($amount > 0)
+                    {
+                        $resource = Resource::fromKey($finishedQueue->resource->key);
+
+                        TickChange::create([
+                            'tick' => $tradeRoute->dominion->round->ticks,
+                            'source_type' => Resource::class,
+                            'source_id' => $resource->id,
+                            'target_type' => get_class($tradeRoute->dominion),
+                            'target_id' => $tradeRoute->dominion->id,
+                            'amount' => $amount,
+                            'status' => 0,
+                            'type' => 'trade',
+                        ]);
+                    }
                     xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to dominion {$tradeRoute->dominion->name} (ID {$tradeRoute->dominion->id})");
                 }
                 elseif ($finishedQueue->type == 'export')
                 {
-                    $this->holdResourceService->update($tradeRoute->hold, [$finishedQueue->resource->key => $amount]);
+                    #$this->holdResourceService->update($tradeRoute->hold, [$finishedQueue->resource->key => $amount]);
+                    if($amount > 0)
+                    {
+                        $resource = Resource::fromKey($finishedQueue->resource->key);
+
+                        TickChange::create([
+                            'tick' => $tradeRoute->hold->round->ticks,
+                            'source_type' => Resource::class,
+                            'source_id' => $resource->id,
+                            'target_type' => get_class($tradeRoute->hold),
+                            'target_id' => $tradeRoute->hold->id,
+                            'amount' => $amount,
+                            'status' => 0,
+                            'type' => 'trade',
+                        ]);
+                    }
                     xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to hold {$tradeRoute->hold->name}");
                 }
     

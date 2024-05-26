@@ -11,14 +11,17 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 use OpenDominion\Models\Artefact;
+use OpenDominion\Models\Building;
 use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionSpell;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Improvement;
-use OpenDominion\Models\Spell;
 use OpenDominion\Models\Realm;
+use OpenDominion\Models\Resource;
+use OpenDominion\Models\Spell;
 use OpenDominion\Models\Tech;
+use OpenDominion\Models\TickChange;
 
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
@@ -117,10 +120,8 @@ class ProcessDominionJob implements ShouldQueue
         #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
         $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Advancing queues");
-            $this->advanceQueues($this->dominion);
-        xtLog("[{$this->dominion->id}] ** Advancing queues");
-        $this->advanceQueues($this->dominion);
+        #xtLog("[{$this->dominion->id}] ** Advancing queues");
+        #$this->advanceQueues($this->dominion);
 
         xtLog("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)");
         $this->handleBarbarians($this->dominion);
@@ -323,9 +324,25 @@ class ProcessDominionJob implements ShouldQueue
             $buildingsToAdd[$buildingKey] = $amount;
 
             xtLog("[{$dominion->id}] *** {$amount} building {$buildingKey} finished.");
+
+            if($amount > 0)
+            {
+                $building = Building::fromKey($buildingKey);
+
+                TickChange::create([
+                    'tick' => $dominion->round->ticks,
+                    'source_type' => Building::class,
+                    'source_id' => $building->id,
+                    'target_type' => Dominion::class,
+                    'target_id' => $dominion->id,
+                    'amount' => $amount,
+                    'status' => 0,
+                    'type' => 'construction',
+                ]);
+            }
         }
 
-        $this->buildingService->update($dominion, $buildingsToAdd);
+        #$this->buildingService->update($dominion, $buildingsToAdd);
     }
 
     # Take deities that are one tick away from finished and create or increment DominionImprovements.
@@ -538,7 +555,6 @@ class ProcessDominionJob implements ShouldQueue
                 'tick' => $dominion->round->ticks
             ]);
         }
-
     }
 
     # Take resources that are one tick away from finished and create or increment DominionImprovements.
@@ -553,7 +569,16 @@ class ProcessDominionJob implements ShouldQueue
             ->where('hours', 0)
             ->get();
 
-        foreach ($dominion->race->resources as $resourceKey) {
+        foreach ($dominion->race->resources as $resourceKey)
+        {
+            $resource = Resource::fromKey($resourceKey);
+
+            if(!$resource)
+            {
+                xtLog("[{$dominion->id}] *** Resource {$resourceKey} not found.");
+                continue;
+            }
+
             $resourcesProduced = $finishedResourcesInQueue
                 ->where('resource', 'resource_' . $resourceKey)
                 ->sum('amount');
@@ -568,9 +593,23 @@ class ProcessDominionJob implements ShouldQueue
             xtLog("[{$dominion->id}] *** Resource: {$resourcesProducedRaw} {$resourceKey} raw produced.");
             xtLog("[{$dominion->id}] *** Resource: {$resourcesConsumed} {$resourceKey} consumed.");
             xtLog("[{$dominion->id}] *** Resource: {$resourcesProduced} {$resourceKey} net produced.");
+
+            if($resourcesProduced != 0)
+            {
+                TickChange::create([
+                    'tick' => $dominion->round->ticks,
+                    'source_type' => Resource::class,
+                    'source_id' => $resource->id,
+                    'target_type' => Dominion::class,
+                    'target_id' => $dominion->id,
+                    'amount' => $resourcesProduced,
+                    'status' => 0,
+                    'type' => 'production',
+                ]);
+            }
         }
 
-        $this->resourceService->update($dominion, $resourcesNetChange);
+        #$this->resourceService->update($dominion, $resourcesNetChange);
     }
 
     # Take buildings that are one tick away from finished and create or increment DominionBuildings.
