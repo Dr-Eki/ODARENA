@@ -75,10 +75,70 @@ class QueueService
     public function advanceTradeRouteQueues(TradeRoute $tradeRoute): void
     {
         $tradeRoute->queues()
-            ->where('tick','>',0)
+            ->where('tick', '>', 0)
             ->decrement('tick');
     }
    
+
+    public function finishTradeRouteQueues(TradeRoute $tradeRoute): void
+    {
+        DB::transaction(function () use ($tradeRoute) {
+            $finishedQueues = $tradeRoute->queues()
+                ->where('tick', 0)
+                ->get();
+    
+            if (!$finishedQueues->count()) {
+                return;
+            }
+    
+            $tradeRoute->increment('trades');
+            $tradeRoute->increment('total_bought', $finishedQueues->where('type', 'import')->sum('amount'));
+            $tradeRoute->increment('total_sold', $finishedQueues->where('type', 'export')->sum('amount'));
+    
+            foreach ($finishedQueues as $key => $finishedQueue)
+            {
+                $amount = $finishedQueue->amount;
+    
+                xtLog("[TR{$tradeRoute->id}] **** Finished queue {$finishedQueue->id} of type {$finishedQueue->type} with {$finishedQueue->amount} {$finishedQueue->resource->name} for trade route {$tradeRoute->id} at tick {$finishedQueue->tick} ($key/" . ($finishedQueues->count()-1) . "), dominion ID {$tradeRoute->dominion->id} and hold ID {$tradeRoute->hold->id}");
+    
+                if ($finishedQueue->type == 'import')
+                {
+                    $this->dominionResourceService->updateResources($tradeRoute->dominion, [$finishedQueue->resource->key => $amount]);
+                    xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to dominion {$tradeRoute->dominion->name} (ID {$tradeRoute->dominion->id})");
+                }
+                elseif ($finishedQueue->type == 'export')
+                {
+                    $this->holdResourceService->update($tradeRoute->hold, [$finishedQueue->resource->key => $amount]);
+                    xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to hold {$tradeRoute->hold->name}");
+                }
+    
+                $isDeleted = $finishedQueue->delete();
+                if ($isDeleted)
+                {
+                    xtLog("[TR{$tradeRoute->id}] ***** Deleted queue {$finishedQueue->id}");
+                }
+                else
+                {
+                    xtLog("[TR{$tradeRoute->id}] ***** Failed to delete queue {$finishedQueue->id}");
+                }
+            }
+    
+            if ($tradeRoute->status == 1) {
+                HoldSentimentEvent::add($tradeRoute->hold, $tradeRoute->dominion, config('holds.sentiment_values.trade_completed'), 'trade_completed');
+            }
+    
+            $overDueQueues = $tradeRoute->queues()
+                ->where('status', 1)
+                ->where('tick', '<', 0)
+                ->get();
+    
+            $overDueQueues->each(function ($queue) {
+                $queue->delete();
+            });
+        });
+    }
+
+    /*
     public function finishTradeRouteQueues(TradeRoute $tradeRoute): void
     {
 
@@ -143,6 +203,7 @@ class QueueService
 
         $overDueQueues->each->delete();
     }
+    */
 
 
     /**
