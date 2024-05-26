@@ -295,8 +295,8 @@ class QueueService
                 continue;
             }
 
-            #dump("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
-            xtLog("[{$dominion->id}] Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
+            // No xtLog() here, as it creates frontend output
+            Log::info("[{$dominion->id}] Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
     
             $attempts = 10; // Number of attempts to retry
             for ($attempt = 1; $attempt <= $attempts; $attempt++) {
