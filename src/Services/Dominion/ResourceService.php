@@ -32,7 +32,8 @@ class ResourceService
                     ->where('resource_id', $resource->id)
                     ->exists();
     
-                if($holdHasResource) {
+                if($holdHasResource)
+                {
                     $holdResource = DominionResource::where('dominion_id', $hold->id)
                         ->where('resource_id', $resource->id)
                         ->first();
@@ -44,7 +45,9 @@ class ResourceService
                     } else {
                         $holdResource->save();
                     }
-                } elseif($amount > 0) {
+                }
+                elseif($amount > 0)
+                {
                     DominionResource::create([
                         'dominion_id' => $hold->id,
                         'resource_id' => $resource->id,

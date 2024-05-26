@@ -113,4 +113,9 @@ class TradeRoute extends AbstractModel
         return $this->status === 1;
     }
 
+    public function hasQueues(): bool
+    {
+        return $this->queues->isNotEmpty();
+    }
+
 }
