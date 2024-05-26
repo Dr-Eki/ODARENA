@@ -74,6 +74,13 @@ class QueueService
 
     public function advanceTradeRouteQueues(TradeRoute $tradeRoute): void
     {
+
+        // Delete leftover zero tick trades
+        $tradeRoute->queues()
+            ->where('tick', '=', 0)
+            ->delete();
+
+        // Decrement all ticks
         $tradeRoute->queues()
             ->where('tick', '>', 0)
             ->decrement('tick');
