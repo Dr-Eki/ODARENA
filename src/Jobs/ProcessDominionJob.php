@@ -132,7 +132,7 @@ class ProcessDominionJob implements ShouldQueue
             xtLog("[{$this->dominion->id}] ** Updating terrain");
             $this->handleTerrain($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Updating improvments");
+            xtLog("[{$this->dominion->id}] ** Updating improvements");
             $this->handleImprovements($this->dominion);
 
             xtLog("[{$this->dominion->id}] ** Updating deities");
@@ -153,8 +153,8 @@ class ProcessDominionJob implements ShouldQueue
             xtLog("[{$this->dominion->id}] ** Updating resources");
             $this->handleResources($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Handle stasis");
-            $this->handleStasis($this->dominion);
+            #xtLog("[{$this->dominion->id}] ** Handle stasis");
+            #$this->handleStasis($this->dominion);
 
             xtLog("[{$this->dominion->id}] ** Handle Pestilence");
             $this->handlePestilence($this->dominion);
@@ -514,6 +514,7 @@ class ProcessDominionJob implements ShouldQueue
     }
 
     // Scoot hour 1 Qur Stasis units back to hour 2
+    /*
     public function handleStasis(Dominion $dominion): void
     {
         if(!$dominion->getSpellPerkValue('stasis'))
@@ -617,57 +618,29 @@ class ProcessDominionJob implements ShouldQueue
 
         #$this->queueService->setForTick(true);
     }
-
+    */
 
     protected function advanceQueues(Dominion $dominion): void
     {
-        # If $domion->getSpellPerkValue('stasis'), then exclude queue source 'invasion'
-        if($dominion->getSpellPerkValue('stasis'))
-        {
+        xtLog("[{$dominion->id}] *** Advancing all dominion queues");
+        $attempts = 10; // Number of attempts to retry
+        $delay = 1; // Delay in seconds between attempts
 
-            xtLog("[{$dominion->id}] *** Dominion is under stasis: advancing all queues except invasion");
-
-            $attempts = 10; // Number of attempts to retry
-            for ($attempt = 1; $attempt <= $attempts; $attempt++) {
-                try {
-                    DB::transaction(function () use ($dominion) {
-                        $dominion->queues()
-                            ->where('hours', '>', 0)
-                            ->where('source', '!=', 'invasion')
-                            ->decrement('hours');
-                    });
-                    break; // If successful, exit the loop
-                } catch (\Illuminate\Database\QueryException $e) {
-                    if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
-                        sleep(1); // Wait a bit before retrying
-                        xtLog("[{$dominion->id}] Deadlock detected in ProcessDominionJob::advanceQueues(), retrying... (attempt $attempt/$attempts)");
-                        continue;
-                    }
-                    throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
+        for ($attempt = 1; $attempt <= $attempts; $attempt++) {
+            try {
+                DB::transaction(function () use ($dominion) {
+                    $dominion->queues()
+                    ->where('hours', '>', 0)
+                    ->decrement('hours');
+                });
+                break; // If successful, exit the loop
+            } catch (\Illuminate\Database\QueryException $e) {
+                if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
+                    sleep($delay); // Wait a bit before retrying
+                    xtLog("[{$dominion->id}] Deadlock detected in ProcessDominionJob::advanceQueues(), retrying... (attempt $attempt/$attempts)");
+                    continue;
                 }
-            }
-        }
-        else
-        {
-            xtLog("[{$dominion->id}] *** Advancing all dominion queues");
-
-            $attempts = 10; // Number of attempts to retry
-            for ($attempt = 1; $attempt <= $attempts; $attempt++) {
-                try {
-                    DB::transaction(function () use ($dominion) {
-                        $dominion->queues()
-                        ->where('hours', '>', 0)
-                        ->decrement('hours');
-                    });
-                    break; // If successful, exit the loop
-                } catch (\Illuminate\Database\QueryException $e) {
-                    if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
-                        sleep(1); // Wait a bit before retrying
-                        xtLog("[{$dominion->id}] Deadlock detected in ProcessDominionJob::advanceQueues(), retrying... (attempt $attempt/$attempts)");
-                        continue;
-                    }
-                    throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
-                }
+                throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
             }
         }
     }

@@ -161,6 +161,7 @@ nocten_veil:
 
 stasis: 
   name: Stasis
+  enabled: 0
   level: 0
   scope: self
   class: passive
