@@ -640,6 +640,7 @@ class ProcessDominionJob implements ShouldQueue
                 } catch (\Illuminate\Database\QueryException $e) {
                     if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
                         sleep(1); // Wait a bit before retrying
+                        xtLog("[{$dominion->id}] Deadlock detected in ProcessDominionJob::advanceQueues(), retrying... (attempt $attempt/$attempts)");
                         continue;
                     }
                     throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
@@ -662,6 +663,7 @@ class ProcessDominionJob implements ShouldQueue
                 } catch (\Illuminate\Database\QueryException $e) {
                     if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
                         sleep(1); // Wait a bit before retrying
+                        xtLog("[{$dominion->id}] Deadlock detected in ProcessDominionJob::advanceQueues(), retrying... (attempt $attempt/$attempts)");
                         continue;
                     }
                     throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded

@@ -296,29 +296,36 @@ class QueueService
             }
 
             #dump("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
-            Log::debug("> Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
+            xtLog("[{$dominion->id}] Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
     
-            try {
-                $sql = "INSERT INTO `dominion_queue` (`dominion_id`, `source`, `resource`, `hours`, `amount`, `created_at`)
-                VALUES (:dominion_id, :source, :resource, :hours, :amount, :created_at)
-                ON DUPLICATE KEY UPDATE `amount` = `amount` + VALUES(`amount`), `created_at` = VALUES(`created_at`)";
-                
-                $bindings = [
-                    'dominion_id' => $dominion->id,
-                    'source' => $source,
-                    'resource' => $resource,
-                    'hours' => $ticks,
-                    'amount' => $amount,
-                    'created_at' => $now
-                ];
-
-                DB::transaction(function () use ($sql, $bindings) {
-                    DB::statement($sql, $bindings);
-                });
-                
-            } catch (\Illuminate\Database\QueryException $e) {
-                dump(">> Error: " . $e->getMessage());
-                Log::error(">> Error: " . $e->getMessage());
+            $attempts = 10; // Number of attempts to retry
+            for ($attempt = 1; $attempt <= $attempts; $attempt++) {
+                try {
+                    $sql = "INSERT INTO `dominion_queue` (`dominion_id`, `source`, `resource`, `hours`, `amount`, `created_at`)
+                    VALUES (:dominion_id, :source, :resource, :hours, :amount, :created_at)
+                    ON DUPLICATE KEY UPDATE `amount` = `amount` + VALUES(`amount`), `created_at` = VALUES(`created_at`)";
+                    
+                    $bindings = [
+                        'dominion_id' => $dominion->id,
+                        'source' => $source,
+                        'resource' => $resource,
+                        'hours' => $ticks,
+                        'amount' => $amount,
+                        'created_at' => $now
+                    ];
+    
+                    DB::transaction(function () use ($sql, $bindings) {
+                        DB::statement($sql, $bindings);
+                    });
+                    break; // If successful, exit the loop
+                } catch (\Illuminate\Database\QueryException $e) {
+                    if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
+                        sleep(1); // Wait a bit before retrying
+                        xtLog("[{$dominion->id}] Deadlock detected in QueueService::queueResources(), retrying... (attempt $attempt/$attempts)");
+                        continue;
+                    }
+                    throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
+                }
             }
         }
     }

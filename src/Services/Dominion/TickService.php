@@ -327,6 +327,7 @@ class TickService
             } catch (\Illuminate\Database\QueryException $e) {
                 if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
                     sleep(1); // Wait a bit before retrying
+                    xtLog("[RD{$round->id}] Deadlock detected in TickService::clearFinishedQueues(), retrying... (attempt $attempt/$attempts)");
                     continue;
                 }
                 throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
