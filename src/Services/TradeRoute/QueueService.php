@@ -72,21 +72,13 @@ class QueueService
         
     }
 
-    public function handleTradeRouteQueues(TradeRoute $tradeRoute): void
-    {
-        $this->finishTradeRouteQueues($tradeRoute);
-        $this->advanceTradeRouteQueues($tradeRoute);
-    }
-
     public function advanceTradeRouteQueues(TradeRoute $tradeRoute): void
     {
         $tradeRoute->queues()
-            #->whereIn('status', [0, 1])
             ->where('tick','>',0)
             ->decrement('tick');
     }
    
-
     public function finishTradeRouteQueues(TradeRoute $tradeRoute): void
     {
 
@@ -96,48 +88,48 @@ class QueueService
             ->where('tick', 0)
             ->get();
 
-            #dd($finishedQueues);
-
-        if($finishedQueues->count() > 0)
+        if(!$finishedQueues->count())
         {
-            $tradeRoute->increment('trades');
-            $tradeRoute->increment('total_bought', $finishedQueues->where('type', 'import')->sum('amount'));
-            $tradeRoute->increment('total_sold', $finishedQueues->where('type', 'export')->sum('amount'));
+            return;
+        }
+        
+        $tradeRoute->increment('trades');
+        $tradeRoute->increment('total_bought', $finishedQueues->where('type', 'import')->sum('amount'));
+        $tradeRoute->increment('total_sold', $finishedQueues->where('type', 'export')->sum('amount'));
 
-            foreach($finishedQueues as $key => $finishedQueue)
+        foreach($finishedQueues as $key => $finishedQueue)
+        {
+            $amount = $finishedQueue->amount;
+
+            xtLog("[TR{$tradeRoute->id}] **** Finished queue {$finishedQueue->id} of type {$finishedQueue->type} with {$finishedQueue->amount} {$finishedQueue->resource->name} for trade route {$tradeRoute->id} at tick {$finishedQueue->tick} ($key/" . ($finishedQueues->count()-1) . "), dominion ID {$tradeRoute->dominion->id} and hold ID {$tradeRoute->hold->id}");
+
+            if($finishedQueue->type == 'import')
             {
-                $amount = $finishedQueue->amount;
-    
-                xtLog("[TR{$tradeRoute->id}] **** Finished queue {$finishedQueue->id} of type {$finishedQueue->type} with {$finishedQueue->amount} {$finishedQueue->resource->name} for trade route {$tradeRoute->id} at tick {$finishedQueue->tick} ($key/" . ($finishedQueues->count()-1) . "), dominion ID {$tradeRoute->dominion->id} and hold ID {$tradeRoute->hold->id}");
+                $this->dominionResourceService->updateResources($tradeRoute->dominion, [$finishedQueue->resource->key => $amount]);
+                xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to dominion {$tradeRoute->dominion->name} (ID {$tradeRoute->dominion->id})");
+            }
+            elseif($finishedQueue->type == 'export')
+            {
 
-                if($finishedQueue->type == 'import')
-                {
-                    $this->dominionResourceService->updateResources($tradeRoute->dominion, [$finishedQueue->resource->key => $amount]);
-                    xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to dominion {$tradeRoute->dominion->name} (ID {$tradeRoute->dominion->id})");
-                }
-                elseif($finishedQueue->type == 'export')
-                {
-
-                    $this->holdResourceService->update($tradeRoute->hold, [$finishedQueue->resource->key => $amount]);
-                    xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to hold {$tradeRoute->hold->name}");
-                }
-
-                #$tradeRoute->save();
-
-                $isDeleted = $finishedQueue->delete();
-                if($isDeleted)
-                {
-                    xtLog("[TR{$tradeRoute->id}] ***** Deleted queue {$finishedQueue->id}");
-                }
-                else
-                {
-                    xtLog("[TR{$tradeRoute->id}] ***** Failed to delete queue {$finishedQueue->id}");
-                }
-
+                $this->holdResourceService->update($tradeRoute->hold, [$finishedQueue->resource->key => $amount]);
+                xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to hold {$tradeRoute->hold->name}");
             }
 
-            $finishedQueues->each->delete();
+            #$tradeRoute->save();
+
+            $isDeleted = $finishedQueue->delete();
+            if($isDeleted)
+            {
+                xtLog("[TR{$tradeRoute->id}] ***** Deleted queue {$finishedQueue->id}");
+            }
+            else
+            {
+                xtLog("[TR{$tradeRoute->id}] ***** Failed to delete queue {$finishedQueue->id}");
+            }
+
         }
+
+        $finishedQueues->each->delete();
 
         if($tradeRoute->status == 1)
         {

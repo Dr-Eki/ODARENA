@@ -38,20 +38,6 @@ class TradeService
         $this->queueService = app(QueueService::class);
     }
 
-    public function handleTradeRoutesTick(Round $round)
-    {
-        $activeTradeRoutes = $round->tradeRoutes->whereIn('status', [0,1])->sortBy('id');
-
-        foreach ($activeTradeRoutes as $tradeRoute)
-        {
-            # Handle queues
-            $this->queueService->handleTradeRouteQueues($tradeRoute);
-
-            # Prepare new resources to be queued
-            $this->handleTradeRoute($tradeRoute);
-        }
-    }
-
     public function handleTradeRoute(TradeRoute $tradeRoute): void
     {
 
@@ -158,7 +144,6 @@ class TradeService
                     'trade_result_data' => json_encode($tradeResult)
                 ]);
 
-                #Log::info("*** Dominion is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The dominion does not have enough {$soldResource->name}: {$soldResourceAmount} expected, {$tradeResult['error']['details']['dominion_total_available']} available, {$tradeResult['error']['details']['dominion_production']} production, {$tradeResult['error']['details']['dominion_stockpile']} stockpile.");
                 xtLog("[{$dominion->id}] *** Dominion is out of resources. Trade failed between {$dominion->name} (# {$dominion->realm->number}) and {$hold->name}. The dominion does not have enough {$soldResource->name}: {$soldResourceAmount} expected, {$tradeResult['error']['details']['dominion_total_available']} available, {$tradeResult['error']['details']['dominion_production']} production, {$tradeResult['error']['details']['dominion_stockpile']} stockpile.");
 
                 $this->cancelTradeRoute($tradeRoute, 'dominion_insufficient_resources');

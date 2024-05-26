@@ -32,6 +32,6 @@ class ProcessPrecalculationJob implements ShouldQueue
     {
         xtLog("[{$this->dominion->id}] ** Precalculating dominion {$this->dominion->name}");
         $this->tickCalculator->precalculateTick($this->dominion, true);
-        xtLog("[{$this->dominion->id}] ** Precalculationg done");
+        xtLog("[{$this->dominion->id}] ** Precalculation done");
     }
 }

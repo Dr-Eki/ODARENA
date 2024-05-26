@@ -627,18 +627,46 @@ class ProcessDominionJob implements ShouldQueue
 
             xtLog("[{$dominion->id}] *** Dominion is under stasis: advancing all queues except invasion");
 
-            $dominion->queues()
-                ->where('hours', '>', 0)
-                ->where('source', '!=', 'invasion')
-                ->decrement('hours');
+            $attempts = 10; // Number of attempts to retry
+            for ($attempt = 1; $attempt <= $attempts; $attempt++) {
+                try {
+                    DB::transaction(function () use ($dominion) {
+                        $dominion->queues()
+                            ->where('hours', '>', 0)
+                            ->where('source', '!=', 'invasion')
+                            ->decrement('hours');
+                    });
+                    break; // If successful, exit the loop
+                } catch (\Illuminate\Database\QueryException $e) {
+                    if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
+                        sleep(1); // Wait a bit before retrying
+                        continue;
+                    }
+                    throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
+                }
+            }
         }
         else
         {
             xtLog("[{$dominion->id}] *** Advancing all dominion queues");
 
-            $dominion->queues()
-                ->where('hours', '>', 0)
-                ->decrement('hours');
+            $attempts = 10; // Number of attempts to retry
+            for ($attempt = 1; $attempt <= $attempts; $attempt++) {
+                try {
+                    DB::transaction(function () use ($dominion) {
+                        $dominion->queues()
+                        ->where('hours', '>', 0)
+                        ->decrement('hours');
+                    });
+                    break; // If successful, exit the loop
+                } catch (\Illuminate\Database\QueryException $e) {
+                    if ($e->getCode() == 1213 && $attempt < $attempts) { // Deadlock
+                        sleep(1); // Wait a bit before retrying
+                        continue;
+                    }
+                    throw $e; // Re-throw the exception if it's not a deadlock or attempts exceeded
+                }
+            }
         }
     }
 

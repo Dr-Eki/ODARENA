@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Jobs;
 
+use DB;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -10,8 +11,6 @@ use Illuminate\Queue\SerializesModels;
 
 use OpenDominion\Services\TradeRoute\QueueService;
 use OpenDominion\Services\TradeService;
-
-// handleHoldtick()
 
 class ProcessTradeRouteJob implements ShouldQueue
 {
@@ -38,9 +37,14 @@ class ProcessTradeRouteJob implements ShouldQueue
     public function handle()
     {
         xtLog("[TR{$this->tradeRoute->id}] *** Advancing and finishing trade route queues");
-        $this->queueService->handleTradeRouteQueues($this->tradeRoute);
-
+        DB::transaction(function () {
+            $this->queueService->advanceTradeRouteQueues($this->tradeRoute);
+            $this->queueService->finishTradeRouteQueues($this->tradeRoute);
+        });
+        
         xtLog("[TR{$this->tradeRoute->id}] *** Checking trade route and queueing new trades");
-        $this->tradeService->handleTradeRoute($this->tradeRoute);
+        DB::transaction(function () {
+            $this->tradeService->handleTradeRoute($this->tradeRoute);
+        });
     }
 }

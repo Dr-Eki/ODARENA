@@ -11,8 +11,6 @@ use Illuminate\Queue\SerializesModels;
 use OpenDominion\Services\Hold\QueueService;
 use OpenDominion\Services\HoldService;
 
-// handleTradeRoutesTick()
-
 class ProcessHoldJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
