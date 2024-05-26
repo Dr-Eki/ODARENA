@@ -22,28 +22,23 @@ class ResourceService
         $this->resourceCalculator = app(ResourceCalculator::class);
     }
 
-    public function update(Dominion $hold, array $resourceKeys): void
+    public function update(Dominion $dominion, array $resourceKeys): void
     {
-        #DB::transaction(function () use ($hold, $resourceKeys)
+        #DB::transaction(function () use ($dominion, $resourceKeys)
         #{
             foreach($resourceKeys as $resourceKey => $amount)
             {
                 $resource = Resource::where('key', $resourceKey)->first();
     
-                $holdResource = DominionResource::updateOrCreate(
+                DominionResource::updateOrCreate(
                     [
-                        'dominion_id' => $hold->id,
+                        'dominion_id' => $dominion->id,
                         'resource_id' => $resource->id,
                     ],
                     [
                         'amount' => DB::raw("GREATEST(0, amount + {$amount})")
                     ]
                 );
-    
-                if ($holdResource->amount < 0) {
-                    $holdResource->amount = 0;
-                    $holdResource->save();
-                }
             }
         #});
     }
