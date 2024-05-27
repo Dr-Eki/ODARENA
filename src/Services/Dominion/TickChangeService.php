@@ -49,8 +49,6 @@ class TickChangeService
         $tickChangesHoldResources = $tickChanges->where('target_type', Hold::class)->where('source_type', Resource::class);
         $tickChangesDominionBuildings = $tickChanges->where('target_type', Dominion::class)->where('source_type', Building::class);
 
-        dd($tickChangesDominionResources, $tickChangesHoldResources, $tickChangesDominionBuildings);
-
         $this->commitDominionResources($tickChangesDominionResources);
         $this->commitHoldResources($tickChangesHoldResources);
         $this->commitDominionBuildings($tickChangesDominionBuildings);
@@ -96,7 +94,7 @@ class TickChangeService
             if($dominion->protection_ticks)
             {
                 xtLog("[{$dominion->id}] ** Dominion is in protection mode, skipping tick change commit");
-                return;
+                continue;
             }
 
             foreach($resourceData as $resourceKey => $amount)
@@ -189,7 +187,7 @@ class TickChangeService
             if($dominion->protection_ticks)
             {
                 xtLog("[{$dominion->id}] ** Dominion is in protection mode, skipping tick change commit");
-                return;
+                continue;
             }
 
             foreach($buildingData as $buildingKey => $amount)
