@@ -582,7 +582,7 @@ class ResourceCalculator
     {
         $resource = Resource::fromKey($resourceKey);
 
-        $tradeRouteIds = $dominion->tradeRoutes()->where('status',1)->where('target_resource_id', $resource->id)->pluck('id');
+        $tradeRouteIds = $dominion->tradeRoutes()->where('target_resource_id', $resource->id)->pluck('id');
         $queues = TradeRoute\Queue::whereIn('trade_route_id', $tradeRouteIds)->where('type','import')->get();
 
         return $queues->where('tick',1)->where('type', 'import')->sum('amount');

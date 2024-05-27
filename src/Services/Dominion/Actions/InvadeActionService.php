@@ -870,17 +870,10 @@ class InvadeActionService
         $this->invasion['attacker']['prestige_change'] = 0;
         $this->invasion['defender']['prestige_change'] = 0;
 
-        # LDA mitigation
-        $victoriesRatioMultiplier = 1;
-        // if($this->statsService->getStat($attacker, 'defense_failures') >= 10)
-        // {
-        //     $victoriesRatioMultiplier = $this->statsService->getStat($attacker, 'invasion_victories') / ($this->statsService->getStat($attacker, 'invasion_victories') + $this->statsService->getStat($attacker, 'defense_failures'));
-        // }
-
         # Successful hits over 75% give prestige to attacker and remove prestige from defender
         if($countsAsVictory)
         {
-            $attackerPrestigeChange += 60 * $landRatio * $victoriesRatioMultiplier;
+            $attackerPrestigeChange += 60 * $landRatio;
             $defenderPrestigeChange -= 20 * $landRatio;
         }
 
