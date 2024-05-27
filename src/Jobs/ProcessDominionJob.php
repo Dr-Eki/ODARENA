@@ -177,13 +177,13 @@ class ProcessDominionJob implements ShouldQueue
             xtLog("[{$this->dominion->id}] ** Handle finished queues");
             $this->handleFinishedQueues($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Clear finished queues");
-            $this->deleteFinishedQueues($this->dominion);
+            #xtLog("[{$this->dominion->id}] ** Delete finished queues");
+            #$this->deleteFinishedQueues($this->dominion);
 
             xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
             $this->handleFinishedSpells($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Clearing finished spells");
+            xtLog("[{$this->dominion->id}] ** Delete finished spells");
             $this->deleteFinishedSpells($this->dominion);
 
         });
