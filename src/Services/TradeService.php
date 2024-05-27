@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace OpenDominion\Services;
 
 use DB;
-use OpenDominion\Models\Round;
+use OpenDominion\Models\TickChange;
 use OpenDominion\Models\TradeLedger;
 use OpenDominion\Models\TradeRoute;
 
@@ -158,10 +158,30 @@ class TradeService
             $boughtResourceAmount = $tradeResult['bought_resource_amount'];
 
             # Remove the resource from the dominion
-            $this->dominionResourceService->update($dominion, [$soldResource->key => ($soldResourceAmount * -1)]);
+            #$this->dominionResourceService->update($dominion, [$soldResource->key => ($soldResourceAmount * -1)]);
+            TickChange::create([
+                'tick' => $dominion->round->ticks,
+                'source_type' => get_class($soldResource),
+                'source_id' => $soldResource->id,
+                'target_type' => get_class($dominion),
+                'target_id' => $dominion->id,
+                'amount' => -$soldResourceAmount,
+                'status' => 0,
+                'type' => 'trade',
+            ]);
 
             # Remove the resource from the hold
-            $this->holdResourceService->update($hold, [$boughtResource->key => ($boughtResourceAmount * -1)]);
+            #$this->holdResourceService->update($hold, [$boughtResource->key => ($boughtResourceAmount * -1)]);
+            TickChange::create([
+                'tick' => $dominion->round->ticks,
+                'source_type' => get_class($boughtResource),
+                'source_id' => $boughtResource->id,
+                'target_type' => get_class($hold),
+                'target_id' => $hold->id,
+                'amount' => -$boughtResourceAmount,
+                'status' => 0,
+                'type' => 'trade',
+            ]);
 
             # Queue up outgoing
             $this->queueService->queueTrade($tradeRoute, 'export', $soldResource, $soldResourceAmount);
