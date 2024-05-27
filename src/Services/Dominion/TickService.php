@@ -413,15 +413,6 @@ class TickService
             ->decrement('dominion_queue.hours', 1);
     }
 
-    private function advanceAllTradeRouteQueues(Round $round): void
-    {
-        DB::table('trade_route_queue')
-            ->join('trade_routes', 'trade_route_queue.trade_route_id', '=', 'trade_routes.id')
-            ->where('trade_routes.round_id', $round->id)
-            ->where('trade_route_queue.tick', '>', 0)
-            ->decrement('trade_route_queue.tick', 1);
-    }
-
     private function deleteAllFinishedDominionQueues(Round $round): void
     {
         $deletedRows = DB::table('dominion_queue')
@@ -429,10 +420,19 @@ class TickService
             ->where('dominions.round_id', $round->id)
             ->where('dominions.is_locked', false)
             ->where('dominions.protection_ticks', 0)
-            ->where('trade_route_queue.tick', '=', 0)
+            ->where('dominion_queue.hours', '=', 0)
             ->delete();
         
         xtLog("** Deleted {$deletedRows} finished dominion queues.");
+    }
+
+    private function advanceAllTradeRouteQueues(Round $round): void
+    {
+        DB::table('trade_route_queue')
+            ->join('trade_routes', 'trade_route_queue.trade_route_id', '=', 'trade_routes.id')
+            ->where('trade_routes.round_id', $round->id)
+            ->where('trade_route_queue.tick', '>', 0)
+            ->decrement('trade_route_queue.tick', 1);
     }
 
     private function deleteAllFinishedTradeRouteQueues(Round $round): void
