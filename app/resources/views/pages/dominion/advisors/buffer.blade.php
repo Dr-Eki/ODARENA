@@ -27,7 +27,7 @@
                             <th>Name</th>
                             <th>Amount</th>
                             <th>Source</th>
-                            <th>Status</th>
+                            <th class="text-center">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,7 +38,7 @@
                             <td>{{ $buffer->source->name }}</td>
                             <td>{{ number_format($buffer->amount) }}</td>
                             <td>{{ $buffer->type }}</td>
-                            <td>{!! ($buffer->status == 1) ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-spinner fa-spin"></i>' !!}</td>
+                            <td class="text-center">{!! ($buffer->status == 1) ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-spinner fa-spin"></i>' !!}</td>
                         </tr>
                     @endforeach
                     <tbody>
