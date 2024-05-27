@@ -798,31 +798,10 @@ class TickService
 
     public function handleTickCommit(): void
     {
-
         # Make sure that all queued jobs are finished
-        $attempts = (int)config('ticking.queue_retry_attempts');
-        $delay = (int)config('ticking.queue_check_delay');
         $openingDelay = (int)config('ticking.queue_opening_delay');
-        $closingDelay = (int)config('ticking.queue_closing_delay');
-
-        usleep(roundInt($openingDelay / 2));
-
-        retry($attempts, function () use ($delay) {
-            $i = isset($i) ? $i + 1 : 1;
-        
-            $infoString = sprintf(
-                '** Waiting for queued jobs to finish before committing tick. Current queue: %s. Next check in: %s ms.',
-                Redis::llen('queues:tick'),
-                number_format($delay)
-            );
-        
-            if (Redis::llen('queues:tick') !== 0) {
-                xtLog($infoString);
-                throw new Exception('Tick queue not finish');
-            }
-        }, $delay);
-
-        usleep(roundInt($closingDelay / 2));
+     
+        usleep($openingDelay);
 
         $this->tickChangeService->commit();
     }
@@ -831,29 +810,9 @@ class TickService
     {
 
         # Make sure that all queued jobs are finished
-        $attempts = (int)config('ticking.queue_retry_attempts');
-        $delay = (int)config('ticking.queue_check_delay');
         $openingDelay = (int)config('ticking.queue_opening_delay');
-        $closingDelay = (int)config('ticking.queue_closing_delay');
 
-        usleep(roundInt($openingDelay / 2));
-
-        retry($attempts, function () use ($delay) {
-            $i = isset($i) ? $i + 1 : 1;
-        
-            $infoString = sprintf(
-                '** Waiting for queued jobs to finish before committing tick. Current queue: %s. Next check in: %s ms.',
-                Redis::llen('queues:tick'),
-                number_format($delay)
-            );
-        
-            if (Redis::llen('queues:tick') !== 0) {
-                xtLog($infoString);
-                throw new Exception('Tick queue not finish');
-            }
-        }, $delay);
-
-        usleep(roundInt($closingDelay / 2));
+        usleep($openingDelay);
 
         $this->tickChangeService->commitForDominion($dominion);
     }

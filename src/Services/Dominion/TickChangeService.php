@@ -80,12 +80,6 @@ class TickChangeService
         foreach($dominionResourceChanges as $dominionId => $resourceData)
         {
             $dominion = Dominion::find($dominionId);
-            
-            if($dominion->protection_ticks)
-            {
-                xtLog("[{$dominion->id}] ** Dominion is in protection mode, skipping tick change commit");
-                return;
-            }
 
             if($dominion)
             {
@@ -95,6 +89,12 @@ class TickChangeService
             {
                 xtLog("[{$dominionId}] ** Dominion ID not found for tick change change");
                 continue;
+            }
+            
+            if($dominion->protection_ticks)
+            {
+                xtLog("[{$dominion->id}] ** Dominion is in protection mode, skipping tick change commit");
+                return;
             }
 
             foreach($resourceData as $resourceKey => $amount)
