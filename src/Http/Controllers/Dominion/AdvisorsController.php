@@ -142,7 +142,6 @@ class AdvisorsController extends AbstractDominionController
         $bufferedItems = TickChange::where('target_type', get_class($selectedDominion))->where('target_id', $selectedDominion->id)->orderBy('created_at','desc')->paginate($resultsPerPage);
 
         return view('pages.dominion.advisors.buffer', [
-            'historyHelper' => app(HistoryHelper::class),
             'bufferedItems' => $bufferedItems
         ]);
     }

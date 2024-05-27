@@ -13,9 +13,12 @@
             <div class="box-body">
                 <table class="table table-condensed table-striped no-border">
                     <colgroup>
-                        <col width="150">
                         <col width="100">
-                        <col>
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
+                        <col width="200">
+                        <col width="100">
                     </colgroup>
                     <thead>
                         <tr>
