@@ -131,7 +131,7 @@ class QueueService
                             'target_id' => $tradeRoute->dominion->id,
                             'amount' => $amount,
                             'status' => 0,
-                            'type' => 'trade',
+                            'type' => 'trade_bought',
                         ]);
                     }
                     xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to dominion {$tradeRoute->dominion->name} (ID {$tradeRoute->dominion->id})");
@@ -151,7 +151,7 @@ class QueueService
                             'target_id' => $tradeRoute->hold->id,
                             'amount' => $amount,
                             'status' => 0,
-                            'type' => 'trade',
+                            'type' => 'trade_bought',
                         ]);
                     }
                     xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to hold {$tradeRoute->hold->name}");

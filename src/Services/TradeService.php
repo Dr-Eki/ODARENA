@@ -167,20 +167,20 @@ class TradeService
                 'target_id' => $dominion->id,
                 'amount' => -$soldResourceAmount,
                 'status' => 0,
-                'type' => 'trade',
+                'type' => 'trade_sold',
             ]);
 
             # Remove the resource from the hold
             #$this->holdResourceService->update($hold, [$boughtResource->key => ($boughtResourceAmount * -1)]);
             TickChange::create([
-                'tick' => $dominion->round->ticks,
+                'tick' => $hold->round->ticks,
                 'source_type' => get_class($boughtResource),
                 'source_id' => $boughtResource->id,
                 'target_type' => get_class($hold),
                 'target_id' => $hold->id,
                 'amount' => -$boughtResourceAmount,
                 'status' => 0,
-                'type' => 'trade',
+                'type' => 'trade_sold',
             ]);
 
             # Queue up outgoing

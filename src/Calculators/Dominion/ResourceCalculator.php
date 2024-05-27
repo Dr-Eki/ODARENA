@@ -908,10 +908,9 @@ class ResourceCalculator
     {
         $production = $this->getProduction($dominion, $resourceKey);
         $consumption = $this->getConsumption($dominion, $resourceKey);
-        #$sold = $this->getResourceTotalSoldPerTick($dominion, $resourceKey);
 
-        $netProduction = $production - $consumption;# - $sold;
-        $netProduction = (int)floor($netProduction);
+        $netProduction = $production - $consumption;
+        $netProduction = floorInt($netProduction);
 
         return $netProduction;
     }

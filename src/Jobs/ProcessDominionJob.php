@@ -610,14 +610,14 @@ class ProcessDominionJob implements ShouldQueue
             #$resourcesNetChange[$resourceKey] = $resourcesProduced;
 
             $netProduction = $this->resourceCalculator->getNetProduction($dominion, $resourceKey);
-            $rawProduction = $this->resourceCalculator->getProduction($dominion, $resourceKey);
-            $resourcesConsumed = $this->resourceCalculator->getConsumption($dominion, $resourceKey);
+            $production = $this->resourceCalculator->getProduction($dominion, $resourceKey);
+            $consumption = $this->resourceCalculator->getConsumption($dominion, $resourceKey);
 
-            xtLog("[{$dominion->id}] *** Resource: {$rawProduction} {$resourceKey} raw produced.");
-            xtLog("[{$dominion->id}] *** Resource: {$resourcesConsumed} {$resourceKey} consumed.");
+            xtLog("[{$dominion->id}] *** Resource: {$production} {$resourceKey} raw produced.");
+            xtLog("[{$dominion->id}] *** Resource: {$consumption} {$resourceKey} consumed.");
             xtLog("[{$dominion->id}] *** Resource: {$netProduction} {$resourceKey} net produced.");
 
-            if($netProduction != 0)
+            if($production != 0)
             {
                 TickChange::create([
                     'tick' => $dominion->round->ticks,
@@ -625,9 +625,23 @@ class ProcessDominionJob implements ShouldQueue
                     'source_id' => $resource->id,
                     'target_type' => Dominion::class,
                     'target_id' => $dominion->id,
-                    'amount' => $netProduction,
+                    'amount' => $production,
                     'status' => 0,
                     'type' => 'production',
+                ]);
+            }
+
+            if($consumption != 0)
+            {
+                TickChange::create([
+                    'tick' => $dominion->round->ticks,
+                    'source_type' => Resource::class,
+                    'source_id' => $resource->id,
+                    'target_type' => Dominion::class,
+                    'target_id' => $dominion->id,
+                    'amount' => -$consumption,
+                    'status' => 0,
+                    'type' => 'consumption',
                 ]);
             }
         }
