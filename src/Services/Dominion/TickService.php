@@ -165,7 +165,6 @@ class TickService
 
                 xtLog('* Advance all trade route queues');
                 $this->advanceAllTradeRouteQueues($round);
-
             });
     
             xtLog('* Queue, process, and wait for dominion jobs.');

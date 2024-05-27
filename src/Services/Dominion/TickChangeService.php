@@ -99,6 +99,13 @@ class TickChangeService
             foreach($resourceData as $resourceKey => $amount)
             {
                 xtLog("[{$dominionId}] *** Committing for tick: Resource: {$resourceKey}, Amount: {$amount}");
+
+                if($amount < 0)
+                {
+                    $amount = max(abs($amount), $dominion->{$resourceKey});
+                    $amount = -$amount;
+                }
+
                 $this->dominionResourceService->update($dominion, [$resourceKey => $amount]);
             }
         }
