@@ -98,13 +98,13 @@ class TickChangeService
 
             foreach($resourceData as $resourceKey => $amount)
             {
-                xtLog("[{$dominionId}] *** Committing for tick: Resource: {$resourceKey}, Amount: {$amount}");
-
-                if($amount < 0)
+                $currentAmount = $dominion->{$resourceKey};
+                if($amount < 0 && abs($amount) > $currentAmount)
                 {
-                    $amount = max(abs($amount), $dominion->{$resourceKey});
-                    $amount = -$amount;
+                    $amount = -$currentAmount;
                 }
+
+                xtLog("[{$dominionId}] *** Committing for tick: Resource: {$resourceKey}, Amount: {$amount}");
 
                 $this->dominionResourceService->update($dominion, [$resourceKey => $amount]);
             }
@@ -142,6 +142,12 @@ class TickChangeService
 
             foreach($resourceData as $resourceKey => $amount)
             {
+                $currentAmount = $hold->{$resourceKey};
+                if($amount < 0 && abs($amount) > $currentAmount)
+                {
+                    $amount = -$currentAmount;
+                }
+
                 xtLog("[{$holdId}] *** Committing for tick: Resource: {$resourceKey}, Amount: {$amount}");
                 $this->holdResourceService->update($hold, [$resourceKey => $amount]);
             }

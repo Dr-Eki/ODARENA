@@ -28,6 +28,12 @@ class ResourceService
             foreach($resourceKeys as $resourceKey => $amount)
             {
                 $resource = Resource::where('key', $resourceKey)->first();
+                $currentAmount = $dominion->{'resource_' . $resourceKey};
+
+                if($amount < 0 && abs($amount) > $currentAmount)
+                {
+                    $amount = -$currentAmount;
+                }
     
                 // Get the dominion resource with a lock for update
                 $dominionResource = DominionResource::where('dominion_id', $dominion->id)
