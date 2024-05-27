@@ -89,6 +89,7 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('advisors')->uses('Dominion\AdvisorsController@getAdvisors')->name('advisors');
             $router->get('advisors/production')->uses('Dominion\AdvisorsController@getAdvisorsProduction')->name('advisors.production');
             $router->get('advisors/statistics')->uses('Dominion\AdvisorsController@getAdvisorsStatistics')->name('advisors.statistics');
+            $router->get('advisors/buffer')->uses('Dominion\AdvisorsController@getBuffer')->name('advisors.buffer');
             $router->get('advisors/military')->uses('Dominion\AdvisorsController@getAdvisorsMilitary')->name('advisors.military');
             $router->get('advisors/history')->uses('Dominion\AdvisorsController@getHistory')->name('advisors.history');
 

@@ -20,5 +20,9 @@
             <i class="fa fa-book"></i> History
         </a>
 
+        <a href="{{ route('dominion.advisors.buffer') }}" class="btn btn-app {{ Route::is('dominion.advisors.buffer') ? 'active' : null }}">
+            <i class="fa fa-brands fa-buffer"></i> Buffer
+        </a>
+
     </div>
 </div>
