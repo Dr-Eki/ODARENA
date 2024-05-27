@@ -559,8 +559,6 @@ class ProcessDominionJob implements ShouldQueue
     # Take resources that are one tick away from finished and create or increment DominionImprovements.
     private function handleResources(Dominion $dominion): void
     {
-        $resourcesNetChange = [];
-
         $finishedResourcesInQueue = DB::table('dominion_queue')
             ->where('dominion_id', $dominion->id)
             ->where('resource', 'like', 'resource%')
@@ -575,6 +573,12 @@ class ProcessDominionJob implements ShouldQueue
             $finishedResource = Resource::fromKey($finishedResourceKey);
             $type = $finishedResourceInQueue->source;
             $amount = (int)$finishedResourceInQueue->amount;
+
+            if(!$finishedResource)
+            {
+                xtLog("[{$dominion->id}] *** Resource {$finishedResourceKey} not found.", 'error');
+                continue;
+            }
 
             TickChange::create([
                 'tick' => $dominion->round->ticks,
