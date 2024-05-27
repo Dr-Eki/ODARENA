@@ -83,6 +83,7 @@ class TickChangeService
             
             if($dominion->protection_ticks)
             {
+                xtLog("[{$dominion->id}] ** Dominion is in protection mode, skipping tick change commit");
                 return;
             }
 
