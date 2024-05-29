@@ -582,7 +582,7 @@ class ResourceCalculator
     {
         $resource = Resource::fromKey($resourceKey);
 
-        $tradeRouteIds = $dominion->tradeRoutes()->where('status',1)->where('target_resource_id', $resource->id)->pluck('id');
+        $tradeRouteIds = $dominion->tradeRoutes()->where('target_resource_id', $resource->id)->pluck('id');
         $queues = TradeRoute\Queue::whereIn('trade_route_id', $tradeRouteIds)->where('type','import')->get();
 
         return $queues->where('tick',1)->where('type', 'import')->sum('amount');
@@ -908,10 +908,9 @@ class ResourceCalculator
     {
         $production = $this->getProduction($dominion, $resourceKey);
         $consumption = $this->getConsumption($dominion, $resourceKey);
-        #$sold = $this->getResourceTotalSoldPerTick($dominion, $resourceKey);
 
-        $netProduction = $production - $consumption;# - $sold;
-        $netProduction = (int)floor($netProduction);
+        $netProduction = $production - $consumption;
+        $netProduction = floorInt($netProduction);
 
         return $netProduction;
     }

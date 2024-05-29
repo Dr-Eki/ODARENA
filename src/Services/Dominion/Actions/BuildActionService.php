@@ -240,12 +240,12 @@ class BuildActionService
 
             $this->queueService->queueResources('construction', $dominion, $data, $ticks);
 
-            $this->resourceService->updateResources($dominion, [$primaryResource => $primaryCostTotal*-1]);
+            $this->resourceService->update($dominion, [$primaryResource => $primaryCostTotal*-1]);
             $this->statsService->updateStat($dominion, ($primaryResource . '_building'), $primaryCostTotal);
 
             if(isset($secondaryResource))
             {
-                $this->resourceService->updateResources($dominion, [$secondaryResource => $secondaryCostTotal*-1]);
+                $this->resourceService->update($dominion, [$secondaryResource => $secondaryCostTotal*-1]);
                 $this->statsService->updateStat($dominion, ($secondaryResource . '_building'), $secondaryCostTotal);
             }
 

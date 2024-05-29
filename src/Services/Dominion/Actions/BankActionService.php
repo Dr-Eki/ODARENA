@@ -90,8 +90,8 @@ class BankActionService
 
         $targetAmount = floor($amount * (float)$sourceResource->sell * $this->resourceCalculator->getExchangeRatePerkMultiplier($dominion) * (float)$targetResource->buy);
 
-        $this->resourceService->updateResources($dominion, [$sourceResourceKey => $amount*-1]);
-        $this->resourceService->updateResources($dominion, [$targetResourceKey => $targetAmount]);
+        $this->resourceService->update($dominion, [$sourceResourceKey => $amount*-1]);
+        $this->resourceService->update($dominion, [$targetResourceKey => $targetAmount]);
 
         $dominion->most_recent_exchange_from = $source;
         $dominion->most_recent_exchange_to = $target;

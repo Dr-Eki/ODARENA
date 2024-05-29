@@ -357,10 +357,10 @@ class TradeCalculator
     {
         # What the hold buys and the PLAYER SELLS
         $stockpile = $dominion->{'resource_' . $soldResource->key};
-        // Production is accounted for, this happens AFTER production.
-        #$production = $this->dominionResourceCalculator->getProduction($dominion, $soldResource->key);
+        $production = $this->dominionResourceCalculator->getProduction($dominion, $soldResource->key);
+        $dueNextTick = $this->dominionResourceCalculator->getResourceDueFromTradeNextTick($dominion, $soldResource->key);
 
-        return $stockpile >= $soldAmount;
+        return ($stockpile + $production + $dueNextTick) >= $soldAmount;
     }
 
     public function getSentimentRequiredToEstablishTradeRoute(Hold $hold, Dominion $dominion): int

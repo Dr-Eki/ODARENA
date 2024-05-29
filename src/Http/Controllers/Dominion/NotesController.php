@@ -5,6 +5,9 @@ namespace OpenDominion\Http\Controllers\Dominion;
 use OpenDominion\Http\Requests\Dominion\Actions\NotesActionRequest;
 use OpenDominion\Services\Dominion\HistoryService;
 
+
+use OpenDominion\Services\Dominion\TickChangeService;
+
 use OpenDominion\Calculators\NetworthCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
@@ -19,6 +22,8 @@ class NotesController extends AbstractDominionController
             'networthCalculator' => app(NetworthCalculator::class),
             'landCalculator' => app(LandCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
+
+            'tickChangeService' => app(TickChangeService::class),
         ]);
     }
 

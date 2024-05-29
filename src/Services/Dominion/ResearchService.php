@@ -14,6 +14,11 @@ use OpenDominion\Models\GameEvent;
 
 class ResearchService
 {
+
+    protected $researchHelper;
+    protected $researchCalculator;
+    protected $queueService;
+
     public function __construct()
     {
         $this->researchHelper = app(ResearchHelper::class);

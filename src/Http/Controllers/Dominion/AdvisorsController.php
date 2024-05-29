@@ -26,6 +26,7 @@ use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Models\DominionHistory;
 use OpenDominion\Models\DominionStat;
 use OpenDominion\Models\Spell;
+use OpenDominion\Models\TickChange;
 #use OpenDominion\Models\Stat;
 
 class AdvisorsController extends AbstractDominionController
@@ -130,6 +131,18 @@ class AdvisorsController extends AbstractDominionController
         return view('pages.dominion.advisors.history', [
             'historyHelper' => app(HistoryHelper::class),
             'history' => $history
+        ]);
+    }
+
+    public function getBuffer()
+    {
+        $resultsPerPage = 20;
+        $selectedDominion = $this->getSelectedDominion();
+
+        $bufferedItems = TickChange::where('target_type', get_class($selectedDominion))->where('target_id', $selectedDominion->id)->orderBy('created_at','desc')->paginate($resultsPerPage);
+
+        return view('pages.dominion.advisors.buffer', [
+            'bufferedItems' => $bufferedItems
         ]);
     }
 

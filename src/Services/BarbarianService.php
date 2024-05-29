@@ -301,7 +301,8 @@ class BarbarianService
             }
             else
             {
-                DB::transaction(function () use ($dominion, $logString, $target)
+
+                DB::transaction(function () use ($dominion, $logString)
                 {
                     $landGainRatio = rand($this->barbarianCalculator->getSetting('LAND_GAIN_MIN'), $this->barbarianCalculator->getSetting('LAND_GAIN_MAX'))/1000;
 
@@ -317,7 +318,7 @@ class BarbarianService
                     {
                         $largestDominion = $dominion->round->getNthLargestDominion(1);
 
-                        if(($dominion->land + $landGained) >= ($largestDominion->land * 0.6) and $target->id !== $largestDominion->id)
+                        if(($dominion->land + $landGained) >= ($largestDominion->land * 0.6))
                         {
                             $logString .= "\t\t**Land to gain would put Barbarian within 60% of largest dominion. Aborting invasion.\n";
                             Log::info($logString);

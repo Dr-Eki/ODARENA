@@ -219,7 +219,7 @@ class SpellActionService
 
             if($spell->class !== 'invasion')
             {
-                $this->resourceService->updateResources($dominion, ['mana' => $manaCost*-1]);
+                $this->resourceService->update($dominion, ['mana' => $manaCost*-1]);
 
                 $wizardStrengthCost = min($wizardStrengthCost, $dominion->wizard_strength);
                 $dominion->wizard_strength -= $wizardStrengthCost;
@@ -473,8 +473,8 @@ class SpellActionService
                     $amountRemoved = ceil($caster->{'resource_' . $sourceResourceKey} * $ratio);
                     $amountAdded = floor($amountRemoved / $exchangeRate);
 
-                    $this->resourceService->updateResources($caster, [$sourceResourceKey => $amountRemoved*-1]);
-                    $this->resourceService->updateResources($caster, [$targetResourceKey => $amountAdded]);
+                    $this->resourceService->update($caster, [$sourceResourceKey => $amountRemoved*-1]);
+                    $this->resourceService->update($caster, [$targetResourceKey => $amountAdded]);
                 }
 
                 # Resource conversion capped
@@ -489,8 +489,8 @@ class SpellActionService
                     $amountRemoved = ceil(min($caster->{'resource_' . $sourceResourceKey} * $ratio, $sourceMax));
                     $amountAdded = floor($amountRemoved / $exchangeRate);
 
-                    $this->resourceService->updateResources($caster, [$sourceResourceKey => $amountRemoved*-1]);
-                    $this->resourceService->updateResources($caster, [$targetResourceKey => $amountAdded]);
+                    $this->resourceService->update($caster, [$sourceResourceKey => $amountRemoved*-1]);
+                    $this->resourceService->update($caster, [$targetResourceKey => $amountAdded]);
                 }
 
                 # Resource conversion
@@ -514,7 +514,7 @@ class SpellActionService
 
                     $caster->peasants -= $peasantsSacrificed;
 
-                    $this->resourceService->updateResources($caster, $newResources);
+                    $this->resourceService->update($caster, $newResources);
                 }
 
                 # Resource conversion
@@ -561,7 +561,7 @@ class SpellActionService
                     $landGenerated = (int)floor($resourceAmount / $amountOfResourcePerLand);
 
                     $resource = Resource::where('key', $resourceKey)->firstOrFail();
-                    $this->resourceService->updateResources($caster, [$resourceKey => ($resourceAmount * -1)]);
+                    $this->resourceService->update($caster, [$resourceKey => ($resourceAmount * -1)]);
 
                     $caster->land += $landGenerated;
 
@@ -609,7 +609,7 @@ class SpellActionService
                     $resourceAmountConverted = min($resourceAmountConverted, ($this->populationCalculator->getMaxPopulation($caster) - $this->populationCalculator->getPopulationMilitary($caster)/* - 1000*/));
 
                     $resource = Resource::where('key', $resourceKey)->firstOrFail();
-                    $resourceAmountOwned = $this->resourceService->updateResources($caster, [$resourceKey => ($resourceAmountConverted * -1)]);
+                    $resourceAmountOwned = $this->resourceService->update($caster, [$resourceKey => ($resourceAmountConverted * -1)]);
 
                     $unitSlots = (array)$spellPerkValues[2];
                     $newUnitSlots = array_fill(1, $caster->race->units->count(), 0);
@@ -659,7 +659,7 @@ class SpellActionService
                     $resourceKey = (string)$spellPerkValues[1];
                     $amountToAdd = (int)floor($amount * $caster->peasants);
 
-                    $this->resourceService->updateResources($caster, [$resourceKey => $amountToAdd]);
+                    $this->resourceService->update($caster, [$resourceKey => $amountToAdd]);
                 }
 
                 # Increase morale from net victories
@@ -924,7 +924,7 @@ class SpellActionService
             }
             else
             {
-                $this->resourceService->updateResources($breaker, ['mana' => $manaCost*-1]);
+                $this->resourceService->update($breaker, ['mana' => $manaCost*-1]);
             }
         }
 

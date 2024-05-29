@@ -39,7 +39,7 @@ class ProcessTradeRouteJob implements ShouldQueue
         if($this->tradeRoute->hasQueues())
         {
             xtLog("[TR{$this->tradeRoute->id}] *** Advancing and finishing trade route queues");
-            $this->queueService->advanceTradeRouteQueues($this->tradeRoute);
+            #$this->queueService->advanceTradeRouteQueues($this->tradeRoute);
             $this->queueService->finishTradeRouteQueues($this->tradeRoute);    
         }
 

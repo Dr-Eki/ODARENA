@@ -330,7 +330,7 @@ class DominionFactory
         ]);
 
         $this->buildingCalculator->createOrIncrementBuildings($dominion, $startingBuildings);
-        $this->resourceService->updateResources($dominion, $startingResources);
+        $this->resourceService->update($dominion, $startingResources);
         $this->terrainService->update($dominion, $startingTerrain);
 
         if($race->name == 'Barbarian')
@@ -604,7 +604,7 @@ class DominionFactory
 
         $this->improvementCalculator->createOrIncrementImprovements($dominion, $quickstart->improvements);
         $this->buildingCalculator->createOrIncrementBuildings($dominion, $quickstart->buildings);
-        $this->resourceService->updateResources($dominion, $quickstart->resources);
+        $this->resourceService->update($dominion, $quickstart->resources);
 
         if(isset($quickstart->deity))
         {

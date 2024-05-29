@@ -206,7 +206,7 @@ class ExploreActionService
                 'military_draftees' => $newDraftees
             ])->save(['event' => HistoryService::EVENT_ACTION_EXPLORE]);
 
-            $this->resourceService->updateResources($dominion, ['gold' => $goldCost*-1]);
+            $this->resourceService->update($dominion, ['gold' => $goldCost*-1]);
         });
 
         return [

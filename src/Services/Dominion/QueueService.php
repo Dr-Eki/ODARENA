@@ -290,13 +290,14 @@ class QueueService
     
         foreach ($data as $resource => $amount)
         {
-            if ($amount === 0)
+            if ($amount == 0)
             {
                 continue;
             }
 
-            // No xtLog() here, as it creates frontend output
+            // No xtLog() here, as it creates frontend output, only enable when debugging
             Log::info("[{$dominion->id}] Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
+            #xtLog("[{$dominion->id}] Queue for {$dominion->name} / source: $source / resource: $resource / amount: $amount / ticks: $ticks");
     
             $attempts = 10; // Number of attempts to retry
             for ($attempt = 1; $attempt <= $attempts; $attempt++) {

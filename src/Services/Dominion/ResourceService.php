@@ -22,101 +22,41 @@ class ResourceService
         $this->resourceCalculator = app(ResourceCalculator::class);
     }
 
-    public function updateResources(Dominion $hold, array $resourceKeys): void
+    public function update(Dominion $dominion, array $resourceKeys): void
     {
-        DB::transaction(function () use ($hold, $resourceKeys) {
-            foreach($resourceKeys as $resourceKey => $amount) {
+        DB::transaction(function () use ($dominion, $resourceKeys) {
+            foreach($resourceKeys as $resourceKey => $amount)
+            {
                 $resource = Resource::where('key', $resourceKey)->first();
-    
-                $holdHasResource = DominionResource::where('dominion_id', $hold->id)
-                    ->where('resource_id', $resource->id)
-                    ->exists();
-    
-                if($holdHasResource)
+                $currentAmount = $dominion->{'resource_' . $resourceKey};
+
+                if($amount < 0 && abs($amount) > $currentAmount)
                 {
-                    $holdResource = DominionResource::where('dominion_id', $hold->id)
-                        ->where('resource_id', $resource->id)
-                        ->first();
-    
-                    $holdResource->amount += $amount;
-    
-                    if ($holdResource->amount <= 0) {
-                        $holdResource->delete();
-                    } else {
-                        $holdResource->save();
-                    }
+                    $amount = -$currentAmount;
                 }
-                elseif($amount > 0)
-                {
+    
+                // Get the dominion resource with a lock for update
+                $dominionResource = DominionResource::where('dominion_id', $dominion->id)
+                    ->where('resource_id', $resource->id)
+                    ->lockForUpdate()
+                    ->first();
+    
+                if ($dominionResource) {
+                    // Update the existing dominion resource
+                    $dominionResource->update([
+                        'amount' => DB::raw("GREATEST(0, amount + {$amount})")
+                    ]);
+                } else {
+                    // Create a new dominion resource
                     DominionResource::create([
-                        'dominion_id' => $hold->id,
+                        'dominion_id' => $dominion->id,
                         'resource_id' => $resource->id,
-                        'amount' => $amount,
+                        'amount' => max(0, $amount)
                     ]);
                 }
             }
         });
     }
-    /*
-    public function updateResources(Dominion $dominion, array $resourceKeys): void
-    {
-        foreach($resourceKeys as $resourceKey => $amount)
-        {
-            $resource = Resource::where('key', $resourceKey)->first();
-            
-            # Positive values: create or update DominionResource
-            if($amount > 0)
-            {
-                $amount = intval(max(0, $amount));
-
-                if($dominion->{'resource_' . $resourceKey})
-                {
-                    DB::transaction(function () use ($dominion, $resource, $amount)
-                    {
-                        DominionResource::where('dominion_id', $dominion->id)->where('resource_id', $resource->id)
-                        ->increment('amount', $amount);
-                    });
-                }
-                else
-                {
-                    DB::transaction(function () use ($dominion, $resource, $amount)
-                    {
-                        DominionResource::create([
-                            'dominion_id' => $dominion->id,
-                            'resource_id' => $resource->id,
-                            'amount' => $amount
-                        ]);
-                    });
-                }
-            }
-            # Negative values: update or delete DominionResource
-            else
-            {
-                $owned = $dominion->{'resource_' . $resource->key};
-
-                $amountToRemove = min(abs($amount), $owned);
-
-                if($owned)
-                {
-                    if($amountToRemove <= $owned)
-                    {
-                        
-                        # Let's try storing 0s instead of deleting.
-                        DB::transaction(function () use ($dominion, $resource, $amountToRemove)
-                        {
-                            DominionResource::where('dominion_id', $dominion->id)->where('resource_id', $resource->id)
-                            ->decrement('amount', $amountToRemove);
-                        });
-                    }
-                    else
-                    {
-                        xtLog("[{$dominion->id}] *** Tried to remove more of a resource than dominion has. Resource: {$resource->key}, Amount: {$amountToRemove}, Owned: {$owned}");
-                    }
-                }
-            }
-        }
-    }
-    */
 
     public function updateRealmResources(Realm $realm, array $resourceKeys): void
     {

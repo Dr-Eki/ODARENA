@@ -4,18 +4,18 @@ namespace OpenDominion\Console\Commands\Game;
 
 use Illuminate\Console\Command;
 use OpenDominion\Console\Commands\CommandInterface;
-use OpenDominion\Services\Dominion\TickService;
+use OpenDominion\Services\Dominion\TickChangeService;
 
-class TickCommand extends Command implements CommandInterface
+class TickCommitCommand extends Command implements CommandInterface
 {
     /** @var string The name and signature of the console command. */
-    protected $signature = 'game:tick';
+    protected $signature = 'game:tick:commit';
 
     /** @var string The console command description. */
     protected $description = 'Ticks the game (all active rounds)';
 
-    /** @var TickService */
-    protected $tickService;
+    /** @var TickChangeService */
+    protected $tickChangeService;
 
     /**
      * GameTickCommand constructor.
@@ -24,7 +24,7 @@ class TickCommand extends Command implements CommandInterface
     {
         parent::__construct();
 
-        $this->tickService = app(TickService::class);
+        $this->tickChangeService = app(TickChangeService::class);
     }
 
     /**
@@ -33,11 +33,7 @@ class TickCommand extends Command implements CommandInterface
 
     public function handle(): void
     {
-        $this->tickService->tick();
-        if (now()->hour === 0 && now()->minute < 15)
-        {
-            $this->tickService->tickDaily();
-        }
+        $this->tickChangeService->commit();
     }
 
 

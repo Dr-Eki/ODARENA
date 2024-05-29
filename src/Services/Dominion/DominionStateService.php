@@ -240,13 +240,13 @@ class DominionStateService
             {
                 $amountOwned = $dominion->{'resource_' . $resource->key};
                 $amountToRemove = $amountOwned * -1;
-                $this->resourceService->updateResources($dominion, [$resource->key => $amountToRemove]);
+                $this->resourceService->update($dominion, [$resource->key => $amountToRemove]);
             }
 
             // Add resources
             foreach($dominionState->resources as $resourceKey => $amount)
             {
-                $this->resourceService->updateResources($dominion, [$resourceKey => $amount]);
+                $this->resourceService->update($dominion, [$resourceKey => $amount]);
             }
     
             // Delete spells

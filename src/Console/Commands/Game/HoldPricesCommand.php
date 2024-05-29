@@ -42,12 +42,10 @@ class HoldPricesCommand extends Command
             }
         }
         
-        DB::transaction(function () use ($round) {
-            foreach($round->holds as $hold)
-            {
-                $this->info("Updating hold prices for {$hold->name} (ID {$hold->id})");
-                $this->holdService->setHoldPrices($hold, $round->ticks);
-            }
-        });
+        foreach($round->holds as $hold)
+        {
+            $this->info("Updating hold prices for {$hold->name} (ID {$hold->id})");
+            $this->holdService->setHoldPrices($hold, $round->ticks);
+        }
     }
 }
