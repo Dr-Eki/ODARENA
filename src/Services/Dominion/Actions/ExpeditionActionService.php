@@ -25,6 +25,7 @@ use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\ExpeditionCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\MagicCalculator;
+use OpenDominion\Calculators\Dominion\PrestigeCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\TerrainCalculator;
@@ -53,6 +54,7 @@ class ExpeditionActionService
     protected $landCalculator;
     protected $magicCalculator;
     protected $militaryCalculator;
+    protected $prestigeCalculator;
     protected $spellCalculator;
     protected $terrainCalculator;
     protected $unitCalculator;
@@ -359,7 +361,7 @@ class ExpeditionActionService
         ];
     }
 
-    protected function handlePrestigeChanges(Dominion $dominion, int $landDiscovered, int $landSize, array $units): void
+    protected function handlePrestigeChanges(Dominion $dominion, int $landDiscovered, array $units): void
     {
         $prestigeChange = intval($landDiscovered / $dominion->land * 400);
 

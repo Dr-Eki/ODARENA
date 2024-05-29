@@ -102,6 +102,7 @@ units:
       gold: 2000
       mana: 100
       elk: 1
+      draftees: 1
     power:
       offense: 12
       defense: 8
