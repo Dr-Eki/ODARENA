@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace OpenDominion\Services\Dominion;
 
+use DB;
 use Illuminate\Support\Collection;
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Dominion;
@@ -46,28 +47,66 @@ class TickChangeService
         $tickChanges = TickChange::where('status', 0)->get();
 
         $tickChangesDominionResources = $tickChanges->where('target_type', Dominion::class)->where('source_type', Resource::class);
-        $tickChangesHoldResources = $tickChanges->where('target_type', Hold::class)->where('source_type', Resource::class);
         $tickChangesDominionBuildings = $tickChanges->where('target_type', Dominion::class)->where('source_type', Building::class);
+        $tickChangesHoldResources = $tickChanges->where('target_type', Hold::class)->where('source_type', Resource::class);
 
         $this->commitDominionResources($tickChangesDominionResources);
-        $this->commitHoldResources($tickChangesHoldResources);
         $this->commitDominionBuildings($tickChangesDominionBuildings);
+        $this->commitHoldResources($tickChangesHoldResources);
     }
 
     public function commitForDominion(Dominion $dominion): void
     {
+        // Retrieve TickChange records with debug output
+        $tickChanges = TickChange::where([
+            'target_type' => Dominion::class,
+            'target_id' => $dominion->id,
+            'status' => 0
+        ])->get();
+    
+        if ($tickChanges->count() == 0)
+        {
 
-        $tickChanges = TickChange::where('status', 0)->get();
+            xtLog("{$dominion->id} ** No tick changes found for dominion, which is unusual for manual ticks. Initiate retry loop.");
 
-        $tickChangesDominionResources = $tickChanges->where('target_type', Dominion::class)->where('target_id', $dominion->id)->where('source_type', Resource::class);
-        $tickChangesDominionBuildings = $tickChanges->where('target_type', Dominion::class)->where('target_id', $dominion->id)->where('source_type', Building::class);
+            for ($i = 0; $i < 10; $i++)
+            {
+                $tickChanges = \OpenDominion\Models\TickChange::where([
+                    'target_type' => \OpenDominion\Models\Dominion::class,
+                    'target_id' => $dominion->id,
+                    'status' => 0
+                ])->get();
 
-        $this->commitDominionResources($tickChangesDominionResources);
-        $this->commitDominionBuildings($tickChangesDominionBuildings);
+                xtLog("{$dominion->id} *** Retry loop iteration {$i} found {$tickChanges->count()} tick changes for dominion.");
+
+                if($tickChanges->count() > 0)
+                {
+                    xtLog("{$dominion->id} *** Found tick changes for dominion after {$i} iterations.");
+                    break;
+                }
+
+                xtLog("{$dominion->id} *** Sleeping for 100ms and retrying");
+
+                usleep(100000);
+            }
+        } 
+    
+        // Separate tick changes by source type
+        $tickChangesDominionResources = $tickChanges->where('source_type', Resource::class);
+        $tickChangesDominionBuildings = $tickChanges->where('source_type', Building::class);
+    
+        $isScheduledTick = false;
+    
+        // Commit the changes
+        $this->commitDominionResources($tickChangesDominionResources, $isScheduledTick);
+        $this->commitDominionBuildings($tickChangesDominionBuildings, $isScheduledTick);
     }
+    
+    
 
-    protected function commitDominionResources(Collection $tickChangesDominionResources): void
+    protected function commitDominionResources(Collection $tickChangesDominionResources, bool $isScheduledTick = true): void
     {
+
         $dominionResourceChanges = [];
 
         foreach($tickChangesDominionResources as $tickChange)
@@ -77,9 +116,12 @@ class TickChangeService
             isset($dominionResourceChanges[$tickChange->target_id][$resourceKey]) ? $dominionResourceChanges[$tickChange->target_id][$resourceKey] += $amount : $dominionResourceChanges[$tickChange->target_id][$resourceKey] = $amount;
         }
 
+
         foreach($dominionResourceChanges as $dominionId => $resourceData)
         {
+
             $dominion = Dominion::find($dominionId);
+
 
             if($dominion)
             {
@@ -87,11 +129,11 @@ class TickChangeService
             }
             else
             {
-                xtLog("[{$dominionId}] ** Dominion ID not found for tick change change");
+                xtLog("[{$dominionId}] ** Dominion ID ($dominionId) does not correspond to a dominion.");
                 continue;
             }
             
-            if($dominion->protection_ticks)
+            if($dominion->protection_ticks and $isScheduledTick)
             {
                 xtLog("[{$dominion->id}] ** Dominion is in protection mode, skipping tick change commit");
                 continue;
@@ -105,8 +147,6 @@ class TickChangeService
                     $amount = -$currentAmount;
                 }
 
-                xtLog("[{$dominionId}] *** Committing for tick: Resource: {$resourceKey}, Amount: {$amount}");
-
                 $this->dominionResourceService->update($dominion, [$resourceKey => $amount]);
             }
         }
@@ -115,6 +155,50 @@ class TickChangeService
             $tickChange->update(['status' => 1]);
         });
     }
+
+    protected function commitDominionBuildings(Collection $tickChangesDominionBuildings, bool $isScheduledTick = true): void
+    {
+        $dominionBuildingChanges = [];
+
+        foreach($tickChangesDominionBuildings as $tickChange)
+        {
+            $buildingKey = $tickChange->source->key;
+            $amount = $tickChange->amount;
+            isset($dominionBuildingChanges[$tickChange->target_id][$buildingKey]) ? $dominionBuildingChanges[$tickChange->target_id][$buildingKey] += $amount : $dominionBuildingChanges[$tickChange->target_id][$buildingKey] = $amount;
+        }
+
+        foreach($dominionBuildingChanges as $dominionId => $buildingData)
+        {
+            $dominion = Dominion::find($dominionId);
+
+            if($dominion)
+            {
+                xtLog("[{$dominionId}] ** Committing tick change for dominion buildings");
+            }
+            else
+            {
+                xtLog("[{$dominionId}] ** Dominion ID not found for tick change change");
+                continue;
+            }
+            
+            if($dominion->protection_ticks and $isScheduledTick)
+            {
+                xtLog("[{$dominion->id}] ** Dominion is in protection mode, skipping tick change commit");
+                continue;
+            }
+
+            foreach($buildingData as $buildingKey => $amount)
+            {
+                xtLog("[{$dominionId}] *** Committing for tick: Building: {$buildingKey}, Amount: {$amount}");
+                $this->buildingService->update($dominion, [$buildingKey => $amount]);
+            }
+        }
+
+        $tickChangesDominionBuildings->each(function ($tickChange) {
+            $tickChange->update(['status' => 1]);
+        });
+    }
+
 
     protected function commitHoldResources(Collection $tickChangesHoldResources): void
     {
@@ -158,48 +242,4 @@ class TickChangeService
             $tickChange->update(['status' => 1]);
         });
     }
-
-    protected function commitDominionBuildings(Collection $tickChangesDominionBuildings): void
-    {
-        $dominionBuildingChanges = [];
-
-        foreach($tickChangesDominionBuildings as $tickChange)
-        {
-            $buildingKey = $tickChange->source->key;
-            $amount = $tickChange->amount;
-            isset($dominionBuildingChanges[$tickChange->target_id][$buildingKey]) ? $dominionBuildingChanges[$tickChange->target_id][$buildingKey] += $amount : $dominionBuildingChanges[$tickChange->target_id][$buildingKey] = $amount;
-        }
-
-        foreach($dominionBuildingChanges as $dominionId => $buildingData)
-        {
-            $dominion = Dominion::find($dominionId);
-
-            if($dominion)
-            {
-                xtLog("[{$dominionId}] ** Committing tick change for dominion buildings");
-            }
-            else
-            {
-                xtLog("[{$dominionId}] ** Dominion ID not found for tick change change");
-                continue;
-            }
-            
-            if($dominion->protection_ticks)
-            {
-                xtLog("[{$dominion->id}] ** Dominion is in protection mode, skipping tick change commit");
-                continue;
-            }
-
-            foreach($buildingData as $buildingKey => $amount)
-            {
-                xtLog("[{$dominionId}] *** Committing for tick: Building: {$buildingKey}, Amount: {$amount}");
-                $this->buildingService->update($dominion, [$buildingKey => $amount]);
-            }
-        }
-
-        $tickChangesDominionBuildings->each(function ($tickChange) {
-            $tickChange->update(['status' => 1]);
-        });
-    }
-
 }

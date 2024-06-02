@@ -241,6 +241,11 @@ class Dominion extends AbstractModel
         );
     }
 
+    public function tickChanges()
+    {
+        return $this->morphMany(TickChange::class, 'target');
+    }
+    
     public function watchedDominions()
     {
         return $this->hasManyThrough(

@@ -31,7 +31,7 @@ class PrestigeCalculator
 
     public function getDefenderPrestigeChange(Dominion $dominion, Dominion $defender, array $invasion)
     {
-        $baseGain = 50;
+        $baseLoss = 20;
     }
 
     public function getExpeditionerPrestigeChange(Dominion $dominion, int $landDiscovered)

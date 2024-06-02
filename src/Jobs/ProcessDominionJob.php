@@ -185,8 +185,8 @@ class ProcessDominionJob implements ShouldQueue
 
             xtLog("[{$this->dominion->id}] ** Delete finished spells");
             $this->deleteFinishedSpells($this->dominion);
-
         });
+
 
         xtLog("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number})");
         xtLog("[{$this->dominion->id}] ** Sending notifications (hourly_dominion)");
@@ -602,23 +602,14 @@ class ProcessDominionJob implements ShouldQueue
                 continue;
             }
 
-            #$resourcesProduced = $finishedResourcesInQueue
-            #    ->where('resource', 'resource_' . $resourceKey)
-            #    ->sum('amount');
-
-
-            #$resourcesNetChange[$resourceKey] = $resourcesProduced;
-
-            $netProduction = $this->resourceCalculator->getNetProduction($dominion, $resourceKey);
+            #$netProduction = $this->resourceCalculator->getNetProduction($dominion, $resourceKey);
             $production = $this->resourceCalculator->getProduction($dominion, $resourceKey);
             $consumption = $this->resourceCalculator->getConsumption($dominion, $resourceKey);
 
-            xtLog("[{$dominion->id}] *** Resource: {$production} {$resourceKey} raw produced.");
-            xtLog("[{$dominion->id}] *** Resource: {$consumption} {$resourceKey} consumed.");
-            xtLog("[{$dominion->id}] *** Resource: {$netProduction} {$resourceKey} net produced.");
-
             if($production != 0)
             {
+                xtLog("[{$dominion->id}] *** Resource: {$production} {$resourceKey} raw produced.");
+
                 TickChange::create([
                     'tick' => $dominion->round->ticks,
                     'source_type' => Resource::class,
@@ -633,6 +624,8 @@ class ProcessDominionJob implements ShouldQueue
 
             if($consumption != 0)
             {
+                xtLog("[{$dominion->id}] *** Resource: {$consumption} {$resourceKey} consumed.");
+
                 TickChange::create([
                     'tick' => $dominion->round->ticks,
                     'source_type' => Resource::class,
@@ -644,9 +637,9 @@ class ProcessDominionJob implements ShouldQueue
                     'type' => 'consumption',
                 ]);
             }
-        }
 
-        #$this->resourceService->update($dominion, $resourcesNetChange);
+            #xtLog("[{$dominion->id}] *** Resource: {$netProduction} {$resourceKey} net produced.");
+        }
     }
 
     # Take buildings that are one tick away from finished and create or increment DominionBuildings.

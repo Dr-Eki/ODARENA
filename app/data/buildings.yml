@@ -1576,7 +1576,7 @@ cyst:
     - Growth
   perks:
     #sorcery_damage_suffered: 1,-4,80 # 1% gives -4%, max -80%
-    growth_units_production: 1,0.3 # 0.1 unit 1 per tick
+    growth_units_production: 1,0.3 # 0.3 unit1 per tick
     housing: 88
     jobs: 0
 

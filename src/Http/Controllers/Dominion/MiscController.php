@@ -170,6 +170,10 @@ class MiscController extends AbstractDominionController
             DB::table('watched_dominions')->where('dominion_id', '=', $dominion->id)->delete();
             DB::table('watched_dominions')->where('watcher_id', '=', $dominion->id)->delete();
 
+            // Tick changes
+            DB::table('tick_changes')->where('source_type', Dominion::class)->where('source_id', $dominion->id)->delete();
+            DB::table('tick_changes')->where('target_type', Dominion::class)->where('target_id', $dominion->id)->delete();
+
             // Game event stories...
             DB::table('game_event_stories')
                 ->whereIn('game_event_id', function ($query) use ($dominion) {

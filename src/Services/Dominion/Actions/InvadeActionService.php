@@ -2614,7 +2614,7 @@ class InvadeActionService
 
     protected function handleResourceConversions(Dominion $converter, string $mode = 'offense'): void
     {
-        # Queue up for attacker in handlResourceGainsForAttacker
+        # Queue up for attacker in handleResourceGainsForAttacker
         /*
         if($mode == 'offense')
         {
