@@ -50,7 +50,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1200
+      gold: 1100
       ore: 50
       lumber: 150
       draftees: 1

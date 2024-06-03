@@ -179,10 +179,10 @@ class TickService
             // One transaction for all of these
             DB::transaction(function () use ($round) {
 
-                xtLog('* Advance all dominion queues');
+                xtLog('* Delete all finished dominion queues');
                 $this->deleteAllFinishedDominionQueues($round);
 
-                xtLog('* Advance all trade route queues');
+                xtLog('* Delete all finished trade route queues');
                 $this->deleteAllFinishedTradeRouteQueues($round);
             });
     
@@ -237,7 +237,8 @@ class TickService
     {
         xtLog("[{$dominion->id}] * Manual tick started for {$dominion->name} at {$this->now}.");
 
-        if ($dominion->protection_ticks <= 0) {
+        if ($dominion->protection_ticks <= 0)
+        {
             xtLog("[{$dominion->id}] ** Manual tick skipped, protection ticks are <=0.");
             return;
         }
@@ -299,6 +300,11 @@ class TickService
 
         xtLog("[{$dominion->id}] ** Sending notifications");
         $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
+
+        DB::transaction(function () use ($dominion) {
+            xtLog('* Delete all finished dominion queues');
+            $this->deleteFinishedDominionQueues($dominion);
+        });
 
         xtLog("[{$dominion->id}] ** Precalculating tick for dominion again");
         $this->tickCalculator->precalculateTick($dominion, true);
@@ -430,6 +436,19 @@ class TickService
             ->where('dominions.round_id', $round->id)
             ->where('dominions.is_locked', false)
             ->where('dominions.protection_ticks', 0)
+            ->where('dominion_queue.hours', '=', 0)
+            ->delete();
+        
+        xtLog("** Deleted {$deletedRows} finished dominion queues.");
+    }
+
+    private function deleteFinishedDominionQueues(Dominion $dominion): void
+    {
+        $deletedRows = DB::table('dominion_queue')
+            ->join('dominions', 'dominion_queue.dominion_id', '=', 'dominions.id')
+            ->where('dominions.id', $dominion->id)
+            ->where('dominions.is_locked', false)
+            ->where('dominions.protection_ticks', '>', 0)
             ->where('dominion_queue.hours', '=', 0)
             ->delete();
         

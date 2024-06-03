@@ -100,6 +100,11 @@ class TickChangeService
         // Commit the changes
         $this->commitDominionResources($tickChangesDominionResources, $isScheduledTick);
         $this->commitDominionBuildings($tickChangesDominionBuildings, $isScheduledTick);
+
+        // Set all tick changes to status 1
+        $tickChanges->each(function ($tickChange) {
+            $tickChange->update(['status' => 1]);
+        });
     }
     
     
@@ -116,12 +121,10 @@ class TickChangeService
             isset($dominionResourceChanges[$tickChange->target_id][$resourceKey]) ? $dominionResourceChanges[$tickChange->target_id][$resourceKey] += $amount : $dominionResourceChanges[$tickChange->target_id][$resourceKey] = $amount;
         }
 
-
         foreach($dominionResourceChanges as $dominionId => $resourceData)
         {
 
             $dominion = Dominion::find($dominionId);
-
 
             if($dominion)
             {

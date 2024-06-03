@@ -28,7 +28,7 @@ construction:
     - Troll
   perks:
     construction_cost: -20,4800
-    rezone_cost: -20,4800
+    #rezone_cost: -20,4800
 
 defenses:  
   name: Defenses
@@ -448,17 +448,6 @@ uprooting:
     lumber_production_mod: 60,5000
 # END TROLL #
 
-# BEGIN UNDEAD #
-
-necromancy:  
-  name: Necromancy
-  exclusive_races:
-    - Undead
-  perks:
-    unit_pairing: 40,6000
-
-# END UNDEAD #
-
 ### DISABLED
 
 cartography:  
@@ -510,7 +499,7 @@ construction_artillery:
     - Artillery
   perks:
     construction_cost: -25,4000
-    rezone_cost: -25,4000
+    #rezone_cost: -25,4000
 
 construction_dragon:  
   enabled: 0
@@ -519,7 +508,7 @@ construction_dragon:
   - Dragon
   perks:
     construction_cost: -25,4000
-    rezone_cost: -25,4000
+    #rezone_cost: -25,4000
     unit_pairing: 25,4000
 
 construction_imperial_gnome:
@@ -529,7 +518,7 @@ construction_imperial_gnome:
     - Imperial Gnome
   perks:
     construction_cost: -25,4000
-    rezone_cost: -25,4000
+    #rezone_cost: -25,4000
     unit_pairing: 25,4000
 
 construction_qur:  
@@ -539,7 +528,7 @@ construction_qur:
   - Qur
   perks:
     construction_cost: -25,4000
-    rezone_cost: -25,4000
+    #rezone_cost: -25,4000
     unit_pairing: 90,5000
 
 defense:  
@@ -730,7 +719,7 @@ imperial_gnome_construction:
     - Imperial Gnome
   perks:
     construction_cost: -25,4000
-    rezone_cost: -25,4000
+    #rezone_cost: -25,4000
     unit_pairing: 25,4000
 
 armoury:  
@@ -967,7 +956,7 @@ construction_wood_elf:
     - Wood Elf
   perks:
     construction_cost: -50,7000
-    rezone_cost: -50,7000
+    #rezone_cost: -50,7000
 
 camouflage:  
   enabled: 0

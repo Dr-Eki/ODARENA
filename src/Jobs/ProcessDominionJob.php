@@ -120,9 +120,13 @@ class ProcessDominionJob implements ShouldQueue
             #$this->temporaryData[$round->id][$this->dominion->id]['units_generated'] = $this->unitCalculator->getUnitsGenerated($this->dominion);
             $this->temporaryData[$round->id][$this->dominion->id]['units_attrited'] = $this->unitCalculator->getUnitsAttrited($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Advancing queues (if in protection)");
-            $this->advanceQueues($this->dominion);
+            if($this->dominion->protection_ticks)
+            {
+                xtLog("[{$this->dominion->id}] ** Advancing queues");
+                $this->advanceQueues($this->dominion);
 
+            }
+            
             xtLog("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)");
             $this->handleBarbarians($this->dominion);
 

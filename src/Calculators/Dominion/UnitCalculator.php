@@ -303,7 +303,6 @@ class UnitCalculator
         return $units;
     }
 
-
     public function getUnitTypeTotalReturning(Dominion $dominion, string $unitType): int
     {
         return (int)$this->getUnitTypeTotal($dominion, $unitType, true, false, true);

@@ -1,28 +1,5 @@
 # FACTION SPECIFIC
 
-## Aurei
-chryson_phase:
-  name: Chryson Phase
-  level: 5
-  scope: self
-  class: active
-  cost: 33
-  exclusive_races:
-    - Aurei
-  perks:
-    aurei_unit_conversion: 3,4,1000 # from, to, amount
-
-halcyon_phase:
-  name: Halcyon Phase
-  level: 5
-  scope: self
-  class: active
-  cost: 11
-  exclusive_races:
-    - Aurei
-  perks:
-    aurei_unit_conversion: 4,3,1000 # from, to, amount
-
 ## Beastfolk
 ambush:
   name: Ambush

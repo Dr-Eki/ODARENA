@@ -31,18 +31,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @php
-                            $dominion = $selectedDominion;
-
-                            $tickChanges = \OpenDominion\Models\TickChange::where([
-                                            'target_type' => \OpenDominion\Models\Dominion::class,
-                                            'target_id' => $dominion->id,
-                                            'status' => 0
-                                        ])->get();
-
-                            dump($tickChanges);
-                        @endphp
-
                     @foreach ($bufferedItems as $buffer)
                         <tr>
                             <td>{{ $buffer->tick }}</td>

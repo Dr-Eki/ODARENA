@@ -52,7 +52,7 @@ units:
       offense: 0
       defense: 1.5
     perks:
-      lumber_production_raw: 0.35
+      lumber_production_raw: 0.40
 
   - name: Armoured Ant
     training_time: 9
@@ -92,7 +92,7 @@ units:
       offense: 0
       defense: 4
     perks:
-      increases_morale_fixed: 0.01
+      increases_morale_fixed: 0.05
       building_limit: colony,1 # building, buildings per unit, imp to increased
       attrition_if_capacity_limit_exceeded: 5 # Decays at a rate of 5% per tick of units exceeding building_limit
       food_consumption_raw: 2

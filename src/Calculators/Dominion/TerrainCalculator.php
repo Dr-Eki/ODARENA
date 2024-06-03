@@ -3,7 +3,6 @@
 namespace OpenDominion\Calculators\Dominion;
 
 use Log;
-use OpenDominion\Exceptions\GameException;
 
 use OpenDominion\Helpers\TerrainHelper;
 

@@ -346,7 +346,7 @@
         <div class="col-sm-12 col-md-9">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                  <h3 class="box-title"><i class="fas fa-exchange-alt"></i> Trade</h3>
+                  <h3 class="box-title"><i class="fas fa-exchange-alt"></i> Exchange</h3>
                 </div>
                 <form action="{{ route('dominion.resources') }}" method="post" {{--class="form-inline" --}}role="form">
                     @csrf

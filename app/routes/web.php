@@ -157,6 +157,11 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('expedition')->uses('Dominion\ExpeditionController@getExpedition')->name('expedition');
             $router->post('expedition')->uses('Dominion\ExpeditionController@postExpedition');
 
+            // Expedition
+            $router->get('phasing')->uses('Dominion\PhasingController@getPhasing')->name('phasing');
+            $router->post('phasing')->uses('Dominion\PhasingController@postPhasing');
+            $router->post('phasing/calculate')->uses('Dominion\PhasingController@calculatePhasing')->name('phasing.calculate'); 
+
             // Artefacts
             $router->get('artefacts')->uses('Dominion\ArtefactsController@getArtefacts')->name('artefacts');
             $router->post('artefacts')->uses('Dominion\ArtefactsController@postArtefacts');

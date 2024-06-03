@@ -89,7 +89,7 @@ units:
       offense: 0
       defense: 3
     perks:
-      miasma_production_raw: 0.06
+      miasma_production_raw: 0.10
       kills_into_resource_per_value: 25,miasma # 25 miasma per value of killed units
 
   - name: Wretch

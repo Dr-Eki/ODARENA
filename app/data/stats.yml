@@ -229,6 +229,8 @@ mana_rezoning:
   name: Mana rezoning
 mana_training:
   name: Mana training
+mana_phasing:
+  name: Mana phasing
 mana_improvements:
   name: Mana improvements
 mana_exploring:

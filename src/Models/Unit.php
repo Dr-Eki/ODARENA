@@ -33,7 +33,13 @@ class Unit extends AbstractModel
         'type' => 'array',
         'static_networth' => 'integer',
         'training_time' => 'integer',
+        'description' => 'string',
     ];
+
+    public static function fromKey($key)
+    {
+        return self::where('key', $key)->first();
+    }
 
     public function perks()
     {

@@ -278,8 +278,8 @@ prisoner:
   buy: null
   sell: 4
   trade:
-    buy: 40
-    sell: 40
+    buy: 150
+    sell: 150
 
 sapling:
   name: Sapling
@@ -334,8 +334,8 @@ thunderstone:
   buy: null
   sell: null
   trade:
-    buy: 2000
-    sell: 2000
+    buy: 16000
+    sell: 16000
 
 yak:
   name: Yak

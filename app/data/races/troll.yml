@@ -124,7 +124,7 @@ units:
     - living
     - sentient
   cost:
-    gold: 2600
+    gold: 2300
     draftees: 1
   power:
     offense: 6

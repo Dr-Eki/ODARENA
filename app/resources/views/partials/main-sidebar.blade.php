@@ -116,6 +116,10 @@
 
                 <li class="{{ Route::is('dominion.military') ? 'active' : null }}"><a href="{{ route('dominion.military') }}"><i class="ra ra-sword ra-fw"></i> <span>Military</span></a></li>
 
+                @if ($selectedDominion->race->getPerkValue('can_phase_units'))
+                    <li class="{{ Route::is('dominion.phasing') ? 'active' : null }}"><a href="{{ route('dominion.phasing') }}"><i class="ra ra-player-dodge ra-fw"></i> <span>Phasing</span></a></li>
+                @endif
+
                 @if ($roundSettings['invasions'] and !$selectedDominion->race->getPerkValue('cannot_invade'))
                     <li class="{{ Route::is('dominion.invade') ? 'active' : null }}"><a href="{{ route('dominion.invade') }}"><i class="ra ra-crossed-swords ra-fw"></i> <span>Invade</span></a></li>
                 @endif
