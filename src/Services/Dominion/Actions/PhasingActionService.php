@@ -13,6 +13,7 @@ use OpenDominion\Traits\DominionGuardsTrait;
 
 use OpenDominion\Calculators\Dominion\PhasingCalculator;
 use OpenDominion\Services\Dominion\ResourceService;
+use OpenDominion\Services\Dominion\StatsService;
 
 class PhasingActionService
 {
@@ -20,11 +21,15 @@ class PhasingActionService
 
     protected $phasingCalculator;
     protected $resourceService;
+    protected $statsService;
+
+    protected $phasing;
 
     public function __construct()
     {
         $this->phasingCalculator = app(PhasingCalculator::class);
         $this->resourceService = app(ResourceService::class);
+        $this->statsService = app(StatsService::class);
     }
 
     public function phase(Dominion $phaser, Unit $sourceUnit, int $sourceUnitAmount, Unit $targetUnit): array
@@ -89,7 +94,19 @@ class PhasingActionService
 
             $phaser->save();
 
+            $this->phasing = [
+                'source_unit' => $sourceUnit,
+                'source_unit_amount' => $sourceUnitAmount,
+                'target_unit' => $targetUnit,
+                'resource_key' => key($cost),
+                'cost' => current($cost),
+            ];
+
         });
+
+        $this->statsService->updateStat($phaser, 'units_phased', $this->phasing['source_unit_amount']);
+        $this->statsService->updateStat($phaser, ($this->phasing['resource_key'] . '_phasing'), $this->phasing['cost']);
+
 
         $message = sprintf(
             'You phase %s %s into %s.',
