@@ -827,7 +827,7 @@ class PopulationCalculator
         // Values (percentages)
         $growthFactor = 0.01;
 
-        $growthFactor += $dominion->race->getPerkValue('drafting_growth_factor');
+        $growthFactor += $dominion->race->getPerkMultiplier('drafting_growth_factor');
 
         $multiplier = 1;
 

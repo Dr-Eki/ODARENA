@@ -106,8 +106,6 @@ class TickChangeService
             $tickChange->update(['status' => 1]);
         });
     }
-    
-    
 
     protected function commitDominionResources(Collection $tickChangesDominionResources, bool $isScheduledTick = true): void
     {
@@ -144,13 +142,7 @@ class TickChangeService
 
             foreach($resourceData as $resourceKey => $amount)
             {
-                $currentAmount = $dominion->{$resourceKey};
-                if($amount < 0 && abs($amount) > $currentAmount)
-                {
-                    $amount = -$currentAmount;
-                }
-
-                $this->dominionResourceService->update($dominion, [$resourceKey => $amount]);
+                $this->dominionResourceService->update($dominion, [$resourceKey => $amount]); // Contains safety for negative $amount values that exceed current resource amount
             }
         }
 
