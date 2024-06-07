@@ -302,7 +302,7 @@ class TickService
         $this->notificationService->sendNotifications($dominion, 'hourly_dominion');
 
         DB::transaction(function () use ($dominion) {
-            xtLog('* Delete all finished dominion queues');
+            xtLog("[{$dominion->id}] * Delete all finished dominion queues");
             $this->deleteFinishedDominionQueues($dominion);
         });
 
@@ -452,7 +452,7 @@ class TickService
             ->where('dominion_queue.hours', '=', 0)
             ->delete();
         
-        xtLog("** Deleted {$deletedRows} finished dominion queues.");
+        xtLog("[{$dominion->id}] ** Deleted {$deletedRows} finished dominion queues.");
     }
 
     private function advanceAllTradeRouteQueues(Round $round): void
