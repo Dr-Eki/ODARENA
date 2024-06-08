@@ -860,6 +860,14 @@ giant_shell:
     food_theft_protection: 20000 # protects 20,000 food from theft
     pearls_theft_protection: 5000 # protects 5,000 pearls from theft
 
+kelp_forest:
+  name: Kelp Forest
+  category: production
+  exclusive_races:
+    - Glimjir
+  perks:
+    kelp_production_raw: 30
+
 mana_spring:
   name: Mana Spring
   category: production
