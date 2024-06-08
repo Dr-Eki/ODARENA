@@ -1,0 +1,120 @@
+name: Troll (Engineer) Quickstart by Golrath
+description: 
+race: Troll
+title: Engineer
+deity: Bregon
+land: 1000
+offensive_power: 0
+defensive_power: 0
+draft_rate: 0
+morale: 100
+prestige: 600
+peasants: 17011
+protection_ticks: 0
+devotion_ticks: 48
+spy_strength: 100
+wizard_strength: 100
+xp: 7989
+
+buildings:
+    aqueduct: 0
+    barracks: 0
+    bazaar: 0
+    constabulary: 0
+    factory: 0
+    farm: 100
+    gem_mine: 400
+    gold_mine: 60
+    granary: 0
+    guard_tower: 0
+    harbour: 50
+    hut: 0
+    infirmary: 0
+    lapidary: 0
+    military_academy: 0
+    monument: 0
+    ore_mine: 250
+    redoubt: 70
+    sanctuary: 0
+    saw_mill: 0
+    spire: 0
+    stone_wall: 0
+    stronghold: 0
+    syndicate_quarters: 0
+    tower: 20
+    training_grounds: 0
+    university: 0
+    vault: 0
+    watch_tower: 0
+    watermill: 50
+    wizard_guild: 0
+
+improvements:
+    bashing: 0
+    building: 0
+    fighting: 0
+    glimmering: 1925471
+    hunting: 0
+    leadership: 0
+    muttering: 0
+    nesting: 3025641
+    rock_breaking: 247242
+    smashing: 122661
+    sneaking: 0
+    trampling: 0
+    uprooting: 0
+    warfare: 0
+    wizardry: 0
+
+resources:
+    gold: 311
+    food: 125835
+    ore: 80
+    gems: 0
+    mana: 2400
+    lumber: 0
+
+spells:
+    sazals_charge: 0,96
+    bregons_muster: 6,86
+    fog: 0,96
+
+advancements:
+    anvils: 4
+    infrastructure: 2
+
+techs:
+
+terrains:
+   hills: 1000
+
+decree_states:
+
+units:
+    draftees: 898
+    unit1: 0
+    unit2: 581
+    unit3: 0
+    unit4: 2000
+    unit5: 2476
+    unit6: 0
+    unit7: 0
+    unit8: 0
+    unit9: 0
+    unit10: 0
+    spies: 0
+    wizards: 0
+    archmages: 0
+
+queues:
+    - training,military_unit2,0,31
+    - training,military_unit2,1,31
+    - training,military_unit2,2,31
+    - training,military_unit2,3,32
+    - training,military_unit5,0,2476
+    - training,military_unit5,1,35
+    - training,military_unit5,2,34
+    - training,military_unit5,3,35
+    - training,military_unit5,4,35
+    - training,military_unit5,5,34
+    - training,military_unit5,6,35

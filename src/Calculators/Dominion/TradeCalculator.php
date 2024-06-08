@@ -360,6 +360,8 @@ class TradeCalculator
         $production = $this->dominionResourceCalculator->getProduction($dominion, $soldResource->key);
         $dueNextTick = $this->dominionResourceCalculator->getResourceDueFromTradeNextTick($dominion, $soldResource->key);
 
+        $soldAmount += $this->dominionResourceCalculator->getResourceTotalSoldPerTick($dominion, $soldResource->key);
+
         return ($stockpile + $production + $dueNextTick) >= $soldAmount;
     }
 

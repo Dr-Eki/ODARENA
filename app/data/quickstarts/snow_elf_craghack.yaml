@@ -1,0 +1,141 @@
+name: Snow Elf (Engineer) Quickstart by Craghack
+description: 
+race: Snow Elf
+title: Engineer
+deity: Mirnon
+land: 1000
+offensive_power: 0
+defensive_power: 0
+draft_rate: 100
+morale: 100
+prestige: 600
+peasants: 15149
+protection_ticks: 0
+devotion_ticks: 48
+spy_strength: 100
+wizard_strength: 100
+xp: 6384
+
+buildings:
+    aqueduct: 0
+    barracks: 0
+    battlement: 0
+    bazaar: 0
+    constabulary: 0
+    factory: 0
+    farm: 70
+    gem_mine: 365
+    gold_mine: 0
+    granary: 0
+    gryphon_nest: 250
+    guard_tower: 0
+    hall: 0
+    harbour: 50
+    infirmary: 0
+    lapidary: 0
+    military_academy: 0
+    monument: 0
+    ore_mine: 45
+    redoubt: 0
+    sanctuary: 0
+    saw_mill: 150
+    school: 0
+    spire: 0
+    stone_wall: 0
+    syndicate_quarters: 0
+    tower: 20
+    training_grounds: 0
+    university: 0
+    vault: 0
+    watch_tower: 0
+    watermill: 50
+    wizard_guild: 0
+
+improvements:
+agriculture: 0
+    conduits: 0
+    construction: 0
+    defenses: 0
+    education: 1831275
+    espionage: 0
+    gryphonry: 0
+    housing: 1712821
+    leadership: 0
+    logging: 0
+    markets: 0
+    mining: 0
+    science: 3587833
+    tactics: 0
+    warding: 0
+    warfare: 0
+    wizardry: 0
+
+resources:
+    gold: 972624
+    food: 67852
+    lumber: 3732
+    ore: 15
+    gems: 0
+    mana: 5888
+
+spells:
+    enhanced_yields: 0,27
+    miners_fortune: 0,38
+    mining_strength: 16,84
+    sazals_charge: 0,96
+    mirnons_fortitude: 0,66
+    arboreal_abundance: 0,66
+    fog: 0,96
+
+advancements:
+    anvils: 6
+    gemcutting: 2
+
+techs:
+
+terrains:
+   glacier: 96
+   mountains: 904
+
+decree_states:
+
+units:
+    draftees: 0
+    unit1: 0
+    unit2: 0
+    unit3: 0
+    unit4: 144
+    unit5: 0
+    unit6: 0
+    unit7: 0
+    unit8: 0
+    unit9: 0
+    unit10: 0
+    spies: 0
+    wizards: 0
+    archmages: 0
+
+queues:
+    - summoning,military_unit4,0,2
+    - summoning,military_unit4,1,2
+    - summoning,military_unit4,2,2
+    - summoning,military_unit4,3,2
+    - summoning,military_unit4,4,2
+    - summoning,military_unit4,5,2
+    - summoning,military_unit4,6,2
+    - summoning,military_unit4,7,2
+    - summoning,military_unit4,8,2
+    - summoning,military_unit4,9,2
+    - summoning,military_unit4,10,2
+    - summoning,military_unit4,11,2
+    - summoning,military_unit4,12,2
+    - training,military_unit1,1,3081
+    - training,military_unit1,2,155
+    - training,military_unit1,4,53
+    - training,military_unit1,5,49
+    - training,military_unit1,7,44
+    - training,military_unit1,8,49
+    - training,military_unit1,9,50
+    - training,military_unit2,6,86
+    - training,military_unit2,9,12
+    - training,military_unit2,10,2
