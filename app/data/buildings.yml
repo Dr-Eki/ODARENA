@@ -586,7 +586,7 @@ edifice:
   exclusive_races:
     - Glimjir 
   perks:
-    deity_power: 1,10,100
+    deity_power: 1,20,100
 
 lapidary:
   name: Lapidary
@@ -614,7 +614,7 @@ obelisk:
   exclusive_races:
     - Reptilians
   perks:
-    deity_power: 1,10,100
+    deity_power: 1,20,100
 
 redoubt:
   name: Redoubt
@@ -644,7 +644,7 @@ shrine:
   exclusive_races:
     - Demon
   perks:
-    deity_power: 1,10,100
+    deity_power: 1,20,100
 
 spire:
   name: Spire
@@ -683,7 +683,7 @@ monument:
     - Growth
     - Reptilians
   perks:
-    deity_power: 1,5,100
+    deity_power: 1,10,100
 
 # BEGIN AFFLICTED
 

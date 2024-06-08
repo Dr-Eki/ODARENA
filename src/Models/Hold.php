@@ -1617,19 +1617,15 @@ class Hold extends AbstractModel
             return 0;
         }
 
-        #return Cache::remember("dominion.{$this->id}.deityPerkValue.{$perkKey}", 5, function () use ($perkKey)
-        #{
-            $multiplier = 1;
-            $multiplier += $this->getBuildingPerkMultiplier('deity_power');
-            $multiplier += $this->race->getPerkMultiplier('deity_power');
-            $multiplier += $this->title->getPerkMultiplier('deity_power') * $this->getTitlePerkMultiplier();
-            $multiplier += $this->getDecreePerkMultiplier('deity_power');
-            #$multiplier += $this->realm->getArtefactPerkMultiplier('deity_power_mod');
-            
-            $devotionDurationMultiplier = 1 + min($this->devotion->duration * 0.1 / 100, 1);
+        $multiplier = 1;
+        $multiplier += $this->getBuildingPerkMultiplier('deity_power');
+        $multiplier += $this->race->getPerkMultiplier('deity_power');
+        $multiplier += $this->title->getPerkMultiplier('deity_power') * $this->getTitlePerkMultiplier();
+        $multiplier += $this->getDecreePerkMultiplier('deity_power');
+        
+        $devotionDurationMultiplier = 1 + min($this->devotion->duration * 0.1 / 100, 1);
 
-            return (float)$this->deity->getPerkValue($perkKey) * $multiplier * $devotionDurationMultiplier;
-        #});
+        return (float)$this->deity->getPerkValue($perkKey) * $multiplier * $devotionDurationMultiplier;
     }
 
     /**
