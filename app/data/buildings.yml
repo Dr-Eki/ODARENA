@@ -866,7 +866,7 @@ kelp_forest:
   exclusive_races:
     - Glimjir
   perks:
-    kelp_production_raw: 30
+    kelp_production_raw: 35
 
 mana_spring:
   name: Mana Spring
