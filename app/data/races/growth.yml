@@ -71,6 +71,8 @@ perks:
   #drafting: -99
   #drafting_per_defensive_failure: 1
   cannot_change_draft_rate: 1
+  starts_devoted_to_druva: 1
+  cannot_renounce_deity: 1
 
 units:
   - name: Tendril
