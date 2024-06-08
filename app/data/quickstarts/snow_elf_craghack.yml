@@ -52,7 +52,7 @@ buildings:
     wizard_guild: 0
 
 improvements:
-agriculture: 0
+    agriculture: 0
     conduits: 0
     construction: 0
     defenses: 0
