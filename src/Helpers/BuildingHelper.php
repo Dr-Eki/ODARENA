@@ -192,7 +192,7 @@ class BuildingHelper
 
             # Military
             'casualties' => '%2$+g%% casualties for every %1$s%% (max %3$s%% reduction).',
-            'casualties_on_offense' => '%2$+g%% ofensive casualties for every %1$s%% (max %3$s%% reduction).',
+            'casualties_on_offense' => '%2$+g%% offensive casualties for every %1$s%% (max %3$s%% reduction).',
             'casualties_on_defense' => '%2$+g%% defensive casualties for every %1$s%% (max %3$s%% reduction).',
 
             'increases_enemy_casualties' => '+%2$g%% enemy casualties for every %1$s%% (max %3$s%%).',

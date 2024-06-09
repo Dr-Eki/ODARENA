@@ -269,7 +269,7 @@ class SpellHelper
             'defensive_power_from_peasants' => '%s raw defensive power per peasant',
 
             'offensive_power_from_terrain' => '%2$+g%% raw defensive power per 1%% of %1$s.',
-            'defensive_power_from_terrain' => '%2$+g%% raw defensive power per 1%% of %1$s.',
+            'defensive_power_from_terrain' => '%2$+g%% raw offensive power per 1%% of %1$s.',
 
             'offensive_power_from_devotion' => '%2$s%% offensive power for every tick devoted to %1$s (max %3$s%%).',
             'defense_from_devotion' => '%2$s%% offensive power for every tick devoted to %1$s (max %3$s%%).',

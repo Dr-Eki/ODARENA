@@ -5,8 +5,6 @@ declare(strict_types=1);
 
 namespace OpenDominion\Calculators\Dominion;
 
-use Log;
-
 use Illuminate\Support\Collection;
 
 use OpenDominion\Models\Dominion;
@@ -41,7 +39,23 @@ class TradeCalculator
 
     public function getMaxTradeValue(Dominion $dominion, Resource $resource): int
     {
-        return config('trade.trade_base_max');
+        $base = config('trade.trade_base_max');
+        $multiplier = $this->getMaxTradeMultiplier($dominion, $resource);
+
+        return floorInt($base * $multiplier);
+    }
+
+    public function getMaxTradeMultiplier(Dominion $dominion, Resource $resource): float
+    {
+        $multiplier = 1;
+
+        $multiplier += $dominion->race->getPerkMultiplier('max_trade_value_mod');
+        $multiplier += $dominion->getAdvancementPerkMultiplier('max_trade_value_mod');
+
+        $multiplier += $dominion->race->getPerkMultiplier($resource->key . '_max_trade_value_mod');
+        $multiplier += $dominion->getAdvancementPerkMultiplier($resource->key . '_max_trade_value_mod');
+
+        return config('trade.trade_base_max') / $this->getMaxTradeValue($dominion, $resource);
     }
 
     public function getTradeMaxAmount(Dominion $dominion, Resource $resource): int
@@ -360,7 +374,21 @@ class TradeCalculator
         $production = $this->dominionResourceCalculator->getProduction($dominion, $soldResource->key);
         $dueNextTick = $this->dominionResourceCalculator->getResourceDueFromTradeNextTick($dominion, $soldResource->key);
 
-        $soldAmount += $this->dominionResourceCalculator->getResourceTotalSoldPerTick($dominion, $soldResource->key);
+        /*
+        *   This next line discards $soldAmount so that the evaluation is done based on  
+        *   whether the dominion can afford ALL trades of THIS RESOURCE.
+        *
+        *   Before this change, dominions could sell infinite amounts of a resource by simply 
+        *   having enough of the resource for each individual trade, not all total trades.
+        *
+        *   While the ideal effect of this change is that only trades which cannot be afford
+        *   are cancelled, due to trade routes being calculated simultaneously, it is possible
+        *   that a trade route is cancelled even though the dominion can afford it.
+        *  
+        *   That is an acceptable trade-off for now.
+        */
+
+        $soldAmount = $this->dominionResourceCalculator->getResourceTotalSoldPerTick($dominion, $soldResource->key);
 
         return ($stockpile + $production + $dueNextTick) >= $soldAmount;
     }
