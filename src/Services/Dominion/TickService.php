@@ -290,7 +290,7 @@ class TickService
         xtLog("[{$dominion->id}] ** Waiting for closing delay of {$closingDelay} microseconds.");
         usleep($closingDelay);
 
-        xtLog('* Commit tick changes');
+        xtLog("[{$dominion->id}] * Commit tick changes");
         $this->handleTickCommitForDominion($dominion);
 
         xtLog("[{$dominion->id}] ** Saving dominion state");
