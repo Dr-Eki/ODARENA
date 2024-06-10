@@ -2,20 +2,16 @@
 
 namespace OpenDominion\Services;
 
+use Illuminate\Support\Str;
+
 use OpenDominion\Models\User;
 
 class UserService
 {
-    public function updateXp(User $user, string $action, int $xp = 0): void
+    public function generateApiKey(User $user): void
     {
-
-    }
-
-    public function getXpForAction(string $action): int
-    {
-        $xp = 0;
-
-        
+        $user->api_key = Str::random(60);
+        $user->save();
     }
 
 }

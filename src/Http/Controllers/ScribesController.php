@@ -2,8 +2,6 @@
 
 namespace OpenDominion\Http\Controllers;
 
-use Illuminate\Support\Str;
-
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
 use OpenDominion\Calculators\Dominion\ResearchCalculator;
@@ -42,8 +40,6 @@ use OpenDominion\Models\Tech;
 use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Spell;
 use OpenDominion\Models\Spyop;
-
-
 
 class ScribesController extends AbstractController
 {

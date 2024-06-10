@@ -27,7 +27,6 @@ $router->group(['prefix' => 'v1', 'as' => 'api.'], static function (Router $rout
     });
 
     $router->post('/push-subscription', function (Request $request) {
-        #Log::info('Request body:', $request->json()->all()); // Log the request body
     
         $user = Auth::user(); // Get the authenticated user
     
@@ -35,13 +34,6 @@ $router->group(['prefix' => 'v1', 'as' => 'api.'], static function (Router $rout
     
         return response()->json(null, 204);
     })->middleware('api', 'auth');
-
-    /*
-    $router->group(['prefix' => 'calculator', 'middleware' => ['api', 'auth'], 'as' => 'calculator.'], static function (Router $router) {
-        $router->get('defense')->uses('Dominion\APIController@calculateDefense')->name('defense');
-        $router->get('offense')->uses('Dominion\APIController@calculateOffense')->name('offense');
-    });
-    */
 
     $router->group(['middleware' => 'throttle:90,1'], function () use ($router)
     {
@@ -75,6 +67,8 @@ $router->group(['prefix' => 'v1', 'as' => 'api.'], static function (Router $rout
         $router->get('/models/{model}/{id}/perks')->uses('ApiController@getModelPerks')->name('model-perks');
 
         $router->get('/queue-types')->uses('ApiController@getQueueTypes')->name('queue-types');
+
+        $router->get('/quickstarts/{quickstartId}/{apiKey}')->uses('DashboardController@getQuickstartViaApi')->name('queue-types');
 
 
     });

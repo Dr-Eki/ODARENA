@@ -787,7 +787,7 @@ class TickService
 
     public function processTradeRouteJobs(Round $round): void
     {
-        $tradeRoutes = $round->tradeRoutes->whereIn('status', [0,1])->sortBy('id');
+        $tradeRoutes = $round->tradeRoutes->whereIn('status', [0,1])->shuffle();
 
         // Queue up all dominions for precalculation (simultaneous processing)
         foreach ($tradeRoutes as $tradeRoute)

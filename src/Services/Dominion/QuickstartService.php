@@ -3,12 +3,20 @@
 namespace OpenDominion\Services\Dominion;
 
 use Auth;
+use Symfony\Component\Yaml\Yaml;
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 use OpenDominion\Models\Advancement;
 use OpenDominion\Models\Decree;
 use OpenDominion\Models\DecreeState;
+use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionDecreeState;
+use OpenDominion\Models\Quickstart;
+use OpenDominion\Models\Race;
+use OpenDominion\Models\Title;
 
 use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\ImprovementHelper;
@@ -236,4 +244,148 @@ xp: %s\n",
         
         return $string;
     }
+
+    public function saveQuickstart(Dominion $dominion, string $name = null,  int $offensivePower = null, int $defensivePower = null, string $description = null, bool $isPublic = false): Quickstart
+    {
+
+        if ($name == null or strlen($name) == 0)
+        {
+            $name = "{$dominion->race->name} ({$dominion->title->name}) by {$dominion->user->display_name}"; 
+        }
+
+        $quickstartData = $this->generateQuickstartFile($dominion);
+
+        $data = Yaml::parse($quickstartData, Yaml::PARSE_OBJECT_FOR_MAP);
+
+        $race = Race::where('name', $data->race)->first();
+
+        $quickstartsToSync[] = $data->name;
+
+        if(isset($data->deity))
+        {
+            $deity = Deity::where('name', $data->deity)->first();
+        }
+        else
+        {
+            $deity = null;
+        }
+
+        if(isset($data->title))
+        {
+            $title = Title::where('name', $data->title)->first();
+        }
+
+        // Quickstart
+        $quickstart = Quickstart::create(
+            [
+                'name' => $name ?? object_get($data, 'name'),
+                'description' => $description ?? object_get($data, 'description'),
+                'race_id' => $race->id,
+                'deity_id' => isset($deity) ? $deity->id : null,
+                'title_id' => isset($title) ? $title->id : null,
+                'user_id' => $dominion->user->id,
+                'enabled' => object_get($data, 'enabled', 1),
+                'offensive_power' => $offensivePower ?? object_get($data, 'offensive_power', 0),
+                'defensive_power' => $defensivePower ?? object_get($data, 'defensive_power', 0),
+                
+                'land' => object_get($data, 'land', 1000),
+                'draft_rate' => object_get($data, 'draft_rate', 50),
+                'devotion_ticks' => isset($deity) ? max(min(object_get($data, 'devotion_ticks', 0), 96),0) : 0,
+                'morale' => object_get($data, 'morale', 100),
+                'peasants' => object_get($data, 'peasants', 2000),
+                'prestige' => object_get($data, 'prestige', 400),
+                'protection_ticks' => max(min(object_get($data, 'protection_ticks', 0), 96),0),
+                'spy_strength' => object_get($data, 'spy_strength', 100),
+                'wizard_strength' => object_get($data, 'wizard_strength', 100),
+                'xp' => object_get($data, 'xp', 0),
+
+                'buildings' => object_get($data, 'buildings', []),
+                'improvements' => object_get($data, 'improvements', []),
+                'resources' => object_get($data, 'resources', []),
+                'spells' => object_get($data, 'spells', []),
+                'advancements' => object_get($data, 'advancements', []),
+                'decree_states' => object_get($data, 'decree_states', []),
+                'techs' => object_get($data, 'techs', []),
+                'terrains' => object_get($data, 'terrains', []),
+                'units' => object_get($data, 'units', []),
+                'queues' => object_get($data, 'queues', []),
+            ]);
+
+        return $quickstart;
+    }
+
+
+    public function importQuickstart(string $source, int $quickstartId, string $apiKey)
+    {
+        $user = Auth::user();
+
+        if(env('APP_ENV') == 'local')
+        {
+            $url = "http://host.docker.internal/api/v1/quickstarts/{$quickstartId}/{$apiKey}";
+        }
+        elseif($source == 'sim')
+        {
+            $url = "https://sim.opendominion.com/api/v1/quickstarts/{$quickstartId}/{$apiKey}";
+        }
+        else
+        {
+            $url = "https://opendominion.com/api/v1/quickstarts/{$quickstartId}/{$apiKey}";
+        }
+
+        $client = new Client();
+
+        try {
+            $response = $client->get($url);
+            $responseBody = $response->getBody()->getContents();
+            $quickstartData = json_decode($responseBody);
+    
+            if ($quickstartData === null || !is_object($quickstartData) || !isset($quickstartData->name) || empty($quickstartData)) {
+                throw new \Exception('Failed to import quickstart. Make sure quickstart ID and API key are correct for the source.');
+            }
+    
+        } catch (RequestException $e) {
+            throw new \Exception('Failed to import quickstart: ' . $e->getMessage());
+        }
+        
+        try {
+            $quickstart = Quickstart::create([
+            'name' => $quickstartData->name,
+            'description' => $quickstartData->description ?? '',
+            'race_id' => $quickstartData->race_id,
+            'deity_id' => $quickstartData->deity_id ?? null,
+            'title_id' => $quickstartData->title_id,
+            'user_id' => $user->id,
+            'offensive_power' => $quickstartData->offensive_power ?? 0,
+            'defensive_power' => $quickstartData->defensive_power ?? 0,
+            'enabled' => $quickstartData->enabled ?? 1,
+            'is_public' => $quickstartData->is_public ?? 0,
+            'draft_rate' => $quickstartData->draft_rate ?? 50,
+            'devotion_ticks' => $quickstartData->devotion_ticks ?? 0,
+            'morale' => $quickstartData->morale ?? 100,
+            'peasants' => $quickstartData->peasants ?? 0,
+            'prestige' => $quickstartData->prestige ?? 0,
+            'protection_ticks' => $quickstartData->protection_ticks ?? 0,
+            'spy_strength' => $quickstartData->spy_strength ?? 0,
+            'wizard_strength' => $quickstartData->wizard_strength ?? 0,
+            'xp' => $quickstartData->xp ?? 0,
+            'land' => $quickstartData->land ?? 1000,
+            'buildings' => $quickstartData->buildings ?? [],
+            'improvements' => $quickstartData->improvements ?? [],
+            'resources' => $quickstartData->resources ?? [],
+            'spells' => $quickstartData->spells ?? [],
+            'advancements' => $quickstartData->advancements ?? [],
+            'decree_states' => $quickstartData->decree_states ?? [],
+            'techs' => $quickstartData->techs ?? [],
+            'terrains' => $quickstartData->terrains ?? [],
+            'units' => $quickstartData->units ?? [],
+            'queues' => $quickstartData->queues ?? [],
+        ]);
+        } catch (\Exception $e) {
+            throw new \Exception('Failed to create Quickstart: ' . $e->getMessage());
+        }
+
+    
+        return $quickstart;
+    }
+
 }

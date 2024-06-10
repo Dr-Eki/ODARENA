@@ -116,5 +116,9 @@ class DominionHelper
         return true; // The name is unique within this round
     }
     
+    public function canBeSavedAsQuickstart(Dominion $dominion): bool
+    {
+        return $dominion->ticks <= 96;
+    }
 
 }

@@ -30,7 +30,6 @@ $router->group(['prefix' => 'auth', 'as' => 'auth.'], static function (Router $r
     });
 
     $router->group(['middleware' => 'auth'], static function (Router $router) {
-
         // Logout
         $router->post('logout')->uses('Auth\LoginController@logout')->name('logout');
 
@@ -45,6 +44,17 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
     // Dashboard
     $router->get('dashboard')->uses('DashboardController@getIndex')->name('dashboard');
     $router->post('dashboard/delete-pack/{pack}')->uses('DashboardController@postDeletePack')->name('dashboard.delete-pack');
+
+    $router->get('dashboard/quickstarts')->uses('DashboardController@getQuickstarts')->name('dashboard.quickstarts');
+    $router->get('dashboard/quickstarts/import')->uses('DashboardController@getQuickstartsImport')->name('dashboard.quickstarts.import');
+    $router->post('dashboard/quickstarts/import')->uses('DashboardController@postQuickstartsImport')->name('dashboard.quickstarts.import');
+    $router->get('dashboard/quickstarts/export')->uses('DashboardController@getQuickstartsExport')->name('dashboard.quickstarts.export');
+    $router->post('dashboard/quickstarts/export')->uses('DashboardController@postQuickstartsExport')->name('dashboard.quickstarts.export');
+    $router->post('dashboard/quickstarts/save/{dominion}')->uses('DashboardController@postQuickstartsSave')->name('dashboard.quickstarts.save');
+    $router->get('dashboard/quickstarts/edit/{quickstart}')->uses('DashboardController@getEditQuickstarts')->name('dashboard.quickstarts.edit');
+    $router->post('dashboard/quickstarts/edit/{quickstart}')->uses('DashboardController@postEditQuickstarts')->name('dashboard.quickstarts.edit');
+    $router->post('dashboard/quickstarts/toggle-availability/{quickstart}')->uses('DashboardController@postQuickstartsToggleAvailability')->name('dashboard.quickstarts.toggle-availability');
+    $router->post('dashboard/quickstarts/delete/{quickstart}')->uses('DashboardController@postQuickstartsDelete')->name('dashboard.quickstarts.delete');
 
     // Settings
     $router->get('settings')->uses('SettingsController@getIndex')->name('settings');

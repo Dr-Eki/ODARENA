@@ -47,17 +47,16 @@ class User extends AbstractModel implements AuthenticatableContract, Authorizabl
     use Authenticatable, Authorizable, CanResetPassword, Notifiable, HasPushSubscriptions;
 
     protected $casts = [
+        'email' => 'string',
+        'display_name' => 'string',
         'settings' => 'array',
+        'activated' => 'boolean',
+        'api_key' => 'string',
     ];
 
     protected $dates = ['last_online', 'created_at', 'updated_at'];
 
     protected $hidden = ['password', 'remember_token', 'activation_code'];
-
-//    public function dominion(Round $round)
-//    {
-//        return $this->dominions()->where('round_id', $round->id)->get();
-//    }
 
     // Relations
 
@@ -76,6 +75,11 @@ class User extends AbstractModel implements AuthenticatableContract, Authorizabl
         return $this->hasMany(Pack::class);
     }
 
+    public function quickstarts()
+    {
+        return $this->hasMany(Quickstart::class);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -88,7 +92,7 @@ class User extends AbstractModel implements AuthenticatableContract, Authorizabl
 
     public function getAvatarUrl()
     {
-        if ($this->avatar !== null) {
+        if ($this->avatar) {
             return asset("storage/uploads/avatars/{$this->avatar}");
         }
 

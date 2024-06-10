@@ -18,7 +18,10 @@
                         <a href="{{ route('dashboard') }}" class="btn btn-info btn-flat btn-block"><i class="fas fa-columns fa-fw"></i> Dashboard</a>
                     </div>
                     <div class="col-md-12">
-                          <a href="{{ route('settings') }}" class="btn btn-flat btn-block"><i class="fas fa-sliders-h fa-fw"></i> Settings</a>
+                          <a href="{{ route('settings') }}" class="btn btn-primary btn-block"><i class="fas fa-sliders-h fa-fw"></i> Settings</a>
+                    </div>
+                    <div class="col-md-12">
+                          <a href="{{ route('dashboard.quickstarts') }}" class="btn btn-warning btn-block"><i class="fas fa-solid fa-forward-fast"></i> Quickstarts</a>
                     </div>
                     <div class="col-md-12">
                         <form action="{{ route('auth.logout') }}" method="post">

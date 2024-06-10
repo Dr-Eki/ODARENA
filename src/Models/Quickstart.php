@@ -21,7 +21,10 @@ class Quickstart extends AbstractModel
 {
 
     protected $casts = [
-        'enabled' => 'integer',
+        'name' => 'string',
+        'description' => 'string',
+        'offensive_power' => 'integer',
+        'defensive_power' => 'integer',
         'land' => 'integer',
         'devotion_ticks' => 'integer',
         'draft_rate' => 'integer',
@@ -45,6 +48,42 @@ class Quickstart extends AbstractModel
         'queues' => 'array',
     ];
 
+    protected $fillable = [
+        'race_id',
+        'title_id',
+        'deity_id',
+        'user_id',
+        'is_public',
+        'enabled',
+
+        'name',
+        'description',
+        'offensive_power',
+        'defensive_power',
+        
+        'land',
+        'devotion_ticks',
+        'draft_rate',
+        'morale',
+        'peasants',
+        'prestige',
+        'spy_strength',
+        'protection_ticks',
+        'wizard_strength',
+        'xp',
+        'buildings',
+        'cooldown',
+        'improvements',
+        'resources',
+        'spells',
+        'advancements',
+        'decree_states',
+        'techs',
+        'terrains',
+        'units',
+        'queues',
+    ];
+
     public function race()
     {
         return $this->belongsTo(Race::class);
@@ -59,5 +98,11 @@ class Quickstart extends AbstractModel
     {
         return $this->belongsTo(Deity::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 
 }
