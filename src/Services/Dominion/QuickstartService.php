@@ -325,11 +325,11 @@ xp: %s\n",
         }
         elseif($source == 'sim')
         {
-            $url = "https://sim.opendominion.com/api/v1/quickstarts/{$quickstartId}/{$apiKey}";
+            $url = "https://sim.odarena.com/api/v1/quickstarts/{$quickstartId}/{$apiKey}";
         }
         else
         {
-            $url = "https://opendominion.com/api/v1/quickstarts/{$quickstartId}/{$apiKey}";
+            $url = "https://sim.odarena.com/api/v1/quickstarts/{$quickstartId}/{$apiKey}";
         }
 
         $client = new Client();
