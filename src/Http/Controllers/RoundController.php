@@ -156,8 +156,8 @@ class RoundController extends AbstractController
             'titleHelper' => app(TitleHelper::class),
             'round' => $round,
             'quickstarts' => $quickstarts,
-            #'titles' => $titles,
-            'packs' => $packs
+            'packs' => $packs,
+            'user' => Auth::user(),
         ]);
     }
 

@@ -15,29 +15,46 @@
             <div class="box box-body">
                 <table class="table table-striped table-hover" id="quickstarts-table">
                     <colgroup>
-                        <col width="60px">
-                        <col width="">
-                        <col width="120px">
-                        <col width="120px">
-                        <col width="120px">
+                        <col width="50">
+                        <col width="50">
+                        <col width="150">
+                        <col>
+                        <col width="100">
+                        <col width="100">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
+                        <col width="150">
                     </colgroup>
                     <thead>
                         <tr>
-                            <th>Select</th>
+                            <th class="text-center">&nbsp;</th>
+                            <th class="text-center">ID</th>
+                            <th>Author</th>
                             <th>Name</th>
+                            <th>OP</th>
+                            <th>DP</th>
                             <th>Faction</th>
-                            <th>Land</th>
-                            <th>Ticks</th>
+                            <th>Title</th>
+                            <th>Deity</th>
+                            <th>Remaing Ticks</th>
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach($quickstarts as $quickstart)
+                    @foreach($quickstarts->sortByDesc('id')->filter(function ($quickstart) use ($user) {
+                            return $quickstart->is_public == 1 || $quickstart->user_id == $user->id;
+                        }) as $quickstart)
                             <tr>
                                 <td class="text-center"><input type="radio" id="quickstart{{ $quickstart->id}}" name="quickstart" value="{{ $quickstart->id }}" required></td>
-                                <td class="text-left"><label style="font-weight: normal; display: block;" for="quickstart{{ $quickstart->id}}"><a href="{{ route('scribes.quickstart', $quickstart->id) }}" target="_blank">{{ $quickstart->name }}</a></label></td>
+                                <td><label for="quickstart{{ $quickstart->id}}">{{ $quickstart->id }}</label></td>
+                                <td><label for="quickstart{{ $quickstart->id}}">{{ optional($quickstart->user)->display_name ?? '-' }}</label></td>
+                                <td><a href="{{ route('scribes.quickstart', $quickstart->id) }}">{{ $quickstart->name }}</a></td>
+                                <td>{{ number_format($quickstart->offensive_power) }}</td>
+                                <td>{{ number_format($quickstart->defensive_power) }}</td>
                                 <td>{{ $quickstart->race->name }}</td>
-                                <td>{{ number_format($quickstart->land) }}</td>
-                                <td>{{ number_format($quickstart->protection_ticks) }}</td>
+                                <td>{{ $quickstart->title->name }}</td>
+                                <td>{{ optional($quickstart->deity)->name ?? 'None' }}</td>
+                                <td>{{ $quickstart->protection_ticks }}</td>
                             </tr>
                     @endforeach
                     </tbody>
@@ -170,7 +187,7 @@
     <script type="text/javascript">
         (function ($) {
             var table = $('#quickstarts-table').DataTable({
-                order: [1, 'asc'],
+                order: [1, 'desc'],
                 paging: true,
                 pageLength: 10
             });

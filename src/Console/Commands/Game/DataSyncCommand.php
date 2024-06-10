@@ -126,7 +126,7 @@ class DataSyncCommand extends Command implements CommandInterface
             $this->syncStats();
             $this->syncArtefacts();
             $this->syncDecrees();
-            $this->syncQuickstarts();
+            #$this->syncQuickstarts();
 
             $this->populateRaceTerrains();
 
@@ -1442,6 +1442,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'deity_id' => isset($deity) ? $deity->id : null,
                     'title_id' => isset($title) ? $title->id : null,
                     'enabled' => object_get($data, 'enabled', 1),
+                    'is_public' => object_get($data, 'is_public', 1),
                     'offensive_power' => object_get($data, 'offensive_power', 0),
                     'defensive_power' => object_get($data, 'defensive_power', 0),
                     

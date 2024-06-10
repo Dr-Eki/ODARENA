@@ -4,6 +4,12 @@
 @section('content')
 @include('partials.scribes.nav')
 
+@if(!$quickstart->is_public and (!Auth::user() or $quickstart->user_id != Auth::user()->id))
+    @php
+        abort(403, 'This quickstart is not public');
+    @endphp
+@endif
+
 <div class="row">
     <div class="col-md-12 col-md-6">
         <div class="box box-primary">
