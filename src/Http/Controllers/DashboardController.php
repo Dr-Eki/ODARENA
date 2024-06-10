@@ -176,9 +176,16 @@ class DashboardController extends AbstractController
 
     public function postQuickstartsDelete(Quickstart $quickstart)
     {
+        $user = Auth::user();
+
+        if($quickstart->user_id !== $user->id)
+        {
+            return redirect()->route('dashboard.quickstarts')->with('alert-danger', 'You can only delete your own quickstarts.');
+        }
+
         $quickstart->delete();
 
-        return redirect()->route('dashboard.quickstarts');
+        return redirect()->route('dashboard.quickstarts')->with('alert-success', 'Quickstart deleted');
     }
 
     public function getQuickstartViaApi(int $quickstartId, string $apiKey)
