@@ -55,7 +55,7 @@ class TradeCalculator
         $multiplier += $dominion->race->getPerkMultiplier($resource->key . '_max_trade_value_mod');
         $multiplier += $dominion->getAdvancementPerkMultiplier($resource->key . '_max_trade_value_mod');
 
-        return config('trade.trade_base_max') / $this->getMaxTradeValue($dominion, $resource);
+        return $multiplier;
     }
 
     public function getTradeMaxAmount(Dominion $dominion, Resource $resource): int
