@@ -99,10 +99,10 @@ class DashboardController extends AbstractController
         try {
             $userService->generateApiKey($user);
         } catch (\Exception $e) {
-            return redirect()->back()->with('alert-danger', 'Failed to generate API key');
+            return redirect()->route('dashboard.quickstarts.export')->with('alert-danger', 'Failed to generate API key');
         }
 
-        return redirect()->back()->with('alert-success', 'API key generated');
+        return redirect()->route('dashboard.quickstarts.export')->with('alert-success', 'API key generated');
     }
 
     public function getQuickstartsImport()
