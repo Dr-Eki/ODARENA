@@ -565,13 +565,12 @@ class ProcessDominionJob implements ShouldQueue
     {
         $finishedResourcesInQueue = $dominion->queues()
             ->where('hours', 0)
+            ->where('resource', 'like', 'resource%')
             ->whereIn('source', ['invasion', 'expedition', 'theft', 'desecration'])
             ->get();
 
         foreach($finishedResourcesInQueue as $finishedResourceInQueue)
         {
-
-            xtLog($finishedResourcesInQueue);
 
             $finishedResourceKey = str_replace('resource_', '', $finishedResourceInQueue->resource);
             $finishedResource = Resource::fromKey($finishedResourceKey);
