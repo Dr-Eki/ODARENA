@@ -563,17 +563,17 @@ class ProcessDominionJob implements ShouldQueue
     # Take resources that are one tick away from finished and create or increment DominionImprovements.
     private function handleResources(Dominion $dominion): void
     {
-        $finishedResourcesInQueue = DB::table('dominion_queue')
-            ->where('dominion_id', $dominion->id)
-            ->where('resource', 'like', 'resource%')
-            ->whereIn('source', ['invasion', 'expedition', 'theft', 'desecration'])
+        $finishedResourcesInQueue = $dominion->queues()
             ->where('hours', 0)
+            ->whereIn('source', ['invasion', 'expedition', 'theft', 'desecration'])
             ->get();
 
         foreach($finishedResourcesInQueue as $finishedResourceInQueue)
         {
 
-            $finishedResourceKey = str_replace($finishedResourceInQueue->resource, 'resource_', '');
+            xtLog($finishedResourcesInQueue);
+
+            $finishedResourceKey = str_replace('resource_', '', $finishedResourceInQueue->resource);
             $finishedResource = Resource::fromKey($finishedResourceKey);
             $type = $finishedResourceInQueue->source;
             $amount = (int)$finishedResourceInQueue->amount;
@@ -594,6 +594,8 @@ class ProcessDominionJob implements ShouldQueue
                 'status' => 0,
                 'type' => $type,
             ]);
+
+            xtLog("[{$dominion->id}] *** Added {$amount} {$finishedResourceKey} to dominion {$dominion->name} from {$type}.");
         }
 
         foreach ($dominion->race->resources as $resourceKey)
