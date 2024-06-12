@@ -679,7 +679,7 @@ class ProcessDominionJob implements ShouldQueue
         {
             if(!empty($dominion->tick->{'generated_unit' . $unit->slot}))
             {
-                $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time + 0));
+                $this->queueService->queueResources('summoning', $dominion, [('military_unit' . $unit->slot) => $dominion->tick->{'generated_unit' . $unit->slot}], ($unit->training_time ?? 12));
             }
         }
     }

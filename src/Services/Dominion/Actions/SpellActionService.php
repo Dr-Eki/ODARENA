@@ -270,7 +270,7 @@ class SpellActionService
 
             $durationMultiplier = $this->getSpellDurationMultiplier($caster, $spell);
 
-            $duration = (int)floor($duration * $durationMultiplier);
+            $duration = floorInt($duration * $durationMultiplier);
 
             $duration = max(1, $duration);
 

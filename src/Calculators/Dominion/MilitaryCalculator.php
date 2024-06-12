@@ -1382,7 +1382,7 @@ class MilitaryCalculator
               {
                   if($calc['units_sent'] > $calc['opposing_units'])
                   {
-                      $powerFromPerk = $mobPerk[0];
+                      $powerFromPerk = (float)$mobPerk[0];
                   }
               }
           }
@@ -1397,7 +1397,7 @@ class MilitaryCalculator
                     {
                         if(array_sum($units) > $targetUnits)
                         {
-                            $powerFromPerk = $mobPerk[0];
+                            $powerFromPerk = (float)$mobPerk[0];
                         }
                     }
                 }
@@ -1409,12 +1409,12 @@ class MilitaryCalculator
 
                     if(isset($invadingUnits) and $mobUnits > array_sum($invadingUnits))
                     {
-                        $powerFromPerk = $mobPerk[0];
+                        $powerFromPerk = (float)$mobPerk[0];
                     }
                 }
           }
 
-          return $powerFromPerk;
+          return (float)$powerFromPerk;
       }
 
         protected function getUnitPowerFromVersusMilitaryPercentagePerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = [], array $units = null, array $invadingUnits = null): float
