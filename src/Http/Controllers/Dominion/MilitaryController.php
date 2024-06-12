@@ -70,7 +70,7 @@ class MilitaryController extends AbstractDominionController
     {
         $dominion = $this->getSelectedDominion();
         $changeDraftRateActionService = app(ChangeDraftRateActionService::class);
-        $newDraftRate = intval($request->get('draft_rate'));
+        $newDraftRate = floorInt($request->get('draft_rate'));
 
         try {
             $result = $changeDraftRateActionService->changeDraftRate($dominion, $newDraftRate);

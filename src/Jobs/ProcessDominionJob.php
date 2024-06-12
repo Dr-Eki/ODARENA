@@ -108,8 +108,8 @@ class ProcessDominionJob implements ShouldQueue
         xtLog('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . '), ID ' . $this->dominion->id);
 
         # Do this first to populate dominion_tick
-        # xtLog("[{$this->dominion->id}] ** Precalculate tick");
-        # $this->tickCalculator->precalculateTick($this->dominion, true);
+        xtLog("[{$this->dominion->id}] ** Precalculate tick");
+        $this->tickCalculator->precalculateTick($this->dominion, true);
         
         # Make a DB transaction
 

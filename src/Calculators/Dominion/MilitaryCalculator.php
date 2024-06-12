@@ -595,25 +595,20 @@ class MilitaryCalculator
         $unitPower += $this->getUnitPowerFromImprovementPoints($dominion, $unit, $powerType);
         $unitPower += $this->getUnitPowerFromResearch($dominion, $unit, $powerType);
 
-        if ($target !== null || !empty($calc))
+        if ($target !== null or !empty($calc))
         {
             $unitPower += $this->getUnitPowerFromVersusBarrenLandPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromVersusBuildingPerk($dominion, $target, $unit, $powerType, $calc);
-            $unitPower += $this->getUnitPowerFromVersusOtherDeityPerk($dominion, $target, $unit, $powerType, $calc);
-            $unitPower += $this->getUnitPowerFromVersusTerrainPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromVersusNoDeity($dominion, $target, $unit, $powerType, $calc);
+            $unitPower += $this->getUnitPowerFromVersusOtherDeityPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromVersusPrestigePerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromVersusResourcePerk($dominion, $target, $unit, $powerType, $calc);
-            $unitPower += $this->getUnitPowerFromVersusMilitaryPercentagePerk($dominion, $target, $unit, $powerType, $calc, $units, $invadingUnits);
-            $unitPower += $this->getUnitPowerFromVersusFixedMilitaryPercentagePerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromMob($dominion, $target, $unit, $powerType, $calc, $units, $invadingUnits);
             $unitPower += $this->getUnitPowerFromBeingOutnumbered($dominion, $target, $unit, $powerType, $calc, $units, $invadingUnits);
             $unitPower += $this->getUnitPowerFromVersusSorcerySpellsPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromTargetRecentlyInvadedPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromTargetRecentlyVictoriousPerk($dominion, $target, $unit, $powerType, $calc);
             $unitPower += $this->getUnitPowerFromTargetIsLargerPerk($dominion, $target, $unit, $powerType, $calc);
-
-
         }
 
         return $unitPower;
@@ -913,42 +908,6 @@ class MilitaryCalculator
             $powerFromPerk = max(-1 * $powerFromBuilding, $max);
         } else {
             $powerFromPerk = min($powerFromBuilding, $max);
-        }
-
-        return $powerFromPerk;
-    }
-
-
-    protected function getUnitPowerFromVersusTerrainPerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = []): float
-    {
-        if ($target === null && empty($calc)) {
-            return 0;
-        }
-
-        $versusLandPerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_vs_terrain", null);
-        if(!$versusLandPerkData) {
-            return 0;
-        }
-
-        $terrainKey = $versusLandPerkData[0];
-        $ratio = (int)$versusLandPerkData[1];
-        $max = (int)$versusLandPerkData[2];
-
-        $landPercentage = 0;
-        if (!empty($calc)) {
-            # Override land percentage for invasion calculator
-            if (isset($calc["{$terrainKey}_percent"])) {
-                $landPercentage = (float) $calc["{$terrainKey}_percent"];
-            }
-        } elseif ($target !== null) {
-            $landPercentage = ($target->{"terrain_{$terrainKey}"} / $target->land) * 100;
-        }
-
-        $powerFromLand = $landPercentage / $ratio;
-        if ($max < 0) {
-            $powerFromPerk = max(-1 * $powerFromLand, $max);
-        } else {
-            $powerFromPerk = min($powerFromLand, $max);
         }
 
         return $powerFromPerk;
@@ -1357,124 +1316,60 @@ class MilitaryCalculator
         return $powerFromPerk;
     }
 
-      protected function getUnitPowerFromMob(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = [], array $units = null, array $invadingUnits = null): float
-      {
+    protected function getUnitPowerFromMob(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = [], array $units = null, array $invadingUnits = null): float
+    {
 
-          if ($target === null and empty($calc))
-          {
-              return 0;
-          }
+        $mobPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_mob", null);
 
-          $mobPerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "{$powerType}_mob", null);
+        if(!$mobPerk)
+        {
+            return 0;
+        }
 
-          if(!$mobPerk)
-          {
-              return 0;
-          }
+        $powerFromPerk = 0;
 
-          $powerFromPerk = 0;
-
-          if (!empty($calc))
-          {
-              #return 0;
-              # Override resource amount for invasion calculator
-              if (isset($calc['opposing_units']))
-              {
-                  if($calc['units_sent'] > $calc['opposing_units'])
-                  {
-                      $powerFromPerk = (float)$mobPerk[0];
-                  }
-              }
-          }
-          elseif ($target)
-          {
-                # mob_on_offense: Do we ($units) outnumber the defenders ($target)?
-                if($powerType == 'offense')
+        if (!empty($calc))
+        {
+            #return 0;
+            # Override resource amount for invasion calculator
+            if (isset($calc['opposing_units']))
+            {
+                if($calc['units_sent'] > $calc['opposing_units'])
                 {
-                    $targetUnits = $this->getTotalUnitsAtHome($target, true, true);
-
-                    if(isset($units))
-                    {
-                        if(array_sum($units) > $targetUnits)
-                        {
-                            $powerFromPerk = (float)$mobPerk[0];
-                        }
-                    }
+                    $powerFromPerk = (float)$mobPerk[0];
                 }
+            }
+        }
+        elseif ($target)
+        {
+            # mob_on_offense: Do we ($units) outnumber the defenders ($target)?
+            if($powerType == 'offense')
+            {
+                $targetUnits = $this->getTotalUnitsAtHome($target, true, true);
 
-                # mob_on_defense: Do we ($dominion) outnumber the attackers ($units)?
-                if($powerType == 'defense')
+                if(isset($units))
                 {
-                    $mobUnits = $this->getTotalUnitsAtHome($dominion, true, true);
-
-                    if(isset($invadingUnits) and $mobUnits > array_sum($invadingUnits))
+                    if(array_sum($units) > $targetUnits)
                     {
                         $powerFromPerk = (float)$mobPerk[0];
                     }
                 }
-          }
-
-          return (float)$powerFromPerk;
-      }
-
-        protected function getUnitPowerFromVersusMilitaryPercentagePerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = [], array $units = null, array $invadingUnits = null): float
-        {
-            $militaryPercentagePerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, $powerType . "_vs_military_percentage");
-
-            if (!$militaryPercentagePerk or !isset($target))
-            {
-                return 0;
             }
 
-            $perPercentage = (float)$militaryPercentagePerk[0];
-            $max = (int)$militaryPercentagePerk[1];
-
-            $military = 0;
-
-            $military = 0;
-
-            foreach($this->unitCalculator->getDominionUnitKeys($target) as $unitKey)
+            # mob_on_defense: Do we ($dominion) outnumber the attackers ($units)?
+            if($powerType == 'defense')
             {
-                $military += $this->unitCalculator->getUnitTypeTotal($target, $unitKey);
+                $mobUnits = $this->getTotalUnitsAtHome($dominion, true, true);
+
+                if(isset($invadingUnits) and $mobUnits > array_sum($invadingUnits))
+                {
+                    $powerFromPerk = (float)$mobPerk[0];
+                }
             }
-
-            $militaryPercentage = min(1, $military / ($military + $dominion->peasants));
-
-            $powerFromPerk = min($perPercentage * $militaryPercentage, $max);
-
-            return $powerFromPerk;
         }
 
-        protected function getUnitPowerFromVersusFixedMilitaryPercentagePerk(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = [], array $units = null, array $invadingUnits = null): float
-        {
-            $militaryPercentagePerk = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, $powerType . "_vs_fixed_military_percentage");
-
-            if (!$militaryPercentagePerk or !isset($target))
-            {
-                return 0;
-            }
-
-            $power = (float)$militaryPercentagePerk[0];
-            $cutoff = (int)$militaryPercentagePerk[1];
-
-            $military = 0;
-
-            $military = 0;
-
-            foreach($this->unitCalculator->getDominionUnitKeys($target) as $unitKey)
-            {
-                $military += $this->unitCalculator->getUnitTypeTotal($target, $unitKey);
-            }
-
-            $militaryPercentage = min(1, $military / ($military + $dominion->peasants));
-
-            if($militaryPercentage >= $cutoff)
-            {
-                $powerFromPerk = $power;
-            }
-
-            return $powerFromPerk;
-        }
+        return (float)$powerFromPerk;
+    }
 
       protected function getUnitPowerFromBeingOutnumbered(Dominion $dominion, Dominion $target = null, Unit $unit, string $powerType, ?array $calc = [], array $units = null, array $invadingUnits = null): float
       {

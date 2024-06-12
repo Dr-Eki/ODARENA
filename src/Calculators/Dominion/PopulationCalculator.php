@@ -819,7 +819,12 @@ class PopulationCalculator
     {
         $draftees = 0;
 
-        if($dominion->getSpellPerkValue('no_drafting') or $dominion->getDecreePerkValue('no_drafting') or $dominion->race->getPerkValue('no_drafting') or $dominion->draft_rate == 0)
+        if(
+                $dominion->getSpellPerkValue('no_drafting') or
+                $dominion->getDecreePerkValue('no_drafting') or
+                $dominion->race->getPerkValue('no_drafting') or
+                $this->getPopulationMilitaryPercentage($dominion) > $dominion->draft_rate or
+                $dominion->draft_rate == 0)
         {
             return $draftees;
         }
@@ -831,31 +836,19 @@ class PopulationCalculator
 
         $multiplier = 1;
 
-        // Advancement
         $multiplier += $dominion->getAdvancementPerkMultiplier('drafting');
-
-        // Spell
-        $multiplier += $dominion->getSpellPerkMultiplier('drafting');
-
-        // Buildings
         $multiplier += $dominion->getBuildingPerkMultiplier('drafting');
-
-        // Improvements
+        $multiplier += $dominion->getDecreePerkMultiplier('drafting');
+        $multiplier += $dominion->getSpellPerkMultiplier('drafting');
         $multiplier += $dominion->getImprovementPerkMultiplier('drafting');
 
         // Faction Perk
         $multiplier += $dominion->race->getPerkMultiplier('drafting');
         $multiplier += $dominion->race->getPerkMultiplier('drafting_per_defensive_failure') * $this->statsService->getStat($dominion, 'defense_failures');
 
-        // Decree
-        $multiplier += $dominion->getDecreePerkMultiplier('drafting');
-
         $growthFactor *= $multiplier;
 
-        if ($this->getPopulationMilitaryPercentage($dominion) < $dominion->draft_rate)
-        {
-            $draftees += round($dominion->peasants * $growthFactor);
-        }
+        $draftees += round($dominion->peasants * $growthFactor);
 
         return $draftees;
     }
