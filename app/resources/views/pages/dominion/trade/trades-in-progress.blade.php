@@ -20,10 +20,10 @@
                     <table class="table">
                         <colgroup>
                             <col>
-                            <col width="100">
                             @for ($tick = 1; $tick <= 12; $tick++)
                                 <col width="100">
                             @endfor
+                            <col width="100">
                         </colgroup>
                         <thead>
                             <tr>

@@ -428,6 +428,8 @@ class BarbarianService
 
         $logString .= "\t[/invasion]\n[/BARBARIAN]";
 
+        xtLog($logString);
+
         #Log::Debug($logString);
         #Log::Debug($oneLineLogString);
     }

@@ -321,7 +321,7 @@ class ExpeditionActionService
                 );
             }
 
-            $this->handlePrestigeChanges($dominion, $this->expedition['land_discovered'], $this->expedition['land_size'], $units);
+            $this->handlePrestigeChanges($dominion, $this->expedition['land_discovered'], $units);
             $this->handleXp($dominion, $this->expedition['land_discovered']);
             $this->handleResourceFinding($dominion, $units);
             $this->handleArtefactsDiscovery($dominion);
