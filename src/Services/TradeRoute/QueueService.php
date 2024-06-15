@@ -118,7 +118,6 @@ class QueueService
     
                 if ($finishedQueue->type == 'import')
                 {
-                    #$this->dominionResourceService->update($tradeRoute->dominion, [$finishedQueue->resource->key => $amount]);
                     if($amount > 0)
                     {
                         $resource = Resource::fromKey($finishedQueue->resource->key);
@@ -134,11 +133,10 @@ class QueueService
                             'type' => 'trade_bought',
                         ]);
                     }
-                    xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to dominion {$tradeRoute->dominion->name} (ID {$tradeRoute->dominion->id})");
+                    xtLog("[TR{$tradeRoute->id}][{$tradeRoute->dominion->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to dominion {$tradeRoute->dominion->name} (ID {$tradeRoute->dominion->id})");
                 }
                 elseif ($finishedQueue->type == 'export')
                 {
-                    #$this->holdResourceService->update($tradeRoute->hold, [$finishedQueue->resource->key => $amount]);
                     if($amount > 0)
                     {
                         $resource = Resource::fromKey($finishedQueue->resource->key);
@@ -154,7 +152,7 @@ class QueueService
                             'type' => 'trade_bought',
                         ]);
                     }
-                    xtLog("[TR{$tradeRoute->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to hold {$tradeRoute->hold->name}");
+                    xtLog("[TR{$tradeRoute->id}][HL{$tradeRoute->hold->id}] ***** Added {$finishedQueue->amount} {$finishedQueue->resource->name} to hold {$tradeRoute->hold->name}");
                 }
     
                 $isDeleted = $finishedQueue->delete();

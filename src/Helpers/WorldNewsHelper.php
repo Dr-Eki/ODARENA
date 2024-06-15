@@ -575,14 +575,14 @@ class WorldNewsHelper
         if($viewerInvolved)
         {
             $string = sprintf(
-                '%s performed a desecration.',
+                '%s desecrated the dead.',
                 $this->generateDominionString($desecrator, 'friendly', $viewer)
               );
         }
         else
         {
             $string = sprintf(
-                '%s units performed a desecration.',
+                '%s desecrated the dead.',
                 $this->raceHelper->getRaceAdjective($desecrator->race)
             );
         }

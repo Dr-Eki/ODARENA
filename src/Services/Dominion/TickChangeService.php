@@ -222,13 +222,7 @@ class TickChangeService
 
             foreach($resourceData as $resourceKey => $amount)
             {
-                $currentAmount = $hold->{$resourceKey};
-                if($amount < 0 && abs($amount) > $currentAmount)
-                {
-                    $amount = -$currentAmount;
-                }
-
-                xtLog("[{$holdId}] *** Committing for tick: Resource: {$resourceKey}, Amount: {$amount}");
+                xtLog("[HL{$holdId}] *** Committing for tick: Resource: {$resourceKey}, Amount: {$amount}");
                 $this->holdResourceService->update($hold, [$resourceKey => $amount]);
             }
         }

@@ -158,8 +158,7 @@ class TradeService
 
             $boughtResourceAmount = $tradeResult['bought_resource_amount'];
 
-            # Remove the resource from the dominion
-            #$this->dominionResourceService->update($dominion, [$soldResource->key => ($soldResourceAmount * -1)]);
+            # Prepare TickChange records
             TickChange::create([
                 'tick' => $dominion->round->ticks,
                 'source_type' => get_class($soldResource),
@@ -171,8 +170,6 @@ class TradeService
                 'type' => 'trade_sold',
             ]);
 
-            # Remove the resource from the hold
-            #$this->holdResourceService->update($hold, [$boughtResource->key => ($boughtResourceAmount * -1)]);
             TickChange::create([
                 'tick' => $hold->round->ticks,
                 'source_type' => get_class($boughtResource),
