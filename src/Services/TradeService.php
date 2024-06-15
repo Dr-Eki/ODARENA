@@ -40,10 +40,11 @@ class TradeService
 
     public function handleTradeRoute(TradeRoute $tradeRoute): void
     {
-        if($tradeRoute->status !== 1)
+        if($tradeRoute->status !== 1 or $tradeRoute->dominion->isAbandoned())
         {
             return;
         }
+
 
         DB::transaction(function() use ($tradeRoute)
         {

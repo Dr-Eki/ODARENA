@@ -14,6 +14,7 @@ use OpenDominion\Calculators\Dominion\MagicCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\ResourceService;
+use OpenDominion\Services\Dominion\StatsService;
 
 class DesecrationService
 {
@@ -24,6 +25,7 @@ class DesecrationService
     protected $militaryCalculator;
     protected $queueService;
     protected $resourceService;
+    protected $statsServices;
 
     protected $desecrationEvent;
 
@@ -48,6 +50,7 @@ class DesecrationService
 
         $this->queueService = app(QueueService::class);
         $this->resourceService = app(ResourceService::class);
+        $this->statsServices = app(StatsService::class);
     }
 
     public function desecrate(Dominion $desecrator, array $desecratingUnits): array
@@ -174,6 +177,10 @@ class DesecrationService
             );
     
             $alertType = 'success';
+
+            $this->statsServices->updateStat($desecrator, 'body_desecrated', $this->desecration['bodies']['desecrated']);
+            $this->statsServices->updateStat($desecrator, 'desecrations', 1);
+
         }
         else
         {

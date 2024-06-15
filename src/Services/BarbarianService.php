@@ -258,7 +258,7 @@ class BarbarianService
                     $units = [1 => $dominion->military_unit1, 4 => $dominion->military_unit4];
                     $targetDp = $this->militaryCalculator->getDefensivePower($target, $dominion, $landRatio);
 
-                    $logString .= "\t\t** " . $dominion->name . ' is checking ' . $target->name . ': ';
+                    $logString .= "\t\t*** " . $dominion->name . ' is checking ' . $target->name . ': ';
 
                     if($this->barbarianCalculator->getOpCurrent($dominion) >= $targetDp * 0.85)
                     {
@@ -274,13 +274,13 @@ class BarbarianService
                 }
                 else
                 {
-                    $logString .= "🚫 Target has fog.\n";
+                    $logString .= "\t\t*** 🚫 Target has fog.\n";
                     $invadePlayer = false;
                 }
 
             }
 
-            $invadePlayer = false; # Fully disabled
+            #$invadePlayer = false; # Fully disabled
 
             # Chicken out: 7/8 chance that the Barbarians won't hit.
             if($invadePlayer and rand(1, 8) !== 1)
