@@ -84,7 +84,6 @@ class GovernmentController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', 'Your vote has been cast!');
         return redirect()->route('dominion.government');
     }
 
@@ -107,7 +106,6 @@ class GovernmentController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', 'Your realm has been updated!');
         return redirect()->route('dominion.government');
     }
 
@@ -126,7 +124,6 @@ class GovernmentController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', 'Your offer has been sent.');
         return redirect()->route('dominion.government');
     }
 
@@ -165,7 +162,6 @@ class GovernmentController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', 'Your answer has been sent.');
         return redirect()->route('dominion.government');
     }
     # END PROTECTORSHIP
@@ -186,7 +182,6 @@ class GovernmentController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', 'Your offer has been sent.');
         return redirect()->route('dominion.government');
     }
 
@@ -225,7 +220,6 @@ class GovernmentController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', 'Your answer has been sent.');
         return redirect()->route('dominion.government');
     }
 

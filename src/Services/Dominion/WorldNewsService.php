@@ -58,41 +58,6 @@ class WorldNewsService
         ]);
     }
 
-    private function getDominionScopeRelation(Dominion $viewer = null, GameEvent $event)
-    {
-        if(
-            $event->source_type == Dominion::class and $event->source_id == $viewer->id or
-            $event->target_type == Dominion::class and $event->target_id == $viewer->id or
-            $event->source_type == Dominion::class and $event->source->realm->id == $viewer->realm->id or
-            #$event->target_type == Dominion::class and $event->target->realm->id == $dominion->realm->id or
-
-            $event->target_type == Realm::class and $event->target_id == $viewer->realm->id or
-            $event->target_type == Realm::class and $event->target_id == $viewer->realm->id
-        )
-        {
-            return 'own';
-        }
-        else
-        {
-            return 'other';
-        }
-    }
-
-    private function filterRealmEvents(Collection $events, Realm $realm)
-    {
-
-        $events = $events->filter(function($event) use ($realm) {
-            return (
-                $event->source_type == Dominion::class and Dominion::findOrFail($event->source_id)->realm->id == $realm->id or
-                $event->target_type == Dominion::class and Dominion::findOrFail($event->target_id)->realm->id == $realm->id or
-                $event->target_type == Realm::class and $event->target_id == $realm->id or
-                $event->target_type == Realm::class and $event->target_id == $realm->id
-            );
-        });
-
-        return $events;
-    }
-
     public function getUnreadNewsCount(Dominion $dominion)
     {
         return $this->getWorldNews($dominion)->filter(function($event) use ($dominion)

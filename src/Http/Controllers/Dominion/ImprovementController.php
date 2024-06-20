@@ -9,8 +9,6 @@ use OpenDominion\Exceptions\GameException;
 use OpenDominion\Helpers\ImprovementHelper;
 use OpenDominion\Helpers\ResourceHelper;
 use OpenDominion\Http\Requests\Dominion\Actions\ImproveActionRequest;
-use OpenDominion\Services\Analytics\AnalyticsEvent;
-use OpenDominion\Services\Analytics\AnalyticsService;
 use OpenDominion\Services\Dominion\Actions\ImproveActionService;
 use OpenDominion\Services\Dominion\QueueService;
 
@@ -47,7 +45,6 @@ class ImprovementController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.improvements', [
             'resource' => $request->get('resource'),
         ]);

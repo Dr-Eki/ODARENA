@@ -58,11 +58,6 @@ class RegisterController extends AbstractController
         $message = 'You have been successfully registered. An activation email has been dispatched to your address.';
         $message = $alwaysActivate ? 'You have been successfully registered. You can now login.' : $message;
 
-        $request->session()->flash(
-            'alert-success',
-            $message
-        );
-
         return redirect($this->redirectPath());
     }
 
@@ -91,11 +86,6 @@ class RegisterController extends AbstractController
         auth()->login($user);
 
         event(new UserActivatedEvent($user));
-
-        $request->session()->flash(
-            'alert-success',
-            'Your account has been activated and you are now logged in.'
-        );
 
         return redirect()->route('dashboard');
     }

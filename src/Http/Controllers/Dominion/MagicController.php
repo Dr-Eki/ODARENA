@@ -10,8 +10,6 @@ use OpenDominion\Http\Requests\Dominion\Actions\MagicRequest;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\DominionSpell;
 use OpenDominion\Models\Spell;
-use OpenDominion\Services\Analytics\AnalyticsEvent;
-use OpenDominion\Services\Analytics\AnalyticsService;
 use OpenDominion\Services\Dominion\Actions\SpellActionService;
 
 use OpenDominion\Calculators\Dominion\MagicCalculator;
@@ -87,16 +85,7 @@ class MagicController extends AbstractDominionController
                     ->withInput($request->all())
                     ->withErrors([$e->getMessage()]);
             }
-
-            // todo: fire laravel event
-            $analyticsService = app(AnalyticsService::class);
-            $analyticsService->queueFlashEvent(new AnalyticsEvent(
-                'dominion',
-                'magic.cast',
-                $result['data']['spell'],
-                $result['data']['manaCost']
-            ));
-
+            
             return redirect()
                 ->to($result['redirect'] ?? route('dominion.magic'))
                 ->with('friendly_dominion', $request->get('friendly_dominion'));

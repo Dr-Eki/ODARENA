@@ -48,7 +48,6 @@ class DeityController extends AbstractDominionController
 
         $deity = Deity::where('key', $deityKey)->first();
 
-        $request->session()->flash('alert-success', "You have successfully submitted your devotion to {$deity->name}!");
         return redirect()->route('dominion.deity');
     }
 

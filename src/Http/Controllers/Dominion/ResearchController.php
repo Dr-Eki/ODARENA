@@ -42,8 +42,6 @@ class ResearchController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', "You have started researching {$tech->name}.");
-
         return redirect()->route('dominion.research');
     }
 }

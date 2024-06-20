@@ -28,8 +28,6 @@ use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 
-use OpenDominion\Services\Analytics\AnalyticsEvent;
-use OpenDominion\Services\Analytics\AnalyticsService;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\Actions\ReleaseActionService;
 use OpenDominion\Services\Dominion\Actions\Military\ChangeDraftRateActionService;
@@ -81,16 +79,6 @@ class MilitaryController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        // todo: fire laravel event
-        $analyticsService = app(AnalyticsService::class);
-        $analyticsService->queueFlashEvent(new AnalyticsEvent(
-            'dominion',
-            'military.change-draft-rate',
-            '',
-            $result['data']['draftRate']
-        ));
-
-        #$request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.military');
     }
 
@@ -105,8 +93,6 @@ class MilitaryController extends AbstractDominionController
             }
         }
 
-        #dd($release, $request->get('release'));
-
         $dominion = $this->getSelectedDominion();
         $releaseActionService = app(ReleaseActionService::class);
 
@@ -119,16 +105,6 @@ class MilitaryController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        // todo: laravel event
-        $analyticsService = app(AnalyticsService::class);
-        $analyticsService->queueFlashEvent(new AnalyticsEvent(
-            'dominion',
-            'release',
-            null, // todo: make null everywhere where ''
-            $result['data']['totalTroopsReleased']
-        ));
-
-        #$request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.military');
 
     }
@@ -147,7 +123,6 @@ class MilitaryController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        #$request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.military');
     }
 
@@ -174,17 +149,12 @@ class MilitaryController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        // todo: laravel event
-        $analyticsService = app(AnalyticsService::class);
-        $analyticsService->queueFlashEvent(new AnalyticsEvent(
-            'dominion',
-            'release',
-            null, // todo: make null everywhere where ''
-            $result['data']['totalTroopsReleased']
-        ));
-
-        #$request->session()->flash('alert-success', $result['message']);
-        return redirect()->route('dominion.military.release');
+        return redirect()
+        ->to(route('dominion.military'))
+        ->with(
+            $result['box_type'],
+            $result['message'],
+        );
 
     }
 }

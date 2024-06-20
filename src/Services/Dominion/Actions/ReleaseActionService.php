@@ -2,6 +2,7 @@
 
 namespace OpenDominion\Services\Dominion\Actions;
 
+use DB;
 use Illuminate\Support\Str;
 
 use OpenDominion\Exceptions\GameException;
@@ -226,7 +227,6 @@ class ReleaseActionService
 
             $ticks = rand(6,12);
 
-            #$this->queueService->queueResources('training', $dominion, $data, $hours);
             $this->queueService->queueResources('training', $cult, ['military_unit1' => $enthralled], $ticks);
             $this->notificationService->queueNotification('enthralling_occurred',['sourceDominionId' => $dominion->id, 'enthralled' => $enthralled]);
             $this->notificationService->sendNotifications($cult, 'irregular_dominion');
@@ -236,10 +236,8 @@ class ReleaseActionService
         $dominion->save(['event' => HistoryService::EVENT_ACTION_RELEASE]);
 
         return [
+            'box_type' => 'alert-success',
             'message' => $this->getReturnMessageString($dominion, $troopsReleased),
-            'data' => [
-                'totalTroopsReleased' => $totalTroopsToRelease,
-            ],
         ];
     }
 
@@ -273,17 +271,17 @@ class ReleaseActionService
                 if(isset($unit->cost['draftees']) and $unit->cost['draftees'] > 0)
                 {
                     $releasedInto = Str::plural($this->raceHelper->getDrafteesTerm($dominion->race), $amount);
-                    $releasedUnitName = $unit->name;
+                    #$releasedUnitName = $unit->name;
                 }
                 elseif(isset($unit->cost['peasant']) and $unit->cost['peasant'] > 0)
                 {
                     $releasedInto = Str::plural($this->raceHelper->getPeasantsTerm($dominion->race), $amount);
-                    $releasedUnitName = $unit->name;
+                    #$releasedUnitName = $unit->name;
                 }
                 else
                 {
                     $releasedInto = null;
-                    $releasedUnitName = $unit->name;
+                    #$releasedUnitName = $unitType;
                 }
 
                 if($releasedInto)
@@ -297,10 +295,9 @@ class ReleaseActionService
                 {
                     $unitStrings[] = sprintf('%s %s',
                         number_format($amount),
-                        Str::unitPlural($unit->name, $amount));
+                        isset($unit) ? Str::unitPlural($unit->name, $amount) : Str::plural($unitType, $amount));
                 }
             }
-
         }
 
         return 'You released ' . generate_sentence_from_array($unitStrings) . '.';

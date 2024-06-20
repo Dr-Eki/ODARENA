@@ -78,7 +78,7 @@ class AppServiceProvider extends AbstractServiceProvider
         Paginator::useBootstrapThree();
         Schema::defaultStringLength(191);
 
-        Str::macro('unitPlural', function ($value) {
+        Str::macro('unitPlural', function ($value, $amount = 0) {
             $unitSpecialPluralNames = config('units.special_plural_units');
         
             $lowerValue = strtolower($value);
@@ -87,7 +87,7 @@ class AppServiceProvider extends AbstractServiceProvider
                 return $unitSpecialPluralNames[$lowerValue];
             }
         
-            return Str::plural($value);
+            return Str::plural($value, $amount);
         });
 
     }
@@ -134,18 +134,18 @@ class AppServiceProvider extends AbstractServiceProvider
 
         // Dominion Action Calculators
         $this->app->singleton(ConstructionCalculator::class);
-        $this->app->singleton(ExplorationCalculator::class);
+        #$this->app->singleton(ExplorationCalculator::class);
         $this->app->singleton(RezoningCalculator::class);
         $this->app->singleton(TechCalculator::class);
         $this->app->singleton(TrainingCalculator::class);
 
-        $this->app->singleton(PopulationCalculatorInterface::class, function ($app) {
-            return new PopulationCalculator($app->make(UnitCalculatorInterface::class));
-        });
-        
-        $this->app->singleton(UnitCalculatorInterface::class, function ($app) {
-            return new UnitCalculator($app->make(PopulationCalculatorInterface::class));
-        });
+        #$this->app->singleton(PopulationCalculatorInterface::class, function ($app) {
+        #    return new PopulationCalculator($app->make(UnitCalculatorInterface::class));
+        #});
+        #
+        #$this->app->singleton(UnitCalculatorInterface::class, function ($app) {
+        #    return new UnitCalculator($app->make(PopulationCalculatorInterface::class));
+        #});
         
     }
 

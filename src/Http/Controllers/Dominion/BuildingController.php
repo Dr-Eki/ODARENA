@@ -68,7 +68,6 @@ class BuildingController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        #$request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.buildings');
     }
 
@@ -99,7 +98,6 @@ class BuildingController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        #$request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.demolish');
     }
 }

@@ -73,16 +73,6 @@ class CouncilController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        // todo: fire laravel event
-//        $analyticsService = app(AnalyticsService::class);
-//        $analyticsService->queueFlashEvent(new Event( // todo: contract
-//            'council',
-//            'create-thread',
-//            $thread->title, // ?
-//            null
-//        ));
-
-        $request->session()->flash('alert-success', 'Your thread has been created');
         return redirect()->route('dominion.council.thread', $thread);
     }
 
@@ -129,16 +119,6 @@ class CouncilController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        // todo: fire laravel event
-//        $analyticsService = app(AnalyticsService::class);
-//        $analyticsService->queueFlashEvent(new Event( // todo: contract
-//            'dominion.council',
-//            'create-post',
-//            $thread->title, // ?
-//            null
-//        ));
-
-        $request->session()->flash('alert-success', 'Your message has been posted');
         return redirect()->route('dominion.council.thread', $thread);
     }
 
@@ -171,7 +151,6 @@ class CouncilController extends AbstractDominionController
 
         $post->delete();
 
-        $request->session()->flash('alert-success', 'Post successfully deleted.');
         return redirect()->route('dominion.council');
     }
 
@@ -204,7 +183,6 @@ class CouncilController extends AbstractDominionController
 
         $thread->delete();
 
-        $request->session()->flash('alert-success', 'Thread successfully deleted.');
         return redirect()->route('dominion.council');
     }
 

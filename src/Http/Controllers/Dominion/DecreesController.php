@@ -45,7 +45,6 @@ class DecreesController extends AbstractDominionController
                 ->withErrors([$e->getMessage()]);
         }
 
-        $request->session()->flash('alert-success', "You have revoked decree {$decree->name}.");
         return redirect()->route('dominion.decrees');
     }
 

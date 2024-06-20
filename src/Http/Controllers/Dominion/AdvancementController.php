@@ -45,7 +45,6 @@ class AdvancementController extends AbstractDominionController
         }
 
 
-        $request->session()->flash('alert-success', $result['message']);
         return redirect()->route('dominion.advancements');
     }
 }
