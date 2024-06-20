@@ -39,17 +39,16 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 100
-      ore: 10
+      gold: 400
+      ore: 50
       spy: 1
     power:
       offense: 4
-      defense: 0
+      defense: 1
     perks:
       counts_as_spy: 0.5
       increases_casualties_on_defense: 1
       immortal_on_victory: 1
-      no_draftee: 1
       offense_from_spy_ratio_capped: 0.2,1 # ratio%, max
 
   - name: Battlemage
@@ -61,17 +60,51 @@ units:
       - legendary
       - wise
     cost:
-      gold: 800
-      ore: 50
+      gold: 1000
+      ore: 100
       wizard: 1
     power:
-      offense: 6
-      defense: 7
+      offense: 5
+      defense: 6
     perks:
-      counts_as_wizard_offense: 0.10
-      counts_as_wizard_defense: 0.25
-      immortal_wizard: 1
-      no_draftee: 1
+      counts_as_wizard: 0.25
+
+  - name: Gunner
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+    cost:
+      gold: 1000
+      ore: 100
+      draftee: 1
+    power:
+      offense: 5
+      defense: 2
+    perks:
+      spends_resource_on_offense: gunpowder,1
+      spends_resource_on_defense: gunpowder,1
+      casualties: -25
+
+  - name: Obsidian Cannon
+    training_time: 12
+    type:
+      - living
+      - sentient
+      - intelligent
+      - wise
+    cost:
+      gold: 1000
+      ore: 100
+      obsidian: 20
+    power:
+      offense: 0
+      defense: 12
+    perks:
+      spends_resource_on_defense: gunpowder,1
+      immortal_on_victory: 1
 
   - name: Immortal Guard
     training_time: 6
@@ -80,12 +113,28 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 400
+      gold: 800
       ore: 100
-      gems: 10
     power:
       offense: 0
       defense: 4
+    perks:
+      increases_morale_by_population: 1 #Morale increased by 1% for every 1% of population made up of Immortal Guards.
+
+  - name: Dragonblade
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
+      - legendary
+    cost:
+      gold: 800
+      ore: 100
+      dragonscale: 12
+    power:
+      offense: 6
+      defense: 3
     perks:
       increases_morale_by_population: 1 #Morale increased by 1% for every 1% of population made up of Immortal Guards.
 
@@ -100,7 +149,66 @@ units:
       gold: 700
       ore: 50
       gems: 20
-      unit2: 1
+      unit5: 1
+    power:
+      offense: 9
+      defense: 5
+    perks:
+      increases_morale_by_population: 2 # Morale increased by 2% for every 1% of population made up of Immortal Guards.
+      increases_prestige_gains: 0.50
+
+  - name: Immortal Cavalry
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
+      - legendary
+    cost:
+      gold: 700
+      ore: 50
+      horse: 1
+      unit5: 1
+    power:
+      offense: 9
+      defense: 5
+    perks:
+      increases_morale_by_population: 2 # Morale increased by 2% for every 1% of population made up of Immortal Guards.
+      increases_prestige_gains: 0.50
+      no_draftee: 1
+
+  - name: Immortal Charger
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
+      - legendary
+    cost:
+      gold: 700
+      ore: 50
+      yak: 1
+      unit7: 1
+    power:
+      offense: 9
+      defense: 5
+    perks:
+      increases_morale_by_population: 2 # Morale increased by 2% for every 1% of population made up of Immortal Guards.
+      increases_prestige_gains: 0.50
+      no_draftee: 1
+
+  - name: Thunder Knight
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
+      - legendary
+    cost:
+      gold: 700
+      ore: 50
+      yak: 1
+      unit7: 1
     power:
       offense: 9
       defense: 5

@@ -5,15 +5,13 @@ home_terrain: hills
 playable: 0 # NPC only
 skill_level: 3
 
+resources:
+  - gold
+
 perks:
+  no_production: 1
   no_food_consumption: 1
-  gold_production_mod: -100
-  food_production_mod: -100
-  lumber_production_mod: -100
-  mana_production_mod: -100
-  ore_production_mod: -100
-  gems_production_mod: -100
-  #max_population: 12.5
+  cannot_train_archmages: 1
 units:
   - name: Marauder
     training_time: 6
@@ -24,31 +22,9 @@ units:
     cost:
       gold: 225
     power:
-      offense: 3
-      defense: 0
-  - name: Thug
-    training_time: 6
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      gold: 225
-    power:
-      offense: 0
-      defense: 3
-  - name: Robber
-    training_time: 6
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      gold: 600
-    power:
       offense: 0
       defense: 5
-  - name: Bandit
+  - name: Thug
     training_time: 6
     type:
       - living
@@ -58,4 +34,4 @@ units:
       gold: 720
     power:
       offense: 5
-      defense: 2
+      defense: 2.5

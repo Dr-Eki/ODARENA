@@ -159,7 +159,7 @@ class TheftActionService
                 throw new GameException($target->race->name . ' does not use ' . $resource->name . '.');
             }
 
-            if (!$this->passes43RatioRule($thief, $target, $landRatio, $units))
+            if (!$this->militaryCalculator->passes43RatioRule($thief, $target, $landRatio, $units))
             {
                 throw new GameException('You are sending out too much OP, based on your new home DP (4:3 rule).');
             }
@@ -445,31 +445,6 @@ class TheftActionService
         return true;
     }
 
-    /**
-     * Check if an invasion passes the 4:3-rule.
-     *
-     * @param Dominion $thief
-     * @param array $units
-     * @return bool
-     */
-    protected function passes43RatioRule(Dominion $thief, Dominion $target, float $landRatio, array $units): bool
-    {
-        $unitsHome = [
-            0 => $thief->military_draftees,
-        ];
-
-        foreach($thief->race->units as $unit)
-        {
-            $unitsHome[] = $thief->{'military_unit'.$unit->slot} - (isset($units[$unit->slot]) ? $units[$unit->slot] : 0);
-        }
-
-        $attackingForceOP = $this->militaryCalculator->getOffensivePower($thief, $target, $landRatio, $units);
-        $newHomeForcesDP = $this->militaryCalculator->getDefensivePower($thief, null, null, $unitsHome, 0, false, false, null, true); # The "true" at the end excludes raw DP from annexed dominions
-
-        $attackingForceMaxOP = (int)ceil($newHomeForcesDP * (4/3));
-
-        return ($attackingForceOP <= $attackingForceMaxOP);
-    }
 
     protected function passesUnitSendableCapacityCheck(Dominion $attacker, array $units): bool
     {

@@ -22,6 +22,11 @@ namespace OpenDominion\Models;
 class Title extends AbstractModel
 {
 
+    public static function fromKey($key)
+    {
+        return self::where('key', $key)->first();
+    }
+
     public function perks()
     {
         return $this->belongsToMany(

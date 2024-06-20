@@ -12,28 +12,41 @@ use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Hold;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\TickChange;
+use OpenDominion\Models\Unit;
 
 
-use OpenDominion\Services\Dominion\BuildingService;
+use OpenDominion\Services\Dominion\BuildingService as DominionBuildingService;
 use OpenDominion\Services\Dominion\ResourceService as DominionResourceService;
+use OpenDominion\Services\Dominion\UnitService as DominionUnitService;
+
+use OpenDominion\Services\Hold\BuildingService as HoldBuildingService;
 use OpenDominion\Services\Hold\ResourceService as HoldResourceService;
+use OpenDominion\Services\Hold\UnitService as HoldUnitService;
 
 use Throwable;
 
 class TickChangeService
 {
-    protected $buildingService;
+    protected $dominionBuildingService;
     protected $dominionResourceService;
+    protected $dominionUnitService;
+
+    protected $holdBuildingService;
     protected $holdResourceService;
+    protected $holdUnitService;
 
     /**
      * TickService constructor.
      */
     public function __construct()
     {
-        $this->buildingService = app(BuildingService::class);
+        $this->dominionBuildingService = app(DominionBuildingService::class);
         $this->dominionResourceService = app(DominionResourceService::class);
+        $this->dominionUnitService = app(DominionUnitService::class);
+
+        $this->holdBuildingService = app(HoldBuildingService::class);
         $this->holdResourceService = app(HoldResourceService::class);
+        $this->holdUnitService = app(HoldUnitService::class);
 
     }
 
@@ -48,11 +61,20 @@ class TickChangeService
 
         $tickChangesDominionResources = $tickChanges->where('target_type', Dominion::class)->where('source_type', Resource::class);
         $tickChangesDominionBuildings = $tickChanges->where('target_type', Dominion::class)->where('source_type', Building::class);
+        $tickChangesDominionUnits = $tickChanges->where('target_type', Dominion::class)->where('source_type', Unit::class);
+
         $tickChangesHoldResources = $tickChanges->where('target_type', Hold::class)->where('source_type', Resource::class);
+        $tickChangesHoldBuildings = $tickChanges->where('target_type', Hold::class)->where('source_type', Building::class);
+        $tickChangesHoldUnits = $tickChanges->where('target_type', Hold::class)->where('source_type', Unit::class);
 
         $this->commitDominionResources($tickChangesDominionResources);
         $this->commitDominionBuildings($tickChangesDominionBuildings);
+        #$this->commitDominionUnits($tickChangesDominionUnits);
+
+
         $this->commitHoldResources($tickChangesHoldResources);
+        $this->commitHoldBuildings($tickChangesHoldBuildings);
+        #$this->commitHoldUnits($tickChangesHoldUnits);
     }
 
     public function commitForDominion(Dominion $dominion): void
@@ -185,7 +207,7 @@ class TickChangeService
             foreach($buildingData as $buildingKey => $amount)
             {
                 xtLog("[{$dominionId}] *** Committing for tick: Building: {$buildingKey}, Amount: {$amount}");
-                $this->buildingService->update($dominion, [$buildingKey => $amount]);
+                $this->dominionBuildingService->update($dominion, [$buildingKey => $amount]);
             }
         }
 
@@ -193,7 +215,6 @@ class TickChangeService
             $tickChange->update(['status' => 1]);
         });
     }
-
 
     protected function commitHoldResources(Collection $tickChangesHoldResources): void
     {
@@ -231,4 +252,42 @@ class TickChangeService
             $tickChange->update(['status' => 1]);
         });
     }
+
+    public function commitHoldBuildings(Collection $tickChangesHoldBuildings): void
+    {
+        $holdBuildingChanges = [];
+
+        foreach($tickChangesHoldBuildings as $tickChange)
+        {
+            $buildingKey = $tickChange->source->key;
+            $amount = $tickChange->amount;
+            isset($holdBuildingChanges[$tickChange->target_id][$buildingKey]) ? $holdBuildingChanges[$tickChange->target_id][$buildingKey] += $amount : $holdBuildingChanges[$tickChange->target_id][$buildingKey] = $amount;
+        }
+
+        foreach($holdBuildingChanges as $holdId => $buildingData)
+        {
+            $hold = Hold::find($holdId);
+
+            if($hold)
+            {
+                xtLog("[{$holdId}] ** Committing tick change for hold buildings");
+            }
+            else
+            {
+                xtLog("[{$holdId}] ** Hold ID not found for tick change change");
+                continue;
+            }
+
+            foreach($buildingData as $buildingKey => $amount)
+            {
+                xtLog("[HL{$holdId}] *** Committing for tick: Building: {$buildingKey}, Amount: {$amount}");
+                $this->holdBuildingService->update($hold, [$buildingKey => $amount]);
+            }
+        }
+
+        $tickChangesHoldBuildings->each(function ($tickChange) {
+            $tickChange->update(['status' => 1]);
+        });
+    }
+
 }

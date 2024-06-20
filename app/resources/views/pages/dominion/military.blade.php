@@ -123,6 +123,8 @@
                                             @else
                                                 {!! $unitHelper->getUnitCostString($selectedDominion->race, $trainingCalculator->getTrainingCostsPerUnit($selectedDominion)[$unitType]) !!}
                                             @endif
+
+
                                         </td>
                                     </tr>
                                 @endif

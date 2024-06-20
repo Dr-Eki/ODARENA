@@ -3,9 +3,13 @@
 // We want strict types here.
 declare(strict_types=1);
 
+
 namespace OpenDominion\Calculators\Dominion;
 
+use Illuminate\Support\Str;
+
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\Resource;
 use OpenDominion\Models\Unit;
 
 use OpenDominion\Helpers\UnitHelper;
@@ -701,6 +705,47 @@ class UnitCalculator
 
         return max(0, $maxCapacity - $usedCapacity);
 
+    }
+
+    public function getUnitCostValue(Unit $unit): float
+    {
+        $cost = 0;
+
+        foreach($unit->cost as $resourceKey => $resourceCost)
+        {
+
+            if($resourceKey == 'draftees' or $resourceKey == 'peasants')
+            {
+                $cost += $resourceCost;
+                continue;
+            }
+            
+            if($resourceKey == 'spies' or $resourceKey == 'wizards')
+            {
+                $cost += $resourceCost * 500;
+                continue;
+            }
+            
+            if($resourceKey == 'archmages')
+            {
+                $cost += $resourceCost * 1000;
+                continue;
+            }
+
+            if(Str::startsWith($resourceKey, 'unit'))
+            {
+                $subUnitSlot = (int)substr($resourceKey, 4);
+                $subUnit = Unit::where('slot', $subUnitSlot)->where('race_id', $unit->race->id)->first();
+                $cost += $this->getUnitCostValue($subUnit) * $resourceCost;
+                continue;
+            }
+
+            $resource = Resource::fromKey($resourceKey);
+
+            $cost += $resource->trade->buy * $resourceCost;
+        }
+
+        return $cost;
     }
 
 }

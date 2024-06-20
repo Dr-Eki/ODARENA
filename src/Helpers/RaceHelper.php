@@ -107,6 +107,11 @@ class RaceHelper
                 $booleanValue = 'static';
                 $valueType = '%';
                 break;
+            case 'no_production':
+                $negativeBenefit = false;
+                $description = 'No production';
+                $booleanValue = true;
+                break;
             case 'food_production_mod':
                 $negativeBenefit = false;
                 $description = 'Food production';

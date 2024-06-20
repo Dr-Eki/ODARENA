@@ -32,17 +32,15 @@ class WorldNewsController extends AbstractDominionController
         $realm = Realm::where([
             'round_id' => $dominion->round_id,
             'number' => $realmNumber,
-        ])
-        ->first();
+        ])->first();
 
-        if ($realm)
-        {
-            $worldNewsData = $worldNewsService->getWorldNewsForRealm($realm, $dominion);
-        }
-        else
-        {
-            $realm = null;
-            $worldNewsData = $worldNewsService->getWorldNewsForDominion($dominion);
+        $perPage = 50; // Set the number of items per page
+        $currentPage = request('page', 1); // Get the current page or default to 1
+
+        if ($realm) {
+            $worldNewsData = $worldNewsService->getWorldNews($dominion, $realm, $perPage, $currentPage);
+        } else {
+            $worldNewsData = $worldNewsService->getWorldNews($dominion, null, $perPage, $currentPage);
         }
 
         $realmCount = Realm::where('round_id', $dominion->round_id)->count();
@@ -56,8 +54,7 @@ class WorldNewsController extends AbstractDominionController
             'landCalculator' => app(LandCalculator::class),
             'militaryCalculator' => app(MilitaryCalculator::class),
             'networthCalculator' => app(NetworthCalculator::class),
-            ]
-        );
+        ]);
     }
 
     protected function updateDominionNewsLastRead(Dominion $dominion): void
@@ -65,5 +62,4 @@ class WorldNewsController extends AbstractDominionController
         $dominion->news_last_read = now();
         $dominion->save();
     }
-
 }

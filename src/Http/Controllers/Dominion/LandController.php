@@ -41,6 +41,7 @@ class LandController extends AbstractDominionController
         ]);
     }
 
+    /*
     public function postRezone(RezoneActionRequest $request)
     {
 
@@ -83,6 +84,7 @@ class LandController extends AbstractDominionController
 
         return redirect()->route('dominion.land');
     }
+        */
 
     public function postDailyBonus(RezoneActionRequest $request)
     {

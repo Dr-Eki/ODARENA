@@ -23,20 +23,12 @@ class ReleaseActionService
 {
     use DominionGuardsTrait;
 
-    /** @var UnitHelper */
     protected $unitHelper;
-
-    /** @var MilitaryCalculator */
     protected $militaryCalculator;
-
-    /** @var QueueService */
     protected $queueService;
-
-    /** @var SpellCalculator */
     protected $spellCalculator;
-
-    /** @var NotificationService */
     protected $notificationService;
+    protected $resourceService;
 
     /** @var RaceHelper */
     protected $raceHelper;

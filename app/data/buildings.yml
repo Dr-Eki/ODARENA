@@ -1937,20 +1937,6 @@ enclosure:
     jobs: 30
     housing: 0
 
-# BARBARIAN
-
-cabin:
-  name: Cabin
-  exclusive_races:
-    - Barbarian
-  land_type: forest
-  perks:
-    military_housing: 20
-    housing: 50
-    jobs: 0
-
-# END BARBARIAN
-
 
 ### HOLD BUILDINGS ###
 

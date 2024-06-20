@@ -81,6 +81,9 @@
                 </div>
             @endif
         </div>
+        <div class="text-center">
+            {{ $gameEvents->links() }}
+        </div>
     </div>
 
     <div class="col-sm-12 col-md-3">

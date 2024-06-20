@@ -58,10 +58,9 @@
     </div>
 </div>
 
-@if($race->playable)
+@if($race->playable or isLocal())
 
 <div class="row">
-
     <a id="units"></a>
     <div class="col-sm-12 col-md-9">
         <div class="box">
@@ -168,37 +167,24 @@
                                 @endif
                             @endif
 
-                            <tr>
-                                <td>
-                                    <span data-toggle="tooltip" data-placement="top" title="">Home terrain:</span>
-                                </td>
-                                <td>{{ $race->homeTerrain()->name }}</td>
                             @if($race->max_per_round)
-                            <tr>
-                                <td>
-                                    <span data-toggle="tooltip" data-placement="top" title="Maximum amount of dominions of this faction per round">Max per round:</span>
-                                </td>
-                                <td><span class="text-red">{{ $race->max_per_round }}</a></td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <span data-toggle="tooltip" data-placement="top" title="Maximum amount of dominions of this faction per round">Max per round:</span>
+                                    </td>
+                                    <td><span class="text-red">{{ $race->max_per_round }}</a></td>
+                                </tr>
                             @endif
+
                             @if($race->minimum_rounds)
-                            <tr>
-                                <td>
-                                    <span data-toggle="tooltip" data-placement="top" title="Minimum rounds you must have played in order to select this faction">Minimum rounds played:</span>
-                                </td>
-                                <td><span class="text-red">{{ $race->minimum_rounds }}</a></td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <span data-toggle="tooltip" data-placement="top" title="Minimum rounds you must have played in order to select this faction">Minimum rounds played:</span>
+                                    </td>
+                                    <td><span class="text-red">{{ $race->minimum_rounds }}</a></td>
+                                </tr>
                             @endif
-                            {{--
-                            @if($race->psionic_strength !== 1)
-                            <tr>
-                                <td>
-                                    <span data-toggle="tooltip" data-placement="top" title="Standard is 1">Psionic base strength:</span>
-                                </td>
-                                <td><span class="text-info">{{ number_format($race->psionic_strength,6) }}</a></td>
-                            </tr>
-                            @endif
-                            --}}
+                            
                             @if(!$race->getPerkValue('no_population'))
                             <tr>
                                 <td>
@@ -226,6 +212,7 @@
                                 </td>
                             </tr>
                             @endif
+
                             @foreach ($race->perks as $perk)
                                 @php
                                     $perkDescription = $raceHelper->getPerkDescriptionHtmlWithValue($perk);
@@ -239,6 +226,7 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            
                             @if(isset($race->round->modes))
                                 <tr>
                                     <th colspan="2">Round modes</th>

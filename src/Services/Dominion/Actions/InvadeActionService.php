@@ -344,7 +344,7 @@ class InvadeActionService
                     throw new GameException('You do not have enough morale to invade.');
                 }
 
-                if (!$this->passes43RatioRule($attacker, $defender, $landRatio, $units))
+                if (!$this->militaryCalculator->passes43RatioRule($attacker, $defender, $landRatio, $units))
                 {
                     throw new GameException('You are sending out too much OP, based on your new home DP (4:3 rule).');
                 }
@@ -743,7 +743,7 @@ class InvadeActionService
             
 
             # Debug before saving:
-            #ldd($this->invasion); dd('Safety!', env('APP_ENV'));
+            ldd($this->invasion); dd('Safety!', env('APP_ENV'));
             
               $target->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
             $attacker->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
@@ -3406,37 +3406,6 @@ class InvadeActionService
         }
 
         return true;
-    }
-
-    /**
-     * Check if an invasion passes the 4:3-rule.
-     *
-     * @param Dominion $attacker
-     * @param array $units
-     * @return bool
-     */
-    protected function passes43RatioRule(Dominion $attacker, Dominion $target, float $landRatio, array $units): bool
-    {
-        # Artillery is exempt from 4:3.
-        if($attacker->race->name == 'Artillery')
-        {
-            return true;
-        }
-
-        $unitsHome = [
-            0 => $attacker->military_draftees,
-        ];
-
-        foreach($attacker->race->units as $unit)
-        {
-            $unitsHome[] = $attacker->{'military_unit'.$unit->slot} - (isset($units[$unit->slot]) ? $units[$unit->slot] : 0);
-        }
-        $attackingForceOP = $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $units);
-        $newHomeForcesDP = $this->militaryCalculator->getDefensivePower($attacker, null, null, $unitsHome, 0, false, false, null, true); # The "true" at the end excludes raw DP from annexed dominions
-
-        $attackingForceMaxOP = (int)ceil($newHomeForcesDP * (4/3));
-
-        return ($attackingForceOP <= $attackingForceMaxOP);
     }
 
     protected function passesUnitSendableCapacityCheck(Dominion $attacker, array $units): bool

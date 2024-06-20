@@ -1666,42 +1666,6 @@ class Hold extends AbstractModel
 
         return $bonus;
     }
-
-    # Race Terrain Perks 2.0 - finish this with AI
-    public function getRaceTerrainPerks()
-    {
-        return $this->race->raceTerrains->flatMap(
-            function ($raceTerrain)
-            {
-                return $raceTerrain->perks;
-            }
-        );
-    }
-
-    public function getTerrainPerkValue(string $perkKey): float
-    {
-        #return Cache::remember("dominion.{$this->id}.terrainPerkValue.{$perkKey}", 5, function () use ($perkKey)
-        #{
-            return $this->race->raceTerrains->sum(function ($raceTerrain) use ($perkKey)
-            {
-                $terrainPerk = $raceTerrain->perks()->where('key', $perkKey)->first();
-                return $terrainPerk ? $terrainPerk->pivot->value * $this->{'terrain_' . $raceTerrain->terrain->key} : 0;
-            });
-        #});
-    }
-    
-    public function getTerrainPerkMultiplier(string $perkKey): float
-    {
-
-        #return Cache::remember("dominion.{$this->id}.terrainPerkMultiplier.{$perkKey}", 5, function () use ($perkKey)
-        #{
-            return $this->race->raceTerrains->sum(function ($raceTerrain) use ($perkKey)
-            {
-                $terrainPerk = $raceTerrain->perks()->where('key', $perkKey)->first();
-                return $terrainPerk ? ($terrainPerk->pivot->value * $this->{'terrain_' . $raceTerrain->terrain->key}) / $this->land : 0;
-            });
-        #});
-    }
     
     # DECREES
 

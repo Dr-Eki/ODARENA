@@ -232,18 +232,24 @@
                                     <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot)) }}</td>
                                 </tr>
                             @endforeach
-                            <tr>
-                                <td>Spies:</td>
-                                <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($dominion, 'spies')) }}</td>
-                            </tr>
-                            <tr>
-                                <td>Wizards:</td>
-                                <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($dominion, 'wizards')) }}</td>
-                            </tr>
-                            <tr>
-                                <td>ArchMages:</td>
-                                <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($dominion, 'archmages')) }}</td>
-                            </tr>
+                            @if(!$dominion->race->getPerkValue('cannot_train_spies'))
+                                <tr>
+                                    <td>Spies:</td>
+                                    <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($dominion, 'spies')) }}</td>
+                                </tr>
+                            @endif
+                            @if(!$dominion->race->getPerkValue('cannot_train_wizards'))
+                                <tr>
+                                    <td>Wizards:</td>
+                                    <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($dominion, 'wizards')) }}</td>
+                                </tr>
+                            @endif
+                            @if(!$dominion->race->getPerkValue('cannot_train_archmages'))
+                                <tr>
+                                    <td>ArchMages:</td>
+                                    <td>{{ number_format($militaryCalculator->getTotalUnitsForSlot($dominion, 'archmages')) }}</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -1155,119 +1161,58 @@
     </div>
 </div>
 <div class="row">
-
     <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Land')
-            @slot('titleIconClass', 'ra ra-honeycomb')
-            <table class="table">
-                <colgroup>
-                    <col width="100">
-                    <col>
-                    <col>
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>Terrain</th>
-                        <th class="text-center">Amount</th>
-                        <th>
-                            <span data-toggle="tooltip" data-placement="top" title="Perk value shown is total for each perk (sum of perk values across terrains)">
-                                Perks
-                            </span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($dominion->race->raceTerrains as $raceTerrain)
-                        <tr>
-                            <td>{{ $raceTerrain->terrain->name }}</td>
-                            <td class="text-center">
-                                {{ number_format($dominion->{'terrain_' . $raceTerrain->terrain->key}) }}
-                                <small class="text-muted">({{ number_format(($dominion->{'terrain_' . $raceTerrain->terrain->key} / $dominion->land)*100,2) }}%)</small>
-                            </td>
-                            <td>
-                                @if($raceTerrain->perks->count())
-                                    @foreach($raceTerrain->perks as $perk)
-                                        @php
-                                            $perkValue = $dominion->getTerrainPerkValue($perk->key);
-                                            if($terrainHelper->getPerkType($perk->key) == 'mod')
-                                            {
-                                            $perkValue = $dominion->getTerrainPerkMultiplier($perk->key);
-                                            }
-                                        @endphp
-                                        {!! $terrainHelper->getPerkDescription($perk->key, $perkValue, false) !!}
-                                        <br>
-                                    @endforeach
-                                @else
-                                    <em class="text-muted">None</em>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endcomponent
-    </div>
-
-    <div class="col-sm-12 col-md-6">
-        @component('partials.dominion.insight.box')
-
-            @slot('title', 'Incoming land breakdown')
-            @slot('titleIconClass', 'fa fa-clock-o')
+            @slot('titleIconClass', 'fa fa-map fa-fw')
             @slot('noPadding', true)
 
             <table class="table">
                 <colgroup>
-                    <col>
+                    <col width="100">
                     @for ($i = 1; $i <= 12; $i++)
-                        <col width="20">
+                        <col>
                     @endfor
                     <col width="100">
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>Terrain</th>
+                        <th>Land</th>
                         @for ($i = 1; $i <= 12; $i++)
                             <th class="text-center">{{ $i }}</th>
                         @endfor
-                        <th class="text-center">Total</th>
+                        <th class="text-center">Total<br>Incoming</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
-                        <tr>
-                            <td>{{ ucfirst($terrain->name) }}</td>
-                            @for ($i = 1; $i <= 12; $i++)
-                                @php
-                                    $amount = $queueService->getExplorationQueueAmount($dominion, "terrain_{$terrain->key}", $i);
-                                    $amount += $queueService->getInvasionQueueAmount($dominion, "terrain_{$terrain->key}", $i);
-                                    $amount += $queueService->getExpeditionQueueAmount($dominion, "terrain_{$terrain->key}", $i);
-                                @endphp
-                                <td class="text-center">
-                                    @if ($amount === 0)
-                                        -
-                                    @else
-                                        {{ number_format($amount) }}
-                                    @endif
-                                </td>
-                            @endfor
-                            <td class="text-center">{{ number_format($queueService->getExplorationQueueTotalByResource($dominion, "terrain_{$terrain->key}") + $queueService->getInvasionQueueTotalByResource($dominion, "terrain_{$terrain->key}")  + $queueService->getExpeditionQueueTotalByResource($dominion, "terrain_{$terrain->key}")) }}</td>
-                        </tr>
-                    @endforeach
+                    <tr>
+                        <td>{{ number_format($dominion->land) }}</td>
+                        @for ($i = 1; $i <= 12; $i++)
+                            @php
+                                $amount = $queueService->getExplorationQueueAmount($dominion, 'land', $i);
+                                $amount += $queueService->getInvasionQueueAmount($dominion, 'land', $i);
+                                $amount += $queueService->getExpeditionQueueAmount($dominion, 'land', $i);
+                            @endphp
+                            <td class="text-center">
+                                @if ($amount === 0)
+                                    -
+                                @else
+                                    {{ number_format($amount) }}
+                                @endif
+                            </td>
+                        @endfor
+                        <td class="text-center">{{ number_format($queueService->getInvasionQueueTotalByResource($dominion, 'land')  + $queueService->getExpeditionQueueTotalByResource($dominion, 'land')) }}</td>
+                    </tr>
                 </tbody>
             </table>
         @endcomponent
     </div>
-
-</div>
-<div class="row">
-
     <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Advancements')
-            @slot('titleIconClass', 'fas fa-layer-group')
+            @slot('titleIconClass', 'fas fa-layer-group fa-fw')
             @slot('noPadding', true)
 
             @if($dominion->advancements->count() > 0)
@@ -1329,6 +1274,8 @@
         @endcomponent
     </div>
 
+</div>
+<div class="row">
     <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
 
@@ -1375,9 +1322,7 @@
             @endif
         @endcomponent
     </div>
-</div>
-
-<div class="row">
+    
     <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
             @slot('title', 'Research')

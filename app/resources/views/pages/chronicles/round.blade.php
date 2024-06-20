@@ -190,7 +190,7 @@
                 </table>
                     <table class="table table-striped table-hover">
                         <colgroup>
-                            <col width="3em">
+                            <col>
                             <col>
                         </colgroup>
                         <thead>

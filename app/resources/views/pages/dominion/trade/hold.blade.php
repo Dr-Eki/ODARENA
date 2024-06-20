@@ -468,6 +468,7 @@
                     @endforeach
                 </tbody>
             </table>
+            <a href="{{ route('dominion.trade.hold.give-units', $hold) }}" class="btn btn-primary btn-xl btn-block">Give units</a>
         @endcomponent
     </div>
 </div>

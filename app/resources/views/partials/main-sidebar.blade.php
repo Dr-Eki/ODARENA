@@ -33,25 +33,12 @@
                 
                 </li>
 
-                
-
-
                 <li class="{{ Route::is('dominion.resources') ? 'active' : null }}">
                     <a href="{{ route('dominion.resources') }}">
                         <i class="ra ra-mining-diamonds ra-fw"></i>
                         <span>Resources</span>
                         @if($resourceCalculator->isOnBrinkOfStarvation($selectedDominion))
                             <span class="label label-danger pull-right"><i class="ra ra-apple"></i></span>
-                        @endif
-                    </a>
-                </li>
-
-                <li class="{{ Route::is('dominion.land') ? 'active' : null }}">
-                    <a href="{{ route('dominion.land') }}">
-                        <i class="fa fa-map fa-fw"></i>
-                        <span>Land</span>
-                        @if (!$selectedDominion->daily_land and $selectedDominion->protection_ticks == 0 and $selectedDominion->round->hasStarted())
-                            <span class="label label-primary pull-right"><i class="fa fa-plus"></i></span>
                         @endif
                     </a>
                 </li>
@@ -157,6 +144,16 @@
                 @if ($roundSettings['decrees'] and !$selectedDominion->race->getPerkValue('cannot_issue_decrees'))
                     <li class="{{ Route::is('dominion.decrees') ? 'active' : null }}"><a href="{{ route('dominion.decrees') }}"><i class="fas fa-gavel fw-fw"></i> <span>Decrees</span></a></li>
                 @endif
+
+                <li class="{{ Route::is('dominion.land') ? 'active' : null }}">
+                    <a href="{{ route('dominion.land') }}">
+                        <i class="fa fa-map fa-fw"></i>
+                        <span>Land</span>
+                        @if (!$selectedDominion->daily_land and $selectedDominion->protection_ticks == 0 and $selectedDominion->round->hasStarted())
+                            <span class="label label-primary pull-right"><i class="fa fa-plus"></i></span>
+                        @endif
+                    </a>
+                </li>
 
                 @if($roundSettings['deities'] and !$selectedDominion->race->getPerkValue('cannot_submit_to_deity'))
                     <li class="{{ Route::is('dominion.deity') ? 'active' : null }}"><a href="{{ route('dominion.deity') }}"><i class="fas fa-pray fa-fw"></i> <span>Deity</span></a></li>

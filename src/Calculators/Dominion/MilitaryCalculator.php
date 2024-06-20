@@ -2730,4 +2730,28 @@ class MilitaryCalculator
         return $op + $dp;
     }
 
+    public function passes43RatioRule(Dominion $attacker, Dominion $target = null, float $landRatio = null, array $units, string $type = 'invasion'): bool
+    {
+        # Artillery is exempt from 4:3.
+        if($attacker->race->name == 'Artillery')
+        {
+            return true;
+        }
+
+        $unitsHome = [
+            0 => $attacker->military_draftees,
+        ];
+
+        foreach($attacker->race->units as $unit)
+        {
+            $unitsHome[] = $attacker->{'military_unit'.$unit->slot} - (isset($units[$unit->slot]) ? $units[$unit->slot] : 0);
+        }
+        $attackingForceOP = $this->getOffensivePower($attacker, $target, $landRatio, $units);
+        $newHomeForcesDP = $this->getDefensivePower($attacker, null, null, $unitsHome, 0, false, false, null, true); # The "true" at the end excludes raw DP from annexed dominions
+
+        $attackingForceMaxOP = (int)ceil($newHomeForcesDP * (4/3));
+
+        return ($attackingForceOP <= $attackingForceMaxOP);
+    }
+
 }

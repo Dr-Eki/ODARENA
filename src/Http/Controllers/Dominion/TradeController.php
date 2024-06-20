@@ -8,22 +8,26 @@ use Illuminate\Http\Request;
 
 use OpenDominion\Exceptions\GameException;
 
+use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Hold;
 use OpenDominion\Models\Resource;
-use OpenDominion\Models\TradeLedger;
+#use OpenDominion\Models\TradeLedger;
 use OpenDominion\Models\TradeRoute;
 
+use OpenDominion\Calculators\HoldCalculator;
 use OpenDominion\Calculators\Hold\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\TradeCalculator;
 
+use OpenDominion\Http\Requests\Dominion\HoldUnitsGiftRequest;
 use OpenDominion\Http\Requests\Dominion\TradeCalculationRequest;
 use OpenDominion\Http\Requests\Dominion\TradeDeleteRequest;
+use OpenDominion\Http\Requests\Dominion\HoldUnitsGiftCalculationRequest;
 use OpenDominion\Http\Requests\Dominion\Actions\TradeEditActionRequest;
 use OpenDominion\Http\Requests\Dominion\Actions\TradeActionRequest;
 
 use OpenDominion\Services\TradeCalculationService;
 use OpenDominion\Services\Dominion\Actions\TradeActionService;
-
+use OpenDominion\Services\Dominion\UnitService;
 
 use OpenDominion\Helpers\HoldHelper;
 use OpenDominion\Helpers\RaceHelper;
@@ -35,13 +39,9 @@ class TradeController extends AbstractDominionController
 {
     use DominionGuardsTrait;
 
-    protected $resourceCalculator;
-    protected $tradeCalculator;
 
     public function __construct()
     {
-        #$this->resourceCalculator = app(ResourceCalculator::class);
-        #$this->tradeCalculator = app(TradeCalculator::class);
     }
 
     public function getTradeRoutes()
@@ -129,6 +129,7 @@ class TradeController extends AbstractDominionController
             'hold' => $hold,
         ]);
     }
+
     public function getHoldSentiments(Hold $hold, Request $request)
     {
         $viewer = $this->getSelectedDominion();
@@ -157,9 +158,43 @@ class TradeController extends AbstractDominionController
             'search' => $request->search // Passing back the search term to the view
         ]);
     }
+
+    public function getHoldGiveUnits(Hold $hold)
+    {
+        return view('pages.dominion.trade.hold.give-units',[
+            'hold' => $hold
+        ]);
+    }
+
+    public function calculateUnitsGift(HoldUnitsGiftCalculationRequest $request, HoldCalculator $holdCalculator)
+    {
+        $dominion = $this->getSelectedDominion();
+        $hold = Hold::where('id', $request->get('hold'))->firstOrFail();
+        $units = $request->get('units');
+
+        $result = $holdCalculator->calculateUnitsSentimentValue($hold, $dominion, $units);
     
-    
-    
+        return response()->json(['sentiment' => $result]);
+    }
+
+    public function postHoldGiveUnits(HoldUnitsGiftRequest $request)
+    {
+
+        $dominion = $this->getSelectedDominion();
+        $hold = Hold::where('id', $request->get('hold'))->firstOrFail();
+        $units = $request->get('units');
+
+        try {
+            $result = app(UnitService::class)->sendUnitsToHold($dominion, $hold, $units);
+
+        } catch (GameException $e) {
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors([$e->getMessage()]);
+        }
+
+        return redirect()->to($result['redirect'] ?? route('dominion.trade.hold', $hold));
+    }
 
     public function getEditTradeRoute($tradeRoute)
     {

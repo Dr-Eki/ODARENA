@@ -73,12 +73,11 @@ class DailyBonusesActionService
         }
 
         $landGained = rand(1,200) == 1 ? 100 : rand(10, 40);
-        $xpGained = $landGained * 20;
-        $terrain = $dominion->race->homeTerrain();
+        $xpGainedPerLand = 25 * (1 + $dominion->round->ticks / 10000);
+        $xpGained = $landGained * $xpGainedPerLand;
 
         $dominion->land += $landGained;
         $dominion->xp += $xpGained;
-        $this->terrainService->update($dominion, [$terrain->key => $landGained]);
 
         $this->statsService->updateStat($dominion, 'land_discovered', $landGained);
 
@@ -87,9 +86,8 @@ class DailyBonusesActionService
 
         return [
             'message' => sprintf(
-                'You gain %d acres of %s and %s XP.',
+                'You gain %d land and %s XP.',
                 $landGained,
-                $terrain->name,
                 number_format($xpGained)
             ),
             'data' => [

@@ -38,11 +38,6 @@
                         <td>{{ number_format($selectedDominion->getImprovementPerkValue('defensive_power'), 2) }}%</td>
                     </tr>
                     <tr>
-                        <td>Terrain:</td>
-                        <td>{{ number_format($selectedDominion->getTerrainPerkMultiplier('offensive_power_mod') * 100, 2) }}%</td>
-                        <td>{{ number_format($selectedDominion->getTerrainPerkMultiplier('defensive_power_mod') * 100, 2) }}%</td>
-                    </tr>
-                    <tr>
                         <td>Advancements:</td>
                         <td>{{ number_format($selectedDominion->getAdvancementPerkMultiplier('offensive_power') * 100, 2) }}%</td>
                         <td>{{ number_format($selectedDominion->getAdvancementPerkMultiplier('defensive_power') * 100, 2) }}%</td>

@@ -57,7 +57,6 @@ class Unit extends AbstractModel
     public function race()
     {
         return $this->belongsTo(Race::class);
-        #return $this->hasOne(Race::class);
     }
 
     public function deity()

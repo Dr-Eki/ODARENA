@@ -42,6 +42,11 @@ class Race extends AbstractModel
         'magic_level' => 'integer',
     ];
 
+    public static function fromKey($key)
+    {
+        return self::where('key', $key)->first();
+    }
+
     public function dominions()
     {
         return $this->hasMany(Dominion::class);

@@ -23,4 +23,16 @@ class Queue extends AbstractModel
     protected $dates = ['created_at'];
 
     const UPDATED_AT = null;
+
+    public function item()
+    {
+        return $this->morphTo();
+    }
+
+    public function source()
+    {
+        return $this->morphTo();
+    }
+
+
 }

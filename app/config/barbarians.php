@@ -3,7 +3,7 @@
 # app/config/barbarians.php
 
 return [
-    'tribeTypes' => [
+    'tribe_types' => [
         'Crew',
         'Gang',
         'Tribe',
@@ -50,7 +50,7 @@ return [
     ],
 
 
-    'invasionTypes' => [
+    'invasion_types' => [
         'attacked', 
         'raided', 
         'pillaged', 
@@ -75,7 +75,7 @@ return [
         'seized'
     ],
     
-    'invasionTargets' => [
+    'invasion_targets' => [
         'settlement', 
         'village', 
         'town', 
@@ -97,9 +97,9 @@ return [
     ],
 
     'settings' => [
-        'DPA_CONSTANT' => 27.0,
+        'DPA_CONSTANT' => 10,
         'DPA_OVERSHOT' => 1.10,
-        'DPA_PER_TICK' => 0.125,
+        'DPA_PER_TICK' => 0.1,
         'DPA_PER_TIMES_INVADED' => 1.5,
         'OPA_MULTIPLIER' => (4/3),
         'SPECS_RATIO_MIN' => 50,
@@ -115,11 +115,24 @@ return [
         'UNITS_TRAINED_MAX' => 1200,
         'UNITS_TRAINING_TICKS' => 6,
         'CONSTRUCTION_TIME' => 12,
-        'UNIT1_OP' => 3,
-        'UNIT2_DP' => 3,
-        'UNIT3_DP' => 5,
-        'UNIT4_OP' => 5,
         'ONE_IN_CHANCE_TO_SPAWN' => 60,
+
+        'spy_ratio_target' => 0.5,
+        'wizard_ratio_target' => 0.5,
     ],
+
+    'buildings' => [
+        'barracks' => 0.36,
+        'guard_tower' => 0.08,
+        'training_grounds' => 0.08,
+        'watch_tower' => 0.08,
+        'stone_wall' => 0.08,
+        'farm' => 0.10,
+        'tavern' => 0.04,
+        'monument' => 0.08,
+        'saw_mill' => 0.04,
+        'ore_mine' => 0.04,
+        'aqueduct' => 0.02
+    ]
 
 ];

@@ -183,18 +183,24 @@
                                     <td>{{ number_format($data['military_unit' . $unit->slot]) }}</td>
                                 </tr>
                             @endforeach
-                            <tr>
-                                <td>Spies:</td>
-                                <td>{{ number_format($data['military_spies']) }}</td>
-                            </tr>
-                            <tr>
-                                <td>Wizards:</td>
-                                <td>{{ number_format($data['military_wizards']) }}</td>
-                            </tr>
-                            <tr>
-                                <td>ArchMages:</td>
-                                <td>{{ number_format($data['military_archmages']) }}</td>
-                            </tr>
+                            @if(!$dominion->race->getPerkValue('cannot_train_spies'))
+                                <tr>
+                                    <td>Spies:</td>
+                                    <td>{{ number_format($data['military_spies']) }}</td>
+                                </tr>
+                            @endif
+                            @if(!$dominion->race->getPerkValue('cannot_train_wizards'))
+                                <tr>
+                                    <td>Wizards:</td>
+                                    <td>{{ number_format($data['military_wizards']) }}</td>
+                                </tr>
+                            @endif
+                            @if(!$dominion->race->getPerkValue('cannot_train_archmages'))
+                                <tr>
+                                    <td>ArchMages:</td>
+                                    <td>{{ number_format($data['military_archmages']) }}</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -675,119 +681,57 @@
     </div>
 </div>
 <div class="row">
-
     <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Land')
-            @slot('titleIconClass', 'ra ra-honeycomb')
-            <table class="table">
-                <colgroup>
-                    <col width="100">
-                    <col>
-                    <col>
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>Terrain</th>
-                        <th class="text-center">Amount</th>
-                        <th>
-                            <span data-toggle="tooltip" data-placement="top" title="Perk value shown is total for each perk (sum of perk values across terrains)">
-                                Perks
-                            </span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($dominion->race->raceTerrains as $raceTerrain)
-                        <tr>
-                            <td>{{ $raceTerrain->terrain->name }}</td>
-                            <td class="text-center">
-                                {{ number_format($data['terrain'][$raceTerrain->terrain->key]['amount']) }}
-                                <small class="text-muted">({{ number_format($data['terrain'][$raceTerrain->terrain->key]['percentage'], 2) }}%)</small>
-                            </td>
-                            <td>
-                                @if(count($data['terrain_perks']))
-                                    @foreach($data['terrain_perks'][$raceTerrain->terrain->key] as $terrainPerkKey => $terrainPerkValue)
-                                        {!! $terrainHelper->getPerkDescription($terrainPerkKey, $terrainPerkValue, false) !!}
-                                        <br>
-                                    @endforeach
-                                @else
-                                    <em class="text-muted">None</em>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                    {{-- 
-                        @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
-                            <tr>
-                                <td>{{ $terrain->name }}</td>
-                                <td class="text-center">{{ number_format($data['terrain'][$terrain->key]['amount']) }}</td>
-                                <td class="text-center">{{ number_format($data['terrain'][$terrain->key]['percentage'], 2) }}%</td>
-                            </tr>
-                        @endforeach
-                    --}}
-                </tbody>
-            </table>
-        @endcomponent
-    </div>
-
-    <div class="col-sm-12 col-md-6">
-        @component('partials.dominion.insight.box')
-
-            @slot('title', 'Incoming land breakdown')
-            @slot('titleIconClass', 'fas fa-map-marked-alt')
+            @slot('titleIconClass', 'fa fa-map fa-fw')
             @slot('noPadding', true)
 
             <table class="table">
                 <colgroup>
-                    <col>
+                    <col width="100">
                     @for ($i = 1; $i <= 12; $i++)
-                        <col width="20">
+                        <col>
                     @endfor
                     <col width="100">
                 </colgroup>
                 <thead>
                     <tr>
-                        <th>Terrain</th>
+                        <th class="text-center">Land</th>
                         @for ($i = 1; $i <= 12; $i++)
                             <th class="text-center">{{ $i }}</th>
                         @endfor
-                        <th class="text-center">Total</th>
+                        <th class="text-center">Total<br>Incoming</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
-                        <tr>
-                            <td>{{ $terrain->name }}</td>
-                            @for ($i = 1; $i <= 12; $i++)
-                                @php
-                                    $amount = $data['terrain']['incoming'][$terrain->key][$i];
-                                @endphp
-                                <td class="text-center">
-                                    @if ($amount === 0)
-                                        -
-                                    @else
-                                        {{ number_format($amount) }}
-                                    @endif
-                                </td>
-                            @endfor
-                            <td class="text-center">{{ number_format(array_sum($data['terrain']['incoming'][$terrain->key])) }}</td>
-                        </tr>
-                    @endforeach
+                    <tr>
+                        <td class="text-center">{{ $data['land']['amount'] }}</td>
+                        @for ($i = 1; $i <= 12; $i++)
+                            @php
+                                $amount = $data['land']['incoming'][$i];
+                            @endphp
+                            <td class="text-center">
+                                @if ($amount === 0)
+                                    -
+                                @else
+                                    {{ number_format($amount) }}
+                                @endif
+                            </td>
+                        @endfor
+                        <td class="text-center">{{ number_format(array_sum($data['land']['incoming'])) }}</td>
+                    </tr>
                 </tbody>
             </table>
         @endcomponent
     </div>
 
-</div>
-<div class="row">
-
     <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Advancements')
-            @slot('titleIconClass', 'fa fa-flask')
+            @slot('titleIconClass', 'fas fa-layer-group fa-fw')
             @slot('noPadding', true)
 
             @if(count($data['advancements']) > 0)
@@ -847,12 +791,14 @@
             @endif
         @endcomponent
     </div>
+</div>
 
+<div class="row">
     <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
 
             @slot('title', 'Decrees')
-            @slot('titleIconClass', 'fas fa-layer-group')
+            @slot('titleIconClass', 'fas fa-gavel')
             @slot('noPadding', true)
 
             @if(count($data['decrees']) > 0)
@@ -894,9 +840,7 @@
             @endif
         @endcomponent
     </div>
-
-</div>
-<div class="row">
+    
     <div class="col-sm-12 col-md-6">
         @component('partials.dominion.insight.box')
             @slot('title', 'Research')
@@ -949,7 +893,6 @@
 
         @endcomponent
     </div>
-
 </div>
 
 <div class="box-footer">

@@ -61,4 +61,42 @@ class GameEvent extends AbstractModel
             $model->id = Uuid::generate();
         });
     }
+
+    public function isInWorldNewsUserSettings(Dominion $viewer, array $userWorldNewsSettings)
+    {
+        $scope = $this->isOwnRealmEvent($viewer) ? 'own' : 'other';
+    
+        return in_array($this->type, $userWorldNewsSettings[$scope]);
+    }
+    
+    public function isInWorldNewsRealm(Realm $realm = null)
+    {
+        return $realm === null || $this->isInRealm($realm);
+    }
+
+    public function isInRealm(Realm $realm)
+    {
+        if ($this->source_type === Dominion::class && $this->source->realm_id === $realm->id) {
+            return true;
+        }
+
+        if ($this->target_type === Dominion::class && $this->target->realm_id === $realm->id) {
+            return true;
+        }
+
+        if ($this->source_type === Realm::class && $this->source_id === $realm->id) {
+            return true;
+        }
+
+        if ($this->target_type === Realm::class && $this->target_id === $realm->id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isOwnRealmEvent(Dominion $viewer)
+    {
+        return $this->isInRealm($viewer->realm);
+    }
 }

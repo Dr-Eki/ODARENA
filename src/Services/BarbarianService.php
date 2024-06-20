@@ -1,20 +1,21 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Services;
 
 Use DB;
 use Log;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Carbon;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
-use OpenDominion\Models\User;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Title;
+use OpenDominion\Models\User;
+use OpenDominion\Models\Unit;
 
-use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\LandHelper;
 
 use OpenDominion\Factories\DominionFactory;
@@ -30,18 +31,13 @@ use OpenDominion\Calculators\Dominion\TerrainCalculator;
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\QueueService;
 
-use OpenDominion\Http\Requests\Dominion\Actions\InvadeActionRequest;
 use OpenDominion\Services\Dominion\Actions\InvadeActionService;
 
 use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\StatsService;
-use OpenDominion\Services\Dominion\Action\ImproveActionService;
 
 class BarbarianService
 {
-
-    /** @var BuildingHelper */
-    protected $buildingHelper;
 
     /** @var LandCalculator */
     protected $landCalculator;
@@ -79,14 +75,13 @@ class BarbarianService
     /** @var TerrainCalculator */
     protected $terrainCalculator;
 
+    protected $settings;
+
     public function __construct()
     {
-        #$this->now = now();
-        $this->buildingHelper = app(BuildingHelper::class);
         $this->landCalculator = app(LandCalculator::class);
         $this->queueService = app(QueueService::class);
         $this->militaryCalculator = app(MilitaryCalculator::class);
-        $this->landCalculator = app(LandCalculator::class);
         $this->landHelper = app(LandHelper::class);
         $this->spellCalculator = app(SpellCalculator::class);
         $this->rangeCalculator = app(RangeCalculator::class);
@@ -96,6 +91,8 @@ class BarbarianService
         $this->resourceService = app(ResourceService::class);
         $this->statsService = app(StatsService::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
+
+        $this->settings = config('barbarians.settings');
     }
 
     public function handleBarbarianTraining(Dominion $dominion): void
@@ -105,38 +102,33 @@ class BarbarianService
             return;
         }
     
-        foreach($this->landHelper->getLandTypes() as $landType)
-        {
-            $dominion->land += $this->queueService->getInvasionQueueTotalByResource($dominion, $landType);
-        }
+        // Temporarily add incoming land to the dominion.
+        $dominion->land += $this->queueService->getInvasionQueueTotalByResource($dominion, 'land');
     
         $units = [
             'military_unit1' => 0,
             'military_unit2' => 0,
-            'military_unit3' => 0,
-            'military_unit4' => 0,
         ];
+
+        $unit1 = Unit::where('race_id', $dominion->race->id)->where('slot', 1)->first();
+        $unit2 = Unit::where('race_id', $dominion->race->id)->where('slot', 2)->first();
+
+        $unit1Dp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit1, 'defense');
+        $unit2Op = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit2, 'offense');
     
         $dpaDeltaPaid = $this->barbarianCalculator->getDpaDeltaPaid($dominion);
         $opaDeltaPaid = $this->barbarianCalculator->getOpaDeltaPaid($dominion);
-    
-        $specsRatio = rand($this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'), $this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'))/1000;
-        $elitesRatio = 1-$specsRatio;
-    
+        
         if($dpaDeltaPaid > 0)
         {
-            $dpToTrain = $dpaDeltaPaid * $dominion->land * $this->barbarianCalculator->getSetting('DPA_OVERSHOT');
-    
-            $units['military_unit2'] = ceil(($dpToTrain * $specsRatio) / $this->barbarianCalculator->getSetting('UNIT2_DP'));
-            $units['military_unit3'] = ceil(($dpToTrain * $elitesRatio) / $this->barbarianCalculator->getSetting('UNIT3_DP'));
+            $dpToTrain = $dpaDeltaPaid * $dominion->land * $this->settings['DPA_OVERSHOT'];
+            $units['military_unit1'] = ceilInt($dpToTrain / $unit1Dp);
         }
     
         if($opaDeltaPaid > 0)
         {
             $opToTrain = $opaDeltaPaid * $dominion->land;
-    
-            $units['military_unit1'] = ceil(($opToTrain * $specsRatio) / $this->barbarianCalculator->getSetting('UNIT1_OP'));
-            $units['military_unit4'] = ceil(($opToTrain * $elitesRatio) / $this->barbarianCalculator->getSetting('UNIT4_OP'));
+            $units['military_unit2'] = ceilInt($opToTrain / $unit2Op);
         }
     
         foreach($units as $unit => $amountToTrain)
@@ -144,7 +136,7 @@ class BarbarianService
             if($amountToTrain > 0)
             {
                 $data = [$unit => $amountToTrain];
-                $ticks = intval($this->barbarianCalculator->getSetting('UNITS_TRAINING_TICKS'));
+                $ticks = intval($this->settings['UNITS_TRAINING_TICKS']);
                 $this->queueService->queueResources('training', $dominion, $data, $ticks);
             }
         }
@@ -185,9 +177,10 @@ class BarbarianService
         {
 
             $currentDay = $dominion->round->start_date->subDays(1)->diffInDays(now());
-            $chanceOneIn = $this->barbarianCalculator->getSetting('CHANCE_TO_HIT_CONSTANT') - (14 - $currentDay);
 
-            $chanceOneIn += floor($this->statsService->getStat($dominion, 'defense_failures') * 0.125);
+            $chanceOneIn = $this->barbarianCalculator->getSetting('CHANCE_TO_HIT_CONSTANT') - (14 - $currentDay);
+            $chanceOneIn += $this->statsService->getStat($dominion, 'defense_failures') * 0.125;
+            $chanceOneIn = floorInt($chanceOneIn);
 
             $chanceToHit = rand(1,$chanceOneIn);
 
@@ -304,7 +297,7 @@ class BarbarianService
 
                 DB::transaction(function () use ($dominion, $logString)
                 {
-                    $landGainRatio = rand($this->barbarianCalculator->getSetting('LAND_GAIN_MIN'), $this->barbarianCalculator->getSetting('LAND_GAIN_MAX'))/1000;
+                    $landGainRatio = rand($this->settings['LAND_GAIN_MIN'], $this->settings['LAND_GAIN_MAX'])/1000;
 
                     $logString .= "\t\t* Invasion:\n";
                     $logString .= "\t\t** Land gain ratio: " . number_format($landGainRatio*100,2) . "% \n";
@@ -330,28 +323,22 @@ class BarbarianService
                     $this->statsService->updateStat($dominion, 'land_conquered', $landGained);
                     $this->statsService->updateStat($dominion, 'invasion_victories', 1);
 
-                    $sentRatio = rand($this->barbarianCalculator->getSetting('SENT_RATIO_MIN'), $this->barbarianCalculator->getSetting('SENT_RATIO_MAX'))/1000;
-
-                    $casualtiesRatio = rand($this->barbarianCalculator->getSetting('CASUALTIES_MIN'), $this->barbarianCalculator->getSetting('CASUALTIES_MAX'))/1000;
+                    $sentRatio = rand($this->settings['SENT_RATIO_MIN'], $this->settings['SENT_RATIO_MAX'])/1000;
+                    $casualtiesRatio = rand($this->settings['CASUALTIES_MIN'], $this->settings['CASUALTIES_MAX'])/1000;
 
                     $logString .= "\t\t**Sent ratio: " . number_format($sentRatio*100,2). "%\n";
                     $logString .= "\t\t**Casualties ratio: " . number_format($casualtiesRatio*100,2). "%\n";
 
-                    # Calculate how many Unit1 and Unit4 are sent.
                     $unitsSent['military_unit1'] = $dominion->military_unit1 * $sentRatio;
-                    $unitsSent['military_unit4'] = $dominion->military_unit4 * $sentRatio;
 
                     # Remove the sent units from the dominion.
                     $dominion->military_unit1 -= $unitsSent['military_unit1'];
-                    $dominion->military_unit4 -= $unitsSent['military_unit4'];
 
                     # Calculate losses by applying casualties ratio to units sent.
                     $unitsLost['military_unit1'] = $unitsSent['military_unit1'] * $casualtiesRatio;
-                    $unitsLost['military_unit4'] = $unitsSent['military_unit4'] * $casualtiesRatio;
 
                     # Calculate amount of returning units.
                     $unitsReturning['military_unit1'] = intval(max($unitsSent['military_unit1'] - $unitsLost['military_unit1'],0));
-                    $unitsReturning['military_unit4'] = intval(max($unitsSent['military_unit4'] - $unitsLost['military_unit4'],0));
 
                     $terrainGained = $this->terrainCalculator->getDominionTerrainChange($dominion, $landGained);
 
@@ -380,9 +367,9 @@ class BarbarianService
                         $unitsReturning
                     );
 
-                    $invasionTypes = config('barbarians.invasionTypes');
+                    $invasionTypes = config('barbarians.invasion_types');
                     
-                    $invasionTargets = config('barbarians.invasionTargets');
+                    $invasionTargets = config('barbarians.invasion_targets');
                     
 
                     $bodies = array_sum($unitsLost) / 10 + $landGained;
@@ -441,17 +428,15 @@ class BarbarianService
         # Determine buildings
         if(($barrenLand = $this->landCalculator->getTotalBarrenLand($dominion)) > 0)
         {
-            foreach($this->buildingHelper->getBuildingsByRace($dominion->race) as $building)
+            foreach(config('barbarians.buildings') as $buildingKey => $ratio)
             {
-                $buildings[('building_' . $building->key)] = intval($barrenLand / $this->buildingHelper->getBuildingsByRace($dominion->race)->count());
+                $buildings[('building_' . $buildingKey)] = roundInt($barrenLand * $ratio);
             }
-
-            $buildings = array_map('intval', $buildings);
         }
 
         if(array_sum($buildings) > 0)
         {
-            $this->queueService->queueResources('construction', $dominion, $buildings, $this->barbarianCalculator->getSetting('CONSTRUCTION_TIME'));
+            $this->queueService->queueResources('construction', $dominion, $buildings, $this->settings['CONSTRUCTION_TIME']);
         }
 
     }
@@ -481,12 +466,11 @@ class BarbarianService
                 ['round_id', '=', $round->id]
             ]);
     
-            $race = Race::firstWhere('name', '=', 'Barbarian');
-    
-            $title = Title::firstWhere('name', '=', 'Commander');
+            $race = Race::fromKey('barbarian'); 
+            $title = Title::fromKey('commander');
    
             # Barbarian tribe names
-            $tribeTypes = config('barbarians.tribeTypes');
+            $tribeTypes = config('barbarians.tribe_types');
 
             # Get ruler name.
             $rulerName = $barbarianUser->display_name;
@@ -494,7 +478,14 @@ class BarbarianService
             # Get the corresponding dominion name.
             $dominionName = $rulerName . "'s " . $tribeTypes[array_rand($tribeTypes, 1)];
 
-            $barbarian = $this->dominionFactory->create($barbarianUser, $realm, $race, $title, $rulerName, $dominionName, NULL);
+            $barbarian = $this->dominionFactory->create(
+                $barbarianUser,
+                $realm,
+                $race,
+                $title,
+                $rulerName,
+                $dominionName,
+                null);
 
             GameEvent::create([
                 'round_id' => $barbarian->round_id,
@@ -503,8 +494,8 @@ class BarbarianService
                 'target_type' => Realm::class,
                 'target_id' => $barbarian->realm_id,
                 'type' => 'new_dominion',
-                'data' => NULL,
-                'tick' => $barbarian->round->ticks
+                'data' => null,
+                'tick' => $round->ticks
             ]);
 
             return $barbarian;

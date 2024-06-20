@@ -8,6 +8,11 @@ namespace OpenDominion\Calculators;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Hold;
 use OpenDominion\Models\Resource;
+use OpenDominion\Models\Unit;
+
+
+use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Dominion\UnitCalculator;
 
 use OpenDominion\Services\Dominion\StatsService;
 use OpenDominion\Helpers\HoldHelper;
@@ -16,11 +21,17 @@ class HoldCalculator
 {
 
     protected $holdHelper;
+    protected $militaryCalculator;
     protected $statsService;
+    protected $unitCalculator;
 
     public function __construct()
     {
         $this->holdHelper = app(HoldHelper::class);
+
+        $this->militaryCalculator = app(MilitaryCalculator::class);
+        $this->unitCalculator = app(UnitCalculator::class);
+
         $this->statsService = app(StatsService::class);
     }
 
@@ -259,6 +270,51 @@ class HoldCalculator
         return (int)round($growth);
     }
 
+    public function getDpaTarget(Hold $hold): int
+    {
+        $dpa = config('holds.military.dpa_base') + ($hold->round->ticks * config('holds.military.dpa_per_tick'));
+        return ceilInt($dpa);
+    }
+
+    public function getOpaTarget(Hold $hold): int
+    {
+        return ceilInt($this->getDpaTarget($hold) * config('holds.military.dpa_opa_target_ratio'));
+    }
+
+    public function calculateUnitsSentimentValue(Hold $hold, Dominion $dominion, array $units): int
+    {
+        $value = 0;
+        $unitsPower = 0;
+        $unitsValue = 0;
+
+        foreach($units as $unitKey => $amount)
+        {
+            $unit = Unit::fromKey($unitKey);
+
+            $unitsPower += $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'offense') * $amount;
+            $unitsPower += $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'defense') * $amount;
+
+            $unitsValue += $this->unitCalculator->getUnitCostValue($unit) * $amount;
+        }
+
+        $dpa = $this->getDpaTarget($hold);
+        $opa = $this->getOpaTarget($hold);
+        $mppa = $dpa + $opa;
+        $militaryPowerTarget = $hold->land * $mppa;
+        $militaryPowerTarget /= 10;
+
+        $valueTarget = (100000000 / 1000) * $hold->round->ticks;
+
+        $ratioFromUnitPower = min($unitsPower, $militaryPowerTarget) / $militaryPowerTarget;
+        $ratioFromUnitValue = min($unitsValue / $valueTarget, 1); // Value out of 100,000,000/Ticks
+
+        $valueFromUnitPower = $ratioFromUnitPower * 50;
+        $valueFromUnitValue = $ratioFromUnitValue * 50;
+
+        $value = $valueFromUnitPower + $valueFromUnitValue;
+
+        return floorInt($value);
+    }
 
 
 }

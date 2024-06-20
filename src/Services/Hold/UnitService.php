@@ -1,17 +1,20 @@
 <?php
 
-namespace OpenDominion\Services\Dominion;
+// We want strict types here.
+declare(strict_types=1);
+
+namespace OpenDominion\Services\Hold;
 
 use OpenDominion\Exceptions\GameException;
 
 use DB;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Hold;
-use OpenDominion\Models\Hold\Queue as HoldQueue;
-use OpenDominion\Models\DominionUnit;
+use OpenDominion\Models\Dominion\Queue as DominionQueue;
+use OpenDominion\Models\HoldUnit;
 use OpenDominion\Models\Unit;
 
-use OpenDominion\Calculators\Dominion\MilitaryCalculator;
+use OpenDominion\Calculators\Hold\MilitaryCalculator;
 
 class UnitService
 {
@@ -20,10 +23,10 @@ class UnitService
 
     public function __construct()
     {
-        $this->militaryCalculator = app(MilitaryCalculator::class);
+        #$this->militaryCalculator = app(MilitaryCalculator::class);
     }
 
-    public function addUnits(Dominion $dominion, array $units, int $state): void
+    public function addUnits(Hold $hold, array $units, int $state = 0): void
     {
         foreach($units as $unitKey => $amount)
         {
@@ -31,9 +34,9 @@ class UnitService
             $amount = (int)abs($amount);
             $state = (int)$state;
 
-            # Create or update DominionUnit
-            DominionUnit::updateOrCreate([
-                    'dominion_id' => $dominion->id,
+            # Create or update HoldUnit
+            HoldUnit::updateOrCreate([
+                    'hold_id' => $hold->id,
                     'unit_id' => $unit->id,
                     'amount' => $amount,
                     'state' => $state,
@@ -41,37 +44,37 @@ class UnitService
         }
     }
 
-    public function removeUnits(Dominion $dominion, array $units): void
+    public function removeUnits(Hold $hold, array $units): void
     {
         foreach($units as $unitKey => $amount)
         {
             $unit = Unit::where('key', $unitKey)->first();
             $amount = (int)abs($amount);
 
-            # Update DominionUnit, delete if new amount is 0 or less
-            $dominionUnit = DominionUnit::where([
-                'dominion_id' => $dominion->id,
+            # Update HoldUnit, delete if new amount is 0 or less
+            $holdUnit = HoldUnit::where([
+                'hold_id' => $hold->id,
                 'unit_id' => $unit->id,
             ])->first();
 
-            if($dominionUnit)
+            if($holdUnit)
             {
-                $temporaryAmount = $dominionUnit->amount - $amount;
+                $temporaryAmount = $holdUnit->amount - $amount;
 
                 if($temporaryAmount <= 0)
                 {
-                    $dominionUnit->delete();
+                    $holdUnit->delete();
                 }
                 else
                 {
-                    $dominionUnit->amount = $temporaryAmount;
-                    $dominionUnit->save();
+                    $holdUnit->amount = $temporaryAmount;
+                    $holdUnit->save();
                 }
             }
         }
     }
 
-    public function changeUnitsState(Dominion $dominion, array $units, int $state): void
+    public function changeUnitsState(Hold $hold, array $units, int $state): void
     {
         foreach($units as $unitKey => $amount)
         {
@@ -79,9 +82,9 @@ class UnitService
             $amount = (int)abs($amount);
             $state = (int)$state;
 
-            # Update DominionUnit
-            DominionUnit::updateOrCreate([
-                'dominion_id' => $dominion->id,
+            # Update HoldUnit
+            HoldUnit::updateOrCreate([
+                'hold_id' => $hold->id,
                 'unit_id' => $unit->id,
                 'amount' => $amount,
                 'state' => $state,
@@ -89,17 +92,17 @@ class UnitService
         }
     }
 
-    public function sendUnitsToHold(Dominion $dominion, Hold $hold, array $units): void
+    public function sendUnitsToDominion(Hold $hold, Dominion $dominion, array $units): void
     {
 
         $unitsAsSlots = [];
 
-        if($dominion->isAbandoned() or $dominion->isLocked())
+        if($hold->isAbandoned() or $hold->isLocked())
         {
-            throw new GameException('Cannot send units from an abandoned or locked dominion.');
+            throw new GameException('Cannot send units from an abandoned or locked hold.');
         }
 
-        if($dominion->round->id !== $hold->round->id)
+        if($hold->round->id !== $hold->round->id)
         {
             throw new GameException('Cannot send units to a hold from a different round.');
         }
@@ -123,7 +126,7 @@ class UnitService
                 throw new GameException('Invalid amount.');
             }
 
-            if($amount > $dominion->{'military_unit' . $unit->slot})
+            if($amount > $hold->{'military_unit' . $unit->slot})
             {
                 throw new GameException('Not enough units.');
             }
@@ -131,12 +134,12 @@ class UnitService
             $unitsAsSlots[$unit->slot] = $amount;
         }
 
-        if (!$this->militaryCalculator->passes43RatioRule($dominion, null, null, $unitsAsSlots))
+        if (!$this->militaryCalculator->passes43RatioRule($hold, null, null, $unitsAsSlots))
         {
             throw new GameException('You are giving away too many units, based on your new home DP (4:3 rule).');
         }
 
-        DB::transaction( function() use ($dominion, $hold, $units)
+        DB::transaction( function() use ($hold, $dominion, $units)
         {
 
             # Create HoldQueue
@@ -144,27 +147,7 @@ class UnitService
             {
                 $unit = Unit::where('key', $unitKey)->first();
                 $amount = (int)abs($amount);
-
-                $holdQueue = HoldQueue::updateOrCreate(
-                    [
-                        'hold_id' => $hold->id,
-                        'type' => 'units_gift',
-                        'item_type' => Unit::class,
-                        'item_id' => $unit->id,
-                        'tick' => 12,
-                        'source_type' => Dominion::class,
-                        'source_id' => $dominion->id,
-                    ],
-                    [
-                        'amount' => DB::raw("amount + $amount")
-                    ]
-                );
-
-                if($holdQueue)
-                {
-                    $dominion->{'military_unit' . $unit->slot} -= $amount;
-                    $dominion->save();
-                }
+                // Add logic
             }
         });
     }

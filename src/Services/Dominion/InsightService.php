@@ -424,6 +424,7 @@ class InsightService
         }
 
         # Terrain
+        /*
         $data['terrain'] = [];
 
         foreach(Terrain::all() as $terrain)
@@ -479,46 +480,28 @@ class InsightService
                 $data['terrain']['incoming'][$landType][$row->hours] += $row->amount;
             }
         });
+        */
 
         # Land
         $data['land'] = [];
 
-        foreach ($this->landHelper->getLandTypes() as $landType)
-        {
-            $amount = $target->{'land_' . $landType};
-            $data['land'][$landType]['amount'] = $amount;
-            $data['land'][$landType]['percentage'] = ($amount / $target->land) * 100;
-            $data['land'][$landType]['barren'] = $this->landCalculator->getTotalBarrenLandByLandType($target, $landType);
-            $data['land'][$landType]['landtype_defense'] = 0;#$this->militaryCalculator->getDefensivePowerModifierFromLandType($target, $landType);
-
-            $data['land']['incoming'][$landType] = array_fill(1, 12, 0);
-        }
-
-
-        $this->queueService->getExplorationQueue($target)->each(static function ($row) use (&$data)
-        {
-            if (Str::startsWith($row->resource, 'land_'))
-            {
-                $landType = str_replace('land_', '', $row->resource);
-                $data['land']['incoming'][$landType][$row->hours] += $row->amount;
-            }
-        });
+        $data['land']['amount'] = $target->land;
+        $data['land']['barren'] = $this->landCalculator->getTotalBarrenLand($target);
+        $data['land']['incoming'] = array_fill(1, 12, 0);
 
         $this->queueService->getInvasionQueue($target)->each(static function ($row) use (&$data)
         {
-            if (Str::startsWith($row->resource, 'land_'))
+            if ($row->resource == 'land')
             {
-                $landType = str_replace('land_', '', $row->resource);
-                $data['land']['incoming'][$landType][$row->hours] += $row->amount;
+                $data['land']['incoming'][$row->hours] += $row->amount;
             }
         });
 
         $this->queueService->getExpeditionQueue($target)->each(static function ($row) use (&$data)
         {
-            if (Str::startsWith($row->resource, 'land_'))
+            if ($row->resource == 'land')
             {
-                $landType = str_replace('land_', '', $row->resource);
-                $data['land']['incoming'][$landType][$row->hours] += $row->amount;
+                $data['land']['incoming'][$row->hours] += $row->amount;
             }
         });
 

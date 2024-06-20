@@ -123,6 +123,12 @@ class ResourceCalculator
 
     public function getProduction(Dominion $dominion, $resourceKey): int
     {
+
+        if($dominion->race->getPerkValue('no_production'))
+        {
+            return 0;
+        }
+
         // Get raw production
         $production = $this->getProductionRaw($dominion, $resourceKey);
 

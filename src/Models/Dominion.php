@@ -1799,6 +1799,8 @@ class Dominion extends AbstractModel
 
     public function getTerrainPerkValue(string $perkKey): float
     {
+        return 0;
+
         #return Cache::remember("dominion.{$this->id}.terrainPerkValue.{$perkKey}", 5, function () use ($perkKey)
         #{
             return $this->race->raceTerrains->sum(function ($raceTerrain) use ($perkKey)
@@ -1811,6 +1813,7 @@ class Dominion extends AbstractModel
     
     public function getTerrainPerkMultiplier(string $perkKey): float
     {
+        return 0;
 
         #return Cache::remember("dominion.{$this->id}.terrainPerkMultiplier.{$perkKey}", 5, function () use ($perkKey)
         #{

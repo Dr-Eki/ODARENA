@@ -1303,3 +1303,4 @@ tribalism:
     - Barbarian
   perks:
     population: 360,12000
+    military_housing: 240,12000

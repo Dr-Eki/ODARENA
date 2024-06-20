@@ -42,4 +42,10 @@ return [
 
     'sentiment_divisor' => 4000,
 
+    'military' => [
+        'dpa_base' => 25,
+        'dpa_per_tick' => 0.25,
+        'dpa_opa_target_ratio' => 4/3,
+    ]
+
 ];

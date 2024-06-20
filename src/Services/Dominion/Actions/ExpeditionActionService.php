@@ -172,7 +172,7 @@ class ExpeditionActionService
                 throw new GameException('You do not have enough morale to send out units on an expedition.');
             }
 
-            if (!$this->passes43RatioRule($dominion, $units))
+            if (!$this->militaryCalculator->passes43RatioRule($dominion, $units))
             {
                 throw new GameException('You are sending out too much OP, based on your new home DP (4:3 rule).');
             }
@@ -767,31 +767,6 @@ class ExpeditionActionService
         }
 
         return true;
-    }
-
-    /**
-     * Check if an invasion passes the 4:3-rule.
-     *
-     * @param Dominion $dominion
-     * @param array $units
-     * @return bool
-     */
-    protected function passes43RatioRule(Dominion $dominion, array $units): bool
-    {
-        $unitsHome = [
-            0 => $dominion->military_draftees,
-        ];
-
-        foreach($dominion->race->units as $unit)
-        {
-            $unitsHome[] = $dominion->{'military_unit'.$unit->slot} - (isset($units[$unit->slot]) ? $units[$unit->slot] : 0);
-        }
-        $attackingForceOP = $this->militaryCalculator->getOffensivePower($dominion, null, null, $units);
-        $newHomeForcesDP = $this->militaryCalculator->getDefensivePower($dominion, null, null, $unitsHome, 0, false, false, null, true); # The "true" at the end excludes raw DP from annexed dominions
-
-        $attackingForceMaxOP = (int)ceil($newHomeForcesDP * (4/3));
-
-        return ($attackingForceOP <= $attackingForceMaxOP);
     }
 
     protected function passesUnitSendableCapacityCheck(Dominion $attacker, array $units): bool
