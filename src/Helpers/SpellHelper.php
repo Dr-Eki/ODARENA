@@ -260,6 +260,7 @@ class SpellHelper
             'offensive_power_vs_blight' => '%+g%% offensive power if target has Insect Swarm',
 
             'reduces_target_raw_defense_from_terrain' => 'Target raw defensive power lowered by %1$s%% for every %2$s%% of your own %3$s, max %4$s%% reduction.',
+            'reduces_target_raw_defense' => '%+g%% raw defensive power for target',
 
             'increases_enemy_casualties_on_offense_from_wizard_ratio' => 'Enemy casualties on offense increased by %+g%% for every 1 wizard ratio.',
             'increases_enemy_casualties_on_defense_from_wizard_ratio' => 'Enemy casualties on defense increased by %+g%% for every 1 wizard ratio.',
@@ -299,6 +300,9 @@ class SpellHelper
 
             'cannot_take_hostile_actions' => 'Cannot take hostile actions against other dominions.',
             'cannot_receive_hostile_actions' => 'Cannot receive hostile actions against from dominions.',
+
+            'building_sunken_shrine_perk_mod' => '%+g%% power from Sunken Shrines',
+            'building_water_temple_perk_mod' => '%+g%% power from Water Temples',
 
             // Cult
             'cogency' => 'Wizards and wizard units that fail hostile spells against the Cult have a chance of joining the Cult instead of dying.',

@@ -1,5 +1,36 @@
 # FACTION SPECIFIC
 
+## Afflicted
+forced_suicides:
+  level: 1
+  name: Forced Suicides
+  scope: self
+  class: passive
+  cost: 6
+  duration: 24
+  cooldown: 192
+  exclusive_races:
+    - Afflicted
+  perks:
+    miasma_production_mod: 100
+    peasants_converted: 100
+    prestige_gains: -50
+
+miasmic_charges:
+  level: 2
+  name: Miasmic Charges
+  scope: self
+  class: passive
+  cost: 6
+  duration: 24
+  exclusive_races:
+    - Afflicted
+  perks:
+    defense_from_resource: 0.20,miasma # DP per resource, resource
+    resource_lost_on_invasion: 100,miasma # percentage, resource
+    miasma_production_mod: -50
+    population_growth: -35
+
 ## Beastfolk
 ambush:
   name: Ambush
@@ -205,13 +236,13 @@ visions_of_death:
   class: passive
   cost: 10
   level: 3
-  duration: 12
-  cooldown: 48
+  duration: 1
+  cooldown: 72
   exclusive_races:
     - Afflicted
     - Undead
   perks:
-    can_see_battlefield_bodies: 1
+    desecration: 20 # +20% bodies desecrated
 
 ## Werewolves
 
@@ -244,38 +275,7 @@ restraint:
 # BEGIN DISABLED
 
 # BEGIN FACTION SPECIFIC (SINGLE OR MULTI, NON-SORCERY)
-forced_suicides:  
-  enabled: 0
-  name: Forced Suicides
-  scope: self
-  class: passive
-  cost: 6
-  duration: 24
-  cooldown: 192
-  exclusive_races:
-    - Afflicted
-  perks:
-    miasma_production_mod: 100
-    peasants_converted: 100
-    prestige_gains: -50
-
-miasmic_charges:  
-  enabled: 0
-  name: Miasmic Charges
-  scope: self
-  class: passive
-  cost: 6
-  duration: 24
-  exclusive_races:
-    - Afflicted
-  perks:
-    defense_from_resource: 0.20,miasma # DP per resource, resource
-    resource_lost_on_invasion: 100,miasma # percentage, resource
-    miasma_production_mod: -50
-    population_growth: -90
-
-swarming:  
-  enabled: 0
+swarming:
   name: Swarming
   scope: self
   class: passive
@@ -308,19 +308,6 @@ enchanted_blades:
   cost: 10
   duration: 1
   cooldown: 0
-  exclusive_races:
-    - Dark Elf
-  perks:
-    increases_enemy_casualties_on_offense_from_wizard_ratio: 5
-
-enchanted_blades_friendly:  
-  enabled: 0
-  name: Enchanted Blades
-  scope: friendly
-  class: passive
-  cost: 10
-  duration: 1
-  cooldown: 92
   exclusive_races:
     - Dark Elf
   perks:
@@ -428,21 +415,6 @@ pyromancy:
     no_attrition: 1
     unit_gold_costs: 2
     unit_magma_costs: 2
-
-
-
-iceshield:  
-  enabled: 0
-  name: Iceshield
-  scope: friendly
-  class: passive
-  cost: 8
-  duration: 24
-  cooldown: 24
-  exclusive_races:
-    - Icekin
-  perks:
-    sorcery_damage_suffered: -10
 
 blizzard:  
   enabled: 0
@@ -556,36 +528,10 @@ mycelial_visions:
   perks:
     mana_production_mod: 20
 
-mycelial_visions_friendly:  
-  enabled: 0
-  name: Mycelial Visions
-  scope: friendly
-  class: passive
-  cost: 9
-  duration: 24
-  cooldown: 92
-  exclusive_races:
-    - Myconid
-  perks:
-    mana_production_mod: 5
-
 protective_spores:  
   enabled: 0
   name: Protective Spores
   scope: self
-  class: passive
-  cost: 9
-  duration: 24
-  cooldown: 92
-  exclusive_races:
-    - Myconid
-  perks:
-    damage_from_spells: -20
-
-protective_spores_friendly:  
-  enabled: 0
-  name: Protective Spores
-  scope: friendly
   class: passive
   cost: 9
   duration: 24
@@ -607,19 +553,6 @@ verdant_fields:
     - Myconid
   perks:
     food_production_mod: 20
-
-verdant_fields_friendly:  
-  enabled: 0
-  name: Verdant Fields
-  scope: friendly
-  class: passive
-  cost: 9
-  duration: 24
-  cooldown: 92
-  exclusive_races:
-    - Myconid
-  perks:
-    food_production_mod: 5
 
 lay_of_the_land:  
   enabled: 0
@@ -649,8 +582,6 @@ fimbulwinter:
     food_production_mod: -10
     lumber_production_mod: -10
 
-
-
 guardian_spirit:  
   enabled: 0
   name: Guardian Spirit
@@ -664,31 +595,6 @@ guardian_spirit:
   perks:
     defensive_power: 1
     casualties_resource_conversion_for_caster: 1,soul
-
-dark_rites:  
-  enabled: 0
-  name: Dark Rites
-  scope: self
-  class: passive
-  cost: 10
-  duration: 24
-  cooldown: 0
-  exclusive_races:
-    - Undead
-  perks:
-    converts_crypt_bodies: 50,4,1 # every 50 unit4 creates one unit1
-
-birdsong:  
-  enabled: 0
-  name: Birdsong
-  scope: friendly
-  class: active
-  cost: 4
-  duration: 0
-  exclusive_races:
-    - Sylvan
-  perks:
-    increase_morale: 1
 
 arterial_rush:  
   enabled: 0

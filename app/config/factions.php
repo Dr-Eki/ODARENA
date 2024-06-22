@@ -3,6 +3,17 @@
 # app/config/factions.php
 
 return [
+
+    'demon' => [
+        'starting_units' => [
+            'archdemon' => 1,
+        ],
+    ],
+
+    'growth' => [
+        'starting_draft_rate' => 100,
+    ],
+
     'kerranad' => [
         'starting_buildings' => 
         [
@@ -21,7 +32,19 @@ return [
             'syndicate_quarters' => 50,
             'gem_mine' => 300,
         ],
+
+        'starting_resources' => 
+        [
+            'gems' => 500000,
+        ],
     ],
 
-    
+    'undead' => [
+        'starting_resources' => 
+        [
+            'body' => 4000,
+        ],
+    ]
+
+
 ];

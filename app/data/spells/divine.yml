@@ -127,12 +127,24 @@ glimjs_tide:
   level: 1
   scope: self
   class: passive
-  cost: 8
-  duration: 12
-  cooldown: 144
+  cost: 12
+  duration: 1
+  cooldown: 192
   deity: glimj
   perks:
-    power_from_building_sunken_shrine: 50
+    building_sunken_shrine_perk_mod: 50
+
+glimjs_flood:
+  name: Glimj's Flood
+  level: 1
+  scope: self
+  class: passive
+  cost: 12
+  duration: 1
+  cooldown: 192
+  deity: glimj
+  perks:
+    building_water_temple_perk_mod: 50
 
 ixs_virtue:
   name: Ix's Virtue

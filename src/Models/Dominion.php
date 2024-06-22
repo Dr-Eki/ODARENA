@@ -1311,6 +1311,7 @@ class Dominion extends AbstractModel
             if(in_array($perkKey, [
                 'extra_units_trained',
                 'improvements',
+                'casualties',
                 'casualties_on_offense',
                 'casualties_on_defense',
                 'prestige_gains'

@@ -20,38 +20,6 @@ peasants_production:
 improvement_resources:
   lumber: 1.2
 
-terrain_perks:
-  badlands:
-    population_mod: -0.04
-  desert:
-    population_mod: -0.04
-    lumber_production_mod: -0.05
-  forest:
-    lumber_production_mod: 0.10
-    population_mod: 0.08
-  glacier:
-    lumber_production_mod: -0.05
-    population_mod: -0.04
-  hills:
-    defensive_power_mod: 0.04
-    population_mod: -0.02
-  jungle:
-    lumber_improvement_points_mod: 0.10
-  mountains:
-    offensive_power_mod: -0.02
-    population_mod: -0.02
-  plains:
-    exchange_rate_mod: 0.07
-  swamps:
-    mana_production_mod: 0.06
-  volcanic:
-    food_production_mod: -0.04
-    lumber_production_mod: -0.08
-  water:
-    food_production_mod: 0.08
-  wetlands:
-    lumber_production_mod: 0.12
-
 perks:
   wizard_strength: 20
   spy_strength: 20

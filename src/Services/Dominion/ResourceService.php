@@ -27,7 +27,7 @@ class ResourceService
         DB::transaction(function () use ($dominion, $resourceKeys) {
             foreach($resourceKeys as $resourceKey => $amount)
             {
-                $resource = Resource::where('key', $resourceKey)->first();
+                $resource = Resource::where('key', $resourceKey)->firstOrFail();
                 $currentAmount = $dominion->{'resource_' . $resourceKey};
 
                 if($amount < 0 && abs($amount) > $currentAmount)

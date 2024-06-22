@@ -524,11 +524,6 @@ class RaceHelper
                 $valueType = '%';
                 $booleanValue = 'static';
                 break;
-            case 'cannot_rezone':
-                $negativeBenefit = true;
-                $description = 'Cannot rezone';
-                $booleanValue = true;
-                break;
             case 'cannot_research':
                 $negativeBenefit = true;
                 $description = 'Cannot research';

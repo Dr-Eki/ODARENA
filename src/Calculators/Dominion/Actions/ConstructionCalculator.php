@@ -231,7 +231,7 @@ class ConstructionCalculator
         $multiplier += $dominion->getDeityPerkMultiplier('construction_cost');
 
         // Terrain
-        $multiplier += $dominion->getTerrainPerkMultiplier('construction_costs_mod');
+        #$multiplier += $dominion->getTerrainPerkMultiplier('construction_costs_mod');
 
         // Decree
         $multiplier += $dominion->getDecreePerkMultiplier('construction_cost');

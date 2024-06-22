@@ -279,7 +279,7 @@ class UnitCalculator
         $attritionMultiplier += $dominion->getImprovementPerkMultiplier('attrition_mod'); # Negative value, hence +
         $attritionMultiplier += $dominion->getDecreePerkMultiplier('attrition_mod'); # Negative value, hence +
         $attritionMultiplier += $dominion->getSpellPerkMultiplier('attrition_mod'); # Negative value, hence +
-        $attritionMultiplier += $dominion->getTerrainPerkMultiplier('attrition_mod'); # Negative value, hence +
+        #$attritionMultiplier += $dominion->getTerrainPerkMultiplier('attrition_mod'); # Negative value, hence +
 
         # Cap at -100%
         $attritionMultiplier = max(-1, $attritionMultiplier);
@@ -560,7 +560,7 @@ class UnitCalculator
         $limitMultiplier += $dominion->getBuildingPerkMultiplier('unit_pairing');
         $limitMultiplier += $dominion->getBuildingPerkMultiplier('unit_pairing_capped');
         $limitMultiplier += $dominion->getSpellPerkMultiplier('unit_pairing');
-        $limitMultiplier += $dominion->getTerrainPerkMultiplier('unit_pairing_mod');
+        #$limitMultiplier += $dominion->getTerrainPerkMultiplier('unit_pairing_mod');
 
         return $limitMultiplier;
     }

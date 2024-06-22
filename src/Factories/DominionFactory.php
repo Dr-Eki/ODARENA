@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OpenDominion\Factories;
 
 use Auth;
@@ -94,23 +96,23 @@ class DominionFactory
         string $dominionName,
         Pack $pack = null
     ): Dominion {
-        $this->guardAgainstCrossRoundRegistration($user, $realm->round);
+        $this->guardAgainstCrossRoundRegistration($realm->round);
         $this->guardAgainstMultipleDominionsInARound($user, $realm->round);
         $this->guardAgainstMismatchedAlignments($race, $realm, $realm->round);
 
-        // Starting resources are based on this.
+        $raceSettings = config('factions.' . $race->key);
         $landBase = config('game.starting_land');
 
         $startingParameters = [];
         $startingResources = [];
 
-        $startingParameters['prestige'] = $landBase/2;
+        $startingParameters['prestige'] = floorInt($landBase/2) + 100;
         $startingParameters['npc_modifier'] = 0;
         $startingParameters['protection_ticks'] = 96;
 
         if($realm->round->ticks > $startingParameters['protection_ticks'] and env('APP_ENV') !== 'local' and request()->getHost() !== 'sim.odarena.com')
         {
-            $startingParameters['protection_ticks'] += (int)floor($realm->round->ticks - $startingParameters['protection_ticks']) / 4;
+            $startingParameters['protection_ticks'] += floorInt(($realm->round->ticks - $startingParameters['protection_ticks']) / 4);
         }
 
         foreach($race->units as $unit)
@@ -136,94 +138,30 @@ class DominionFactory
 
         $startingTerrain = $this->terrainCalculator->getStartingTerrain($race, $landBase);
 
-        # Late-joiner bonus:
-
         $startingParameters['draftees'] = 0;
 
         foreach($race->units as $unit)
         {
-            $startingParameters['unit' . $unit->slot] = 0;
+            $startingParameters['unit' . $unit->slot] = $raceSettings['starting_units'][$unit->key] ?? 0;
         }
+
+        foreach($race->resources as $resourceKey)
+        {
+            $startingResources[$resourceKey] = $raceSettings['starting_resources'][$resourceKey] ?? 0;
+        }
+
         
-        $startingParameters['spies'] = 0;
-        $startingParameters['wizards'] = 0;
-        $startingParameters['archmages'] = 0;
-        $startingResources['food'] = 0;
+        $startingParameters['spies'] = $raceSettings['starting_spies'] ?? 0;
+        $startingParameters['wizards'] = $raceSettings['starting_wizards'] ?? 0;
+        $startingParameters['archmages'] = $raceSettings['starting_archmages'] ?? 0;
+        $startingResources['food'] = $raceSettings['starting_food'] ?? 0;
 
         if($race->name !== 'Barbarian')
         {
-            foreach($race->resources as $resourceKey)
-            {
-                #$startingResources[$resourceKey] = 0;
-            }
-
             # Override rulername choice
             $rulerName = Auth::user()->display_name;
 
-            $startingParameters['draft_rate'] = 50;
-
-            if(Auth::user()->display_name == $rulerName)
-            {
-                $startingParameters['prestige'] += 100;
-            }
-
-            if($race->name == 'Demon')
-            {
-                $maxUnitSlot = $race->units->max('slot');
-                $startingParameters['unit' . $maxUnitSlot] = 1;
-            }
-
-            if($race->name == 'Growth')
-            {
-                $startingParameters['draft_rate'] = 100;
-            }
-
-            if($race->name == 'Kerranad')
-            {
-                $startingResources['gems'] = 400000;
-            }
-
-            if($race->name == 'Legion')
-            {
-                $startingParameters['unit4'] += 1;
-            }
-
-            if($race->name == 'Marshling')
-            {
-                $startingResources['marshling'] = 1500;
-            }
-
-            if($race->name == 'Monster')
-            {
-                $startingParameters['unit1'] = 10;
-                $startingParameters['unit2'] = 100;
-                $startingParameters['unit3'] = 200;
-                $startingParameters['unit4'] = 2;
-
-                $startingParameters['prestige'] = 0;
-
-                $startingParameters['protection_ticks'] = 0;
-
-                $startingResources['strength'] = 25000;
-
-                $startingParameters['draft_rate'] = 0;
-            }
-
-            if($race->name == 'Revenants')
-            {
-                $startingParameters['unit1'] = 4000;
-                $startingResources['food'] += 40000;
-            }
-
-            if($race->name == 'Undead')
-            {
-                $startingResources['body'] = 4000;
-            }
-
-            if($race->name == 'Werewolves')
-            {
-                $startingParameters['unit1'] += 2500;
-            }
+            $startingParameters['draft_rate'] = $raceSettings['starting_draft_rate'] ?? 50;
         }
         else
         {
@@ -246,7 +184,6 @@ class DominionFactory
 
         $startingParameters['xp'] = $startingParameters['prestige'];
         $startingParameters['land'] = $landBase;
-
 
         # Peasants
         $housingPerBarren = 5;
@@ -404,7 +341,7 @@ class DominionFactory
      * @param Round $round
      * @throws GameException
      */
-    protected function guardAgainstCrossRoundRegistration(User $user, Round $round): void
+    protected function guardAgainstCrossRoundRegistration(Round $round): void
     {
         if($round->hasEnded())
         {
@@ -475,48 +412,17 @@ class DominionFactory
      */
     protected function getStartingBuildings($race, $landBase): array
     {
-        # Default
-        $startingBuildings = [];
-
-        if($race->name == 'Kerranad')
-        {
-            foreach(config('factions.kerranad.starting_buildings') as $buildingKey => $amount)
-            {
-                $startingBuildings[('building_' . $buildingKey)] = $amount;
-            }
-
-            #$startingBuildings['aqueduct'] = 25;
-            #$startingBuildings['constabulary'] = 25;
-            #$startingBuildings['farm'] = 50;
-            #$startingBuildings['gold_mine'] = 100;
-            #$startingBuildings['harbour'] = 50;
-            #$startingBuildings['infirmary'] = 50;
-            #$startingBuildings['ore_mine'] = 100;
-            #$startingBuildings['residence'] = 50;
-            #$startingBuildings['saw_mill'] = 50;
-            #$startingBuildings['tavern'] = 50;
-            #$startingBuildings['tower'] = 50;
-            #$startingBuildings['wizard_guild'] = 50;
-            #$startingBuildings['syndicate_quarters'] = 50;
-            #$startingBuildings['gem_mine'] = 300;
-        }
-        elseif($race->name == 'Growth')
-        {
-          $startingBuildings['tissue'] = $landBase;
-        }
-        elseif($race->name == 'Myconid')
-        {
-          $startingBuildings['mycelia'] = $landBase;
-        }
-        elseif($race->name == 'Barbarian')
+        if($race->name == 'Barbarian')
         {
             foreach(config('barbarians.buildings') as $buildingKey => $ratio)
             {
                 $startingBuildings[('building_' . $buildingKey)] = roundInt($landBase * $ratio);
             }
+
+            return $startingBuildings;
         }
 
-        return $startingBuildings;
+        return $raceSettings['starting_buildings'] ?? [];
     }
 
     /**
@@ -541,7 +447,7 @@ class DominionFactory
         Quickstart $quickstart,
         ?Pack $pack
     ): Dominion {
-        $this->guardAgainstCrossRoundRegistration($user, $realm->round);
+        $this->guardAgainstCrossRoundRegistration($realm->round);
         $this->guardAgainstMultipleDominionsInARound($user, $realm->round);
         $this->guardAgainstMismatchedAlignments($race, $realm, $realm->round);
 
@@ -691,7 +597,7 @@ class DominionFactory
 
             $source = $queueRow[0];
             $resource = $queueRow[1];
-            $ticks = $queueRow[2];
+            $ticks = (int)$queueRow[2];
             $amount = $queueRow[3];
 
             $this->queueService->queueResources($source, $dominion, [$resource => $amount], $ticks);

@@ -171,7 +171,7 @@ class ResourceCalculator
         $production += $dominion->getUnitPerkProductionBonus($resourceKey . '_production_raw');
         $production += $dominion->race->getPerkValue($resourceKey . '_production_raw');
         $production += $dominion->getUnitPerkProductionBonusFromTitle($resourceKey);
-        $production += $dominion->getTerrainPerkValue($resourceKey . '_production_raw');
+        #$production += $dominion->getTerrainPerkValue($resourceKey . '_production_raw');
 
         # Production from wizard ratio
         $production += $dominion->getBuildingPerkValue($resourceKey . '_production_raw_from_wizard_ratio');
@@ -420,7 +420,7 @@ class ResourceCalculator
         $multiplier += $dominion->getDeityPerkMultiplier($resourceKey . '_production_mod');
         $multiplier += $dominion->realm->getArtefactPerkMultiplier($resourceKey . '_production_mod');
         $multiplier += $dominion->getDecreePerkMultiplier($resourceKey . '_production_mod');
-        $multiplier += $dominion->getTerrainPerkMultiplier($resourceKey . '_production_mod');
+        #$multiplier += $dominion->getTerrainPerkMultiplier($resourceKey . '_production_mod');
 
         if(isset($dominion->title))
         {
@@ -461,7 +461,7 @@ class ResourceCalculator
         # Add upkeep mod
         $upkeepMultiplier = 1;
         $upkeepMultiplier += $dominion->getBuildingPerkMultiplier($consumedResourceKey . '_upkeep_mod');
-        $upkeepMultiplier += $dominion->getTerrainPerkMultiplier($consumedResourceKey . '_upkeep_mod');
+        #$upkeepMultiplier += $dominion->getTerrainPerkMultiplier($consumedResourceKey . '_upkeep_mod');
 
         $consumption *= $upkeepMultiplier;
 
@@ -759,7 +759,7 @@ class ResourceCalculator
         $perk += $dominion->getDecreePerkMultiplier('exchange_rate');
 
         // Terrain
-        $perk += $dominion->getTerrainPerkMultiplier('exchange_rate_mod');
+        #$perk += $dominion->getTerrainPerkMultiplier('exchange_rate_mod');
 
         // Ruler Title: Merchant
         $perk += $dominion->title->getPerkMultiplier('exchange_rate') * $dominion->getTitlePerkMultiplier();

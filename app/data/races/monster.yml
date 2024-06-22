@@ -26,9 +26,6 @@ resources:
 perks:
   cannot_build: 1
   cannot_improve: 1
-  cannot_perform_sorcery: 1
-  cannot_rezone: 1
-  cannot_sabotage: 1
   cannot_send_expeditions: 1
   cannot_steal: 1
   cannot_submit_to_deity: 1

@@ -137,7 +137,7 @@ class RezoningCalculator
         $multiplier += $dominion->getDecreePerkMultiplier('rezone_cost');
 
         // Terrain
-        $multiplier += $dominion->getTerrainPerkMultiplier('rezoning_costs_mod');
+        #$multiplier += $dominion->getTerrainPerkMultiplier('rezoning_costs_mod');
 
         // Artefact
         $multiplier += $dominion->realm->getArtefactPerkMultiplier('rezone_cost');

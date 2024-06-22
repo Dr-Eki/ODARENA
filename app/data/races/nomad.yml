@@ -22,7 +22,6 @@ perks:
   food_consumption_mod: -25
   extra_barren_housing: 20
   salvaging: 50
-  cannot_rezone: 1
   extra_barren_housing_per_net_victory: 0.50
 
 units:

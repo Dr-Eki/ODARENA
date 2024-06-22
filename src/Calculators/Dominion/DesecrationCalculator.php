@@ -21,22 +21,26 @@ class DesecrationCalculator
     public function getBodiesDesecrated(Dominion $desecrator, array $desecratingUnits): int
     {
         $maxDesecrated = 0;
+
+        $desecrationMultiplier = 1;
+        $desecrationMultiplier += $desecrator->getSpellPerkMultiplier('desecration');
+
         foreach($desecratingUnits as $slot => $amount)
         {
             if(($desecrationPerk = $desecrator->race->getUnitPerkValueForUnitSlot($slot, 'desecration')))
             {
                 $perUnit = (float)$desecrationPerk[0];
-                $maxDesecrated += $perUnit * $amount;
+                $maxDesecrated += $perUnit * $amount * $desecrationMultiplier;
             }
         }
 
-        return min($maxDesecrated, $desecrator->round->resource_body);
+        return floorInt(min($maxDesecrated, $desecrator->round->resource_body));
 
     }
 
     public function getDesecrationResult(Dominion $desecrator, array $desecratingUnits, bool $isCalc = false): array
     {
-        $result = []; # [resourceKey => amount] pairs
+        $result = []; 
 
         $bodiesDesecrated = $this->getBodiesDesecrated($desecrator, $desecratingUnits, $isCalc);
         $bodiesRemaining = $desecrator->round->resource_body;
@@ -64,11 +68,6 @@ class DesecrationCalculator
             $resourceCreated = $bodiesUsed * $perBody;
 
             $result[$resourceKey] = (int)floor(($result[$resourceKey] ?? 0) + $resourceCreated);
-
-            if($isCalc and !$desecrator->getSpellPerkValue('can_see_battlefield_bodies'))
-            {
-                $result[$resourceKey] = 0;
-            }
 
             $bodiesRemaining = $bodiesRemaining - $bodiesUsed;
         }
