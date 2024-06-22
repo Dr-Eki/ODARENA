@@ -16,35 +16,6 @@ resources:
   - mana
   - body
 
-terrain_perks:
-  badlands:
-    gold_production_mod: 0.04
-  desert:
-    food_production_mod: -0.06
-  forest:
-    lumber_production_mod: 0.06
-  glacier:
-    enemy_casualties_on_defense_mod: 0.12
-  hills:
-    defensive_power_mod: 0.05
-  jungle:
-    food_production_mod: 0.02
-    lumber_production_mod: 0.04
-  mountains:
-    gems_production_mod: 0.08
-  plains:
-    population_growth_mod: 0.5
-  swamps:
-    population_mod: 0.08
-  volcanic:
-    mana_production_mod: 0.10
-  water:
-    food_production_mod: 0.06
-    sabotage_damage_suffered_mod: -0.08
-  wetlands:
-    food_production_mod: 0.06
-    sorcery_damage_suffered_mod: -0.06
-
 perks:
   can_desecrate: 1
 

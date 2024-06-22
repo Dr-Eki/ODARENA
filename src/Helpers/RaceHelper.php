@@ -434,6 +434,12 @@ class RaceHelper
                 $description = 'Morale per percentage of castle buildings';
                 $valueType = '';
                 break;
+            case 'morale_per_improvement_points':
+                $negativeBenefit = false;
+                $description = 'Base morale +1 per';
+                $valueType = ' million improvement points';
+                $booleanValue = 'static';
+                break;
             case 'improvements_decay':
                 $negativeBenefit = true;
                 $description = 'Improvements decay';

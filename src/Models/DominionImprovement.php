@@ -16,6 +16,10 @@ class DominionImprovement extends AbstractModel
 {
     protected $table = 'dominion_improvements';
 
+    protected $casts = [
+        'invested' => 'float',
+    ];
+
     public function dominion()
     {
         return $this->belongsTo(Dominion::class, 'dominion_id');

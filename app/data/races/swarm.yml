@@ -20,42 +20,8 @@ peasants_production:
 construction_materials:
   - gold
 
-terrain_perks:
-  badlands:
-    defensive_power_mod: 0.02
-  desert:
-    food_production_mod: -0.08
-  forest:
-    food_production_mod: 0.10
-  glacier:
-    defensive_power_mod: 0.02
-  hills:
-    population_mod: 0.11
-  jungle:
-    food_production_mod: 0.04
-    population_growth_mod: 0.60
-  mountains:
-    gems_production_mod: 0.08
-  plains:
-    enemy_casualties_on_defense_mod: 0.12
-  swamps:
-    mana_production_mod: 0.08
-  volcanic:
-    population_mod: -0.10
-  water:
-    food_production_mod: 0.06
-    population_growth_mod: 0.40
-  wetlands:
-    food_production_mod: 0.07
-    population_mod: 0.07
-
 perks:
   #no_construction_costs: 1
-  #rezoning_costs: -20
-  #immortal_spies: 1
-  #immortal_wizards: 1
-  #damage_from_lightning_bolt: -75
-  #damage_from_blight: -100
   indestructible_buildings: 1
 
 units:

@@ -27,7 +27,6 @@ use OpenDominion\Models\Terrain;
 use OpenDominion\Models\Title;
 use OpenDominion\Models\User;
 
-use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Helpers\LandHelper;
 use OpenDominion\Helpers\RaceHelper;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
@@ -43,8 +42,6 @@ use OpenDominion\Services\Dominion\TerrainService;
 
 class DominionFactory
 {
-
-    protected $buildingHelper;
     protected $landHelper;
     protected $raceHelper;
     protected $buildingCalculator;
@@ -60,7 +57,6 @@ class DominionFactory
 
     public function __construct()
     {
-        $this->buildingHelper = app(BuildingHelper::class);
         $this->landHelper = app(LandHelper::class);
         $this->raceHelper = app(RaceHelper::class);
 
@@ -242,15 +238,8 @@ class DominionFactory
               $dpRequired = $landBase * $dpaTarget;
               $opRequired = $landBase * $opaTarget;
 
-              $specsRatio = rand($this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'), $this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'))/100;
-              $elitesRatio = 1-$specsRatio;
-              $startingParameters['unit3'] = floor(($dpRequired * $elitesRatio)/5);
-              $startingParameters['unit2'] = floor(($dpRequired * $specsRatio)/3);
-
-              $specsRatio = rand($this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'), $this->barbarianCalculator->getSetting('SPECS_RATIO_MIN'))/100;
-              $elitesRatio = 1-$specsRatio;
-              $startingParameters['unit1'] = floor(($opRequired * $specsRatio)/3);
-              $startingParameters['unit4'] = floor(($opRequired * $elitesRatio)/5);
+              $startingParameters['unit1'] = ceilInt($dpRequired / 5);
+              $startingParameters['unit2'] = ceilInt($opRequired / 5);
 
               $startingParameters['protection_ticks'] = 0;
         }
@@ -491,20 +480,25 @@ class DominionFactory
 
         if($race->name == 'Kerranad')
         {
-            $startingBuildings['aqueduct'] = 25;
-            $startingBuildings['constabulary'] = 25;
-            $startingBuildings['farm'] = 50;
-            $startingBuildings['gold_mine'] = 100;
-            $startingBuildings['harbour'] = 50;
-            $startingBuildings['infirmary'] = 50;
-            $startingBuildings['ore_mine'] = 100;
-            $startingBuildings['residence'] = 50;
-            $startingBuildings['saw_mill'] = 50;
-            $startingBuildings['tavern'] = 50;
-            $startingBuildings['tower'] = 50;
-            $startingBuildings['wizard_guild'] = 50;
-            $startingBuildings['syndicate_quarters'] = 50;
-            $startingBuildings['gem_mine'] = 300;
+            foreach(config('factions.kerranad.starting_buildings') as $buildingKey => $amount)
+            {
+                $startingBuildings[('building_' . $buildingKey)] = $amount;
+            }
+
+            #$startingBuildings['aqueduct'] = 25;
+            #$startingBuildings['constabulary'] = 25;
+            #$startingBuildings['farm'] = 50;
+            #$startingBuildings['gold_mine'] = 100;
+            #$startingBuildings['harbour'] = 50;
+            #$startingBuildings['infirmary'] = 50;
+            #$startingBuildings['ore_mine'] = 100;
+            #$startingBuildings['residence'] = 50;
+            #$startingBuildings['saw_mill'] = 50;
+            #$startingBuildings['tavern'] = 50;
+            #$startingBuildings['tower'] = 50;
+            #$startingBuildings['wizard_guild'] = 50;
+            #$startingBuildings['syndicate_quarters'] = 50;
+            #$startingBuildings['gem_mine'] = 300;
         }
         elseif($race->name == 'Growth')
         {
@@ -516,11 +510,9 @@ class DominionFactory
         }
         elseif($race->name == 'Barbarian')
         {
-            $availableBuildings = $this->buildingHelper->getBuildingsByRace($race);
-
-            foreach($availableBuildings as $building)
+            foreach(config('barbarians.buildings') as $buildingKey => $ratio)
             {
-                $startingBuildings[$building->key] = round($landBase / count($availableBuildings));
+                $startingBuildings[('building_' . $buildingKey)] = roundInt($landBase * $ratio);
             }
         }
 

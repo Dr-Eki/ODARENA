@@ -58,7 +58,6 @@ perks:
   xp_generation_mod: 50
   salvaging: 25
   improvements: 50
-  turns_terrain_to_forest: 5
 
 units:
   - name: Warden

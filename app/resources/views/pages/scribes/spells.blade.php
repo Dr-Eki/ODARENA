@@ -20,7 +20,7 @@
             <h4>Scope</h4>
             <ul>
                 <li><b>Friendly</b>: cast on dominions in your realm.</li>
-                <li><b>Hostile</b>: cast on enemy dominions.</li>
+                <li><b>Hostile</b>: cast on enemy dominions (disabled).</li>
                 <li><b>Self</b>: cast on yourself.</li>
             </ul>
         </div>
@@ -105,6 +105,7 @@
         </div>
     </div>
 
+    {{-- 
     <div class="box-header">
         <h4 class="box-title">Hostile Passive Spells</h4>
     </div>
@@ -168,6 +169,7 @@
             </div>
         </div>
     </div>
+    --}}
 
     <div class="box-header">
         <h4 class="box-title">Passive Self Spells</h4>
@@ -305,6 +307,7 @@
             </div>
         </div>
 
+        {{--
         <div class="box-header">
             <h4 class="box-title">Hostile Active Spells</h4>
         </div>
@@ -365,6 +368,7 @@
                 </div>
             </div>
         </div>
+        --}}
 
 
         <div class="box-header">

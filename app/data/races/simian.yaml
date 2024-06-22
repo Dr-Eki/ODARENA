@@ -7,46 +7,6 @@ experimental: 1
 magic_level: 2
 skill_level: 2
 
-terrain_perks:
-  badlands:
-    population_mod: -0.10
-    fixed_barren_housing_raw: 2
-  desert:
-    food_production_mod: -0.10
-    fixed_barren_housing_raw: 3
-  forest:
-    population_growth_mod: 1
-    casualties_on_defense_mod: -0.20
-    construction_costs_mod: -1
-    fixed_barren_housing_raw: 10
-    lumber_production_raw: 0.3
-  glacier:
-    food_production_mod: -0.20
-    population_mod: -0.20
-    fixed_barren_housing_raw: 0
-  hills:
-    lumber_production_mod: 0.15
-  jungle:
-    population_growth_mod: 1.5
-    casualties_on_defense_mod: -0.20
-    construction_costs_mod: -0.8
-    fixed_barren_housing_raw: 10
-    lumber_production_raw: 0.4
-  mountains:
-    lumber_production_mod: 0.10
-    fixed_barren_housing_raw: 4
-  plains:
-    casualties_on_offense_mod: -0.10
-  swamps:
-    mana_production_mod: 0.20
-    lumber_production_mod: 0.20
-  volcanic:
-    lumber_production_mod: -0.25
-  water:
-    food_production_mod: 0.12
-  wetlands:
-    food_production_mod: 0.12
-
 resources:
   - gold
   - food
@@ -58,8 +18,8 @@ improvement_resources:
 
 perks:
   spy_strength: 10
-  wizard_strength: -10
-  increased_construction_speed: 2
+  increased_construction_speed: 4
+  morale_per_improvement_points: 10 
 
 units:
   - name: Mauler
@@ -76,7 +36,7 @@ units:
       offense: 3
       defense: 2
     perks:
-      casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
+      #casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
       offense_from_victories: 0.05,1 # +0.10 OP per Victory, max +2 (at 20 Victories)
 
   - name: Vine Strider
@@ -93,7 +53,7 @@ units:
       offense: 0
       defense: 4
     perks:
-      casualties_on_defense_from_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
+      #casualties_on_defense_from_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
       defense_from_victories: 0.05,1 # +0.05 OP per Victory, max +1 (at 20 Victories)
 
   - name: Ironwood Guardian
@@ -111,8 +71,9 @@ units:
       offense: 4
       defense: 6
     perks:
-      casualties_on_defense_from_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
-      casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
+      casualties: -20
+      #casualties_on_defense_from_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
+      #casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
       defense_from_times_spell_cast: 1,rainy_season # +1 DP for every time the Rainy Season spell has been cast (power,spell,[max])
 
   - name: Ironwood Berserker
@@ -130,6 +91,8 @@ units:
       offense: 5
       defense: 4
     perks:
-      casualties_on_defense_from_terrain: forest;jungle,-0.5,-50 # terrains,terrains;effect;max
-      casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
+      casualties_on_defense: -30
+      casualties_on_offense: -10
+      #casualties_on_defense_from_terrain: forest;jungle,-0.5,-50 # terrains,terrains;effect;max
+      #casualties_on_offense_vs_terrain: forest;jungle,-1,-50 # terrains,terrains;effect;max
       offense_from_victories: 0.10,2 # +0.10 OP per Victory, max +2 (at 20 Victories)

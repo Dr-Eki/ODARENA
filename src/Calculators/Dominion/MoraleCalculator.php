@@ -4,6 +4,7 @@ namespace OpenDominion\Calculators\Dominion;
 
 use OpenDominion\Models\Building;
 use OpenDominion\Models\Dominion;
+use OpenDominion\Models\DominionImprovement;
 
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
@@ -105,6 +106,13 @@ class MoraleCalculator
 
         $baseModifier += $dominion->getTechPerkValue('base_morale');
         $baseModifier += $dominion->realm->getArtefactPerkValue('base_morale');
+
+        if($moralePerImprovementPoints = $dominion->race->getPerkValue('morale_per_improvement_points'))
+        {
+            $moralePerImprovementPoints *= 1000000;
+            $totalInvestments = DominionImprovement::where('dominion_id', $dominion->id)->sum('invested');
+            $baseModifier += floorInt($totalInvestments / $moralePerImprovementPoints);    
+        }
 
         return $baseModifier;
     }

@@ -132,8 +132,7 @@ glimjs_tide:
   cooldown: 144
   deity: glimj
   perks:
-    defensive_power_from_terrain: wetlands,0.12
-    offensive_power_from_terrain: wetlands,0.08
+    power_from_building_sunken_shrine: 50
 
 ixs_virtue:
   name: Ix's Virtue

@@ -26,32 +26,6 @@ improvement_resources:
   gold: 1
   lumber: 2
 
-terrain_perks:
-  badlands:
-    attrition_mod: -0.20
-  desert:
-    food_production_mod: -0.40
-  forest:
-    food_production_mod: 0.40
-  glacier:
-    attrition_mod: -0.30
-  hills:
-    defensive_power_mod: 0.08
-  jungle:
-    miasma_production_mod: 0.40
-  mountains:
-    defensive_power_mod: 0.10
-  plains:
-    unit_specific_housing_mod: 0.20
-  swamps:
-    unit_specific_housing_mod: 0.25
-  volcanic:
-    food_production_mod: -0.20
-  water:
-    food_production_mod: 0.20
-  wetlands:
-    food_production_mod: 0.20
-
 perks:
   can_desecrate: 1
   population_growth: 30

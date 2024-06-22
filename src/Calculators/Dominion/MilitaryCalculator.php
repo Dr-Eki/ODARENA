@@ -2409,6 +2409,7 @@ class MilitaryCalculator
 
     public function getRawDefenseAmbushReductionRatio(Dominion $attacker): float
     {
+        /*
         $ambushSpellKey = 'ambush';
         $ambushReductionRatio = 0.0;
 
@@ -2430,7 +2431,15 @@ class MilitaryCalculator
 
         $ambushReductionRatio = min(($landTypeRatio / $ratio) * $reduction, $max);
 
+
         return $ambushReductionRatio;
+        */
+
+        $ambushReduction = 0;
+        $ambushReduction += $attacker->getSpellPerkMultiplier('reduces_target_raw_defense');
+
+        return $ambushReduction;
+
     }
 
     public function getDefensivePowerModifierFromTerrain(Dominion $dominion, string $terrainKey): float

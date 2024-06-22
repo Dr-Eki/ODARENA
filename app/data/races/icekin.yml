@@ -18,56 +18,11 @@ construction_materials:
   - gold
   - mana
 
-#archmages_cost: 650,gold
-
-terrain_perks:
-  badlands:
-    food_production_mod: -0.50
-    population_mod: -0.50
-    population_growth_mod: -0.50
-    fixed_barren_housing_raw: 3
-  desert:
-    food_production_mod: -0.50
-    population_mod: -0.50
-    population_growth_mod: -0.50
-    fixed_barren_housing_raw: 3
-  forest:
-    food_production_mod: 0.15
-  glacier:
-    population_mod: 0.20
-    population_growth_mod: 0.20
-  hills:
-    food_production_mod: 0.06
-    gems_production_mod: 0.06
-    mana_production_mod: 0.06
-  jungle:
-    food_production_mod: 0.05
-  mountains:
-    gems_production_mod: 0.12
-    mana_production_mod: 0.08
-  plains:
-    food_production_mod: -0.10
-    population_mod: -0.10
-    population_growth_mod: -0.10
-    fixed_barren_housing_raw: 3
-  swamps:
-    mana_production_mod: 0.04
-  volcanic:
-    food_production_mod: -0.50
-    population_mod: -0.50
-    population_growth_mod: -0.50
-    fixed_barren_housing_raw: 3
-  water:
-    food_production_mod: 0.10
-  wetlands:
-    food_production_mod: 0.10
-
 perks:
   food_consumption_mod: -50
   title_bonus: 50
   wizards_training_time: 6
   cannot_train_archmages: 1
-  turns_terrain_to_glacier: 5
 
 units:
   - name: Ice Beast

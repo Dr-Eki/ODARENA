@@ -113,7 +113,7 @@ class DataSyncCommand extends Command implements CommandInterface
             $this->syncRaceTerrains();
 
             $this->syncResources();
-            $this->syncTerrains();
+            #$this->syncTerrains();
             $this->syncDeities();
             $this->syncRaces();
             $this->syncAdvancements();
@@ -128,9 +128,9 @@ class DataSyncCommand extends Command implements CommandInterface
             $this->syncDecrees();
             #$this->syncQuickstarts();
 
-            $this->populateRaceTerrains();
+            #$this->populateRaceTerrains();
 
-            $this->syncRaceTerrains();
+            #$this->syncRaceTerrains();
         });
 
         $finish = now();

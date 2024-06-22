@@ -40,7 +40,6 @@ perks:
   damage_from_fireball: -100
   no_food_consumption: 1
   caverns_required_to_send_units: 1
-  turns_terrain_to_volcanic: 10
 
 units:
   - name: Magma Fragment

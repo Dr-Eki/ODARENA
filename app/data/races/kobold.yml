@@ -6,33 +6,6 @@ playable: 1
 skill_level: 2
 magic_level: 1
 
-terrain_perks:
-  badlands:
-    population_mod: -0.12
-  desert:
-    food_production_mod: -0.14
-  forest:
-    casualties_on_defense_mod: 0.10
-  glacier:
-    offensive_power_mod: -0.03
-    defensive_power_mod: -0.03
-  hills:
-    defensive_power_mod: 0.05
-  jungle:
-    casualties_on_defense_mod: 0.14
-  mountains:
-    ore_production_mod: 0.10
-  plains:
-    offensive_power_mod: 0.05
-  swamps:
-    mana_production_mod: 0.06
-  volcanic:
-    food_production_mod: -0.10
-  water:
-    food_production_mod: 0.04
-  wetlands:
-    food_production_mod: 0.08
-
 perks:
   max_population: 50
   population_growth: 20

@@ -14,35 +14,6 @@ resources:
   - gems
   - mana
 
-terrain_perks:
-  badlands:
-    food_production_mod: -0.05
-  desert:
-    food_production_mod: -0.10
-  forest:
-    lumber_production_mod: 0.10
-  glacier:
-    population_mod: -0.20
-    defensive_power_mod: 0.05
-  hills:
-    defensive_power_mod: 0.025
-    gems_production_mod: 0.05
-  jungle:
-    lumber_production_mod: 0.05
-    food_production_mod: 0.05
-  mountains:
-    gems_production_mod: 0.10
-  plains:
-    population_mod: 0.15 
-  swamps:
-    population_mod: 0.1
-  volcanic:
-    population_mod: -0.20
-  water:
-    food_production_mod: 0.1
-  wetlands:
-    food_production_mod: 0.1 
-
 perks:
   max_population: 20
   food_consumption_mod: -50
