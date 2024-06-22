@@ -198,6 +198,7 @@ warfare:
 wizardry:
   name: Wizardry
   excluded_races:
+    - Barbarian
     - Beastfolk
     - Growth
     - Sylvan

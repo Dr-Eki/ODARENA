@@ -136,7 +136,7 @@ class DominionFactory
 
         $startingBuildings = $this->getStartingBuildings($race, $landBase);
 
-        $startingTerrain = $this->terrainCalculator->getStartingTerrain($race, $landBase);
+        #$startingTerrain = $this->terrainCalculator->getStartingTerrain($race, $landBase);
 
         $startingParameters['draftees'] = 0;
 
@@ -257,7 +257,7 @@ class DominionFactory
 
         $this->buildingCalculator->createOrIncrementBuildings($dominion, $startingBuildings);
         $this->resourceService->update($dominion, $startingResources);
-        $this->terrainService->update($dominion, $startingTerrain);
+        #$this->terrainService->update($dominion, $startingTerrain);
 
         if($race->name == 'Barbarian')
         {
@@ -416,9 +416,9 @@ class DominionFactory
         {
             foreach(config('barbarians.buildings') as $buildingKey => $ratio)
             {
-                $startingBuildings[('building_' . $buildingKey)] = roundInt($landBase * $ratio);
+                $startingBuildings[$buildingKey] = roundInt($landBase * $ratio);
             }
-
+            
             return $startingBuildings;
         }
 

@@ -27,6 +27,7 @@ perks:
 
 units:
   - name: Kaboom
+    description: Strapped with explosives, Kabooms are the ultimate sacrifice a Goblin can make for its dominion.
     training_time: 3
     type:
       - living
@@ -43,6 +44,7 @@ units:
       fixed_casualties: 100
 
   - name: Shaman
+    description: Shamans are the spiritual leaders of the Goblins, and are able to cast powerful spells.
     training_time: 9
     type:
       - living
@@ -93,6 +95,7 @@ units:
   #     offense_from_improvement_points: 0.2,10000000,3 # +0.2 for every 10,000,000 imp points, max +3
 
   - name: Wolf Rider
+    description: Wolf Riders are Goblins who have tamed wolves to ride into battle.
     training_time: 12
     type:
       - living

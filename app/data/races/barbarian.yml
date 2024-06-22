@@ -14,6 +14,7 @@ perks:
   cannot_train_archmages: 1
 units:
   - name: Marauder
+    description: Hardened older Barbarians tasked with defending the tribe.
     training_time: 6
     type:
       - living
@@ -24,7 +25,9 @@ units:
     power:
       offense: 0
       defense: 5
+
   - name: Thug
+    description: Thugs are the infantry of the Barbarian tribe.
     training_time: 6
     type:
       - living

@@ -31,8 +31,8 @@ perks:
 
 units:
   - name: Alchemist
-    training_time: 6
     description: Alchemists have devoted their lives to refinind gold and extracting its magical properties.
+    training_time: 6
     type:
       - living
       - sentient
@@ -49,8 +49,8 @@ units:
       gold_improvements: 10
 
   - name: Gold Wyrm
-    training_time: 12
     description: The Gold Wyrm is a massive, sentient, and intelligent creature that is the embodiment of the Aurei's connection to gold.
+    training_time: 12
     type:
       - living
       - sentient
@@ -69,8 +69,8 @@ units:
       casualties: -20
 
   - name: Halcyon
-    training_time: 0
     description: The Halcyon phase is a defensive aspect which Aurei wizards can take. The wizard is surrounded by a golden aura.
+    training_time: 0
     type:
       - living
       - sentient
@@ -93,8 +93,8 @@ units:
       gold_production_raw: 0.10
 
   - name: Chryson
-    training_time: 0
     description: The Chryson phase is an offensive aspect which envelops the wizard in a golden aura and enhances their offensive capabilities with golden blades.
+    training_time: 0
     type:
       - living
       - sentient

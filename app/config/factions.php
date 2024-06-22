@@ -2,6 +2,22 @@
 
 # app/config/factions.php
 
+/*
+
+    race->key => [
+        'starting_units' => [
+            'unit_key' => amount,
+        ],
+        'starting_buildings' => [
+            'building_key' => amount,
+        ],
+        'starting_resources' => [
+            'resource_key' => amount,
+        ],
+    ]
+
+*/
+
 return [
 
     'demon' => [
@@ -15,8 +31,7 @@ return [
     ],
 
     'kerranad' => [
-        'starting_buildings' => 
-        [
+        'starting_buildings' => [
             'aqueduct' => 25,
             'constabulary' => 25,
             'farm' => 50,
@@ -33,15 +48,13 @@ return [
             'gem_mine' => 300,
         ],
 
-        'starting_resources' => 
-        [
+        'starting_resources' => [
             'gems' => 500000,
         ],
     ],
 
     'undead' => [
-        'starting_resources' => 
-        [
+        'starting_resources' => [
             'body' => 4000,
         ],
     ]

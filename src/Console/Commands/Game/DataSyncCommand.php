@@ -301,6 +301,7 @@ class DataSyncCommand extends Command implements CommandInterface
                     'name' => $unitName,
                     'key' => Str::snake($unitName),
                     'type' => object_get($unitData, 'type'),
+                    'description' => object_get($unitData, 'description'),
                     'cost' => object_get($unitData, 'cost', []),
                     'power_offense' => object_get($unitData, 'power.offense', 0),
                     'power_defense' => object_get($unitData, 'power.defense', 0),
