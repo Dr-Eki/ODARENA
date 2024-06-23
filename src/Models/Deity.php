@@ -33,6 +33,11 @@ class Deity extends AbstractModel
         'wizard_strength' => 'integer',
     ];
 
+    public static function fromKey($key)
+    {
+        return self::where('key', $key)->first();
+    }
+
     public function perks()
     {
         return $this->belongsToMany(
