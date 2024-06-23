@@ -54,6 +54,7 @@ magical_disguise:
     #horse_theft: -100
 
 magical_shield:
+  enabled: 0
   name: Magical Shield
   scope: self
   class: passive

@@ -416,20 +416,6 @@
                         </div>
 
                       <p class="text-center"><a href="{{ route('dominion.world-news', [$realm->number]) }}">Read the News from the {{ $alignmentNoun }}</a></p>
-
-                        @if(isset($realmDominionsStats))
-                            <div class="col-xs-12">
-                                <div class="row">
-                                    <strong>{{ $alignmentAdjective }} Lands</strong><br>
-                                <div class="row">
-                                    @foreach(OpenDominion\Models\Terrain::all()->sortBy('order') as $terrain)
-                                        <div class="col-xs-4">
-                                            {{ $terrain->name }}: {{ number_format($realmDominionsStats['terrain'][$terrain->key]) }}
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>
