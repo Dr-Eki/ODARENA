@@ -337,7 +337,15 @@ xp: %s\n",
         try {
             $response = $client->get($url);
             $responseBody = $response->getBody()->getContents();
-            $quickstartData = json_decode($responseBody);
+            $result = json_decode($responseBody);
+            $quickstartData = $result->quickstart;
+            $deityKey = $quickstartData->deity_key ?? null;
+            $raceKey = $quickstartData->race_key;
+            $titleKey = $quickstartData->title_key;
+
+            $deityId = $deityKey ? Deity::fromKey($deityKey)->id : null;
+            $raceId = Race::fromKey($raceKey)->id;
+            $titleId = Title::fromKey($titleKey)->id;
     
             if ($quickstartData === null || !is_object($quickstartData) || !isset($quickstartData->name) || empty($quickstartData)) {
                 throw new \Exception('Failed to import quickstart. Make sure quickstart ID and API key are correct for the source.');
@@ -351,9 +359,9 @@ xp: %s\n",
             $quickstart = Quickstart::create([
             'name' => $quickstartData->name,
             'description' => $quickstartData->description ?? '',
-            'race_id' => $quickstartData->race_id,
-            'deity_id' => $quickstartData->deity_id ?? null,
-            'title_id' => $quickstartData->title_id,
+            'race_id' => $raceId,
+            'deity_id' => $deityId,
+            'title_id' => $titleId,
             'user_id' => $user->id,
             'offensive_power' => $quickstartData->offensive_power ?? 0,
             'defensive_power' => $quickstartData->defensive_power ?? 0,

@@ -27,7 +27,7 @@ perks:
 
 units:
   - name: Kaboom
-    description: Strapped with explosives, Kabooms are the ultimate sacrifice a Goblin can make for its dominion.
+    description: Strapped with explosives and a short fuse, Kabooms are frenzied Goblins who charge into enemy lines.
     training_time: 3
     type:
       - living

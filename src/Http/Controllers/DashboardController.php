@@ -5,10 +5,13 @@ namespace OpenDominion\Http\Controllers;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
+use OpenDominion\Models\Deity;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Pack;
-use OpenDominion\Models\Round;
 use OpenDominion\Models\Quickstart;
+use OpenDominion\Models\Race;
+use OpenDominion\Models\Round;
+use OpenDominion\Models\Title;
 use OpenDominion\Services\Dominion\QuickstartService;
 use OpenDominion\Services\Dominion\RoundService;
 use OpenDominion\Services\Dominion\SelectorService;
@@ -215,7 +218,11 @@ class DashboardController extends AbstractController
         # Remove the user from the quickstart
         $quickstart->makeHidden('user', 'user_id');
 
+        # Supplemental data
+        $deityKey = $quickstart->deity_id ? Deity::find($quickstart->deity_id)->key : null;
+        $raceKey = Race::find($quickstart->race_id)->key;
+        $titleKey = $quickstart->title_id ? Title::find($quickstart->title_id)->key : null;
 
-        return response()->json($quickstart);
+        return response()->json(['quickstart' => $quickstart, 'deity_key' => $deityKey, 'race_key' => $raceKey, 'title_key' => $titleKey]);
     }
 }

@@ -22,7 +22,7 @@
                     <p>Exporting a quickstart is done to transfer a quickstart from sim (<a href="https://sim.odarena.com/" target="_new">https://sim.odarena.com/</a>) to the game (<a href="https://odarena.com/" target="_new">https://odarena.com/</a>) or vice versa.</p>
                     <p>To export a dominion as a quickstart, you need your API key and the ID of the dominion you wish to.</p>
 
-                    @if(!$selectedDominion)
+                    @if(!isset($selectedDominion))
                         <p>You have not selected a dominion to export quickstarts from.</p>
                         <p>Go to the <a href="{{ route('dashboard') }}">dashboard</a> to select a dominion.</p>
                     @else
