@@ -339,9 +339,9 @@ xp: %s\n",
             $responseBody = $response->getBody()->getContents();
             $result = json_decode($responseBody);
             $quickstartData = $result->quickstart;
-            $deityKey = $quickstartData->deity_key ?? null;
-            $raceKey = $quickstartData->race_key;
-            $titleKey = $quickstartData->title_key;
+            $deityKey = $result->deity_key ?? null;
+            $raceKey = $result->race_key;
+            $titleKey = $result->title_key;
 
             $deityId = $deityKey ? Deity::fromKey($deityKey)->id : null;
             $raceId = Race::fromKey($raceKey)->id;
