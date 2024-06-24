@@ -33,7 +33,7 @@
                 </thead>
                 <tbody>
                     @foreach($quickstarts->sortByDesc('id')->filter(function ($quickstart) use ($user) {
-                            return $quickstart->is_public == 1 or $quickstart->user_id == $user->id;
+                            return $quickstart->is_public == 1 or (Auth::user() and $quickstart->user_id == Auth::user()->id);
                         }) as $quickstart)
                         <tr>
                             <td class="text-center">{{ $quickstart->id }}</td>
