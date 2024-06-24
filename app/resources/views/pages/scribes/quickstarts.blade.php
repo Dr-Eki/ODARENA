@@ -32,7 +32,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($quickstarts->where('is_public',0) as $quickstart)
+                    @foreach($quickstarts->sortByDesc('id')->filter(function ($quickstart) use ($user) {
+                            return $quickstart->is_public == 1 or $quickstart->user_id == $user->id;
+                        }) as $quickstart)
                         <tr>
                             <td class="text-center">{{ $quickstart->id }}</td>
                             <td>{{ optional($quickstart->user)->display_name ?? '-' }}</td>

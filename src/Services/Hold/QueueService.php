@@ -6,9 +6,11 @@ use BadMethodCallException;
 use DB;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use OpenDominion\Models\HoldSentimentEvent;
-use OpenDominion\Models\Hold;
 use OpenDominion\Models\Building;
+use OpenDominion\Models\Hold;
+use OpenDominion\Models\TickChange;
+use OpenDominion\Models\Resource;
+use OpenDominion\Models\Unit;
 use OpenDominion\Models\Hold\Queue;
 
 use OpenDominion\Services\Hold\BuildingService;
@@ -93,8 +95,30 @@ class QueueService
                 # Update dominion resources
                 if($finishedQueue->type == 'construction')
                 {
-                    $this->buildingService->update($hold->dominion, [$finishedQueue->resource->key => $amount]);
-                    #dump('+ Added ' . $finishedQueue->amount . ' ' . $finishedQueue->resource->name . ' to dominion ' . $hold->dominion->name);
+                    TickChange::create([
+                        'tick' => $hold->round->ticks,
+                        'source_type' => Building::class,
+                        'source_id' => $finishedQueue->item_id,
+                        'target_type' => Hold::class,
+                        'target_id' => $hold->id,
+                        'amount' => $finishedQueue->amount,
+                        'status' => 0,
+                        'type' => 'construction',
+                    ]);
+                }
+                if($finishedQueue->type == 'units_gift')
+                {
+
+                    TickChange::create([
+                        'tick' => $hold->round->ticks,
+                        'source_type' => Unit::class,
+                        'source_id' => $finishedQueue->item_id,
+                        'target_type' => Hold::class,
+                        'target_id' => $hold->id,
+                        'amount' => $finishedQueue->amount,
+                        'status' => 0,
+                        'type' => 'construction',
+                    ]);
                 }
                 $hold->save();
             }

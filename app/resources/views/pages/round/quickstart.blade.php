@@ -42,7 +42,7 @@
                     </thead>
                     <tbody>
                     @foreach($quickstarts->sortByDesc('id')->filter(function ($quickstart) use ($user) {
-                            return $quickstart->is_public == 1 || $quickstart->user_id == $user->id;
+                            return $quickstart->is_public == 1 or $quickstart->user_id == $user->id;
                         }) as $quickstart)
                             <tr>
                                 <td class="text-center"><input type="radio" id="quickstart{{ $quickstart->id}}" name="quickstart" value="{{ $quickstart->id }}" required></td>

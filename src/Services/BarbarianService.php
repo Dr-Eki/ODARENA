@@ -26,7 +26,7 @@ use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
-use OpenDominion\Calculators\Dominion\TerrainCalculator;
+#use OpenDominion\Calculators\Dominion\TerrainCalculator;
 
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\QueueService;
@@ -73,7 +73,7 @@ class BarbarianService
     protected $improvementCalculator;
 
     /** @var TerrainCalculator */
-    protected $terrainCalculator;
+    #protected $terrainCalculator;
 
     protected $settings;
 
@@ -87,7 +87,7 @@ class BarbarianService
         $this->rangeCalculator = app(RangeCalculator::class);
         $this->dominionFactory = app(DominionFactory::class);
         $this->barbarianCalculator = app(BarbarianCalculator::class);
-        $this->terrainCalculator = app(TerrainCalculator::class);
+        #$this->terrainCalculator = app(TerrainCalculator::class);
         $this->resourceService = app(ResourceService::class);
         $this->statsService = app(StatsService::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
@@ -178,7 +178,7 @@ class BarbarianService
 
             $currentDay = $dominion->round->start_date->subDays(1)->diffInDays(now());
 
-            $chanceOneIn = $this->barbarianCalculator->getSetting('CHANCE_TO_HIT_CONSTANT') - (14 - $currentDay);
+            $chanceOneIn = $this->settings['CHANCE_TO_HIT_CONSTANT'] - (14 - $currentDay);
             $chanceOneIn += $this->statsService->getStat($dominion, 'defense_failures') * 0.125;
             $chanceOneIn = floorInt($chanceOneIn);
 
@@ -340,7 +340,7 @@ class BarbarianService
                     # Calculate amount of returning units.
                     $unitsReturning['military_unit1'] = intval(max($unitsSent['military_unit1'] - $unitsLost['military_unit1'],0));
 
-                    $terrainGained = $this->terrainCalculator->getDominionTerrainChange($dominion, $landGained);
+                    #$terrainGained = $this->terrainCalculator->getDominionTerrainChange($dominion, $landGained);
 
                     # Queue the incoming land.
                     $this->queueService->queueResources(
@@ -349,15 +349,15 @@ class BarbarianService
                         ['land' => $landGained]
                     );
 
-                    foreach($terrainGained as $terrainKey => $amount)
-                    {
-                        # Queue the incoming terrain.
-                        $this->queueService->queueResources(
-                            'invasion',
-                            $dominion,
-                            [('terrain_'.$terrainKey) => $amount]
-                        );
-                    }
+                    #foreach($terrainGained as $terrainKey => $amount)
+                    #{
+                    #    # Queue the incoming terrain.
+                    #    $this->queueService->queueResources(
+                    #        'invasion',
+                    #        $dominion,
+                    #        [('terrain_'.$terrainKey) => $amount]
+                    #    );
+                    #}
 
 
                     # Queue the returning units.
