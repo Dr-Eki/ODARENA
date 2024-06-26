@@ -329,16 +329,16 @@ class BarbarianService
                     $logString .= "\t\t**Sent ratio: " . number_format($sentRatio*100,2). "%\n";
                     $logString .= "\t\t**Casualties ratio: " . number_format($casualtiesRatio*100,2). "%\n";
 
-                    $unitsSent['military_unit1'] = $dominion->military_unit1 * $sentRatio;
+                    $unitsSent['military_unit2'] = $dominion->military_unit2 * $sentRatio;
 
                     # Remove the sent units from the dominion.
-                    $dominion->military_unit1 -= $unitsSent['military_unit1'];
+                    $dominion->military_unit2 -= $unitsSent['military_unit2'];
 
                     # Calculate losses by applying casualties ratio to units sent.
-                    $unitsLost['military_unit1'] = $unitsSent['military_unit1'] * $casualtiesRatio;
+                    $unitsLost['military_unit2'] = $unitsSent['military_unit2'] * $casualtiesRatio;
 
                     # Calculate amount of returning units.
-                    $unitsReturning['military_unit1'] = intval(max($unitsSent['military_unit1'] - $unitsLost['military_unit1'],0));
+                    $unitsReturning['military_unit2'] = intval(max($unitsSent['military_unit2'] - $unitsLost['military_unit2'],0));
 
                     #$terrainGained = $this->terrainCalculator->getDominionTerrainChange($dominion, $landGained);
 
