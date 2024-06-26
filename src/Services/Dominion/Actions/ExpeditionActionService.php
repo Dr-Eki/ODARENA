@@ -172,7 +172,7 @@ class ExpeditionActionService
                 throw new GameException('You do not have enough morale to send out units on an expedition.');
             }
 
-            if (!$this->militaryCalculator->passes43RatioRule($dominion, $units))
+            if (!$this->militaryCalculator->passes43RatioRule($dominion, null, null, $units))
             {
                 throw new GameException('You are sending out too much OP, based on your new home DP (4:3 rule).');
             }
