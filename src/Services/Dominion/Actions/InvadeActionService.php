@@ -40,7 +40,6 @@ use OpenDominion\Calculators\Dominion\RangeCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\Dominion\ResourceConversionCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
-use OpenDominion\Calculators\Dominion\TerrainCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
 use OpenDominion\Calculators\Dominion\Actions\TrainingCalculator;
 
@@ -51,7 +50,6 @@ use OpenDominion\Services\Dominion\GovernmentService;
 use OpenDominion\Services\Dominion\QueueService;
 use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\StatsService;
-use OpenDominion\Services\Dominion\TerrainService;
 use OpenDominion\Services\Dominion\Actions\SpellActionService;
 
 class InvadeActionService
@@ -109,8 +107,6 @@ class InvadeActionService
     private $spellActionService;
     private $spellCalculator;
     private $spellHelper;
-    private $terrainCalculator;
-    private $terrainService;
     private $trainingCalculator;
     private $unitHelper;
     private $unitCalculator;
@@ -139,8 +135,6 @@ class InvadeActionService
         $this->spellActionService = app(SpellActionService::class);
         $this->spellCalculator = app(SpellCalculator::class);
         $this->spellHelper = app(SpellHelper::class);
-        $this->terrainCalculator = app(TerrainCalculator::class);
-        $this->terrainService = app(TerrainService::class);
         $this->trainingCalculator = app(TrainingCalculator::class);
         $this->raceHelper = app(RaceHelper::class);
         $this->unitHelper = app(UnitHelper::class);
@@ -1288,12 +1282,8 @@ class InvadeActionService
         $extraLandDiscovered = (int)$this->militaryCalculator->getExtraLandDiscovered($attacker, $target, $discoverLand, $landConquered);
 
         $this->invasion['attacker']['land_conquered'] = $landConquered;
-        $this->invasion['attacker']['terrain_conquered'] = $this->terrainCalculator->getDominionTerrainChange($target, $landConquered);
 
         $this->invasion['defender']['land_lost'] = $landConquered;
-        $this->invasion['defender']['terrain_lost'] = array_map(function($value) {
-                return -$value;
-            }, $this->invasion['attacker']['terrain_conquered']);
         $this->invasion['defender']['buildings_lost'] = $this->buildingCalculator->getBuildingsLost($target, $landConquered);
 
 
@@ -1314,9 +1304,6 @@ class InvadeActionService
         # Remove land
         $target->land -= $landConquered;
 
-        # Remove terrain
-        $this->terrainService->update($target, $this->invasion['defender']['terrain_lost']);
-
         # Remove buildings
         ## Start with available buildings
         $this->buildingCalculator->removeBuildings($target, $this->invasion['defender']['buildings_lost']['available']);
@@ -1332,7 +1319,6 @@ class InvadeActionService
         }
 
         $landDiscovered = 0;
-        $this->invasion['attacker']['terrain_discovered'] = [];
         $this->invasion['attacker']['land_discovered'] = 0;
         $this->invasion['attacker']['extra_land_discovered'] = 0;
 
@@ -1351,43 +1337,12 @@ class InvadeActionService
             $landDiscovered = (int)floor($landDiscovered);
 
             $this->invasion['attacker']['land_discovered'] = $landDiscovered;
-            $this->invasion['attacker']['terrain_discovered'] = $this->terrainCalculator->getDominionTerrainChange($attacker, $landDiscovered);
 
             $this->invasion['attacker']['extra_land_discovered'] = (int)$extraLandDiscovered;
         }
 
         $this->landLost = $landConquered;
         $queueData['land'] = ($this->invasion['attacker']['land_conquered'] + $this->invasion['attacker']['land_discovered'] + $this->invasion['attacker']['extra_land_discovered']);
-
-        $allArrays = [
-            $this->invasion['attacker']['terrain_conquered'],
-            $this->invasion['attacker']['terrain_discovered']
-        ];
-        
-        foreach ($allArrays as $array) {
-            foreach ($array as $key => $value) {
-                if (!isset($mergedTerrainArrays[$key])) {
-                    $mergedTerrainArrays[$key] = 0;
-                }
-                $mergedTerrainArrays[$key] += $value;
-            }
-        }
-        
-        $mergedTerrainArrays = array_filter($mergedTerrainArrays, function($value) {
-            return $value !== 0;
-        });
-
-        $this->invasion['attacker']['terrain_gained'] = $mergedTerrainArrays;
-
-        foreach($mergedTerrainArrays as $terrainKey => $amount)
-        {
-            $queueData[('terrain_' . $terrainKey)] = abs($amount);
-        }
-
-        if(empty($queueData))
-        {
-            Log::info('[MISSING TERRAIN] No terrain gained from invasion. Attacker: ' . $attacker->id . ' Target: ' . $target->id . ' Land conquered: ' . $landConquered . ' Land discovered: ' . $landDiscovered . ' Extra land discovered: ' . $extraLandDiscovered);
-        }   
 
         $this->queueService->queueResources(
             'invasion',
@@ -2324,28 +2279,6 @@ class InvadeActionService
                             $newUnitSlotReturnTime = $this->getUnitReturnTicksForSlot($attacker, $newUnitSlot);
 
                             $returningUnits[$newUnitKey][$newUnitSlotReturnTime] += floor($casualties * $newUnitAmount);
-                        }
-
-                        # Check for faster_return_from_terrain
-                        if($fasterReturnFromTerrainPerk = $attacker->race->getUnitPerkValueForUnitSlot((int)$slot, 'faster_return_from_terrain'))
-                        {
-
-                            $perChunk = $fasterReturnFromTerrainPerk[0];
-                            $chunkSize = $fasterReturnFromTerrainPerk[1];
-                            $terrainKey = $fasterReturnFromTerrainPerk[2];
-                            $maxPerk = $fasterReturnFromTerrainPerk[3];
-
-                            $ticksFaster = ($attacker->{'terrain_' . $terrainKey} / $attacker->land) * 100 / $chunkSize * $perChunk;
-                            $ticksFaster = min($ticksFaster, $maxPerk);
-                            $ticksFaster = floor($ticksFaster);
-
-                            $fasterReturningTicks = min(max(1, ($ticks - $ticksFaster)), 12);
-
-                            # How many of $slot should return faster?
-                            $unitsWithFasterReturnTime = $amountReturning;
-
-                            $returningUnits[$unitKey][$fasterReturningTicks] += $unitsWithFasterReturnTime;
-                            $returningUnits[$unitKey][$ticks] -= $unitsWithFasterReturnTime;
                         }
 
                         # Check for faster_return_from_time

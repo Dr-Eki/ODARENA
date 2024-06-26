@@ -1035,7 +1035,7 @@
                             </colgroup>
                             <thead>
                                 <tr>
-                                    <th>Terrain</th>
+                                    <th>Land</th>
                                     <th>
                                         @if ($event->target->realm->id === $selectedDominion->realm->id)
                                             Lost
@@ -1056,22 +1056,6 @@
                                         </td>
                                     </tr>
                                 @else
-
-                                    @foreach($event->data['attacker']['terrain_gained'] as $terrainKey => $amount)
-                                        @php
-                                            $terrainKey = str_replace('terrain_', '', $terrainKey);
-                                            $terrain = OpenDominion\Models\Terrain::where('key', $terrainKey)->first();
-                                            $conqueredAmount = abs($event->data['attacker']['terrain_conquered'][$terrainKey] ?? 0);
-                                            $discoveredAmount = abs($event->data['attacker']['terrain_discovered'][$terrainKey] ?? 0);
-                                        @endphp
-                                        <tr>
-                                            <td>{{ $terrain->name }}</td>
-                                            <td>{!! $conqueredAmount ? $conqueredAmount : '&mdash;' !!}</td>
-                                            @if ($event->source->realm->id === $selectedDominion->realm->id)
-                                                <td>{!! $discoveredAmount ? $discoveredAmount : '&mdash;' !!}</td>
-                                            @endif
-                                        </tr>
-                                    @endforeach
                                     <tr>
                                         <td><strong>Total</strong></td>
                                         <td><strong>{{ number_format($event->data['attacker']['land_conquered']) }}</strong></td>
