@@ -447,8 +447,6 @@ class ResourceCalculator
             return 0;
         }
 
-        $consumedResource = Resource::where('key', $consumedResourceKey)->firstOrFail();
-
         $consumption = 0;
         $consumption += $dominion->getBuildingPerkValue($consumedResourceKey . '_upkeep_raw');
         $consumption += $dominion->getSpellPerkValue($consumedResourceKey . '_upkeep_raw');
@@ -574,7 +572,7 @@ class ResourceCalculator
 
         #$consumption += $this->getResourceTotalSoldPerTick($dominion, $consumedResource);
 
-        return (int)max(0, $consumption);
+        return (int)max(0, ceilInt($consumption));
     }
 
     public function getResourceTotalSoldPerTick(Dominion $dominion, string $resourceKey): float
