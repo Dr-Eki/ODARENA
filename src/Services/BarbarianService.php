@@ -113,8 +113,8 @@ class BarbarianService
         $unit1 = Unit::where('race_id', $dominion->race->id)->where('slot', 1)->first();
         $unit2 = Unit::where('race_id', $dominion->race->id)->where('slot', 2)->first();
 
-        $unit1Dp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit1, 'defense');
-        $unit2Op = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit2, 'offense');
+        $unit1Dp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit1, 'defense') * $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
+        $unit2Op = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit2, 'offense') * $this->militaryCalculator->getOffensivePowerMultiplier($dominion);
     
         $dpaDeltaPaid = $this->barbarianCalculator->getDpaDeltaPaid($dominion);
         $opaDeltaPaid = $this->barbarianCalculator->getOpaDeltaPaid($dominion);
