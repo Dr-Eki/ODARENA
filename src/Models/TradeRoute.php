@@ -17,6 +17,7 @@ class TradeRoute extends AbstractModel
         'total_bought',
         'total_sold',
         'status',
+        'tick_created',
     ];
 
     public function hold()

@@ -273,9 +273,9 @@ class TradeCalculator
     // Sentiment
     public function getTradeRouteCancellationSentimentPenalty(TradeRoute $tradeRoute, string $reason): int
     {
-        $tradeRouteTicks = $tradeRoute->ticks;
+        $tradeRouteTickCreated = $tradeRoute->tick_created;
         $currentTick = $tradeRoute->dominion->round->ticks;
-        $tradeRouteDuration = $tradeRouteTicks - $currentTick;
+        $tradeRouteDuration = $tradeRouteTickCreated - $currentTick;
 
         $penalty = 0;
 
