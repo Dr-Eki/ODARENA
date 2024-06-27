@@ -163,6 +163,7 @@ class TradeActionService
                 'source_resource_id' => $soldResource->id,
                 'target_resource_id' => $boughtResource->id,
                 'source_amount' => $soldResourceAmount,
+                'tick_created' => $dominion->round->ticks,
             ]);
         });
 
