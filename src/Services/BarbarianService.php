@@ -127,6 +127,12 @@ class BarbarianService
     
         if($opaDeltaPaid > 0)
         {
+            if($this->militaryCalculator->hasReturningUnits($dominion))
+            {
+                // Bug fix: Barbarians would forget units returning from an invasion, and train more units than they should. This is a tentative fix.
+                return;
+            }
+
             $opToTrain = $opaDeltaPaid * $dominion->land;
             $units['military_unit2'] = ceilInt($opToTrain / $unit2Op);
         }
