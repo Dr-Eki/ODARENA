@@ -99,7 +99,7 @@ return [
     'settings' => [
         'DPA_CONSTANT' => 10,
         'DPA_OVERSHOT' => 1.10,
-        'DPA_PER_TICK' => 0.1,
+        'DPA_PER_TICK' => (1/16),
         'DPA_PER_TIMES_INVADED' => 1,
         'OPA_MULTIPLIER' => (4/3),
         'SPECS_RATIO_MIN' => 50,
