@@ -9,7 +9,7 @@
                 <small class="pull-right text-muted">
                     <span data-toggle="tooltip" data-placement="top" title="Wizards Per Acre (Wizard Ratio) on offense">WPA</span>: {{ number_format($magicCalculator->getWizardRatio($selectedDominion, 'offense'),3) }},
                     <span data-toggle="tooltip" data-placement="top" title="Wizard Strength">WS</span>: {{ $selectedDominion->wizard_strength }}%,
-                    Mana: {{ $selectedDominion->resource_mana }},
+                    Mana: {{ number_format($selectedDominion->resource_mana) }},
                     Magic Level: {{ $magicCalculator->getMagicLevel($selectedDominion) }}
                 </small>
             </div>

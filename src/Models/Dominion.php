@@ -1281,8 +1281,8 @@ class Dominion extends AbstractModel
                 $buildingRatio = $buildingOwned / $this->land;
             
                 $effectFromPerk = $buildingRatio * $perkRatio * ($perkMultiplier + $buildingRatio) * 100;
-            
-                $perk += min($effectFromPerk, $perkMax ?? $perk);
+
+                $perk += min($effectFromPerk, $perkMax ?? $effectFromPerk);
             }
 
             elseif($perkKey == 'artefact_aegis_restoration')
