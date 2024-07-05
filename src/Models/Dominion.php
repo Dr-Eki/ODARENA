@@ -1314,7 +1314,9 @@ class Dominion extends AbstractModel
                 'casualties',
                 'casualties_on_offense',
                 'casualties_on_defense',
-                'prestige_gains'
+                'population_growth',
+                'prestige_gains',
+                'target_defensive_power_mod',
                 ]
                 ))
             {
