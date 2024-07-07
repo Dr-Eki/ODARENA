@@ -13,7 +13,7 @@ perks:
   no_food_consumption: 1
   cannot_train_archmages: 1
 units:
-  - name: Marauder
+  - name: Guard
     description: Hardened older Barbarians tasked with defending the tribe.
     training_time: 6
     type:
@@ -21,12 +21,12 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 225
+      gold: 800
     power:
       offense: 0
       defense: 5
 
-  - name: Thug
+  - name: Bandit
     description: Thugs are the infantry of the Barbarian tribe.
     training_time: 6
     type:
@@ -34,7 +34,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 720
+      gold: 1200
     power:
       offense: 5
       defense: 2
