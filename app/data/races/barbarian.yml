@@ -26,7 +26,7 @@ units:
       offense: 0
       defense: 5
 
-  - name: Bandit
+  - name: Marauder
     description: Thugs are the infantry of the Barbarian tribe.
     training_time: 6
     type:
