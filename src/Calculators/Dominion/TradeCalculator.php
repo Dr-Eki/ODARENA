@@ -358,6 +358,28 @@ class TradeCalculator
     public function canHoldAffordTrade(Hold $hold, Resource $boughtResource, int $amountToBeExported): bool
     {
 
+        $stockpile = $hold->{'resource_' . $boughtResource->key};
+        $production = $this->holdResourceCalculator->getProduction($hold, $boughtResource->key);
+        $dueNextTick = $this->holdResourceCalculator->getResourceDueFromTradeNextTick($hold, $boughtResource->key);
+
+        /*
+        *   This next line discards $soldAmount so that the evaluation is done based on  
+        *   whether the dominion can afford ALL trades of THIS RESOURCE.
+        *
+        *   Before this change, dominions could sell infinite amounts of a resource by simply 
+        *   having enough of the resource for each individual trade, not all total trades.
+        *
+        *   While the ideal effect of this change is that only trades which cannot be afford
+        *   are cancelled, due to trade routes being calculated simultaneously, it is possible
+        *   that a trade route is cancelled even though the dominion can afford it.
+        *  
+        *   That is an acceptable trade-off for now.
+        */
+
+        $soldAmount = $this->holdResourceCalculator->getResourceTotalSoldPerTick($hold, $boughtResource);
+
+        return ($stockpile + $production + $dueNextTick) >= $soldAmount;
+
         # boughtResource = bought BY THE PLAYER
 
         $stockpile = $hold->{'resource_' . $boughtResource->key};

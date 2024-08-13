@@ -6,7 +6,7 @@ playable: 1 # Back as of round 113
 experimental: 1
 skill_level: 2
 
-draftees_alias: guard
+draftees_alias: grunt
 
 resources:
   - gold

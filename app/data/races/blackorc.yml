@@ -8,7 +8,7 @@ experimental: 1
 
 
 peasants_alias: peon
-draftees_alias: guard
+draftees_alias: grunt
 
 peasants_production:
   gold: 2.5

@@ -81,17 +81,20 @@ class BarbarianCalculator
     # Includes units out on attack.
     public function getDpCurrent(Dominion $dominion): int
     {
-        $unitAmount = $this->unitCalculator->getUnitTypeTotalTrained($dominion, 'military_unit1');
+        #$unitAmount = $this->unitCalculator->getUnitTypeTotalTrained($dominion, 'military_unit1');
+        #return ceilInt($this->militaryCalculator->getDefensivePower($dominion, null, null, [1 => $unitAmount]));
 
-        return ceilInt($this->militaryCalculator->getDefensivePower($dominion, null, null, [1 => $unitAmount]));
+        return ceilInt($this->militaryCalculator->getDefensivePower($dominion));
+
     }
 
     # Includes units at home and out on attack.
     public function getOpCurrent(Dominion $dominion): int
     {
-        $unitAmount = $this->unitCalculator->getUnitTypeTotalTrained($dominion, 'military_unit2');
+        #$unitAmount = $this->unitCalculator->getUnitTypeTotalTrained($dominion, 'military_unit2');
+        #return ceilInt($this->militaryCalculator->getOffensivePower($dominion, null, null, [2 => $unitAmount]));
 
-        return ceilInt($this->militaryCalculator->getOffensivePower($dominion, null, null, [2 => $unitAmount]));
+        return ceilInt($this->militaryCalculator->getOffensivePower($dominion));
     }
 
     # Includes units at home and out on attack.

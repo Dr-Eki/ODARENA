@@ -26,7 +26,6 @@ use OpenDominion\Calculators\Dominion\ImprovementCalculator;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\LandCalculator;
 use OpenDominion\Calculators\Dominion\RangeCalculator;
-#use OpenDominion\Calculators\Dominion\TerrainCalculator;
 
 use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\QueueService;
@@ -72,9 +71,6 @@ class BarbarianService
     /** @var ImprovementCalculator */
     protected $improvementCalculator;
 
-    /** @var TerrainCalculator */
-    #protected $terrainCalculator;
-
     protected $settings;
 
     public function __construct()
@@ -87,7 +83,6 @@ class BarbarianService
         $this->rangeCalculator = app(RangeCalculator::class);
         $this->dominionFactory = app(DominionFactory::class);
         $this->barbarianCalculator = app(BarbarianCalculator::class);
-        #$this->terrainCalculator = app(TerrainCalculator::class);
         $this->resourceService = app(ResourceService::class);
         $this->statsService = app(StatsService::class);
         $this->improvementCalculator = app(ImprovementCalculator::class);
@@ -101,11 +96,10 @@ class BarbarianService
         {
             return;
         }
-    
-        // Temporarily add incoming land to the dominion.
-        $dominion->land += $this->queueService->getInvasionQueueTotalByResource($dominion, 'land');
-    
-        $units = [
+
+        $land = $dominion->land + $this->queueService->getInvasionQueueTotalByResource($dominion, 'land');
+
+        $unitsToTrain = [
             'military_unit1' => 0,
             'military_unit2' => 0,
         ];
@@ -122,7 +116,7 @@ class BarbarianService
         if($dpaDeltaPaid > 0)
         {
             $dpToTrain = $dpaDeltaPaid * $dominion->land * $this->settings['DPA_OVERSHOT'];
-            $units['military_unit1'] = ceilInt($dpToTrain / $unit1Dp);
+            $unitsToTrain['military_unit1'] = ceilInt($dpToTrain / $unit1Dp);
         }
     
         if($opaDeltaPaid > 0)
@@ -130,14 +124,15 @@ class BarbarianService
             if($this->militaryCalculator->hasReturningUnits($dominion))
             {
                 // Bug fix: Barbarians would forget units returning from an invasion, and train more units than they should. This is a tentative fix.
+                // Did not work.
                 return;
             }
 
             $opToTrain = $opaDeltaPaid * $dominion->land;
-            $units['military_unit2'] = ceilInt($opToTrain / $unit2Op);
+            $unitsToTrain['military_unit2'] = ceilInt($opToTrain / $unit2Op);
         }
     
-        foreach($units as $unit => $amountToTrain)
+        foreach($unitsToTrain as $unit => $amountToTrain)
         {
             if($amountToTrain > 0)
             {
