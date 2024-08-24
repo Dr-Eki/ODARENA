@@ -108,8 +108,9 @@ class ProcessDominionJob implements ShouldQueue
         xtLog('* Processing dominion ' . $this->dominion->name . ' (# ' . $this->dominion->realm->number . '), ID ' . $this->dominion->id);
 
         # Do this first to populate dominion_tick
-        xtLog("[{$this->dominion->id}] ** Precalculate tick");
-        $this->tickCalculator->precalculateTick($this->dominion, true);
+        ## Disabled because of processPrecalculationJobs in TickService
+        #xtLog("[{$this->dominion->id}] ** Precalculate tick");
+        #$this->tickCalculator->precalculateTick($this->dominion, true);
         
         # Make a DB transaction
 
@@ -126,9 +127,6 @@ class ProcessDominionJob implements ShouldQueue
                 $this->advanceQueues($this->dominion);
 
             }
-            
-            xtLog("[{$this->dominion->id}] ** Handle Barbarian stuff (if this dominion is a Barbarian)");
-            $this->handleBarbarians($this->dominion);
 
             xtLog("[{$this->dominion->id}] ** Updating buildings");
             $this->handleCaptureInsight($this->dominion);
@@ -181,16 +179,15 @@ class ProcessDominionJob implements ShouldQueue
             xtLog("[{$this->dominion->id}] ** Handle finished queues");
             $this->handleFinishedQueues($this->dominion);
 
-            #xtLog("[{$this->dominion->id}] ** Delete finished queues");
-            #$this->deleteFinishedQueues($this->dominion);
-
             xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
             $this->handleFinishedSpells($this->dominion);
 
             xtLog("[{$this->dominion->id}] ** Delete finished spells");
             $this->deleteFinishedSpells($this->dominion);
         });
-
+            
+        xtLog("[{$this->dominion->id}] * Handle Barbarian stuff (if this dominion is a Barbarian)");
+        $this->handleBarbarians($this->dominion);
 
         xtLog("[{$this->dominion->id}] ** Done processing dominion {$this->dominion->name} (# {$this->dominion->realm->number})");
         xtLog("[{$this->dominion->id}] ** Sending notifications (hourly_dominion)");
@@ -241,17 +238,20 @@ class ProcessDominionJob implements ShouldQueue
             return;
         }
         
-        xtLog("[{$barbarian->id}] *** Handle Barbarian invasions");
-        $this->barbarianService->handleBarbarianInvasion($barbarian);
+        DB::transaction(function () use ($barbarian)
+        {  
+            xtLog("[{$barbarian->id}] *** Handle Barbarian invasions");
+            $this->barbarianService->handleBarbarianInvasion($barbarian);
 
-        xtLog("[{$barbarian->id}] *** Handle Barbarian construction");
-        $this->barbarianService->handleBarbarianConstruction($barbarian);
+            xtLog("[{$barbarian->id}] *** Handle Barbarian construction");
+            $this->barbarianService->handleBarbarianConstruction($barbarian);
 
-        xtLog("[{$barbarian->id}] *** Handle Barbarian improvements");
-        $this->barbarianService->handleBarbarianImprovements($barbarian);
+            xtLog("[{$barbarian->id}] *** Handle Barbarian improvements");
+            $this->barbarianService->handleBarbarianImprovements($barbarian);
 
-        xtLog("[{$barbarian->id}] *** Handle Barbarian training");
-        $this->barbarianService->handleBarbarianTraining($barbarian);
+            xtLog("[{$barbarian->id}] *** Handle Barbarian training");
+            $this->barbarianService->handleBarbarianTraining($barbarian);
+        });
     }
 
 
@@ -330,22 +330,25 @@ class ProcessDominionJob implements ShouldQueue
 
             if($amount > 0)
             {
-                $building = Building::fromKey($buildingKey);
-
-                TickChange::create([
-                    'tick' => $dominion->round->ticks,
-                    'source_type' => Building::class,
-                    'source_id' => $building->id,
-                    'target_type' => Dominion::class,
-                    'target_id' => $dominion->id,
-                    'amount' => $amount,
-                    'status' => 0,
-                    'type' => 'construction',
-                ]);
+                if($building = Building::fromKey($buildingKey))
+                {
+                    TickChange::create([
+                        'tick' => $dominion->round->ticks,
+                        'source_type' => Building::class,
+                        'source_id' => $building->id,
+                        'target_type' => Dominion::class,
+                        'target_id' => $dominion->id,
+                        'amount' => $amount,
+                        'status' => 0,
+                        'type' => 'construction',
+                    ]);
+                }
+                else
+                {
+                    xtLog("[{$dominion->id}] *** Building {$buildingKey} not found.", 'error');
+                }
             }
         }
-
-        #$this->buildingService->update($dominion, $buildingsToAdd);
     }
 
     # Take deities that are one tick away from finished and create or increment DominionImprovements.
@@ -815,16 +818,6 @@ class ProcessDominionJob implements ShouldQueue
             ->delete();
         
         xtLog("[{$dominion->id}] *** Deleted {$deletedSpells} finished spells.");
-    }
-
-    public function deleteFinishedQueues(Dominion $dominion)
-    {
-        $deletedQueueItems = DB::table('dominion_queue')
-            ->where('dominion_id', $dominion->id)
-            ->where('hours', '<=', 0)
-            ->delete();
-
-        xtLog("[{$dominion->id}] *** Deleted {$deletedQueueItems} finished queue items.");
     }
 
 }

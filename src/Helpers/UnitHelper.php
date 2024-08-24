@@ -430,6 +430,7 @@ class UnitHelper
             'swamp_gas_production_raw' => 'Produces %s swamp gas/tick.',
             'miasma_production_raw' => 'Generates %s miasma/tick.',
             'gunpowder_production_raw' => 'Produces %s gunpowder/tick.',
+            'stones_production_raw' => 'Produces %s stones/tick.',
 
             'gold_production_raw_from_pairing' => 'Produces %2$s gold/tick if paired with %1$s at home.',
             'food_production_raw_from_pairing' => 'Produces %2$s food/tick if paired with %1$s at home.',
@@ -439,6 +440,7 @@ class UnitHelper
             'gems_production_raw_from_pairing' => 'Mines %2$s gems/tick if paired with %1$s at home.',
             'blood_production_raw_from_pairing' => 'Gathers %2$s blood/tick if paired with %1$s at home.',
             'gunpowder_production_raw_from_pairing' => 'Prepares %2$s gunpowder/tick if paired with %1$s at home.',
+            'stones_production_raw_from_pairing' => 'Produces %2$s stones/tick if paired with %1$s at home.',
 
             'mana_production_raw_per_victory' => 'Gathers %s mana/tick per victory.',
             'gems_production_raw_per_victory' => 'Mines %s gems/tick per victory.',         
@@ -449,6 +451,7 @@ class UnitHelper
             'ore_production_raw_from_building_pairing' => '%3$s ore/tick (up to %1$s units per %2$s).',
             'gems_production_raw_from_building_pairing' => '%3$s gems/tick (up to %1$s units per %2$s).',
             'gunpowder_production_raw_from_building_pairing' => '%3$s gunpowder/tick (up to %1$s units per %2$s).',
+            'stones_production_raw_from_building_pairing' => '%3$s stones/tick (up to %1$s units per %2$s).',
 
             'xp_generation_raw' => 'Each unit generates %s XP per tick.',
 
@@ -653,6 +656,7 @@ class UnitHelper
                     $perk->key === 'gold_production_raw_from_pairing' or
                     $perk->key === 'lumber_production_raw_from_pairing' or
                     $perk->key === 'ore_production_raw_from_pairing' or
+                    $perk->key === 'stones_production_raw_from_pairing' or
                     $perk->key === 'gems_production_raw_from_pairing' or
                     $perk->key === 'food_production_raw_from_pairing' or
                     $perk->key === 'blood_production_raw_from_pairing' or

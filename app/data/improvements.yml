@@ -121,6 +121,7 @@ mining:
     - Swarm
     - Sylvan
     - Troll
+    - Yeti
     - Wood Elf
   perks:
     ore_production_mod: 30,5600
@@ -903,14 +904,6 @@ readiness:
     training_time_mod: -80,12500
     unit_gold_costs: -35,5500
     unit_ore_costs: -35,5500
-
-stonecutting_kerranad:  
-  enabled: 0
-  name: Stonecutting
-  exclusive_races:
-    - Kerranad
-  perks:
-    ore_production_mod: 35,5000
 
 warding_kerranad:  
   enabled: 0

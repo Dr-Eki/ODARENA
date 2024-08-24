@@ -10,6 +10,7 @@
                     <h3 class="box-title"><i class="fa fa-chart-bar"></i> The Dominion of {{ $selectedDominion->name }}</h3>
                 </span>
             </div>
+
             <div class="box-body no-padding">
                 <div class="row">
                     <div class="col-xs-12 col-sm-4">

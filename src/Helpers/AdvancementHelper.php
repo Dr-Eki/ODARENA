@@ -63,6 +63,7 @@ class AdvancementHelper
             'blood_improvement_points' => 'blood improvement points',
             'mana_improvement_points' => 'mana improvement points',
             'food_improvement_points' => 'food improvement points',
+            'stones_improvement_points' => 'stones improvement points',
 
             // Military and Training
             'offensive_power' => 'offensive power',

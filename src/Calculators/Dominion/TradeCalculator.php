@@ -388,7 +388,7 @@ class TradeCalculator
 
         return $stockpile >= $amountToBeExported;
     }
-
+    
     public function canDominionAffordTrade(Dominion $dominion, Resource $soldResource, int $soldAmount): bool
     {
         # What the hold buys and the PLAYER SELLS

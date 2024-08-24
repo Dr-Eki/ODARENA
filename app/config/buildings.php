@@ -25,6 +25,7 @@ return [
         'gunpowder_production_raw',
         'magma_production_raw',
         'obsidian_production_raw',
+        'stones_production_raw',
     
         'gunpowder_storage_raw',
         'sapling_storage_raw',

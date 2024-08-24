@@ -94,6 +94,7 @@ mirnons_pickaxe:
   perks:
     gems_improvement_points_mod: 25
     ore_improvement_points_mod: 50
+    stones_improvement_points_mod: 60
 
 sazals_staff:
   name: Sazal's Staff

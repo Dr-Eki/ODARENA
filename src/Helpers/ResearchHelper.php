@@ -27,6 +27,7 @@ class ResearchHelper
             'food_production_raw_mod' => '%+g%% raw food production',
             'gems_production_raw_mod' => '%+g%% raw gem production',
             'gold_production_raw_mod' => '%+g%% raw gold production',
+            'stones_production_raw_mod' => '%+g%% raw stone production',
 
             'elk_production_raw_from_terrain' => 'Grants one elk per %1$s acres of %2$s each tick.',
 
@@ -47,6 +48,7 @@ class ResearchHelper
             'yak_production_mod' => '%+g%% yak taming',
             'kelp_production_mod' => '%+g%% kelp harvest',
             'pearls_production_mod' => '%+g%% pearls production',
+            'stones_production_mod' => '%+g%% stones production',
 
             'acid_production_raw_from_land' => '%+g acid per tick per land',
 
@@ -285,6 +287,7 @@ class ResearchHelper
             'gems_improvement_points' => '%+g%% gem improvement points',
             'food_improvement_points' => '%+g%% food improvement points',
             'mana_improvement_points' => '%+g%% mana improvement points',
+            'stones_improvement_points' => '%+g%% stone improvement points',
             'improvement_points' => '%+g%% improvement points',
 
             'improvements' => '%+g%% improvements',
@@ -379,74 +382,6 @@ class ResearchHelper
                 }
             }
 
-            // Special case for dies_into, wins_into ("change_into"), fends_off_into
-            if ($perk->key === 'dies_into' or $perk->key === 'wins_into' or $perk->key === 'fends_off_into')
-            {
-                $unitSlotsToConvertTo = array_map('intval', str_split($perkValue));
-                $unitNamesToConvertTo = [];
-
-                foreach ($unitSlotsToConvertTo as $slot) {
-                    $unitToConvertTo = $race->units->filter(static function ($unit) use ($slot) {
-                        return ($unit->slot === $slot);
-                    })->first();
-
-                    $unitNamesToConvertTo[] = $unitToConvertTo->name;
-                }
-
-                $perkValue = generate_sentence_from_array($unitNamesToConvertTo);
-            }
-
-            // Special case for dies_into, wins_into ("change_into"), fends_off_into
-            if ($perk->key === 'offensive_power_from_devotion' or $perk->key === 'defense_from_devotion')
-            {
-                $deityKey = $perkValue[0];
-                $perTick = (float)$perkValue[1];
-                $max = (int)$perkValue[2];
-
-                if($perTick > 0)
-                {
-                    $perTick = '+'.$perTick;
-                }
-
-                $deity = Deity::where('key', $deityKey)->first();
-
-                $perkValue = [$deity->name, $perTick, $max];
-            }
-
-            // Special case for returns faster if pairings
-            if ($perk->key === 'dies_into_multiple')
-            {
-                $slot = (int)$perkValue[0];
-                $pairedUnit = $race->units->filter(static function ($unit) use ($slot) {
-                    return ($unit->slot === $slot);
-                })->first();
-
-                $amount = (int)$perkValue[1];
-
-                $perkValue[0] = $pairedUnit->name;
-                if (isset($perkValue[1]) && $perkValue[1] > 0)
-                {
-                    $perkValue[0] = Str::plural($perkValue[0]);
-                }
-                else
-                {
-                    $perkValue[1] = 1;
-                }
-            }
-
-            // Special case for unit_production
-            if ($perk->key === 'unit_production')
-            {
-                $unitSlotToProduce = intval($perkValue[0]);
-
-                $unitToProduce = $race->units->filter(static function ($unit) use ($unitSlotToProduce) {
-                    return ($unit->slot === $unitSlotToProduce);
-                })->first();
-
-                $unitNameToProduce[] = Str::unitPlural($unitToProduce->name);
-
-                $perkValue = generate_sentence_from_array($unitNameToProduce);
-            }
 
             /*****/
 
@@ -543,33 +478,7 @@ class ResearchHelper
                 $nestedArrays = false;
             }
 
-            if($perk->key === 'marshling_random_resource_to_units_conversion')
-            {
-                $ratioPerWpa = (float)$perkValue[0];
-                $maxRatio = (float)$perkValue[1];
-                $resourceKey = (string)$perkValue[2];
-                $unitSlots = (array)$perkValue[3];
 
-                // Rue the day this perk is used for other factions.
-                $race = Race::where('name', 'Marshling')->firstOrFail();
-                $resource = Resource::where('key', $resourceKey)->firstOrFail();
-
-                foreach ($unitSlots as $index => $slot)
-                {
-                    $slot = (int)$slot;
-                    $unit = $race->units->filter(static function ($unit) use ($slot)
-                        {
-                            return ($unit->slot === $slot);
-                        })->first();
-
-                    $units[$index] = Str::unitPlural($unit->name);
-                }
-
-                $unitsString = generate_sentence_from_array($units);
-
-                $perkValue = [$ratioPerWpa, $maxRatio, Str::plural($resource->name), $unitsString];
-                $nestedArrays = false;
-            }
 
             if($perk->key === 'converts_crypt_bodies')
             {
@@ -597,22 +506,6 @@ class ResearchHelper
                 #$perkValue = [$unitsString, $maxPerAcre, $landType];
             }
 
-            // Special case for dies_into, wins_into ("change_into"), fends_off_into
-            if ($perk->key === 'defense_from_resource' or $perk->key === 'offense_from_resource' or  $perk->key === 'resource_lost_on_invasion')
-            {
-                $firstValue = (float)$perkValue[0];
-                $resourceKey = (string)$perkValue[1];
-
-                if($firstValue > 1000)
-                {
-                    $firstValue = number_format($firstValue);
-                }
-
-                $resource = Resource::where('key', $resourceKey)->first();
-
-
-                $perkValue = [$firstValue, $resource->name];
-            }
 
             // Special case for elk_production_raw_from_terrain
             if($perk->key === 'elk_production_raw_from_terrain')

@@ -27,6 +27,7 @@ class ImprovementCalculator
                     'gold' => 1,
                     'lumber' => 2,
                     'ore' => 2,
+                    'stones' => 1.2,
                     'gems' => 18,
                     'pearls' => 20,
                 ];

@@ -60,6 +60,7 @@ class TechHelper
             'mana_production_raw' => '%s% mana/tick production',
             'ore_production_raw' => '%s% ore/tick production',
             'gold_production_raw' => '%s% gold/tick production',
+            'stones_production_raw' => '%s% stone/tick production',
 
             // ODA
             'prestige_gains' => '%+d%% higher prestige gains',

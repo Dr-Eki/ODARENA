@@ -22,7 +22,6 @@ use OpenDominion\Models\GameEvent;
 use OpenDominion\Models\Realm;
 use OpenDominion\Models\Round;
 use OpenDominion\Models\RoundWinner;
-use OpenDominion\Models\TickChange;
 
 use OpenDominion\Calculators\Dominion\EspionageCalculator;
 use OpenDominion\Calculators\Dominion\ImprovementCalculator;
@@ -125,6 +124,8 @@ class TickService
      */
     public function tick()
     {
+
+
         if (File::exists('storage/framework/down')) {
             xtLog('Tick at ' . $this->now . ' skipped.');
             return;
@@ -139,12 +140,31 @@ class TickService
             $round->is_ticking = 1;
             $round->save();
     
+            // This is super quick so it's fine to run it twice per tick.
+            DB::transaction(function () use ($round) {
+
+                xtLog('* Delete all finished dominion queues before tick start');
+                $this->deleteAllFinishedDominionQueues($round);
+
+                xtLog('* Delete all finished trade route queues before tick start');
+                $this->deleteAllFinishedTradeRouteQueues($round);
+            });
+    
             xtLog('* Queue, process, and wait for dominion precalculations.');
             $this->processPrecalculationJobs($round);
     
             // One transaction for all of these
             DB::transaction(function () use ($round) {
                 $this->temporaryData[$round->id] = [];
+    
+                xtLog('* Update all dominions');
+                $this->updateDominions($round);
+
+                xtLog('* Advance all dominion queues');
+                $this->advanceAllDominionQueues($round);
+
+                xtLog('* Advance all trade route queues');
+                $this->advanceAllTradeRouteQueues($round);
         
                 xtLog('* Checking for win conditions');
                 $this->handleWinConditions($round);
@@ -157,15 +177,6 @@ class TickService
     
                 xtLog('* Handle body decay');
                 $this->handleBodyDecay($round);
-    
-                xtLog('* Update all dominions');
-                $this->updateDominions($round);
-
-                xtLog('* Advance all dominion queues');
-                $this->advanceAllDominionQueues($round);
-
-                xtLog('* Advance all trade route queues');
-                $this->advanceAllTradeRouteQueues($round);
             });
     
             xtLog('* Queue, process, and wait for dominion jobs.');
@@ -179,10 +190,10 @@ class TickService
             // One transaction for all of these
             DB::transaction(function () use ($round) {
 
-                xtLog('* Delete all finished dominion queues');
+                xtLog('* Delete all finished dominion queues at tick end');
                 $this->deleteAllFinishedDominionQueues($round);
 
-                xtLog('* Delete all finished trade route queues');
+                xtLog('* Delete all finished trade route queues at tick end');
                 $this->deleteAllFinishedTradeRouteQueues($round);
             });
     
@@ -746,6 +757,45 @@ class TickService
     }
 
     public function processDominionJobs(Round $round): void
+    {
+
+        if(env('TICK_METHOD') ==='parallel')
+        {
+            $this->processDominionJobsParallel($round);
+        }
+        elseif(env('TICK_METHOD') ==='sequential')
+        {
+            $this->processDominionJobsSequential($round);
+        }
+        else
+        {
+            xtLog('** Invalid tick method specified in .env file. Please set TICK_METHOD to either "parallel" or "sequential".');
+        }
+    }
+
+    public function processDominionJobsSequential(Round $round): void
+    {
+        $dominions = $round->activeDominions()
+            ->where('protection_ticks', 0)
+            ->inRandomOrder()
+            ->get();
+    
+        // Process each dominion sequentially
+        foreach ($dominions as $dominion) {
+            xtLog("[{$dominion->id}] ** Processing dominion job: {$dominion->name}");
+            
+            // Create a new instance of the job
+            $job = new ProcessDominionJob($dominion);
+            
+            // Directly call the handle method to process the job immediately
+            $job->handle();
+            
+            // Optional: Add a delay between processing each dominion if needed
+            $closingDelay = (int)config('ticking.queue_closing_delay');
+            usleep($closingDelay);
+        }
+    }
+    public function processDominionJobsParallel(Round $round): void
     {
         $dominions = $round->activeDominions()
             ->where('protection_ticks', 0)

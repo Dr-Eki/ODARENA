@@ -121,6 +121,7 @@ class BuildingHelper
             'yak_production_raw' => 'Breeds %g yak per tick.',
             'kelp_production_raw' => 'Grows %g kelp per tick.',
             'gunpowder_production_raw' => 'Produces %g gunpowder per tick.',
+            'stones_production_raw' => 'Produces %g stones per tick.',
 
             'xp_generation_raw' => 'Generates %g XP per tick.',
 

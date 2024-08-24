@@ -309,6 +309,15 @@ spices:
     buy: 600
     sell: 600
 
+stones:
+  name: Stones
+  description: Various rocks and stones of high quality and desirable characteristics, used for building, crafting, and crushing.
+  buy: 0.6
+  sell: 0.3
+  trade:
+    buy: 1.2
+    sell: 1.2
+
 sugar:
   name: Sugar
   category: luxury

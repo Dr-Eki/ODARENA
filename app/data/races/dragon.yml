@@ -13,14 +13,14 @@ draftees_alias: militia
 resources:
   - gold
   - food
-  - ore
+  - stones
   - mana
   - gems
   - dragonscale
 
 construction_materials:
   - gold
-  - ore
+  - stones
 
 peasants_production:
   gold: 2.50
@@ -47,7 +47,7 @@ units:
       gold_upkeep_raw: 3
 
   - name: Driller
-    description: A miner, skilled in extracting ore from the mountains, strong and sturdy enough to put up defense.
+    description: A miner, skilled in extracting gems from the mountains, strong and sturdy enough to put up defense.
     training_time: 6
     type:
       - living
@@ -55,7 +55,7 @@ units:
       - intelligent
     cost:
       gold: 200
-      ore: 20
+      stones: 20
       peasant: 1
     power:
       offense: 0

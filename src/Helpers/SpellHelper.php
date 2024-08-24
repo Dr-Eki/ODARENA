@@ -60,6 +60,7 @@ class SpellHelper
             'food_production_raw_mod' => '%+g%% raw food production',
             'gems_production_raw_mod' => '%+g%% raw gem production',
             'gold_production_raw_mod' => '%+g%% raw gold production',
+            'stone_production_raw_mod' => '%+g%% raw stone production',
 
             'elk_production_raw_from_terrain' => 'Grants one elk per %1$s acres of %2$s each tick.',
 
@@ -76,6 +77,7 @@ class SpellHelper
             'magma_production_mod' => '%+g%% magma collection',
             'obsidian_production_mod' => '%+g%% obsidian generation',
             'strength_gain_mod' => '%+g%% strength gains',
+            'stones_production_mod' => '%+g%% stone production',
             'xp_generation_mod' => '%+g%% XP generation',
 
             'building_gold_mine_production_mod' => '%+g%% Gold Mine production',

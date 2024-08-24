@@ -1080,7 +1080,7 @@ class Dominion extends AbstractModel
                 return $result;
             }
             # Dark Elven slave workers
-            elseif(in_array($perkKey, ['ore_production_raw_from_prisoner', 'gold_production_raw_from_prisoner', 'gems_production_raw_from_prisoner']))
+            elseif(in_array($perkKey, ['ore_production_raw_from_prisoner', 'gold_production_raw_from_prisoner', 'gems_production_raw_from_prisoner', 'stones_production_raw_from_prisoner']))
             {
                 $perkValues = $this->extractBuildingPerkValues($perkValueString);
 

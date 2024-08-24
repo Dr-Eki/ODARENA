@@ -210,6 +210,7 @@ mining_equipment:
     - Weres
   perks:
     ore_production_mod: 2.5
+    stones_production_mod: 2.5
 
 minting:
   name: Minting
@@ -228,13 +229,6 @@ molluscs:
     - Glimjir
   perks:
     pearls_production_mod: 2.5
-
-commerce:
-  name: Commerce
-  excluded_races:
-    - Void
-  perks:
-    exchange_rate: 2.5
 
 # POPULATION
 
@@ -343,6 +337,15 @@ stoneworks:
   perks:
     ore_improvement_points: 5
 
+
+masonry:
+  name: Masonry
+  exclusive_races:
+    - Dragons
+    - Yeti
+  perks:
+    stones_improvement_points: 5
+
 woodworks:
   name: Woodworks
   excluded_races:
@@ -380,6 +383,14 @@ mercantilism:
     - Growth
   perks:
     land_per_trade_slot: -3.125
+
+commerce:
+  name: Commerce
+  excluded_races:
+    - Growth
+  perks:
+    max_trade_value_mod: 3.125
+
 
 # FACTION SPECIFIC
 

@@ -12,7 +12,7 @@ draftees_alias: yeti
 resources:
   - food
   - lumber
-  - ore
+  - stones
   - gems
   - mana
 
@@ -20,7 +20,7 @@ peasants_production:
   food: 1
 
 construction_materials:
-  - lumber
+  - stones
 
 spies_cost: 400,food
 wizards_cost: 200,food
@@ -51,7 +51,7 @@ units:
       offense: 0
       defense: 3
     perks:
-      ore_production_raw: 1
+      stones_production_raw: 1
 
   - name: Mutterer
     training_time: 9
@@ -69,9 +69,6 @@ units:
       offense: 0
       defense: 6
     perks:
-      #only_dies_vs_raw_power: 6 # >=
-      #counts_as_wizard: 0.1
-      #immortal_wizard: 1
       mana_production_raw: 0.1
 
   - name: Thrasher
@@ -100,15 +97,14 @@ units:
       - intelligent
       - wise
     cost:
-      food: 380
-      ore: 300
+      food: 500
       draftees: 1
     power:
       offense: 0
       defense: 3
     perks:
       #only_dies_vs_raw_power: 6 # >=
-      offense_from_resource_capped_exhausting: 6,30,ore # +6 OP if paired with 30 ore (was +16 from 150 ore)
+      offense_from_resource_capped_exhausting: 6,50,stones # +6 OP if paired with 30 ore (was +16 from 150 ore)
       faster_return: 2
       sendable_with_zero_op: 1
       #immortal_on_victory: 1
