@@ -48,7 +48,7 @@ units:
       offense_if_recently_invaded: 1.5,24
       counts_as_spy: 0.5
 
-  - name: Dryad2
+  - name: Dryad
     training_time: 12
     type:
       - living
@@ -63,7 +63,7 @@ units:
     perks:
       counts_as_wizard: 0.125
 
-  - name: Spriggan2
+  - name: Spriggan
     training_time: 12
     type:
       - living
