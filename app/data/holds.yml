@@ -847,7 +847,7 @@ zagkari_isles:
     - pearls
     - kelp
   
-mirkmoor_gravefields:
+mirk_gravefields:
   name: Mirkmoor Gravefields
   ruler_name: Sorrow-Bringer
   description: A vast, fog-shrouded expanse of waterlogged soil and twisted vegetation, Mirkmoor Gravefields is a grim testament to nature's resilience in the face of corruption. Countless tombstones and mausoleums, half-sunken into the mire, dot the landscape. The air is thick with the stench of decay and the eerie glow of swamp gas. Afflicted beings and exiled Dark Elves have made this desolate place their home, harvesting the unique resources born of death and decay. Visitors brave enough to enter are advised to tread carefully, for in Mirkmoor, the line between the living and the dead is perilously thin.
@@ -865,12 +865,13 @@ mirkmoor_gravefields:
     - gold
 
 under_the_tree:
-  name: Under the Tree
-  ruler_name: The Root
-  description: Located, as the name suggests, under The Tree, this hold is home to the Gnomes, who have built their homes and workshops in the roots and branches of the ancient tree.
+  name: Under The Tree
+  ruler_name: Flintock Rootbinder
+  description: Concealed within the labyrinthine roots and towering boughs of an ancient tree lies Under The Tree, a gnomish hold that defies conventional architecture. This subterranean-arboreal marvel is a pinnacle of gnomish ingenuity, where workshops and domiciles are craftily hewn into living wood and stone. The gnomes have forged a complex symbiosis with their colossal host, using a blend of advanced mechanics and simple magic to sustain their unique ecosystem. A network of root-channels serves as both a sophisticated aqueduct and a discreet means of communication, while bioluminescent fungi provide illumination in the deeper recesses. Under the pragmatic governance of Flintock Rootbinder, the hold has flourished into a nexus for innovation and trade, attracting a diverse array of visitors and residents who contribute to its intricate social tapestry. Here, amid the quiet creaking of wooden gears and the whisper of leaves, the gnomes of Under The Tree continue their endless pursuit of knowledge and craft, ever mindful of the delicate balance between progress and preservation.
   race: Gnome
   units_from: Gnome, Dwarg, Human, Wood Elf
   desired_resources:
+    - brimmer
     - gold
     - ore
     - gems
