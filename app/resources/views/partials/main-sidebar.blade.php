@@ -51,6 +51,9 @@
                             @if(($barrenLand = $landCalculator->getTotalBarrenLand($selectedDominion)))
                                 <span class="label label-danger pull-right">{{ number_format($barrenLand) }}</span>
                             @endif
+                            @if (!$selectedDominion->daily_land and $selectedDominion->protection_ticks == 0 and $selectedDominion->round->hasStarted())
+                                <span class="label label-primary pull-right"><i class="fa fa-plus"></i></span>
+                            @endif
                         </a>
                     </li>
                 @endif
@@ -145,6 +148,7 @@
                     <li class="{{ Route::is('dominion.decrees') ? 'active' : null }}"><a href="{{ route('dominion.decrees') }}"><i class="fas fa-gavel fw-fw"></i> <span>Decrees</span></a></li>
                 @endif
 
+                {{-- 
                 <li class="{{ Route::is('dominion.land') ? 'active' : null }}">
                     <a href="{{ route('dominion.land') }}">
                         <i class="fa fa-map fa-fw"></i>
@@ -154,6 +158,7 @@
                         @endif
                     </a>
                 </li>
+                --}}
 
                 @if($roundSettings['deities'] and !$selectedDominion->race->getPerkValue('cannot_submit_to_deity'))
                     <li class="{{ Route::is('dominion.deity') ? 'active' : null }}"><a href="{{ route('dominion.deity') }}"><i class="fas fa-pray fa-fw"></i> <span>Deity</span></a></li>
