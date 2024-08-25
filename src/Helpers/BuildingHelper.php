@@ -7,6 +7,7 @@ use OpenDominion\Models\Building;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Resource;
 use OpenDominion\Models\Tech;
+use OpenDominion\Models\Unit;
 
 
 class BuildingHelper
@@ -207,6 +208,7 @@ class BuildingHelper
             'unit_blood_costs' => 'Unit blood costs %2$s%% for every %1$s%% (max %3$s%% reduction).',
             'unit_food_costs' => 'Unit food costs %2$s%% for every %1$s%% (max %3$s%% reduction).',
 
+
             'machine_unit_costs' => '%2$s%% cost of machine units for every %1$s%% (max %3$s%% reduction).',
 
             'extra_units_trained' => '%2$s%% additional units trained for free for every %1$s%% (max %3$s%% extra units).',
@@ -334,6 +336,11 @@ class BuildingHelper
             'snow_elf_units_production' => 'Produces %1$s %2$s per tick.',
 
         ];
+
+        foreach(Unit::all() as $unit)
+        {
+            $perkTypeStrings[$unit->key . '_unit_cost'] = '%2$+g%% cost of ' . Str::plural($unit->name) . ' per %1$s%% (max %3$s%% reduction).';
+        }
 
 
         foreach ($building->perks as $perk)

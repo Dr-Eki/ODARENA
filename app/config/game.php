@@ -5,7 +5,7 @@
 return [
 
     'extended_logging' => true,
-    'extended_logging_with_dump' => true,
+    'extended_logging_with_dump' => false,
 
     'starting_land' => 1000,
 

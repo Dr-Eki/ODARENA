@@ -31,8 +31,8 @@ units:
       - living
       - sentient
     cost:
-      mana: 60
-      food: 200
+      mana: 90
+      food: 300
     power:
       offense: 3
       defense: 0
@@ -48,7 +48,7 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 250
+      gold: 375
       wizard: 1
     power:
       offense: 0
@@ -68,7 +68,7 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 350
+      gold: 525
       wizard: 1
     power:
       offense: 0
@@ -89,9 +89,9 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1000
-      gems: 100
-      mana: 120
+      gold: 1500
+      gems: 150
+      mana: 180
     power:
       offense: 4
       defense: 4

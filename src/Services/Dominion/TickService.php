@@ -10,6 +10,7 @@ use Exception;
 use File;
 use Log;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Bus;
 use OpenDominion\Jobs\ProcessDominionJob;
 use OpenDominion\Jobs\ProcessHoldJob;
 use OpenDominion\Jobs\ProcessPrecalculationJob;
@@ -124,17 +125,18 @@ class TickService
      */
     public function tick()
     {
-
-
         if (File::exists('storage/framework/down')) {
             xtLog('Tick at ' . $this->now . ' skipped.');
             return;
         }
     
         xtLog('Scheduled tick started at ' . $this->now . '.');
+        
+        $chain = [];
     
         foreach (Round::active()->get() as $round)
         {
+
             xtLog('Round ' . $round->number . ' tick started at ' . $this->now . '.');
     
             $round->is_ticking = 1;
@@ -264,8 +266,8 @@ class TickService
             xtLog("[{$dominion->id}] ** Update dominion (from dominion_tick)");
             $this->updateDominion($dominion);
 
-            xtLog("[{$dominion->id}] ** Audit and repair terrain");
-            $this->terrainService->auditAndRepairTerrain($dominion);
+            #xtLog("[{$dominion->id}] ** Audit and repair terrain");
+            #$this->terrainService->auditAndRepairTerrain($dominion);
         });
 
         xtLog("[{$dominion->id}] ** Queuing up manual tick in ProcessDominionJob");
@@ -544,7 +546,7 @@ class TickService
                 ]);
                 $round->save(['event' => HistoryService::EVENT_ROUND_COUNTDOWN]);
 
-                if(config('game.extended_logging')) { Log::debug('*** Countdown triggered by ' . $realms->count() . ' realm(s)'); }
+                xtLog('*** Countdown triggered by ' . $realms->count() . ' realm(s)');
             }
 
             if(!$realms->count() and $round->hasCountdown())
@@ -585,7 +587,7 @@ class TickService
                     ]);
                     $round->save(['event' => HistoryService::EVENT_ROUND_COUNTDOWN]);
 
-                    if(config('game.extended_logging')) { Log::debug('*** Countdown triggered by ticks'); }
+                    xtLog('*** Countdown triggered by ticks');
                 }
             }
             # For indefinite rounds, create a countdown.
@@ -610,7 +612,7 @@ class TickService
                     $round->end_tick = $endTick;
                     $round->save();
 
-                    if(config('game.extended_logging')) { Log::debug('*** Countdown triggered by ' . $dominion->name . ' in realm #' . $dominion->realm->number); }
+                    xtLog('*** Countdown triggered by ' . $dominion->name . ' in realm #' . $dominion->realm->number);
                 }
             }
         }

@@ -39,7 +39,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 500
+      gold: 720
     power:
       offense: 0
       defense: 4.5
@@ -54,8 +54,8 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 200
-      stones: 20
+      gold: 300
+      stones: 30
       peasant: 1
     power:
       offense: 0
@@ -71,8 +71,8 @@ units:
       - sentient
       - legendary
     cost:
-      gold: 1400
-      dragonscale: 10
+      gold: 2000
+      dragonscale: 12
       draftees: 1
     power:
       offense: 8
@@ -105,3 +105,4 @@ units:
       protects_resource_from_theft: gems,10000
       immortal_on_overwhelming_victory: 1.10 # OP:DP ratio required to be immortal
       dies_into_resource: 1000,dragonscale
+      dragonscale_production_raw: 0.1

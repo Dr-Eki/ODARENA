@@ -192,6 +192,7 @@ kemuhl:
     - lumber
     - gold
     - ore
+    - stones
     - sugar
   sold_resources:
     - gems
@@ -222,6 +223,7 @@ forgeheart:
     - food
     - gold
     - ore
+    - stones
   sold_resources:
     - brimmer
     - gold
@@ -292,6 +294,7 @@ drakmount:
     - gold
     - obsidian
     - dragonscale
+    - stones
 
 vas_nilghad:
   name: Vas Nilghad
@@ -555,6 +558,7 @@ shadowmire:
     - gems
     - gold
     - spices
+    - stones
   sold_resources:
     - books
     - gold
@@ -752,6 +756,7 @@ windward_fortress:
     - obsidian
     - thunderstone
     - dragonscale
+    - stones
 
 hammerhead_bay:
   name: Hammerhead Bay
@@ -804,3 +809,73 @@ blackmoss_cavern:
     - kelp
     - lumber
     - mud
+
+mqauin_uktula:
+  name: M'Qauin Uktula
+  ruler_name: Dengi-Sela Jadigo
+  description: Built around a large oasis in the desert, M'Qauin Uktula is a hold of the Jagunii trade and resting hub, known for its hospitality and exotic goods.
+  race: Jagunii
+  units_from: Jagunii
+  desired_resources:
+    - books
+    - food
+    - gems
+    - gold
+    - mud
+    - stones
+  sold_resources:
+    - gold
+    - figurines
+    - instruments
+    - obsidian
+
+zagkari_isles:
+  name: Zagkari Isles
+  ruler_name: Alhaji Wulwandu
+  description: A tropical island paradise known for its vast sugar cane plantations, shallow waters, and fierce storms.
+  race: Jagunii
+  units_from: Jagunii, Glimjir
+  desired_resources:
+    - gold
+    - lumber
+    - ore
+    - spices
+  sold_resources:
+    - sugar
+    - food
+    - gold
+    - pearls
+    - kelp
+  
+mirkmoor_gravefields:
+  name: Mirkmoor Gravefields
+  ruler_name: Sorrow-Bringer
+  description: A vast, fog-shrouded expanse of waterlogged soil and twisted vegetation, Mirkmoor Gravefields is a grim testament to nature's resilience in the face of corruption. Countless tombstones and mausoleums, half-sunken into the mire, dot the landscape. The air is thick with the stench of decay and the eerie glow of swamp gas. Afflicted beings and exiled Dark Elves have made this desolate place their home, harvesting the unique resources born of death and decay. Visitors brave enough to enter are advised to tread carefully, for in Mirkmoor, the line between the living and the dead is perilously thin.
+  race: Afflicted
+  units_from: Afflicted, Dark Elf
+  desired_resources:
+    - swamp_gas
+    - mud
+    - acid
+    - gold
+    - miasma
+  sold_resources:
+    - body
+    - blood
+    - gold
+
+under_the_tree:
+  name: Under the Tree
+  ruler_name: The Root
+  description: Located, as the name suggests, under The Tree, this hold is home to the Gnomes, who have built their homes and workshops in the roots and branches of the ancient tree.
+  race: Gnome
+  units_from: Gnome, Dwarg, Human, Wood Elf
+  desired_resources:
+    - gold
+    - ore
+    - gems
+    - mana
+  sold_resources:
+    - food
+    - gold
+    - stones

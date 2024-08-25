@@ -21,9 +21,9 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1100
-      ore: 50
-      lumber: 150
+      gold: 1600
+      ore: 80
+      lumber: 220
       draftees: 1
     power:
       offense: 4
@@ -38,9 +38,9 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1600
-      ore: 200
-      lumber: 50
+      gold: 2400
+      ore: 250
+      lumber: 85
       draftees: 1
     power:
       offense: 6
@@ -55,10 +55,10 @@ units:
       - machine
       - immobile
     cost:
-      gold: 1000000
-      ore: 500000
-      lumber: 250000
-      gems: 100000
+      gold: 1500000
+      ore: 750000
+      lumber: 325000
+      gems: 150000
     power:
       offense: 0
       defense: 0

@@ -1,5 +1,8 @@
 <?php
 
+// We want strict types here.
+declare(strict_types=1);
+
 namespace OpenDominion\Jobs;
 
 use DB;
@@ -173,8 +176,8 @@ class ProcessDominionJob implements ShouldQueue
             xtLog("[{$this->dominion->id}] ** Updating spells");
             $this->updateSpells($this->dominion);
 
-            xtLog("[{$this->dominion->id}] ** Audit and repair terrain");
-            $this->terrainService->auditAndRepairTerrain($this->dominion);
+            #xtLog("[{$this->dominion->id}] ** Audit and repair terrain");
+            #$this->terrainService->auditAndRepairTerrain($this->dominion);
                 
             xtLog("[{$this->dominion->id}] ** Handle finished queues");
             $this->handleFinishedQueues($this->dominion);
@@ -430,11 +433,13 @@ class ProcessDominionJob implements ShouldQueue
 
         $this->improvementCalculator->createOrIncrementImprovements($dominion, $improvements);
 
+        $improvementInterestPerk = 0;
+        $improvementInterestPerk += $dominion->race->getPerkValue('improvements_interest');
+        $improvementInterestPerk += (mt_rand((int)($dominion->race->getPerkValue('improvements_interest_random_min')*100), (int)($dominion->race->getPerkValue('improvements_interest_random_max')*100)))/100;
+
+
         # Impterest
-        if(
-            ($improvementInterestPerk = $dominion->race->getPerkValue('improvements_interest')) or
-            ($improvementInterestPerk = (mt_rand($dominion->race->getPerkValue('improvements_interest_random_min')*100, $dominion->race->getPerkValue('improvements_interest_random_max')*100))/100)
-            )
+        if($improvementInterestPerk)
         {
             $multiplier = 1;
             $multiplier += $dominion->getBuildingPerkMultiplier('improvements_interest');

@@ -99,11 +99,9 @@ return [
     'settings' => [
         'DPA_CONSTANT' => 10,
         'DPA_OVERSHOT' => 1.10,
-        'DPA_PER_TICK' => (1/16),
+        'DPA_PER_TICK' => (1/24),
         'DPA_PER_TIMES_INVADED' => 1,
         'OPA_MULTIPLIER' => (4/3),
-        'SPECS_RATIO_MIN' => 50,
-        'SPECS_RATIO_MAX' => 500,
         'CHANCE_TO_HIT_CONSTANT' => 14,
         'LAND_GAIN_MIN' => 30,
         'LAND_GAIN_MAX' => 100,

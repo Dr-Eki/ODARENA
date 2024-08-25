@@ -48,7 +48,7 @@ units:
       - living
       - sentient
     cost:
-      gold: 260
+      gold: 380
       draftees: 1
     power:
       offense: 0
@@ -63,8 +63,8 @@ units:
       - living
       - sentient
     cost:
-      gold: 400
-      lumber: 40
+      gold: 600
+      lumber: 60
       draftees: 1
     power:
       offense: 0

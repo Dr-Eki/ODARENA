@@ -37,7 +37,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 980
+      gold: 1400
       draftees: 1
     power:
       offense: 4
@@ -53,7 +53,7 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1200
+      gold: 1800
       draftees: 1
     power:
       offense: 5
@@ -104,8 +104,8 @@ units:
       prayer: 30000
     power:
       offense: 0
-      defense: 2000
+      defense: 2200
     perks:
       immortal: 1
       offensive_power_mod: 0.10
-      cost_increase_to_train_per_unit: 2.75
+      cost_increase_to_train_per_unit: 2.60

@@ -431,6 +431,7 @@ class UnitHelper
             'miasma_production_raw' => 'Generates %s miasma/tick.',
             'gunpowder_production_raw' => 'Produces %s gunpowder/tick.',
             'stones_production_raw' => 'Produces %s stones/tick.',
+            'dragonscales_production_raw' => 'Sheds %s dragonscales/tick.',
 
             'gold_production_raw_from_pairing' => 'Produces %2$s gold/tick if paired with %1$s at home.',
             'food_production_raw_from_pairing' => 'Produces %2$s food/tick if paired with %1$s at home.',

@@ -45,7 +45,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1200
+      gold: 1800
       draftees: 1
     power:
       offense: 0
@@ -61,7 +61,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1600
+      gold: 2400
       draftees: 1
     power:
       offense: 7
@@ -78,7 +78,7 @@ units:
       - intelligent
       - massive
     cost:
-      gold: 360000
+      gold: 540000
     power:
       offense: 0
       defense: 1200

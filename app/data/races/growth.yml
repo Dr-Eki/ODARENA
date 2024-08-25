@@ -53,7 +53,7 @@ units:
       - living
       - mindless
     cost:
-      food: 500
+      food: 750
       draftees: 1
     power:
       offense: 1

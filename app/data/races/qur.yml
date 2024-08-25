@@ -46,9 +46,9 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 800
-      ore: 50
-      lumber: 50
+      gold: 1200
+      ore: 75
+      lumber: 75
       draftees: 1
     power:
       offense: 0
@@ -63,8 +63,8 @@ units:
     type:
       - magical
     cost:
-      gems: 20
-      mana: 5
+      gems: 30
+      mana: 7
     power:
       offense: 0
       defense: 2
@@ -82,8 +82,8 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1700
-      mana: 25
+      gold: 2500
+      mana: 35
       draftees: 1
     power:
       offense: 5

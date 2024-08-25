@@ -39,7 +39,7 @@ units:
       - living
       - mindless
     cost:
-      food: 400
+      food: 600
       draftees: 1
     power:
       offense: 2
@@ -56,8 +56,8 @@ units:
       - living
       - sentient
     cost:
-      gold: 330
-      food: 10
+      gold: 480
+      food: 15
       peasant: 1
     power:
       offense: 0
@@ -72,7 +72,7 @@ units:
       - living
       - sentient
     cost:
-      gold: 800
+      gold: 1200
       draftees: 1
     power:
       offense: 0
@@ -85,8 +85,8 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 850
-      miasma: 8
+      gold: 1250
+      miasma: 10
       draftees: 2
     power:
       offense: 6

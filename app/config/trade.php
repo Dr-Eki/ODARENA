@@ -17,8 +17,10 @@ return [
         'luxury' => (5/4)*10000,
     ],
 
+    
     'trade_base_max' => 10000,
 
+    // Divide land by this to get trade slots
     'land_per_trade_slot' => 200,
 
     'sentiment_per_trade_route' => 50,

@@ -96,8 +96,8 @@ units:
       - wise
     cost:
       wizard: 1
+      gold: 4200
       mana: 200
-      gold: 3000
     power:
       offense: 0
       defense: 0
@@ -114,13 +114,12 @@ units:
       - wise
     cost:
       unit5: 1
-      mana: 1000
-      gloom: 10
-      gold: 1000
+      mana: 1200
+      gloom: 12
     power:
       offense: 0
       defense: 0
     perks:
-      counts_as_wizard: 3
+      counts_as_wizard: 4
       counts_as_wizard_from_time: 18,06,3
-      does_not_count_towards_sorcery: 1
+      #does_not_count_towards_sorcery: 1

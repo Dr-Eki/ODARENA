@@ -31,8 +31,8 @@ units:
       - intelligent
     cost:
       prisoner: 1
-      gold: 100
-      ore: 25
+      gold: 125
+      ore: 35
     power:
       offense: 3
       defense: 1.5
@@ -100,7 +100,7 @@ units:
       offense: 5
       defense: 2
     perks:
-      offense_from_target_active_offensive_spells: 0.10,1 # per spell, max total
+      #offense_from_target_active_offensive_spells: 0.10,1 # per spell, max total
       #offense_from_active_self_spells: 0.20
       kills_into_resource_per_casualty: 1,prisoner
       displaced_peasants_conversion: 1

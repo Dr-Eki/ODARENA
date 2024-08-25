@@ -25,7 +25,7 @@ units:
     type:
       - mindless
     cost:
-      gold: 560
+      gold: 840
       draftees: 1
     power:
       offense: 0
@@ -39,7 +39,7 @@ units:
     type:
       - mindless
     cost:
-      mana: 200
+      mana: 300
       body: 1
     power:
       offense: 4

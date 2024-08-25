@@ -2,14 +2,16 @@ name: Jagunii
 alignment: good
 description:
 home_terrain: desert
-playable: 0 # Round 88
+playable: 1
 skill_level: 2
+magic_level: 2
 
 
 perks:
-  xp_gains: 25
-  prestige_gains: 25
-  gems_production_mod: 30
+  xp_gains: 20
+  prestige_gains: 20
+  gems_production_mod: 20
+  max_trade_value_mod: 10
   salvaging: 25
 
 units:
@@ -20,12 +22,13 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 250
-      ore: 5
-      lumber: 5
+      gold: 900
+      ore: 60
+      lumber: 100
+      draftees: 1
     power:
       offense: 4
-      defense: 1
+      defense: 2
 
   - name: Lancer
     training_time: 6
@@ -34,53 +37,73 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 250
-      ore: 5
-      lumber: 5
+      gold: 900
+      ore: 100
+      lumber: 60
+      draftees: 1
+    power:
+      offense: 2
+      defense: 4
+
+  - name: Drummer
+    training_time: 6
+    type:
+      - living
+      - sentient
+      - intelligent
+    cost:
+      gold: 300
+      ore: 10
+      lumber: 10
+      draftees: 1
     power:
       offense: 0
-      defense: 4
+      defense: 0
+    perks:
+      increases_morale_fixed: 0.1 # Morale increased by 0.1 per Drummer
+      building_limit: mammothary,2
 
   - name: Mammoth
     training_time: 12
     type:
-      - living
-      - sentient
-      - massive
       - intelligent
+      - living
+      - massive
+      - sentient
     cost:
-      gold: 20000
+      gold: 40000
     power:
       offense: 0
-      defense: 80
+      defense: 120
     perks:
-      no_draftee: 1
       does_not_count_as_population: 1
-      food_consumption_raw: 3
+      food_consumption_raw: 4
       casualties: -50
       faster_return: 6 # This is used for when War Mammoths die into Mammoths
 
   - name: War Mammoth
     training_time: 12
     type:
-      - living
-      - sentient
-      - massive
       - intelligent
+      - living
+      - massive
+      - sentient
     cost:
-      ore: 2000
+      gold: 50000
+      ore: 10000
+      lumber: 10000
       gems: 1000
-      unit1: 8
-      unit2: 4
+      unit1: 24
+      unit2: 12
       unit3: 1
+      unit4: 1
     power:
-      offense: 140
-      defense: 80
+      offense: 264
+      defense: 220
     perks:
-      dies_into: 3
+      dies_into: 4
       casualties_on_offense: -25
       casualties_on_defense: -50
-      no_draftee: 1
-      does_not_count_as_population: 1
-      food_consumption_raw: 6
-      plunders: gems;1,food;1
+      food_consumption_raw: 40
+      plunders: gold;20,gems;8
+      increases_morale_fixed: 0.2 # Morale increased by 0.2  per Drummer

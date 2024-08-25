@@ -41,8 +41,8 @@ units:
     - living
     - sentient
   cost:
-    gold: 700
-    ore: 100
+    gold: 1100
+    ore: 140
     draftees: 1
   power:
     offense: 0
@@ -54,7 +54,7 @@ units:
   type:
     - equipment
   cost:
-    ore: 420
+    ore: 620
   power:
     offense: 0
     defense: 0
@@ -68,7 +68,7 @@ units:
   type:
     - equipment
   cost:
-    lumber: 260
+    lumber: 400
   power:
     offense: 0
     defense: 0
@@ -82,7 +82,7 @@ units:
   type:
     - equipment
   cost:
-    ore: 400
+    ore: 600
   power:
     offense: 0
     defense: 0
@@ -95,7 +95,7 @@ units:
     - living
     - sentient
   cost:
-    gold: 2300
+    gold: 3400
     draftees: 1
   power:
     offense: 6

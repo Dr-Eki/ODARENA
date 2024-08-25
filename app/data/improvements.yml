@@ -179,15 +179,6 @@ tactics:
   perks:
     offensive_power: 30,6800
 
-warding:
-  name: Warding
-  excluded_races:
-    - Barbarian
-    - Growth
-    - Troll
-  perks:
-    sorcery_damage_suffered: -40,5500
-
 warfare:
   name: Warfare
   excluded_races:
@@ -905,14 +896,6 @@ readiness:
     unit_gold_costs: -35,5500
     unit_ore_costs: -35,5500
 
-warding_kerranad:  
-  enabled: 0
-  name: Warding
-  exclusive_races:
-    - Kerranad
-  perks:
-    sorcery_damage_suffered: -55,6500
-
 wizardry_kerranad:  
   enabled: 0
   name: Wizardry
@@ -1039,13 +1022,6 @@ vigilance:
   perks:
     theft_protection: 60,7000
 
-warding_wood_elf:  
-  enabled: 0
-  name: Warding
-  exclusive_races:
-    - Wood Elf
-  perks:
-    sorcery_damage_suffered: -80,10000
 
 wizardry_wood_elf:  
   enabled: 0

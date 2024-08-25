@@ -230,6 +230,7 @@ ore_mine:
     - Dwarg
     - Goblin
     - Human
+    - Jagunii
     - Kobold
     - Orc
     - Qur
@@ -246,6 +247,7 @@ saw_mill:
     - Goblin
     - Kobold
     - Human
+    - Jagunii
     - Orc
     - Snow Elf
     - Troll
@@ -286,6 +288,7 @@ watermill:
     - Goblin
     - Gnome
     - Human
+    - Jagunii
     - Kobold
     - Snow Elf
     - Troll
@@ -912,7 +915,7 @@ water_temple:
     target_defensive_power_mod: 1,-1.5,30 # Every 1% gives -2% DP mods, max -40% DP mods
     population_growth: 1,6 # Every 1%, gives 6%
 
-wharf:  
+wharf:
   name: Wharf
   category: other
   exclusive_races:
@@ -1047,6 +1050,19 @@ terrace:
     casualties_on_defense: 1,-5,25 # 1% gives -5%, max -50%
 
 # END ICEKIN
+
+# BEGIN JAGUNII
+
+mammothary:
+  name: Mammothary
+  category: production
+  exclusive_races:
+    - Jagunii
+  perks:
+    mammoth_unit_cost: 1,-2,40 # Every 1% gives -2% unit cost, max -40%
+    war_mammoth_unit_cost: 1,-1,20 # Every 1% gives -2% unit cost, max -40%
+
+# END JAGUNII
 
 # BEGIN NOX
 

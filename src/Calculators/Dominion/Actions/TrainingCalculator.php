@@ -150,6 +150,7 @@ class TrainingCalculator
                         $multiplier = 1;
                         $multiplier += $this->getSpecialistEliteCostMultiplier($dominion, $costResourceKey);
                         $multiplier += $this->getAttributeCostMultiplier($dominion, $unit);
+                        $multiplier += $this->getUnitSpecificCostMultiplier($dominion, $unit, $costResourceKey);
     
                         $multiplier += $this->militaryCalculator->getTotalUnitsForSlot($dominion, $unit->slot) * ($dominion->race->getUnitPerkValueForUnitSlot($unit->slot, 'cost_increase_to_train_per_unit') / 100);
     
@@ -434,6 +435,20 @@ class TrainingCalculator
             $multiplier += $dominion->getTechPerkMultiplier($attribute . '_unit_costs');
             $multiplier += $dominion->getBuildingPerkMultiplier($attribute . '_unit_costs');
         }
+
+        return $multiplier;
+    }
+
+    public function getUnitSpecificCostMultiplier(Dominion $dominion, Unit $unit, string $costResourceKey): float
+    {
+
+        if(!array_key_exists($costResourceKey, $unit->cost) or !in_array($costResourceKey, config('training.default_reduceable_resources')))
+        {
+            return 0;
+        }
+
+        $multiplier = 0;
+        $multiplier += $dominion->getBuildingPerkMultiplier($unit->key . '_unit_cost');
 
         return $multiplier;
     }

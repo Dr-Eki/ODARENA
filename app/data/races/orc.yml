@@ -87,7 +87,7 @@ units:
       - intelligent
       - wise
     cost:
-      gold: 1500
+      gold: 2400
       ore: 300
       draftees: 1
     power:

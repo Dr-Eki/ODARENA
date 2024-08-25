@@ -461,9 +461,12 @@ class InvadeActionService
             }
 
             # Sending more than 22,000 OP in the first 12 ticks
-            if($attacker->round->ticks <= 12 and $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $units, [], true) > 22000)
+            $maximumOpRestrictionTicks = config('military.maximum_op_restriction_ticks');
+            $maximumOpRestrictionValue = config('military.maximum_op_restriction_value');
+
+            if($attacker->round->ticks <= $maximumOpRestrictionTicks and $this->militaryCalculator->getOffensivePower($attacker, $target, $landRatio, $units, [], true) > $maximumOpRestrictionValue)
             {
-                throw new GameException('You cannot send more than 22,000 OP in a single invasion during the first 12 ticks of the round.');
+                throw new GameException("You cannot send more than " . number_format($maximumOpRestrictionValue) ." OP in a single invasion during the first {$maximumOpRestrictionTicks} ticks of the round.");
             }
         
             $this->invasion['defender']['recently_invaded_count'] = $this->militaryCalculator->getRecentlyInvadedCount($defender);

@@ -87,6 +87,35 @@ spurt:
   perks:
     convert_resource_to_land: 100000,food # amount, resource
 
+## Jagunii
+retribution:
+  name: Retribution
+  level: 0
+  scope: self
+  class: passive
+  cost: 0
+  duration: 24
+  cooldown: 48
+  exclusive_races:
+    - Jagunii
+  perks:
+    offensive_power_on_retaliation: 15
+
+## Kerranad
+justice:
+  enabled: 0
+  name: Justice
+  level: 0
+  scope: self
+  class: passive
+  cost: 0
+  duration: 12
+  cooldown: 36
+  exclusive_races:
+    - Kerranad
+  perks:
+    offensive_power_on_retaliation: 20
+
 ## Kobold
 
 howling:
@@ -445,20 +474,6 @@ rapid_compression:
     - Imperial Gnome
   perks:
     resource_conversion_capped: ore,brimmer,100,20,1000000 # from, to, percentage, ratio:1, max_from
-
-retribution:  
-  enabled: 0
-  name: Retribution
-  scope: self
-  class: passive
-  cost: 8
-  duration: 48
-  cooldown: 0
-  exclusive_races:
-    - Jagunii
-    - Kerranad
-  perks:
-    offensive_power_on_retaliation: 20
 
 marsh_attacks:  
   enabled: 0

@@ -39,7 +39,7 @@ units:
       - sentient
       - intelligent
     cost:
-      mana: 248
+      mana: 372
       sapling: 1
     power:
       offense: 3
@@ -48,21 +48,6 @@ units:
       offense_if_recently_invaded: 1.5,24
       counts_as_spy: 0.5
 
-  - name: Sprite
-    training_time: 12
-    type:
-      - living
-      - sentient
-      - intelligent
-    cost:
-      mana: 356
-      sapling: 1
-    power:
-      offense: 0
-      defense: 6
-    perks:
-      counts_as_wizard_defense: 0.25
-
   - name: Dryad
     training_time: 12
     type:
@@ -70,7 +55,7 @@ units:
       - sentient
       - intelligent
     cost:
-      mana: 356
+      mana: 534
       sapling: 1
     power:
       offense: 0
@@ -85,7 +70,7 @@ units:
       - sentient
       - intelligent
     cost:
-      mana: 750
+      mana: 1125
       sapling: 1
     power:
       offense: 9

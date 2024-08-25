@@ -36,8 +36,8 @@ units:
       - machine
       - immobile
     cost:
-      gold: 400
-      ore: 200
+      gold: 600
+      ore: 300
       draftees: 1
     power:
       offense: 0

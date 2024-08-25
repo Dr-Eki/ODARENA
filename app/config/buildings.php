@@ -203,7 +203,10 @@ return [
         'population_capped',
         'population_growth_capped',
         'unit_pairing',
-        'unit_pairing_capped'
+        'unit_pairing_capped',
+
+        'mammoth_unit_cost',
+        'war_mammoth_unit_cost',
     ],
 
 
