@@ -44,7 +44,7 @@ units:
       - wise
     cost:
       food: 150
-      ore: 75
+      stones: 75
       lumber: 75
       draftees: 1
     power:
@@ -62,7 +62,7 @@ units:
       - wise
     cost:
       food: 360
-      ore: 225
+      stones: 225
       lumber: 150
       draftees: 1
     power:
@@ -80,7 +80,7 @@ units:
       - wise
     cost:
       food: 360
-      ore: 240
+      stones: 240
       lumber: 150
       draftees: 1
     power:

@@ -106,4 +106,4 @@ units:
       casualties_on_defense: -50
       food_consumption_raw: 40
       plunders: gold;20,gems;8
-      increases_morale_fixed: 0.2 # Morale increased by 0.2  per Drummer
+      increases_morale_fixed: 0.2 # Morale increased by 0.2  per War Mammoth
