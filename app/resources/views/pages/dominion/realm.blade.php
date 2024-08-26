@@ -124,6 +124,7 @@
                         <col width="100">
                         <col width="100">
                         <col width="100">
+                        <col width="100">
                     </colgroup>
                     <thead>
                         <tr>
@@ -133,6 +134,7 @@
                             <th class="text-center">Deity</th>
                             <th class="text-center">Land</th>
                             <th class="text-center">Networth</th>
+                            <th class="text-center">DP</th>
                             <th class="text-center">Units<br>Returning</th>
                         </tr>
                     </thead>
@@ -263,6 +265,13 @@
                                     </td>
                                     <td class="text-center">{{ number_format($dominion->land) }}</td>
                                     <td class="text-center">{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}</td>
+                                    <td class="text-center">
+                                        @if($dominion->getSpellPerkValue('fog_of_war'))
+                                            <em class='text-muted'>Unknown</em>
+                                        @else
+                                            {{ number_format($militaryCalculator->getDefensivePower($dominion)) }}
+                                        @endif
+                                    </td>
                                     <td class="text-center">
                                         @if ($militaryCalculator->hasReturningUnits($dominion))
                                             <span class="label label-success">Yes</span>
