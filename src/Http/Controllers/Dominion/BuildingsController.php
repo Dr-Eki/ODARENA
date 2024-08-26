@@ -18,12 +18,11 @@ use OpenDominion\Services\Dominion\Actions\BuildActionService;
 use OpenDominion\Http\Requests\Dominion\Actions\BuildActionRequest;
 use OpenDominion\Helpers\RaceHelper;
 
-class BuildingController extends AbstractDominionController
+class BuildingsController extends AbstractDominionController
 {
     public function getBuildings()
     {
         $dominion = $this->getSelectedDominion();
-        $dominionBuildings = [];
         $buildingCalculator = app(BuildingCalculator::class);
         $buildings = Building::all()->where('enabled',1);
 
@@ -38,20 +37,21 @@ class BuildingController extends AbstractDominionController
 
         $availableBuildings = $buildingCalculator->getDominionBuildingsAvailableAndOwned($dominion)->sortBy('category');
 
-        return view('pages.dominion.buildings', [
-
+        $viewData = [
             'availableBuildings' => $availableBuildings,
             'buildings' => $buildings,
             'categories' => $categories,
 
             'buildingCalculator' => app(BuildingCalculator::class),
-            'buildingHelper' => app(BuildingHelper::class),
+            'buildingHelper' => $buildingHelper,
             'constructionCalculator' => app(ConstructionCalculator::class),
             'landCalculator' => app(LandCalculator::class),
             'queueService' => app(QueueService::class),
-            'raceHelper' => app(RaceHelper::class),
-            'landHelper' => app(LandHelper::class),
-        ]);
+            #'raceHelper' => app(RaceHelper::class),
+            #'landHelper' => app(LandHelper::class),
+        ];
+
+        return view('pages.dominion.buildings', $viewData);
     }
 
     public function postBuildings(BuildActionRequest $request)

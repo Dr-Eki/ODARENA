@@ -104,10 +104,10 @@ $router->group(['middleware' => 'auth'], static function (Router $router) {
             $router->get('advisors/history')->uses('Dominion\AdvisorsController@getHistory')->name('advisors.history');
 
             # Buildings
-            $router->get('buildings')->uses('Dominion\BuildingController@getBuildings')->name('buildings');
-            $router->post('buildings')->uses('Dominion\BuildingController@postBuildings');
-            $router->get('demolish')->uses('Dominion\BuildingController@getDemolish')->name('demolish');
-            $router->post('demolish')->uses('Dominion\BuildingController@postDemolish');
+            $router->get('buildings')->uses('Dominion\BuildingsController@getBuildings')->name('buildings');
+            $router->post('buildings')->uses('Dominion\BuildingsController@postBuildings');
+            $router->get('demolish')->uses('Dominion\BuildingsController@getDemolish')->name('demolish');
+            $router->post('demolish')->uses('Dominion\BuildingsController@postDemolish');
 
             # Land
             $router->get('land')->uses('Dominion\LandController@getLand')->name('land');
