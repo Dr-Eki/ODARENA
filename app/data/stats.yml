@@ -176,6 +176,29 @@ lumber_salvaged:
 lumber_plundered:
   name: Lumber plundered
 
+stones_production:
+  name: Stones production
+stones_sold:
+  name: Stones sold
+stones_bought:
+  name: Stones bought
+stones_building:
+  name: Stones building
+stones_rezoning:
+  name: Stones rezoning
+stones_training:
+  name: Stones training
+stones_improvements:
+  name: Stones improvements
+stones_exploring:
+  name: Stones exploring
+stones_lost:
+  name: Stones lost
+stones_salvaged:
+  name: Stones salvaged
+stones_plundered:
+  name: Stones plundered
+
 ore_production:
   name: Ore production
 ore_sold:
