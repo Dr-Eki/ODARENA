@@ -204,11 +204,6 @@ class Dominion extends AbstractModel
         return $this->belongsTo(Race::class);
     }
 
-    public function title()
-    {
-        return $this->belongsTo(Title::class);
-    }
-
     public function realm()
     {
         return $this->belongsTo(Realm::class);
@@ -376,10 +371,6 @@ class Dominion extends AbstractModel
         ->withPivot('amount');
     }
 
-    public function hasTitle()
-    {
-        return $this->title_id ? true : false;
-    }
 
     public function units()
     {
@@ -390,6 +381,28 @@ class Dominion extends AbstractModel
     public function getUnitsByState(int $state)
     {
         return $this->units->where('state', $state);
+    }
+
+    public function title()
+    {
+        return $this->belongsTo(Title::class);
+    }
+
+    // Accessor for title name
+    public function getTitleNameAttribute()
+    {
+        return $this->title ? $this->title->name : '';
+    }
+
+    // Accessor for title key
+    public function getTitleKeyAttribute()
+    {
+        return $this->title ? $this->title->key : '';
+    }
+
+    public function hasTitle()
+    {
+        return $this->title_id ? true : false;
     }
 
     # Used for trade routes
