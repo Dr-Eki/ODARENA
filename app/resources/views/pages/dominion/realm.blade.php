@@ -266,7 +266,7 @@
                                     <td class="text-center">{{ number_format($dominion->land) }}</td>
                                     <td class="text-center">{{ number_format($networthCalculator->getDominionNetworth($dominion)) }}</td>
                                     <td class="text-center">
-                                        @if($dominion->getSpellPerkValue('fog_of_war'))
+                                        @if($dominion->getSpellPerkValue('fog_of_war') or !$dominion->round->hasStarted())
                                             <em class='text-muted'>Unknown</em>
                                         @else
                                             {{ number_format($militaryCalculator->getDefensivePower($dominion)) }}
