@@ -130,7 +130,7 @@ class MagicCalculator
 
             # Check for wizard_from_title
             $titlePerkData = $dominion->race->getUnitPerkValueForUnitSlot($unit->slot, "wizard_from_title", null);
-            if($titlePerkData)
+            if($titlePerkData and $dominion->hasTitle())
             {
                 $titleKey = $titlePerkData[0];
                 $titlePower = $titlePerkData[1];

@@ -376,6 +376,11 @@ class Dominion extends AbstractModel
         ->withPivot('amount');
     }
 
+    public function hasTitle()
+    {
+        return $this->title_id ? true : false;
+    }
+
     public function units()
     {
         return $this->hasMany(DominionUnit::class);
