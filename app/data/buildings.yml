@@ -1211,7 +1211,7 @@ gryphon_nest:
   land_type: mountain
   perks:
     #snow_elf_unit4_production_raw_capped: 0.008,25
-    snow_elf_units_production: 4,0.008 # 0.008 unit4 per tick
+    snow_elf_units_production: 4,0.0055 # 0.0055 unit4 per tick
     max_effective_building_ratio: 25 # No perk effect after 5% of land
     #attrition_protection: 2,4,Snow Elf # amount, slot, faction
 

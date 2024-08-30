@@ -887,7 +887,7 @@ class Dominion extends AbstractModel
 
             if($maxBuildingRatio = $building->getPerkValue('max_effective_building_ratio'))
             {
-                $buildingOwned = min($buildingOwned, $this->land * ($maxBuildingRatio / 100));
+                $buildingOwned = min($buildingOwned, floor($this->land * ($maxBuildingRatio / 100)));
             }
 
             # Check if building has perk pairing_limit

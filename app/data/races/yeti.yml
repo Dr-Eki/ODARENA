@@ -97,7 +97,7 @@ units:
       - intelligent
       - wise
     cost:
-      food: 500
+      food: 850
       draftees: 1
     power:
       offense: 0
