@@ -33,8 +33,8 @@ units:
       - living
       - sentient
     cost:
-      gold: 80
-      ore: 20
+      gold: 120
+      ore: 30
       gunpowder: 1
       peasant: 1
     power:
@@ -51,8 +51,8 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 420
-      lumber: 20
+      gold: 620
+      lumber: 30
       draftees: 1
     power:
       offense: 0
@@ -102,8 +102,8 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 700
-      ore: 100
+      gold: 1000
+      ore: 160
       draftees: 1
     power:
       offense: 4

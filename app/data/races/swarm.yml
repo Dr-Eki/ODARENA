@@ -50,7 +50,7 @@ units:
       - living
       - sentient
     cost:
-      gold: 360
+      gold: 480
       draftees: 1
     power:
       offense: 0
@@ -67,7 +67,7 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 900
+      gold: 1350
       draftees: 1
     power:
       offense: 0
@@ -84,8 +84,8 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1580
-      food: 40
+      gold: 2400
+      food: 50
       draftees: 1
     power:
       offense: 7

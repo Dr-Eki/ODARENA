@@ -77,7 +77,7 @@ units:
       - living
       - sentient
     cost:
-      gold: 600
+      gold: 900
       draftees: 1
     power:
       offense: 3
@@ -92,7 +92,7 @@ units:
       - living
       - sentient
     cost:
-      food: 2000
+      food: 3000
     power:
       offense: 0
       defense: 4

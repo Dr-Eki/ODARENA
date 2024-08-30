@@ -36,7 +36,7 @@ units:
     type:
       - magical
     cost:
-      mana: 100
+      mana: 150
     power:
       offense: 2
       defense: 0
@@ -50,7 +50,7 @@ units:
     type:
       - magical
     cost:
-      mana: 380
+      mana: 560
     power:
       offense: 0
       defense: 5
@@ -63,7 +63,7 @@ units:
     type:
       - magical
     cost:
-      mana: 800
+      mana: 1200
     power:
       offense: 6
       defense: 6
@@ -77,7 +77,7 @@ units:
     type:
       - magical
     cost:
-      mana: 1000
+      mana: 1500
     power:
       offense: 8
       defense: 5
@@ -97,7 +97,7 @@ units:
     cost:
       wizard: 1
       gold: 4200
-      mana: 200
+      mana: 300
     power:
       offense: 0
       defense: 0
@@ -115,7 +115,7 @@ units:
     cost:
       unit5: 1
       mana: 1200
-      gloom: 12
+      gloom: 10
     power:
       offense: 0
       defense: 0

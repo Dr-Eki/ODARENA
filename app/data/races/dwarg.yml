@@ -55,8 +55,8 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 800
-      ore: 200
+      gold: 1200
+      ore: 300
       draftees: 1
     power:
       offense: 0
@@ -71,8 +71,8 @@ units:
       - sentient
       - intelligent
     cost:
-      gold: 1200
-      ore: 250
+      gold: 1800
+      ore: 380
       draftees: 1
     power:
       offense: 6
