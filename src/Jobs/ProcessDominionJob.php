@@ -179,8 +179,8 @@ class ProcessDominionJob implements ShouldQueue
             #xtLog("[{$this->dominion->id}] ** Audit and repair terrain");
             #$this->terrainService->auditAndRepairTerrain($this->dominion);
                 
-            xtLog("[{$this->dominion->id}] ** Handle finished queues");
-            $this->handleFinishedQueues($this->dominion);
+            #xtLog("[{$this->dominion->id}] ** Handle finished queues");
+            #$this->handleFinishedQueues($this->dominion);
 
             xtLog("[{$this->dominion->id}] ** Cleaning up active spells");
             $this->handleFinishedSpells($this->dominion);

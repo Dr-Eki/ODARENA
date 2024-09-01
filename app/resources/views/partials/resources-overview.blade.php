@@ -75,6 +75,9 @@
             </div>
 
             @if ($dominionProtectionService->canTick($selectedDominion))
+                @php
+                    $maxTicks = min($selectedDominion->protection_ticks, config('protection.max_manual_ticks_at_once'));
+                @endphp
                 <div class="row">
                     <div class="col-xs-12">
                         <form action="{{ route('dominion.status') }}" method="post" role="form" id="tick_form">
@@ -82,7 +85,7 @@
                         <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
 
                         <select class="btn btn-warning" name="ticks">
-                            @for ($i = 1; $i <= min(24, $selectedDominion->protection_ticks); $i++)
+                            @for ($i = 1; $i <= $maxTicks; $i++)
                                 <option value="{{ $i }}">{{ $i }}</option>
                             @endfor
                         </select>
@@ -92,7 +95,7 @@
                                 {{ $selectedDominion->isLocked() ? 'disabled' : null }}
                                 id="tick-button">
                             <i class="ra ra-shield"></i>
-                            Proceed tick(s) ({{ $selectedDominion->protection_ticks }} {{ Str::plural('tick', $selectedDominion->protection_ticks) }} left)
+                            Process tick(s) ({{ $selectedDominion->protection_ticks }} {{ Str::plural('tick', $selectedDominion->protection_ticks) }} left)
                         </button>
                     </form>
                     </div>

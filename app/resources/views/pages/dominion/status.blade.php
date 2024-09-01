@@ -398,6 +398,9 @@
         @endif
 
         @if ($dominionProtectionService->canTick($selectedDominion))
+            @php
+                $maxTicks = min($selectedDominion->protection_ticks, config('protection.max_manual_ticks_at_once'));
+            @endphp
             <div class="col-sm-12 col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
@@ -412,7 +415,7 @@
                         @csrf
                         <input type="hidden" name="returnTo" value="{{ Route::currentRouteName() }}">
                         <select class="btn btn-warning" name="ticks">
-                            @for ($i = 1; $i <= min(24, $selectedDominion->protection_ticks); $i++)
+                            @for ($i = 1; $i <= $maxTicks; $i++)
                             <option value="{{ $i }}">{{ $i }}</option>
                             @endfor
                         </select>
@@ -422,7 +425,7 @@
                                 {{ $selectedDominion->isLocked() ? 'disabled' : null }}
                                 id="tick-button">
                             <i class="ra ra-shield"></i>
-                            Proceed tick(s) ({{ $selectedDominion->protection_ticks }} {{ Str::plural('tick', $selectedDominion->protection_ticks) }} left)
+                            Process tick(s) ({{ $selectedDominion->protection_ticks }} {{ Str::plural('tick', $selectedDominion->protection_ticks) }} left)
                     </form>
                     </div>
                 </div>

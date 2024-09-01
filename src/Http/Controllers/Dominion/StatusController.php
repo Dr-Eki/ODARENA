@@ -82,8 +82,9 @@ class StatusController extends AbstractDominionController
 
     public function postTick(TickActionRequest $request)
     {
+        $maxTicks = config('protection.max_manual_ticks_at_once');
         $ticks = intval($request->ticks);
-        $ticks = (int)max(min($ticks, 24), 0);
+        $ticks = (int)max(min($ticks, $maxTicks), 0);
         $dominion = $this->getSelectedDominion();
         $tickActionService = app(TickActionService::class);
 

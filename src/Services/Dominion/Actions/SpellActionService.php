@@ -760,16 +760,8 @@ class SpellActionService
                 if($perk->key === 'increase_morale')
                 {
                     $moraleAdded = (int)$spellPerkValues;
-
-                    if($target->morale >= 100)
-                    {
-                          throw new GameException($target->name . ' already has 100% morale.');
-                    }
-                    else
-                    {
-                        $target->morale = min(($target->morale + $moraleAdded), 100);
-                        $target->save();
-                    }
+                    $target->morale = min(($target->morale + $moraleAdded), 100);
+                    $target->save();
 
                     $this->notificationService
                         ->queueNotification('received_friendly_spell', [
