@@ -90,62 +90,47 @@ class BarbarianService
         $this->settings = config('barbarians.settings');
     }
 
-    public function handleBarbarianTraining(Dominion $dominion): void
+    public function handleBarbarianTraining(Dominion $barbarian): void
     {
-        if($dominion->race->name !== 'Barbarian')
+        if($barbarian->race->name !== 'Barbarian')
         {
             return;
         }
 
-        $land = $dominion->land + $this->queueService->getInvasionQueueTotalByResource($dominion, 'land');
+        $logString = "[B{$barbarian->id}] ** Barbarian training: {$barbarian->name} (# {$barbarian->realm->number}). | ";
 
-        $unitsToTrain = [
-            'military_unit1' => 0,
-            'military_unit2' => 0,
-        ];
+        $defensiveUnitsToTrain = $this->barbarianCalculator->getDefensiveUnitsToTrain($barbarian);
 
-        $unit1 = Unit::where('race_id', $dominion->race->id)->where('slot', 1)->first();
-        $unit2 = Unit::where('race_id', $dominion->race->id)->where('slot', 2)->first();
-
-        $unit1Dp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit1, 'defense') * $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
-        $unit2Op = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit2, 'offense') * $this->militaryCalculator->getOffensivePowerMultiplier($dominion);
-    
-        $dpaDeltaPaid = $this->barbarianCalculator->getDpaDeltaPaid($dominion);
-        $opaDeltaPaid = $this->barbarianCalculator->getOpaDeltaPaid($dominion);
-        
-        if($dpaDeltaPaid > 0)
+        if($defensiveUnitsToTrain > 0)
         {
-            $dpToTrain = $dpaDeltaPaid * $dominion->land * $this->settings['DPA_OVERSHOT'];
-            $unitsToTrain['military_unit1'] = ceilInt($dpToTrain / $unit1Dp);
-        }
-    
-        if($opaDeltaPaid > 0)
-        {
-            if($this->militaryCalculator->hasReturningUnits($dominion))
-            {
-                // Bug fix: Barbarians would forget units returning from an invasion, and train more units than they should. This is a tentative fix.
-                // Did not work.
-                return;
-            }
+            $data = ['military_unit1' => $defensiveUnitsToTrain];
+            $ticks = intval($this->settings['UNITS_TRAINING_TICKS']);
+            $this->queueService->queueResources('training', $barbarian, $data, $ticks);
 
-            $opToTrain = $opaDeltaPaid * $dominion->land;
-            $unitsToTrain['military_unit2'] = ceilInt($opToTrain / $unit2Op);
+            $logString .= "Defensive units to train: {$defensiveUnitsToTrain} | ";
         }
-    
-        foreach($unitsToTrain as $unit => $amountToTrain)
+
+        $offensiveUnitsToTrain = $this->barbarianCalculator->getOffensiveUnitsToTrain($barbarian);
+
+        if($offensiveUnitsToTrain > 0)
         {
-            if($amountToTrain > 0)
-            {
-                $data = [$unit => $amountToTrain];
-                $ticks = intval($this->settings['UNITS_TRAINING_TICKS']);
-                $this->queueService->queueResources('training', $dominion, $data, $ticks);
-            }
+            $data = ['military_unit2' => $offensiveUnitsToTrain];
+            $ticks = intval($this->settings['UNITS_TRAINING_TICKS']);
+            $this->queueService->queueResources('training', $barbarian, $data, $ticks);
+
+            $logString .= "Offensive units to train: {$offensiveUnitsToTrain} | ";
         }
+
+        if(!$defensiveUnitsToTrain and !$offensiveUnitsToTrain)
+        {
+            $logString .= "No units to train.";
+        }
+
+        xtLog($logString);
     }
 
     public function handleBarbarianInvasion(Dominion $dominion): void
     {
-        $invade = false;
 
         if($dominion->race->name !== 'Barbarian')
         {
@@ -161,21 +146,19 @@ class BarbarianService
                 return;
             }
         }
+        
+        $invade = false;
 
-        $oneLineLogString = '';
-
-        $logString = "\n[BARBARIAN]\n\t[invasion]\n";
-        $logString .= "\t\tName: $dominion->name\n";
-        $logString .= "\t\tSize: ".number_format($dominion->land)."\n";
-
-        $oneLineLogString = '[BARBARIAN]{T' . $dominion->round->ticks . '} #' . $dominion->id;
-        $oneLineLogString .= ' | Current DPA: ' . number_format($this->barbarianCalculator->getDpaCurrent($dominion),2) . ' | Current DP: ' . number_format($this->barbarianCalculator->getDpCurrent($dominion),2);
-        $oneLineLogString .= ' | Current OPA: ' . number_format($this->barbarianCalculator->getOpaCurrent($dominion),2) . ' | Current OP: ' . number_format($this->barbarianCalculator->getOpCurrent($dominion),2);
-        $oneLineLogString .= ' | Target DPA: ' . number_format($this->barbarianCalculator->getDpaTarget($dominion), 2) . ' | Target OPA: ' . number_format($this->barbarianCalculator->getOpaTarget($dominion), 2);
+        $logString = "[B{$dominion->id}] ** Barbarian invasion: {$dominion->name} (# {$dominion->realm->number}). | ";
 
         # Make sure we have the expected OPA to hit, and enough DPA at home.
-        if($this->barbarianCalculator->getDpaDeltaCurrent($dominion) <= 0 and $this->barbarianCalculator->getOpaDeltaAtHome($dominion) <= 0)
+        $currentOp = $this->barbarianCalculator->getCurrentOffensivePower($dominion);
+        $targetedOp = $this->barbarianCalculator->getTargetedOffensivePower($dominion);
+        $currentToTargetedOpRatio = $currentOp / $targetedOp;
+
+        if($currentToTargetedOpRatio >= $this->settings['CURRENT_TO_TARGETED_OP_RATIO_TO_SEND'])
         {
+            $logString .= "Current OP: {$currentOp} | Targeted OP: {$targetedOp} | Ratio: {$currentToTargetedOpRatio} | ";
 
             $currentDay = $dominion->round->start_date->subDays(1)->diffInDays(now());
 
@@ -185,163 +168,77 @@ class BarbarianService
 
             $chanceToHit = rand(1,$chanceOneIn);
 
-            $logString .= "\t\t* OP/DP\n";
-            $logString .= "\t\t** DPA current: " . $this->barbarianCalculator->getDpaCurrent($dominion) ."\n";
-            $logString .= "\t\t** DP current: " . $this->barbarianCalculator->getDpCurrent($dominion) ."\n";
+            $invade = (bool)($chanceToHit === 1);
 
-            $logString .= "\t\t** OPA at home: " . $this->barbarianCalculator->getOpaAtHome($dominion) ."\n";
-            $logString .= "\t\t** OP current: " . $this->barbarianCalculator->getOpCurrent($dominion) ."\n";
+            $logString .= "Chance to hit: 1 in {$chanceOneIn} | Hit: " . ($invade ? 'Yes' : 'No') . " | ";
 
-            $logString .= "\t\t* Chance to hit: 1 in $chanceOneIn\n";
-            $logString .= "\t\t** Outcome: $chanceToHit: ";
-
-            if($chanceToHit === 1)
-            {
-                $invade = true;
-                $logString .= "✅ Invade!\n";
-            }
-            else
-            {
-                $logString .= "❌ No invasion\n";
-            }
-
-            $oneLineLogString .= 'Invasion decision: ' . ($chanceToHit == 1 ? '✅ ' : '❌');
-
-        }
-        else
-        {
-            if($this->barbarianCalculator->getDpaDeltaCurrent($dominion) > 0)
-            {
-                $logString .= "\t\t🚫 Insufficient DP:\n";
-                $logString .= "\t\t* DPA\n";
-                $logString .= "\t\t** DPA delta current: " . $this->barbarianCalculator->getDpaDeltaCurrent($dominion) ."\n";
-                $logString .= "\t\t** DPA delta paid: " . $this->barbarianCalculator->getDpaDeltaPaid($dominion) ."\n";
-                $logString .= "\t\t** DPA target: " . $this->barbarianCalculator->getDpaTarget($dominion) ."\n";
-                $logString .= "\t\t** DPA paid: " . $this->barbarianCalculator->getDpaPaid($dominion) ."\n";
-                $logString .= "\t\t** DPA current: " . $this->barbarianCalculator->getDpaCurrent($dominion) ."\n";
-            }
-
-            if($this->barbarianCalculator->getOpaDeltaAtHome($dominion) > 0)
-            {
-                $logString .= "\t\t🚫 Insufficient OP:\n";
-                $logString .= "\t\t* OPA\n";
-                $logString .= "\t\t** OPA delta at home: " . $this->barbarianCalculator->getOpaDeltaAtHome($dominion) ."\n";
-                $logString .= "\t\t** OPA delta paid: " . $this->barbarianCalculator->getOpaDeltaPaid($dominion) ."\n";
-                $logString .= "\t\t** OPA target: " . $this->barbarianCalculator->getOpaTarget($dominion) ."\n";
-                $logString .= "\t\t** OPA paid: " . $this->barbarianCalculator->getOpaPaid($dominion) ."\n";
-                $logString .= "\t\t** OPA at home: " . $this->barbarianCalculator->getOpaAtHome($dominion) ."\n";
-            }
-
-            $oneLineLogString .= 'Need to train ' . ($this->barbarianCalculator->getDpaDeltaCurrent($dominion) > 0 ? 'more DP' : 'no DP') . ' and ' . ($this->barbarianCalculator->getOpaDeltaAtHome($dominion) > 0 ? 'more OP' : 'no OP');
         }
 
         if($invade)
         {
             $invadePlayer = false;
-            # First, look for human players
+            
             $targetsInRange = $this->rangeCalculator->getDominionsInRange($dominion);
-
-            $logString .= "\t\t* Find Target:\n";
-            $logString .= "\t\t** Looking for human targets in range:\n";
 
             foreach($targetsInRange as $target)
             {
                 if(!$target->getSpellPerkValue('fog_of_war') and $target->realm->id !== $dominion->realm->id)
                 {
                     $landRatio = $this->rangeCalculator->getDominionRange($dominion, $target) / 100;
-                    $units = [1 => $dominion->military_unit1, 4 => $dominion->military_unit4];
-                    $targetDp = $this->militaryCalculator->getDefensivePower($target, $dominion, $landRatio);
+                    $units = [2 => $dominion->military_unit2];
+                    $targetDp = $this->militaryCalculator->getDefensivePower($target, $dominion, $landRatio, $units);
 
-                    $logString .= "\t\t*** " . $dominion->name . ' is checking ' . $target->name . ': ';
-
-                    if($this->barbarianCalculator->getOpCurrent($dominion) >= $targetDp * 0.85)
+                    if($currentOp >= ($targetDp * $this->settings['PLAYER_INVASION_OP_DP_RATIO_TOLERANCE']))
                     {
-                        $logString .= '✅ DP is within tolerance! DP: ' . number_format($targetDp) . ' vs. available OP: ' . number_format($this->barbarianCalculator->getOpCurrent($dominion)) . "\n";
                         $invadePlayer = $target;
                         break;
                     }
-                    else
-                    {
-                        $logString .= '🚫 DP is too high. DP: ' . number_format($targetDp) . ' vs. available OP: ' . number_format($this->barbarianCalculator->getOpCurrent($dominion)) . "\n";
-                        $invadePlayer = false;
-                    }
                 }
-                else
-                {
-                    $logString .= "\t\t*** 🚫 Target has fog.\n";
-                    $invadePlayer = false;
-                }
-
             }
-
-            #$invadePlayer = false; # Fully disabled
 
             # Chicken out: 7/8 chance that the Barbarians won't hit.
             if($invadePlayer and rand(1, 8) !== 1)
             {
-                $logString .= "\t\t** " . $dominion->name . ' chickens out from invading ' . $target->name . "! 🐤\n";
                 $invadePlayer = false;
             }
 
-            if($this->barbarianCalculator->getOpaDeltaPaid($dominion) < -1)
-            {
-                $invadePlayer = false;
-            }
+            $logString .= "Invade player: " . ($invadePlayer ? 'Yes' : 'No') . " | ";
 
             if($invadePlayer)
             {
-                $logString .= "\t\t** " . $dominion->name . ' is invading ' . $target->name . "! ⚔️\n";
                 app(InvadeActionService::class)->invade($dominion, $target, $units);
             }
             else
             {
 
-                DB::transaction(function () use ($dominion, $logString)
+                DB::transaction(function () use ($dominion)
                 {
-                    $landGainRatio = rand($this->settings['LAND_GAIN_MIN'], $this->settings['LAND_GAIN_MAX'])/1000;
 
-                    $logString .= "\t\t* Invasion:\n";
-                    $logString .= "\t\t** Land gain ratio: " . number_format($landGainRatio*100,2) . "% \n";
+                    $largestDominion = $dominion->round->getNthLargestDominion(1);
+                    $maxLandToGain = max(0, $largestDominion->land * 0.6 - $dominion->land);
+
+                    $landGainRatio = rand($this->settings['LAND_GAIN_MIN'], $this->settings['LAND_GAIN_MAX']) / 1000;
 
                     # Calculate the amount of acres to grow.
-                    $landGained = intval($dominion->land * $landGainRatio);
-                    $logString .= "\t\t** Land to gain: " . number_format($landGained). "\n";
-
-                    # After 384 ticks into the round, Barbarian will abort invasion if the land gained would put the Barbarian within 60% of the largest dominion of the round
-                    if($dominion->round->ticks > 384 and !(env('APP_ENV') == 'local'))
-                    {
-                        $largestDominion = $dominion->round->getNthLargestDominion(1);
-
-                        if(($dominion->land + $landGained) >= ($largestDominion->land * 0.6))
-                        {
-                            $logString .= "\t\t**Land to gain would put Barbarian within 60% of largest dominion. Aborting invasion.\n";
-                            Log::info($logString);
-                            return;
-                        }
-                    }
+                    $landGained = min($maxLandToGain, $dominion->land * $landGainRatio);
 
                     # Add the land gained to the $dominion.
                     $this->statsService->updateStat($dominion, 'land_conquered', $landGained);
                     $this->statsService->updateStat($dominion, 'invasion_victories', 1);
 
-                    $sentRatio = rand($this->settings['SENT_RATIO_MIN'], $this->settings['SENT_RATIO_MAX'])/1000;
-                    $casualtiesRatio = rand($this->settings['CASUALTIES_MIN'], $this->settings['CASUALTIES_MAX'])/1000;
+                    $sentRatio = rand($this->settings['SENT_RATIO_MIN'], $this->settings['SENT_RATIO_MAX']) / 1000;
+                    $casualtiesRatio = rand($this->settings['CASUALTIES_MIN'], $this->settings['CASUALTIES_MAX']) / 1000;
 
-                    $logString .= "\t\t**Sent ratio: " . number_format($sentRatio*100,2). "%\n";
-                    $logString .= "\t\t**Casualties ratio: " . number_format($casualtiesRatio*100,2). "%\n";
-
-                    $unitsSent['military_unit2'] = $dominion->military_unit2 * $sentRatio;
+                    $unitsSent['military_unit2'] = floorInt($dominion->military_unit2 * $sentRatio);
 
                     # Remove the sent units from the dominion.
                     $dominion->military_unit2 -= $unitsSent['military_unit2'];
 
                     # Calculate losses by applying casualties ratio to units sent.
-                    $unitsLost['military_unit2'] = $unitsSent['military_unit2'] * $casualtiesRatio;
+                    $unitsLost['military_unit2'] = floorInt($unitsSent['military_unit2'] * $casualtiesRatio);
 
                     # Calculate amount of returning units.
-                    $unitsReturning['military_unit2'] = intval(max($unitsSent['military_unit2'] - $unitsLost['military_unit2'],0));
-
-                    #$terrainGained = $this->terrainCalculator->getDominionTerrainChange($dominion, $landGained);
+                    $unitsReturning['military_unit2'] = max($unitsSent['military_unit2'] - $unitsLost['military_unit2'], 0);
 
                     # Queue the incoming land.
                     $this->queueService->queueResources(
@@ -349,17 +246,6 @@ class BarbarianService
                         $dominion,
                         ['land' => $landGained]
                     );
-
-                    #foreach($terrainGained as $terrainKey => $amount)
-                    #{
-                    #    # Queue the incoming terrain.
-                    #    $this->queueService->queueResources(
-                    #        'invasion',
-                    #        $dominion,
-                    #        [('terrain_'.$terrainKey) => $amount]
-                    #    );
-                    #}
-
 
                     # Queue the returning units.
                     $this->queueService->queueResources(
@@ -372,9 +258,13 @@ class BarbarianService
                     
                     $invasionTargets = config('barbarians.invasion_targets');
                     
+                    $bodies = floorInt(array_sum($unitsLost) / 10 + $landGained);
 
-                    $bodies = array_sum($unitsLost) / 10 + $landGained;
-                    $bodies = (int)floor($bodies);
+                    # Update RoundResources
+                    if($bodies > 0)
+                    {
+                        $this->resourceService->updateRoundResources($dominion->round, ['body' => $bodies]);
+                    }
                 
                     $data = [
                         'type' => $invasionTypes[rand(0,count($invasionTypes)-1)],
@@ -391,12 +281,6 @@ class BarbarianService
                             ],
                     ];
 
-                    # Update RoundResources
-                    if($bodies > 0)
-                    {
-                        $this->resourceService->updateRoundResources($dominion->round, ['body' => $bodies]);
-                    }
-
                     GameEvent::create([
                         'round_id' => $dominion->round_id,
                         'source_type' => Dominion::class,
@@ -407,6 +291,7 @@ class BarbarianService
                         'data' => $data,
                         'tick' => $dominion->round->ticks
                     ]);
+
                     $dominion->save(['event' => HistoryService::EVENT_ACTION_INVADE]);
 
                 });
@@ -414,12 +299,7 @@ class BarbarianService
 
         }
 
-        $logString .= "\t[/invasion]\n[/BARBARIAN]";
-
         xtLog($logString);
-
-        #Log::Debug($logString);
-        #Log::Debug($oneLineLogString);
     }
 
     public function handleBarbarianConstruction(Dominion $dominion): void

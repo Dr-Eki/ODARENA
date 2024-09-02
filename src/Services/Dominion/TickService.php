@@ -10,7 +10,6 @@ use Exception;
 use File;
 use Log;
 use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Bus;
 use OpenDominion\Jobs\ProcessDominionJob;
 use OpenDominion\Jobs\ProcessHoldJob;
 use OpenDominion\Jobs\ProcessPrecalculationJob;

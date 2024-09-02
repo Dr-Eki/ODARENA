@@ -8,6 +8,7 @@ namespace OpenDominion\Calculators\Dominion;
 use OpenDominion\Helpers\BuildingHelper;
 use OpenDominion\Models\Dominion;
 use OpenDominion\Models\Round;
+use OpenDominion\Models\Unit;
 
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Calculators\Dominion\UnitCalculator;
@@ -51,16 +52,23 @@ class BarbarianCalculator
         $this->settings = config('barbarians.settings');
     }
 
-
-    public function getDpaTarget(Dominion $dominion = null, Round $round = null, ?float $npcModifier = 1000): int
+    public function getAmountToInvest(Dominion $barbarian): int
     {
+        return roundInt(6000 * (1 + $barbarian->ticks / 400));
+    }
+
+
+    public function getDpaTarget(Dominion $barbarian = null, Round $round = null, float $npcModifier = 1000.00): int
+    {
+
+        $dpa = $this->settings['DPA_CONSTANT'];
+
         # Get DPA target for a specific dominion/barbarian
-        if($dominion)
+        if($barbarian)
         {
-            $dpa = $this->settings['DPA_CONSTANT'];
-            $dpa += $dominion->ticks * $this->settings['DPA_PER_TICK'];
-            $dpa += $this->statsService->getStat($dominion, 'defense_failures') * $this->settings['DPA_PER_TIMES_INVADED'];
-            $dpa *= ($dominion->npc_modifier / 1000);
+            $dpa += $barbarian->ticks * $this->settings['DPA_PER_TICK'];
+            $dpa += $this->statsService->getStat($barbarian, 'defense_failures') * $this->settings['DPA_PER_TIMES_INVADED'];
+            $dpa *= ($barbarian->npc_modifier / 1000);
         }
         # Get DPA target in general
         elseif($round)
@@ -69,96 +77,122 @@ class BarbarianCalculator
             $dpa *= ($npcModifier / 1000);
         }
 
-        return ceilInt($dpa);
+        return roundInt($dpa);
     }
 
-
-    public function getOpaTarget(Dominion $dominion = null, Round $round = null, float $npcModifier = 1000): int
+    public function getOpaTarget(Dominion $barbarian = null, Round $round = null, float $npcModifier = 1000.00): int
     {
-        return floorInt($this->getDpaTarget($dominion, $round, $npcModifier) * $this->settings['OPA_MULTIPLIER']);
+        return roundInt($this->getDpaTarget($barbarian, $round, $npcModifier) * $this->settings['OPA_MULTIPLIER']);
     }
 
-    public function getDpCurrent(Dominion $dominion): int
+    public function getTargetedDefensivePower(Dominion $barbarian): int
     {
-        return ceilInt($this->militaryCalculator->getDefensivePower($dominion, null, null, [1 => $dominion->military_unit1]));
-
+        $land = $barbarian->land + $this->queueService->getInvasionQueueTotalByResource($barbarian, 'land');
+        return roundInt($this->getDpaTarget($barbarian) * $land);
     }
 
-    public function getOpCurrent(Dominion $dominion): int
+    public function getTargetedOffensivePower(Dominion $barbarian): int
     {
-        return ceilInt($this->militaryCalculator->getOffensivePower($dominion, null, null, [2 => $dominion->military_unit2]));
+        $land = $barbarian->land + $this->queueService->getInvasionQueueTotalByResource($barbarian, 'land');
+        return roundInt($this->getOpaTarget($barbarian) * $land);
     }
 
-    # Includes units at home and out on attack.
-    public function getOpAtHome(Dominion $dominion): int
+    public function getCurrentDefensivePower(Dominion $dominion): int
     {
-        $unitAmount = $this->unitCalculator->getUnitTypeTotalAtHome($dominion, 'military_unit2');
+        $slot = 1;
+        $currentUnits = $dominion->{'military_unit' . $slot};
 
-        return ceilInt($this->militaryCalculator->getOffensivePower($dominion, null, null, [2 => $unitAmount]));
+        $currentDp = $this->militaryCalculator->getDefensivePower($dominion, null, null, [$slot => $currentUnits]);
+
+        return roundInt($currentDp);
     }
 
-    public function getDpPaid(Dominion $dominion): int
+    public function getIncomingDefensivePower(Dominion $dominion): int
     {
-        $unitAmount = $this->unitCalculator->getUnitTypeTotalPaid($dominion, 'military_unit1');
+        $slot = 1;
+        $incomingUnits = $this->unitCalculator->getUnitTypeTotalIncoming($dominion, ('military_unit' . $slot));
 
-        return ceilInt($this->militaryCalculator->getDefensivePower($dominion, null, null, [1 => $unitAmount]));
+        $incomingDp = $this->militaryCalculator->getDefensivePower($dominion, null, null, [$slot => $incomingUnits]);
+
+        return roundInt($incomingDp);
     }
 
-    public function getOpPaid(Dominion $dominion): int
+    public function getCurrentOffensivePower(Dominion $dominion): int
     {
-        $unitAmount = $this->unitCalculator->getUnitTypeTotalPaid($dominion, 'military_unit2');
+        $slot = 2;
+        $currentUnits = $dominion->{'military_unit' . $slot};
 
-        return ceilInt($this->militaryCalculator->getOffensivePower($dominion, null, null, [2 => $unitAmount]));
+        $currentOp = $this->militaryCalculator->getOffensivePower($dominion, null, null, [$slot => $currentUnits]);
+
+        return roundInt($currentOp);
     }
 
-    public function getDpaCurrent(Dominion $dominion): int
+    public function getIncomingOffensivePower(Dominion $dominion): int
     {
-        return roundInt($this->getDpCurrent($dominion) / $dominion->land);
+        $slot = 2;
+        $incomingUnits = $this->unitCalculator->getUnitTypeTotalIncoming($dominion, ('military_unit' . $slot));
+
+        $incomingOp = $this->militaryCalculator->getOffensivePower($dominion, null, null, [$slot => $incomingUnits]);
+
+        return roundInt($incomingOp);
     }
 
-    public function getOpaCurrent(Dominion $dominion): int
+    public function getPaidDefensivePower(Dominion $dominion): int
     {
-        return roundInt($this->getOpCurrent($dominion) / $dominion->land);
+        return roundInt($this->getCurrentDefensivePower($dominion) + $this->getIncomingDefensivePower($dominion));
     }
 
-    public function getDpaPaid(Dominion $dominion): int
+    public function getPaidOffensivePower(Dominion $dominion): int
     {
-        return roundInt($this->getDpPaid($dominion) / $dominion->land);
+        return roundInt($this->getCurrentOffensivePower($dominion) + $this->getIncomingOffensivePower($dominion));
     }
 
-    public function getOpaPaid(Dominion $dominion): int
+    public function getMissingDefensivePower(Dominion $dominion): int
     {
-        return roundInt($this->getOpPaid($dominion) / $dominion->land);
+        return roundInt(max(0, $this->getTargetedDefensivePower($dominion) - $this->getPaidDefensivePower($dominion)));
     }
 
-    public function getOpaAtHome(Dominion $dominion): int
+    public function getMissingOffensivePower(Dominion $dominion): int
     {
-        return roundInt($this->getOpAtHome($dominion) / $dominion->land);
+        return roundInt(max(0, $this->getTargetedOffensivePower($dominion) - $this->getPaidOffensivePower($dominion)));
     }
 
-    public function getOpaDeltaPaid(Dominion $dominion): int
+    public function getDefensiveUnitsToTrain(Dominion $dominion): int
     {
-        return roundInt($this->getOpaTarget($dominion) - $this->getOpaPaid($dominion));
+        $missingDp = $this->getMissingDefensivePower($dominion);
+
+        $slot = 1;
+        $unit = $dominion->race->units->where('slot', $slot)->first();
+        $unitDp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'defense');
+
+        $unitsToTrain = ceilInt($missingDp / $unitDp);
+        $unitsToTrain *= $this->settings['DPA_OVERSHOT'];
+
+        return ceilInt($unitsToTrain);
     }
 
-    public function getDpaDeltaPaid(Dominion $dominion): int
+    public function getOffensiveUnitsToTrain(Dominion $dominion): int
     {
-        return roundInt($this->getDpaTarget($dominion) - $this->getDpaPaid($dominion));
+        $missingOp = $this->getMissingDefensivePower($dominion);
+
+        $slot = 2;
+        $unit = $dominion->race->units->where('slot', $slot)->first();
+        $unitOp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'offense');
+
+        $unitsToTrain = ceilInt($missingOp / $unitOp);
+        $unitsToTrain *= $this->settings['OPA_OVERSHOT'];
+
+        return ceilInt($unitsToTrain);
     }
 
-    public function getOpaDeltaAtHome(Dominion $dominion): int
+    public function needsToTrainDefensivePower(Dominion $dominion): bool
     {
-        return roundInt($this->getOpaTarget($dominion) - $this->getOpaAtHome($dominion));
+        return $this->getMissingDefensivePower($dominion) > 0;
     }
 
-    public function getDpaDeltaCurrent(Dominion $dominion): int
+    public function needsToTrainOffensivePower(Dominion $dominion): bool
     {
-        return roundInt($this->getDpaTarget($dominion) - $this->getDpaCurrent($dominion));
-    }
-
-    public function getAmountToInvest(Dominion $barbarian): int
-    {
-        return roundInt(6000 * (1 + $barbarian->ticks / 400));
+        return $this->getMissingOffensivePower($dominion) > 0;
     }
 
 }

@@ -659,19 +659,6 @@ class UnitCalculator
         $maxCapacity = $this->getUnitMaxCapacity($dominion, $slotLimited);
 
         $currentlyTrained = $this->getUnitTypeTotalPaid($dominion, 'military_unit' . $slotLimited);
-        /*
-        $dominion->{'military_unit' . $slotLimited};
-        $currentlyTrained += $this->queueService->getTrainingQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
-        $currentlyTrained += $this->queueService->getSummoningQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
-        $currentlyTrained += $this->queueService->getEvolutionQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
-        $currentlyTrained += $this->queueService->getInvasionQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
-        $currentlyTrained += $this->queueService->getExpeditionQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
-        $currentlyTrained += $this->queueService->getTheftQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
-        $currentlyTrained += $this->queueService->getSabotageQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
-        $currentlyTrained += $this->queueService->getDesecrationQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
-        $currentlyTrained += $this->queueService->getStunQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
-        $currentlyTrained += $this->queueService->getArtefactattackQueueTotalByResource($dominion, 'military_unit' . $slotLimited);
-        */
 
         $totalWithAmountToTrain = $currentlyTrained + $amountToTrain;
 

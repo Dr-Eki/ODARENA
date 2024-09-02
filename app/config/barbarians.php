@@ -98,13 +98,16 @@ return [
 
     'settings' => [
         'DPA_CONSTANT' => 10,
-        'DPA_OVERSHOT' => 1.10,
+        'DPA_OVERSHOT' => 1.05,
         'DPA_PER_TICK' => (1/24),
         'DPA_PER_TIMES_INVADED' => 1,
         'OPA_MULTIPLIER' => (4/3),
+        'OPA_OVERSHOT' => 1.05,
         'CHANCE_TO_HIT_CONSTANT' => 14,
+        'CURRENT_TO_TARGETED_OP_RATIO_TO_SEND' => 0.85,
         'LAND_GAIN_MIN' => 30,
         'LAND_GAIN_MAX' => 100,
+        'PLAYER_INVASION_OP_DP_RATIO_TOLERANCE' => 0.85,
         'SENT_RATIO_MIN' => 800,
         'SENT_RATIO_MAX' => 1000,
         'CASUALTIES_MIN' => 50,

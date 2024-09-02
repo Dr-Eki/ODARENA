@@ -16,7 +16,7 @@ use OpenDominion\Services\Dominion\ProtectionService;
 use OpenDominion\Calculators\Dominion\SpellCalculator;
 use OpenDominion\Calculators\Dominion\ResourceCalculator;
 use OpenDominion\Calculators\RealmCalculator;
-use OpenDominion\Calculators\Dominion\BarbarianCalculator;
+#use OpenDominion\Calculators\Dominion\BarbarianCalculator;
 use OpenDominion\Calculators\Dominion\MilitaryCalculator;
 use OpenDominion\Helpers\ArtefactHelper;
 use OpenDominion\Helpers\DeityHelper;
@@ -32,7 +32,7 @@ class RealmController extends AbstractDominionController
     public function getRealm(Request $request, $realmNumber = null)
     {
         $landCalculator = app(LandCalculator::class);
-        $barbarianCalculator = app(BarbarianCalculator::class);
+        #$barbarianCalculator = app(BarbarianCalculator::class);
         $networthCalculator = app(NetworthCalculator::class);
         $protectionService = app(ProtectionService::class);
         $spellCalculator = app(SpellCalculator::class);
@@ -205,7 +205,7 @@ class RealmController extends AbstractDominionController
     public function getAllRealms(Request $request)
     {
         $landCalculator = app(LandCalculator::class);
-        $barbarianCalculator = app(BarbarianCalculator::class);
+        #$barbarianCalculator = app(BarbarianCalculator::class);
         $networthCalculator = app(NetworthCalculator::class);
         $protectionService = app(ProtectionService::class);
         $spellCalculator = app(SpellCalculator::class);
