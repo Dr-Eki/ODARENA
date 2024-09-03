@@ -214,13 +214,20 @@ class BarbarianService
                 DB::transaction(function () use ($dominion)
                 {
 
-                    $largestDominion = $dominion->round->getNthLargestDominion(1);
-                    $maxLandToGain = max(0, $largestDominion->land * 0.6 - $dominion->land);
-
                     $landGainRatio = rand($this->settings['LAND_GAIN_MIN'], $this->settings['LAND_GAIN_MAX']) / 1000;
 
+                    if($dominion->round->ticks >= 384)
+                    {
+                        $largestDominion = $dominion->round->getNthLargestDominion(1);
+                        $maxLandToGain = max(0, $largestDominion->land * 0.6 - $dominion->land);
+                        $landGained = min($maxLandToGain, $dominion->land * $landGainRatio);
+                    }
+                    else
+                    {
+                        $landGained = $dominion->land * $landGainRatio;
+                    }
+
                     # Calculate the amount of acres to grow.
-                    $landGained = min($maxLandToGain, $dominion->land * $landGainRatio);
 
                     # Add the land gained to the $dominion.
                     $this->statsService->updateStat($dominion, 'land_conquered', $landGained);
