@@ -853,6 +853,8 @@ class InvadeActionService
 
         return [
             'message' => $message,
+            'invasion' => $this->invasion,
+            'invasion_event' => $this->invasionEvent,
             'alert-type' => $alertType,
             'redirect' => route('dominion.event', [$this->invasionEvent->id])
         ];

@@ -156,10 +156,10 @@ class BarbarianService
         $targetedOp = $this->barbarianCalculator->getTargetedOffensivePower($dominion);
         $currentToTargetedOpRatio = $currentOp / $targetedOp;
 
+        $logString .= "Current OP: {$currentOp} | Targeted OP: {$targetedOp} | Ratio: {$currentToTargetedOpRatio} | ";
+
         if($currentToTargetedOpRatio >= $this->settings['CURRENT_TO_TARGETED_OP_RATIO_TO_SEND'])
         {
-            $logString .= "Current OP: {$currentOp} | Targeted OP: {$targetedOp} | Ratio: {$currentToTargetedOpRatio} | ";
-
             $currentDay = $dominion->round->start_date->subDays(1)->diffInDays(now());
 
             $chanceOneIn = $this->settings['CHANCE_TO_HIT_CONSTANT'] - (14 - $currentDay);
@@ -206,7 +206,8 @@ class BarbarianService
 
             if($invadePlayer)
             {
-                app(InvadeActionService::class)->invade($dominion, $target, $units);
+                $invasionResult = app(InvadeActionService::class)->invade($dominion, $target, $units);
+
             }
             else
             {
