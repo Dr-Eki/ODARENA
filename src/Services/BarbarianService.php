@@ -157,6 +157,8 @@ class BarbarianService
         $currentToTargetedOpRatio = $currentOp / $targetedOp;
 
         $logString .= "Current OP: {$currentOp} | Targeted OP: {$targetedOp} | Ratio: {$currentToTargetedOpRatio} | ";
+        $logString .= "Missing OP: {$this->barbarianCalculator->getMissingOffensivePower($dominion)} | ";
+        $logString .= "Paid OP: {$this->barbarianCalculator->getPaidOffensivePower($dominion)} | ";
 
         if($currentToTargetedOpRatio >= $this->settings['CURRENT_TO_TARGETED_OP_RATIO_TO_SEND'])
         {

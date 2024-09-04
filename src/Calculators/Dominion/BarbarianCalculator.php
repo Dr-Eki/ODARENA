@@ -179,7 +179,7 @@ class BarbarianCalculator
         $unit = $dominion->race->units->where('slot', $slot)->first();
         $unitOp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'offense');
 
-        $unitsToTrain = ceilInt($missingOp / $unitOp);
+        $unitsToTrain = $missingOp / $unitOp;
         $unitsToTrain *= $this->settings['OPA_OVERSHOT'];
 
         return ceilInt($unitsToTrain);
