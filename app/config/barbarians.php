@@ -104,7 +104,7 @@ return [
         'OPA_MULTIPLIER' => (4/3),
         'OPA_OVERSHOT' => 1.05,
         'CHANCE_TO_HIT_CONSTANT' => 14,
-        'CURRENT_TO_TARGETED_OP_RATIO_TO_SEND' => 0.85,
+        'CURRENT_TO_TARGETED_OP_RATIO_TO_SEND' => 0.33,
         'LAND_GAIN_MIN' => 30,
         'LAND_GAIN_MAX' => 100,
         'PLAYER_INVASION_OP_DP_RATIO_TOLERANCE' => 0.85,
