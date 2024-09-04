@@ -743,8 +743,6 @@
     </div>
 
     <div class="col-sm-12 col-md-3">
-
-
         <div class="box">
             <div class="box-header with-border">
                 <h3 class="box-title"><i class="ra ra-axe"></i> Military</h3>
@@ -796,6 +794,62 @@
                 </table>
             </div>
         </div>
+
+        @if($dominion->race->key == 'barbarian')
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="ra ra-spear-head"></i> Barbarian Data</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table">
+                        <colgroup>
+                            <col width="33%">
+                            <col width="33%">
+                            <col width="33%">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Offensive</th>
+                                <th>Defensive</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>xPA Target:</td>
+                                <td>{{ number_format($barbarianCalculator->getOpaTarget($dominion)) }}</td>
+                                <td>{{ number_format($barbarianCalculator->getDpaTarget($dominion)) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Targeted:</td>
+                                <td>{{ number_format($barbarianCalculator->getTargetedOffensivePower($dominion)) }}</td>
+                                <td>{{ number_format($barbarianCalculator->getTargetedDefensivePower($dominion)) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Current:</td>
+                                <td>{{ number_format($barbarianCalculator->getCurrentOffensivePower($dominion)) }}</td>
+                                <td>{{ number_format($barbarianCalculator->getCurrentDefensivePower($dominion)) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Incoming:</td>
+                                <td>{{ number_format($barbarianCalculator->getIncomingOffensivePower($dominion)) }}</td>
+                                <td>{{ number_format($barbarianCalculator->getIncomingDefensivePower($dominion)) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Paid:</td>
+                                <td>{{ number_format($barbarianCalculator->getPaidOffensivePower($dominion)) }}</td>
+                                <td>{{ number_format($barbarianCalculator->getPaidDefensivePower($dominion)) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Missing:</td>
+                                <td>{{ number_format($barbarianCalculator->getMissingOffensivePower($dominion)) }}</td>
+                                <td>{{ number_format($barbarianCalculator->getMissingDefensivePower($dominion)) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
     </div>
 
 </div>

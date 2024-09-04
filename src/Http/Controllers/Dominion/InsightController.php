@@ -12,6 +12,7 @@ use OpenDominion\Models\DominionInsight;
 use OpenDominion\Models\DominionDecreeState;
 
 use OpenDominion\Calculators\NetworthCalculator;
+use OpenDominion\Calculators\Dominion\BarbarianCalculator;
 use OpenDominion\Calculators\Dominion\BuildingCalculator;
 use OpenDominion\Calculators\Dominion\CasualtiesCalculator;
 use OpenDominion\Calculators\Dominion\DecreeCalculator;
@@ -179,6 +180,7 @@ class InsightController extends AbstractDominionController
             'titleHelper' => app(TitleHelper::class),
             'unitHelper' => app(UnitHelper::class),
 
+            'barbarianCalculator' => app(BarbarianCalculator::class),
             'buildingCalculator' => app(BuildingCalculator::class),
             'casualtiesCalculator' => app(CasualtiesCalculator::class),
             'decreeCalculator' => app(DecreeCalculator::class),

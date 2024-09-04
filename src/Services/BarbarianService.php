@@ -202,6 +202,7 @@ class BarbarianService
             if($invadePlayer and rand(1, 8) !== 1)
             {
                 $invadePlayer = false;
+                $logString .= "Chicken out. | ";
             }
 
             $logString .= "Invade player: " . ($invadePlayer ? 'Yes' : 'No') . " | ";
