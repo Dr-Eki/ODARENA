@@ -236,13 +236,17 @@ class ProcessDominionJob implements ShouldQueue
 
     protected function handleBarbarians(Dominion $barbarian): void
     {
-        if($barbarian->race->name !== 'Barbarian')
+        if($barbarian->race->key !== 'barbarian')
         {
             return;
         }
         
         DB::transaction(function () use ($barbarian)
         {  
+
+            xtLog("[{$barbarian->id}] *** Handle Barbarian training");
+            $this->barbarianService->handleBarbarianTraining($barbarian);
+            
             xtLog("[{$barbarian->id}] *** Handle Barbarian invasions");
             $this->barbarianService->handleBarbarianInvasion($barbarian);
 
@@ -251,9 +255,6 @@ class ProcessDominionJob implements ShouldQueue
 
             xtLog("[{$barbarian->id}] *** Handle Barbarian improvements");
             $this->barbarianService->handleBarbarianImprovements($barbarian);
-
-            xtLog("[{$barbarian->id}] *** Handle Barbarian training");
-            $this->barbarianService->handleBarbarianTraining($barbarian);
         });
     }
 

@@ -92,7 +92,7 @@ class BarbarianService
 
     public function handleBarbarianTraining(Dominion $barbarian): void
     {
-        if($barbarian->race->name !== 'Barbarian')
+        if($barbarian->race->key !== 'barbarian')
         {
             return;
         }
@@ -158,6 +158,11 @@ class BarbarianService
 
             $logString .= "Offensive units released: {$unitsToRelease} | ";
 
+        }
+
+        if(!$defensiveUnitsToTrain and !$offensiveUnitsToTrain and !$excessiveDefensivePower and !$excessiveOffensivePower)
+        {
+            $logString .= "No units to release.";
         }
 
         xtLog($logString);

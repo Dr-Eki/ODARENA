@@ -246,8 +246,7 @@ class BarbarianCalculator
         $dpMod = $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
 
         $unitsToRelease = $excessiveDp / ($unitDp * $dpMod);
-        #$unitsToRelease /= $this->settings['DPA_OVERSHOT']; 
-
+        $unitsToRelease = min($unitsToRelease, $dominion->{'military_unit' . $slot});
         $unitsToRelease = max(0, $unitsToRelease);
 
         return floorInt($unitsToRelease);
@@ -270,8 +269,7 @@ class BarbarianCalculator
         $dpMod = $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
 
         $unitsToRelease = $excessiveOp / ($unitDp * $dpMod);
-        #$unitsToRelease /= $this->settings['OPA_OVERSHOT']; 
-
+        $unitsToRelease = min($unitsToRelease, $dominion->{'military_unit' . $slot});
         $unitsToRelease = max(0, $unitsToRelease);
 
         return floorInt($unitsToRelease);
