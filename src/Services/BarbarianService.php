@@ -126,7 +126,6 @@ class BarbarianService
             $logString .= "No units to train.";
         }
 
-
         # Release excessive DP
         $excessiveDefensivePower = $this->barbarianCalculator->getExcessiveDefensivePower($barbarian);
 
