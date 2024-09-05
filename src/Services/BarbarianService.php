@@ -30,6 +30,7 @@ use OpenDominion\Services\Dominion\HistoryService;
 use OpenDominion\Services\Dominion\QueueService;
 
 use OpenDominion\Services\Dominion\Actions\InvadeActionService;
+use OpenDominion\Services\Dominion\Actions\ReleaseActionService;
 
 use OpenDominion\Services\Dominion\ResourceService;
 use OpenDominion\Services\Dominion\StatsService;
@@ -123,6 +124,41 @@ class BarbarianService
         if(!$defensiveUnitsToTrain and !$offensiveUnitsToTrain)
         {
             $logString .= "No units to train.";
+        }
+
+
+        # Release excessive DP
+        $excessiveDefensivePower = $this->barbarianCalculator->getExcessiveDefensivePower($barbarian);
+
+        if($excessiveDefensivePower > 0)
+        {
+            $logString .= "Excessive defensive power: {$excessiveDefensivePower} | ";
+
+            $unitsToRelease = $this->barbarianCalculator->getDefensiveUnitsToRelease($barbarian);
+
+            $units = ['military_unit1' => $unitsToRelease];
+
+            $releaseResult = app(ReleaseActionService::class)->invade($barbarian, $units);
+
+            $logString .= "Defensive units released: {$unitsToRelease} | ";
+
+        }
+
+        # Release excessive OP
+        $excessiveOffensivePower = $this->barbarianCalculator->getExcessiveOffensivePower($barbarian);
+
+        if($excessiveOffensivePower > 0)
+        {
+            $logString .= "Excessive offensive power: {$excessiveOffensivePower} | ";
+
+            $unitsToRelease = $this->barbarianCalculator->getOffensiveUnitsToRelease($barbarian);
+
+            $units = ['military_unit2' => $unitsToRelease];
+
+            $releaseResult = app(ReleaseActionService::class)->invade($barbarian, $units);
+
+            $logString .= "Offensive units released: {$unitsToRelease} | ";
+
         }
 
         xtLog($logString);

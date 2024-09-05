@@ -219,6 +219,65 @@ class BarbarianCalculator
         return ceilInt($unitsToTrain);
     }
 
+    public function getExcessiveDefensivePower(Dominion $dominion): int
+    {
+        return roundInt(max(0, $this->getPaidDefensivePower($dominion) - $this->getTargetedDefensivePower($dominion)));
+    }
+
+    public function getExcessiveOffensivePower(Dominion $dominion): int
+    {
+        return roundInt(max(0, $this->getPaidOffensivePower($dominion) - $this->getTargetedOffensivePower($dominion)));
+    }
+
+    public function getDefensiveUnitsToRelease(Dominion $dominion): int
+    {
+        $excessiveDp = $this->getExcessiveDefensivePower($dominion);
+
+        $unitsToRelease = 0;
+
+        if($excessiveDp <= 0)
+        {
+            return $unitsToRelease;
+        }
+
+        $slot = 1;
+        $unit = $dominion->race->units->where('slot', $slot)->first();
+        $unitDp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'defense');
+        $dpMod = $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
+
+        $unitsToRelease = $excessiveDp / ($unitDp * $dpMod);
+        #$unitsToRelease /= $this->settings['DPA_OVERSHOT']; 
+
+        $unitsToRelease = max(0, $unitsToRelease);
+
+        return floorInt($unitsToRelease);
+    }
+
+    public function getOffensiveUnitsToRelease(Dominion $dominion): int
+    {
+        $excessiveOp = $this->getExcessiveOffensivePower($dominion);
+
+        $unitsToRelease = 0;
+
+        if($excessiveOp <= 0)
+        {
+            return $unitsToRelease;
+        }
+
+        $slot = 2;
+        $unit = $dominion->race->units->where('slot', $slot)->first();
+        $unitDp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'offense');
+        $dpMod = $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
+
+        $unitsToRelease = $excessiveOp / ($unitDp * $dpMod);
+        #$unitsToRelease /= $this->settings['OPA_OVERSHOT']; 
+
+        $unitsToRelease = max(0, $unitsToRelease);
+
+        return floorInt($unitsToRelease);
+    }
+
+
     public function needsToTrainDefensivePower(Dominion $dominion): bool
     {
         return $this->getMissingDefensivePower($dominion) > 0;
