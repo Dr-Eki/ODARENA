@@ -185,7 +185,7 @@ class BarbarianCalculator
         {
             return $unitsToTrain;
         }
-        
+
         $slot = 1;
         $unit = $dominion->race->units->where('slot', $slot)->first();
         $unitDp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'defense');
@@ -227,6 +227,16 @@ class BarbarianCalculator
     public function needsToTrainOffensivePower(Dominion $dominion): bool
     {
         return $this->getMissingOffensivePower($dominion) > 0;
+    }
+
+    public function getChanceToHit(Dominion $dominion): int
+    {
+        $currentDay = $dominion->round->start_date->subDays(1)->diffInDays(now());
+
+        $chanceOneIn = $this->settings['CHANCE_TO_HIT_CONSTANT'] - (14 - $currentDay);
+        $chanceOneIn += $this->statsService->getStat($dominion, 'defense_failures') * 0.125;
+
+        return roundInt($chanceOneIn);
     }
 
 }

@@ -14,7 +14,6 @@ use OpenDominion\Models\Round;
 use OpenDominion\Models\Race;
 use OpenDominion\Models\Title;
 use OpenDominion\Models\User;
-use OpenDominion\Models\Unit;
 
 use OpenDominion\Helpers\LandHelper;
 
@@ -155,25 +154,19 @@ class BarbarianService
         $currentOp = $this->barbarianCalculator->getCurrentOffensivePower($dominion);
         $targetedOp = $this->barbarianCalculator->getTargetedOffensivePower($dominion);
         $currentToTargetedOpRatio = $currentOp / $targetedOp;
+        $currentToTargetedOpRatioToSend = $this->settings['CURRENT_TO_TARGETED_OP_RATIO_TO_SEND'];
 
-        $logString .= "Current OP: {$currentOp} | Targeted OP: {$targetedOp} | Ratio: {$currentToTargetedOpRatio} | ";
+        $logString .= "Current OP: {$currentOp} | Targeted OP: {$targetedOp} | Ratio: {$currentToTargetedOpRatio} | Required ratio: {$currentToTargetedOpRatioToSend} | ";
         $logString .= "Missing OP: {$this->barbarianCalculator->getMissingOffensivePower($dominion)} | ";
         $logString .= "Paid OP: {$this->barbarianCalculator->getPaidOffensivePower($dominion)} | ";
 
-        if($currentToTargetedOpRatio >= $this->settings['CURRENT_TO_TARGETED_OP_RATIO_TO_SEND'])
+        if($currentToTargetedOpRatio >= $currentToTargetedOpRatioToSend)
         {
-            $currentDay = $dominion->round->start_date->subDays(1)->diffInDays(now());
+            $chanceToHit = rand(1, $this->barbarianCalculator->getChanceToHit($dominion));
 
-            $chanceOneIn = $this->settings['CHANCE_TO_HIT_CONSTANT'] - (14 - $currentDay);
-            $chanceOneIn += $this->statsService->getStat($dominion, 'defense_failures') * 0.125;
-            $chanceOneIn = floorInt($chanceOneIn);
+            $invade = (bool)($chanceToHit == 1);
 
-            $chanceToHit = rand(1,$chanceOneIn);
-
-            $invade = (bool)($chanceToHit === 1);
-
-            $logString .= "Chance to hit: 1 in {$chanceOneIn} | Hit: " . ($invade ? 'Yes' : 'No') . " | ";
-
+            $logString .= "Chance to hit: " . ($invade ? 'Yes' : 'No') . " | ";
         }
 
         if($invade)
@@ -214,8 +207,7 @@ class BarbarianService
             }
             else
             {
-
-                DB::transaction(function () use ($dominion)
+                DB::transaction(function () use ($dominion, $logString)
                 {
 
                     $landGainRatio = rand($this->settings['LAND_GAIN_MIN'], $this->settings['LAND_GAIN_MAX']) / 1000;
@@ -226,11 +218,15 @@ class BarbarianService
                         $largestDominion = $dominion->round->getNthLargestDominion(1);
                         $maxLandToGain = max(0, $largestDominion->land * 0.6 - $dominion->land - 1);
                         $landGained = min($maxLandToGain, $dominion->land * $landGainRatio);
+
+                        $logString .= "Max land to gain: {$maxLandToGain} | ";
                     }
                     else
                     {
                         $landGained = $dominion->land * $landGainRatio;
                     }
+
+                    $logString .= "Land gained: {$landGained} | ";
 
                     if($landGained > 0)
                     {
