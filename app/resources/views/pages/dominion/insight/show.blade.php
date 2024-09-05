@@ -845,6 +845,11 @@
                                 <td>{{ number_format($barbarianCalculator->getMissingOffensivePower($dominion)) }}</td>
                                 <td>{{ number_format($barbarianCalculator->getMissingDefensivePower($dominion)) }}</td>
                             </tr>
+                            <tr>
+                                <td>Excessive:</td>
+                                <td>{{ number_format($barbarianCalculator->getExcessiveOffensivePower($dominion)) }}</td>
+                                <td>{{ number_format($barbarianCalculator->getExcessiveDefensivePower($dominion)) }}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
