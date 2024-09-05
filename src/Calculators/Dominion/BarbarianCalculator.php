@@ -154,7 +154,7 @@ class BarbarianCalculator
 
         return roundInt($incomingOp);
     }
-    
+
     public function getPaidDefensivePower(Dominion $dominion): int
     {
         return roundInt($this->getCurrentDefensivePower($dominion) + $this->getIncomingDefensivePower($dominion));
@@ -179,25 +179,41 @@ class BarbarianCalculator
     {
         $missingDp = $this->getMissingDefensivePower($dominion);
 
+        $unitsToTrain = 0;
+
+        if($missingDp <= 0)
+        {
+            return $unitsToTrain;
+        }
+        
         $slot = 1;
         $unit = $dominion->race->units->where('slot', $slot)->first();
         $unitDp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'defense');
+        $dpMod = $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
 
-        $unitsToTrain = ceilInt($missingDp / $unitDp);
-        $unitsToTrain *= $this->settings['DPA_OVERSHOT'];
+        $unitsToTrain = $missingDp / ($unitDp * $dpMod);
+        $unitsToTrain *= $this->settings['DPA_OVERSHOT']; 
 
         return ceilInt($unitsToTrain);
     }
 
     public function getOffensiveUnitsToTrain(Dominion $dominion): int
     {
-        $missingOp = $this->getMissingDefensivePower($dominion);
+        $missingOp = $this->getMissingOffensivePower($dominion);
+
+        $unitsToTrain = 0;
+
+        if($missingOp <= 0)
+        {
+            return $unitsToTrain;
+        }
 
         $slot = 2;
         $unit = $dominion->race->units->where('slot', $slot)->first();
         $unitOp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'offense');
+        $opMod = $this->militaryCalculator->getOffensivePowerMultiplier($dominion);
 
-        $unitsToTrain = $missingOp / $unitOp;
+        $unitsToTrain = $missingOp / ($unitOp * $opMod);
         $unitsToTrain *= $this->settings['OPA_OVERSHOT'];
 
         return ceilInt($unitsToTrain);
