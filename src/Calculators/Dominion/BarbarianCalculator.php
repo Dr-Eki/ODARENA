@@ -109,10 +109,19 @@ class BarbarianCalculator
 
     public function getIncomingDefensivePower(Dominion $dominion): int
     {
+        $incomingDp = 0;
+
         $slot = 1;
         $incomingUnits = $this->unitCalculator->getUnitTypeTotalIncoming($dominion, ('military_unit' . $slot));
 
-        $incomingDp = $this->militaryCalculator->getDefensivePower($dominion, null, null, [$slot => $incomingUnits]);
+        if($incomingUnits > 0)
+        {
+            $unit = $dominion->race->units->where('slot', $slot)->first();
+            $unitDp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'defense');
+            $dpMod = $this->militaryCalculator->getDefensivePowerMultiplier($dominion);
+    
+            $incomingDp = $incomingUnits * $unitDp * $dpMod;
+        }
 
         return roundInt($incomingDp);
     }
@@ -129,14 +138,23 @@ class BarbarianCalculator
 
     public function getIncomingOffensivePower(Dominion $dominion): int
     {
+        $incomingOp = 0;
+
         $slot = 2;
         $incomingUnits = $this->unitCalculator->getUnitTypeTotalIncoming($dominion, ('military_unit' . $slot));
 
-        $incomingOp = $this->militaryCalculator->getOffensivePower($dominion, null, null, [$slot => $incomingUnits]);
+        if($incomingUnits > 0)
+        {
+            $unit = $dominion->race->units->where('slot', $slot)->first();
+            $unitOp = $this->militaryCalculator->getUnitPowerWithPerks($dominion, null, null, $unit, 'offense');
+            $opMod = $this->militaryCalculator->getOffensivePowerMultiplier($dominion);
+    
+            $incomingOp = $incomingUnits * $unitOp * $opMod;
+        }
 
         return roundInt($incomingOp);
     }
-
+    
     public function getPaidDefensivePower(Dominion $dominion): int
     {
         return roundInt($this->getCurrentDefensivePower($dominion) + $this->getIncomingDefensivePower($dominion));
